@@ -35,13 +35,37 @@ class PassEmploiDioBuilder {
       keyBuilder: (request) => PassEmploiCacheManager.getCacheKey(request.uri.toString()),
     );
     final dioClient = Dio(BaseOptions(baseUrl: baseUrl));
-    dioClient.interceptors
-      ..add(DemoInterceptor(modeDemoRepository))
-      ..add(monitoringInterceptor)
-      ..add(AuthInterceptor(accessTokenRetriever))
-      ..add(DioCacheInterceptor(options: cacheOptions))
-      ..add(LoggingNetworkInterceptor())
-      ..add(ExpiredTokenInterceptor(authAccessChecker));
+    dioClient.interceptors..add(DemoInterceptor(modeDemoRepository))..add(monitoringInterceptor)..add(
+        AuthInterceptor(accessTokenRetriever))..add(ForceCacheInterceptor(options: cacheOptions))..add(
+        DioCacheInterceptor(options: cacheOptions))..add(LoggingNetworkInterceptor())..add(
+        ExpiredTokenInterceptor(authAccessChecker));
     return dioClient;
+  }
+}
+
+class ForceCacheInterceptor extends DioCacheInterceptor {
+  final CacheOptions options;
+
+  ForceCacheInterceptor({required this.options}) : super(options: options);
+
+  @override
+  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    if (['POST', 'PUT', 'DELETE'].contains(options.method)) {
+      return handler.reject(DioException(requestOptions: options, type: DioExceptionType.cancel));
+    }
+
+    final cacheResponse = await _loadResponse(options);
+    if (cacheResponse != null) {
+      handler.resolve(cacheResponse.toResponse(options, fromNetwork: false), false);
+    } else {
+      handler.next(options);
+    }
+  }
+
+  Future<CacheResponse?> _loadResponse(RequestOptions request) async {
+    final cacheKey = options.keyBuilder(request);
+    final cacheStore = options.store!;
+    final response = await cacheStore.get(cacheKey);
+    return response?.readContent(options);
   }
 }
