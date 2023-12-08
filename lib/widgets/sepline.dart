@@ -6,11 +6,11 @@ class SepLine extends StatelessWidget {
   final double spaceAfter;
   final Color color;
 
-  const SepLine(
+  SepLine(
     this.spaceBefore,
     this.spaceAfter, {
-    this.color = AppColors.primaryLighten,
-  }) : super();
+    Color? color,
+  }) : color = color ?? AppColors.primaryLighten;
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +24,7 @@ class SepLine extends StatelessWidget {
   }
 }
 
-
 class SepLineWithPadding extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Padding(

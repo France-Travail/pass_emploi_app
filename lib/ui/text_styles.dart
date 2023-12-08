@@ -5,9 +5,9 @@ import 'package:pass_emploi_app/ui/font_sizes.dart';
 class TextStyles {
   TextStyles._();
 
-  static TextStyle textLBold({Color color = AppColors.contentColor}) {
+  static TextStyle textLBold({Color? color}) {
     return TextStyle(
-      color: color,
+      color: color ?? AppColors.contentColor,
       fontSize: FontSizes.huge,
       fontWeight: FontWeight.w700,
       fontFamily: "Marianne",
@@ -23,9 +23,9 @@ class TextStyles {
     );
   }
 
-  static TextStyle textSMedium({Color color = AppColors.contentColor}) {
+  static TextStyle textSMedium({Color? color}) {
     return TextStyle(
-      color: color,
+      color: color ?? AppColors.contentColor,
       fontSize: FontSizes.normal,
       fontWeight: FontWeight.w500,
       fontFamily: 'Marianne',
@@ -50,16 +50,16 @@ class TextStyles {
     );
   }
 
-  static TextStyle textXsRegular({Color color = AppColors.contentColor}) {
+  static TextStyle textXsRegular({Color? color}) {
     return TextStyle(
-      color: color,
+      color: color ?? AppColors.contentColor,
       fontSize: FontSizes.xs,
       fontWeight: FontWeight.w400,
       fontFamily: 'Marianne',
     );
   }
 
-  static TextStyle textXsBold({Color color = AppColors.contentColor}) {
+  static TextStyle textXsBold({Color? color}) {
     return TextStyle(
       color: color,
       fontSize: FontSizes.xs,
@@ -120,9 +120,9 @@ class TextStyles {
     decoration: TextDecoration.underline,
   );
 
-  static TextStyle textBaseMediumBold({Color? color = AppColors.contentColor}) {
+  static TextStyle textBaseMediumBold({Color? color}) {
     return TextStyle(
-      color: color,
+      color: color ?? AppColors.contentColor,
       fontFamily: 'Marianne',
       fontSize: FontSizes.medium,
       fontWeight: FontWeight.w600,
@@ -136,9 +136,9 @@ class TextStyles {
     fontWeight: FontWeight.w500,
   );
 
-  static TextStyle textMBoldWithColor({Color? color = AppColors.contentColor}) {
+  static TextStyle textMBoldWithColor({Color? color}) {
     return TextStyle(
-      color: color,
+      color: color ?? AppColors.contentColor,
       fontFamily: 'Marianne',
       fontSize: FontSizes.semi,
       fontWeight: FontWeight.w700,
@@ -166,9 +166,9 @@ class TextStyles {
     fontWeight: FontWeight.w700,
   );
 
-  static TextStyle textSRegular({Color color = AppColors.contentColor}) {
+  static TextStyle textSRegular({Color? color}) {
     return TextStyle(
-      color: color,
+      color: color ?? AppColors.contentColor,
       fontFamily: 'Marianne',
       fontSize: FontSizes.normal,
       fontWeight: FontWeight.w400,

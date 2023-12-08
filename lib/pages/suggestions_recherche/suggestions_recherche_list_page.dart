@@ -90,7 +90,7 @@ class _Scaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const backgroundColor = AppColors.grey100;
+    final backgroundColor = AppColors.grey100;
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: SecondaryAppBar(title: Strings.suggestionsDeRechercheTitlePage, backgroundColor: backgroundColor),

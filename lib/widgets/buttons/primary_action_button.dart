@@ -24,22 +24,26 @@ class PrimaryActionButton extends StatelessWidget {
 
   PrimaryActionButton({
     super.key,
-    Color? backgroundColor,
-    this.disabledBackgroundColor = AppColors.primaryWithAlpha50,
-    this.textColor = Colors.white,
-    this.rippleColor = AppColors.primaryDarken,
-    this.iconColor = Colors.white,
+    required this.label,
     this.withShadow = true,
     this.icon,
     this.onPressed,
-    required this.label,
     this.fontSize,
     this.iconSize = Dimens.icon_size_m,
     this.iconRightPadding = Margins.spacing_s,
     this.heightPadding = Margins.spacing_base,
     this.widthPadding = Margins.spacing_m,
     this.suffix,
-  }) : backgroundColor = backgroundColor ?? AppColors.primary;
+    Color? backgroundColor,
+    Color? disabledBackgroundColor,
+    Color? rippleColor,
+    Color? textColor,
+    Color? iconColor,
+  })  : backgroundColor = backgroundColor ?? AppColors.primary,
+        disabledBackgroundColor = disabledBackgroundColor ?? AppColors.primaryWithAlpha50,
+        rippleColor = rippleColor ?? AppColors.primaryDarken,
+        textColor = textColor ?? Colors.white,
+        iconColor = iconColor ?? Colors.white;
 
   @override
   Widget build(BuildContext context) {
