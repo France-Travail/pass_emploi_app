@@ -50,7 +50,7 @@ class _PieceJointeName extends StatelessWidget {
           padding: const EdgeInsets.only(right: 10),
           child: Icon(
             AppIcons.attach_file_rounded,
-            color: AppColors.primary,
+            color: AppColors.primary(),
           ),
         ),
         Flexible(
@@ -121,12 +121,12 @@ class _FileWasDeleted extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(right: 10),
-          child: Icon(AppIcons.error_rounded, color: AppColors.warning),
+          child: Icon(AppIcons.error_rounded, color: AppColors.warning()),
         ),
         Flexible(
           child: Text(
             Strings.fileNotAvailableTitle,
-            style: TextStyles.textBaseMediumWithColor(AppColors.warning),
+            style: TextStyles.textBaseMediumWithColor(AppColors.warning()),
           ),
         ),
       ],

@@ -113,7 +113,7 @@ class LoginPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Center(child: Text(Strings.loginError, style: TextStyles.textSMedium(color: AppColors.warning))),
+        Center(child: Text(Strings.loginError, style: TextStyles.textSMedium(color: AppColors.warning()))),
         SizedBox(height: Margins.spacing_base),
         ..._loginButtons(viewModel, context),
       ],
@@ -165,11 +165,11 @@ class OrSeperator extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(width: Margins.spacing_l),
-        Expanded(child: Divider(color: AppColors.grey500)),
+        Expanded(child: Divider(color: AppColors.grey500())),
         SizedBox(width: Margins.spacing_base),
         Text(Strings.or, style: TextStyles.textBaseBold),
         SizedBox(width: Margins.spacing_base),
-        Expanded(child: Divider(color: AppColors.grey500)),
+        Expanded(child: Divider(color: AppColors.grey500())),
         SizedBox(width: Margins.spacing_l),
       ],
     );

@@ -96,7 +96,7 @@ class _AlertePageState extends State<AlertePage> {
 
   Widget _body(AlerteListViewModel viewModel) {
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: AppColors.grey100(),
       body: _content(viewModel),
       floatingActionButton: _floatingActionButton(context, viewModel),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

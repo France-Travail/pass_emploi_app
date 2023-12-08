@@ -53,7 +53,7 @@ class ChoixOrganismePage extends StatelessWidget {
                                     Text(
                                       Strings.interestedInCej,
                                       style: TextStyle(
-                                        color: AppColors.primary,
+                                        color: AppColors.primary(),
                                         fontFamily: 'Marianne',
                                         fontSize: FontSizes.semi,
                                         fontWeight: FontWeight.w500,
@@ -109,7 +109,7 @@ class ChoixOrganismePage extends StatelessWidget {
                                         child: Padding(
                                           padding:
                                               const EdgeInsets.symmetric(vertical: 2, horizontal: Margins.spacing_xs),
-                                          child: Icon(AppIcons.open_in_new_rounded, color: AppColors.contentColor),
+                                          child: Icon(AppIcons.open_in_new_rounded, color: AppColors.contentColor()),
                                         ),
                                       )
                                     ],

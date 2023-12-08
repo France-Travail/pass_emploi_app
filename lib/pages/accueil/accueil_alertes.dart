@@ -74,7 +74,7 @@ class _SansAlerte extends StatelessWidget {
           Center(
             child: Icon(
               AppIcons.notifications_rounded,
-              color: AppColors.accent2,
+              color: AppColors.accent2(),
               size: 40,
             ),
           ),

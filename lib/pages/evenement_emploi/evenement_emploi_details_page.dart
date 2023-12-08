@@ -117,7 +117,7 @@ class _Header extends StatelessWidget {
         if (viewModel.tag != null) ...[
           JobTag(
             label: viewModel.tag!,
-            backgroundColor: AppColors.additional5Lighten,
+            backgroundColor: AppColors.additional5Lighten(),
           ),
           SizedBox(height: Margins.spacing_s),
         ],
@@ -125,11 +125,11 @@ class _Header extends StatelessWidget {
         SizedBox(height: Margins.spacing_base),
         Row(
           children: [
-            Icon(AppIcons.today_outlined, color: AppColors.primary, size: Dimens.icon_size_base),
+            Icon(AppIcons.today_outlined, color: AppColors.primary(), size: Dimens.icon_size_base),
             SizedBox(width: Margins.spacing_xs),
             Text(viewModel.date, style: TextStyles.textBaseBold),
             Expanded(child: SizedBox.shrink()),
-            Icon(AppIcons.schedule, color: AppColors.primary, size: Dimens.icon_size_base),
+            Icon(AppIcons.schedule, color: AppColors.primary(), size: Dimens.icon_size_base),
             SizedBox(width: Margins.spacing_xs),
             Text(viewModel.heure, style: TextStyles.textBaseBold),
           ],
@@ -137,7 +137,7 @@ class _Header extends StatelessWidget {
         SizedBox(height: Margins.spacing_s),
         Row(
           children: [
-            Icon(AppIcons.place_outlined, color: AppColors.primary, size: Dimens.icon_size_base),
+            Icon(AppIcons.place_outlined, color: AppColors.primary(), size: Dimens.icon_size_base),
             SizedBox(width: Margins.spacing_xs),
             Text(viewModel.lieu, style: TextStyles.textBaseRegular),
           ],
@@ -172,9 +172,9 @@ class _Details extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text("•", style: TextStyles.textMBoldWithColor(color: AppColors.primary)),
+            Text("•", style: TextStyles.textMBoldWithColor(color: AppColors.primary())),
             SizedBox(width: Margins.spacing_s),
-            Text(Strings.evenementEmploiDetails, style: TextStyles.textMBoldWithColor(color: AppColors.grey800)),
+            Text(Strings.evenementEmploiDetails, style: TextStyles.textMBoldWithColor(color: AppColors.grey800())),
           ],
         ),
         SizedBox(height: Margins.spacing_m),

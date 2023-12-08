@@ -84,7 +84,7 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
     }
   }
 
-  Widget _loading() => Center(child: CircularProgressIndicator(color: AppColors.primary));
+  Widget _loading() => Center(child: CircularProgressIndicator(color: AppColors.primary()));
 
   Widget _error() => Center(child: Text(Strings.offreDetailsError));
 

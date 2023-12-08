@@ -162,7 +162,7 @@ class _DemarcheCardBase extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(icon, color: AppColors.primary),
+                Icon(icon, color: AppColors.primary()),
                 SizedBox(width: Margins.spacing_s),
                 Text(title, style: TextStyles.textMBold),
               ],
@@ -185,7 +185,7 @@ class _Subtitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: TextStyles.textMBold.copyWith(color: AppColors.grey800));
+    return Text(text, style: TextStyles.textMBold.copyWith(color: AppColors.grey800()));
   }
 }
 

@@ -153,7 +153,7 @@ class _Subtitle extends StatelessWidget {
               width: 8,
               height: 8,
               decoration: BoxDecoration(
-                color: AppColors.primary,
+                color: AppColors.primary(),
                 shape: BoxShape.circle,
               ),
             ),

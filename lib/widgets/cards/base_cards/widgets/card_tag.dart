@@ -23,50 +23,50 @@ class CardTag extends StatelessWidget {
   CardTag.evenement({
     required this.text,
   })  : icon = AppIcons.event,
-        backgroundColor = AppColors.accent1Lighten,
-        contentColor = AppColors.additional3;
+        backgroundColor = AppColors.accent1Lighten(),
+        contentColor = AppColors.additional32();
 
   CardTag.secondary({
     this.icon,
     required this.text,
-  })  : backgroundColor = AppColors.primaryLighten,
-        contentColor = AppColors.primary;
+  })  : backgroundColor = AppColors.primaryLighten(),
+        contentColor = AppColors.primary();
 
   CardTag.annule()
       : icon = AppIcons.error_rounded,
-        backgroundColor = AppColors.warningLighten,
+        backgroundColor = AppColors.warningLighten(),
         text = Strings.rendezvousCardAnnule,
-        contentColor = AppColors.warning;
+        contentColor = AppColors.warning();
 
   CardTag.emploi()
       : icon = Icons.business_center_outlined,
-        backgroundColor = AppColors.additional2Lighten,
+        backgroundColor = AppColors.additional2Lighten(),
         text = Strings.emploiTag,
-        contentColor = AppColors.accent3;
+        contentColor = AppColors.accent3();
 
   CardTag.alternance()
       : icon = Icons.business_center_outlined,
-        backgroundColor = AppColors.additional4Lighten,
+        backgroundColor = AppColors.additional4Lighten(),
         text = Strings.alternanceTag,
-        contentColor = AppColors.accent3;
+        contentColor = AppColors.accent3();
 
   CardTag.immersion()
       : icon = Icons.business_center_outlined,
-        backgroundColor = AppColors.accent3Lighten,
+        backgroundColor = AppColors.accent3Lighten(),
         text = Strings.immersionTag,
-        contentColor = AppColors.accent3;
+        contentColor = AppColors.accent3();
 
   CardTag.serviceCivique()
       : icon = Icons.business_center_outlined,
-        backgroundColor = AppColors.additional5Lighten,
+        backgroundColor = AppColors.additional5Lighten(),
         text = Strings.serviceCiviqueTag,
-        contentColor = AppColors.accent3;
+        contentColor = AppColors.accent3();
 
   CardTag.entrepriseAccueillante()
       : icon = Icons.volunteer_activism,
-        backgroundColor = AppColors.additional1Lighten,
+        backgroundColor = AppColors.additional1Lighten(),
         text = Strings.entrepriseAccueillante,
-        contentColor = AppColors.accent2;
+        contentColor = AppColors.accent2();
 
   @override
   Widget build(BuildContext context) {

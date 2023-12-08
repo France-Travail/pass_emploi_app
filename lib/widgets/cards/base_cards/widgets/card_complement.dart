@@ -12,7 +12,7 @@ class CardComplement extends StatelessWidget {
   final IconData icon;
 
   CardComplement({required this.text, required this.icon, Color? color, this.bold = false})
-      : color = color ?? AppColors.grey800;
+      : color = color ?? AppColors.grey800();
 
   factory CardComplement.place({required String text}) => CardComplement(
         text: text,
@@ -35,9 +35,9 @@ class CardComplement extends StatelessWidget {
       );
 
   factory CardComplement.dateLate({required String text}) => CardComplement(
-        text: text,
+    text: text,
         icon: AppIcons.event,
-        color: AppColors.warning,
+        color: AppColors.warning(),
         bold: true,
       );
 

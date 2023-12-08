@@ -119,7 +119,7 @@ class _Offre extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.grey100, width: 1),
+        border: Border.all(color: AppColors.grey100(), width: 1),
         borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base)),
       ),
       child: Padding(
@@ -155,14 +155,14 @@ class _InfoPartage extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.primaryLighten,
+        color: AppColors.primaryLighten(),
         borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(Margins.spacing_m),
         child: Text(
           _viewModel.information,
-          style: TextStyles.textBaseBoldWithColor(AppColors.primary),
+          style: TextStyles.textBaseBoldWithColor(AppColors.primary()),
         ),
       ),
     );

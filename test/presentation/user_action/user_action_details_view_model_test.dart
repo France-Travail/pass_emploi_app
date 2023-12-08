@@ -181,8 +181,8 @@ void main() {
       UserActionDetailDateEcheanceViewModel(
         formattedTexts: [FormattedText("À réaliser pour le "), FormattedText("mardi 1 janvier", bold: true)],
         icons: [AppIcons.schedule_rounded],
-        textColor: AppColors.accent2,
-        backgroundColor: AppColors.accent3Lighten,
+        textColor: AppColors.accent2(),
+        backgroundColor: AppColors.accent3Lighten(),
       ),
     );
   });
@@ -200,8 +200,8 @@ void main() {
       UserActionDetailDateEcheanceViewModel(
         formattedTexts: [FormattedText("À réaliser pour le "), FormattedText("vendredi 1 janvier", bold: true)],
         icons: [AppIcons.schedule_rounded],
-        textColor: AppColors.warning,
-        backgroundColor: AppColors.warningLighten,
+        textColor: AppColors.warning(),
+        backgroundColor: AppColors.warningLighten(),
       ),
     );
   });

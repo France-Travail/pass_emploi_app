@@ -75,7 +75,7 @@ class _SansFavori extends StatelessWidget {
           Center(
             child: Icon(
               AppIcons.favorite_rounded,
-              color: AppColors.accent2,
+              color: AppColors.accent2(),
               size: 40,
             ),
           ),

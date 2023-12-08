@@ -15,7 +15,7 @@ class PassEmploiTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_m),
-      color: Brand.isCej() ? Colors.transparent : AppColors.primary,
+      color: Brand.isCej() ? Colors.transparent : AppColors.primary(),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -23,19 +23,19 @@ class PassEmploiTabBar extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: TabBar(
               controller: controller,
-              indicatorColor: Brand.isCej() ? AppColors.primary : AppColors.grey100,
+              indicatorColor: Brand.isCej() ? AppColors.primary() : AppColors.grey100(),
               indicatorWeight: 4,
               labelStyle: TextStyles.textBaseBold,
-              labelColor: Brand.isCej() ? AppColors.contentColor : AppColors.grey100,
+              labelColor: Brand.isCej() ? AppColors.contentColor() : AppColors.grey100(),
               indicatorSize: TabBarIndicatorSize.tab,
               isScrollable: true,
               labelPadding: const EdgeInsets.only(right: 32),
               indicatorPadding: const EdgeInsets.only(right: 32),
-              unselectedLabelColor: Brand.isCej() ? AppColors.grey800 : Colors.grey[350],
+              unselectedLabelColor: Brand.isCej() ? AppColors.grey800() : Colors.grey[350],
               tabs: _tabs(),
             ),
           ),
-          if (Brand.isCej()) SepLine(0, 0, color: AppColors.grey500),
+          if (Brand.isCej()) SepLine(0, 0, color: AppColors.grey500()),
         ],
       ),
     );

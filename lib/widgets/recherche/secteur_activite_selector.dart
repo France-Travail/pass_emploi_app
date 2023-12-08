@@ -71,7 +71,7 @@ class _SecteurActiviteField extends StatelessWidget {
             alignment: Alignment.centerLeft,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(Dimens.radius_base),
-              border: Border.all(color: AppColors.contentColor),
+              border: Border.all(color: AppColors.contentColor()),
             ),
             child: _SelectedSecteurActivite(value?.label ?? Strings.secteurActiviteAll),
           ),
@@ -95,12 +95,12 @@ class _SelectedSecteurActivite extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_s, vertical: Margins.spacing_xs),
             decoration: BoxDecoration(
-              color: AppColors.primaryLighten,
+              color: AppColors.primaryLighten(),
               borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base)),
             ),
             child: Text(
               label,
-              style: TextStyles.textSMedium(color: AppColors.primary),
+              style: TextStyles.textSMedium(color: AppColors.primary()),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

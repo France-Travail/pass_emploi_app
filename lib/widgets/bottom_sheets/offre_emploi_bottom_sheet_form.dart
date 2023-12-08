@@ -186,7 +186,7 @@ class _OffreEmploiBottomSheetFormState extends State<OffreEmploiBottomSheetForm>
               child: Icon(
                 AppIcons.info_rounded,
                 size: Dimens.icon_size_base,
-                color: AppColors.primary,
+                color: AppColors.primary(),
               ),
             )),
         SizedBox(
@@ -206,7 +206,7 @@ class _OffreEmploiBottomSheetFormState extends State<OffreEmploiBottomSheetForm>
       child: Text(
         Strings.creationAlerteError,
         textAlign: TextAlign.center,
-        style: TextStyles.textSRegular(color: AppColors.warning),
+        style: TextStyles.textSRegular(color: AppColors.warning()),
       ),
     );
   }

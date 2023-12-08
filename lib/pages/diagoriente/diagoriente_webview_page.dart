@@ -35,7 +35,7 @@ class DiagorienteWebviewPage extends StatelessWidget {
   }
 
   Widget _builder(BuildContext context, DiagorienteWebviewViewModel viewModel) {
-    final backgroundColor = AppColors.grey100;
+    final backgroundColor = AppColors.grey100();
     final DiagorienteBottomButtonsNotifier diagorienteDrawer = DiagorienteBottomButtonsNotifier();
     final controller = WebViewController();
     final delegate = NavigationDelegate(onPageFinished: (_) => controller.addChatbotListener());

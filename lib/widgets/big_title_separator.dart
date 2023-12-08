@@ -16,7 +16,7 @@ class BigTitleSeparator extends StatelessWidget {
         Expanded(
           child: Divider(
             thickness: 1,
-            color: AppColors.contentColor,
+            color: AppColors.contentColor(),
           ),
         ),
         Padding(
@@ -29,7 +29,7 @@ class BigTitleSeparator extends StatelessWidget {
         Expanded(
           child: Divider(
             thickness: 1,
-            color: AppColors.contentColor,
+            color: AppColors.contentColor(),
           ),
         ),
       ],

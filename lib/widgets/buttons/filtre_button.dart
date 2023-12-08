@@ -31,7 +31,7 @@ class FiltreButton extends StatelessWidget {
                   padding: EdgeInsets.all(Margins.spacing_xs),
                   child: Text(
                     filtresCount.toString(),
-                    style: TextStyles.textBaseBoldWithColor(AppColors.primary),
+                    style: TextStyles.textBaseBoldWithColor(AppColors.primary()),
                   ),
                 ),
               ),

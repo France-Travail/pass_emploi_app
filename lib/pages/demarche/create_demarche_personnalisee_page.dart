@@ -125,7 +125,7 @@ class _PremierTitre extends StatelessWidget {
       padding: const EdgeInsets.only(left: 24, right: 24, top: 16),
       child: Text(
         Strings.createDemarchePersonnalisee,
-        style: TextStyles.textBaseBoldWithColor(AppColors.primary),
+        style: TextStyles.textBaseBoldWithColor(AppColors.primary()),
       ),
     );
   }
@@ -150,7 +150,7 @@ class _Separateur extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 24, right: 24, top: 32),
       child: Container(
-        color: AppColors.primaryLighten,
+        color: AppColors.primaryLighten(),
         height: 2,
       ),
     );
@@ -190,7 +190,7 @@ class _NombreCaracteresRegle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = _isCommentaireValid ? AppColors.contentColor : AppColors.warning;
+    final textColor = _isCommentaireValid ? AppColors.contentColor() : AppColors.warning();
     return Align(
       alignment: Alignment.centerRight,
       child: Padding(
@@ -210,7 +210,7 @@ class _Separateur2 extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 24, right: 24, top: 32),
       child: Container(
-        color: AppColors.primaryLighten,
+        color: AppColors.primaryLighten(),
         height: 2,
       ),
     );
@@ -251,7 +251,7 @@ class _NombreCaracteresCompteur extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = _isCommentaireValid ? AppColors.contentColor : AppColors.warning;
+    final textColor = _isCommentaireValid ? AppColors.contentColor() : AppColors.warning();
     return Align(
       alignment: Alignment.centerRight,
       child: Padding(
@@ -296,14 +296,14 @@ class _MessageError extends StatelessWidget {
           Icon(
             AppIcons.error_rounded,
             size: Dimens.icon_size_m,
-            color: AppColors.warning,
+            color: AppColors.warning(),
           ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(left: 13),
               child: Text(
                 Strings.addAMessageError,
-                style: TextStyles.textBaseMediumWithColor(AppColors.warning),
+                style: TextStyles.textBaseMediumWithColor(AppColors.warning()),
               ),
             ),
           ),

@@ -17,7 +17,7 @@ class ChatInformation extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(vertical: Margins.spacing_s),
       decoration: BoxDecoration(
-        color: AppColors.primaryLighten,
+        color: AppColors.primaryLighten(),
         borderRadius: BorderRadius.circular(Dimens.radius_base),
       ),
       child: Padding(
@@ -50,14 +50,14 @@ class _Title extends StatelessWidget {
           child: Icon(
             AppIcons.info_rounded,
             semanticLabel: Strings.semanticsLabelInformation,
-            color: AppColors.primary,
+            color: AppColors.primary(),
           ),
         ),
         SizedBox(width: Margins.spacing_s),
         Flexible(
           child: Text(
             title,
-            style: TextStyles.textBaseBoldWithColor(AppColors.primary),
+            style: TextStyles.textBaseBoldWithColor(AppColors.primary()),
           ),
         ),
       ],
@@ -74,7 +74,7 @@ class _Description extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       description,
-      style: TextStyles.textBaseRegularWithColor(AppColors.primary),
+      style: TextStyles.textBaseRegularWithColor(AppColors.primary()),
     );
   }
 }

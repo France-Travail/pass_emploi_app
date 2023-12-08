@@ -10,8 +10,8 @@ void showSnackBarWithSuccess(BuildContext context, String label, [VoidCallback? 
   _showSnackBar(
     context: context,
     label: label,
-    backgroundColor: AppColors.secondaryLighten,
-    textColor: AppColors.secondary,
+    backgroundColor: AppColors.secondaryLighten(),
+    textColor: AppColors.secondary(),
     onActionTap: onActionTap,
   );
 }
@@ -20,8 +20,8 @@ void showSnackBarWithInformation(BuildContext context, String label) {
   _showSnackBar(
     context: context,
     label: label,
-    backgroundColor: AppColors.primaryLighten,
-    textColor: AppColors.primary,
+    backgroundColor: AppColors.primaryLighten(),
+    textColor: AppColors.primary(),
     onActionTap: null,
   );
 }
@@ -30,7 +30,7 @@ void showSnackBarWithSystemError(BuildContext context, [String? label]) {
   _showSnackBar(
     context: context,
     label: label ?? Strings.miscellaneousErrorRetry,
-    backgroundColor: AppColors.disabled,
+    backgroundColor: AppColors.disabled(),
     textColor: Colors.white,
     onActionTap: null,
   );
@@ -40,8 +40,8 @@ void showSnackBarWithUserError(BuildContext context, String label) {
   _showSnackBar(
     context: context,
     label: label,
-    backgroundColor: AppColors.warningLighten,
-    textColor: AppColors.warning,
+    backgroundColor: AppColors.warningLighten(),
+    textColor: AppColors.warning(),
     onActionTap: null,
   );
 }

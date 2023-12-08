@@ -66,7 +66,7 @@ class _OffreFavorisPageState extends State<OffreFavorisPage> {
 
   Widget _builder(BuildContext context, FavoriListViewModel viewModel) {
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: AppColors.grey100(),
       body: Center(child: _content(viewModel)),
       floatingActionButton: _floatingActionButton(context, viewModel),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

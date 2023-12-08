@@ -37,7 +37,7 @@ class _Body extends StatelessWidget {
       initialIndex: viewModel.tabs._index(initialTab),
       length: viewModel.tabs.length,
       child: Scaffold(
-        backgroundColor: AppColors.grey100,
+        backgroundColor: AppColors.grey100(),
         appBar: PrimaryAppBar(title: Strings.solutionsAppBarTitle),
         body: ConnectivityContainer(
           child: Column(

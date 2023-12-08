@@ -14,7 +14,7 @@ class DashedBox extends StatelessWidget {
     return DottedBorder(
       borderType: BorderType.RRect,
       radius: Radius.circular(Dimens.radius_base),
-      color: AppColors.grey800,
+      color: AppColors.grey800(),
       dashPattern: [8, 8],
       child: Padding(
         padding: const EdgeInsets.all(Margins.spacing_m),

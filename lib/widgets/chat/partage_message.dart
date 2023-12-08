@@ -63,7 +63,7 @@ class _PartageCard extends StatelessWidget {
       shape: border,
       child: InkWell(
         onTap: () => _onTap(context),
-        splashColor: AppColors.primaryLighten,
+        splashColor: AppColors.primaryLighten(),
         customBorder: border,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -160,7 +160,7 @@ class _SeeSharedDetails extends StatelessWidget {
           padding: const EdgeInsets.only(right: 4.0),
           child: Text(_title(), style: TextStyles.textSRegular()),
         ),
-        Icon(AppIcons.chevron_right_rounded, color: AppColors.grey800)
+        Icon(AppIcons.chevron_right_rounded, color: AppColors.grey800())
       ],
     );
   }

@@ -34,7 +34,7 @@ class DatePicker extends StatelessWidget {
       readOnly: true,
       suffixIcon: IconButton(
         onPressed: () => openDatePicker(context),
-        icon: Icon(AppIcons.today_rounded, color: AppColors.grey800),
+        icon: Icon(AppIcons.today_rounded, color: AppColors.grey800()),
       ),
       hintText: _hintText(),
       errorText: errorText,

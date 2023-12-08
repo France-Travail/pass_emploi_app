@@ -94,7 +94,7 @@ void main() {
 
     // Then
     expect(viewModel.loginButtons, [
-      LoginButtonViewModel(label: "Pôle emploi", backgroundColor: AppColors.poleEmploi, action: () {}),
+      LoginButtonViewModel(label: "Pôle emploi", backgroundColor: AppColors.poleEmploi(), action: () {}),
     ]);
   });
 
@@ -109,8 +109,8 @@ void main() {
 
     // Then
     expect(viewModel.loginButtons, [
-      LoginButtonViewModel(label: "Pôle emploi", backgroundColor: AppColors.poleEmploi, action: () {}),
-      LoginButtonViewModel(label: "pass emploi", backgroundColor: AppColors.primary, action: () {}),
+      LoginButtonViewModel(label: "Pôle emploi", backgroundColor: AppColors.poleEmploi(), action: () {}),
+      LoginButtonViewModel(label: "pass emploi", backgroundColor: AppColors.primary(), action: () {}),
     ]);
   });
 
@@ -127,9 +127,9 @@ void main() {
 
     // Then
     expect(viewModel.loginButtons, [
-      LoginButtonViewModel(label: "Pôle emploi", backgroundColor: AppColors.poleEmploi, action: () {}),
-      LoginButtonViewModel(label: "Mission Locale", backgroundColor: AppColors.missionLocale, action: () {}),
-      LoginButtonViewModel(label: "pass emploi", backgroundColor: AppColors.primary, action: () {}),
+      LoginButtonViewModel(label: "Pôle emploi", backgroundColor: AppColors.poleEmploi(), action: () {}),
+      LoginButtonViewModel(label: "Mission Locale", backgroundColor: AppColors.missionLocale(), action: () {}),
+      LoginButtonViewModel(label: "pass emploi", backgroundColor: AppColors.primary(), action: () {}),
     ]);
   });
 
@@ -144,8 +144,8 @@ void main() {
 
     // Then
     expect(viewModel.loginButtons, [
-      LoginButtonViewModel(label: "Pôle emploi", backgroundColor: AppColors.poleEmploi, action: () {}),
-      LoginButtonViewModel(label: "Mission Locale", backgroundColor: AppColors.missionLocale, action: () {}),
+      LoginButtonViewModel(label: "Pôle emploi", backgroundColor: AppColors.poleEmploi(), action: () {}),
+      LoginButtonViewModel(label: "Mission Locale", backgroundColor: AppColors.missionLocale(), action: () {}),
     ]);
   });
 

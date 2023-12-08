@@ -25,12 +25,12 @@ class HelpTooltip extends StatelessWidget {
         color: Colors.white,
         borderRadius: const BorderRadius.all(Radius.circular(4)),
         border: Border.all(
-          color: AppColors.primary,
+          color: AppColors.primary(),
         ),
       ),
       child: Icon(
         icon,
-        color: AppColors.primary,
+        color: AppColors.primary(),
       ),
     );
   }

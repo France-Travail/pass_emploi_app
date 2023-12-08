@@ -39,9 +39,9 @@ class PrimaryActionButton extends StatelessWidget {
     Color? rippleColor,
     Color? textColor,
     Color? iconColor,
-  })  : backgroundColor = backgroundColor ?? AppColors.primary,
-        disabledBackgroundColor = disabledBackgroundColor ?? AppColors.primaryWithAlpha50,
-        rippleColor = rippleColor ?? AppColors.primaryDarken,
+  })  : backgroundColor = backgroundColor ?? AppColors.primary(),
+        disabledBackgroundColor = disabledBackgroundColor ?? AppColors.primaryWithAlpha50(),
+        rippleColor = rippleColor ?? AppColors.primaryDarken(),
         textColor = textColor ?? Colors.white,
         iconColor = iconColor ?? Colors.white;
 

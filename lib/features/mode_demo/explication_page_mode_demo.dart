@@ -132,7 +132,7 @@ class _Background extends StatelessWidget {
           flex: 1,
           child: Container(
               decoration:
-                  BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(double.infinity))),
+                  BoxDecoration(color: AppColors.primary(), borderRadius: BorderRadius.circular(double.infinity))),
         ),
         Expanded(flex: 1, child: Container()),
       ],

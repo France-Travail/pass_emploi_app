@@ -93,7 +93,7 @@ class AlerteDeleteDialog extends StatelessWidget {
             top: 0,
             right: 0,
             child: IconButton(
-              icon: Icon(Icons.close, color: AppColors.primaryDarken),
+              icon: Icon(Icons.close, color: AppColors.primaryDarken()),
               onPressed: () => Navigator.pop(context),
             ),
           )
@@ -125,7 +125,7 @@ class AlerteDeleteDialog extends StatelessWidget {
       child: Text(
         Strings.alerteDeleteError,
         textAlign: TextAlign.center,
-        style: TextStyles.textSRegular(color: AppColors.warning),
+        style: TextStyles.textSRegular(color: AppColors.warning()),
       ),
     );
   }

@@ -42,7 +42,7 @@ class CejInformationFirstContentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CejInformationContentCard(
       children: [
-        Text(Strings.whyThisApp, style: TextStyles.textMBold.copyWith(color: AppColors.primary)),
+        Text(Strings.whyThisApp, style: TextStyles.textMBold.copyWith(color: AppColors.primary())),
         SizedBox(height: Margins.spacing_base),
         Text(Strings.whyThisAppDesc, style: TextStyles.textBaseRegular),
         SizedBox(height: Margins.spacing_m),
@@ -69,7 +69,7 @@ class CejInformationSecondContentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CejInformationContentCard(
       children: [
-        Text(Strings.whatIsCej, style: TextStyles.textMBold.copyWith(color: AppColors.primary)),
+        Text(Strings.whatIsCej, style: TextStyles.textMBold.copyWith(color: AppColors.primary())),
         SizedBox(height: Margins.spacing_m),
         _cardBulletPoint(AppIcons.bolt_rounded, Strings.customService),
         SizedBox(height: Margins.spacing_s),
@@ -94,7 +94,7 @@ class CejInformationThirdContentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CejInformationContentCard(
       children: [
-        Text(Strings.whoIsConcerned, style: TextStyles.textMBold.copyWith(color: AppColors.primary)),
+        Text(Strings.whoIsConcerned, style: TextStyles.textMBold.copyWith(color: AppColors.primary())),
         SizedBox(height: Margins.spacing_m),
         Center(
           child: SizedBox(
@@ -137,7 +137,7 @@ Widget _cardBulletPoint(IconData icon, String text) {
         WidgetSpan(
           child: Padding(
             padding: const EdgeInsets.only(right: Margins.spacing_s),
-            child: Icon(icon, color: AppColors.primary),
+            child: Icon(icon, color: AppColors.primary()),
           ),
         ),
         TextSpan(text: text, style: TextStyles.textBaseBold),

@@ -19,7 +19,7 @@ class ExternalLink extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => launchExternalUrl(url),
-      splashColor: AppColors.primaryLighten,
+      splashColor: AppColors.primaryLighten(),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
@@ -31,7 +31,7 @@ class ExternalLink extends StatelessWidget {
             ),
             Icon(
               AppIcons.open_in_new_rounded,
-              color: AppColors.primary,
+              color: AppColors.primary(),
               size: Dimens.icon_size_base,
             )
           ],

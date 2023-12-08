@@ -18,7 +18,7 @@ class CardContainer extends StatelessWidget {
     this.padding = const EdgeInsets.all(Margins.spacing_base),
     Color? splashColor,
     Color? backgroundColor,
-  })  : splashColor = splashColor ?? AppColors.primaryLighten,
+  })  : splashColor = splashColor ?? AppColors.primaryLighten(),
         backgroundColor = backgroundColor ?? Colors.white;
 
   @override

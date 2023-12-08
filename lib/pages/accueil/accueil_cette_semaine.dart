@@ -46,14 +46,14 @@ class AccueilCetteSemaine extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _CetteSemaineRow(
-                  icon: Icon(AppIcons.today_rounded, color: AppColors.primary),
+                  icon: Icon(AppIcons.today_rounded, color: AppColors.primary()),
                   text: item.rendezVous,
                   addBorderRadius: true,
                   onTap: () => Navigator.of(context).push(RendezvousListPage.materialPageRoute()),
                 ),
                 SepLine(0, 0),
                 _CetteSemaineRow(
-                  icon: Icon(AppIcons.error_rounded, color: AppColors.warning),
+                  icon: Icon(AppIcons.error_rounded, color: AppColors.warning()),
                   text: item.actionsDemarchesEnRetard,
                   onTap: () {
                     context.trackEvent(EventType.ACTION_LISTE);
@@ -62,7 +62,7 @@ class AccueilCetteSemaine extends StatelessWidget {
                 ),
                 SepLine(0, 0),
                 _CetteSemaineRow(
-                  icon: Icon(AppIcons.description_rounded, color: AppColors.accent1),
+                  icon: Icon(AppIcons.description_rounded, color: AppColors.accent1()),
                   text: item.actionsDemarchesARealiser,
                   onTap: () {
                     context.trackEvent(EventType.ACTION_LISTE);
@@ -71,7 +71,7 @@ class AccueilCetteSemaine extends StatelessWidget {
                 ),
                 SepLine(0, 0),
                 _CetteSemaineRow(
-                  icon: Icon(AppIcons.add_alert_rounded, color: AppColors.primary),
+                  icon: Icon(AppIcons.add_alert_rounded, color: AppColors.primary()),
                   text: Strings.vosSuggestionsAlertes,
                   onTap: () {
                     PassEmploiMatomoTracker.instance.trackScreen(AnalyticsScreenNames.accueilSuggestionsListe);
@@ -124,7 +124,7 @@ class _CetteSemaineRow extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_xs),
-                  child: Icon(AppIcons.chevron_right_rounded, color: AppColors.grey800),
+                  child: Icon(AppIcons.chevron_right_rounded, color: AppColors.grey800()),
                 ),
               ],
             ),

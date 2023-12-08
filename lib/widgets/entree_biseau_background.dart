@@ -8,10 +8,10 @@ class EntreeBiseauBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(color: AppColors.primary),
+        Container(color: AppColors.primary()),
         ClipPath(
           clipper: DiagonalClipper(),
-          child: Container(color: AppColors.primaryDarken.withOpacity(0.25)),
+          child: Container(color: AppColors.primaryDarken().withOpacity(0.25)),
         ),
       ],
     );

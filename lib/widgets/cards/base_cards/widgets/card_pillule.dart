@@ -34,32 +34,32 @@ class CardPillule extends StatelessWidget {
   CardPillule.todo()
       : icon = Icons.bolt,
         text = Strings.todoPillule,
-        contentColor = AppColors.primaryDarken,
-        backgroundColor = AppColors.accent3Lighten;
+        contentColor = AppColors.primaryDarken(),
+        backgroundColor = AppColors.accent3Lighten();
 
   CardPillule.doing()
       : icon = Icons.redo,
         text = Strings.doingPillule,
-        contentColor = AppColors.accent1,
-        backgroundColor = AppColors.accent1Lighten;
+        contentColor = AppColors.accent1(),
+        backgroundColor = AppColors.accent1Lighten();
 
   CardPillule.done()
       : icon = Icons.check_circle_outline,
         text = Strings.donePillule,
-        contentColor = AppColors.secondary,
-        backgroundColor = AppColors.secondaryLighten;
+        contentColor = AppColors.secondary(),
+        backgroundColor = AppColors.secondaryLighten();
 
   CardPillule.late()
       : icon = Icons.timer_outlined,
         text = Strings.latePillule,
-        contentColor = AppColors.warning,
-        backgroundColor = AppColors.warningLighten;
+        contentColor = AppColors.warning(),
+        backgroundColor = AppColors.warningLighten();
 
   CardPillule.canceled()
       : icon = Icons.block,
         text = Strings.canceledPillule,
-        contentColor = AppColors.disabled,
-        backgroundColor = AppColors.grey100;
+        contentColor = AppColors.disabled(),
+        backgroundColor = AppColors.grey100();
 
   @override
   Widget build(BuildContext context) {

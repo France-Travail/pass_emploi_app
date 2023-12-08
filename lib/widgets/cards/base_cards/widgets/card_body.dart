@@ -11,7 +11,7 @@ class CardBodyText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: TextStyles.textSRegular(color: AppColors.contentColor).copyWith(height: 1.7),
+      style: TextStyles.textSRegular(color: AppColors.contentColor()).copyWith(height: 1.7),
     );
   }
 }

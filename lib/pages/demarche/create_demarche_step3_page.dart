@@ -65,7 +65,7 @@ class _CreateDemarcheStep3PageState extends State<CreateDemarcheStep3Page> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(viewModel.quoi, style: TextStyles.textBaseBoldWithColor(AppColors.primary)),
+                Text(viewModel.quoi, style: TextStyles.textBaseBoldWithColor(AppColors.primary())),
                 if (viewModel.isCommentMandatory) _Mandatory(),
                 if (viewModel.comments.isNotEmpty) _Section(Strings.comment),
                 if (viewModel.isCommentMandatory) _SelectLabel(Strings.selectComment),
@@ -177,7 +177,7 @@ class _Section extends StatelessWidget {
               children: [
                 TextSpan(
                   text: '•',
-                  style: TextStyle(color: AppColors.primary, fontSize: FontSizes.huge, fontWeight: FontWeight.w900),
+                  style: TextStyle(color: AppColors.primary(), fontSize: FontSizes.huge, fontWeight: FontWeight.w900),
                 ),
                 WidgetSpan(child: SizedBox(width: Margins.spacing_base)),
                 TextSpan(text: _section, style: TextStyles.textMBold),

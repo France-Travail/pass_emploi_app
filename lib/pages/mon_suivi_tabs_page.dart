@@ -52,7 +52,7 @@ class _MonSuiviTabPageState extends State<MonSuiviTabPage> with SingleTickerProv
   Widget _builder(MonSuiviViewModel viewModel) {
     _initializeTabController(viewModel);
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: AppColors.grey100(),
       appBar: PrimaryAppBar(title: Strings.monSuiviAppBarTitle),
       body: ConnectivityContainer(child: _getBody(viewModel)),
     );

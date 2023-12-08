@@ -7,7 +7,7 @@ class TextStyles {
 
   static TextStyle textLBold({Color? color}) {
     return TextStyle(
-      color: color ?? AppColors.contentColor,
+      color: color ?? AppColors.contentColor(),
       fontSize: FontSizes.huge,
       fontWeight: FontWeight.w700,
       fontFamily: "Marianne",
@@ -25,7 +25,7 @@ class TextStyles {
 
   static TextStyle textSMedium({Color? color}) {
     return TextStyle(
-      color: color ?? AppColors.contentColor,
+      color: color ?? AppColors.contentColor(),
       fontSize: FontSizes.normal,
       fontWeight: FontWeight.w500,
       fontFamily: 'Marianne',
@@ -52,7 +52,7 @@ class TextStyles {
 
   static TextStyle textXsRegular({Color? color}) {
     return TextStyle(
-      color: color ?? AppColors.contentColor,
+      color: color ?? AppColors.contentColor(),
       fontSize: FontSizes.xs,
       fontWeight: FontWeight.w400,
       fontFamily: 'Marianne',
@@ -76,7 +76,7 @@ class TextStyles {
   );
 
   static final externalLink = TextStyle(
-    color: AppColors.primaryDarken,
+    color: AppColors.primaryDarken(),
     fontSize: FontSizes.medium,
     fontWeight: FontWeight.w700,
     fontFamily: 'Marianne',
@@ -84,7 +84,7 @@ class TextStyles {
   );
 
   static final internalLink = TextStyle(
-    color: AppColors.primary,
+    color: AppColors.primary(),
     fontSize: FontSizes.medium,
     fontWeight: FontWeight.w400,
     fontFamily: 'Marianne',
@@ -92,28 +92,28 @@ class TextStyles {
   );
 
   static final textSecondaryButton = TextStyle(
-    color: AppColors.primary,
+    color: AppColors.primary(),
     fontSize: FontSizes.medium,
     fontWeight: FontWeight.w700,
     fontFamily: 'Marianne',
   );
 
   static final textBaseBold = TextStyle(
-    color: AppColors.contentColor,
+    color: AppColors.contentColor(),
     fontFamily: 'Marianne',
     fontSize: FontSizes.medium,
     fontWeight: FontWeight.w700,
   );
 
   static final textBaseRegular = TextStyle(
-    color: AppColors.contentColor,
+    color: AppColors.contentColor(),
     fontFamily: 'Marianne',
     fontSize: FontSizes.medium,
     fontWeight: FontWeight.w400,
   );
 
   static final textBaseUnderline = TextStyle(
-    color: AppColors.primary,
+    color: AppColors.primary(),
     fontFamily: 'Marianne',
     fontSize: FontSizes.medium,
     fontWeight: FontWeight.w500,
@@ -122,7 +122,7 @@ class TextStyles {
 
   static TextStyle textBaseMediumBold({Color? color}) {
     return TextStyle(
-      color: color ?? AppColors.contentColor,
+      color: color ?? AppColors.contentColor(),
       fontFamily: 'Marianne',
       fontSize: FontSizes.medium,
       fontWeight: FontWeight.w600,
@@ -130,7 +130,7 @@ class TextStyles {
   }
 
   static final textBaseMedium = TextStyle(
-    color: AppColors.contentColor,
+    color: AppColors.contentColor(),
     fontFamily: 'Marianne',
     fontSize: FontSizes.medium,
     fontWeight: FontWeight.w500,
@@ -138,7 +138,7 @@ class TextStyles {
 
   static TextStyle textMBoldWithColor({Color? color}) {
     return TextStyle(
-      color: color ?? AppColors.contentColor,
+      color: color ?? AppColors.contentColor(),
       fontFamily: 'Marianne',
       fontSize: FontSizes.semi,
       fontWeight: FontWeight.w700,
@@ -146,21 +146,21 @@ class TextStyles {
   }
 
   static final textMRegular = TextStyle(
-    color: AppColors.contentColor,
+    color: AppColors.contentColor(),
     fontFamily: 'Marianne',
     fontSize: FontSizes.semi,
     fontWeight: FontWeight.w400,
   );
 
   static final textSBold = TextStyle(
-    color: AppColors.contentColor,
+    color: AppColors.contentColor(),
     fontFamily: 'Marianne',
     fontSize: FontSizes.normal,
     fontWeight: FontWeight.w700,
   );
 
   static final textMBold = TextStyle(
-    color: AppColors.contentColor,
+    color: AppColors.contentColor(),
     fontFamily: 'Marianne',
     fontSize: FontSizes.semi,
     fontWeight: FontWeight.w700,
@@ -168,7 +168,7 @@ class TextStyles {
 
   static TextStyle textSRegular({Color? color}) {
     return TextStyle(
-      color: color ?? AppColors.contentColor,
+      color: color ?? AppColors.contentColor(),
       fontFamily: 'Marianne',
       fontSize: FontSizes.normal,
       fontWeight: FontWeight.w400,
@@ -176,15 +176,15 @@ class TextStyles {
   }
 
   static TextStyle primaryAppBar = TextStyle(
-    color: AppColors.primary,
+    color: AppColors.primary(),
     fontFamily: 'Marianne',
     fontSize: FontSizes.xl,
     fontWeight: FontWeight.w700,
   );
 
-  static final secondaryAppBar = TextStyles.textLBold(color: AppColors.primary);
+  static final secondaryAppBar = TextStyles.textLBold(color: AppColors.primary());
 
-  static final accueilSection = TextStyles.textLBold(color: AppColors.primary);
+  static final accueilSection = TextStyles.textLBold(color: AppColors.primary());
 
   static TextStyle textBaseMediumWithColor(Color color) {
     return TextStyle(

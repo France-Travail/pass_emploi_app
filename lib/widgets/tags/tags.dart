@@ -16,8 +16,8 @@ class DataTag extends StatelessWidget {
     this.icon,
     Color? contentColor,
     Color? backgroundColor,
-  })  : contentColor = contentColor ?? AppColors.primary,
-        backgroundColor = backgroundColor ?? AppColors.primaryLighten;
+  })  : contentColor = contentColor ?? AppColors.primary(),
+        backgroundColor = backgroundColor ?? AppColors.primaryLighten();
 
   @override
   Widget build(BuildContext context) {

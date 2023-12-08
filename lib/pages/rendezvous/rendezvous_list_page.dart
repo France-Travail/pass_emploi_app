@@ -114,7 +114,7 @@ class _Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: AppColors.grey100(),
       body: Center(child: DefaultAnimatedSwitcher(child: body)),
     );
   }
@@ -335,7 +335,7 @@ class _DateHeader extends StatelessWidget {
           if (viewModel.withPreviousPageButton)
             SecondaryIconButton(
               icon: AppIcons.chevron_left_rounded,
-              iconColor: AppColors.primary,
+              iconColor: AppColors.primary(),
               borderColor: Colors.transparent,
               onTap: () {
                 onPageOffsetChanged(-1);
@@ -349,7 +349,7 @@ class _DateHeader extends StatelessWidget {
                 Text(
                   viewModel.title,
                   style: viewModel.pageOffset == 0
-                      ? TextStyles.textMBold.copyWith(color: AppColors.primary)
+                      ? TextStyles.textMBold.copyWith(color: AppColors.primary())
                       : TextStyles.textMBold,
                 ),
                 SizedBox(height: 4),
@@ -363,7 +363,7 @@ class _DateHeader extends StatelessWidget {
           if (viewModel.withNextPageButton)
             SecondaryIconButton(
               icon: AppIcons.chevron_right_rounded,
-              iconColor: AppColors.primary,
+              iconColor: AppColors.primary(),
               borderColor: Colors.transparent,
               onTap: () {
                 onPageOffsetChanged(1);

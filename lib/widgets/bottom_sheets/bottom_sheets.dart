@@ -46,7 +46,7 @@ class BottomSheetHeader extends StatelessWidget implements PreferredSizeWidget {
                     tooltip: Strings.close,
                     icon: Icon(
                       AppIcons.close_rounded,
-                      color: AppColors.contentColor,
+                      color: AppColors.contentColor(),
                     ),
                   ),
                 ),

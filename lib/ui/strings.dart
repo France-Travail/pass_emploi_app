@@ -857,6 +857,7 @@ class Strings {
   static String developerOptions = 'Options développeurs';
   static String developerOptionMatomo = 'Données envoyées à Matomo';
   static String developerOptionMatomoPage = 'Matomo';
+  static String developerOptionColorInspector = 'Inspection des couleurs';
 
   // Tutorial
   static String seeLater = "Voir plus tard";

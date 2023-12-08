@@ -27,7 +27,7 @@ class _FocusedBorderBuilderState extends State<FocusedBorderBuilder> {
     return Container(
       padding: _focusNode.hasFocus ? EdgeInsets.all(2) : null,
       decoration: BoxDecoration(
-        border: _focusNode.hasFocus ? Border.all(color: AppColors.primary, width: 2) : null,
+        border: _focusNode.hasFocus ? Border.all(color: AppColors.primary(), width: 2) : null,
         borderRadius: BorderRadius.circular(360),
       ),
       child: widget.builder(_focusNode),

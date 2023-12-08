@@ -69,8 +69,8 @@ class DemarcheDetailViewModel extends Equatable {
       modifiedByAdvisor: demarche.modifiedByAdvisor,
       withOfflineBehavior: store.state.connectivityState.isOffline(),
       dateFormattedTexts: _formattedDate(demarche),
-      dateBackgroundColor: isLate ? AppColors.warningLighten : AppColors.accent3Lighten,
-      dateTextColor: isLate ? AppColors.warning : AppColors.accent2,
+      dateBackgroundColor: isLate ? AppColors.warningLighten() : AppColors.accent3Lighten(),
+      dateTextColor: isLate ? AppColors.warning() : AppColors.accent2(),
       dateIcons: [AppIcons.schedule_rounded],
       label: demarche.label,
       titreDetail: demarche.titre,
@@ -139,29 +139,29 @@ UserActionTagViewModel _getTagViewModel(DemarcheStatus status, DemarcheStatus cu
     case DemarcheStatus.NOT_STARTED:
       return UserActionTagViewModel(
         title: Strings.todoPillule,
-        backgroundColor: isSelected ? AppColors.accent1Lighten : Colors.transparent,
-        textColor: isSelected ? AppColors.accent1 : AppColors.grey800,
+        backgroundColor: isSelected ? AppColors.accent1Lighten() : Colors.transparent,
+        textColor: isSelected ? AppColors.accent1() : AppColors.grey800(),
         isSelected: isSelected,
       );
     case DemarcheStatus.IN_PROGRESS:
       return UserActionTagViewModel(
         title: Strings.doingPillule,
-        backgroundColor: isSelected ? AppColors.accent3Lighten : Colors.transparent,
-        textColor: isSelected ? AppColors.accent3 : AppColors.grey800,
+        backgroundColor: isSelected ? AppColors.accent3Lighten() : Colors.transparent,
+        textColor: isSelected ? AppColors.accent3() : AppColors.grey800(),
         isSelected: isSelected,
       );
     case DemarcheStatus.DONE:
       return UserActionTagViewModel(
         title: Strings.donePillule,
-        backgroundColor: isSelected ? AppColors.accent2Lighten : Colors.transparent,
-        textColor: isSelected ? AppColors.accent2 : AppColors.grey800,
+        backgroundColor: isSelected ? AppColors.accent2Lighten() : Colors.transparent,
+        textColor: isSelected ? AppColors.accent2() : AppColors.grey800(),
         isSelected: isSelected,
       );
     case DemarcheStatus.CANCELLED:
       return UserActionTagViewModel(
         title: Strings.canceledPillule,
-        backgroundColor: isSelected ? AppColors.accent2Lighten : Colors.transparent,
-        textColor: isSelected ? AppColors.accent2 : AppColors.grey800,
+        backgroundColor: isSelected ? AppColors.accent2Lighten() : Colors.transparent,
+        textColor: isSelected ? AppColors.accent2() : AppColors.grey800(),
         isSelected: isSelected,
       );
   }

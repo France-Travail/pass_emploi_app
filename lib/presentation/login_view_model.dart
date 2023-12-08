@@ -43,19 +43,19 @@ List<LoginButtonViewModel> _loginButtons(Store<AppState> store, Flavor flavor, B
   return [
     LoginButtonViewModel(
       label: Strings.loginPoleEmploi,
-      backgroundColor: AppColors.poleEmploi,
+      backgroundColor: AppColors.poleEmploi(),
       action: () => store.dispatch(RequestLoginAction(RequestLoginMode.POLE_EMPLOI)),
     ),
     if (brand == Brand.cej)
       LoginButtonViewModel(
         label: Strings.loginMissionLocale,
-        backgroundColor: AppColors.missionLocale,
+        backgroundColor: AppColors.missionLocale(),
         action: () => store.dispatch(RequestLoginAction(RequestLoginMode.SIMILO)),
       ),
     if (flavor == Flavor.STAGING)
       LoginButtonViewModel(
         label: Strings.loginPassEmploi,
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primary(),
         action: () => store.dispatch(RequestLoginAction(RequestLoginMode.PASS_EMPLOI)),
       ),
   ];

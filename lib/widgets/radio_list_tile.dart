@@ -14,7 +14,7 @@ class RadioGroup<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return RadioListTile<T>(
       contentPadding: EdgeInsets.zero,
-      activeColor: AppColors.primary,
+      activeColor: AppColors.primary(),
       title: Text(title, style: TextStyles.textBaseMedium),
       controlAffinity: ListTileControlAffinity.leading,
       value: value,

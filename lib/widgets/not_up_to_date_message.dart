@@ -20,7 +20,7 @@ class NotUpToDateMessage extends StatelessWidget {
       margin: margin,
       padding: EdgeInsets.all(Margins.spacing_base),
       decoration: BoxDecoration(
-        color: AppColors.disabled,
+        color: AppColors.disabled(),
         borderRadius: BorderRadius.circular(Dimens.radius_base),
       ),
       child: Column(

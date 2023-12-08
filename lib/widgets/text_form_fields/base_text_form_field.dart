@@ -93,21 +93,21 @@ class BaseTextField extends StatelessWidget {
   OutlineInputBorder _idleBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(Dimens.radius_base),
-      borderSide: BorderSide(color: AppColors.contentColor, width: 1.0),
+      borderSide: BorderSide(color: AppColors.contentColor(), width: 1.0),
     );
   }
 
   OutlineInputBorder _focusedBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(Dimens.radius_base),
-      borderSide: BorderSide(color: AppColors.primary, width: 2.0),
+      borderSide: BorderSide(color: AppColors.primary(), width: 2.0),
     );
   }
 
   OutlineInputBorder _errorBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(Dimens.radius_base),
-      borderSide: BorderSide(color: AppColors.warning, width: 2.0),
+      borderSide: BorderSide(color: AppColors.warning(), width: 2.0),
     );
   }
 }

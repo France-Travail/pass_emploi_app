@@ -104,7 +104,7 @@ class ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
 
   Widget _builder(ChatPageViewModel viewModel, Widget body) {
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: AppColors.grey100(),
       appBar: PrimaryAppBar(title: Strings.menuChat),
       body: ConnectivityContainer(
         child: Column(
@@ -178,7 +178,7 @@ class ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                 ),
                 SizedBox(width: Margins.spacing_s),
                 FloatingActionButton(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: AppColors.primary(),
                   child: Icon(
                     AppIcons.send_rounded,
                     color: Colors.white,

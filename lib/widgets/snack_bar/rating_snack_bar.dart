@@ -48,7 +48,7 @@ class _DismissSnackBar extends StatelessWidget {
       onTap: () => _onDismiss(context, viewModel),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 15, 5, 0),
-        child: Icon(AppIcons.close_rounded, color: AppColors.contentColor),
+        child: Icon(AppIcons.close_rounded, color: AppColors.contentColor()),
       ),
     );
   }
@@ -85,7 +85,7 @@ class _OnRatingTap extends StatelessWidget {
       },
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 50, 35, 0),
-        child: Icon(AppIcons.chevron_right_rounded, color: AppColors.contentColor),
+        child: Icon(AppIcons.chevron_right_rounded, color: AppColors.contentColor()),
       ),
     );
   }

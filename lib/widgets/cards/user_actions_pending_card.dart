@@ -17,7 +17,7 @@ class UserActionsPendingCard extends StatelessWidget {
         ? Strings.pendingActionCreationPlural(userActionsPostponedCount)
         : Strings.pendingActionCreationSingular;
     return CardContainer(
-      backgroundColor: AppColors.disabled,
+      backgroundColor: AppColors.disabled(),
       child: Row(
         children: [
           Icon(AppIcons.error_rounded, color: Colors.white),

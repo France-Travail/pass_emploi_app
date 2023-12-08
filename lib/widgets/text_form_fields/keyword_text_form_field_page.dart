@@ -171,7 +171,7 @@ class _MotCleListTile extends StatelessWidget {
           Icon(
             source == MotCleSource.dernieresRecherches ? AppIcons.schedule_rounded : AppIcons.bolt_rounded,
             size: Dimens.icon_size_base,
-            color: AppColors.grey800,
+            color: AppColors.grey800(),
           ),
           SizedBox(width: Margins.spacing_s),
           Expanded(child: Text(motCle, style: TextStyles.textBaseRegular)),

@@ -162,13 +162,13 @@ class _Categorie extends StatelessWidget {
       alignment: Alignment.topLeft,
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.accent2),
+          border: Border.all(color: AppColors.accent2()),
           borderRadius: BorderRadius.circular(30),
         ),
         padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 12),
         child: Text(
           label,
-          style: TextStyles.textBaseRegularWithColor(AppColors.accent2),
+          style: TextStyles.textBaseRegularWithColor(AppColors.accent2()),
         ),
       ),
     );
@@ -229,7 +229,7 @@ class _AttributItem extends StatelessWidget {
         children: [
           Icon(
             AppIcons.place_outlined,
-            color: AppColors.grey700,
+            color: AppColors.grey700(),
             size: Dimens.icon_size_m,
           ),
           SizedBox(width: 12),
@@ -247,7 +247,7 @@ class _DetailDemarcheTitle extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(color: AppColors.primaryLighten, height: 1),
+        Container(color: AppColors.primaryLighten(), height: 1),
         SizedBox(height: 20),
         Text(Strings.demarcheDetails, style: TextStyles.textBaseBold),
       ],
@@ -262,7 +262,7 @@ class _StatutTitle extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(color: AppColors.primaryLighten, height: 1),
+        Container(color: AppColors.primaryLighten(), height: 1),
         SizedBox(
           height: 20,
         ),
@@ -350,7 +350,7 @@ class _HistoriqueTitle extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(color: AppColors.primaryLighten, height: 1),
+        Container(color: AppColors.primaryLighten(), height: 1),
         SizedBox(
           height: 20,
         ),
@@ -371,7 +371,7 @@ class _Historique extends StatelessWidget {
       padding: const EdgeInsets.only(left: 10),
       decoration: BoxDecoration(
           border: Border(
-        left: BorderSide(color: AppColors.grey500, width: 1),
+            left: BorderSide(color: AppColors.grey500(), width: 1),
       )),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

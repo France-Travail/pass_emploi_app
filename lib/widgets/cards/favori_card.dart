@@ -61,7 +61,7 @@ class FavoriCard<T> extends StatelessWidget {
   }) : specialAction = IconButton(
           icon: Icon(AppIcons.delete),
           onPressed: onDelete,
-          color: AppColors.primary,
+          color: AppColors.primary(),
         );
 
   @override

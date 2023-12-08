@@ -88,8 +88,8 @@ class _LogTag extends StatelessWidget {
   }
 
   Color _color() {
-    if (log.contains(PassEmploiMatomoTracker.eventLogPrefix)) return AppColors.additional1;
-    if (log.contains(PassEmploiMatomoTracker.outLinkLogPrefix)) return AppColors.additional3;
-    return AppColors.additional5;
+    if (log.contains(PassEmploiMatomoTracker.eventLogPrefix)) return AppColors.additional12();
+    if (log.contains(PassEmploiMatomoTracker.outLinkLogPrefix)) return AppColors.additional32();
+    return AppColors.additional52();
   }
 }

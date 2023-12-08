@@ -19,7 +19,7 @@ class ProfileButton extends StatelessWidget {
           height: 48,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: isDarkColor ? AppColors.primary : AppColors.grey100,
+            color: isDarkColor ? AppColors.primary() : AppColors.grey100(),
           ),
           child: IconButton(
             focusNode: focusNode,
@@ -29,7 +29,7 @@ class ProfileButton extends StatelessWidget {
               child: Icon(
                 Icons.person_outline_rounded,
                 size: 24,
-                color: isDarkColor ? AppColors.grey100 : AppColors.primary,
+                color: isDarkColor ? AppColors.grey100() : AppColors.primary(),
               ),
             ),
           ),

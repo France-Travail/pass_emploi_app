@@ -27,7 +27,7 @@ class RechercheEvenementEmploiPage extends RechercheOffrePage<EvenementEmploi> {
 
   static Widget withPrimaryAppBar() {
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: AppColors.grey100(),
       appBar: PrimaryAppBar(title: Strings.eventAppBarTitle),
       body: ConnectivityContainer(child: RechercheEvenementEmploiPage()),
     );

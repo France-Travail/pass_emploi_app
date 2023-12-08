@@ -20,40 +20,40 @@ class Illustration extends StatelessWidget {
     IconData icon,
   ) {
     return Illustration(
-      primaryColor: AppColors.warning,
-      secondaryColor: AppColors.warningLighten,
+      primaryColor: AppColors.warning(),
+      secondaryColor: AppColors.warningLighten(),
       icon: icon,
     );
   }
 
   factory Illustration.blue(IconData icon) {
     return Illustration(
-      primaryColor: AppColors.primary,
-      secondaryColor: AppColors.primaryLighten,
+      primaryColor: AppColors.primary(),
+      secondaryColor: AppColors.primaryLighten(),
       icon: icon,
     );
   }
 
   factory Illustration.green(IconData icon) {
     return Illustration(
-      primaryColor: AppColors.success,
-      secondaryColor: AppColors.successLighten,
+      primaryColor: AppColors.success(),
+      secondaryColor: AppColors.successLighten(),
       icon: icon,
     );
   }
 
   factory Illustration.orange(IconData icon) {
     return Illustration(
-      primaryColor: AppColors.alert,
-      secondaryColor: AppColors.alertLighten,
+      primaryColor: AppColors.alert(),
+      secondaryColor: AppColors.alertLighten(),
       icon: icon,
     );
   }
 
   factory Illustration.grey(IconData icon, {bool withWhiteBackground = false}) {
     return Illustration(
-      primaryColor: AppColors.disabled,
-      secondaryColor: withWhiteBackground ? Colors.white : AppColors.grey100,
+      primaryColor: AppColors.disabled(),
+      secondaryColor: withWhiteBackground ? Colors.white : AppColors.grey100(),
       icon: icon,
     );
   }

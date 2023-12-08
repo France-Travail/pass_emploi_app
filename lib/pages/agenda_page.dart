@@ -78,7 +78,7 @@ class _Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: AppColors.grey100(),
       body: Stack(children: [
         DefaultAnimatedSwitcher(child: _Body(viewModel: viewModel, onActionDelayedTap: onActionDelayedTap)),
         if (viewModel.createButton == CreateButton.userAction)
@@ -138,7 +138,7 @@ class _CreateButton extends StatelessWidget {
         child: PrimaryActionButton(
           label: label,
           icon: AppIcons.add_rounded,
-          rippleColor: AppColors.primaryDarken,
+          rippleColor: AppColors.primaryDarken(),
           onPressed: onPressed,
         ),
       ),
@@ -279,7 +279,7 @@ class _WarningIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 10),
-      child: Icon(AppIcons.error_rounded, color: AppColors.warning, size: Dimens.icon_size_m),
+      child: Icon(AppIcons.error_rounded, color: AppColors.warning(), size: Dimens.icon_size_m),
     );
   }
 }
@@ -289,7 +289,7 @@ class _ChevronIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Icon(AppIcons.chevron_right_rounded, color: AppColors.contentColor),
+      child: Icon(AppIcons.chevron_right_rounded, color: AppColors.contentColor()),
     );
   }
 }
@@ -305,8 +305,8 @@ class _NumberOfDelayedActions extends StatelessWidget {
       child: RichText(
         text: TextSpan(
           children: [
-            TextSpan(text: Strings.late, style: TextStyles.textBaseBoldWithColor(AppColors.warning)),
-            TextSpan(text: delayedLabel, style: TextStyles.textSRegularWithColor(AppColors.warning))
+            TextSpan(text: Strings.late, style: TextStyles.textBaseBoldWithColor(AppColors.warning())),
+            TextSpan(text: delayedLabel, style: TextStyles.textSRegularWithColor(AppColors.warning()))
           ],
         ),
       ),
@@ -354,7 +354,7 @@ class _MessageAgendaItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       emptyMessageAgendaItem.text,
-      style: TextStyles.textBaseRegularWithColor(AppColors.grey700),
+      style: TextStyles.textBaseRegularWithColor(AppColors.grey700()),
     );
   }
 }

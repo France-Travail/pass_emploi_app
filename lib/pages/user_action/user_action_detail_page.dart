@@ -218,7 +218,7 @@ class _ActionDetailPageState extends State<UserActionDetailPage> {
 class _Separator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(height: 1, color: AppColors.primaryLighten);
+    return Container(height: 1, color: AppColors.primaryLighten());
   }
 }
 
@@ -331,11 +331,11 @@ class _DeleteAction extends StatelessWidget {
           PrimaryActionButton(
             onPressed: viewModel.withOfflineBehavior ? null : () => onDeleteAction(viewModel),
             label: Strings.deleteAction,
-            textColor: AppColors.warning,
+            textColor: AppColors.warning(),
             fontSize: FontSizes.normal,
-            backgroundColor: AppColors.warningLighten,
-            disabledBackgroundColor: AppColors.warningLighten,
-            rippleColor: AppColors.warningLighten,
+            backgroundColor: AppColors.warningLighten(),
+            disabledBackgroundColor: AppColors.warningLighten(),
+            rippleColor: AppColors.warningLighten(),
             withShadow: false,
           ),
           if (viewModel.deleteDisplayState == DeleteDisplayState.SHOW_DELETE_ERROR)
@@ -344,7 +344,7 @@ class _DeleteAction extends StatelessWidget {
               child: Text(
                 Strings.deleteActionError,
                 textAlign: TextAlign.center,
-                style: TextStyles.textSRegular(color: AppColors.warning),
+                style: TextStyles.textSRegular(color: AppColors.warning()),
               ),
             ),
         ],

@@ -16,8 +16,8 @@ class JobTag extends StatelessWidget {
     required this.label,
     Color? contentColor,
     Color? backgroundColor,
-  })  : contentColor = contentColor ?? AppColors.contentColor,
-        backgroundColor = backgroundColor ?? AppColors.additional1Lighten;
+  })  : contentColor = contentColor ?? AppColors.contentColor(),
+        backgroundColor = backgroundColor ?? AppColors.additional1Lighten();
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +36,13 @@ extension JobOffreTypeExt on OffreType {
   Widget toJobTag() {
     switch (this) {
       case OffreType.emploi:
-        return JobTag(label: Strings.emploiTag, backgroundColor: AppColors.additional4Lighten);
+        return JobTag(label: Strings.emploiTag, backgroundColor: AppColors.additional4Lighten());
       case OffreType.alternance:
-        return JobTag(label: Strings.alternanceTag, backgroundColor: AppColors.additional3Lighten);
+        return JobTag(label: Strings.alternanceTag, backgroundColor: AppColors.additional3Lighten());
       case OffreType.immersion:
-        return JobTag(label: Strings.immersionTag, backgroundColor: AppColors.additional1Lighten);
+        return JobTag(label: Strings.immersionTag, backgroundColor: AppColors.additional1Lighten());
       case OffreType.serviceCivique:
-        return JobTag(label: Strings.serviceCiviqueTag, backgroundColor: AppColors.additional2Lighten);
+        return JobTag(label: Strings.serviceCiviqueTag, backgroundColor: AppColors.additional2Lighten());
     }
   }
 }

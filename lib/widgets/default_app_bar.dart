@@ -21,17 +21,17 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconColor = Brand.isCej() ? Colors.black : AppColors.grey100;
+    final iconColor = Brand.isCej() ? Colors.black : AppColors.grey100();
     return AppBar(
       toolbarHeight: toolBarHeight,
       leading: canPop ? BackButton(color: iconColor) : null,
       scrolledUnderElevation: 0,
-      backgroundColor: Brand.isCej() ? AppColors.grey100 : AppColors.primary,
+      backgroundColor: Brand.isCej() ? AppColors.grey100() : AppColors.primary(),
       title: Semantics(
         header: true,
         child: Text(
           title,
-          style: TextStyles.primaryAppBar.copyWith(color: Brand.isCej() ? AppColors.primary : AppColors.grey100),
+          style: TextStyles.primaryAppBar.copyWith(color: Brand.isCej() ? AppColors.primary() : AppColors.grey100()),
           overflow: TextOverflow.fade,
         ),
       ),
@@ -89,7 +89,7 @@ class ModeDemoAppBar extends StatelessWidget implements PreferredSizeWidget {
       titleSpacing: 0,
       elevation: 0,
       scrolledUnderElevation: 0,
-      backgroundColor: AppColors.warningLighten,
+      backgroundColor: AppColors.warningLighten(),
       title: Padding(
         padding: const EdgeInsets.symmetric(vertical: Margins.spacing_base, horizontal: Margins.spacing_m),
         child: Row(
@@ -97,13 +97,13 @@ class ModeDemoAppBar extends StatelessWidget implements PreferredSizeWidget {
           children: [
             Icon(
               AppIcons.info_rounded,
-              color: AppColors.warning,
+              color: AppColors.warning(),
             ),
             SizedBox(width: Margins.spacing_base),
             Expanded(
               child: Text(
                 Strings.modeDemoAppBarLabel,
-                style: TextStyles.textBaseBoldWithColor(AppColors.warning),
+                style: TextStyles.textBaseBoldWithColor(AppColors.warning()),
               ),
             ),
           ],

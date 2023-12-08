@@ -43,5 +43,5 @@ class DefaultMenuItem extends StatelessWidget {
 }
 
 Color _itemColor(bool isActive) {
-  return isActive ? AppColors.primary : AppColors.grey800;
+  return isActive ? AppColors.primary() : AppColors.grey800();
 }

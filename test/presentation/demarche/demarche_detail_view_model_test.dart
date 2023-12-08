@@ -69,19 +69,19 @@ void main() {
         [
           UserActionTagViewModel(
             title: "À réaliser",
-            backgroundColor: AppColors.accent1Lighten,
-            textColor: AppColors.accent1,
+            backgroundColor: AppColors.accent1Lighten(),
+            textColor: AppColors.accent1(),
             isSelected: true,
           ),
           UserActionTagViewModel(
             title: "En cours",
             backgroundColor: Colors.transparent,
-            textColor: AppColors.grey800,
+            textColor: AppColors.grey800(),
           ),
           UserActionTagViewModel(
             title: "Terminée",
             backgroundColor: Colors.transparent,
-            textColor: AppColors.grey800,
+            textColor: AppColors.grey800(),
           ),
         ],
       );
@@ -228,7 +228,7 @@ void main() {
     viewModel.onModifyStatus(UserActionTagViewModel(
       title: "Terminée",
       backgroundColor: Colors.transparent,
-      textColor: AppColors.grey800,
+      textColor: AppColors.grey800(),
     ));
 
     // Then

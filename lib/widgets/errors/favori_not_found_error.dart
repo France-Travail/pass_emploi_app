@@ -11,7 +11,7 @@ class FavoriNotFoundError extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: Container(
-        color: AppColors.warningLighten,
+        color: AppColors.warningLighten(),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -19,13 +19,13 @@ class FavoriNotFoundError extends StatelessWidget {
               Text(
                 Strings.offreNotFoundError,
                 style: TextStyles.textSBoldWithColor(
-                  AppColors.warning,
+                  AppColors.warning(),
                 ),
               ),
               SizedBox(height: 8),
               Text(
                 Strings.offreNotFoundExplaination,
-                style: TextStyles.textSRegular(color: AppColors.warning),
+                style: TextStyles.textSRegular(color: AppColors.warning()),
               ),
             ],
           ),

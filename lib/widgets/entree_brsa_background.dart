@@ -8,10 +8,10 @@ class EntreeBrsaBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(color: AppColors.primary),
+        Container(color: AppColors.primary()),
         ClipPath(
           clipper: HalfCircleClipper(),
-          child: Container(color: AppColors.primaryLighten),
+          child: Container(color: AppColors.primaryLighten()),
         ),
       ],
     );

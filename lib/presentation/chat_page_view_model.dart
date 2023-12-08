@@ -154,7 +154,7 @@ Color? _captionColor(Message message) {
   return switch (message.status) {
     MessageStatus.sending => null,
     MessageStatus.sent => null,
-    MessageStatus.failed => AppColors.warning,
+    MessageStatus.failed => AppColors.warning(),
   };
 }
 

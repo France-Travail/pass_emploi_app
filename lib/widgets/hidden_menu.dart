@@ -133,7 +133,7 @@ class _DeviceInfosDialog extends StatelessWidget {
                 IconButton(
                   icon: Icon(
                     Icons.copy,
-                    color: AppColors.primary,
+                    color: AppColors.primary(),
                   ),
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: viewmodel.installationId));

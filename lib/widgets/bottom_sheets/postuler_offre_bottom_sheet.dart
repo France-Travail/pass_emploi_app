@@ -22,7 +22,7 @@ class PostulerOffreBottomSheet extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(AppIcons.description_rounded, color: AppColors.primary),
+              Icon(AppIcons.description_rounded, color: AppColors.primary()),
               SizedBox(width: Margins.spacing_base),
               Expanded(child: Text(Strings.postulerTitle, style: TextStyles.textMBold))
             ],

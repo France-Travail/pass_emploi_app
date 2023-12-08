@@ -11,7 +11,7 @@ class PressedTip extends StatelessWidget {
   final IconData icon;
 
   PressedTip(this.tip, {Color? textColor, IconData? icon})
-      : textColor = textColor ?? AppColors.contentColor,
+      : textColor = textColor ?? AppColors.contentColor(),
         icon = icon ?? AppIcons.chevron_right_rounded;
 
   factory PressedTip.externalLink(String tip) {

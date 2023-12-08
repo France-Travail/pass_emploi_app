@@ -186,7 +186,7 @@ class Link extends StatelessWidget {
             SizedBox(width: Margins.spacing_s),
             Padding(
               padding: const EdgeInsets.only(bottom: 3),
-              child: Icon(AppIcons.open_in_new_rounded, color: AppColors.primary),
+              child: Icon(AppIcons.open_in_new_rounded, color: AppColors.primary()),
             )
           ],
         ),

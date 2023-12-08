@@ -121,7 +121,7 @@ class _RendezvousDetailsPageState extends State<RendezvousDetailsPage> {
             ],
             JobTag(
               label: viewModel.tag,
-              backgroundColor: viewModel.greenTag ? AppColors.accent3Lighten : AppColors.accent2Lighten,
+              backgroundColor: viewModel.greenTag ? AppColors.accent3Lighten() : AppColors.accent2Lighten(),
             ),
             SizedBox(height: Margins.spacing_base),
             _Header(viewModel),
@@ -166,11 +166,11 @@ class _Header extends StatelessWidget {
         SizedBox(height: Margins.spacing_m),
         Row(
           children: [
-            Icon(AppIcons.today_rounded, color: AppColors.grey800),
+            Icon(AppIcons.today_rounded, color: AppColors.grey800()),
             SizedBox(width: Margins.spacing_s),
             Text(viewModel.date, style: TextStyles.textBaseBold),
             Expanded(child: SizedBox()),
-            Icon(AppIcons.schedule_rounded, color: AppColors.grey800),
+            Icon(AppIcons.schedule_rounded, color: AppColors.grey800()),
             SizedBox(width: Margins.spacing_s),
             Text(viewModel.hourAndDuration, style: TextStyles.textBaseBold),
           ],
@@ -248,7 +248,7 @@ class _Modality extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: Margins.spacing_xs),
-                  child: Icon(AppIcons.place_outlined, color: AppColors.grey800),
+                  child: Icon(AppIcons.place_outlined, color: AppColors.grey800()),
                 ),
                 SizedBox(width: Margins.spacing_s),
                 Expanded(child: Text(viewModel.address!, style: TextStyles.textBaseRegular)),
@@ -376,13 +376,13 @@ class _Annule extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(40)),
-          color: AppColors.warningLighten,
-          border: Border.all(color: AppColors.warning),
+          color: AppColors.warningLighten(),
+          border: Border.all(color: AppColors.warning()),
         ),
         padding: const EdgeInsets.symmetric(vertical: Margins.spacing_xs, horizontal: Margins.spacing_base),
         child: Text(
           Strings.rendezvousDetailsAnnule,
-          style: TextStyles.textSRegularWithColor(AppColors.warning),
+          style: TextStyles.textSRegularWithColor(AppColors.warning()),
           overflow: TextOverflow.ellipsis,
         ),
       ),
@@ -400,7 +400,7 @@ class _Createur extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(vertical: Margins.spacing_s),
       decoration: BoxDecoration(
-        color: AppColors.primaryLighten,
+        color: AppColors.primaryLighten(),
         borderRadius: BorderRadius.circular(Dimens.radius_base),
       ),
       child: Padding(
@@ -410,10 +410,10 @@ class _Createur extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(Margins.spacing_xs),
-              child: Icon(AppIcons.info_rounded, color: AppColors.primary),
+              child: Icon(AppIcons.info_rounded, color: AppColors.primary()),
             ),
             SizedBox(width: Margins.spacing_s),
-            Flexible(child: Text(label, style: TextStyles.textBaseRegularWithColor(AppColors.primary))),
+            Flexible(child: Text(label, style: TextStyles.textBaseRegularWithColor(AppColors.primary()))),
           ],
         ),
       ),
@@ -450,15 +450,15 @@ class _InscritTag extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimens.radius_l),
-        border: Border.all(color: AppColors.accent1),
+        border: Border.all(color: AppColors.accent1()),
       ),
       padding: const EdgeInsets.symmetric(vertical: Margins.spacing_xs, horizontal: Margins.spacing_base),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(AppIcons.today_rounded, color: AppColors.accent1),
+          Icon(AppIcons.today_rounded, color: AppColors.accent1()),
           SizedBox(width: Margins.spacing_s),
-          Text(Strings.eventVousEtesDejaInscrit, style: TextStyles.textSRegularWithColor(AppColors.accent1)),
+          Text(Strings.eventVousEtesDejaInscrit, style: TextStyles.textSRegularWithColor(AppColors.accent1())),
         ],
       ),
     );

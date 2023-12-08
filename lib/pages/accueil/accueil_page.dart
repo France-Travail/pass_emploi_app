@@ -44,7 +44,7 @@ class AccueilPage extends StatelessWidget {
 
   Widget _builder(BuildContext context, AccueilViewModel viewModel) {
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: AppColors.grey100(),
       appBar: PrimaryAppBar(title: Strings.accueilAppBarTitle),
       body: ConnectivityContainer(child: _Body(viewModel)),
     );

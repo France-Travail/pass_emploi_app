@@ -61,7 +61,7 @@ class _Icon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 10),
-      child: Icon(AppIcons.add_alert_rounded, color: AppColors.accent2, size: 40),
+      child: Icon(AppIcons.add_alert_rounded, color: AppColors.accent2(), size: 40),
     );
   }
 }

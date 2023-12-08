@@ -9,17 +9,17 @@ class EntreprisesAccueillantesHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.primaryLighten,
+      color: AppColors.primaryLighten(),
       padding: EdgeInsets.all(Margins.spacing_m),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(AppIcons.info_rounded, color: AppColors.primary),
+          Icon(AppIcons.info_rounded, color: AppColors.primary()),
           SizedBox(width: Margins.spacing_s),
           Flexible(
             child: Text(
               Strings.entreprisesAccueillantesHeader,
-              style: TextStyles.textBaseBoldWithColor(AppColors.primary),
+              style: TextStyles.textBaseBoldWithColor(AppColors.primary()),
             ),
           ),
         ],

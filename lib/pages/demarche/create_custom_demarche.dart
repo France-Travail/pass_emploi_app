@@ -14,12 +14,12 @@ class CreateCustomDemarche extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      backgroundColor: AppColors.primaryLighten,
+      backgroundColor: AppColors.primaryLighten(),
       child: Column(
         children: [
           Icon(
             AppIcons.search_rounded,
-            color: AppColors.accent2,
+            color: AppColors.accent2(),
             size: 40,
           ),
           SizedBox(height: Margins.spacing_base),

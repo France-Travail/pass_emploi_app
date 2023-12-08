@@ -13,11 +13,11 @@ class TextFormFieldInputDecoration extends InputDecoration {
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide(color: AppColors.contentColor, width: 1.0),
+            borderSide: BorderSide(color: AppColors.contentColor(), width: 1.0),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide(color: AppColors.primary, width: 2.0),
+            borderSide: BorderSide(color: AppColors.primary(), width: 2.0),
           ),
         );
 }

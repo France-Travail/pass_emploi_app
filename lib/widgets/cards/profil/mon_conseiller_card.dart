@@ -54,7 +54,7 @@ class MonConseillerCard extends StatelessWidget {
               Text(
                 name,
                 style: TextStyles.textBaseBold.copyWith(
-                  color: AppColors.primary,
+                  color: AppColors.primary(),
                 ),
               ),
             ],

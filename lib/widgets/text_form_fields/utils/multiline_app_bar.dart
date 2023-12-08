@@ -32,7 +32,7 @@ class MultilineAppBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title, style: TextStyles.textBaseBold),
-                if (hint != null) Text(hint!, style: TextStyles.textSRegularWithColor(AppColors.contentColor)),
+                if (hint != null) Text(hint!, style: TextStyles.textSRegularWithColor(AppColors.contentColor())),
               ],
             ),
           ),

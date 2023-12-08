@@ -136,7 +136,7 @@ class _PartageFavorisState extends State<_PartageFavoris> {
                     child: Text(
                   Strings.shareFavoriteLabel,
                   style: TextStyles.textBaseRegularWithColor(
-                    widget.updatedState == DisplayState.LOADING ? AppColors.grey500 : AppColors.contentColor,
+                    widget.updatedState == DisplayState.LOADING ? AppColors.grey500() : AppColors.contentColor(),
                   ),
                 )),
                 Switch(
@@ -147,7 +147,7 @@ class _PartageFavorisState extends State<_PartageFavoris> {
                 Text(
                   _partageFavorisEnabled ? Strings.yes : Strings.no,
                   style: TextStyles.textBaseRegularWithColor(
-                      widget.updatedState == DisplayState.LOADING ? AppColors.grey500 : AppColors.contentColor),
+                      widget.updatedState == DisplayState.LOADING ? AppColors.grey500() : AppColors.contentColor()),
                 ),
               ],
             ),

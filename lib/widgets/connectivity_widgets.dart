@@ -37,7 +37,7 @@ class ConnectivityBandeau extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: AppColors.disabled,
+      color: AppColors.disabled(),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: Margins.spacing_xs),
         child: Row(

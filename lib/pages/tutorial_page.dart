@@ -111,8 +111,8 @@ class _TutorialPageState extends State<TutorialPage> {
                       controller: _controller,
                       count: viewModel.pages.length,
                       effect: WormEffect(
-                        activeDotColor: AppColors.primary,
-                        dotColor: AppColors.disabled,
+                        activeDotColor: AppColors.primary(),
+                        dotColor: AppColors.disabled(),
                         dotHeight: 10,
                         dotWidth: 10,
                       ),
@@ -198,7 +198,7 @@ class _TutorialContentCard extends StatelessWidget {
                 children: [
                   _Animation(image: image),
                   SizedBox(height: Margins.spacing_base),
-                  Text(title, style: TextStyles.textMBold.copyWith(color: AppColors.primary)),
+                  Text(title, style: TextStyles.textMBold.copyWith(color: AppColors.primary())),
                   SizedBox(height: Margins.spacing_base),
                   Text(description, style: TextStyles.textBaseRegular),
                 ],

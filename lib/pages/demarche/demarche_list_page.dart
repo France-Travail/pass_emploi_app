@@ -57,7 +57,7 @@ class DemarcheListPage extends StatelessWidget {
 
   Widget _scaffold(BuildContext context, DemarcheListPageViewModel viewModel) {
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: AppColors.grey100(),
       body: Stack(
         children: [
           DefaultAnimatedSwitcher(child: _animatedBody(context, viewModel)),

@@ -94,10 +94,10 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
                     builder: (context, value, child) {
                       return PrimaryActionButton(
                         label: Strings.suppressionLabel,
-                        textColor: AppColors.warning,
-                        backgroundColor: AppColors.warningLighten,
-                        disabledBackgroundColor: AppColors.warningLighten,
-                        rippleColor: AppColors.warningLighten,
+                        textColor: AppColors.warning(),
+                        backgroundColor: AppColors.warningLighten(),
+                        disabledBackgroundColor: AppColors.warningLighten(),
+                        rippleColor: AppColors.warningLighten(),
                         withShadow: true,
                         onPressed: _shouldActivateButton(viewModel) ? () => viewModel.onDeleteUser() : null,
                       );
@@ -140,7 +140,7 @@ class _DeleteAlertCrossButton extends StatelessWidget {
           padding: const EdgeInsets.all(Margins.spacing_s),
           child: Icon(
             AppIcons.close_rounded,
-            color: AppColors.contentColor,
+            color: AppColors.contentColor(),
           ),
         ),
       ),

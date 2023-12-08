@@ -105,11 +105,11 @@ class _DeleteAccountButton extends StatelessWidget {
     return PrimaryActionButton(
       onPressed: () => _showDeleteDialog(context),
       label: Strings.suppressionButtonLabel,
-      textColor: AppColors.warning,
+      textColor: AppColors.warning(),
       fontSize: FontSizes.normal,
-      backgroundColor: AppColors.warningLighten,
-      disabledBackgroundColor: AppColors.warningLighten,
-      rippleColor: AppColors.warningLighten,
+      backgroundColor: AppColors.warningLighten(),
+      disabledBackgroundColor: AppColors.warningLighten(),
+      rippleColor: AppColors.warningLighten(),
       withShadow: false,
     );
   }

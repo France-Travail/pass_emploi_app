@@ -55,7 +55,7 @@ class _CampagneQuestionPageState extends State<CampagneQuestionPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(Strings.mandatory, style: TextStyles.textSRegular(color: AppColors.contentColor)),
+            Text(Strings.mandatory, style: TextStyles.textSRegular(color: AppColors.contentColor())),
             SizedBox(height: Margins.spacing_m),
             Text(viewModel.question, style: TextStyles.textBaseRegular),
             SizedBox(height: Margins.spacing_m),
@@ -67,7 +67,7 @@ class _CampagneQuestionPageState extends State<CampagneQuestionPage> {
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.white,
-                border: Border.all(color: AppColors.grey700, width: 1.0),
+                border: Border.all(color: AppColors.grey700(), width: 1.0),
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
               ),
               child: BaseTextField(

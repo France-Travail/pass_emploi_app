@@ -12,7 +12,7 @@ class CardTitle extends StatelessWidget {
       title,
       style: TextStyles.textBaseBold.copyWith(
         fontSize: 16,
-        color: AppColors.contentColor,
+        color: AppColors.contentColor(),
       ),
     );
   }

@@ -76,7 +76,7 @@ class CheckBoxGroupState<T extends CheckboxValueViewModel> extends State<CheckBo
       title: helpText != null ? _textWithToolTip(label, helpText) : _title(label),
       value: isSelected,
       contentPadding: EdgeInsets.zero,
-      activeColor: AppColors.primary,
+      activeColor: AppColors.primary(),
       onChanged: (value) {
         setState(() {
           if (value != null) {

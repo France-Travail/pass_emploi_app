@@ -10,7 +10,7 @@ class SepLine extends StatelessWidget {
     this.spaceBefore,
     this.spaceAfter, {
     Color? color,
-  }) : color = color ?? AppColors.primaryLighten;
+  }) : color = color ?? AppColors.primaryLighten();
 
   @override
   Widget build(BuildContext context) {

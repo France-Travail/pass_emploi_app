@@ -247,17 +247,17 @@ class _DataWarningMessage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(Margins.spacing_m),
       decoration: BoxDecoration(
-        color: AppColors.primaryLighten,
+        color: AppColors.primaryLighten(),
         borderRadius: BorderRadius.circular(Dimens.radius_base),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(AppIcons.info_rounded, color: AppColors.primary, size: Dimens.icon_size_m),
+          Icon(AppIcons.info_rounded, color: AppColors.primary(), size: Dimens.icon_size_m),
           SizedBox(width: Margins.spacing_s),
           Expanded(
               child: Text(Strings.immersionDataWarningMessage,
-                  style: TextStyles.textBaseBold.copyWith(color: AppColors.primary))),
+                  style: TextStyles.textBaseBold.copyWith(color: AppColors.primary()))),
         ],
       ),
     );

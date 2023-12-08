@@ -29,7 +29,7 @@ class RatingCard extends StatelessWidget {
             Icon(
               AppIcons.chevron_right_rounded,
               semanticLabel: Strings.openInNewTab,
-              color: AppColors.contentColor,
+              color: AppColors.contentColor(),
             ),
           ],
         ),

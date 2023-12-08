@@ -275,7 +275,7 @@ class _Rappel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = isActive ? TextStyles.textBaseRegular : TextStyles.textBaseRegularWithColor(AppColors.disabled);
+    final textStyle = isActive ? TextStyles.textBaseRegular : TextStyles.textBaseRegularWithColor(AppColors.disabled());
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [

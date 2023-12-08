@@ -17,7 +17,7 @@ class SecondaryIconButton extends StatelessWidget {
     Color? iconColor,
     this.borderColor,
     this.iconSize = Dimens.icon_size_m,
-  }) : iconColor = iconColor ?? AppColors.primary;
+  }) : iconColor = iconColor ?? AppColors.primary();
 
   @override
   Widget build(BuildContext context) {

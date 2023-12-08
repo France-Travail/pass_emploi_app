@@ -188,7 +188,7 @@ class _LocationListTile extends StatelessWidget {
       title: Row(
         children: [
           if (source == LocationSource.dernieresRecherches) ...[
-            Icon(AppIcons.schedule_rounded, size: Dimens.icon_size_base, color: AppColors.grey800),
+            Icon(AppIcons.schedule_rounded, size: Dimens.icon_size_base, color: AppColors.grey800()),
             SizedBox(width: Margins.spacing_s),
           ],
           RichText(

@@ -134,8 +134,8 @@ UserActionDetailDateEcheanceViewModel? _dateEcheanceViewModel(UserAction? userAc
   return UserActionDetailDateEcheanceViewModel(
     formattedTexts: _formattedDate(userAction),
     icons: [AppIcons.schedule_rounded],
-    textColor: isLate ? AppColors.warning : AppColors.accent2,
-    backgroundColor: isLate ? AppColors.warningLighten : AppColors.accent3Lighten,
+    textColor: isLate ? AppColors.warning() : AppColors.accent2(),
+    backgroundColor: isLate ? AppColors.warningLighten() : AppColors.accent3Lighten(),
   );
 }
 

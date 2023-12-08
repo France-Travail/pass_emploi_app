@@ -123,7 +123,7 @@ class _Background extends StatelessWidget {
           flex: 1,
           child: Container(
             decoration: BoxDecoration(
-                color: AppColors.primary, borderRadius: BorderRadius.vertical(bottom: Radius.circular(123456789))),
+                color: AppColors.primary(), borderRadius: BorderRadius.vertical(bottom: Radius.circular(123456789))),
           ),
         ),
         Expanded(flex: 1, child: Container()),
@@ -161,7 +161,7 @@ class _BoutonPE extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       child: PrimaryActionButton(
         label: Strings.loginPoleEmploi,
-        backgroundColor: AppColors.poleEmploi,
+        backgroundColor: AppColors.poleEmploi(),
         onPressed: () {
           StoreProvider.of<AppState>(context).dispatch(RequestLoginAction(RequestLoginMode.DEMO_PE));
         },
@@ -177,7 +177,7 @@ class _BoutonMILO extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 30, left: 20, right: 20),
       child: PrimaryActionButton(
         label: Strings.loginMissionLocale,
-        backgroundColor: AppColors.missionLocale,
+        backgroundColor: AppColors.missionLocale(),
         onPressed: () {
           StoreProvider.of<AppState>(context).dispatch(RequestLoginAction(RequestLoginMode.DEMO_MILO));
         },

@@ -160,7 +160,7 @@ class _CreateCommentaireWidgetState extends State<_CreateCommentaireWidget> {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        color: AppColors.primaryLighten,
+        color: AppColors.primaryLighten(),
         padding: const EdgeInsets.all(Margins.spacing_m),
         child: Row(
           children: [
@@ -178,7 +178,7 @@ class _CreateCommentaireWidgetState extends State<_CreateCommentaireWidget> {
             ),
             SizedBox(width: Margins.spacing_s),
             FloatingActionButton(
-              backgroundColor: AppColors.primary,
+              backgroundColor: AppColors.primary(),
               child: Icon(AppIcons.send_rounded, color: Colors.white),
               onPressed: () {
                 if (_controller.value.text.isNotEmpty && !_loading()) {

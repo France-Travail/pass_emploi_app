@@ -129,7 +129,7 @@ class _BlocSolution extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: AppColors.accent3, size: Dimens.icon_size_m),
+          Icon(icon, color: AppColors.accent3(), size: Dimens.icon_size_m),
           SizedBox(height: Margins.spacing_s),
           Text(title, style: TextStyles.textMBold),
           SizedBox(height: Margins.spacing_m),

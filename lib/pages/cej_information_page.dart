@@ -102,8 +102,8 @@ class _CejInformationPageState extends State<CejInformationPage> {
                       controller: _controller,
                       count: 3,
                       effect: WormEffect(
-                        activeDotColor: AppColors.primary,
-                        dotColor: AppColors.disabled,
+                        activeDotColor: AppColors.primary(),
+                        dotColor: AppColors.disabled(),
                         dotHeight: 10,
                         dotWidth: 10,
                       ),

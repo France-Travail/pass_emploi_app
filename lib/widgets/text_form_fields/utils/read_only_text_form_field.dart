@@ -53,7 +53,7 @@ class _ReadOnlyTextFormFieldState extends State<ReadOnlyTextFormField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(widget.title, style: TextStyles.textBaseBold),
-        if (widget.hint != null) Text(widget.hint!, style: TextStyles.textSRegularWithColor(AppColors.contentColor)),
+        if (widget.hint != null) Text(widget.hint!, style: TextStyles.textSRegularWithColor(AppColors.contentColor())),
         SizedBox(height: Margins.spacing_base),
         Stack(
           alignment: Alignment.centerRight,

@@ -16,7 +16,7 @@ class BoiteAOutilsPage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.toolbox,
       child: Container(
-        color: AppColors.grey100,
+        color: AppColors.grey100(),
         child: ListView.separated(
             padding: EdgeInsets.symmetric(horizontal: 16),
             separatorBuilder: (_, index) => SizedBox(height: Margins.spacing_base),

@@ -31,7 +31,7 @@ class SecondaryButton extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           shape: StadiumBorder(),
           backgroundColor: backgroundColor,
-          side: BorderSide(color: AppColors.primary, width: 2),
+          side: BorderSide(color: AppColors.primary(), width: 2),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -43,7 +43,7 @@ class SecondaryButton extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 12),
                     child: Icon(
                       icon,
-                      color: AppColors.primary,
+                      color: AppColors.primary(),
                       size: Dimens.icon_size_m,
                     )),
               Flexible(child: Text(label, textAlign: TextAlign.center, style: usedTextStyle)),

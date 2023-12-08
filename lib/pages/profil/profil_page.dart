@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/pages/cv/cv_list_page.dart';
 import 'package:pass_emploi_app/pages/diagoriente/diagoriente_entry_page.dart';
 import 'package:pass_emploi_app/pages/partage_activite_page.dart';
+import 'package:pass_emploi_app/pages/profil/color_inspection_page.dart';
 import 'package:pass_emploi_app/pages/profil/matomo_logging_page.dart';
 import 'package:pass_emploi_app/pages/suppression_compte_page.dart';
 import 'package:pass_emploi_app/presentation/profil/profil_page_view_model.dart';
@@ -53,7 +54,7 @@ class ProfilPage extends StatelessWidget {
 
   Scaffold _buildScaffold(BuildContext context, ProfilPageViewModel viewModel) {
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: AppColors.grey100(),
       appBar: PrimaryAppBar(
         title: Strings.menuProfil,
         withProfileButton: false,
@@ -94,7 +95,8 @@ class ProfilPage extends StatelessWidget {
                 if (viewModel.displayDeveloperOptions) ...[
                   _SeactionTitle(Strings.developerOptions),
                   SizedBox(height: Margins.spacing_m),
-                  _MatomoCard(),
+                  _DeveloperCard(),
+                  SizedBox(height: Margins.spacing_m),
                 ],
                 SecondaryButton(
                   onPressed: () => StoreProvider.of<AppState>(context).dispatch(RequestLogoutAction()),
@@ -129,8 +131,8 @@ class _DiscoverDiagorienteCard extends StatelessWidget {
   Widget build(BuildContext context) {
     const Color textColor = Colors.white;
     return CardContainer(
-      backgroundColor: AppColors.primary,
-      splashColor: AppColors.primaryDarken,
+      backgroundColor: AppColors.primary(),
+      splashColor: AppColors.primaryDarken(),
       onTap: () => Navigator.push(context, DiagorienteEntryPage.materialPageRoute()),
       child: Column(
         children: [
@@ -200,7 +202,7 @@ class _ProfileCard extends StatelessWidget {
                 userEmail,
                 textAlign: TextAlign.right,
                 style: TextStyles.textBaseBold.copyWith(
-                  color: AppColors.primary,
+                  color: AppColors.primary(),
                 ),
               ),
             ],
@@ -249,19 +251,19 @@ class _LegalInformationCard extends StatelessWidget {
               title: Text(Strings.legalNoticeLabel, style: TextStyles.textBaseRegular),
               trailing: _redirectIcon(),
             ),
-            Divider(color: AppColors.grey100, height: 0),
+            Divider(color: AppColors.grey100(), height: 0),
             ListTile(
               onTap: () => _launchAndTrackExternalLink(Strings.termsOfServiceUrl),
               title: Text(Strings.termsOfServiceLabel, style: TextStyles.textBaseRegular),
               trailing: _redirectIcon(),
             ),
-            Divider(color: AppColors.grey100, height: 0),
+            Divider(color: AppColors.grey100(), height: 0),
             ListTile(
               onTap: () => _launchAndTrackExternalLink(Strings.privacyPolicyUrl),
               title: Text(Strings.privacyPolicyLabel, style: TextStyles.textBaseRegular),
               trailing: _redirectIcon(),
             ),
-            Divider(color: AppColors.grey100, height: 0),
+            Divider(color: AppColors.grey100(), height: 0),
             ListTile(
               onTap: () => _launchAndTrackExternalLink(Strings.accessibilityUrl),
               title: Text(Strings.accessibilityLevelLabel, style: TextStyles.textBaseRegular),
@@ -283,19 +285,32 @@ class _LegalInformationCard extends StatelessWidget {
   }
 
   Widget _redirectIcon() => Icon(
-        AppIcons.open_in_new_rounded,
+    AppIcons.open_in_new_rounded,
         semanticLabel: Strings.openInNavigator,
         size: Dimens.icon_size_base,
-        color: AppColors.grey800,
+        color: AppColors.grey800(),
       );
 }
 
-class _MatomoCard extends StatelessWidget {
+class _DeveloperCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StandaloneProfilCard(
-      text: Strings.developerOptionMatomo,
-      onTap: () => Navigator.push(context, MatomoLoggingPage.materialPageRoute()),
+    return ProfilCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ListTile(
+            onTap: () => Navigator.push(context, MatomoLoggingPage.materialPageRoute()),
+            title: Text(Strings.developerOptionMatomo, style: TextStyles.textBaseRegular),
+          ),
+          Divider(color: AppColors.grey100(), height: 0),
+          ListTile(
+            onTap: () => Navigator.push(context, ColorInspectionPage.materialPageRoute()),
+            title: Text(Strings.developerOptionColorInspector, style: TextStyles.textBaseRegular),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -315,7 +330,7 @@ class _RatingCard extends StatelessWidget {
               title: Text(Strings.contactTeamLabel, style: TextStyles.textBaseRegular),
               trailing: _arrowRedirectIcon(),
             ),
-            Divider(color: AppColors.grey100, height: 0),
+            Divider(color: AppColors.grey100(), height: 0),
             ListTile(
               onTap: () => Navigator.of(context).push(RatingPage.materialPageRoute()),
               title: Text(
@@ -331,8 +346,8 @@ class _RatingCard extends StatelessWidget {
   }
 
   Widget _arrowRedirectIcon() => Icon(
-        AppIcons.chevron_right_rounded,
+    AppIcons.chevron_right_rounded,
         semanticLabel: Strings.openInNewTab,
-        color: AppColors.contentColor,
+        color: AppColors.contentColor(),
       );
 }

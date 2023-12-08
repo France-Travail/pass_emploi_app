@@ -192,7 +192,7 @@ class _MetierListTile extends StatelessWidget {
           Icon(
             source == MetierSource.dernieresRecherches ? AppIcons.schedule_rounded : AppIcons.bolt_rounded,
             size: Dimens.icon_size_base,
-            color: AppColors.grey800,
+            color: AppColors.grey800(),
           ),
           SizedBox(width: Margins.spacing_s),
           Expanded(child: Text(metier.libelle, style: TextStyles.textBaseRegular)),

@@ -68,7 +68,7 @@ class _UserActionListPageState extends State<UserActionListPage> {
 
   Widget _scaffold(BuildContext context, UserActionListPageViewModel viewModel) {
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: AppColors.grey100(),
       body: Stack(
         children: [
           DefaultAnimatedSwitcher(child: _animatedBody(context, viewModel)),
@@ -132,7 +132,7 @@ class _UserActionListPageState extends State<UserActionListPage> {
     return PrimaryActionButton(
       label: Strings.addAnAction,
       icon: AppIcons.add_rounded,
-      rippleColor: AppColors.primaryDarken,
+      rippleColor: AppColors.primaryDarken(),
       onPressed: () => Navigator.push(context, CreateUserActionBottomSheet.materialPageRoute()).then((result) {
         CreateUserActionBottomSheet.displaySnackBarOnResult(
           context,
