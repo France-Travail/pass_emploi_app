@@ -7,7 +7,10 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
+import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
+import 'package:pass_emploi_app/utils/launcher_utils.dart';
+import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
@@ -23,7 +26,7 @@ class CguPage extends StatelessWidget {
         builder: (context, viewModel) => _Scaffold(
           body: switch (viewModel.displayState) {
             CguNeverAcceptedDisplayState() => SizedBox.shrink(),
-            final CguUpdateRequiredDisplayState vm => SizedBox.shrink(),
+            CguUpdateRequiredDisplayState() => SizedBox.shrink(),
             null => SizedBox.shrink(),
           },
         ),
@@ -81,37 +84,40 @@ class _BodyState extends State<_Body> {
               child: Column(
                 children: [
                   Text(
-                    'Bienvenue sur l’application du CEJ',
+                    Strings.cguTitle,
                     style: TextStyles.textLBold(color: AppColors.primary),
                   ),
                   SizedBox(height: Margins.spacing_m),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "L’utilisation de notre service est soumise à l’acception préalable de nos ",
-                          style: TextStyles.textBaseRegular,
-                        ),
-                        TextSpan(
-                          text: "↗ Conditions Générales d’Utilisation",
-                          style: TextStyles.textBaseRegular.copyWith(
-                            color: AppColors.contentColor,
-                            decoration: TextDecoration.underline,
+                  GestureDetector(
+                    onTap: _launchExternalRedirect,
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: Strings.cguInitialDescription[0],
+                            style: TextStyles.textBaseRegular,
                           ),
-                        ),
-                        TextSpan(
-                          text: ". Ces conditions définissent ",
-                          style: TextStyles.textBaseRegular,
-                        ),
-                        TextSpan(
-                          text: "vos droits et obligations en tant qu'utilisateur ",
-                          style: TextStyles.textBaseBold,
-                        ),
-                        TextSpan(
-                          text: "de notre application.",
-                          style: TextStyles.textBaseRegular,
-                        ),
-                      ],
+                          TextSpan(
+                            text: Strings.cguInitialDescription[1],
+                            style: TextStyles.textBaseRegular.copyWith(
+                              color: AppColors.contentColor,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                          TextSpan(
+                            text: Strings.cguInitialDescription[2],
+                            style: TextStyles.textBaseRegular,
+                          ),
+                          TextSpan(
+                            text: Strings.cguInitialDescription[3],
+                            style: TextStyles.textBaseBold,
+                          ),
+                          TextSpan(
+                            text: Strings.cguInitialDescription[4],
+                            style: TextStyles.textBaseRegular,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(height: Margins.spacing_m),
@@ -123,27 +129,30 @@ class _BodyState extends State<_Body> {
                   Row(
                     children: [
                       Expanded(
-                        child: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "J’ai lu et j’accepte les",
-                                style: TextStyles.textBaseRegular,
-                              ),
-                              TextSpan(
-                                text: "  ↗ Conditions Générales d’Utilisation",
-                                style: TextStyles.textBaseRegular.copyWith(
-                                  color: AppColors.contentColor,
-                                  decoration: TextDecoration.underline,
+                        child: GestureDetector(
+                          onTap: _launchExternalRedirect,
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: Strings.cguSwitch[0],
+                                  style: TextStyles.textBaseRegular,
                                 ),
-                              ),
-                            ],
+                                TextSpan(
+                                  text: Strings.cguSwitch[1],
+                                  style: TextStyles.textBaseRegular.copyWith(
+                                    color: AppColors.contentColor,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                       SizedBox(width: Margins.spacing_m),
                       Semantics(
-                        label: 'TODO',
+                        label: Strings.cguSwitchLabel(_cguAccepted),
                         child: Switch(
                           value: _cguAccepted,
                           onChanged: (value) => setState(() => _cguAccepted = value),
@@ -159,7 +168,7 @@ class _BodyState extends State<_Body> {
                       SizedBox(width: Margins.spacing_s),
                       Expanded(
                         child: Text(
-                          'Acceptez les Conditions Générales d’Utilisation pour utiliser l’application.',
+                          Strings.cguSwitchError,
                           style: TextStyles.textXsRegular(color: AppColors.warning),
                         ),
                       ),
@@ -174,7 +183,7 @@ class _BodyState extends State<_Body> {
         SizedBox(
           width: double.infinity,
           child: PrimaryActionButton(
-            label: 'Valider',
+            label: Strings.cguAccept,
             onPressed: () {},
           ),
         ),
@@ -183,11 +192,16 @@ class _BodyState extends State<_Body> {
           width: double.infinity,
           child: SecondaryButton(
             backgroundColor: Colors.transparent,
-            label: 'Refuser et se déconnecter',
+            label: Strings.cguRefuse,
             onPressed: () {},
           ),
         ),
       ],
     );
   }
+}
+
+void _launchExternalRedirect() {
+  PassEmploiMatomoTracker.instance.trackOutlink(Strings.termsOfServiceUrl);
+  launchExternalUrl(Strings.termsOfServiceUrl);
 }

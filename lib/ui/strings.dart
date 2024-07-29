@@ -1239,6 +1239,26 @@ class Strings {
       "Sélectionnez une ville dans laquelle vous cherchez une immersion.";
   static String suggestionLocalisationAddAlerteButton = "Ajouter l’alerte";
 
+  // CGU
+  static String cguTitle =
+      Brand.isCej() ? "Bienvenue sur l’application du CEJ" : "Bienvenue sur l’application pass emploi";
+  static List<String> cguInitialDescription = [
+    "L’utilisation de notre service est soumise à l’acception préalable de nos",
+    " ↗ Conditions Générales d’Utilisation",
+    ". Ces conditions définissent ",
+    "vos droits et obligations en tant qu'utilisateur ",
+    "de notre application.",
+  ];
+  static List<String> cguSwitch = [
+    "J’ai lu et j’accepte les",
+    "  ↗ Conditions Générales d’Utilisation",
+  ];
+  static String cguSwitchError = "Acceptez les Conditions Générales d’Utilisation pour utiliser l’application.";
+  static String cguAccept = "Valider";
+  static String cguRefuse = "Refuser et se déconnecter";
+
+  static String cguSwitchLabel(bool accepted) => accepted ? "Refuser les cgu" : "Accepter les cgu";
+
   // textes alternatifs
   static String favoriHeartRemove = "Retirer l'offre des favoris";
   static String favoriHeartAdd = "Mettre l'offre en favoris";
