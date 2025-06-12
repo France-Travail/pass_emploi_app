@@ -25,6 +25,7 @@ import 'package:pass_emploi_app/repositories/evenement_emploi/evenement_emploi_r
 import 'package:pass_emploi_app/repositories/evenement_engagement/evenement_engagement_repository.dart';
 import 'package:pass_emploi_app/repositories/favoris/get_favoris_repository.dart';
 import 'package:pass_emploi_app/repositories/first_launch_onboarding_repository.dart';
+import 'package:pass_emploi_app/repositories/ia_ft_suggestions_repository.dart';
 import 'package:pass_emploi_app/repositories/immersion/immersion_details_repository.dart';
 import 'package:pass_emploi_app/repositories/in_app_feedback_repository.dart';
 import 'package:pass_emploi_app/repositories/in_app_notifications_repository.dart';
@@ -315,4 +316,6 @@ class MockBoulangerCampagneRepository extends Mock implements BoulangerCampagneR
     when(() => get()).thenAnswer((_) async => false);
   }
 }
+
+class MockIaFtSuggestionsRepository extends Mock implements IaFtSuggestionsRepository {}
 /*AUTOGENERATE-REDUX-TEST-MOCKS-REPOSITORY-DECLARATION*/

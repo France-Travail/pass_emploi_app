@@ -37,6 +37,7 @@ import 'package:pass_emploi_app/features/favori/list/favori_list_state.dart';
 import 'package:pass_emploi_app/features/favori/update/favori_update_state.dart';
 import 'package:pass_emploi_app/features/feature_flip/feature_flip_state.dart';
 import 'package:pass_emploi_app/features/first_launch_onboarding/first_launch_onboarding_state.dart';
+import 'package:pass_emploi_app/features/ia_ft_suggestions/ia_ft_suggestions_state.dart';
 import 'package:pass_emploi_app/features/immersion/details/immersion_details_state.dart';
 import 'package:pass_emploi_app/features/in_app_feedback/in_app_feedback_state.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_state.dart';
@@ -165,6 +166,7 @@ class AppState extends Equatable {
   final OffresSuiviesState offresSuiviesState;
   final ComptageDesHeuresState comptageDesHeuresState;
   final BoulangerCampagneState boulangerCampagneState;
+  final IaFtSuggestionsState iaFtSuggestionsState;
   /*AUTOGENERATE-REDUX-APP-STATE-PROPERTY*/
 
   AppState({
@@ -248,6 +250,7 @@ class AppState extends Equatable {
     required this.offresSuiviesState,
     required this.comptageDesHeuresState,
     required this.boulangerCampagneState,
+    required this.iaFtSuggestionsState,
     /*AUTOGENERATE-REDUX-APP-STATE-CONSTRUCTOR*/
   });
 
@@ -332,6 +335,7 @@ class AppState extends Equatable {
     final OffresSuiviesState? offresSuiviesState,
     final ComptageDesHeuresState? comptageDesHeuresState,
     final BoulangerCampagneState? boulangerCampagneState,
+    final IaFtSuggestionsState? iaFtSuggestionsState,
     /*AUTOGENERATE-REDUX-APP-STATE-COPYPARAM*/
   }) {
     return AppState(
@@ -415,6 +419,7 @@ class AppState extends Equatable {
       offresSuiviesState: offresSuiviesState ?? this.offresSuiviesState,
       comptageDesHeuresState: comptageDesHeuresState ?? this.comptageDesHeuresState,
       boulangerCampagneState: boulangerCampagneState ?? this.boulangerCampagneState,
+      iaFtSuggestionsState: iaFtSuggestionsState ?? this.iaFtSuggestionsState,
       /*AUTOGENERATE-REDUX-APP-STATE-COPYBODY*/
     );
   }
@@ -501,6 +506,7 @@ class AppState extends Equatable {
       offresSuiviesState: OffresSuiviesState(),
       comptageDesHeuresState: ComptageDesHeuresNotInitializedState(),
       boulangerCampagneState: BoulangerCampagneState(),
+      iaFtSuggestionsState: IaFtSuggestionsNotInitializedState(),
       /*AUTOGENERATE-REDUX-APP-STATE-FACTORY*/
     );
   }
@@ -580,6 +586,7 @@ class AppState extends Equatable {
         offresSuiviesState,
         comptageDesHeuresState,
         boulangerCampagneState,
+        iaFtSuggestionsState,
         /*AUTOGENERATE-REDUX-APP-STATE-EQUATABLE*/
       ];
 
