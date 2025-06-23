@@ -21,6 +21,7 @@ import 'package:pass_emploi_app/features/date_consultation_notification/date_con
 import 'package:pass_emploi_app/features/date_consultation_offre/date_consultation_offre_reducer.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_reducer.dart';
 import 'package:pass_emploi_app/features/demarche/create/create_demarche_reducer.dart';
+import 'package:pass_emploi_app/features/demarche/create_demarche_batch/create_demarche_batch_reducer.dart';
 import 'package:pass_emploi_app/features/demarche/search/seach_demarche_reducer.dart';
 import 'package:pass_emploi_app/features/demarche/update/update_demarche_reducer.dart';
 import 'package:pass_emploi_app/features/details_jeune/details_jeune_reducer.dart';
@@ -208,6 +209,7 @@ AppState reducer(AppState current, dynamic action) {
     comptageDesHeuresState: comptageDesHeuresReducer(current.comptageDesHeuresState, action),
     boulangerCampagneState: boulangerCampagneReducer(current.boulangerCampagneState, action),
     iaFtSuggestionsState: iaFtSuggestionsReducer(current.iaFtSuggestionsState, action),
+    createDemarcheBatchState: createDemarcheBatchReducer(current.createDemarcheBatchState, action),
     /*AUTOGENERATE-REDUX-APP-REDUCER-STATE*/
   );
 }

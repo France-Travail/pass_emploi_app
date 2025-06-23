@@ -48,6 +48,7 @@ import 'package:pass_emploi_app/repositories/chat_repository.dart';
 import 'package:pass_emploi_app/repositories/comptage_des_heures_repository.dart';
 import 'package:pass_emploi_app/repositories/configuration_application_repository.dart';
 import 'package:pass_emploi_app/repositories/contact_immersion_repository.dart';
+import 'package:pass_emploi_app/repositories/create_demarche_batch_repository.dart';
 import 'package:pass_emploi_app/repositories/crypto/chat_crypto.dart';
 import 'package:pass_emploi_app/repositories/crypto/chat_encryption_local_storage.dart';
 import 'package:pass_emploi_app/repositories/cv_repository.dart';
@@ -314,6 +315,7 @@ class AppInitializer {
       ComptageDesHeuresRepository(dioClient, crashlytics),
       BoulangerCampagneRepository(securedPreferences),
       IaFtSuggestionsRepository(dioClient, crashlytics),
+      CreateDemarcheBatchRepository(dioClient, crashlytics),
       /*AUTOGENERATE-REDUX-APP-INITIALIZER-REPOSITORY-CONSTRUCTOR*/
     ).initializeReduxStore(initialState: AppState.initialState(configuration: configuration));
     accessTokenRetriever.setStore(reduxStore);

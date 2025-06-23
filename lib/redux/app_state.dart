@@ -24,6 +24,7 @@ import 'package:pass_emploi_app/features/date_consultation_notification/date_con
 import 'package:pass_emploi_app/features/date_consultation_offre/date_consultation_offre_state.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_state.dart';
 import 'package:pass_emploi_app/features/demarche/create/create_demarche_state.dart';
+import 'package:pass_emploi_app/features/demarche/create_demarche_batch/create_demarche_batch_state.dart';
 import 'package:pass_emploi_app/features/demarche/search/seach_demarche_state.dart';
 import 'package:pass_emploi_app/features/demarche/update/update_demarche_state.dart';
 import 'package:pass_emploi_app/features/details_jeune/details_jeune_state.dart';
@@ -167,6 +168,7 @@ class AppState extends Equatable {
   final ComptageDesHeuresState comptageDesHeuresState;
   final BoulangerCampagneState boulangerCampagneState;
   final IaFtSuggestionsState iaFtSuggestionsState;
+  final CreateDemarcheBatchState createDemarcheBatchState;
   /*AUTOGENERATE-REDUX-APP-STATE-PROPERTY*/
 
   AppState({
@@ -251,6 +253,7 @@ class AppState extends Equatable {
     required this.comptageDesHeuresState,
     required this.boulangerCampagneState,
     required this.iaFtSuggestionsState,
+    required this.createDemarcheBatchState,
     /*AUTOGENERATE-REDUX-APP-STATE-CONSTRUCTOR*/
   });
 
@@ -336,6 +339,7 @@ class AppState extends Equatable {
     final ComptageDesHeuresState? comptageDesHeuresState,
     final BoulangerCampagneState? boulangerCampagneState,
     final IaFtSuggestionsState? iaFtSuggestionsState,
+    final CreateDemarcheBatchState? createDemarcheBatchState,
     /*AUTOGENERATE-REDUX-APP-STATE-COPYPARAM*/
   }) {
     return AppState(
@@ -420,6 +424,7 @@ class AppState extends Equatable {
       comptageDesHeuresState: comptageDesHeuresState ?? this.comptageDesHeuresState,
       boulangerCampagneState: boulangerCampagneState ?? this.boulangerCampagneState,
       iaFtSuggestionsState: iaFtSuggestionsState ?? this.iaFtSuggestionsState,
+      createDemarcheBatchState: createDemarcheBatchState ?? this.createDemarcheBatchState,
       /*AUTOGENERATE-REDUX-APP-STATE-COPYBODY*/
     );
   }
@@ -507,6 +512,7 @@ class AppState extends Equatable {
       comptageDesHeuresState: ComptageDesHeuresNotInitializedState(),
       boulangerCampagneState: BoulangerCampagneState(),
       iaFtSuggestionsState: IaFtSuggestionsNotInitializedState(),
+      createDemarcheBatchState: CreateDemarcheBatchNotInitializedState(),
       /*AUTOGENERATE-REDUX-APP-STATE-FACTORY*/
     );
   }
@@ -587,6 +593,7 @@ class AppState extends Equatable {
         comptageDesHeuresState,
         boulangerCampagneState,
         iaFtSuggestionsState,
+        createDemarcheBatchState,
         /*AUTOGENERATE-REDUX-APP-STATE-EQUATABLE*/
       ];
 

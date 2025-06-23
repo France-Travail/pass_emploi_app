@@ -31,6 +31,7 @@ import 'package:pass_emploi_app/features/cvm/cvm_middleware.dart';
 import 'package:pass_emploi_app/features/date_consultation_notification/date_consultation_notification_middleware.dart';
 import 'package:pass_emploi_app/features/date_consultation_offre/date_consultation_offre_middleware.dart';
 import 'package:pass_emploi_app/features/demarche/create/create_demarche_middleware.dart';
+import 'package:pass_emploi_app/features/demarche/create_demarche_batch/create_demarche_batch_middleware.dart';
 import 'package:pass_emploi_app/features/demarche/search/seach_demarche_middleware.dart';
 import 'package:pass_emploi_app/features/demarche/update/update_demarche_middleware.dart';
 import 'package:pass_emploi_app/features/details_jeune/details_jeune_middleware.dart';
@@ -117,6 +118,7 @@ import 'package:pass_emploi_app/repositories/chat_repository.dart';
 import 'package:pass_emploi_app/repositories/comptage_des_heures_repository.dart';
 import 'package:pass_emploi_app/repositories/configuration_application_repository.dart';
 import 'package:pass_emploi_app/repositories/contact_immersion_repository.dart';
+import 'package:pass_emploi_app/repositories/create_demarche_batch_repository.dart';
 import 'package:pass_emploi_app/repositories/crypto/chat_crypto.dart';
 import 'package:pass_emploi_app/repositories/crypto/chat_encryption_local_storage.dart';
 import 'package:pass_emploi_app/repositories/cv_repository.dart';
@@ -264,6 +266,7 @@ class StoreFactory {
   final ComptageDesHeuresRepository comptageDesHeuresRepository;
   final BoulangerCampagneRepository boulangerCampagneRepository;
   final IaFtSuggestionsRepository iaFtSuggestionsRepository;
+  final CreateDemarcheBatchRepository createDemarcheBatchRepository;
   /*AUTOGENERATE-REDUX-STOREFACTORY-PROPERTY-REPOSITORY*/
 
   StoreFactory(
@@ -351,6 +354,7 @@ class StoreFactory {
     this.comptageDesHeuresRepository,
     this.boulangerCampagneRepository,
     this.iaFtSuggestionsRepository,
+    this.createDemarcheBatchRepository,
     /*AUTOGENERATE-REDUX-STOREFACTORY-CONSTRUCTOR-REPOSITORY*/
   );
 
@@ -455,6 +459,7 @@ class StoreFactory {
         ComptageDesHeuresMiddleware(comptageDesHeuresRepository).call,
         BoulangerCampagneMiddleware(boulangerCampagneRepository).call,
         IaFtSuggestionsMiddleware(iaFtSuggestionsRepository).call,
+        CreateDemarcheBatchMiddleware(createDemarcheRepository).call,
         /*AUTOGENERATE-REDUX-STOREFACTORY-ADD-MIDDLEWARE*/
         ..._debugMiddlewares(),
         ..._stagingMiddlewares(initialState.configurationState.getFlavor()),
