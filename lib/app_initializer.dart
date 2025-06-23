@@ -315,7 +315,6 @@ class AppInitializer {
       ComptageDesHeuresRepository(dioClient, crashlytics),
       BoulangerCampagneRepository(securedPreferences),
       IaFtSuggestionsRepository(dioClient, crashlytics),
-      CreateDemarcheBatchRepository(dioClient, crashlytics),
       /*AUTOGENERATE-REDUX-APP-INITIALIZER-REPOSITORY-CONSTRUCTOR*/
     ).initializeReduxStore(initialState: AppState.initialState(configuration: configuration));
     accessTokenRetriever.setStore(reduxStore);
