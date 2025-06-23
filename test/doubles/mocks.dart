@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pass_emploi_app/auth/auth_wrapper.dart';
 import 'package:pass_emploi_app/auth/authenticator.dart';
+import 'package:pass_emploi_app/models/demarche_ia_suggestion.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/offre_dto.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
@@ -317,5 +318,23 @@ class MockBoulangerCampagneRepository extends Mock implements BoulangerCampagneR
   }
 }
 
-class MockIaFtSuggestionsRepository extends Mock implements IaFtSuggestionsRepository {}
+class MockComptageDesHeuresRepository extends Mock implements ComptageDesHeuresRepository {}
+
+class MockBoulangerCampagneRepository extends Mock implements BoulangerCampagneRepository {
+  MockBoulangerCampagneRepository() {
+    when(() => get()).thenAnswer((_) async => false);
+  }
+}
+
+class FakeIaFtSuggestion extends Fake implements DemarcheIaSuggestion {}
+
+class MockIaFtSuggestionsRepository extends Mock implements IaFtSuggestionsRepository {
+  void withGetAndReturnSuccess() {
+    when(() => get(any())).thenAnswer((_) async => [FakeIaFtSuggestion()]);
+  }
+
+  void withGetAndReturnFailure() {
+    when(() => get(any())).thenAnswer((_) async => null);
+  }
+}
 /*AUTOGENERATE-REDUX-TEST-MOCKS-REPOSITORY-DECLARATION*/
