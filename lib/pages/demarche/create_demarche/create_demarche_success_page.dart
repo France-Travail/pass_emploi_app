@@ -81,7 +81,7 @@ class _Body extends StatelessWidget {
           onGoActionDetail: viewModel.demarcheId != null
               ? () {
                   Navigator.pop(context);
-                  Navigator.of(context).push(DemarcheDetailPage.materialPageRoute(viewModel.demarcheId));
+                  Navigator.of(context).push(DemarcheDetailPage.materialPageRoute(viewModel.demarcheId!));
                 }
               : null,
           onCreateMore: () {

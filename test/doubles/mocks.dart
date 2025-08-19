@@ -318,14 +318,6 @@ class MockBoulangerCampagneRepository extends Mock implements BoulangerCampagneR
   }
 }
 
-class MockComptageDesHeuresRepository extends Mock implements ComptageDesHeuresRepository {}
-
-class MockBoulangerCampagneRepository extends Mock implements BoulangerCampagneRepository {
-  MockBoulangerCampagneRepository() {
-    when(() => get()).thenAnswer((_) async => false);
-  }
-}
-
 class FakeIaFtSuggestion extends Fake implements DemarcheIaSuggestion {}
 
 class MockIaFtSuggestionsRepository extends Mock implements IaFtSuggestionsRepository {

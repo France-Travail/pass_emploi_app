@@ -56,13 +56,3 @@ DisplayState _displayState(Store<AppState> store) {
     CreateDemarcheFailureState() => DisplayState.FAILURE,
   };
 }
-
-DisplayState _displayState(Store<AppState> store) {
-  final createState = store.state.createDemarcheState;
-  return switch (createState) {
-    CreateDemarcheNotInitializedState() => DisplayState.LOADING,
-    CreateDemarcheLoadingState() => DisplayState.LOADING,
-    CreateDemarcheSuccessState() => DisplayState.CONTENT,
-    CreateDemarcheFailureState() => DisplayState.FAILURE,
-  };
-}
