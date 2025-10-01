@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pass_emploi_app/models/evenement_emploi/evenement_emploi_modalite.dart';
 import 'package:pass_emploi_app/utils/string_extensions.dart';
@@ -71,7 +70,7 @@ class JsonEvenementEmploi {
       codePostal: codePostal,
       dateDebut: dateDebut,
       dateFin: dateFin,
-      modalites: modalites.map((modalite) => EvenementEmploiModalite.from(modalite)).whereNotNull().toList(),
+      modalites: modalites.map((modalite) => EvenementEmploiModalite.from(modalite)).nonNulls.toList(),
     );
   }
 }

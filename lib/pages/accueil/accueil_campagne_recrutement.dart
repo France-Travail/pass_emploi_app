@@ -24,13 +24,10 @@ class CampagneRecrutementCard extends StatelessWidget {
       button: true,
       child: CardContainer(
         backgroundColor: Colors.transparent,
-        splashColor: AppColors.primaryDarken.withOpacity(0.5),
+        splashColor: AppColors.primaryDarken.withValues(alpha: 0.5),
         padding: EdgeInsets.zero,
         onTap: () => launchExternalUrl(ExternalLinks.campagneRecrutement),
-        image: DecorationImage(
-          image: AssetImage(Drawables.campagneRecrutementBg),
-          fit: BoxFit.cover,
-        ),
+        image: DecorationImage(image: AssetImage(Drawables.campagneRecrutementBg), fit: BoxFit.cover),
         child: Stack(
           children: [
             Padding(
@@ -46,12 +43,7 @@ class CampagneRecrutementCard extends StatelessWidget {
                           child: SizedBox(
                             width: 72,
                             height: 72,
-                            child: Semantics(
-                              excludeSemantics: true,
-                              child: Image.asset(
-                                Drawables.logoInProgress,
-                              ),
-                            ),
+                            child: Semantics(excludeSemantics: true, child: Image.asset(Drawables.logoInProgress)),
                           ),
                         ),
                       ),
@@ -66,10 +58,7 @@ class CampagneRecrutementCard extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: Margins.spacing_s),
-                  PressedTip.externalLink(
-                    Strings.accueilCampagneRecrutementPressedTip,
-                    textColor: Colors.white,
-                  )
+                  PressedTip.externalLink(Strings.accueilCampagneRecrutementPressedTip, textColor: Colors.white),
                 ],
               ),
             ),

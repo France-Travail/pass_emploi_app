@@ -47,10 +47,7 @@ class _FirstScreen extends StatelessWidget {
       body: Stack(
         children: [
           BiseauBackground(),
-          Align(
-            alignment: Alignment.center,
-            child: _Welcome(firstScreen: true),
-          ),
+          Align(alignment: Alignment.center, child: _Welcome(firstScreen: true)),
           SizedBox(height: Margins.spacing_m),
           Align(
             alignment: Alignment.bottomCenter,
@@ -84,12 +81,7 @@ class _PageViewScreen extends StatelessWidget {
       body: Stack(
         children: [
           BiseauBackground(),
-          Positioned(
-            top: MediaQuery.of(context).padding.top,
-            left: 0,
-            right: 0,
-            child: AppLogo(width: 120),
-          ),
+          Positioned(top: MediaQuery.of(context).padding.top, left: 0, right: 0, child: AppLogo(width: 120)),
           PageView(
             controller: _pageController,
             onPageChanged: (value) {
@@ -101,10 +93,7 @@ class _PageViewScreen extends StatelessWidget {
             },
             children: [
               _FirstPageContent(onContinue: () => _pageController.next()),
-              _SecondPageContent(
-                onContinue: () => _pageController.next(),
-                globalKey: page2Key,
-              ),
+              _SecondPageContent(onContinue: () => _pageController.next(), globalKey: page2Key),
               _ThirdPageContent(
                 continueLabel: Strings.letsGo,
                 onContinue: () => context.dispatch(FirstLaunchOnboardingFinishAction()),
@@ -136,10 +125,7 @@ class _Welcome extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         AppLogo(width: 120),
-        if (withText) ...[
-          const SizedBox(height: Margins.spacing_base),
-          firstScreen ? Welcome() : Welcome.small(),
-        ],
+        if (withText) ...[const SizedBox(height: Margins.spacing_base), firstScreen ? Welcome() : Welcome.small()],
       ],
     );
   }
@@ -294,7 +280,7 @@ class _CarouselStepperIndicatorState extends State<_CarouselStepperIndicator> {
           margin: const EdgeInsets.symmetric(horizontal: Margins.spacing_xs),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: i == currentPage ? Colors.white : Colors.white.withOpacity(0.5),
+            color: i == currentPage ? Colors.white : Colors.white.withValues(alpha: 0.5),
           ),
         );
       }),

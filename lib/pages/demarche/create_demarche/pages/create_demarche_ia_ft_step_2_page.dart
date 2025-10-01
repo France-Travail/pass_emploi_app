@@ -40,15 +40,17 @@ class _CreateDemarcheIaFtStep2PageState extends State<CreateDemarcheIaFtStep2Pag
     );
     if (available) {
       setState(() => _isListening = true);
-      _speechToText.listen(onResult: (result) {
-        setState(() {
-          if (result.recognizedWords.length >= CreateDemarcheIaFtStep2ViewModel.maxLength) {
-            _stopListening();
-          } else {
-            _textEditingController.text = result.recognizedWords;
-          }
-        });
-      });
+      _speechToText.listen(
+        onResult: (result) {
+          setState(() {
+            if (result.recognizedWords.length >= CreateDemarcheIaFtStep2ViewModel.maxLength) {
+              _stopListening();
+            } else {
+              _textEditingController.text = result.recognizedWords;
+            }
+          });
+        },
+      );
     }
   }
 
@@ -84,10 +86,7 @@ class _CreateDemarcheIaFtStep2PageState extends State<CreateDemarcheIaFtStep2Pag
               backgroundColor: AppColors.primaryLighten,
               textColor: AppColors.primary,
               borderRadius: Dimens.radius_base,
-              padding: EdgeInsets.symmetric(
-                vertical: Margins.spacing_s,
-                horizontal: Margins.spacing_base,
-              ),
+              padding: EdgeInsets.symmetric(vertical: Margins.spacing_s, horizontal: Margins.spacing_base),
             ),
             const SizedBox(height: Margins.spacing_base),
             Text(Strings.iaFtStep2FieldTitle, style: TextStyles.textBaseBold),
@@ -105,11 +104,7 @@ class _CreateDemarcheIaFtStep2PageState extends State<CreateDemarcheIaFtStep2Pag
                   suffixIcon: Opacity(
                     opacity: 0,
                     child: ExcludeSemantics(
-                      child: IconButton(
-                        onPressed: null,
-                        icon: Icon(Icons.close),
-                        color: AppColors.primary,
-                      ),
+                      child: IconButton(onPressed: null, icon: Icon(Icons.close), color: AppColors.primary),
                     ),
                   ),
                 ),
@@ -137,17 +132,12 @@ class _CreateDemarcheIaFtStep2PageState extends State<CreateDemarcheIaFtStep2Pag
                   _startListening();
                 }
               },
-              suffix: _isListening
-                  ? SizedBox(
-                      height: 24,
-                      child: SoundWaveformWidget(),
-                    )
-                  : null,
+              suffix: _isListening ? SizedBox(height: 24, child: SoundWaveformWidget()) : null,
               backgroundColor: AppColors.primaryLighten,
               textColor: AppColors.primary,
               iconColor: AppColors.primary,
               icon: _isListening ? Icons.stop_circle_rounded : Icons.mic,
-              rippleColor: AppColors.primary.withOpacity(0.3),
+              rippleColor: AppColors.primary.withValues(alpha: 0.3),
             ),
             const SizedBox(height: Margins.spacing_base),
             PrimaryActionButton(
@@ -191,11 +181,9 @@ class _SoundWaveformWidgetState extends State<SoundWaveformWidget> with TickerPr
   void initState() {
     super.initState();
     controller = AnimationController(
-        vsync: this,
-        duration: Duration(
-          milliseconds: widget.durationInMilliseconds,
-        ))
-      ..repeat();
+      vsync: this,
+      duration: Duration(milliseconds: widget.durationInMilliseconds),
+    )..repeat();
   }
 
   @override
@@ -223,10 +211,7 @@ class _SoundWaveformWidgetState extends State<SoundWaveformWidget> with TickerPr
               margin: i == (count - 1) ? EdgeInsets.zero : const EdgeInsets.only(right: 5),
               height: i == current ? maxHeight : minHeight,
               width: 4,
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(9999),
-              ),
+              decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(9999)),
             ),
           ),
         );

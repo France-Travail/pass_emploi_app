@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pass_emploi_app/models/alerte/alerte.dart';
 import 'package:pass_emploi_app/models/campagne.dart';
@@ -93,17 +92,17 @@ class Accueil extends Equatable {
 
   @override
   List<Object?> get props => [
-        dateDerniereMiseAJour,
-        cetteSemaine,
-        prochainRendezVous,
-        prochaineSessionMilo,
-        animationsCollectives,
-        sessionsMiloAVenir,
-        alertes,
-        favoris,
-        accueilErreur,
-        peutVoirLeComptageDesHeures,
-      ];
+    dateDerniereMiseAJour,
+    cetteSemaine,
+    prochainRendezVous,
+    prochaineSessionMilo,
+    animationsCollectives,
+    sessionsMiloAVenir,
+    alertes,
+    favoris,
+    accueilErreur,
+    peutVoirLeComptageDesHeures,
+  ];
 }
 
 DateTime? _dateDerniereMiseAJour(dynamic json) {
@@ -146,7 +145,7 @@ List<Alerte>? _alertes(dynamic json) {
   return alertes
       .map((search) => AlerteResponse.fromJson(search))
       .map((e) => AlerteJsonExtractor().extract(e))
-      .whereNotNull()
+      .nonNulls
       .toList();
 }
 
@@ -161,10 +160,7 @@ class AccueilCetteSemaine extends Equatable {
   final int nombreRendezVous;
   final int nombreActionsDemarchesARealiser;
 
-  AccueilCetteSemaine({
-    required this.nombreRendezVous,
-    required this.nombreActionsDemarchesARealiser,
-  });
+  AccueilCetteSemaine({required this.nombreRendezVous, required this.nombreActionsDemarchesARealiser});
 
   factory AccueilCetteSemaine.fromJson(dynamic json) {
     return AccueilCetteSemaine(

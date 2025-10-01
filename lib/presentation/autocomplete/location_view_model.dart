@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pass_emploi_app/features/location/search_location_actions.dart';
 import 'package:pass_emploi_app/models/location.dart';
@@ -12,11 +11,7 @@ class LocationViewModel extends Equatable {
   final List<LocationItem> dernieresLocations;
   final Function(String? input) onInputLocation;
 
-  LocationViewModel._({
-    required this.locations,
-    required this.dernieresLocations,
-    required this.onInputLocation,
-  });
+  LocationViewModel._({required this.locations, required this.dernieresLocations, required this.onInputLocation});
 
   factory LocationViewModel.create(Store<AppState> store, {required bool villesOnly}) {
     return LocationViewModel._(
@@ -73,7 +68,7 @@ List<LocationItem> _dernieresLocationItems(List<Location> locations) {
 List<Location> _dernieresLocations(Store<AppState> store, bool villesOnly) {
   return store.state.recherchesRecentesState.recentSearches
       .map((offre) => offre.getLocation())
-      .whereNotNull()
+      .nonNulls
       .where((location) => location._isValid)
       .distinct()
       .where((location) => villesOnly ? location.type == LocationType.COMMUNE : true)

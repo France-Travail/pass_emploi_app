@@ -35,48 +35,45 @@ class _SecondaryButtonState extends State<SecondaryButton> {
   @override
   Widget build(BuildContext context) {
     final baseTextStyle = TextStyles.textSecondaryButton;
-    final textColor = (widget.foregroundColor ?? AppColors.primary).withOpacity(widget.isEnabled ? 1 : 0.5);
+    final textColor = (widget.foregroundColor ?? AppColors.primary).withValues(alpha: widget.isEnabled ? 1 : 0.5);
     final usedTextStyle = widget.fontSize != null ? baseTextStyle.copyWith(fontSize: widget.fontSize) : baseTextStyle;
-    return FocusedBorderBuilder(builder: (focusNode) {
-      return OutlinedButton(
-        focusNode: focusNode,
-        onPressed: widget.onPressed,
-        onHover: (hover) => setState(() => isHovered = hover),
-        style: OutlinedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Dimens.radius_base),
+    return FocusedBorderBuilder(
+      builder: (focusNode) {
+        return OutlinedButton(
+          focusNode: focusNode,
+          onPressed: widget.onPressed,
+          onHover: (hover) => setState(() => isHovered = hover),
+          style: OutlinedButton.styleFrom(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimens.radius_base)),
+            backgroundColor: Color.alphaBlend(
+              isHovered ? textColor.withValues(alpha: 0.2) : Colors.transparent,
+              widget.backgroundColor,
+            ),
+            side: BorderSide(color: textColor, width: 2),
           ),
-          backgroundColor: Color.alphaBlend(
-            isHovered ? textColor.withOpacity(0.2) : Colors.transparent,
-            widget.backgroundColor,
-          ),
-          side: BorderSide(color: textColor, width: 2),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (widget.icon != null)
-                Padding(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (widget.icon != null)
+                  Padding(
                     padding: const EdgeInsets.only(right: 12),
-                    child: Icon(
-                      widget.icon,
-                      color: textColor,
-                      size: Dimens.icon_size_m,
-                    )),
-              Flexible(
-                child: Text(
-                  widget.label,
-                  textAlign: TextAlign.center,
-                  style: usedTextStyle.copyWith(color: textColor),
+                    child: Icon(widget.icon, color: textColor, size: Dimens.icon_size_m),
+                  ),
+                Flexible(
+                  child: Text(
+                    widget.label,
+                    textAlign: TextAlign.center,
+                    style: usedTextStyle.copyWith(color: textColor),
+                  ),
                 ),
-              ),
-              Semantics(label: widget.iconLabel),
-            ],
+                Semantics(label: widget.iconLabel),
+              ],
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }
