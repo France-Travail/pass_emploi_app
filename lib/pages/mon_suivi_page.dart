@@ -136,17 +136,13 @@ class _ScrollAwareAppBarState extends State<_ScrollAwareAppBar> {
       actionButton: withActionButton || isScreenReader
           ? IconButton(
               onPressed: () => _StateProvider.maybeOf(context)?.scrollController.animateTo(
-                    0,
-                    duration: AnimationDurations.fast,
-                    curve: Curves.fastEaseInToSlowEaseOut,
-                  ),
+                0,
+                duration: AnimationDurations.fast,
+                curve: Curves.fastEaseInToSlowEaseOut,
+              ),
               icon: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Icon(
-                  AppIcons.event,
-                  color: AppColors.primary,
-                  size: 24,
-                ),
+                child: Icon(AppIcons.event, color: AppColors.primary, size: 24),
               ),
               tooltip: Strings.monSuiviTooltip,
             )
@@ -192,10 +188,7 @@ class _Content extends StatelessWidget {
       children: [
         if (viewModel.withWarningOnWrongPoleEmploiDataRetrieval) ...[
           SizedBox(height: Margins.spacing_s),
-          _WarningCard(
-            label: Strings.monSuiviPoleEmploiDataError,
-            onPressed: () => viewModel.onRetry(),
-          ),
+          _WarningCard(label: Strings.monSuiviPoleEmploiDataError, onPressed: () => viewModel.onRetry()),
         ],
         if (viewModel.monSuiviDemarchesKoMessage != null) ...[
           SizedBox(height: Margins.spacing_s),
@@ -210,10 +203,7 @@ class _Content extends StatelessWidget {
         ],
         if (viewModel.withWarningOnWrongSessionMiloRetrieval) ...[
           SizedBox(height: Margins.spacing_s),
-          _WarningCard(
-            label: Strings.monSuiviSessionMiloError,
-            onPressed: () => viewModel.onRetry(),
-          ),
+          _WarningCard(label: Strings.monSuiviSessionMiloError, onPressed: () => viewModel.onRetry()),
         ],
         if (viewModel.pendingActionCreations > 0) ...[
           SizedBox(height: Margins.spacing_s),
@@ -222,10 +212,7 @@ class _Content extends StatelessWidget {
         Expanded(
           child: Stack(
             key: _StateProvider.maybeOf(context)?.contentKey,
-            children: [
-              _TodayCenteredMonSuiviList(viewModel),
-              _DayOverlay(),
-            ],
+            children: [_TodayCenteredMonSuiviList(viewModel), _DayOverlay()],
           ),
         ),
       ],
@@ -264,17 +251,15 @@ class _WarningCardState extends State<_WarningCard> {
                 children: [
                   SizedBox(width: Margins.spacing_base),
                   IconButton(
-                    icon: Icon(
-                      AppIcons.highlight_off,
-                      color: Colors.white,
-                      semanticLabel: Strings.closeDialog,
-                    ),
+                    icon: Icon(AppIcons.highlight_off, color: Colors.white, semanticLabel: Strings.closeDialog),
                     onPressed: () => setState(() => _visible = false),
                   ),
                   SizedBox(width: Margins.spacing_s),
                   Flexible(
                     child: Semantics(
-                        focusable: true, child: Text(widget.label, style: TextStyles.textSMedium(color: Colors.white))),
+                      focusable: true,
+                      child: Text(widget.label, style: TextStyles.textSMedium(color: Colors.white)),
+                    ),
                   ),
                   SizedBox(width: Margins.spacing_base),
                 ],
@@ -312,7 +297,9 @@ class _UserActionsPendingCard extends StatelessWidget {
           children: [
             Icon(AppIcons.error_rounded, color: Colors.white),
             SizedBox(width: Margins.spacing_s),
-            Flexible(child: Text(message, style: TextStyles.textXsRegular(color: Colors.white))),
+            Flexible(
+              child: Text(message, style: TextStyles.textXsRegular(color: Colors.white)),
+            ),
           ],
         ),
       ),
@@ -326,8 +313,8 @@ class _TodayCenteredMonSuiviList extends StatelessWidget {
   final List<MonSuiviItem> presentAndFutureItems;
 
   _TodayCenteredMonSuiviList(this.viewModel)
-      : pastItems = viewModel.items.sublist(0, viewModel.indexOfTodayItem).reversed.toList(),
-        presentAndFutureItems = viewModel.items.sublist(viewModel.indexOfTodayItem);
+    : pastItems = viewModel.items.sublist(0, viewModel.indexOfTodayItem).reversed.toList(),
+      presentAndFutureItems = viewModel.items.sublist(viewModel.indexOfTodayItem);
 
   @override
   Widget build(BuildContext context) {
@@ -486,20 +473,23 @@ class _FilledDayItem extends StatelessWidget {
       day: day,
       child: Column(
         key: key,
-        children: entries //
-            .map((entry) => [
-                  entries.length > 1
-                      ? Semantics(
-                          // A11y : to repeat day information for each entry
-                          label: day.shortened.toFullDayForScreenReaders() + day.number + day.month,
-                          child: entry.toWidget(),
-                        )
-                      : entry.toWidget(),
-                  SizedBox(height: Margins.spacing_s),
-                ])
-            .flattened
-            .toList()
-          ..removeLast(),
+        children:
+            entries //
+                .map(
+                  (entry) => [
+                    entries.length > 1
+                        ? Semantics(
+                            // A11y : to repeat day information for each entry
+                            label: day.shortened.toFullDayForScreenReaders() + day.number + day.month,
+                            child: entry.toWidget(),
+                          )
+                        : entry.toWidget(),
+                    SizedBox(height: Margins.spacing_s),
+                  ],
+                )
+                .flattened
+                .toList()
+              ..removeLast(),
       ),
     );
   }
@@ -598,10 +588,7 @@ class _UserActionMonSuiviItem extends StatelessWidget {
       source: UserActionStateSource.monSuivi,
       onTap: () {
         context.trackEvenementEngagement(EvenementEngagement.ACTION_DETAIL);
-        Navigator.push(
-          context,
-          UserActionDetailPage.materialPageRoute(entry.id, UserActionStateSource.monSuivi),
-        );
+        Navigator.push(context, UserActionDetailPage.materialPageRoute(entry.id, UserActionStateSource.monSuivi));
       },
     );
   }
@@ -618,10 +605,7 @@ class _DemarcheMonSuiviItem extends StatelessWidget {
       demarcheId: entry.id,
       onTap: () {
         context.trackEvenementEngagement(EvenementEngagement.ACTION_DETAIL);
-        Navigator.push(
-          context,
-          DemarcheDetailPage.materialPageRoute(entry.id),
-        );
+        Navigator.push(context, DemarcheDetailPage.materialPageRoute(entry.id));
       },
     );
   }
@@ -677,7 +661,7 @@ class _MonSuiviLoader extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(top: Margins.spacing_base),
           child: _MonSuiviItemLoader(),
-        )
+        ),
     ];
   }
 
@@ -709,11 +693,7 @@ class _Pagination extends StatelessWidget {
 class _PaginationLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Shimmer.fromColors(
-      baseColor: AppColors.grey100,
-      highlightColor: Colors.white,
-      child: _MonSuiviItemLoader(),
-    );
+    return Shimmer.fromColors(baseColor: AppColors.grey100, highlightColor: Colors.white, child: _MonSuiviItemLoader());
   }
 }
 
@@ -727,10 +707,7 @@ class _LoadPeriodButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: SecondaryButton(
-        label: label,
-        onPressed: () => onPressed(),
-      ),
+      child: SecondaryButton(label: label, onPressed: () => onPressed()),
     );
   }
 }
@@ -759,10 +736,7 @@ class _MonSuiviItemLoader extends StatelessWidget {
       children: [
         Expanded(child: AnimatedListLoader.placeholderBuilder(width: screenWidth, height: 40)),
         const SizedBox(width: Margins.spacing_base),
-        Expanded(
-          flex: 9,
-          child: AnimatedListLoader.placeholderBuilder(width: screenWidth, height: 56),
-        ),
+        Expanded(flex: 9, child: AnimatedListLoader.placeholderBuilder(width: screenWidth, height: 56)),
       ],
     );
   }
@@ -881,15 +855,16 @@ class _CreateDemarcheButtonState extends State<CreateDemarcheButton> with Single
   void initState() {
     super.initState();
 
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    );
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1000));
 
-    _scaleAnimation =
-        Tween<double>(begin: 0.8, end: 1.4).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
-    _fadeAnimation =
-        Tween<double>(begin: 0.6, end: 0.0).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _scaleAnimation = Tween<double>(
+      begin: 0.8,
+      end: 1.4,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _fadeAnimation = Tween<double>(
+      begin: 0.6,
+      end: 0.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed && _shouldAnimate) {
@@ -944,20 +919,16 @@ class _CreateDemarcheButtonState extends State<CreateDemarcheButton> with Single
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(360),
-                    color: AppColors.primary.withOpacity(0.5),
+                    color: AppColors.primary.withValues(alpha: 0.5),
                   ),
-                  child: IgnorePointer(
-                    child: button,
-                  ),
+                  child: IgnorePointer(child: button),
                 ),
               ),
             ),
             OnboardingShowcase(
               source: ShowcaseSource.action,
-              child: FtIaShowcase(
-                child: button,
-              ),
-            )
+              child: FtIaShowcase(child: button),
+            ),
           ],
         );
       },

@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/ia_ft_suggestions/ia_ft_suggestions_actions.dart';
 import 'package:pass_emploi_app/models/demarche_ia_dto.dart';
@@ -15,10 +14,7 @@ class IaFtSuggestionsMiddleware extends MiddlewareClass<AppState> {
   final IaFtSuggestionsRepository _iaFtRepository;
   final MatchingDemarcheRepository _matchingDemarcheRepository;
 
-  IaFtSuggestionsMiddleware(
-    this._iaFtRepository,
-    this._matchingDemarcheRepository,
-  );
+  IaFtSuggestionsMiddleware(this._iaFtRepository, this._matchingDemarcheRepository);
 
   @override
   void call(Store<AppState> store, action, NextDispatcher next) async {
@@ -31,21 +27,24 @@ class IaFtSuggestionsMiddleware extends MiddlewareClass<AppState> {
       if (demarchesSuggestionsRaw != null) {
         final List<(DemarcheIaDto, MatchingDemarcheDuReferentiel?)> matchingDemarcheDuReferentiel = [];
         for (final raw in demarchesSuggestionsRaw) {
-          final matchingDemarche =
-              await _matchingDemarcheRepository.getMatchingDemarcheDuReferentielFromCode(codeQuoi: raw.codeQuoi);
+          final matchingDemarche = await _matchingDemarcheRepository.getMatchingDemarcheDuReferentielFromCode(
+            codeQuoi: raw.codeQuoi,
+          );
           matchingDemarcheDuReferentiel.add((raw, matchingDemarche));
         }
 
         final demarchesSuggestions = matchingDemarcheDuReferentiel
-            .map((doubleEntry) => DemarcheIaSuggestion(
-                  id: Uuid().v4(),
-                  label: doubleEntry.$2?.thematique.libelle,
-                  titre: doubleEntry.$2?.demarcheDuReferentiel.quoi,
-                  sousTitre: doubleEntry.$1.description,
-                  codeQuoi: doubleEntry.$1.codeQuoi,
-                  codePourquoi: doubleEntry.$1.codePourquoi,
-                ))
-            .whereNotNull()
+            .map(
+              (doubleEntry) => DemarcheIaSuggestion(
+                id: Uuid().v4(),
+                label: doubleEntry.$2?.thematique.libelle,
+                titre: doubleEntry.$2?.demarcheDuReferentiel.quoi,
+                sousTitre: doubleEntry.$1.description,
+                codeQuoi: doubleEntry.$1.codeQuoi,
+                codePourquoi: doubleEntry.$1.codePourquoi,
+              ),
+            )
+            .nonNulls
             .toList();
 
         store.dispatch(IaFtSuggestionsSuccessAction(demarchesSuggestions));

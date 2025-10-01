@@ -52,7 +52,10 @@ class UpdateUserActionPage extends StatelessWidget {
   }
 
   void _popOnUpdateSuccess(
-      BuildContext context, UpdateUserActionViewModel? previousViewModel, UpdateUserActionViewModel viewModel) {
+    BuildContext context,
+    UpdateUserActionViewModel? previousViewModel,
+    UpdateUserActionViewModel viewModel,
+  ) {
     if (viewModel.shouldPop && (previousViewModel?.shouldPop != viewModel.shouldPop)) {
       showSnackBarWithSuccess(context, Strings.updateUserActionConfirmation);
       Navigator.of(context).pop();
@@ -69,24 +72,20 @@ class _DisplayState extends StatelessWidget {
     return switch (viewModel.displayState) {
       DisplayState.LOADING => Center(child: CircularProgressIndicator()),
       DisplayState.CONTENT => Padding(
-          padding: const EdgeInsets.all(Margins.spacing_base),
-          child: EditUserActionForm(
-            requireUpdate: true,
-            confirmationLabel: Strings.updateUserActionSaveButton,
-            actionDto: EditUserActionFormDto(
-              date: viewModel.date,
-              title: viewModel.title,
-              description: viewModel.description,
-              type: viewModel.type,
-            ),
-            onSaved: (actionDto) => viewModel.save(
-              actionDto.date,
-              actionDto.title,
-              actionDto.description,
-              actionDto.type,
-            ),
+        padding: const EdgeInsets.all(Margins.spacing_base),
+        child: EditUserActionForm(
+          requireUpdate: true,
+          confirmationLabel: Strings.updateUserActionSaveButton,
+          actionDto: EditUserActionFormDto(
+            date: viewModel.date,
+            title: viewModel.title,
+            description: viewModel.description,
+            type: viewModel.type,
           ),
+          onSaved: (actionDto) =>
+              viewModel.save(actionDto.date, actionDto.title, actionDto.description, actionDto.type),
         ),
+      ),
       _ => Retry(Strings.userActionDetailsError, viewModel.onRety),
     };
   }
@@ -103,18 +102,14 @@ class _Body extends StatelessWidget {
     return Stack(
       children: [
         Scaffold(
-            backgroundColor: bgColor,
-            appBar: SecondaryAppBar(
-              title: Strings.updateUserActionPageTitle,
-              backgroundColor: bgColor,
-            ),
-            body: _DisplayState(viewModel)),
+          backgroundColor: bgColor,
+          appBar: SecondaryAppBar(title: Strings.updateUserActionPageTitle, backgroundColor: bgColor),
+          body: _DisplayState(viewModel),
+        ),
         if (viewModel.showLoading)
           ColoredBox(
-            color: Colors.white.withOpacity(0.5),
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
+            color: Colors.white.withValues(alpha: 0.5),
+            child: Center(child: CircularProgressIndicator()),
           ),
       ],
     );
