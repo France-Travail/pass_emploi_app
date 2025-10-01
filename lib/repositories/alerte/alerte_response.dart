@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:pass_emploi_app/features/recherche/emploi/emploi_filtres_recherche.dart';
 import 'package:pass_emploi_app/features/recherche/immersion/immersion_filtres_recherche.dart';
 import 'package:pass_emploi_app/models/alerte/evenement_emploi_alerte.dart';
@@ -166,9 +165,9 @@ class AlerteEmploiExtractor {
     return EmploiFiltresRecherche.withFiltres(
       distance: criteres.rayon,
       debutantOnly: criteres.debutantAccepte,
-      experience: criteres.experience?.map((e) => FiltresRequest.experienceFromUrlParameter(e)).whereNotNull().toList(),
-      contrat: criteres.contrat?.map((e) => FiltresRequest.contratFromUrlParameter(e)).whereNotNull().toList(),
-      duree: criteres.duree?.map((e) => FiltresRequest.dureeFromUrlParameter(e)).whereNotNull().toList(),
+      experience: criteres.experience?.map((e) => FiltresRequest.experienceFromUrlParameter(e)).nonNulls.toList(),
+      contrat: criteres.contrat?.map((e) => FiltresRequest.contratFromUrlParameter(e)).nonNulls.toList(),
+      duree: criteres.duree?.map((e) => FiltresRequest.dureeFromUrlParameter(e)).nonNulls.toList(),
     );
   }
 }
@@ -239,11 +238,7 @@ class AlerteServiceCiviqueExtractor {
 
 class AlerteEvenementEmploiExtractor {
   EvenementEmploiAlerte extract(AlerteResponse alerte) {
-    return EvenementEmploiAlerte(
-      id: alerte.id,
-      titre: alerte.titre,
-      location: _getLocation(alerte),
-    );
+    return EvenementEmploiAlerte(id: alerte.id, titre: alerte.titre, location: _getLocation(alerte));
   }
 
   Location _getLocation(AlerteResponse alerte) {

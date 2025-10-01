@@ -52,36 +52,36 @@ class SuppressionComptePage extends StatelessWidget {
   }
 
   Widget _body(SuppressionCompteViewModel viewModel) {
-    return Stack(children: [
-      SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(Margins.spacing_m, Margins.spacing_m, Margins.spacing_m, 120),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(child: Text(Strings.warning, style: TextStyles.textMBold)),
-              SizedBox(height: Margins.spacing_base),
-              Text(Strings.warningInformationParagraph1, style: TextStyles.textSRegular()),
-              SizedBox(height: Margins.spacing_base),
-              _ListedItems(list: viewModel.warningSuppressionFeatures),
-              SizedBox(height: Margins.spacing_base),
-              Text(Strings.warningInformationParagraph2, style: TextStyles.textSRegular()),
-              SizedBox(height: Margins.spacing_base),
-              if (viewModel.isPoleEmploiLogin)
-                Text(Strings.warningInformationPoleEmploi, style: TextStyles.textSRegular()),
-              SizedBox(height: Margins.spacing_xx_huge),
-            ],
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(Margins.spacing_m, Margins.spacing_m, Margins.spacing_m, 120),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(child: Text(Strings.warning, style: TextStyles.textMBold)),
+                SizedBox(height: Margins.spacing_base),
+                Text(Strings.warningInformationParagraph1, style: TextStyles.textSRegular()),
+                SizedBox(height: Margins.spacing_base),
+                _ListedItems(list: viewModel.warningSuppressionFeatures),
+                SizedBox(height: Margins.spacing_base),
+                Text(Strings.warningInformationParagraph2, style: TextStyles.textSRegular()),
+                SizedBox(height: Margins.spacing_base),
+                if (viewModel.isPoleEmploiLogin)
+                  Text(Strings.warningInformationPoleEmploi, style: TextStyles.textSRegular()),
+                SizedBox(height: Margins.spacing_xx_huge),
+              ],
+            ),
           ),
         ),
-      ),
-      if (viewModel.displayState == DisplayState.LOADING)
-        Container(
-          color: Colors.white.withOpacity(0.5),
-          child: Center(
-            child: CircularProgressIndicator(),
+        if (viewModel.displayState == DisplayState.LOADING)
+          Container(
+            color: Colors.white.withValues(alpha: 0.5),
+            child: Center(child: CircularProgressIndicator()),
           ),
-        ),
-    ]);
+      ],
+    );
   }
 }
 
@@ -127,13 +127,13 @@ class _DeleteAccountButton extends StatelessWidget {
   }
 
   void _showDeleteDialog(BuildContext context) => showDialog(
-        context: context,
-        barrierLabel: Strings.closeDialog,
-        builder: (_) {
-          PassEmploiMatomoTracker.instance.trackScreen(AnalyticsActionNames.suppressionAccountConfirmation);
-          return DeleteAlertDialog();
-        },
-      );
+    context: context,
+    barrierLabel: Strings.closeDialog,
+    builder: (_) {
+      PassEmploiMatomoTracker.instance.trackScreen(AnalyticsActionNames.suppressionAccountConfirmation);
+      return DeleteAlertDialog();
+    },
+  );
 }
 
 class _DeleteAccountSuccessDialog extends StatelessWidget {
@@ -144,10 +144,7 @@ class _DeleteAccountSuccessDialog extends StatelessWidget {
       backgroundColor: Colors.white,
       title: Column(
         children: [
-          SizedBox.square(
-            dimension: 100,
-            child: Illustration.green(AppIcons.check_rounded),
-          ),
+          SizedBox.square(dimension: 100, child: Illustration.green(AppIcons.check_rounded)),
           SizedBox(height: Margins.spacing_m),
           Text(Strings.accountDeletionSuccess, style: TextStyles.textBaseBold, textAlign: TextAlign.center),
           SizedBox(height: Margins.spacing_m),
@@ -156,10 +153,7 @@ class _DeleteAccountSuccessDialog extends StatelessWidget {
       actions: [
         SizedBox(
           width: double.infinity,
-          child: PrimaryActionButton(
-            label: Strings.closeDialog,
-            onPressed: () => Navigator.pop(context),
-          ),
+          child: PrimaryActionButton(label: Strings.closeDialog, onPressed: () => Navigator.pop(context)),
         ),
       ],
     );

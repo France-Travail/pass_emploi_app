@@ -45,19 +45,15 @@ class DuplicateUserActionPage extends StatelessWidget {
       CreateUserActionFormPage.showSnackBarForOfflineCreation(context);
       Navigator.pop(context);
     } else if (displayState is ShowConfirmationPage) {
-      Navigator.push(
-        context,
-        DuplicateUserActionConfirmationPage.route(
-          displayState.userActionCreatedId,
-          source,
-        ),
-      ).then((result) {
-        if (!context.mounted) return;
-        Navigator.pop(context);
-        if (result is NavigateToUserActionDetails) {
-          Navigator.push(context, UserActionDetailPage.materialPageRoute(result.userActionId, result.source));
-        }
-      });
+      Navigator.push(context, DuplicateUserActionConfirmationPage.route(displayState.userActionCreatedId, source)).then(
+        (result) {
+          if (!context.mounted) return;
+          Navigator.pop(context);
+          if (result is NavigateToUserActionDetails) {
+            Navigator.push(context, UserActionDetailPage.materialPageRoute(result.userActionId, result.source));
+          }
+        },
+      );
     }
   }
 }
@@ -74,10 +70,7 @@ class _Body extends StatelessWidget {
       children: [
         Scaffold(
           backgroundColor: bgColor,
-          appBar: SecondaryAppBar(
-            title: Strings.duplicateUserAction,
-            backgroundColor: bgColor,
-          ),
+          appBar: SecondaryAppBar(title: Strings.duplicateUserAction, backgroundColor: bgColor),
           body: Padding(
             padding: const EdgeInsets.all(Margins.spacing_base),
             child: EditUserActionForm(
@@ -89,21 +82,15 @@ class _Body extends StatelessWidget {
                 description: viewModel.description,
                 type: viewModel.type,
               ),
-              onSaved: (actionDto) => viewModel.duplicate(
-                actionDto.date,
-                actionDto.title,
-                actionDto.description,
-                actionDto.type,
-              ),
+              onSaved: (actionDto) =>
+                  viewModel.duplicate(actionDto.date, actionDto.title, actionDto.description, actionDto.type),
             ),
           ),
         ),
         if (viewModel.showLoading)
           ColoredBox(
-            color: Colors.white.withOpacity(0.5),
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
+            color: Colors.white.withValues(alpha: 0.5),
+            child: Center(child: CircularProgressIndicator()),
           ),
       ],
     );
