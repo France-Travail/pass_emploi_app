@@ -27,6 +27,7 @@ class FeatureFlipMiddleware extends MiddlewareClass<AppState> {
       if (action.user.loginMode.isPe()) {
         _handleCvmFeatureFlip(store, action.user.id);
         _handleMonSuiviDemarchesKoMessageFeatureFlip(store, action.user.id);
+        _handleAbTestingIaFtFeatureFlip(store, action.user.id);
       }
     }
   }
@@ -51,5 +52,10 @@ class FeatureFlipMiddleware extends MiddlewareClass<AppState> {
     if (monSuiviDemarchesKoMessage != null) {
       store.dispatch(FeatureFlipMonSuiviDemarchesKoMessageAction(monSuiviDemarchesKoMessage));
     }
+  }
+
+  Future<void> _handleAbTestingIaFtFeatureFlip(Store<AppState> store, String userId) async {
+    final abTestingIaFt = _remoteConfigRepository.abTestingIaFt();
+    store.dispatch(FeatureFlipAbTestingIaFtAction(abTestingIaFt));
   }
 }

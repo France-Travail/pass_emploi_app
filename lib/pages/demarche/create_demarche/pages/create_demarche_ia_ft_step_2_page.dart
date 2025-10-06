@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_view_model.dart';
+import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
@@ -30,7 +32,9 @@ class _CreateDemarcheIaFtStep2PageState extends State<CreateDemarcheIaFtStep2Pag
 
   Future<void> _startListening() async {
     PassEmploiMatomoTracker.instance.trackEvent(
-      eventCategory: AnalyticsEventNames.createDemarcheEventCategory,
+      eventCategory: AnalyticsEventNames.createDemarcheEventCategory(
+        StoreProvider.of<AppState>(context).state.featureFlipState.featureFlip.abTestingIaFt.name,
+      ),
       action: AnalyticsEventNames.createDemarcheIaDicterPressed,
     );
     final bool available = await _speechToText.initialize(
@@ -95,6 +99,7 @@ class _CreateDemarcheIaFtStep2PageState extends State<CreateDemarcheIaFtStep2Pag
             Stack(
               children: [
                 BaseTextField(
+                  autofocus: true,
                   controller: _textEditingController,
                   hintText: Strings.iaFtStep2FieldHint,
                   minLines: 6,

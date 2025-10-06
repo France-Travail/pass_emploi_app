@@ -79,7 +79,9 @@ class PostulerConfirmationPage extends StatelessWidget {
                         viewModel.onCreateActionOrDemarche();
                         if (viewModel.useDemarche) {
                           PassEmploiMatomoTracker.instance.trackEvent(
-                            eventCategory: AnalyticsEventNames.createDemarcheEventCategory,
+                            eventCategory: AnalyticsEventNames.createDemarcheEventCategory(
+                              StoreProvider.of<AppState>(context).state.featureFlipState.featureFlip.abTestingIaFt.name,
+                            ),
                             action: AnalyticsEventNames.createDemarcheFromOffreSuiviAction,
                           );
                           Navigator.of(context)

@@ -4,11 +4,13 @@ class FeatureFlip extends Equatable {
   final bool useCvm;
   final bool withCampagneRecrutement;
   final String? withMonSuiviDemarchesKoMessage;
+  final AbTestingIaFt abTestingIaFt;
 
   FeatureFlip({
     required this.useCvm,
     required this.withCampagneRecrutement,
     required this.withMonSuiviDemarchesKoMessage,
+    required this.abTestingIaFt,
   });
 
   factory FeatureFlip.initial() {
@@ -16,6 +18,7 @@ class FeatureFlip extends Equatable {
       useCvm: false,
       withCampagneRecrutement: false,
       withMonSuiviDemarchesKoMessage: null,
+      abTestingIaFt: AbTestingIaFt.versionA,
     );
   }
 
@@ -23,11 +26,13 @@ class FeatureFlip extends Equatable {
     bool? useCvm,
     bool? withCampagneRecrutement,
     String? withMonSuiviDemarchesKoMessage,
+    AbTestingIaFt? abTestingIaFt,
   }) {
     return FeatureFlip(
       useCvm: useCvm ?? this.useCvm,
       withCampagneRecrutement: withCampagneRecrutement ?? this.withCampagneRecrutement,
       withMonSuiviDemarchesKoMessage: withMonSuiviDemarchesKoMessage ?? this.withMonSuiviDemarchesKoMessage,
+      abTestingIaFt: abTestingIaFt ?? this.abTestingIaFt,
     );
   }
 
@@ -36,5 +41,17 @@ class FeatureFlip extends Equatable {
         useCvm,
         withCampagneRecrutement,
         withMonSuiviDemarchesKoMessage,
+        abTestingIaFt,
       ];
+}
+
+enum AbTestingIaFt {
+  versionA,
+  versionB;
+
+  factory AbTestingIaFt.fromJson(String json) => switch (json) {
+        "A" => AbTestingIaFt.versionA,
+        "B" => AbTestingIaFt.versionB,
+        _ => AbTestingIaFt.versionA,
+      };
 }

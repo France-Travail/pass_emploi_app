@@ -10,5 +10,8 @@ FeatureFlipState featureFlipReducer(FeatureFlipState current, dynamic action) {
     return FeatureFlipState(
         current.featureFlip.copyWith(withMonSuiviDemarchesKoMessage: action.withMonSuiviDemarchesKoMessage));
   }
+  if (action is FeatureFlipAbTestingIaFtAction) {
+    return FeatureFlipState(current.featureFlip.copyWith(abTestingIaFt: action.abTestingIaFt));
+  }
   return current;
 }

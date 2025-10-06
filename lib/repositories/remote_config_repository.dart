@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/cgu.dart';
+import 'package:pass_emploi_app/models/feature_flip.dart';
 import 'package:pass_emploi_app/models/feedback_for_feature.dart';
 import 'package:pass_emploi_app/models/remote_campagne_accueil.dart';
 
@@ -58,6 +59,12 @@ class RemoteConfigRepository {
     final key = _firebaseRemoteConfig.getString("mon_suivi_demarches_ko_message");
     if (key.isEmpty || key == "null") return null;
     return key;
+  }
+
+  AbTestingIaFt abTestingIaFt() {
+    if (_firebaseRemoteConfig == null) return AbTestingIaFt.versionA;
+    final key = _firebaseRemoteConfig.getString("ab_testing_ia_ft");
+    return AbTestingIaFt.fromJson(key);
   }
 
   Map<Accompagnement, bool> cvmActivationByAccompagnement() {

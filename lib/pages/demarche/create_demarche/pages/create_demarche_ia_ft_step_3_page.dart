@@ -227,7 +227,9 @@ class _ContentState extends State<_Content> {
                   onDelete: (id) {
                     notifier.deleteSuggestion(id);
                     PassEmploiMatomoTracker.instance.trackEvent(
-                      eventCategory: AnalyticsEventNames.createDemarcheEventCategory,
+                      eventCategory: AnalyticsEventNames.createDemarcheEventCategory(
+                        StoreProvider.of<AppState>(context).state.featureFlipState.featureFlip.abTestingIaFt.name,
+                      ),
                       action: AnalyticsEventNames.createDemarcheIaSuggestionsListDeleted,
                       eventValue: 1,
                     );

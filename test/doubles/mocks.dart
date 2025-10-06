@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:pass_emploi_app/auth/auth_wrapper.dart';
 import 'package:pass_emploi_app/auth/authenticator.dart';
 import 'package:pass_emploi_app/models/demarche_ia_dto.dart';
+import 'package:pass_emploi_app/models/feature_flip.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/matching_demarche_du_referentiel.dart';
 import 'package:pass_emploi_app/models/offre_dto.dart';
@@ -243,6 +244,7 @@ class MockRemoteConfigRepository extends Mock implements RemoteConfigRepository 
     when(() => cvmActivationByAccompagnement()).thenReturn({});
     when(() => monSuiviPoleEmploiStartDateInMonths()).thenReturn(1);
     when(() => campagnesAccueil()).thenReturn([]);
+    when(() => abTestingIaFt()).thenReturn(AbTestingIaFt.versionA);
   }
 }
 

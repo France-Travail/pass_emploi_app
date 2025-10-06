@@ -870,10 +870,10 @@ class Strings {
   static String consulterMesDemarches = "Consulter mes démarches";
   static String iaFtShowcaseTitle = "Nouveau ! Créez vos démarches avec l'IA";
 
-  static String topDemarchesTitle = "Vos démarches en un instant";
-  static String topDemarchesSubtitle =
-      "Dictez ou écrivez en une seule fois vos démarches, elles sont triées en un clic";
-  static String topDemarchesPressedTip = "Créez vos démarches";
+  static String topDemarchesTitle = "Vos démarches en 1 minute";
+  static String topDemarchesTitleB = "Vos démarches en 1 minute avec l'IA";
+  static String topDemarchesSubtitle = "Décrivez vos démarches en une seule fois. L’IA s’occupe du reste";
+  static String topDemarchesHint = "Écrivez ou dictez vos démarches...";
 
   // Recherche
   static String derniereRecherche = "Dernière recherche";
