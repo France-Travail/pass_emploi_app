@@ -99,7 +99,6 @@ class _CreateDemarcheIaFtStep2PageState extends State<CreateDemarcheIaFtStep2Pag
             Stack(
               children: [
                 BaseTextField(
-                  autofocus: true,
                   controller: _textEditingController,
                   hintText: Strings.iaFtStep2FieldHint,
                   minLines: 6,
