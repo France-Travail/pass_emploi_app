@@ -280,7 +280,8 @@ void main() {
         expect(viewModel.showConfirmation, false);
       });
 
-      test('should return true when confirmationFavoris is true even if confirmationOffreSuivie is for different offre', () {
+      test('should return true when confirmationFavoris is true even if confirmationOffreSuivie is for different offre',
+          () {
         // Given
         final store = givenState() //
             .loggedInPoleEmploiUser()
@@ -318,7 +319,8 @@ void main() {
         expect(viewModel.showConfirmation, true);
       });
 
-      test('should return true when confirmationOffreSuivie is true even if confirmationFavoris is for different offre', () {
+      test('should return true when confirmationOffreSuivie is true even if confirmationFavoris is for different offre',
+          () {
         // Given
         final store = givenState() //
             .loggedInPoleEmploiUser()
