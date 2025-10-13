@@ -212,6 +212,12 @@ bool _shouldShowOffreSuivieBottomSheet(Store<AppState> store, OffreEmploi offre)
 }
 
 bool _shouldShowOffreSuiviForm(Store<AppState> store, OffreEmploi offre) {
+  final isFavoriNonPostule = store.state.offreEmploiFavorisIdsState.isFavoriNonPostule(offre.id);
+  final confirmationFavoris = store.state.favoriUpdateState.confirmationPostuleOffreId == offre.id;
+  if (isFavoriNonPostule || confirmationFavoris) {
+    return true;
+  }
+
   final offresSuiviesState = store.state.offresSuiviesState;
   return offresSuiviesState.isPresent(offre.id) || offresSuiviesState.confirmationOffre?.offreDto.id == offre.id;
 }

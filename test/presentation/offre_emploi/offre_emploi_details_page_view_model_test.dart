@@ -1,6 +1,7 @@
 import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/features/favori/ids/favori_ids_state.dart';
+import 'package:pass_emploi_app/features/favori/update/favori_update_state.dart';
 import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_state.dart';
 import 'package:pass_emploi_app/models/image_source.dart';
 import 'package:pass_emploi_app/models/offre_dto.dart';
@@ -281,8 +282,10 @@ void main() {
       // Then
       expect(viewModel.shouldShowOffreSuivieBottomSheet, false);
     });
+  });
 
-    test('should display offre suivie form when prensent in offres suivies', () {
+  group('_shouldShowOffreSuiviForm', () {
+    test('should display offre suivie form when present in offres suivies', () {
       // Given
       final store = givenState() //
           .loggedInPoleEmploiUser()
@@ -308,7 +311,7 @@ void main() {
       expect(viewModel.shouldShowOffreSuiviForm, true);
     });
 
-    test('should display offre suivie form when prensent confirmation', () {
+    test('should display offre suivie form when present in confirmation offre', () {
       // Given
       final store = givenState() //
           .loggedInPoleEmploiUser()
@@ -333,7 +336,7 @@ void main() {
       expect(viewModel.shouldShowOffreSuiviForm, true);
     });
 
-    test('should not display offre suivie', () {
+    test('should display offre suivie form when is in favoris and not postulated', () {
       // Given
       final store = givenState() //
           .loggedInPoleEmploiUser()
@@ -343,6 +346,58 @@ void main() {
               offresSuivies: [],
               confirmationOffre: null,
             ),
+            offreEmploiFavorisIdsState: FavoriIdsState.success({
+              FavoriDto(
+                mockOffreEmploiDetails().id,
+                datePostulation: null,
+              )
+            }),
+          )
+          .store();
+
+      // When
+      final viewModel = OffreEmploiDetailsPageViewModel.create(store);
+
+      // Then
+      expect(viewModel.shouldShowOffreSuiviForm, true);
+    });
+
+    test('should display offre suivie form when confirmation favoris is true', () {
+      // Given
+      final store = givenState() //
+          .loggedInPoleEmploiUser()
+          .offreEmploiDetailsSuccess()
+          .copyWith(
+            offresSuiviesState: OffresSuiviesState(
+              offresSuivies: [],
+              confirmationOffre: null,
+            ),
+            favoriUpdateState: FavoriUpdateState(
+              {},
+              confirmationPostuleOffreId: mockOffreEmploiDetails().id,
+            ),
+          )
+          .store();
+
+      // When
+      final viewModel = OffreEmploiDetailsPageViewModel.create(store);
+
+      // Then
+      expect(viewModel.shouldShowOffreSuiviForm, true);
+    });
+
+    test('should not display offre suivie form when postulated', () {
+      // Given
+      final store = givenState() //
+          .loggedInPoleEmploiUser()
+          .offreEmploiDetailsSuccess()
+          .copyWith(
+            offresSuiviesState: OffresSuiviesState(
+              offresSuivies: [],
+              confirmationOffre: null,
+            ),
+            offreEmploiFavorisIdsState:
+                FavoriIdsState.success({FavoriDto(mockOffreEmploiDetails().id, datePostulation: DateTime(2025))}),
           )
           .store();
 
@@ -351,6 +406,88 @@ void main() {
 
       // Then
       expect(viewModel.shouldShowOffreSuiviForm, false);
+    });
+
+    test('should not display offre suivie form when not in any list', () {
+      // Given
+      final store = givenState() //
+          .loggedInPoleEmploiUser()
+          .offreEmploiDetailsSuccess()
+          .copyWith(
+            offresSuiviesState: OffresSuiviesState(
+              offresSuivies: [],
+              confirmationOffre: null,
+            ),
+            favoriUpdateState: FavoriUpdateState(
+              {},
+              confirmationPostuleOffreId: null,
+            ),
+          )
+          .store();
+
+      // When
+      final viewModel = OffreEmploiDetailsPageViewModel.create(store);
+
+      // Then
+      expect(viewModel.shouldShowOffreSuiviForm, false);
+    });
+
+    test('should display offre suivie form when both in offres suivies and favoris', () {
+      // Given
+      final store = givenState() //
+          .loggedInPoleEmploiUser()
+          .offreEmploiDetailsSuccess()
+          .copyWith(
+            offresSuiviesState: OffresSuiviesState(
+              offresSuivies: [
+                OffreSuivie(
+                  dateConsultation: DateTime(2025),
+                  offreDto: OffreEmploiDto(
+                    mockOffreEmploiDetails().toOffreEmploi,
+                  ),
+                )
+              ],
+            ),
+            offreEmploiFavorisIdsState: FavoriIdsState.success({
+              FavoriDto(
+                mockOffreEmploiDetails().id,
+                datePostulation: null,
+              )
+            }),
+          )
+          .store();
+
+      // When
+      final viewModel = OffreEmploiDetailsPageViewModel.create(store);
+
+      // Then
+      expect(viewModel.shouldShowOffreSuiviForm, true);
+    });
+
+    test('should display offre suivie form when in favoris with confirmation and postulated', () {
+      // Given
+      final store = givenState() //
+          .loggedInPoleEmploiUser()
+          .offreEmploiDetailsSuccess()
+          .copyWith(
+            offresSuiviesState: OffresSuiviesState(
+              offresSuivies: [],
+              confirmationOffre: null,
+            ),
+            offreEmploiFavorisIdsState:
+                FavoriIdsState.success({FavoriDto(mockOffreEmploiDetails().id, datePostulation: DateTime(2025))}),
+            favoriUpdateState: FavoriUpdateState(
+              {},
+              confirmationPostuleOffreId: mockOffreEmploiDetails().id,
+            ),
+          )
+          .store();
+
+      // When
+      final viewModel = OffreEmploiDetailsPageViewModel.create(store);
+
+      // Then
+      expect(viewModel.shouldShowOffreSuiviForm, true);
     });
   });
 }

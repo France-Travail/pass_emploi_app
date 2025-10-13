@@ -17,8 +17,9 @@ import 'package:pass_emploi_app/utils/date_extensions.dart';
 import 'package:redux/redux.dart';
 
 class OffreSuivieFormViewmodel extends Equatable {
+  final bool isFavorisNonPostule;
   final bool fromAlternance;
-  final String dateConsultation;
+  final String? dateConsultation;
   final String? offreLien;
   final bool showConfirmation;
   final String? confirmationMessage;
@@ -26,12 +27,13 @@ class OffreSuivieFormViewmodel extends Equatable {
   final String onCreateActionOrDemarcheLabel;
   final bool useDemarche;
   final void Function() onPostule;
-  final void Function() onInteresse;
+  final void Function()? onInteresse;
   final void Function() onNotInterested;
   final void Function() onHideForever;
   final void Function() onCreateActionOrDemarche;
 
   OffreSuivieFormViewmodel._({
+    required this.isFavorisNonPostule,
     required this.fromAlternance,
     required this.dateConsultation,
     required this.offreLien,
@@ -50,25 +52,25 @@ class OffreSuivieFormViewmodel extends Equatable {
   factory OffreSuivieFormViewmodel.create(Store<AppState> store, String offreId, bool isHomePage) {
     final offreSuivie = store.state.offresSuiviesState.getOffre(offreId);
 
+    final isFavorisNonPostule = store.state.offreEmploiFavorisIdsState.isFavoriNonPostule(offreId);
+
     return OffreSuivieFormViewmodel._(
+      isFavorisNonPostule: isFavorisNonPostule,
       fromAlternance: offreSuivie != null && offreSuivie.offreDto.isAlternance,
-      dateConsultation: offreSuivie != null ? _dateConsultation(offreSuivie) : "",
+      dateConsultation: offreSuivie != null ? _dateConsultation(offreSuivie, isFavorisNonPostule) : null,
       offreLien: offreSuivie != null ? _offreLien(offreSuivie, isHomePage) : null,
-      showConfirmation: store.state.offresSuiviesState.confirmationOffre?.offreDto.id == offreId,
+      showConfirmation: _showConfirmation(store, offreId),
       confirmationMessage: _confirmationMessage(store, offreId),
       confirmationButton: _confirmationButton(store, offreId, isHomePage),
       onCreateActionOrDemarcheLabel: store.state.isMiloLoginMode() ? Strings.addAction : Strings.addDemarche,
       useDemarche: !store.state.isMiloLoginMode(),
-      onPostule: () {
-        store.dispatch(FavoriUpdateRequestAction<OffreEmploi>(offreId, FavoriStatus.applied));
-        if (offreSuivie != null) store.dispatch(OffresSuiviesDeleteAction(offreSuivie));
-      },
-      onInteresse: () {
-        store.dispatch(FavoriUpdateRequestAction<OffreEmploi>(offreId, FavoriStatus.added));
-        if (offreSuivie != null) store.dispatch(OffresSuiviesDeleteAction(offreSuivie));
-      },
+      onPostule: _onPostule(isFavorisNonPostule, store, offreId, offreSuivie),
+      onInteresse: _onInteresse(isFavorisNonPostule, store, offreId, offreSuivie),
       onNotInterested: offreSuivie != null ? () => store.dispatch(OffresSuiviesDeleteAction(offreSuivie)) : () {},
-      onHideForever: () => store.dispatch(OffresSuiviesConfirmationResetAction()),
+      onHideForever: () {
+        store.dispatch(OffresSuiviesConfirmationResetAction());
+        store.dispatch(FavoriUpdateConfirmationResetAction());
+      },
       onCreateActionOrDemarche: () => _onCreateActionOrDemarche(store, offreSuivie),
     );
   }
@@ -87,7 +89,40 @@ class OffreSuivieFormViewmodel extends Equatable {
       ];
 }
 
-String _dateConsultation(OffreSuivie offreSuivie) {
+bool _showConfirmation(Store<AppState> store, String offreId) {
+  final confirmationFavoris = store.state.favoriUpdateState.confirmationPostuleOffreId == offreId;
+  final confirmationOffreSuivie = store.state.offresSuiviesState.confirmationOffre?.offreDto.id == offreId;
+  return confirmationFavoris || confirmationOffreSuivie;
+}
+
+void Function()? _onInteresse(
+    bool isFavorisNonPostule, Store<AppState> store, String offreId, OffreSuivie? offreSuivie) {
+  if (isFavorisNonPostule) {
+    return null;
+  }
+  return () {
+    store.dispatch(FavoriUpdateRequestAction<OffreEmploi>(offreId, FavoriStatus.added));
+    if (offreSuivie != null) store.dispatch(OffresSuiviesDeleteAction(offreSuivie));
+  };
+}
+
+void Function() _onPostule(bool isFavorisNonPostule, Store<AppState> store, String offreId, OffreSuivie? offreSuivie) {
+  return () {
+    store.dispatch(
+      FavoriUpdateRequestAction<OffreEmploi>(
+        offreId,
+        FavoriStatus.applied,
+        currentStatus: isFavorisNonPostule ? FavoriStatus.added : null,
+      ),
+    );
+    if (offreSuivie != null) store.dispatch(OffresSuiviesDeleteAction(offreSuivie));
+  };
+}
+
+String? _dateConsultation(OffreSuivie offreSuivie, bool isFavorisNonPostule) {
+  if (isFavorisNonPostule) {
+    return null;
+  }
   return Strings.youConsultedThisOfferAt(offreSuivie.dateConsultation.timeAgo());
 }
 

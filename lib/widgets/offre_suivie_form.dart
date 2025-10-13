@@ -115,7 +115,7 @@ class _Confirmation extends StatelessWidget {
           right: -Margins.spacing_base,
           child: IconButton(
             onPressed: () => viewModel.onHideForever(),
-            icon: Icon(AppIcons.close_rounded),
+            icon: Icon(AppIcons.close_rounded, color: showPrimaryBackground ? Colors.white : AppColors.contentColor),
           ),
         ),
       ],
@@ -139,8 +139,8 @@ class _Content extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ...[
-          Text(viewModel.dateConsultation,
+        if (viewModel.dateConsultation != null) ...[
+          Text(viewModel.dateConsultation!,
               style: TextStyles.textSRegular()
                   .copyWith(color: showPrimaryBackground ? Colors.white : AppColors.contentColor)),
           SizedBox(height: Margins.spacing_s),
@@ -230,16 +230,17 @@ class _OptionsState extends State<_Options> {
               widget.viewModel.onPostule();
             },
           ),
-          PassEmploiRadio<_OffreSuivieStatus?>(
-            title: Strings.caMinteresse,
-            value: _OffreSuivieStatus.interested,
-            groupValue: _selectedValue,
-            onPressed: (status) {
-              trackEvent(OffreSuiviTrackingOption.interesse);
-              selectValue(status);
-              widget.viewModel.onInteresse();
-            },
-          ),
+          if (widget.viewModel.onInteresse != null)
+            PassEmploiRadio<_OffreSuivieStatus?>(
+              title: Strings.caMinteresse,
+              value: _OffreSuivieStatus.interested,
+              groupValue: _selectedValue,
+              onPressed: (status) {
+                trackEvent(OffreSuiviTrackingOption.interesse);
+                selectValue(status);
+                widget.viewModel.onInteresse?.call();
+              },
+            ),
           PassEmploiRadio<_OffreSuivieStatus?>(
             title: Strings.caNeMinteressePas,
             value: _OffreSuivieStatus.notInterested,
