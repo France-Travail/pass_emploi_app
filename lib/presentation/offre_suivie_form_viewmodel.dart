@@ -66,7 +66,7 @@ class OffreSuivieFormViewmodel extends Equatable {
       useDemarche: !store.state.isMiloLoginMode(),
       onPostule: _onPostule(isFavorisNonPostule, store, offreId, offreSuivie),
       onInteresse: _onInteresse(isFavorisNonPostule, store, offreId, offreSuivie),
-      onNotInterested: offreSuivie != null ? () => store.dispatch(OffresSuiviesDeleteAction(offreSuivie)) : () {},
+      onNotInterested: _onNotInterested(offreSuivie, store, offreId),
       onHideForever: () {
         store.dispatch(OffresSuiviesConfirmationResetAction());
         store.dispatch(FavoriUpdateConfirmationResetAction());
@@ -93,6 +93,18 @@ bool _showConfirmation(Store<AppState> store, String offreId) {
   final confirmationFavoris = store.state.favoriUpdateState.confirmationPostuleOffreId == offreId;
   final confirmationOffreSuivie = store.state.offresSuiviesState.confirmationOffre?.offreDto.id == offreId;
   return confirmationFavoris || confirmationOffreSuivie;
+}
+
+void Function() _onNotInterested(OffreSuivie? offreSuivie, Store<AppState> store, String offreId) {
+  return () {
+    if (offreSuivie != null) {
+      store.dispatch(OffresSuiviesDeleteAction(offreSuivie));
+    }
+    final isEnFavoris = store.state.offreEmploiFavorisIdsState.contains(offreId);
+    if (isEnFavoris) {
+      store.dispatch(FavoriUpdateRequestAction<OffreEmploi>(offreId, FavoriStatus.removed));
+    }
+  };
 }
 
 void Function()? _onInteresse(
