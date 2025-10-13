@@ -24,9 +24,11 @@ class OffreSuivieForm extends StatelessWidget {
     required this.offreId,
     required this.showOffreDetails,
     required this.trackingSource,
+    required this.showPrimaryBackground,
   });
 
   final bool showOffreDetails;
+  final bool showPrimaryBackground;
   final String offreId;
   final OffreSuiviTrackingSource trackingSource;
 
@@ -41,10 +43,12 @@ class OffreSuivieForm extends StatelessWidget {
         distinct: true,
         builder: (context, viewModel) {
           return CardContainer(
+            backgroundColor: showPrimaryBackground ? AppColors.primary : Colors.white,
             child: AnimatedSwitcher(
               duration: AnimationDurations.fast,
-              child:
-                  viewModel.showConfirmation ? _Confirmation(viewModel) : _Content(viewModel, offreId, trackingSource),
+              child: viewModel.showConfirmation
+                  ? _Confirmation(viewModel, showPrimaryBackground)
+                  : _Content(viewModel, offreId, trackingSource, showPrimaryBackground),
             ),
           );
         });
@@ -52,8 +56,9 @@ class OffreSuivieForm extends StatelessWidget {
 }
 
 class _Confirmation extends StatelessWidget {
-  const _Confirmation(this.viewModel);
+  const _Confirmation(this.viewModel, this.showPrimaryBackground);
   final OffreSuivieFormViewmodel viewModel;
+  final bool showPrimaryBackground;
 
   @override
   Widget build(BuildContext context) {
@@ -62,19 +67,22 @@ class _Confirmation extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Icon(AppIcons.check_circle_outline_rounded, color: AppColors.contentColor),
+            Icon(AppIcons.check_circle_outline_rounded,
+                color: showPrimaryBackground ? Colors.white : AppColors.contentColor),
             SizedBox(height: Margins.spacing_s),
             Text(
               Strings.merciPourVotreReponse,
               textAlign: TextAlign.center,
-              style: TextStyles.textBaseRegular.copyWith(color: AppColors.contentColor),
+              style: TextStyles.textBaseRegular
+                  .copyWith(color: showPrimaryBackground ? Colors.white : AppColors.contentColor),
             ),
             if (viewModel.confirmationMessage != null) ...[
               SizedBox(height: Margins.spacing_s),
               Text(
                 viewModel.confirmationMessage!,
                 textAlign: TextAlign.center,
-                style: TextStyles.textSRegular().copyWith(color: AppColors.contentColor),
+                style: TextStyles.textSRegular()
+                    .copyWith(color: showPrimaryBackground ? Colors.white : AppColors.contentColor),
               ),
             ],
             SizedBox(height: Margins.spacing_base),
@@ -120,18 +128,21 @@ class _Content extends StatelessWidget {
     this.viewModel,
     this.offreId,
     this.trackingSource,
+    this.showPrimaryBackground,
   );
   final OffreSuivieFormViewmodel viewModel;
   final String offreId;
   final OffreSuiviTrackingSource trackingSource;
-
+  final bool showPrimaryBackground;
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ...[
-          Text(viewModel.dateConsultation, style: TextStyles.textSRegular().copyWith(color: AppColors.contentColor)),
+          Text(viewModel.dateConsultation,
+              style: TextStyles.textSRegular()
+                  .copyWith(color: showPrimaryBackground ? Colors.white : AppColors.contentColor)),
           SizedBox(height: Margins.spacing_s),
         ],
         if (viewModel.offreLien != null) ...[
@@ -142,7 +153,9 @@ class _Content extends StatelessWidget {
           ),
           SizedBox(height: Margins.spacing_s),
         ],
-        Text(Strings.ouEnEtesVous, style: TextStyles.textBaseBold.copyWith(color: AppColors.contentColor)),
+        Text(Strings.ouEnEtesVous,
+            style:
+                TextStyles.textBaseBold.copyWith(color: showPrimaryBackground ? Colors.white : AppColors.contentColor)),
         SizedBox(height: Margins.spacing_s),
         _Options(viewModel, trackingSource),
       ],

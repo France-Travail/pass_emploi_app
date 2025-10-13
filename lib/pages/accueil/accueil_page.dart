@@ -270,6 +270,7 @@ class _Blocs extends StatelessWidget {
           offreId: item.offreId,
           showOffreDetails: true,
           trackingSource: OffreSuiviTrackingSource.accueil,
+          showPrimaryBackground: false,
         ),
       final RemoteCampagneAccueilItem item => RemoteCampagneAccueilCard(item),
       final BoulangerCampagneItem item => BoulangerCampagneCard(item),
