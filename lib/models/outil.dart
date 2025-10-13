@@ -136,6 +136,15 @@ class Outil extends Equatable {
     imagePath: "boite_a_outils/immersion_boulanger.webp",
   );
 
+  static Outil metierScope = Outil(
+    title: "MétierScope, explorez les métiers",
+    description:
+        "Retrouvez toutes les informations sur les métiers, le marché du travail et les services utiles pour enclencher votre projet.",
+    actionLabel: "Découvrir les métiers",
+    redirectMode: OutilExternalRedirectMode(ExternalLinks.boiteAOutilsMetierScope),
+    imagePath: "boite_a_outils/metierscope.webp",
+  );
+
   Outil withoutImage() {
     return Outil(
       title: title,

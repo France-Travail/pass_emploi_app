@@ -27,4 +27,6 @@ class ExternalLinks {
       "https://candidat.francetravail.fr/portail-simulateurs/accueil-formation?at_medium=CMP&at_campaign=MVP_Estime_Formation&at_cmp_indicateur1=DDCT-Incubateur&at_cmp_indicateur2=Appli_CEJ";
   static const String immersionBoulangerLink =
       "https://immersion-facile.beta.gouv.fr/groupe/boulanger?mtm_campaign=AppliCEJ-jeunes-stages-Boulanger&mtm_kwd=notif%20appli%20CEJ";
+  static const String boiteAOutilsMetierScope =
+      "https://candidat.francetravail.fr/metierscope/?at_medium=CMP&at_campaign=Metierscope&at_cmp_%E2%80%A6=";
 }
