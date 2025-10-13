@@ -190,7 +190,7 @@ AccueilItem? _outilsItem(AccueilSuccessState successState, Accompagnement accomp
     Accompagnement.aij => AccueilOutilsItem([
         Outil.immersionBoulanger.withoutImage(),
         Outil.benevolatPassEmploi.withoutImage(),
-        Outil.mesAidesFt.withoutImage(),
+        Outil.metierScope.withoutImage(),
       ])
   };
 }

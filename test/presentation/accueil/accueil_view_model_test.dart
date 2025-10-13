@@ -295,7 +295,7 @@ void main() {
         [
           Outil.immersionBoulanger.withoutImage(),
           Outil.benevolatPassEmploi.withoutImage(),
-          Outil.mesAidesFt.withoutImage(),
+          Outil.metierScope.withoutImage(),
         ],
       );
     });

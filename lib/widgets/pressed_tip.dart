@@ -19,12 +19,12 @@ class PressedTip extends StatelessWidget {
   PressedTip.externalLink(this.tip, {this.textColor = AppColors.contentColor})
       : icon = AppIcons.open_in_new_rounded,
         iconLabel = null,
-        iconLeading = true;
+        iconLeading = false;
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         if (iconLeading) ...[
           Icon(icon, color: textColor, size: Dimens.icon_size_base),
