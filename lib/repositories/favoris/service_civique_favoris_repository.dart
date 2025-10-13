@@ -29,6 +29,21 @@ class ServiceCiviqueFavorisRepository extends FavorisRepository<ServiceCivique> 
   }
 
   @override
+  Future<bool> markFavoriAsPostulated(String userId, String favoriId) async {
+    final url = '/jeunes/$userId/favoris/services-civique/$favoriId';
+    try {
+      await _httpClient.patch(url);
+      return true;
+    } catch (e, stack) {
+      _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
+      if (e is DioException && e.response?.statusCode == 404) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @override
   Future<Set<FavoriDto>?> getFavorisId(String userId) async {
     final url = getFavorisIdUrl(userId: userId);
     try {

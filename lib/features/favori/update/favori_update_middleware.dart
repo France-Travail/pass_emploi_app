@@ -17,7 +17,13 @@ class FavoriUpdateMiddleware<T> extends MiddlewareClass<AppState> {
     final loginState = store.state.loginState;
     if (action is FavoriUpdateRequestAction<T> && loginState is LoginSuccessState) {
       if (action.newStatus == FavoriStatus.added) await _addFavori(store, action, loginState.user.id);
-      if (action.newStatus == FavoriStatus.applied) _addFavori(store, action, loginState.user.id, applied: true);
+      if (action.newStatus == FavoriStatus.applied) {
+        if (action.currentStatus == FavoriStatus.added) {
+          await _updatePostulatedFavori(store, action, loginState.user.id);
+        } else {
+          await _addFavori(store, action, loginState.user.id, applied: true);
+        }
+      }
       if (action.newStatus == FavoriStatus.removed) await _removeFavori(store, action, loginState.user.id);
     }
   }
@@ -50,6 +56,24 @@ class FavoriUpdateMiddleware<T> extends MiddlewareClass<AppState> {
     final result = await _repository.deleteFavori(userId, action.favoriId);
     if (result) {
       store.dispatch(FavoriUpdateSuccessAction<T>(action.favoriId, action.newStatus));
+    } else {
+      store.dispatch(FavoriUpdateFailureAction<T>(action.favoriId));
+    }
+  }
+
+  Future<void> _updatePostulatedFavori(
+    Store<AppState> store,
+    FavoriUpdateRequestAction<T> action,
+    String userId,
+  ) async {
+    store.dispatch(FavoriUpdateLoadingAction<T>(action.favoriId));
+    final result = await _repository.markFavoriAsPostulated(userId, action.favoriId);
+    if (result) {
+      store.dispatch(FavoriUpdateSuccessAction<T>(
+        action.favoriId,
+        action.newStatus,
+        isPostulated: true,
+      ));
     } else {
       store.dispatch(FavoriUpdateFailureAction<T>(action.favoriId));
     }

@@ -119,6 +119,41 @@ void main() {
       });
     });
   });
+
+  group("markFavoriAsPostulated", () {
+    sut.when((repository) => repository.markFavoriAsPostulated("jeuneId", "offreId"));
+
+    group('when response is valid', () {
+      sut.givenResponseCode(200);
+
+      test('request should be valid', () async {
+        await sut.expectRequestBody(
+          method: HttpMethod.patch,
+          url: "/jeunes/jeuneId/favoris/services-civique/offreId",
+        );
+      });
+
+      test('response should be valid', () async {
+        await sut.expectTrueAsResult();
+      });
+    });
+
+    group('when response is 404', () {
+      sut.givenResponseCode(404);
+
+      test('response should be true', () async {
+        await sut.expectTrueAsResult();
+      });
+    });
+
+    group('when response is invalid', () {
+      sut.givenResponseCode(500);
+
+      test('response should be false', () async {
+        await sut.expectFalseAsResult();
+      });
+    });
+  });
 }
 
 ServiceCivique _offreWithFullData() {

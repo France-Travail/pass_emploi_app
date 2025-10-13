@@ -116,6 +116,45 @@ void main() {
     final favorisState = (updatedFavoris.offreEmploiFavorisIdsState as FavoriIdsSuccessState<OffreEmploi>);
     expect(favorisState.favoris, {FavoriDto("1"), FavoriDto("2"), FavoriDto("4")});
   });
+
+  test("favori should be added with applied status when new status is applied and current status is null", () async {
+    // Given
+    final Store<AppState> store = _successStoreWithFavorisAndSearchResultsLoaded();
+
+    final loadingState =
+        store.onChange.any((element) => element.favoriUpdateState.requestStatus["17"] == FavoriUpdateStatus.LOADING);
+    final successState = store.onChange
+        .firstWhere((element) => element.favoriUpdateState.requestStatus["17"] == FavoriUpdateStatus.SUCCESS);
+
+    // When
+    store.dispatch(FavoriUpdateRequestAction<OffreEmploi>("17", FavoriStatus.applied, currentStatus: null));
+
+    // Then
+    expect(await loadingState, true);
+    final updatedFavoris = await successState;
+    final favorisState = (updatedFavoris.offreEmploiFavorisIdsState as FavoriIdsSuccessState<OffreEmploi>);
+    expect(favorisState.favoris, {FavoriDto("1"), FavoriDto("2"), FavoriDto("4"), FavoriDto("17")});
+  });
+
+  test("favori should be marked as postulated when new status is applied and current status is added", () async {
+    // Given
+    final Store<AppState> store = _successStoreWithFavorisAndSearchResultsLoaded();
+
+    final loadingState =
+        store.onChange.any((element) => element.favoriUpdateState.requestStatus["1"] == FavoriUpdateStatus.LOADING);
+    final successState = store.onChange
+        .firstWhere((element) => element.favoriUpdateState.requestStatus["1"] == FavoriUpdateStatus.SUCCESS);
+
+    // When
+    store
+        .dispatch(FavoriUpdateRequestAction<OffreEmploi>("1", FavoriStatus.applied, currentStatus: FavoriStatus.added));
+
+    // Then
+    expect(await loadingState, true);
+    final updatedFavoris = await successState;
+    final favorisState = (updatedFavoris.offreEmploiFavorisIdsState as FavoriIdsSuccessState<OffreEmploi>);
+    expect(favorisState.favoris, {FavoriDto("1"), FavoriDto("2"), FavoriDto("4")});
+  });
 }
 
 Store<AppState> _successStoreWithFavorisAndSearchResultsLoaded() {
@@ -180,6 +219,11 @@ class OffreEmploiFavorisRepositorySuccessStub extends OffreEmploiFavorisReposito
   Future<bool> deleteFavori(String userId, String offreId) async {
     return true;
   }
+
+  @override
+  Future<bool> markFavoriAsPostulated(String userId, String favoriId) async {
+    return true;
+  }
 }
 
 class OffreEmploiFavorisRepositoryFailureStub extends OffreEmploiFavorisRepository {
@@ -197,6 +241,11 @@ class OffreEmploiFavorisRepositoryFailureStub extends OffreEmploiFavorisReposito
 
   @override
   Future<bool> deleteFavori(String userId, String offreId) async {
+    return false;
+  }
+
+  @override
+  Future<bool> markFavoriAsPostulated(String userId, String favoriId) async {
     return false;
   }
 }

@@ -66,4 +66,19 @@ class ImmersionFavorisRepository extends FavorisRepository<Immersion> {
     }
     return false;
   }
+
+  @override
+  Future<bool> markFavoriAsPostulated(String userId, String favoriId) async {
+    final url = "/jeunes/$userId/favoris/offres-immersion/$favoriId";
+    try {
+      await _httpClient.patch(url);
+      return true;
+    } catch (e, stack) {
+      _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
+      if (e is DioException && e.response?.statusCode == 404) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

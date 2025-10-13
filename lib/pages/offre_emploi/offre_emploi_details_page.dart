@@ -193,6 +193,7 @@ class OffreEmploiDetailsPage extends StatelessWidget {
                     offreId: id!,
                     showOffreDetails: false,
                     trackingSource: OffreSuiviTrackingSource.offreDetail,
+                    showPrimaryBackground: true,
                   ),
                   SizedBox(height: Margins.spacing_l),
                 ],

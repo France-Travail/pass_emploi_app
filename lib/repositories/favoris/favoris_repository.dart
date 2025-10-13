@@ -23,4 +23,6 @@ abstract class FavorisRepository<T> {
   Future<bool> postFavori(String userId, T favori, {bool applied = false});
 
   Future<bool> deleteFavori(String userId, String favoriId);
+
+  Future<bool> markFavoriAsPostulated(String userId, String favoriId);
 }

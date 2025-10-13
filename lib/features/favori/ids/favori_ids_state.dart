@@ -11,6 +11,8 @@ abstract class FavoriIdsState<T> {
   bool contains(String offreId);
 
   DateTime? datePostulationOf(String offreId);
+
+  bool isFavoriNonPostule(String offreId);
 }
 
 class FavoriIdsSuccessState<T> extends FavoriIdsState<T> {
@@ -24,6 +26,11 @@ class FavoriIdsSuccessState<T> extends FavoriIdsState<T> {
   @override
   DateTime? datePostulationOf(String offreId) =>
       favoris.firstWhereOrNull((favori) => favori.id == offreId)?.datePostulation;
+
+  @override
+  bool isFavoriNonPostule(String offreId) {
+    return contains(offreId) && datePostulationOf(offreId) == null;
+  }
 }
 
 class FavoriIdsNotInitialized<T> extends FavoriIdsState<T> {
@@ -34,4 +41,7 @@ class FavoriIdsNotInitialized<T> extends FavoriIdsState<T> {
 
   @override
   DateTime? datePostulationOf(String offreId) => null;
+
+  @override
+  bool isFavoriNonPostule(String offreId) => false;
 }
