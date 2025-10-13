@@ -41,7 +41,6 @@ List<Outil> _getOutils(Accompagnement accompagnement) {
     Accompagnement.aij => [
         Outil.immersionBoulanger,
         Outil.laBonneAlternance,
-        Outil.metierScope,
         Outil.mesAidesFt,
         Outil.benevolatPassEmploi,
         Outil.formation,
@@ -55,6 +54,7 @@ List<Outil> _getOutils(Accompagnement accompagnement) {
       ],
     Accompagnement.avenirPro => [
         Outil.laBonneAlternance,
+        Outil.metierScope,
         Outil.mesAidesFt,
         Outil.benevolatPassEmploi,
         Outil.formation,

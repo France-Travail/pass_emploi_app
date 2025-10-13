@@ -184,13 +184,13 @@ AccueilItem? _outilsItem(AccueilSuccessState successState, Accompagnement accomp
       ]),
     Accompagnement.avenirPro => AccueilOutilsItem([
         Outil.benevolatPassEmploi.withoutImage(),
-        Outil.mesAidesFt.withoutImage(),
+        Outil.metierScope.withoutImage(),
         Outil.formation.withoutImage(),
       ]),
     Accompagnement.aij => AccueilOutilsItem([
         Outil.immersionBoulanger.withoutImage(),
         Outil.benevolatPassEmploi.withoutImage(),
-        Outil.metierScope.withoutImage(),
+        Outil.mesAidesFt.withoutImage(),
       ])
   };
 }
