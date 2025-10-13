@@ -17,9 +17,9 @@ class FavoriUpdateLoadingAction<T> {
 class FavoriUpdateSuccessAction<T> {
   final String favoriId;
   final FavoriStatus confirmedNewStatus;
-  final bool isPostulated;
+  final String? confirmationOffreId;
 
-  FavoriUpdateSuccessAction(this.favoriId, this.confirmedNewStatus, {this.isPostulated = false});
+  FavoriUpdateSuccessAction(this.favoriId, this.confirmedNewStatus, {this.confirmationOffreId});
 }
 
 class FavoriUpdateFailureAction<T> {

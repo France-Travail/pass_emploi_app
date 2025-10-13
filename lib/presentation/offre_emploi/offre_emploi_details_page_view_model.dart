@@ -219,7 +219,7 @@ bool _shouldShowOffreSuiviForm(Store<AppState> store, OffreEmploi offre) {
   }
 
   final offresSuiviesState = store.state.offresSuiviesState;
-  return offresSuiviesState.isPresent(offre.id) || offresSuiviesState.confirmationOffre?.offreDto.id == offre.id;
+  return offresSuiviesState.isPresent(offre.id) || offresSuiviesState.confirmationOffreId == offre.id;
 }
 
 void _onPostuler(Store<AppState> store, OffreEmploi offre) {

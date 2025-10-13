@@ -319,12 +319,7 @@ void main() {
           .copyWith(
             offresSuiviesState: OffresSuiviesState(
               offresSuivies: [],
-              confirmationOffre: OffreSuivie(
-                dateConsultation: DateTime(2025),
-                offreDto: OffreEmploiDto(
-                  mockOffreEmploiDetails().toOffreEmploi,
-                ),
-              ),
+              confirmationOffreId: mockOffreEmploiDetails().id,
             ),
           )
           .store();
@@ -344,7 +339,7 @@ void main() {
           .copyWith(
             offresSuiviesState: OffresSuiviesState(
               offresSuivies: [],
-              confirmationOffre: null,
+              confirmationOffreId: null,
             ),
             offreEmploiFavorisIdsState: FavoriIdsState.success({
               FavoriDto(
@@ -370,7 +365,7 @@ void main() {
           .copyWith(
             offresSuiviesState: OffresSuiviesState(
               offresSuivies: [],
-              confirmationOffre: null,
+              confirmationOffreId: null,
             ),
             favoriUpdateState: FavoriUpdateState(
               {},
@@ -394,7 +389,7 @@ void main() {
           .copyWith(
             offresSuiviesState: OffresSuiviesState(
               offresSuivies: [],
-              confirmationOffre: null,
+              confirmationOffreId: null,
             ),
             offreEmploiFavorisIdsState:
                 FavoriIdsState.success({FavoriDto(mockOffreEmploiDetails().id, datePostulation: DateTime(2025))}),
@@ -416,7 +411,7 @@ void main() {
           .copyWith(
             offresSuiviesState: OffresSuiviesState(
               offresSuivies: [],
-              confirmationOffre: null,
+              confirmationOffreId: null,
             ),
             favoriUpdateState: FavoriUpdateState(
               {},
@@ -472,7 +467,7 @@ void main() {
           .copyWith(
             offresSuiviesState: OffresSuiviesState(
               offresSuivies: [],
-              confirmationOffre: null,
+              confirmationOffreId: null,
             ),
             offreEmploiFavorisIdsState:
                 FavoriIdsState.success({FavoriDto(mockOffreEmploiDetails().id, datePostulation: DateTime(2025))}),

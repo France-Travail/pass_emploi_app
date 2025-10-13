@@ -4,7 +4,6 @@ import 'package:pass_emploi_app/features/favori/ids/favori_ids_state.dart';
 import 'package:pass_emploi_app/features/favori/update/favori_update_state.dart';
 import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_state.dart';
 import 'package:pass_emploi_app/models/offre_dto.dart';
-import 'package:pass_emploi_app/models/offre_emploi.dart';
 import 'package:pass_emploi_app/models/offre_emploi_details.dart';
 import 'package:pass_emploi_app/models/offre_suivie.dart';
 import 'package:pass_emploi_app/presentation/offre_suivie_form_viewmodel.dart';
@@ -62,12 +61,7 @@ void main() {
                       offreDto: OffreEmploiDto(offre.toOffreEmploi),
                     ),
                   ],
-                  confirmationOffre: OffreSuivie(
-                    dateConsultation: DateTime(2025),
-                    offreDto: OffreEmploiDto(
-                      mockOffreEmploiDetails().toOffreEmploi,
-                    ),
-                  ),
+                  confirmationOffreId: mockOffreEmploiDetails().id,
                 ),
               )
               .store();
@@ -101,12 +95,7 @@ void main() {
                       offreDto: OffreEmploiDto(offre.toOffreEmploi),
                     ),
                   ],
-                  confirmationOffre: OffreSuivie(
-                    dateConsultation: DateTime(2025),
-                    offreDto: OffreEmploiDto(
-                      mockOffreEmploiDetails().toOffreEmploi,
-                    ),
-                  ),
+                  confirmationOffreId: mockOffreEmploiDetails().id,
                 ),
               )
               .store();
@@ -152,10 +141,7 @@ void main() {
             .copyWith(
               offresSuiviesState: OffresSuiviesState(
                 offresSuivies: [],
-                confirmationOffre: OffreSuivie(
-                  dateConsultation: DateTime(2025),
-                  offreDto: OffreEmploiDto(offre.toOffreEmploi),
-                ),
+                confirmationOffreId: mockOffreEmploiDetails().id,
               ),
             )
             .store();
@@ -179,10 +165,7 @@ void main() {
               ),
               offresSuiviesState: OffresSuiviesState(
                 offresSuivies: [],
-                confirmationOffre: OffreSuivie(
-                  dateConsultation: DateTime(2025),
-                  offreDto: OffreEmploiDto(offre.toOffreEmploi),
-                ),
+                confirmationOffreId: mockOffreEmploiDetails().id,
               ),
             )
             .store();
@@ -206,7 +189,7 @@ void main() {
               ),
               offresSuiviesState: OffresSuiviesState(
                 offresSuivies: [],
-                confirmationOffre: null,
+                confirmationOffreId: null,
               ),
             )
             .store();
@@ -230,7 +213,7 @@ void main() {
               ),
               offresSuiviesState: OffresSuiviesState(
                 offresSuivies: [],
-                confirmationOffre: null,
+                confirmationOffreId: null,
               ),
             )
             .store();
@@ -254,21 +237,7 @@ void main() {
               ),
               offresSuiviesState: OffresSuiviesState(
                 offresSuivies: [],
-                confirmationOffre: OffreSuivie(
-                  dateConsultation: DateTime(2025),
-                  offreDto: OffreEmploiDto(
-                    OffreEmploi(
-                      id: "different-offre-id",
-                      title: "Different Offer",
-                      companyName: "Different Company",
-                      contractType: "CDI",
-                      location: "Paris",
-                      isAlternance: false,
-                      duration: "35h",
-                      origin: mockOffreEmploiDetails().origin,
-                    ),
-                  ),
-                ),
+                confirmationOffreId: "different-offre-id",
               ),
             )
             .store();
@@ -293,21 +262,7 @@ void main() {
               ),
               offresSuiviesState: OffresSuiviesState(
                 offresSuivies: [],
-                confirmationOffre: OffreSuivie(
-                  dateConsultation: DateTime(2025),
-                  offreDto: OffreEmploiDto(
-                    OffreEmploi(
-                      id: "different-offre-id",
-                      title: "Different Offer",
-                      companyName: "Different Company",
-                      contractType: "CDI",
-                      location: "Paris",
-                      isAlternance: false,
-                      duration: "35h",
-                      origin: mockOffreEmploiDetails().origin,
-                    ),
-                  ),
-                ),
+                confirmationOffreId: "different-offre-id",
               ),
             )
             .store();
@@ -332,10 +287,7 @@ void main() {
               ),
               offresSuiviesState: OffresSuiviesState(
                 offresSuivies: [],
-                confirmationOffre: OffreSuivie(
-                  dateConsultation: DateTime(2025),
-                  offreDto: OffreEmploiDto(offre.toOffreEmploi),
-                ),
+                confirmationOffreId: offre.id,
               ),
             )
             .store();

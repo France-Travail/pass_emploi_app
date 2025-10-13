@@ -55,7 +55,8 @@ class FavoriUpdateMiddleware<T> extends MiddlewareClass<AppState> {
     store.dispatch(FavoriUpdateLoadingAction<T>(action.favoriId));
     final result = await _repository.deleteFavori(userId, action.favoriId);
     if (result) {
-      store.dispatch(FavoriUpdateSuccessAction<T>(action.favoriId, action.newStatus));
+      store.dispatch(
+          FavoriUpdateSuccessAction<T>(action.favoriId, action.newStatus, confirmationOffreId: action.favoriId));
     } else {
       store.dispatch(FavoriUpdateFailureAction<T>(action.favoriId));
     }
@@ -72,7 +73,7 @@ class FavoriUpdateMiddleware<T> extends MiddlewareClass<AppState> {
       store.dispatch(FavoriUpdateSuccessAction<T>(
         action.favoriId,
         action.newStatus,
-        isPostulated: true,
+        confirmationOffreId: action.favoriId,
       ));
     } else {
       store.dispatch(FavoriUpdateFailureAction<T>(action.favoriId));

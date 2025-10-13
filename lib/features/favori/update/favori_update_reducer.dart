@@ -3,11 +3,12 @@ import 'package:pass_emploi_app/features/favori/update/favori_update_state.dart'
 
 FavoriUpdateState favoriUpdateReducer(FavoriUpdateState currentState, dynamic action) {
   if (action is FavoriUpdateLoadingAction) {
-    return _updateState(currentState, action.favoriId, FavoriUpdateStatus.LOADING, isPostulated: false);
+    return _updateState(currentState, action.favoriId, FavoriUpdateStatus.LOADING, confirmationOffreId: null);
   } else if (action is FavoriUpdateSuccessAction) {
-    return _updateState(currentState, action.favoriId, FavoriUpdateStatus.SUCCESS, isPostulated: action.isPostulated);
+    return _updateState(currentState, action.favoriId, FavoriUpdateStatus.SUCCESS,
+        confirmationOffreId: action.confirmationOffreId);
   } else if (action is FavoriUpdateFailureAction) {
-    return _updateState(currentState, action.favoriId, FavoriUpdateStatus.ERROR, isPostulated: false);
+    return _updateState(currentState, action.favoriId, FavoriUpdateStatus.ERROR, confirmationOffreId: null);
   } else if (action is FavoriUpdateConfirmationResetAction) {
     return FavoriUpdateState(currentState.requestStatus, confirmationPostuleOffreId: null);
   } else {
@@ -16,8 +17,8 @@ FavoriUpdateState favoriUpdateReducer(FavoriUpdateState currentState, dynamic ac
 }
 
 FavoriUpdateState _updateState(FavoriUpdateState currentState, String offreId, FavoriUpdateStatus status,
-    {required bool isPostulated}) {
+    {required String? confirmationOffreId}) {
   final newStatusMap = Map.of(currentState.requestStatus);
   newStatusMap[offreId] = status;
-  return FavoriUpdateState(newStatusMap, confirmationPostuleOffreId: isPostulated ? offreId : null);
+  return FavoriUpdateState(newStatusMap, confirmationPostuleOffreId: confirmationOffreId);
 }

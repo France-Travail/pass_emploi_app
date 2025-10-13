@@ -316,7 +316,7 @@ class MockAutoInscriptionRepository extends Mock implements AutoInscriptionRepos
 
 class MockOffresSuiviesRepository extends Mock implements OffresSuiviesRepository {
   MockOffresSuiviesRepository() {
-    when(() => get()).thenAnswer((_) async => []);
+    when(() => getOffresSuivies()).thenAnswer((_) async => []);
   }
 }
 

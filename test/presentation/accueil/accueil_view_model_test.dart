@@ -729,12 +729,7 @@ void main() {
                   offreDto: OffreEmploiDto(mockOffreEmploiDetails().toOffreEmploi),
                 ),
               ],
-              confirmationOffre: OffreSuivie(
-                dateConsultation: DateTime(2025),
-                offreDto: OffreEmploiDto(
-                  mockOffreEmploiDetails().toOffreEmploi,
-                ),
-              ),
+              confirmationOffreId: mockOffreEmploiDetails().id,
             ),
           )
           .store();
