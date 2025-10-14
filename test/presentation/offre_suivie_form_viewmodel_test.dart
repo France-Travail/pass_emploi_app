@@ -409,5 +409,63 @@ void main() {
         expect(viewModel.dateConsultation, isNull);
       });
     });
+
+    group('offreLien', () {
+      test('should return null when isHomePage is false', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .offreEmploiDetailsSuccess()
+            .store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, false);
+
+        // Then
+        expect(viewModel.offreLien, isNull);
+      });
+
+      test('should return offreLien when isHomePage is true and offreSuivie is not null', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .offreEmploiDetailsSuccess()
+            .withOffreSuiviState([mockOffreSuivie(id: mockOffreEmploiDetails().id)]).store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
+
+        // Then
+        expect(viewModel.offreLien, isNotNull);
+      });
+
+      test('should return offreLien when isHomePage is true and offreSuivie is null', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .offreEmploiDetailsSuccess()
+            .favoriListSuccessState([mockFavori(id: mockOffreEmploiDetails().id)]).store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
+
+        // Then
+        expect(viewModel.offreLien, isNotNull);
+      });
+
+      test('should return null when isHomePage is true and offreSuivie is null and favori is null', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .offreEmploiDetailsSuccess()
+            .favoriListSuccessState([mockFavori(id: "different-offre-id")]).store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
+
+        // Then
+        expect(viewModel.offreLien, isNull);
+      });
+    });
   });
 }

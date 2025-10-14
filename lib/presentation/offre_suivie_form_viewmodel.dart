@@ -171,16 +171,17 @@ String? _dateConsultation(
   return null;
 }
 
-// TODO: Test me
-String? _offreLien(OffreSuivie? offreSuivie, bool showOffreDetails, Store<AppState> store, String offreId) {
-  if (showOffreDetails) {
-    if (offreSuivie != null) {
-      return offreSuivie.offreDto.title;
-    }
-    final favori = store.state.favoriListState.favoriOrNull(offreId);
-    return favori?.titre;
+String? _offreLien(OffreSuivie? offreSuivie, bool isHomePage, Store<AppState> store, String offreId) {
+  if (!isHomePage) {
+    return null;
   }
-  return null;
+
+  if (offreSuivie != null) {
+    return offreSuivie.offreDto.title;
+  }
+
+  final favori = store.state.favoriListState.favoriOrNull(offreId);
+  return favori?.titre;
 }
 
 String? _confirmationMessage(Store<AppState> store, String offreId) {
