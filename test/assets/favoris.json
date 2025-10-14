@@ -5,6 +5,7 @@
     "type": "OFFRE_EMPLOI",
     "organisation": "organisation-1",
     "localisation": "localisation-1",
+    "dateCreation": "2025-01-01T00:00:00.000Z",
     "origine": {
       "nom": "Indeed",
       "logo": "https://indeed.com/logo.png"
@@ -16,6 +17,7 @@
     "type": "OFFRE_ALTERNANCE",
     "organisation": "organisation-2",
     "localisation": "localisation-2",
+    "dateCreation": "2025-01-01T00:00:00.000Z",
     "origine": {
       "nom": "France Travail"
     }
@@ -24,12 +26,14 @@
     "idOffre": "3",
     "titre": "titre-3",
     "type": "OFFRE_IMMERSION",
-    "localisation": "localisation-3"
+    "localisation": "localisation-3",
+    "dateCreation": "2025-01-01T00:00:00.000Z"
   },
   {
     "idOffre": "4",
     "titre": "titre-4",
     "type": "OFFRE_SERVICE_CIVIQUE",
-    "organisation": "organisation-4"
+    "organisation": "organisation-4",
+    "dateCreation": "2025-01-01T00:00:00.000Z"
   }
 ]

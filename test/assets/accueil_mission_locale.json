@@ -176,20 +176,23 @@
         "titre": "titre-1",
         "type": "OFFRE_EMPLOI",
         "organisation": "organisation-1",
-        "localisation": "localisation-1"
+        "localisation": "localisation-1",
+        "dateCreation": "2025-01-01T00:00:00.000Z"
       },
       {
         "idOffre": "2",
         "titre": "titre-2",
         "type": "OFFRE_ALTERNANCE",
         "organisation": "organisation-2",
-        "localisation": "localisation-2"
+        "localisation": "localisation-2",
+        "dateCreation": "2025-01-01T00:00:00.000Z"
       },
       {
         "idOffre": "3",
         "titre": "titre-3",
         "type": "OFFRE_IMMERSION",
-        "localisation": "localisation-3"
+        "localisation": "localisation-3",
+        "dateCreation": "2025-01-01T00:00:00.000Z"
       }
     ],
     "campagne": {
