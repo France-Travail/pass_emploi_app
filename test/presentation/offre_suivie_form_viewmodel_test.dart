@@ -299,5 +299,115 @@ void main() {
         expect(viewModel.showConfirmation, true);
       });
     });
+
+    group('_onNotYetPostuled', () {
+      // should return null when isFavorisNonPostule is false and isHomePage is true
+      test('should return null when isFavorisNonPostule is false and isHomePage is true', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .favoriListSuccessState([mockFavori(id: mockOffreEmploiDetails().id, datePostulation: DateTime(2025))])
+            .offreEmploiDetailsSuccess()
+            .store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
+
+        // Then
+        expect(viewModel.onNotYetPostuled, isNull);
+      });
+
+      test('should return null when isFavorisNonPostule is true and isHomePage is false', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .favoriListSuccessState([mockFavoriNonPostule(id: mockOffreEmploiDetails().id)])
+            .offreEmploiDetailsSuccess()
+            .store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, false);
+
+        // Then
+        expect(viewModel.onNotYetPostuled, isNull);
+      });
+
+      test('should return function when isFavorisNonPostule is true and isHomePage is true', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .favoriListSuccessState([mockFavoriNonPostule(id: mockOffreEmploiDetails().id)])
+            .offreEmploiDetailsSuccess()
+            .store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
+
+        // Then
+        expect(viewModel.onNotYetPostuled, isNotNull);
+      });
+    });
+
+    group('dateConsultation', () {
+      test('should return null when isFavorisNonPostule is true and isHomePage is false', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .favoriListSuccessState([mockFavoriNonPostule(id: mockOffreEmploiDetails().id)])
+            .offreEmploiDetailsSuccess()
+            .store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, false);
+
+        // Then
+        expect(viewModel.dateConsultation, isNull);
+      });
+
+      test('should return date when isFavorisNonPostule is true and isHomePage is true', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .favoriListSuccessState([mockFavoriNonPostule(id: mockOffreEmploiDetails().id)])
+            .offreEmploiDetailsSuccess()
+            .store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
+
+        // Then
+        expect(viewModel.dateConsultation, isNotNull);
+        expect(viewModel.dateConsultation!.contains("enregistré"), isTrue);
+      });
+
+      test('should return date when offreSuivie is not null', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .offreEmploiDetailsSuccess()
+            .withOffreSuiviState([mockOffreSuivie(id: mockOffreEmploiDetails().id)]).store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
+
+        // Then
+        expect(viewModel.dateConsultation, isNotNull);
+        expect(viewModel.dateConsultation!.contains("consulté"), isTrue);
+      });
+
+      test('should return null when offreSuivie is null', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .offreEmploiDetailsSuccess()
+            .store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
+
+        // Then
+        expect(viewModel.dateConsultation, isNull);
+      });
+    });
   });
 }

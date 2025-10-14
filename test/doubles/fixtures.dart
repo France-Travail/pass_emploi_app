@@ -1017,14 +1017,29 @@ DiagorienteUrls mockDiagorienteUrls() {
   );
 }
 
-Favori mockFavori({String id = 'id', OffreType type = OffreType.immersion, DateTime? dateDeCreation}) {
+Favori mockFavori({
+  String id = 'id',
+  OffreType type = OffreType.immersion,
+  DateTime? dateDeCreation,
+  DateTime? datePostulation,
+}) {
   return Favori(
-      id: id,
-      type: type,
-      titre: 't',
-      organisation: null,
-      localisation: null,
-      dateDeCreation: dateDeCreation ?? DateTime(2025));
+    id: id,
+    type: type,
+    titre: 't',
+    organisation: null,
+    localisation: null,
+    dateDeCreation: dateDeCreation ?? DateTime(2025),
+    datePostulation: datePostulation,
+  );
+}
+
+Favori mockFavoriNonPostule({
+  String id = 'id',
+  OffreType type = OffreType.emploi,
+  DateTime? dateDeCreation,
+}) {
+  return mockFavori(id: id, type: type, dateDeCreation: dateDeCreation, datePostulation: null);
 }
 
 List<Favori> mock3Favoris() {

@@ -32,6 +32,10 @@ abstract class FavoriListState extends Equatable {
   }
 
   bool isFavoriNonPostule(String offreId) {
+    if (this is! FavoriListSuccessState) {
+      return false;
+    }
+
     return favoriOrNull(offreId)?.datePostulation == null;
   }
 }

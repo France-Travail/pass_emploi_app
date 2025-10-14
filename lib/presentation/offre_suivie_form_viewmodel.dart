@@ -111,7 +111,6 @@ void Function()? _onNextOffer(Store<AppState> store, String offreId, bool isHome
   return null;
 }
 
-// TODO: Test me
 void Function()? _onNotYetPostuled(bool isFavorisNonPostule, Store<AppState> store, String offreId, bool isHomePage) {
   if (isFavorisNonPostule && isHomePage) {
     return () => store.dispatch(OffresSuiviesBlacklistAction(offreId));
@@ -155,7 +154,6 @@ void Function() _onPostule(bool isFavorisNonPostule, Store<AppState> store, Stri
   };
 }
 
-// TODO: Test me
 String? _dateConsultation(
   OffreSuivie? offreSuivie,
   String offreId,
@@ -163,12 +161,9 @@ String? _dateConsultation(
   bool isHomePage,
   Store<AppState> store,
 ) {
-  if (isFavorisNonPostule) {
-    if (isHomePage) {
-      final dateCreation = store.state.favoriListState.favoriOrNull(offreId)?.dateDeCreation;
-      return Strings.youSavedThisOfferAt(dateCreation?.timeAgo() ?? "");
-    }
-    return null;
+  if (isFavorisNonPostule && isHomePage) {
+    final dateCreation = store.state.favoriListState.favoriOrNull(offreId)?.dateDeCreation;
+    return Strings.youSavedThisOfferAt(dateCreation?.timeAgo() ?? "");
   }
   if (offreSuivie != null) {
     return Strings.youConsultedThisOfferAt(offreSuivie.dateConsultation.timeAgo());
