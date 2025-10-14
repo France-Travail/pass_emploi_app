@@ -3,15 +3,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/features/accueil/accueil_actions.dart';
 import 'package:pass_emploi_app/features/accueil/accueil_state.dart';
 import 'package:pass_emploi_app/features/date_consultation_notification/date_consultation_notification_state.dart';
-import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_state.dart';
+import 'package:pass_emploi_app/features/favori/update/favori_update_state.dart';
 import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/accueil/accueil.dart';
 import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
-import 'package:pass_emploi_app/models/offre_dto.dart';
-import 'package:pass_emploi_app/models/offre_emploi_details.dart';
-import 'package:pass_emploi_app/models/offre_suivie.dart';
 import 'package:pass_emploi_app/models/outil.dart';
 import 'package:pass_emploi_app/models/remote_campagne_accueil.dart';
 import 'package:pass_emploi_app/presentation/accueil/accueil_item.dart';
@@ -295,7 +292,7 @@ void main() {
         [
           Outil.immersionBoulanger.withoutImage(),
           Outil.benevolatPassEmploi.withoutImage(),
-          Outil.metierScope.withoutImage(),
+          Outil.mesAidesFt.withoutImage(),
         ],
       );
     });
@@ -317,7 +314,7 @@ void main() {
         (outilsItem as AccueilOutilsItem).outils,
         [
           Outil.benevolatPassEmploi.withoutImage(),
-          Outil.mesAidesFt.withoutImage(),
+          Outil.metierScope.withoutImage(),
           Outil.formation.withoutImage(),
         ],
       );
@@ -716,28 +713,12 @@ void main() {
     });
   });
   group('offre suivi item', () {
-    test('should not display remote campagnes when not started', () {
+    test('should display offre suivi item when offre suivie is present', () {
       // Given
       final store = givenPassEmploiState() //
           .loggedInPoleEmploiUser()
           .withAccueilPoleEmploiSuccess()
-          .copyWith(
-            offresSuiviesState: OffresSuiviesState(
-              offresSuivies: [
-                OffreSuivie(
-                  dateConsultation: DateTime(2023),
-                  offreDto: OffreEmploiDto(mockOffreEmploiDetails().toOffreEmploi),
-                ),
-              ],
-              confirmationOffre: OffreSuivie(
-                dateConsultation: DateTime(2025),
-                offreDto: OffreEmploiDto(
-                  mockOffreEmploiDetails().toOffreEmploi,
-                ),
-              ),
-            ),
-          )
-          .store();
+          .withOffreSuiviState([mockOffreSuivie()]).store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -745,10 +726,91 @@ void main() {
       // Then
       expect(
         viewModel.items.firstWhere((element) => element is OffreSuivieAccueilItem),
-        OffreSuivieAccueilItem(
-          offreId: mockOffreEmploiDetails().id,
-        ),
+        OffreSuivieAccueilItem(offreId: mockOffreSuivie().offreDto.id),
       );
+    });
+
+    test('should not display any favori created before 3 days', () {
+      // Given
+      final store = givenPassEmploiState() //
+          .loggedInPoleEmploiUser()
+          .withAccueilPoleEmploiSuccess()
+          .favoriListSuccessState(
+        [mockFavori(dateDeCreation: DateTime.now().subtract(Duration(days: 2)))],
+      ).store();
+
+      // When
+      final viewModel = AccueilViewModel.create(store);
+
+      // Then
+      expect(viewModel.items.firstWhereOrNull((element) => element is OffreSuivieAccueilItem), isNull);
+    });
+
+    test('should display favori created after 3 days', () {
+      // Given
+      final store = givenPassEmploiState() //
+          .loggedInPoleEmploiUser()
+          .withAccueilPoleEmploiSuccess()
+          .favoriListSuccessState(
+        [mockFavori(dateDeCreation: DateTime.now().subtract(Duration(days: 4)))],
+      ).store();
+
+      // When
+      final viewModel = AccueilViewModel.create(store);
+
+      // Then
+      expect(
+        viewModel.items.firstWhere((element) => element is OffreSuivieAccueilItem),
+        OffreSuivieAccueilItem(offreId: mockFavori().id),
+      );
+    });
+
+    test('should not display favori blacklisted', () {
+      // Given
+      final store = givenPassEmploiState() //
+          .loggedInPoleEmploiUser()
+          .withAccueilPoleEmploiSuccess()
+          .withOffreSuiviState([], blackListedOffreIds: [mockFavori().id]) //
+          .favoriListSuccessState(
+        [mockFavori(dateDeCreation: DateTime.now().subtract(Duration(days: 4)))],
+      ).store();
+
+      // When
+      final viewModel = AccueilViewModel.create(store);
+
+      // Then
+      expect(viewModel.items.firstWhereOrNull((element) => element is OffreSuivieAccueilItem), isNull);
+    });
+
+    test('should display offre suivi when favori update confirmation ID is present', () {
+      // Given
+      final store = givenPassEmploiState() //
+          .loggedInPoleEmploiUser()
+          .withAccueilPoleEmploiSuccess()
+          .copyWith(favoriUpdateState: FavoriUpdateState({}, confirmationPostuleOffreId: "test"))
+          .store();
+
+      // When
+      final viewModel = AccueilViewModel.create(store);
+
+      // Then
+      expect(viewModel.items.firstWhere((element) => element is OffreSuivieAccueilItem),
+          OffreSuivieAccueilItem(offreId: "test"));
+    });
+
+    test('should display offre suivi when offre suivi confirmation ID is present', () {
+      // Given
+      final store = givenPassEmploiState() //
+          .loggedInPoleEmploiUser()
+          .withAccueilPoleEmploiSuccess()
+          .withOffreSuiviState([], confirmationOffreId: "test").store();
+
+      // When
+      final viewModel = AccueilViewModel.create(store);
+
+      // Then
+      expect(viewModel.items.firstWhere((element) => element is OffreSuivieAccueilItem),
+          OffreSuivieAccueilItem(offreId: "test"));
     });
   });
 

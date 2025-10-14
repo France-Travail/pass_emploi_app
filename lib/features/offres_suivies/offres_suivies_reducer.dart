@@ -5,11 +5,16 @@ OffresSuiviesState offresSuiviesReducer(OffresSuiviesState current, dynamic acti
   if (action is OffresSuiviesToStateAction) {
     return OffresSuiviesState(
       offresSuivies: List.from(action.offresSuivies),
-      confirmationOffre: action.confirmationOffre,
+      confirmationOffreId: action.confirmationOffreId,
+      blackListedOffreIds: action.blackListedOffreIds,
     );
   }
   if (action is OffresSuiviesConfirmationResetAction) {
-    return OffresSuiviesState(offresSuivies: current.offresSuivies, confirmationOffre: null);
+    return OffresSuiviesState(
+      offresSuivies: current.offresSuivies,
+      blackListedOffreIds: current.blackListedOffreIds,
+      confirmationOffreId: null,
+    );
   }
   return current;
 }

@@ -27,12 +27,12 @@ void main() {
 
   test('set and get', () async {
     // Given
-    final setResult1 = await repository.set(offreSuivie1);
-    final setResult2 = await repository.set(offreSuivie1);
-    final setResult3 = await repository.set(offreSuivie2);
+    final setResult1 = await repository.setOffreSuivie(offreSuivie1);
+    final setResult2 = await repository.setOffreSuivie(offreSuivie1);
+    final setResult3 = await repository.setOffreSuivie(offreSuivie2);
 
     // When
-    final result = await repository.get();
+    final result = await repository.getOffresSuivies();
 
     // Then
     expect(
@@ -55,12 +55,12 @@ void main() {
 
   test('delete', () async {
     // Given
-    await repository.set(offreSuivie1);
-    await repository.set(offreSuivie2);
+    await repository.setOffreSuivie(offreSuivie1);
+    await repository.setOffreSuivie(offreSuivie2);
 
     // When
     final deleteResult = await repository.delete(offreSuivie1);
-    final result = await repository.get();
+    final result = await repository.getOffresSuivies();
 
     // Then
     expect(
@@ -77,14 +77,14 @@ void main() {
   test('should keep a maxium of 20 values', () async {
     // Given
     for (var i = 0; i <= 21; i++) {
-      await repository.set(OffreSuivie(
+      await repository.setOffreSuivie(OffreSuivie(
         offreDto: OffreEmploiDto(mockOffreEmploi(id: "offre$i")),
         dateConsultation: DateTime(2025),
       ));
     }
 
     // When
-    final result = await repository.get();
+    final result = await repository.getOffresSuivies();
 
     // Then
     expect(result[0].offreDto, equals(OffreEmploiDto(mockOffreEmploi(id: "offre2"))));

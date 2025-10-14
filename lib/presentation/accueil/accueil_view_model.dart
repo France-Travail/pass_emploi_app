@@ -184,23 +184,41 @@ AccueilItem? _outilsItem(AccueilSuccessState successState, Accompagnement accomp
       ]),
     Accompagnement.avenirPro => AccueilOutilsItem([
         Outil.benevolatPassEmploi.withoutImage(),
-        Outil.mesAidesFt.withoutImage(),
+        Outil.metierScope.withoutImage(),
         Outil.formation.withoutImage(),
       ]),
     Accompagnement.aij => AccueilOutilsItem([
         Outil.immersionBoulanger.withoutImage(),
         Outil.benevolatPassEmploi.withoutImage(),
-        Outil.metierScope.withoutImage(),
+        Outil.mesAidesFt.withoutImage(),
       ])
   };
 }
 
 AccueilItem? _offreSuivies(Store<AppState> store) {
+  final nonPostuledOffreIds = store.state.favoriListState.nonPostuledOffreIdsAfter(const Duration(days: 3));
+  final blacklistedOffreIds = store.state.offresSuiviesState.blackListedOffreIds;
+
+  final offreFavorisIds = nonPostuledOffreIds.where((id) => !blacklistedOffreIds.contains(id)).toList();
   final offreSuiviesState = store.state.offresSuiviesState;
-  if (offreSuiviesState.offresSuivies.isNotEmpty || offreSuiviesState.confirmationOffre != null) {
-    final id = offreSuiviesState.confirmationOffre?.offreDto.id ?? offreSuiviesState.offresSuivies.first.offreDto.id;
-    return OffreSuivieAccueilItem(offreId: id);
+  final updateFavorisState = store.state.favoriUpdateState;
+
+  if (offreSuiviesState.confirmationOffreId != null) {
+    return OffreSuivieAccueilItem(offreId: offreSuiviesState.confirmationOffreId!);
   }
+
+  if (updateFavorisState.confirmationPostuleOffreId != null) {
+    return OffreSuivieAccueilItem(offreId: updateFavorisState.confirmationPostuleOffreId!);
+  }
+
+  if (offreSuiviesState.offresSuivies.isNotEmpty) {
+    return OffreSuivieAccueilItem(offreId: offreSuiviesState.offresSuivies.first.offreDto.id);
+  }
+
+  if (offreFavorisIds.isNotEmpty) {
+    return OffreSuivieAccueilItem(offreId: offreFavorisIds.first);
+  }
+
   return null;
 }
 

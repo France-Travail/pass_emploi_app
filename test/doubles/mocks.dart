@@ -77,7 +77,11 @@ class MockDetailsJeuneRepository extends Mock implements DetailsJeuneRepository 
   }
 }
 
-class MockGetFavorisRepository extends Mock implements GetFavorisRepository {}
+class MockGetFavorisRepository extends Mock implements GetFavorisRepository {
+  MockGetFavorisRepository() {
+    when(() => getFavoris(any())).thenAnswer((_) async => []);
+  }
+}
 
 class MockServiceCiviqueDetailRepository extends Mock implements ServiceCiviqueDetailRepository {}
 
@@ -316,7 +320,8 @@ class MockAutoInscriptionRepository extends Mock implements AutoInscriptionRepos
 
 class MockOffresSuiviesRepository extends Mock implements OffresSuiviesRepository {
   MockOffresSuiviesRepository() {
-    when(() => get()).thenAnswer((_) async => []);
+    when(() => getOffresSuivies()).thenAnswer((_) async => []);
+    when(() => getBlacklistedOffreIds()).thenAnswer((_) async => []);
   }
 }
 

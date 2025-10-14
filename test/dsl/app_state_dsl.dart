@@ -27,6 +27,7 @@ import 'package:pass_emploi_app/features/in_app_notifications/in_app_notificatio
 import 'package:pass_emploi_app/features/matching_demarche/matching_demarche_state.dart';
 import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_state.dart';
 import 'package:pass_emploi_app/features/offre_emploi/details/offre_emploi_details_state.dart';
+import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_state.dart';
 import 'package:pass_emploi_app/features/onboarding/onboarding_state.dart';
 import 'package:pass_emploi_app/features/preferences/preferences_state.dart';
 import 'package:pass_emploi_app/features/preferences/update/preferences_update_state.dart';
@@ -78,6 +79,7 @@ import 'package:pass_emploi_app/models/metier.dart';
 import 'package:pass_emploi_app/models/mon_suivi.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
 import 'package:pass_emploi_app/models/offre_emploi_details.dart';
+import 'package:pass_emploi_app/models/offre_suivie.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
 import 'package:pass_emploi_app/models/preferences.dart';
 import 'package:pass_emploi_app/models/recherche/recherche_request.dart';
@@ -881,5 +883,15 @@ extension AppStateDSL on AppState {
 
   AppState withBoulangerCampagneState({bool result = false}) {
     return copyWith(boulangerCampagneState: BoulangerCampagneState(result: result));
+  }
+
+  AppState withOffreSuiviState(List<OffreSuivie> offresSuivies,
+      {String? confirmationOffreId, List<String> blackListedOffreIds = const []}) {
+    return copyWith(
+        offresSuiviesState: OffresSuiviesState(
+      offresSuivies: offresSuivies,
+      confirmationOffreId: confirmationOffreId,
+      blackListedOffreIds: blackListedOffreIds,
+    ));
   }
 }

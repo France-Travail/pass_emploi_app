@@ -4,7 +4,6 @@ import 'package:pass_emploi_app/features/favori/ids/favori_ids_state.dart';
 import 'package:pass_emploi_app/features/favori/update/favori_update_state.dart';
 import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_state.dart';
 import 'package:pass_emploi_app/models/offre_dto.dart';
-import 'package:pass_emploi_app/models/offre_emploi.dart';
 import 'package:pass_emploi_app/models/offre_emploi_details.dart';
 import 'package:pass_emploi_app/models/offre_suivie.dart';
 import 'package:pass_emploi_app/presentation/offre_suivie_form_viewmodel.dart';
@@ -62,12 +61,7 @@ void main() {
                       offreDto: OffreEmploiDto(offre.toOffreEmploi),
                     ),
                   ],
-                  confirmationOffre: OffreSuivie(
-                    dateConsultation: DateTime(2025),
-                    offreDto: OffreEmploiDto(
-                      mockOffreEmploiDetails().toOffreEmploi,
-                    ),
-                  ),
+                  confirmationOffreId: mockOffreEmploiDetails().id,
                 ),
               )
               .store();
@@ -101,12 +95,7 @@ void main() {
                       offreDto: OffreEmploiDto(offre.toOffreEmploi),
                     ),
                   ],
-                  confirmationOffre: OffreSuivie(
-                    dateConsultation: DateTime(2025),
-                    offreDto: OffreEmploiDto(
-                      mockOffreEmploiDetails().toOffreEmploi,
-                    ),
-                  ),
+                  confirmationOffreId: mockOffreEmploiDetails().id,
                 ),
               )
               .store();
@@ -152,10 +141,7 @@ void main() {
             .copyWith(
               offresSuiviesState: OffresSuiviesState(
                 offresSuivies: [],
-                confirmationOffre: OffreSuivie(
-                  dateConsultation: DateTime(2025),
-                  offreDto: OffreEmploiDto(offre.toOffreEmploi),
-                ),
+                confirmationOffreId: mockOffreEmploiDetails().id,
               ),
             )
             .store();
@@ -179,10 +165,7 @@ void main() {
               ),
               offresSuiviesState: OffresSuiviesState(
                 offresSuivies: [],
-                confirmationOffre: OffreSuivie(
-                  dateConsultation: DateTime(2025),
-                  offreDto: OffreEmploiDto(offre.toOffreEmploi),
-                ),
+                confirmationOffreId: mockOffreEmploiDetails().id,
               ),
             )
             .store();
@@ -206,7 +189,7 @@ void main() {
               ),
               offresSuiviesState: OffresSuiviesState(
                 offresSuivies: [],
-                confirmationOffre: null,
+                confirmationOffreId: null,
               ),
             )
             .store();
@@ -230,7 +213,7 @@ void main() {
               ),
               offresSuiviesState: OffresSuiviesState(
                 offresSuivies: [],
-                confirmationOffre: null,
+                confirmationOffreId: null,
               ),
             )
             .store();
@@ -254,21 +237,7 @@ void main() {
               ),
               offresSuiviesState: OffresSuiviesState(
                 offresSuivies: [],
-                confirmationOffre: OffreSuivie(
-                  dateConsultation: DateTime(2025),
-                  offreDto: OffreEmploiDto(
-                    OffreEmploi(
-                      id: "different-offre-id",
-                      title: "Different Offer",
-                      companyName: "Different Company",
-                      contractType: "CDI",
-                      location: "Paris",
-                      isAlternance: false,
-                      duration: "35h",
-                      origin: mockOffreEmploiDetails().origin,
-                    ),
-                  ),
-                ),
+                confirmationOffreId: "different-offre-id",
               ),
             )
             .store();
@@ -293,21 +262,7 @@ void main() {
               ),
               offresSuiviesState: OffresSuiviesState(
                 offresSuivies: [],
-                confirmationOffre: OffreSuivie(
-                  dateConsultation: DateTime(2025),
-                  offreDto: OffreEmploiDto(
-                    OffreEmploi(
-                      id: "different-offre-id",
-                      title: "Different Offer",
-                      companyName: "Different Company",
-                      contractType: "CDI",
-                      location: "Paris",
-                      isAlternance: false,
-                      duration: "35h",
-                      origin: mockOffreEmploiDetails().origin,
-                    ),
-                  ),
-                ),
+                confirmationOffreId: "different-offre-id",
               ),
             )
             .store();
@@ -332,10 +287,7 @@ void main() {
               ),
               offresSuiviesState: OffresSuiviesState(
                 offresSuivies: [],
-                confirmationOffre: OffreSuivie(
-                  dateConsultation: DateTime(2025),
-                  offreDto: OffreEmploiDto(offre.toOffreEmploi),
-                ),
+                confirmationOffreId: offre.id,
               ),
             )
             .store();
@@ -345,6 +297,174 @@ void main() {
 
         // Then
         expect(viewModel.showConfirmation, true);
+      });
+    });
+
+    group('_onNotYetPostuled', () {
+      // should return null when isFavorisNonPostule is false and isHomePage is true
+      test('should return null when isFavorisNonPostule is false and isHomePage is true', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .favoriListSuccessState([mockFavori(id: mockOffreEmploiDetails().id, datePostulation: DateTime(2025))])
+            .offreEmploiDetailsSuccess()
+            .store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
+
+        // Then
+        expect(viewModel.onNotYetPostuled, isNull);
+      });
+
+      test('should return null when isFavorisNonPostule is true and isHomePage is false', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .favoriListSuccessState([mockFavoriNonPostule(id: mockOffreEmploiDetails().id)])
+            .offreEmploiDetailsSuccess()
+            .store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, false);
+
+        // Then
+        expect(viewModel.onNotYetPostuled, isNull);
+      });
+
+      test('should return function when isFavorisNonPostule is true and isHomePage is true', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .favoriListSuccessState([mockFavoriNonPostule(id: mockOffreEmploiDetails().id)])
+            .offreEmploiDetailsSuccess()
+            .store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
+
+        // Then
+        expect(viewModel.onNotYetPostuled, isNotNull);
+      });
+    });
+
+    group('dateConsultation', () {
+      test('should return null when isFavorisNonPostule is true and isHomePage is false', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .favoriListSuccessState([mockFavoriNonPostule(id: mockOffreEmploiDetails().id)])
+            .offreEmploiDetailsSuccess()
+            .store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, false);
+
+        // Then
+        expect(viewModel.dateConsultation, isNull);
+      });
+
+      test('should return date when isFavorisNonPostule is true and isHomePage is true', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .favoriListSuccessState([mockFavoriNonPostule(id: mockOffreEmploiDetails().id)])
+            .offreEmploiDetailsSuccess()
+            .store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
+
+        // Then
+        expect(viewModel.dateConsultation, isNotNull);
+        expect(viewModel.dateConsultation!.contains("enregistré"), isTrue);
+      });
+
+      test('should return date when offreSuivie is not null', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .offreEmploiDetailsSuccess()
+            .withOffreSuiviState([mockOffreSuivie(id: mockOffreEmploiDetails().id)]).store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
+
+        // Then
+        expect(viewModel.dateConsultation, isNotNull);
+        expect(viewModel.dateConsultation!.contains("consulté"), isTrue);
+      });
+
+      test('should return null when offreSuivie is null', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .offreEmploiDetailsSuccess()
+            .store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
+
+        // Then
+        expect(viewModel.dateConsultation, isNull);
+      });
+    });
+
+    group('offreLien', () {
+      test('should return null when isHomePage is false', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .offreEmploiDetailsSuccess()
+            .store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, false);
+
+        // Then
+        expect(viewModel.offreLien, isNull);
+      });
+
+      test('should return offreLien when isHomePage is true and offreSuivie is not null', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .offreEmploiDetailsSuccess()
+            .withOffreSuiviState([mockOffreSuivie(id: mockOffreEmploiDetails().id)]).store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
+
+        // Then
+        expect(viewModel.offreLien, isNotNull);
+      });
+
+      test('should return offreLien when isHomePage is true and offreSuivie is null', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .offreEmploiDetailsSuccess()
+            .favoriListSuccessState([mockFavori(id: mockOffreEmploiDetails().id)]).store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
+
+        // Then
+        expect(viewModel.offreLien, isNotNull);
+      });
+
+      test('should return null when isHomePage is true and offreSuivie is null and favori is null', () {
+        // Given
+        final store = givenState() //
+            .loggedInPoleEmploiUser()
+            .offreEmploiDetailsSuccess()
+            .favoriListSuccessState([mockFavori(id: "different-offre-id")]).store();
+
+        // When
+        final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
+
+        // Then
+        expect(viewModel.offreLien, isNull);
       });
     });
   });

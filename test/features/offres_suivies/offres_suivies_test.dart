@@ -22,7 +22,7 @@ void main() {
       sut.whenDispatchingAction(() => BootstrapAction());
 
       test('should load offres suivies', () {
-        when(() => repository.get()).thenAnswer((_) async => [
+        when(() => repository.getOffresSuivies()).thenAnswer((_) async => [
               mockOffreSuivie(),
             ]);
 
@@ -37,7 +37,7 @@ void main() {
       sut.whenDispatchingAction(() => OffresSuiviesWriteAction(mockOffreSuivie().offreDto));
 
       test('should write offre', () {
-        when(() => repository.set(any())).thenAnswer((_) async => [mockOffreSuivie()]);
+        when(() => repository.setOffreSuivie(any())).thenAnswer((_) async => [mockOffreSuivie()]);
 
         sut.givenStore = givenState() //
             .loggedInUser()

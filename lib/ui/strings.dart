@@ -1626,10 +1626,12 @@ class Strings {
   static String offreSuivieConfirmationPageTitle = "Retrouvez cette offre dans votre suivi des offres";
   static String offreSuivieConfirmationPageDescription = "👏 Bravo pour votre engagement !";
   static String youConsultedThisOfferAt(String timeAgo) => "Vous avez consulté cette offre $timeAgo";
+  static String youSavedThisOfferAt(String timeAgo) => "Vous avez enregistré cette offre $timeAgo";
   static String ouEnEtesVous = "Où en êtes-vous ?";
 
   static String jaiPostule = "J’ai postulé";
   static String caMinteresse = "Ça m’intéresse";
+  static String notYetPostuled = "Je n'ai pas encore postulé";
   static String caNeMinteressePas = "Ça ne m’intéresse plus";
   static String seeNextOffer = "Voir l’offre suivante";
   static String merciPourVotreReponse = "Merci pour votre réponse";

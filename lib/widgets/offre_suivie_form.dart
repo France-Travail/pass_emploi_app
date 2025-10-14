@@ -13,6 +13,7 @@ import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
+import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/create_user_action_confirmation_offre_suivi_page.dart';
@@ -86,8 +87,10 @@ class _Confirmation extends StatelessWidget {
               ),
             ],
             SizedBox(height: Margins.spacing_base),
-            SecondaryButton(
+            PrimaryActionButton(
               label: viewModel.onCreateActionOrDemarcheLabel,
+              textColor: showPrimaryBackground ? AppColors.primary : Colors.white,
+              backgroundColor: showPrimaryBackground ? Colors.white : AppColors.primary,
               onPressed: () {
                 viewModel.onCreateActionOrDemarche();
                 viewModel.onHideForever();
@@ -108,6 +111,13 @@ class _Confirmation extends StatelessWidget {
                 }
               },
             ),
+            if (viewModel.onNextOffer != null) ...[
+              SizedBox(height: Margins.spacing_base),
+              SecondaryButton(
+                label: Strings.seeNextOffer,
+                onPressed: viewModel.onNextOffer,
+              ),
+            ],
           ],
         ),
         Positioned(
@@ -192,7 +202,7 @@ class _OffreLien extends StatelessWidget {
   }
 }
 
-enum _OffreSuivieStatus { applied, interested, notInterested }
+enum _OffreSuivieStatus { applied, interested, notInterested, notYetPostuled }
 
 class _Options extends StatefulWidget {
   const _Options(this.viewModel, this.trackingSource);
@@ -239,6 +249,17 @@ class _OptionsState extends State<_Options> {
                 trackEvent(OffreSuiviTrackingOption.interesse);
                 selectValue(status);
                 widget.viewModel.onInteresse?.call();
+              },
+            ),
+          if (widget.viewModel.onNotYetPostuled != null)
+            PassEmploiRadio<_OffreSuivieStatus?>(
+              title: Strings.notYetPostuled,
+              value: _OffreSuivieStatus.notYetPostuled,
+              groupValue: _selectedValue,
+              onPressed: (status) {
+                trackEvent(OffreSuiviTrackingOption.interesse);
+                selectValue(status);
+                widget.viewModel.onNotYetPostuled?.call();
               },
             ),
           PassEmploiRadio<_OffreSuivieStatus?>(

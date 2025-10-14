@@ -4,13 +4,15 @@
     "titre": "titre-1",
     "type": "OFFRE_EMPLOI",
     "organisation": "organisation-1",
-    "localisation": "localisation-1"
+    "localisation": "localisation-1",
+    "dateCreation": "2025-01-01T00:00:00.000Z"
   },
   {
     "idOffre": "2",
     "titre": "titre-2",
     "type": "OFFRE_STAGE",
     "organisation": "organisation-2",
-    "localisation": "localisation-2"
+    "localisation": "localisation-2",
+    "dateCreation": "2025-01-01T00:00:00.000Z"
   }
 ]

@@ -38,7 +38,7 @@ void main() {
     expect(immersionFavoriState.favoris, {FavoriDto("2"), FavoriDto("4")});
 
     final favoriListState = (updatedFavoris.favoriListState as FavoriListSuccessState);
-    expect(favoriListState.results, [mockFavori('2'), mockFavori('4')]);
+    expect(favoriListState.results, [mockFavori(id: '2'), mockFavori(id: '4')]);
   });
 
   test("favori state should not be updated when favori is removed and api call fails", () async {
@@ -166,7 +166,7 @@ Store<AppState> _successStoreWithFavorisAndSearchResultsLoaded() {
             loginState: successMiloUserState(),
             immersionFavorisIdsState:
                 FavoriIdsState<Immersion>.success({FavoriDto("1"), FavoriDto("2"), FavoriDto("4")}))
-        .favoriListSuccessState([mockFavori('1'), mockFavori('2'), mockFavori('4')]) //
+        .favoriListSuccessState([mockFavori(id: '1'), mockFavori(id: '2'), mockFavori(id: '4')]) //
         .successRechercheImmersionState(results: [mockImmersion(id: '1'), mockImmersion(id: '17')]),
   );
   return store;

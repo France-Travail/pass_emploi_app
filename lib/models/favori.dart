@@ -4,12 +4,15 @@ import 'package:pass_emploi_app/models/offre_emploi.dart';
 import 'package:pass_emploi_app/models/offre_type.dart';
 import 'package:pass_emploi_app/models/service_civique.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/string_extensions.dart';
 
 enum FavoriStatus { added, removed, applied }
 
 class Favori extends Equatable {
   final String id;
   final OffreType type;
+  final DateTime dateDeCreation;
+  final DateTime? datePostulation;
   final String titre;
   final String? organisation;
   final String? localisation;
@@ -18,6 +21,8 @@ class Favori extends Equatable {
   Favori({
     required this.id,
     required this.type,
+    required this.dateDeCreation,
+    this.datePostulation,
     required this.titre,
     required this.organisation,
     required this.localisation,
@@ -30,6 +35,9 @@ class Favori extends Equatable {
     return Favori(
       id: json['idOffre'] as String,
       type: type,
+      dateDeCreation: (json['dateCreation'] as String).toDateTimeUtcOnLocalTimeZone(),
+      datePostulation:
+          json['dateCandidature'] != null ? (json['dateCandidature'] as String).toDateTimeUtcOnLocalTimeZone() : null,
       titre: json['titre'] as String,
       organisation: json['organisation'] as String?,
       localisation: json['localisation'] as String?,

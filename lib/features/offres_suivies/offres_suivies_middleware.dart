@@ -15,16 +15,26 @@ class OffresSuiviesMiddleware extends MiddlewareClass<AppState> {
     next(action);
 
     if (action is BootstrapAction) {
-      final offresSuivies = await _repository.get();
-      store.dispatch(OffresSuiviesToStateAction(offresSuivies));
+      final offresSuivies = await _repository.getOffresSuivies();
+      final blacklistedOffreIds = await _repository.getBlacklistedOffreIds();
+      store.dispatch(OffresSuiviesToStateAction(offresSuivies, blackListedOffreIds: blacklistedOffreIds));
     } else if (action is OffresSuiviesWriteAction) {
       final date = DateTime.now();
       final offreSuivie = OffreSuivie(offreDto: action.offreDto, dateConsultation: date);
-      final newoffresSuivies = await _repository.set(offreSuivie);
+      final newoffresSuivies = await _repository.setOffreSuivie(offreSuivie);
       store.dispatch(OffresSuiviesToStateAction(newoffresSuivies));
     } else if (action is OffresSuiviesDeleteAction) {
       final newoffresSuivies = await _repository.delete(action.offreSuivie);
-      store.dispatch(OffresSuiviesToStateAction(newoffresSuivies, confirmationOffre: action.offreSuivie));
+      store.dispatch(OffresSuiviesToStateAction(newoffresSuivies, confirmationOffreId: action.offreSuivie.offreDto.id));
+    } else if (action is OffresSuiviesBlacklistAction) {
+      await _repository.blacklistOffreIds(action.offreId);
+      final offresSuivies = await _repository.getOffresSuivies();
+      final blacklistedOffreIds = await _repository.getBlacklistedOffreIds();
+      store.dispatch(OffresSuiviesToStateAction(
+        offresSuivies,
+        blackListedOffreIds: blacklistedOffreIds,
+        confirmationOffreId: action.offreId,
+      ));
     }
   }
 }

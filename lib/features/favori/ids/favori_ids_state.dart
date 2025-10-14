@@ -13,6 +13,8 @@ abstract class FavoriIdsState<T> {
   DateTime? datePostulationOf(String offreId);
 
   bool isFavoriNonPostule(String offreId);
+
+  List<String> get nonPostuledOffreIds;
 }
 
 class FavoriIdsSuccessState<T> extends FavoriIdsState<T> {
@@ -31,6 +33,10 @@ class FavoriIdsSuccessState<T> extends FavoriIdsState<T> {
   bool isFavoriNonPostule(String offreId) {
     return contains(offreId) && datePostulationOf(offreId) == null;
   }
+
+  @override
+  List<String> get nonPostuledOffreIds =>
+      favoris.where((favori) => isFavoriNonPostule(favori.id)).map((favori) => favori.id).toList();
 }
 
 class FavoriIdsNotInitialized<T> extends FavoriIdsState<T> {
@@ -44,4 +50,7 @@ class FavoriIdsNotInitialized<T> extends FavoriIdsState<T> {
 
   @override
   bool isFavoriNonPostule(String offreId) => false;
+
+  @override
+  List<String> get nonPostuledOffreIds => [];
 }

@@ -28,9 +28,11 @@ class OffreSuivieFormViewmodel extends Equatable {
   final bool useDemarche;
   final void Function() onPostule;
   final void Function()? onInteresse;
+  final void Function()? onNotYetPostuled;
   final void Function() onNotInterested;
   final void Function() onHideForever;
   final void Function() onCreateActionOrDemarche;
+  final void Function()? onNextOffer;
 
   OffreSuivieFormViewmodel._({
     required this.isFavorisNonPostule,
@@ -44,21 +46,23 @@ class OffreSuivieFormViewmodel extends Equatable {
     required this.useDemarche,
     required this.onPostule,
     required this.onInteresse,
+    required this.onNotYetPostuled,
     required this.onNotInterested,
     required this.onHideForever,
     required this.onCreateActionOrDemarche,
+    required this.onNextOffer,
   });
 
   factory OffreSuivieFormViewmodel.create(Store<AppState> store, String offreId, bool isHomePage) {
     final offreSuivie = store.state.offresSuiviesState.getOffre(offreId);
 
-    final isFavorisNonPostule = store.state.offreEmploiFavorisIdsState.isFavoriNonPostule(offreId);
+    final isFavorisNonPostule = store.state.favoriListState.isFavoriNonPostule(offreId);
 
     return OffreSuivieFormViewmodel._(
       isFavorisNonPostule: isFavorisNonPostule,
       fromAlternance: offreSuivie != null && offreSuivie.offreDto.isAlternance,
-      dateConsultation: offreSuivie != null ? _dateConsultation(offreSuivie, isFavorisNonPostule) : null,
-      offreLien: offreSuivie != null ? _offreLien(offreSuivie, isHomePage) : null,
+      dateConsultation: _dateConsultation(offreSuivie, offreId, isFavorisNonPostule, isHomePage, store),
+      offreLien: _offreLien(offreSuivie, isHomePage, store, offreId),
       showConfirmation: _showConfirmation(store, offreId),
       confirmationMessage: _confirmationMessage(store, offreId),
       confirmationButton: _confirmationButton(store, offreId, isHomePage),
@@ -71,7 +75,9 @@ class OffreSuivieFormViewmodel extends Equatable {
         store.dispatch(OffresSuiviesConfirmationResetAction());
         store.dispatch(FavoriUpdateConfirmationResetAction());
       },
+      onNotYetPostuled: _onNotYetPostuled(isFavorisNonPostule, store, offreId, isHomePage),
       onCreateActionOrDemarche: () => _onCreateActionOrDemarche(store, offreSuivie),
+      onNextOffer: _onNextOffer(store, offreId, isHomePage),
     );
   }
 
@@ -91,8 +97,25 @@ class OffreSuivieFormViewmodel extends Equatable {
 
 bool _showConfirmation(Store<AppState> store, String offreId) {
   final confirmationFavoris = store.state.favoriUpdateState.confirmationPostuleOffreId == offreId;
-  final confirmationOffreSuivie = store.state.offresSuiviesState.confirmationOffre?.offreDto.id == offreId;
+  final confirmationOffreSuivie = store.state.offresSuiviesState.confirmationOffreId == offreId;
   return confirmationFavoris || confirmationOffreSuivie;
+}
+
+void Function()? _onNextOffer(Store<AppState> store, String offreId, bool isHomePage) {
+  if (isHomePage) {
+    return () {
+      store.dispatch(OffresSuiviesConfirmationResetAction());
+      store.dispatch(FavoriUpdateConfirmationResetAction());
+    };
+  }
+  return null;
+}
+
+void Function()? _onNotYetPostuled(bool isFavorisNonPostule, Store<AppState> store, String offreId, bool isHomePage) {
+  if (isFavorisNonPostule && isHomePage) {
+    return () => store.dispatch(OffresSuiviesBlacklistAction(offreId));
+  }
+  return null;
 }
 
 void Function() _onNotInterested(OffreSuivie? offreSuivie, Store<AppState> store, String offreId) {
@@ -131,18 +154,34 @@ void Function() _onPostule(bool isFavorisNonPostule, Store<AppState> store, Stri
   };
 }
 
-String? _dateConsultation(OffreSuivie offreSuivie, bool isFavorisNonPostule) {
-  if (isFavorisNonPostule) {
-    return null;
+String? _dateConsultation(
+  OffreSuivie? offreSuivie,
+  String offreId,
+  bool isFavorisNonPostule,
+  bool isHomePage,
+  Store<AppState> store,
+) {
+  if (isFavorisNonPostule && isHomePage) {
+    final dateCreation = store.state.favoriListState.favoriOrNull(offreId)?.dateDeCreation;
+    return Strings.youSavedThisOfferAt(dateCreation?.timeAgo() ?? "");
   }
-  return Strings.youConsultedThisOfferAt(offreSuivie.dateConsultation.timeAgo());
-}
-
-String? _offreLien(OffreSuivie offreSuivie, bool showOffreDetails) {
-  if (showOffreDetails) {
-    return offreSuivie.offreDto.title;
+  if (offreSuivie != null) {
+    return Strings.youConsultedThisOfferAt(offreSuivie.dateConsultation.timeAgo());
   }
   return null;
+}
+
+String? _offreLien(OffreSuivie? offreSuivie, bool isHomePage, Store<AppState> store, String offreId) {
+  if (!isHomePage) {
+    return null;
+  }
+
+  if (offreSuivie != null) {
+    return offreSuivie.offreDto.title;
+  }
+
+  final favori = store.state.favoriListState.favoriOrNull(offreId);
+  return favori?.titre;
 }
 
 String? _confirmationMessage(Store<AppState> store, String offreId) {

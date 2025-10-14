@@ -7,6 +7,12 @@ class OffresSuiviesWriteAction {
   OffresSuiviesWriteAction(this.offreDto);
 }
 
+class OffresSuiviesBlacklistAction {
+  final String offreId;
+
+  OffresSuiviesBlacklistAction(this.offreId);
+}
+
 class OffresSuiviesDeleteAction {
   final OffreSuivie offreSuivie;
 
@@ -17,7 +23,8 @@ class OffresSuiviesConfirmationResetAction {}
 
 class OffresSuiviesToStateAction {
   final List<OffreSuivie> offresSuivies;
-  final OffreSuivie? confirmationOffre;
+  final String? confirmationOffreId;
+  final List<String> blackListedOffreIds;
 
-  OffresSuiviesToStateAction(this.offresSuivies, {this.confirmationOffre});
+  OffresSuiviesToStateAction(this.offresSuivies, {this.confirmationOffreId, this.blackListedOffreIds = const []});
 }
