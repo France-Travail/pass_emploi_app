@@ -195,28 +195,30 @@ AccueilItem? _outilsItem(AccueilSuccessState successState, Accompagnement accomp
   };
 }
 
-// TODO: Test me
 AccueilItem? _offreSuivies(Store<AppState> store) {
-  // TODO: Adjust for testing
-  final nonPostuledOffreIds = store.state.favoriListState.nonPostuledOffreIdsAfter(const Duration(minutes: 1));
+  final nonPostuledOffreIds = store.state.favoriListState.nonPostuledOffreIdsAfter(const Duration(days: 3));
   final blacklistedOffreIds = store.state.offresSuiviesState.blackListedOffreIds;
-  final offreFavorisIds = nonPostuledOffreIds.where((id) => !blacklistedOffreIds.contains(id)).toList();
 
+  final offreFavorisIds = nonPostuledOffreIds.where((id) => !blacklistedOffreIds.contains(id)).toList();
   final offreSuiviesState = store.state.offresSuiviesState;
   final updateFavorisState = store.state.favoriUpdateState;
-  if (offreSuiviesState.offresSuivies.isNotEmpty ||
-      offreFavorisIds.isNotEmpty ||
-      offreSuiviesState.confirmationOffreId != null) {
-    final String? offreSuivieId = offreSuiviesState.offresSuivies.firstOrNull?.offreDto.id;
-    final String? offreFavorisId = offreFavorisIds.firstOrNull;
-    return OffreSuivieAccueilItem(
-      offreId: offreSuiviesState.confirmationOffreId ??
-          updateFavorisState.confirmationPostuleOffreId ??
-          offreSuivieId ??
-          offreFavorisId ??
-          "",
-    );
+
+  if (offreSuiviesState.confirmationOffreId != null) {
+    return OffreSuivieAccueilItem(offreId: offreSuiviesState.confirmationOffreId!);
   }
+
+  if (updateFavorisState.confirmationPostuleOffreId != null) {
+    return OffreSuivieAccueilItem(offreId: updateFavorisState.confirmationPostuleOffreId!);
+  }
+
+  if (offreSuiviesState.offresSuivies.isNotEmpty) {
+    return OffreSuivieAccueilItem(offreId: offreSuiviesState.offresSuivies.first.offreDto.id);
+  }
+
+  if (offreFavorisIds.isNotEmpty) {
+    return OffreSuivieAccueilItem(offreId: offreFavorisIds.first);
+  }
+
   return null;
 }
 

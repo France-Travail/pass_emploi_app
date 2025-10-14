@@ -37,6 +37,7 @@ void main() {
                 organisation: 'organisation-1',
                 localisation: 'localisation-1',
                 origin: PartenaireOrigin(name: 'Indeed', logoUrl: 'https://indeed.com/logo.png'),
+                dateDeCreation: DateTime(2025),
               ),
             );
             expect(
@@ -48,6 +49,7 @@ void main() {
                 organisation: 'organisation-2',
                 localisation: 'localisation-2',
                 origin: FranceTravailOrigin(),
+                dateDeCreation: DateTime(2025),
               ),
             );
             expect(result[2].type, OffreType.immersion);

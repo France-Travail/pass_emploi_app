@@ -1017,8 +1017,14 @@ DiagorienteUrls mockDiagorienteUrls() {
   );
 }
 
-Favori mockFavori([String id = 'id', OffreType type = OffreType.immersion]) {
-  return Favori(id: id, type: type, titre: 't', organisation: null, localisation: null);
+Favori mockFavori({String id = 'id', OffreType type = OffreType.immersion, DateTime? dateDeCreation}) {
+  return Favori(
+      id: id,
+      type: type,
+      titre: 't',
+      organisation: null,
+      localisation: null,
+      dateDeCreation: dateDeCreation ?? DateTime(2025));
 }
 
 List<Favori> mock3Favoris() {
@@ -1029,6 +1035,7 @@ List<Favori> mock3Favoris() {
       type: OffreType.emploi,
       organisation: "organisation-1",
       localisation: "localisation-1",
+      dateDeCreation: DateTime(2025),
     ),
     Favori(
       id: "2",
@@ -1036,6 +1043,7 @@ List<Favori> mock3Favoris() {
       type: OffreType.alternance,
       organisation: "organisation-2",
       localisation: "localisation-2",
+      dateDeCreation: DateTime(2025),
     ),
     Favori(
       id: "3",
@@ -1043,6 +1051,7 @@ List<Favori> mock3Favoris() {
       type: OffreType.immersion,
       organisation: null,
       localisation: "localisation-3",
+      dateDeCreation: DateTime(2025),
     ),
   ];
 }

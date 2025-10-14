@@ -38,7 +38,7 @@ void main() {
     expect(emploiFavorisState.favoris, {FavoriDto("2"), FavoriDto("4")});
 
     final favoriListState = (updatedFavoris.favoriListState as FavoriListSuccessState);
-    expect(favoriListState.results, [mockFavori('2'), mockFavori('4')]);
+    expect(favoriListState.results, [mockFavori(id: '2'), mockFavori(id: '4')]);
   });
 
   test("favori state should not be updated when favori is removed and api call fails", () async {
@@ -167,7 +167,7 @@ Store<AppState> _successStoreWithFavorisAndSearchResultsLoaded() {
             loginState: successMiloUserState(),
             offreEmploiFavorisIdsState:
                 FavoriIdsState<OffreEmploi>.success({FavoriDto("1"), FavoriDto("2"), FavoriDto("4")}))
-        .favoriListSuccessState([mockFavori('1'), mockFavori('2'), mockFavori('4')]) //
+        .favoriListSuccessState([mockFavori(id: '1'), mockFavori(id: '2'), mockFavori(id: '4')]) //
         .successRechercheEmploiState(results: [mockOffreEmploi(id: '1'), mockOffreEmploi(id: '17')]),
   );
   return store;

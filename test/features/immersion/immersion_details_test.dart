@@ -54,7 +54,13 @@ void main() {
           return OffreDetailsResponse(isGenericFailure: false, isOffreNotFound: true, details: null);
         });
 
-        final f = Favori(id: 'id', type: OffreType.immersion, titre: 't', organisation: 'o', localisation: 'l');
+        final f = Favori(
+            id: 'id',
+            type: OffreType.immersion,
+            titre: 't',
+            organisation: 'o',
+            localisation: 'l',
+            dateDeCreation: DateTime(2025));
         sut.givenStore = givenState() //
             .loggedIn() //
             .favoriListSuccessState([f]) //

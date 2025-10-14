@@ -47,7 +47,14 @@ void main() {
         when(() => repository.getServiceCiviqueDetail('id'))
             .thenAnswer((_) async => NotFoundServiceCiviqueDetailResponse());
 
-        final f = Favori(id: 'id', type: OffreType.serviceCivique, titre: 't', organisation: 'o', localisation: 'l');
+        final f = Favori(
+          id: 'id',
+          type: OffreType.serviceCivique,
+          titre: 't',
+          organisation: 'o',
+          localisation: 'l',
+          dateDeCreation: DateTime(2025),
+        );
         sut.givenStore = givenState() //
             .loggedIn() //
             .favoriListSuccessState([f]) //
