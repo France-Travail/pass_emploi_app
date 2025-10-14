@@ -42,7 +42,6 @@ void main() {
     expect(viewModel.outils, [
       Outil.immersionBoulanger,
       Outil.laBonneAlternance,
-      Outil.metierScope,
       Outil.mesAidesFt,
       Outil.benevolatPassEmploi,
       Outil.formation,
@@ -66,6 +65,7 @@ void main() {
     // Then
     expect(viewModel.outils, [
       Outil.laBonneAlternance,
+      Outil.metierScope,
       Outil.mesAidesFt,
       Outil.benevolatPassEmploi,
       Outil.formation,
