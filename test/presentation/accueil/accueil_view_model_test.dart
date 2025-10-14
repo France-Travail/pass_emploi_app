@@ -292,7 +292,7 @@ void main() {
         [
           Outil.immersionBoulanger.withoutImage(),
           Outil.benevolatPassEmploi.withoutImage(),
-          Outil.metierScope.withoutImage(),
+          Outil.mesAidesFt.withoutImage(),
         ],
       );
     });
@@ -314,7 +314,7 @@ void main() {
         (outilsItem as AccueilOutilsItem).outils,
         [
           Outil.benevolatPassEmploi.withoutImage(),
-          Outil.mesAidesFt.withoutImage(),
+          Outil.metierScope.withoutImage(),
           Outil.formation.withoutImage(),
         ],
       );
@@ -718,10 +718,7 @@ void main() {
       final store = givenPassEmploiState() //
           .loggedInPoleEmploiUser()
           .withAccueilPoleEmploiSuccess()
-          .withOffreSuiviState(
-        [mockOffreSuivie()],
-        confirmationOffreId: mockOffreEmploiDetails().id,
-      ).store();
+          .withOffreSuiviState([mockOffreSuivie()]).store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
