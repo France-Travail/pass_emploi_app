@@ -66,35 +66,42 @@ class PostulerConfirmationPage extends StatelessWidget {
                       style: TextStyles.textBaseRegular,
                     ),
                     SizedBox(height: Margins.spacing_l),
-                    Text(
-                      viewModel.wishToCreateActionOrDemarche,
-                      textAlign: TextAlign.center,
-                      style: TextStyles.textBaseRegular,
-                    ),
-                    SizedBox(height: Margins.spacing_base),
-                    PrimaryActionButton(
-                      label: viewModel.onCreateActionOrDemarcheLabel,
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        viewModel.onCreateActionOrDemarche();
-                        if (viewModel.useDemarche) {
-                          PassEmploiMatomoTracker.instance.trackEvent(
-                            eventCategory: AnalyticsEventNames.createDemarcheEventCategory(
-                              StoreProvider.of<AppState>(context).state.featureFlipState.featureFlip.abTestingIaFt.name,
-                            ),
-                            action: AnalyticsEventNames.createDemarcheFromOffreSuiviAction,
-                          );
-                          Navigator.of(context)
-                              .push(CreateDemarcheSuccessPage.route(CreateDemarcheSource.fromReferentiel));
-                        } else {
-                          PassEmploiMatomoTracker.instance.trackEvent(
-                            eventCategory: AnalyticsEventNames.createActionEventCategory,
-                            action: AnalyticsEventNames.createActionResultFromOffreSuiviAction,
-                          );
-                          Navigator.of(context).push(CreateUserActionConfirmationOffreSuiviPage.route());
-                        }
-                      },
-                    ),
+                    if (viewModel.onCreateActionOrDemarche != null) ...[
+                      Text(
+                        viewModel.wishToCreateActionOrDemarche,
+                        textAlign: TextAlign.center,
+                        style: TextStyles.textBaseRegular,
+                      ),
+                      SizedBox(height: Margins.spacing_base),
+                      PrimaryActionButton(
+                        label: viewModel.onCreateActionOrDemarcheLabel,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          viewModel.onCreateActionOrDemarche?.call();
+                          if (viewModel.useDemarche) {
+                            PassEmploiMatomoTracker.instance.trackEvent(
+                              eventCategory: AnalyticsEventNames.createDemarcheEventCategory(
+                                StoreProvider.of<AppState>(context)
+                                    .state
+                                    .featureFlipState
+                                    .featureFlip
+                                    .abTestingIaFt
+                                    .name,
+                              ),
+                              action: AnalyticsEventNames.createDemarcheFromOffreSuiviAction,
+                            );
+                            Navigator.of(context)
+                                .push(CreateDemarcheSuccessPage.route(CreateDemarcheSource.fromReferentiel));
+                          } else {
+                            PassEmploiMatomoTracker.instance.trackEvent(
+                              eventCategory: AnalyticsEventNames.createActionEventCategory,
+                              action: AnalyticsEventNames.createActionResultFromOffreSuiviAction,
+                            );
+                            Navigator.of(context).push(CreateUserActionConfirmationOffreSuiviPage.route());
+                          }
+                        },
+                      ),
+                    ],
                     SizedBox(height: Margins.spacing_base),
                     SecondaryButton(
                       label: Strings.close,

@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:pass_emploi_app/features/demarche/create/create_demarche_actions.dart';
 import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_state.dart';
 import 'package:pass_emploi_app/features/user_action/create/user_action_create_actions.dart';
+import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/offre_suivie.dart';
 import 'package:pass_emploi_app/models/requests/user_action_create_request.dart';
 import 'package:pass_emploi_app/models/user_action.dart';
@@ -21,7 +22,7 @@ class PostulerConfirmationViewModel extends Equatable {
   final String onCreateActionOrDemarcheLabel;
   final String wishToCreateActionOrDemarche;
   final bool useDemarche;
-  final void Function() onCreateActionOrDemarche;
+  final void Function()? onCreateActionOrDemarche;
 
   factory PostulerConfirmationViewModel.create(Store<AppState> store, String offreId) {
     final offreSuivie = store.state.offresSuiviesState.getOffre(offreId);
@@ -31,7 +32,7 @@ class PostulerConfirmationViewModel extends Equatable {
       wishToCreateActionOrDemarche:
           store.state.isMiloLoginMode() ? Strings.wishToCreateAction : Strings.wishToCreateDemarche,
       useDemarche: !store.state.isMiloLoginMode(),
-      onCreateActionOrDemarche: () => _onCreateActionOrDemarche(store, offreSuivie),
+      onCreateActionOrDemarche: _onCreateActionOrDemarche(store, offreSuivie),
     );
   }
 
@@ -44,30 +45,37 @@ class PostulerConfirmationViewModel extends Equatable {
       ];
 }
 
-void _onCreateActionOrDemarche(Store<AppState> store, OffreSuivie? offreSuivie) {
-  if (store.state.isMiloLoginMode()) {
-    store.dispatch(
-      UserActionCreateRequestAction(
-        UserActionCreateRequest(
-          Strings.candidature,
-          Strings.jaiPostuleA(offreSuivie?.offreDto.title, offreSuivie?.offreDto.companyName),
-          DateTime.now(),
-          false,
-          UserActionStatus.DONE,
-          UserActionReferentielType.emploi,
-          false,
-        ),
-      ),
-    );
-  } else {
-    store.dispatch(
-      CreateDemarcheRequestAction(
-        codeQuoi: "Q14",
-        codePourquoi: "P03",
-        codeComment: null,
-        dateEcheance: DateTime.now(),
-        estDuplicata: false,
-      ),
-    );
+void Function()? _onCreateActionOrDemarche(Store<AppState> store, OffreSuivie? offreSuivie) {
+  final user = store.state.user();
+  if (user?.accompagnement == Accompagnement.avenirPro) {
+    return null;
   }
+
+  return () {
+    if (store.state.isMiloLoginMode()) {
+      store.dispatch(
+        UserActionCreateRequestAction(
+          UserActionCreateRequest(
+            Strings.candidature,
+            Strings.jaiPostuleA(offreSuivie?.offreDto.title, offreSuivie?.offreDto.companyName),
+            DateTime.now(),
+            false,
+            UserActionStatus.DONE,
+            UserActionReferentielType.emploi,
+            false,
+          ),
+        ),
+      );
+    } else {
+      store.dispatch(
+        CreateDemarcheRequestAction(
+          codeQuoi: "Q14",
+          codePourquoi: "P03",
+          codeComment: null,
+          dateEcheance: DateTime.now(),
+          estDuplicata: false,
+        ),
+      );
+    }
+  };
 }
