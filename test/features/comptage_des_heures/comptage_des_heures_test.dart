@@ -29,6 +29,14 @@ void main() {
         sut.thenExpectChangingStatesThroughOrder([_shouldSucceed()]);
       });
 
+      test('should not load when user is not a Milo', () {
+        sut.givenStore = givenState() //
+            .loggedInPoleEmploiUser()
+            .store((f) => {f.comptageDesHeuresRepository = repository});
+
+        sut.thenExpectChangingStatesThroughOrder([]);
+      });
+
       test('should load then fail when request fails', () {
         when(() => repository.get(userId: any(named: "userId"))).thenAnswer((_) async => null);
 

@@ -13,7 +13,7 @@ class ComptageDesHeuresMiddleware extends MiddlewareClass<AppState> {
     next(action);
     final userId = store.state.userId();
     if (userId == null) return;
-    if (action is ComptageDesHeuresRequestAction) {
+    if (action is ComptageDesHeuresRequestAction && store.state.isMiloLoginMode()) {
       final result = await _repository.get(userId: userId);
       if (result != null) {
         store.dispatch(ComptageDesHeuresSuccessAction(result));
