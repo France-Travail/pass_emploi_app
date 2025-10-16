@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_actions.dart';
 import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_actions.dart';
 import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_state.dart';
 import 'package:pass_emploi_app/features/user_action/create/user_action_create_actions.dart';
+import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/favori.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
 import 'package:pass_emploi_app/models/offre_suivie.dart';
@@ -203,6 +204,11 @@ String _confirmationButton(Store<AppState> store, String offreId, bool isHomePag
 }
 
 void Function()? _onCreateActionOrDemarche(Store<AppState> store, OffreSuivie? offreSuivie, String offreId) {
+  final user = store.state.user();
+  if (user?.accompagnement == Accompagnement.avenirPro) {
+    return null;
+  }
+
   final updateConfirmation = store.state.favoriUpdateState.confirmationOffre;
   final offreSuivieConfirmation = store.state.offresSuiviesState.confirmationOffre;
 
