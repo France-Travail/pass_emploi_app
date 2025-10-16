@@ -849,14 +849,14 @@ class Strings {
   static String otherDemarche = "Autre démarche";
 
   // IA FT
-  static String iaFtStep2Title = "Dictez ou saisissez vos démarches effectuées";
-  static String iaFtStep2Warning = "Attention à ne pas partager vos données personnelles ou d’informations sensibles.";
-  static String iaFtStep2FieldTitle = "Résumé de vos démarches (obligatoire)";
+  static String iaFtStep2Title = "Décrivez vos démarches";
+  static String iaFtStep2Mandatory = "(obligatoire)";
+  static String iaFtStep2Warning = "Ne renseignez aucune donnée sensible";
   static String iaFtStep2FieldHint =
       "Exemple : Cette semaine, j’ai déposé mon CV à la librairie pour un emploi saisonnier, etc.";
   static String iaFtStep2ButtonDicter = "Dicter";
   static String iaFtStep2ButtonStop = "Arrêter";
-  static String iaFtStep2Button = "Créer les démarches";
+  static String iaFtStep2Button = "Générer les démarches";
 
   static String iaFtSuggestionsLoading = "Nous générons vos démarches, cela peut prendre quelques instants";
   static String iaFtSuggestionsFailure = "Oups, quelque chose s’est mal passé lors de la création des démarches.";

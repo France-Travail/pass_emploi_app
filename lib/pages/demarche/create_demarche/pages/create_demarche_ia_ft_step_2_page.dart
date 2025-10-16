@@ -81,27 +81,14 @@ class _CreateDemarcheIaFtStep2PageState extends State<CreateDemarcheIaFtStep2Pag
           children: [
             SizedBox(height: Margins.spacing_base),
             Text(Strings.iaFtStep2Title, style: TextStyles.textMBold),
+            Text(Strings.iaFtStep2Mandatory, style: TextStyles.textSRegular(color: AppColors.contentColor)),
             const SizedBox(height: Margins.spacing_base),
-            InformationBandeau(
-              text: Strings.iaFtStep2Warning,
-              icon: AppIcons.info,
-              backgroundColor: AppColors.primaryLighten,
-              textColor: AppColors.primary,
-              borderRadius: Dimens.radius_base,
-              padding: EdgeInsets.symmetric(
-                vertical: Margins.spacing_s,
-                horizontal: Margins.spacing_base,
-              ),
-            ),
-            const SizedBox(height: Margins.spacing_base),
-            Text(Strings.iaFtStep2FieldTitle, style: TextStyles.textBaseBold),
-            const SizedBox(height: Margins.spacing_s),
             Stack(
               children: [
                 BaseTextField(
                   controller: _textEditingController,
                   hintText: Strings.iaFtStep2FieldHint,
-                  minLines: 6,
+                  minLines: 3,
                   maxLines: null,
                   maxLength: CreateDemarcheIaFtStep2ViewModel.maxLength,
                   errorText: _errorText,
@@ -120,39 +107,53 @@ class _CreateDemarcheIaFtStep2PageState extends State<CreateDemarcheIaFtStep2Pag
                 Positioned(
                   right: 0,
                   child: IconButton(
+                    tooltip: _isListening ? Strings.iaFtStep2ButtonStop : Strings.iaFtStep2ButtonDicter,
                     onPressed: () {
-                      _textEditingController.clear();
-                      setState(() => _errorText = null);
+                      if (_isListening) {
+                        _stopListening();
+                      } else {
+                        _startListening();
+                      }
                     },
-                    tooltip: Strings.clear,
-                    icon: Icon(Icons.close),
-                    color: AppColors.contentColor,
+                    icon: Icon(_isListening ? Icons.stop_circle_rounded : Icons.mic, color: AppColors.primary),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: Margins.spacing_base),
-            PrimaryActionButton(
-              label: _isListening ? Strings.iaFtStep2ButtonStop : Strings.iaFtStep2ButtonDicter,
-              onPressed: () {
-                if (_isListening) {
-                  _stopListening();
-                } else {
-                  _startListening();
-                }
-              },
-              suffix: _isListening
-                  ? SizedBox(
-                      height: 24,
-                      child: SoundWaveformWidget(),
-                    )
-                  : null,
+            InformationBandeau(
+              text: Strings.iaFtStep2Warning,
+              icon: AppIcons.info,
               backgroundColor: AppColors.primaryLighten,
               textColor: AppColors.primary,
-              iconColor: AppColors.primary,
-              icon: _isListening ? Icons.stop_circle_rounded : Icons.mic,
-              rippleColor: AppColors.primary.withOpacity(0.3),
+              borderRadius: Dimens.radius_base,
+              padding: EdgeInsets.symmetric(
+                vertical: Margins.spacing_s,
+                horizontal: Margins.spacing_base,
+              ),
             ),
+            // const SizedBox(height: Margins.spacing_base),
+            // PrimaryActionButton(
+            //   label: _isListening ? Strings.iaFtStep2ButtonStop : Strings.iaFtStep2ButtonDicter,
+            //   onPressed: () {
+            //     if (_isListening) {
+            //       _stopListening();
+            //     } else {
+            //       _startListening();
+            //     }
+            //   },
+            //   suffix: _isListening
+            //       ? SizedBox(
+            //           height: 24,
+            //           child: SoundWaveformWidget(),
+            //         )
+            //       : null,
+            //   backgroundColor: AppColors.primaryLighten,
+            //   textColor: AppColors.primary,
+            //   iconColor: AppColors.primary,
+            //   icon: _isListening ? Icons.stop_circle_rounded : Icons.mic,
+            //   rippleColor: AppColors.primary.withOpacity(0.3),
+            // ),
             const SizedBox(height: Margins.spacing_base),
             PrimaryActionButton(
               label: Strings.iaFtStep2Button,
