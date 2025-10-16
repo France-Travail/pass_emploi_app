@@ -99,6 +99,7 @@ class _CreateUserActionFormStep2State extends State<CreateUserActionFormStep2> {
                   ),
                 ),
               ],
+              SizedBox(height: 600),
             ],
           ),
         ),
@@ -212,7 +213,6 @@ class UserActionDescriptionField extends StatelessWidget {
                 maxLength: 1024,
                 onChanged: onDescriptionChanged,
                 isInvalid: isInvalid,
-                onTap: () => Scrollable.ensureVisible(context),
               ),
               if (descriptionController.text.isNotEmpty)
                 Align(

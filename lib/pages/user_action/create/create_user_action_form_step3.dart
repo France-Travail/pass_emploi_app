@@ -242,7 +242,7 @@ class _DuplicateUserActionItemState extends State<_DuplicateUserActionItem> {
         final screenHeight = MediaQuery.of(context).size.height;
 
         // Calculer la position cible pour centrer le champ à l'écran
-        final targetOffset = position.dy + scrollOffset - (screenHeight / 2) + (renderBox.size.height / 2);
+        final targetOffset = position.dy + scrollOffset - (screenHeight / 2) + (renderBox.size.height);
 
         widget.scrollController.animateTo(
           targetOffset.clamp(0.0, widget.scrollController.position.maxScrollExtent),
@@ -338,7 +338,7 @@ class _ErrorItem extends StatelessWidget {
       children: [
         Icon(icon, color: AppColors.warning),
         const SizedBox(width: Margins.spacing_s),
-        Text(text, style: TextStyles.textBaseRegular.copyWith(color: AppColors.warning)),
+        Flexible(child: Text(text, style: TextStyles.textBaseRegular.copyWith(color: AppColors.warning))),
       ],
     );
   }
