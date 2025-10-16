@@ -886,11 +886,11 @@ extension AppStateDSL on AppState {
   }
 
   AppState withOffreSuiviState(List<OffreSuivie> offresSuivies,
-      {String? confirmationOffreId, List<String> blackListedOffreIds = const []}) {
+      {ConfirmationOffre? confirmationOffre, List<String> blackListedOffreIds = const []}) {
     return copyWith(
         offresSuiviesState: OffresSuiviesState(
       offresSuivies: offresSuivies,
-      confirmationOffreId: confirmationOffreId,
+      confirmationOffre: confirmationOffre,
       blackListedOffreIds: blackListedOffreIds,
     ));
   }

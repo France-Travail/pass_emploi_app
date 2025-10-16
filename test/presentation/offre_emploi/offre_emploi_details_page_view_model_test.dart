@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/features/favori/ids/favori_ids_state.dart';
 import 'package:pass_emploi_app/features/favori/update/favori_update_state.dart';
 import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_state.dart';
+import 'package:pass_emploi_app/models/favori.dart';
 import 'package:pass_emploi_app/models/image_source.dart';
 import 'package:pass_emploi_app/models/offre_dto.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
@@ -319,7 +320,8 @@ void main() {
           .copyWith(
             offresSuiviesState: OffresSuiviesState(
               offresSuivies: [],
-              confirmationOffreId: mockOffreEmploiDetails().id,
+              confirmationOffre:
+                  ConfirmationOffre(offreId: mockOffreEmploiDetails().id, newStatus: FavoriStatus.removed),
             ),
           )
           .store();
@@ -339,7 +341,7 @@ void main() {
           .copyWith(
             offresSuiviesState: OffresSuiviesState(
               offresSuivies: [],
-              confirmationOffreId: null,
+              confirmationOffre: null,
             ),
             offreEmploiFavorisIdsState: FavoriIdsState.success({
               FavoriDto(
@@ -365,11 +367,12 @@ void main() {
           .copyWith(
             offresSuiviesState: OffresSuiviesState(
               offresSuivies: [],
-              confirmationOffreId: null,
+              confirmationOffre: null,
             ),
             favoriUpdateState: FavoriUpdateState(
               {},
-              confirmationPostuleOffreId: mockOffreEmploiDetails().id,
+              confirmationOffre:
+                  ConfirmationOffre(offreId: mockOffreEmploiDetails().id, newStatus: FavoriStatus.removed),
             ),
           )
           .store();
@@ -389,7 +392,7 @@ void main() {
           .copyWith(
             offresSuiviesState: OffresSuiviesState(
               offresSuivies: [],
-              confirmationOffreId: null,
+              confirmationOffre: null,
             ),
             offreEmploiFavorisIdsState:
                 FavoriIdsState.success({FavoriDto(mockOffreEmploiDetails().id, datePostulation: DateTime(2025))}),
@@ -411,11 +414,11 @@ void main() {
           .copyWith(
             offresSuiviesState: OffresSuiviesState(
               offresSuivies: [],
-              confirmationOffreId: null,
+              confirmationOffre: null,
             ),
             favoriUpdateState: FavoriUpdateState(
               {},
-              confirmationPostuleOffreId: null,
+              confirmationOffre: null,
             ),
           )
           .store();
@@ -467,13 +470,14 @@ void main() {
           .copyWith(
             offresSuiviesState: OffresSuiviesState(
               offresSuivies: [],
-              confirmationOffreId: null,
+              confirmationOffre: null,
             ),
             offreEmploiFavorisIdsState:
                 FavoriIdsState.success({FavoriDto(mockOffreEmploiDetails().id, datePostulation: DateTime(2025))}),
             favoriUpdateState: FavoriUpdateState(
               {},
-              confirmationPostuleOffreId: mockOffreEmploiDetails().id,
+              confirmationOffre:
+                  ConfirmationOffre(offreId: mockOffreEmploiDetails().id, newStatus: FavoriStatus.removed),
             ),
           )
           .store();

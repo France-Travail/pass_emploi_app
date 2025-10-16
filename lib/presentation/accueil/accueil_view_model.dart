@@ -196,8 +196,7 @@ AccueilItem? _outilsItem(AccueilSuccessState successState, Accompagnement accomp
 }
 
 AccueilItem? _offreSuivies(Store<AppState> store) {
-  // TODO: Remove me
-  final nonPostuledOffreIds = store.state.favoriListState.nonPostuledOffreIdsAfter(Duration(minutes: 1));
+  final nonPostuledOffreIds = store.state.favoriListState.nonPostuledOffreIdsAfter(Duration(days: 3));
   final blacklistedOffreIds = store.state.offresSuiviesState.blackListedOffreIds;
 
   final offreFavorisIds = nonPostuledOffreIds.where((id) => !blacklistedOffreIds.contains(id)).toList();

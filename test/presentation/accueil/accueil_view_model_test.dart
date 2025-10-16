@@ -4,10 +4,12 @@ import 'package:pass_emploi_app/features/accueil/accueil_actions.dart';
 import 'package:pass_emploi_app/features/accueil/accueil_state.dart';
 import 'package:pass_emploi_app/features/date_consultation_notification/date_consultation_notification_state.dart';
 import 'package:pass_emploi_app/features/favori/update/favori_update_state.dart';
+import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_state.dart';
 import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/accueil/accueil.dart';
 import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
+import 'package:pass_emploi_app/models/favori.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/outil.dart';
 import 'package:pass_emploi_app/models/remote_campagne_accueil.dart';
@@ -787,7 +789,9 @@ void main() {
       final store = givenPassEmploiState() //
           .loggedInPoleEmploiUser()
           .withAccueilPoleEmploiSuccess()
-          .copyWith(favoriUpdateState: FavoriUpdateState({}, confirmationPostuleOffreId: "test"))
+          .copyWith(
+              favoriUpdateState: FavoriUpdateState({},
+                  confirmationOffre: ConfirmationOffre(offreId: "test", newStatus: FavoriStatus.removed)))
           .store();
 
       // When
@@ -803,7 +807,8 @@ void main() {
       final store = givenPassEmploiState() //
           .loggedInPoleEmploiUser()
           .withAccueilPoleEmploiSuccess()
-          .withOffreSuiviState([], confirmationOffreId: "test").store();
+          .withOffreSuiviState([],
+              confirmationOffre: ConfirmationOffre(offreId: "test", newStatus: FavoriStatus.removed)).store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
