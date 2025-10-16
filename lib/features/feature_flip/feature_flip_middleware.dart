@@ -32,6 +32,8 @@ class FeatureFlipMiddleware extends MiddlewareClass<AppState> {
         _handleCvmFeatureFlip(store, action.user.id);
         _handleMonSuiviDemarchesKoMessageFeatureFlip(store, action.user.id);
         _handleAbTestingIaFtFeatureFlip(store, action.user.id);
+      } else if (action.user.loginMode.isMiLo()) {
+        _handleAccueilZenithMessageFeatureFlip(store, action.user.id);
       }
     }
   }
@@ -67,6 +69,13 @@ class FeatureFlipMiddleware extends MiddlewareClass<AppState> {
     final loginPageMessage = _remoteConfigRepository.loginPageMessage();
     if (loginPageMessage != null) {
       store.dispatch(FeatureFlipLoginPageMessageAction(loginPageMessage));
+    }
+  }
+
+  Future<void> _handleAccueilZenithMessageFeatureFlip(Store<AppState> store, String userId) async {
+    final accueilZenithMessage = _remoteConfigRepository.accueilZenithMessage();
+    if (accueilZenithMessage != null) {
+      store.dispatch(FeatureFlipAccueilZenithMessageAction(accueilZenithMessage));
     }
   }
 }

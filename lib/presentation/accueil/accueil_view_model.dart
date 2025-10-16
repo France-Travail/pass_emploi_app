@@ -90,6 +90,7 @@ List<AccueilItem> _items(Store<AppState> store) {
   if (accueilState is! AccueilSuccessState || user == null) return [];
 
   return [
+    _accueilZenithMessageItem(store.state),
     _errorDegradeeItem(accueilState),
     _onboardingItem(store.state),
     ..._remoteCampagneAccueilItems(store, store.state),
@@ -106,6 +107,12 @@ List<AccueilItem> _items(Store<AppState> store) {
     _alertesItem(accueilState),
     _outilsItem(accueilState, user.accompagnement),
   ].whereNotNull().toList();
+}
+
+AccueilItem? _accueilZenithMessageItem(AppState state) {
+  final accueilZenithMessage = state.featureFlipState.featureFlip.accueilZenithMessage;
+  if (accueilZenithMessage == null) return null;
+  return AccueilZenithMessageItem(accueilZenithMessage);
 }
 
 AccueilItem? _cetteSemaineItem(User user, AccueilSuccessState successState) {

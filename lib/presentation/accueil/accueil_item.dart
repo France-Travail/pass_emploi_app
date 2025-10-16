@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:pass_emploi_app/models/accueil_zenith_message.dart';
 import 'package:pass_emploi_app/models/alerte/alerte.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/outil.dart';
@@ -163,6 +164,12 @@ class OnboardingItem extends AccueilItem {
 
   @override
   List<Object?> get props => [completedSteps, totalSteps];
+}
+
+class AccueilZenithMessageItem extends AccueilItem {
+  final AccueilZenithMessage accueilZenithMessage;
+
+  AccueilZenithMessageItem(this.accueilZenithMessage);
 }
 
 String _actionsOuDemarchesLabel(LoginMode loginMode, int actionsOuDemarches) {

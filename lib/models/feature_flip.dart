@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:pass_emploi_app/models/accueil_zenith_message.dart';
 import 'package:pass_emploi_app/models/login_page_remote_message.dart';
 
 class FeatureFlip extends Equatable {
@@ -7,6 +8,7 @@ class FeatureFlip extends Equatable {
   final String? withMonSuiviDemarchesKoMessage;
   final AbTestingIaFt abTestingIaFt;
   final LoginPageRemoteMessage? loginPageMessage;
+  final AccueilZenithMessage? accueilZenithMessage;
 
   FeatureFlip({
     required this.useCvm,
@@ -14,6 +16,7 @@ class FeatureFlip extends Equatable {
     required this.withMonSuiviDemarchesKoMessage,
     required this.abTestingIaFt,
     required this.loginPageMessage,
+    required this.accueilZenithMessage,
   });
 
   factory FeatureFlip.initial() {
@@ -23,6 +26,7 @@ class FeatureFlip extends Equatable {
       withMonSuiviDemarchesKoMessage: null,
       abTestingIaFt: AbTestingIaFt.versionA,
       loginPageMessage: null,
+      accueilZenithMessage: null,
     );
   }
 
@@ -32,6 +36,7 @@ class FeatureFlip extends Equatable {
     String? withMonSuiviDemarchesKoMessage,
     AbTestingIaFt? abTestingIaFt,
     LoginPageRemoteMessage? loginPageMessage,
+    AccueilZenithMessage? accueilZenithMessage,
   }) {
     return FeatureFlip(
       useCvm: useCvm ?? this.useCvm,
@@ -39,6 +44,7 @@ class FeatureFlip extends Equatable {
       withMonSuiviDemarchesKoMessage: withMonSuiviDemarchesKoMessage ?? this.withMonSuiviDemarchesKoMessage,
       abTestingIaFt: abTestingIaFt ?? this.abTestingIaFt,
       loginPageMessage: loginPageMessage ?? this.loginPageMessage,
+      accueilZenithMessage: accueilZenithMessage ?? this.accueilZenithMessage,
     );
   }
 
@@ -49,6 +55,7 @@ class FeatureFlip extends Equatable {
         withMonSuiviDemarchesKoMessage,
         abTestingIaFt,
         loginPageMessage,
+        accueilZenithMessage,
       ];
 }
 

@@ -13,9 +13,11 @@ FeatureFlipState featureFlipReducer(FeatureFlipState current, dynamic action) {
   if (action is FeatureFlipAbTestingIaFtAction) {
     return FeatureFlipState(current.featureFlip.copyWith(abTestingIaFt: action.abTestingIaFt));
   }
-
   if (action is FeatureFlipLoginPageMessageAction) {
     return FeatureFlipState(current.featureFlip.copyWith(loginPageMessage: action.loginPageMessage));
+  }
+  if (action is FeatureFlipAccueilZenithMessageAction) {
+    return FeatureFlipState(current.featureFlip.copyWith(accueilZenithMessage: action.accueilZenithMessage));
   }
   return current;
 }

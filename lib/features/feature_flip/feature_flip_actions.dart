@@ -1,3 +1,4 @@
+import 'package:pass_emploi_app/models/accueil_zenith_message.dart';
 import 'package:pass_emploi_app/models/feature_flip.dart';
 import 'package:pass_emploi_app/models/login_page_remote_message.dart';
 
@@ -29,4 +30,10 @@ class FeatureFlipLoginPageMessageAction {
   final LoginPageRemoteMessage loginPageMessage;
 
   FeatureFlipLoginPageMessageAction(this.loginPageMessage);
+}
+
+class FeatureFlipAccueilZenithMessageAction {
+  final AccueilZenithMessage accueilZenithMessage;
+
+  FeatureFlipAccueilZenithMessageAction(this.accueilZenithMessage);
 }

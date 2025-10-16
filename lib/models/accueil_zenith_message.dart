@@ -1,20 +1,12 @@
-abstract class RemoteMessage {
-  String title;
-  String description;
+import 'package:pass_emploi_app/models/login_page_remote_message.dart';
 
-  RemoteMessage({
-    required this.title,
-    required this.description,
-  });
-}
-
-class LoginPageRemoteMessage extends RemoteMessage {
-  LoginPageRemoteMessage({
+class AccueilZenithMessage extends RemoteMessage {
+  AccueilZenithMessage({
     required super.title,
     required super.description,
   });
 
-  static LoginPageRemoteMessage? fromJson(Map<String, dynamic> json) {
+  static AccueilZenithMessage? fromJson(Map<String, dynamic> json) {
     final dateDebut = DateTime.fromMillisecondsSinceEpoch(json['dateDebut'] as int);
     final dateFin = DateTime.fromMillisecondsSinceEpoch(json['dateFin'] as int);
 
@@ -22,7 +14,7 @@ class LoginPageRemoteMessage extends RemoteMessage {
       return null;
     }
 
-    return LoginPageRemoteMessage(
+    return AccueilZenithMessage(
       title: json['title'] as String,
       description: json['description'] as String,
     );

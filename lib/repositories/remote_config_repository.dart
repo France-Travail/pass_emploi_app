@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:pass_emploi_app/models/accompagnement.dart';
+import 'package:pass_emploi_app/models/accueil_zenith_message.dart';
 import 'package:pass_emploi_app/models/cgu.dart';
 import 'package:pass_emploi_app/models/feature_flip.dart';
 import 'package:pass_emploi_app/models/feedback_for_feature.dart';
@@ -73,6 +74,13 @@ class RemoteConfigRepository {
     final key = _firebaseRemoteConfig.getString("login_page_message");
     if (key.isEmpty || key == "null") return null;
     return LoginPageRemoteMessage.fromJson(json.decode(key) as Map<String, dynamic>);
+  }
+
+  AccueilZenithMessage? accueilZenithMessage() {
+    if (_firebaseRemoteConfig == null) return null;
+    final key = _firebaseRemoteConfig.getString("zenith_accueil_message_milo");
+    if (key.isEmpty || key == "null") return null;
+    return AccueilZenithMessage.fromJson(json.decode(key) as Map<String, dynamic>);
   }
 
   Map<Accompagnement, bool> cvmActivationByAccompagnement() {

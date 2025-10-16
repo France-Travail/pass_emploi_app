@@ -42,9 +42,11 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/notifications_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/cards/campagne_card.dart';
+import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/information_bandeau.dart';
+import 'package:pass_emploi_app/widgets/login_page_remote_message.dart';
 import 'package:pass_emploi_app/widgets/offre_suivie_form.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 
@@ -264,6 +266,8 @@ class _Blocs extends StatelessWidget {
 
   Widget _buildItem(AccueilItem item) {
     return switch (item) {
+      final AccueilZenithMessageItem item =>
+        CardContainer(child: RemoteMessageWidget(remoteMessage: item.accueilZenithMessage)),
       final ErrorDegradeeItem item => InformationBandeau(icon: AppIcons.error_rounded, text: item.message),
       final OnboardingItem item => AccueilOnboardingTile(item),
       final OffreSuivieAccueilItem item => OffreSuivieForm(
