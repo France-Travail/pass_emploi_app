@@ -5,7 +5,7 @@ OffresSuiviesState offresSuiviesReducer(OffresSuiviesState current, dynamic acti
   if (action is OffresSuiviesToStateAction) {
     return OffresSuiviesState(
       offresSuivies: List.from(action.offresSuivies),
-      confirmationOffreId: action.confirmationOffreId,
+      confirmationOffre: action.confirmationOffre,
       blackListedOffreIds: action.blackListedOffreIds,
     );
   }
@@ -13,7 +13,7 @@ OffresSuiviesState offresSuiviesReducer(OffresSuiviesState current, dynamic acti
     return OffresSuiviesState(
       offresSuivies: current.offresSuivies,
       blackListedOffreIds: current.blackListedOffreIds,
-      confirmationOffreId: null,
+      confirmationOffre: null,
     );
   }
   return current;

@@ -1,5 +1,6 @@
 import 'package:pass_emploi_app/features/favori/update/favori_update_actions.dart';
 import 'package:pass_emploi_app/features/login/login_state.dart';
+import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_state.dart';
 import 'package:pass_emploi_app/models/favori.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/favoris/favoris_repository.dart';
@@ -41,7 +42,11 @@ class FavoriUpdateMiddleware<T> extends MiddlewareClass<AppState> {
       applied: applied,
     );
     if (result) {
-      store.dispatch(FavoriUpdateSuccessAction<T>(action.favoriId, action.newStatus));
+      store.dispatch(FavoriUpdateSuccessAction<T>(
+        action.favoriId,
+        action.newStatus,
+        action.showConfirmationOffre ? ConfirmationOffre(offreId: action.favoriId, newStatus: action.newStatus) : null,
+      ));
     } else {
       store.dispatch(FavoriUpdateFailureAction<T>(action.favoriId));
     }
@@ -56,7 +61,14 @@ class FavoriUpdateMiddleware<T> extends MiddlewareClass<AppState> {
     final result = await _repository.deleteFavori(userId, action.favoriId);
     if (result) {
       store.dispatch(
-          FavoriUpdateSuccessAction<T>(action.favoriId, action.newStatus, confirmationOffreId: action.favoriId));
+        FavoriUpdateSuccessAction<T>(
+          action.favoriId,
+          action.newStatus,
+          action.showConfirmationOffre
+              ? ConfirmationOffre(offreId: action.favoriId, newStatus: action.newStatus)
+              : null,
+        ),
+      );
     } else {
       store.dispatch(FavoriUpdateFailureAction<T>(action.favoriId));
     }
@@ -73,7 +85,7 @@ class FavoriUpdateMiddleware<T> extends MiddlewareClass<AppState> {
       store.dispatch(FavoriUpdateSuccessAction<T>(
         action.favoriId,
         action.newStatus,
-        confirmationOffreId: action.favoriId,
+        action.showConfirmationOffre ? ConfirmationOffre(offreId: action.favoriId, newStatus: action.newStatus) : null,
       ));
     } else {
       store.dispatch(FavoriUpdateFailureAction<T>(action.favoriId));

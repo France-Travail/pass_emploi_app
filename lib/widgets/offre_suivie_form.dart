@@ -77,40 +77,42 @@ class _Confirmation extends StatelessWidget {
               style: TextStyles.textBaseRegular
                   .copyWith(color: showPrimaryBackground ? Colors.white : AppColors.contentColor),
             ),
-            if (viewModel.confirmationMessage != null) ...[
-              SizedBox(height: Margins.spacing_s),
-              Text(
-                viewModel.confirmationMessage!,
-                textAlign: TextAlign.center,
-                style: TextStyles.textSRegular()
-                    .copyWith(color: showPrimaryBackground ? Colors.white : AppColors.contentColor),
+            if (viewModel.onCreateActionOrDemarche != null) ...[
+              if (viewModel.confirmationMessage != null) ...[
+                SizedBox(height: Margins.spacing_s),
+                Text(
+                  viewModel.confirmationMessage!,
+                  textAlign: TextAlign.center,
+                  style: TextStyles.textSRegular()
+                      .copyWith(color: showPrimaryBackground ? Colors.white : AppColors.contentColor),
+                ),
+              ],
+              SizedBox(height: Margins.spacing_base),
+              PrimaryActionButton(
+                label: viewModel.onCreateActionOrDemarcheLabel,
+                textColor: showPrimaryBackground ? AppColors.primary : Colors.white,
+                backgroundColor: showPrimaryBackground ? Colors.white : AppColors.primary,
+                onPressed: () {
+                  viewModel.onCreateActionOrDemarche?.call();
+                  viewModel.onHideForever();
+                  if (viewModel.useDemarche) {
+                    PassEmploiMatomoTracker.instance.trackEvent(
+                      eventCategory: AnalyticsEventNames.createDemarcheEventCategory(
+                        StoreProvider.of<AppState>(context).state.featureFlipState.featureFlip.abTestingIaFt.name,
+                      ),
+                      action: AnalyticsEventNames.createDemarcheFromOffreSuiviAction,
+                    );
+                    Navigator.of(context).push(CreateDemarcheSuccessPage.route(CreateDemarcheSource.fromReferentiel));
+                  } else {
+                    PassEmploiMatomoTracker.instance.trackEvent(
+                      eventCategory: AnalyticsEventNames.createActionEventCategory,
+                      action: AnalyticsEventNames.createActionResultFromOffreSuiviAction,
+                    );
+                    Navigator.of(context).push(CreateUserActionConfirmationOffreSuiviPage.route());
+                  }
+                },
               ),
             ],
-            SizedBox(height: Margins.spacing_base),
-            PrimaryActionButton(
-              label: viewModel.onCreateActionOrDemarcheLabel,
-              textColor: showPrimaryBackground ? AppColors.primary : Colors.white,
-              backgroundColor: showPrimaryBackground ? Colors.white : AppColors.primary,
-              onPressed: () {
-                viewModel.onCreateActionOrDemarche();
-                viewModel.onHideForever();
-                if (viewModel.useDemarche) {
-                  PassEmploiMatomoTracker.instance.trackEvent(
-                    eventCategory: AnalyticsEventNames.createDemarcheEventCategory(
-                      StoreProvider.of<AppState>(context).state.featureFlipState.featureFlip.abTestingIaFt.name,
-                    ),
-                    action: AnalyticsEventNames.createDemarcheFromOffreSuiviAction,
-                  );
-                  Navigator.of(context).push(CreateDemarcheSuccessPage.route(CreateDemarcheSource.fromReferentiel));
-                } else {
-                  PassEmploiMatomoTracker.instance.trackEvent(
-                    eventCategory: AnalyticsEventNames.createActionEventCategory,
-                    action: AnalyticsEventNames.createActionResultFromOffreSuiviAction,
-                  );
-                  Navigator.of(context).push(CreateUserActionConfirmationOffreSuiviPage.route());
-                }
-              },
-            ),
             if (viewModel.onNextOffer != null) ...[
               SizedBox(height: Margins.spacing_base),
               SecondaryButton(

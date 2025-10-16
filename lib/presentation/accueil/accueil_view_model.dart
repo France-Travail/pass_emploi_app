@@ -196,19 +196,20 @@ AccueilItem? _outilsItem(AccueilSuccessState successState, Accompagnement accomp
 }
 
 AccueilItem? _offreSuivies(Store<AppState> store) {
-  final nonPostuledOffreIds = store.state.favoriListState.nonPostuledOffreIdsAfter(const Duration(days: 3));
+  // TODO: Remove me
+  final nonPostuledOffreIds = store.state.favoriListState.nonPostuledOffreIdsAfter(Duration(minutes: 1));
   final blacklistedOffreIds = store.state.offresSuiviesState.blackListedOffreIds;
 
   final offreFavorisIds = nonPostuledOffreIds.where((id) => !blacklistedOffreIds.contains(id)).toList();
   final offreSuiviesState = store.state.offresSuiviesState;
   final updateFavorisState = store.state.favoriUpdateState;
 
-  if (offreSuiviesState.confirmationOffreId != null) {
-    return OffreSuivieAccueilItem(offreId: offreSuiviesState.confirmationOffreId!);
+  if (offreSuiviesState.confirmationOffre != null) {
+    return OffreSuivieAccueilItem(offreId: offreSuiviesState.confirmationOffre!.offreId);
   }
 
-  if (updateFavorisState.confirmationPostuleOffreId != null) {
-    return OffreSuivieAccueilItem(offreId: updateFavorisState.confirmationPostuleOffreId!);
+  if (updateFavorisState.confirmationOffre != null) {
+    return OffreSuivieAccueilItem(offreId: updateFavorisState.confirmationOffre!.offreId);
   }
 
   if (offreSuiviesState.offresSuivies.isNotEmpty) {

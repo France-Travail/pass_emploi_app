@@ -31,7 +31,7 @@ class OffreSuivieFormViewmodel extends Equatable {
   final void Function()? onNotYetPostuled;
   final void Function() onNotInterested;
   final void Function() onHideForever;
-  final void Function() onCreateActionOrDemarche;
+  final void Function()? onCreateActionOrDemarche;
   final void Function()? onNextOffer;
 
   OffreSuivieFormViewmodel._({
@@ -76,7 +76,7 @@ class OffreSuivieFormViewmodel extends Equatable {
         store.dispatch(FavoriUpdateConfirmationResetAction());
       },
       onNotYetPostuled: _onNotYetPostuled(isFavorisNonPostule, store, offreId, isHomePage),
-      onCreateActionOrDemarche: () => _onCreateActionOrDemarche(store, offreSuivie),
+      onCreateActionOrDemarche: _onCreateActionOrDemarche(store, offreSuivie, offreId),
       onNextOffer: _onNextOffer(store, offreId, isHomePage),
     );
   }
@@ -96,8 +96,8 @@ class OffreSuivieFormViewmodel extends Equatable {
 }
 
 bool _showConfirmation(Store<AppState> store, String offreId) {
-  final confirmationFavoris = store.state.favoriUpdateState.confirmationPostuleOffreId == offreId;
-  final confirmationOffreSuivie = store.state.offresSuiviesState.confirmationOffreId == offreId;
+  final confirmationFavoris = store.state.favoriUpdateState.confirmationOffre?.offreId == offreId;
+  final confirmationOffreSuivie = store.state.offresSuiviesState.confirmationOffre?.offreId == offreId;
   return confirmationFavoris || confirmationOffreSuivie;
 }
 
@@ -202,31 +202,44 @@ String _confirmationButton(Store<AppState> store, String offreId, bool isHomePag
   return Strings.close;
 }
 
-void _onCreateActionOrDemarche(Store<AppState> store, OffreSuivie? offreSuivie) {
-  if (store.state.isMiloLoginMode()) {
-    store.dispatch(
-      UserActionCreateRequestAction(
-        UserActionCreateRequest(
-          Strings.candidature,
-          Strings.jaiPostuleA(offreSuivie?.offreDto.title ?? "", offreSuivie?.offreDto.companyName ?? ""),
-          DateTime.now(),
-          false,
-          UserActionStatus.DONE,
-          UserActionReferentielType.emploi,
-          false,
-        ),
-      ),
-    );
-  } else {
-    store.dispatch(
-      CreateDemarcheRequestAction(
-        codeQuoi: "Q14",
-        codePourquoi: "P03",
-        codeComment: null,
-        dateEcheance: DateTime.now(),
-        estDuplicata: false,
-      ),
-    );
-    store.dispatch(MonSuiviRequestAction(MonSuiviPeriod.current));
+void Function()? _onCreateActionOrDemarche(Store<AppState> store, OffreSuivie? offreSuivie, String offreId) {
+  final updateConfirmation = store.state.favoriUpdateState.confirmationOffre;
+  final offreSuivieConfirmation = store.state.offresSuiviesState.confirmationOffre;
+
+  if (updateConfirmation?.offreId == offreId && updateConfirmation?.newStatus != FavoriStatus.applied) {
+    return null;
   }
+
+  if (offreSuivieConfirmation?.offreId == offreId && offreSuivieConfirmation?.newStatus != FavoriStatus.applied) {
+    return null;
+  }
+
+  return () {
+    if (store.state.isMiloLoginMode()) {
+      store.dispatch(
+        UserActionCreateRequestAction(
+          UserActionCreateRequest(
+            Strings.candidature,
+            Strings.jaiPostuleA(offreSuivie?.offreDto.title ?? "", offreSuivie?.offreDto.companyName ?? ""),
+            DateTime.now(),
+            false,
+            UserActionStatus.DONE,
+            UserActionReferentielType.emploi,
+            false,
+          ),
+        ),
+      );
+    } else {
+      store.dispatch(
+        CreateDemarcheRequestAction(
+          codeQuoi: "Q14",
+          codePourquoi: "P03",
+          codeComment: null,
+          dateEcheance: DateTime.now(),
+          estDuplicata: false,
+        ),
+      );
+      store.dispatch(MonSuiviRequestAction(MonSuiviPeriod.current));
+    }
+  };
 }

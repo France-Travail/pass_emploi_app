@@ -6,7 +6,7 @@ import 'package:pass_emploi_app/models/service_civique.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/string_extensions.dart';
 
-enum FavoriStatus { added, removed, applied }
+enum FavoriStatus { added, removed, applied, blacklisted }
 
 class Favori extends Equatable {
   final String id;

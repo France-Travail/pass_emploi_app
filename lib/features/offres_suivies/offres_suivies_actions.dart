@@ -1,3 +1,4 @@
+import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_state.dart';
 import 'package:pass_emploi_app/models/offre_dto.dart';
 import 'package:pass_emploi_app/models/offre_suivie.dart';
 
@@ -23,8 +24,8 @@ class OffresSuiviesConfirmationResetAction {}
 
 class OffresSuiviesToStateAction {
   final List<OffreSuivie> offresSuivies;
-  final String? confirmationOffreId;
+  final ConfirmationOffre? confirmationOffre;
   final List<String> blackListedOffreIds;
 
-  OffresSuiviesToStateAction(this.offresSuivies, {this.confirmationOffreId, this.blackListedOffreIds = const []});
+  OffresSuiviesToStateAction(this.offresSuivies, {this.confirmationOffre, this.blackListedOffreIds = const []});
 }

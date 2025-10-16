@@ -24,7 +24,11 @@ class FavoriHeartViewModel<T> extends Equatable {
       isFavori: _isFavori(offreId, favorisState),
       withError: _withError(offreId, store.state.favoriUpdateState),
       withLoading: _withLoading(offreId, store.state.favoriUpdateState),
-      update: (newStatus) => store.dispatch(FavoriUpdateRequestAction<T>(offreId, newStatus)),
+      update: (newStatus) => store.dispatch(FavoriUpdateRequestAction<T>(
+        offreId,
+        newStatus,
+        showConfirmationOffre: false,
+      )),
     );
   }
 

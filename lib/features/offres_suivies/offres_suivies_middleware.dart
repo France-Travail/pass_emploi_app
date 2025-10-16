@@ -1,5 +1,7 @@
 import 'package:pass_emploi_app/features/bootstrap/bootstrap_action.dart';
 import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_actions.dart';
+import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_state.dart';
+import 'package:pass_emploi_app/models/favori.dart';
 import 'package:pass_emploi_app/models/offre_suivie.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/offres_suivies_repository.dart';
@@ -25,7 +27,15 @@ class OffresSuiviesMiddleware extends MiddlewareClass<AppState> {
       store.dispatch(OffresSuiviesToStateAction(newoffresSuivies));
     } else if (action is OffresSuiviesDeleteAction) {
       final newoffresSuivies = await _repository.delete(action.offreSuivie);
-      store.dispatch(OffresSuiviesToStateAction(newoffresSuivies, confirmationOffreId: action.offreSuivie.offreDto.id));
+      store.dispatch(
+        OffresSuiviesToStateAction(
+          newoffresSuivies,
+          confirmationOffre: ConfirmationOffre(
+            offreId: action.offreSuivie.offreDto.id,
+            newStatus: FavoriStatus.removed,
+          ),
+        ),
+      );
     } else if (action is OffresSuiviesBlacklistAction) {
       await _repository.blacklistOffreIds(action.offreId);
       final offresSuivies = await _repository.getOffresSuivies();
@@ -33,7 +43,10 @@ class OffresSuiviesMiddleware extends MiddlewareClass<AppState> {
       store.dispatch(OffresSuiviesToStateAction(
         offresSuivies,
         blackListedOffreIds: blacklistedOffreIds,
-        confirmationOffreId: action.offreId,
+        confirmationOffre: ConfirmationOffre(
+          offreId: action.offreId,
+          newStatus: FavoriStatus.blacklisted,
+        ),
       ));
     }
   }
