@@ -5,12 +5,7 @@
     "libelleQuoi": "Identification de ses points forts et de ses compétences",
     "libellePourquoi": "Mon (nouveau) métier",
     "commentObligatoire": true,
-    "comment": [
-      {
-        "code": "C01.01",
-        "label": "En participant à un atelier, une prestation, une réunion d'information"
-      }
-    ]
+    "comment": []
   },
   {
     "codeQuoi": "Q02",
@@ -18,12 +13,7 @@
     "libelleQuoi": "Information sur un métier ou un secteur d'activité",
     "libellePourquoi": "Mon (nouveau) métier",
     "commentObligatoire": true,
-    "comment": [
-      {
-        "code": "C02.01",
-        "label": "En participant à un atelier, une prestation, une réunion d'information"
-      }
-    ]
+    "comment": []
   },
   {
     "codeQuoi": "Q06",
@@ -31,12 +21,7 @@
     "libelleQuoi": "Information sur un projet de formation ou de Validation des acquis de l'expérience",
     "libellePourquoi": "Ma formation professionnelle",
     "commentObligatoire": true,
-    "comment": [
-      {
-        "code": "C06.01",
-        "label": "En participant à un atelier, une prestation, une réunion d'information"
-      }
-    ]
+    "comment": []
   },
   {
     "codeQuoi": "Q11",
@@ -44,12 +29,7 @@
     "libelleQuoi": "Préparation de ses candidatures (CV, lettre de motivation, book)",
     "libellePourquoi": "Mes candidatures",
     "commentObligatoire": true,
-    "comment": [
-      {
-        "code": "C11.01",
-        "label": "En participant à un atelier, une prestation, une réunion d'information"
-      }
-    ]
+    "comment": []
   },
   {
     "codeQuoi": "Q12",
@@ -57,12 +37,7 @@
     "libelleQuoi": "Recherche d'offres d'emploi ou d'entreprises",
     "libellePourquoi": "Mes candidatures",
     "commentObligatoire": true,
-    "comment": [
-      {
-        "code": "C12.05",
-        "label": "En participant à un atelier, une prestation, une réunion d'information"
-      }
-    ]
+    "comment": []
   },
   {
     "codeQuoi": "Q17",
@@ -70,12 +45,7 @@
     "libelleQuoi": "Préparation des entretiens d'embauche",
     "libellePourquoi": "Mes entretiens d'embauche",
     "commentObligatoire": true,
-    "comment": [
-      {
-        "code": "C17.01",
-        "label": "En participant à un atelier, une prestation, une réunion d'information"
-      }
-    ]
+    "comment": []
   },
   {
     "codeQuoi": "Q22",
@@ -83,12 +53,7 @@
     "libelleQuoi": "Recherches pour créer ou reprendre une entreprise",
     "libellePourquoi": "Ma création ou reprise d'entreprise",
     "commentObligatoire": true,
-    "comment": [
-      {
-        "code": "C22.01",
-        "label": "En participant à un atelier, une prestation, une réunion d'information"
-      }
-    ]
+    "comment": []
   },
   {
     "codeQuoi": "Q35",
@@ -96,12 +61,7 @@
     "libelleQuoi": "Réalisation d'autres actions pour développer son entreprise",
     "libellePourquoi": "Ma création ou reprise d'entreprise",
     "commentObligatoire": true,
-    "comment": [
-      {
-        "code": "C35.04",
-        "label": "En participant à un atelier, une prestation, une réunion d'information"
-      }
-    ]
+    "comment": []
   },
   {
     "codeQuoi": "Q37",
@@ -109,12 +69,7 @@
     "libelleQuoi": "Initiation à l'informatique ou à Internet",
     "libellePourquoi": "Ma formation professionnelle",
     "commentObligatoire": true,
-    "comment": [
-      {
-        "code": "C37.01",
-        "label": "En participant à un atelier, une prestation, une réunion d'information"
-      }
-    ]
+    "comment": []
   },
   {
     "codeQuoi": "Q39",
@@ -122,11 +77,6 @@
     "libelleQuoi": "Résoudre ses contraintes personnelles",
     "libellePourquoi": "Mes contraintes personnelles",
     "commentObligatoire": true,
-    "comment": [
-      {
-        "code": "C39.01",
-        "label": "En participant à un atelier, une prestation, une réunion d'information"
-      }
-    ]
+    "comment": []
   }
 ]

@@ -84,7 +84,8 @@
         "titre": "Management/gestion de rayon produits alimentaires",
         "type": "OFFRE_IMMERSION",
         "organisation": "Commerce de détail en magasin non spécialisé à prédominance alimentaire",
-        "localisation": "LYON-02"
+        "localisation": "LYON-02",
+        "dateCreation": "2025-01-01T00:00:00.000Z"
       },
       {
         "idOffre": "132WNLT",
@@ -94,7 +95,8 @@
         "localisation": "69 - DARDILLY",
         "origine": {
           "nom": "France Travail"
-        }
+        },
+        "dateCreation": "2025-01-01T00:00:00.000Z"
       },
       {
         "idOffre": "132XPKY",
@@ -105,7 +107,8 @@
         "origine": {
           "nom": "Indeed",
           "logo": "https://prod.statics.indeed.com/eml/assets/images/logo/indeed_logo_1200x630.png"
-        }
+        },
+        "dateCreation": "2025-01-01T00:00:00.000Z"
       }
     ],
     "campagne": {

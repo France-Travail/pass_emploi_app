@@ -84,7 +84,8 @@
         "titre": "Management/gestion de rayon produits alimentaires",
         "type": "OFFRE_IMMERSION",
         "organisation": "Commerce de détail en magasin non spécialisé à prédominance alimentaire",
-        "localisation": "LYON-02"
+        "localisation": "LYON-02",
+        "dateCreation": "2025-01-01T00:00:00.000Z"
       },
       {
         "idOffre": "132WNLT",
@@ -94,14 +95,16 @@
         "localisation": "69 - DARDILLY",
         "origine": {
           "nom": "France Travail"
-        }
+        },
+        "dateCreation": "2025-01-01T00:00:00.000Z"
       },
       {
         "idOffre": "48950012400024-D1502",
         "titre": "Management/gestion de rayon produits alimentaires",
         "type": "OFFRE_IMMERSION",
         "organisation": "Commerce de détail en magasin non spécialisé à prédominance alimentaire",
-        "localisation": "LYON-03"
+        "localisation": "LYON-03",
+        "dateCreation": "2025-01-01T00:00:00.000Z"
       }
     ]
   }
