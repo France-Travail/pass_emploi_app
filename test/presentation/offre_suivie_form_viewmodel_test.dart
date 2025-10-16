@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/features/favori/ids/favori_ids_state.dart';
 import 'package:pass_emploi_app/features/favori/update/favori_update_state.dart';
 import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_state.dart';
+import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/favori.dart';
 import 'package:pass_emploi_app/models/offre_dto.dart';
 import 'package:pass_emploi_app/models/offre_emploi_details.dart';
@@ -471,6 +472,19 @@ void main() {
         // Then
         expect(viewModel.offreLien, isNull);
       });
+    });
+
+    test('should return null when user is in avenir pro', () {
+      // Given
+      final store = givenPassEmploiState() //
+          .loggedInUser(accompagnement: Accompagnement.avenirPro)
+          .favoriListSuccessState([mockFavori(id: "different-offre-id")]).store();
+
+      // When
+      final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
+
+      // Then
+      expect(viewModel.onCreateActionOrDemarche, isNull);
     });
   });
 }
