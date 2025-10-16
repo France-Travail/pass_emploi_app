@@ -13,5 +13,9 @@ FeatureFlipState featureFlipReducer(FeatureFlipState current, dynamic action) {
   if (action is FeatureFlipAbTestingIaFtAction) {
     return FeatureFlipState(current.featureFlip.copyWith(abTestingIaFt: action.abTestingIaFt));
   }
+
+  if (action is FeatureFlipLoginPageMessageAction) {
+    return FeatureFlipState(current.featureFlip.copyWith(loginPageMessage: action.loginPageMessage));
+  }
   return current;
 }

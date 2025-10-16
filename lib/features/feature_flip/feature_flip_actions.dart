@@ -1,4 +1,5 @@
 import 'package:pass_emploi_app/models/feature_flip.dart';
+import 'package:pass_emploi_app/models/login_page_remote_message.dart';
 
 class FeatureFlipUseCvmAction {
   final bool useCvm;
@@ -22,4 +23,10 @@ class FeatureFlipAbTestingIaFtAction {
   final AbTestingIaFt abTestingIaFt;
 
   FeatureFlipAbTestingIaFtAction(this.abTestingIaFt);
+}
+
+class FeatureFlipLoginPageMessageAction {
+  final LoginPageRemoteMessage loginPageMessage;
+
+  FeatureFlipLoginPageMessageAction(this.loginPageMessage);
 }

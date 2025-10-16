@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/cgu.dart';
 import 'package:pass_emploi_app/models/feature_flip.dart';
 import 'package:pass_emploi_app/models/feedback_for_feature.dart';
+import 'package:pass_emploi_app/models/login_page_remote_message.dart';
 import 'package:pass_emploi_app/models/remote_campagne_accueil.dart';
 
 class RemoteConfigRepository {
@@ -65,6 +66,13 @@ class RemoteConfigRepository {
     if (_firebaseRemoteConfig == null) return AbTestingIaFt.versionA;
     final key = _firebaseRemoteConfig.getString("ab_testing_ia_ft");
     return AbTestingIaFt.fromJson(key);
+  }
+
+  LoginPageRemoteMessage? loginPageMessage() {
+    if (_firebaseRemoteConfig == null) return null;
+    final key = _firebaseRemoteConfig.getString("login_page_message");
+    if (key.isEmpty || key == "null") return null;
+    return LoginPageRemoteMessage.fromJson(json.decode(key) as Map<String, dynamic>);
   }
 
   Map<Accompagnement, bool> cvmActivationByAccompagnement() {

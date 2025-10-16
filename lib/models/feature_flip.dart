@@ -1,16 +1,19 @@
 import 'package:equatable/equatable.dart';
+import 'package:pass_emploi_app/models/login_page_remote_message.dart';
 
 class FeatureFlip extends Equatable {
   final bool useCvm;
   final bool withCampagneRecrutement;
   final String? withMonSuiviDemarchesKoMessage;
   final AbTestingIaFt abTestingIaFt;
+  final LoginPageRemoteMessage? loginPageMessage;
 
   FeatureFlip({
     required this.useCvm,
     required this.withCampagneRecrutement,
     required this.withMonSuiviDemarchesKoMessage,
     required this.abTestingIaFt,
+    required this.loginPageMessage,
   });
 
   factory FeatureFlip.initial() {
@@ -19,6 +22,7 @@ class FeatureFlip extends Equatable {
       withCampagneRecrutement: false,
       withMonSuiviDemarchesKoMessage: null,
       abTestingIaFt: AbTestingIaFt.versionA,
+      loginPageMessage: null,
     );
   }
 
@@ -27,12 +31,14 @@ class FeatureFlip extends Equatable {
     bool? withCampagneRecrutement,
     String? withMonSuiviDemarchesKoMessage,
     AbTestingIaFt? abTestingIaFt,
+    LoginPageRemoteMessage? loginPageMessage,
   }) {
     return FeatureFlip(
       useCvm: useCvm ?? this.useCvm,
       withCampagneRecrutement: withCampagneRecrutement ?? this.withCampagneRecrutement,
       withMonSuiviDemarchesKoMessage: withMonSuiviDemarchesKoMessage ?? this.withMonSuiviDemarchesKoMessage,
       abTestingIaFt: abTestingIaFt ?? this.abTestingIaFt,
+      loginPageMessage: loginPageMessage ?? this.loginPageMessage,
     );
   }
 
@@ -42,6 +48,7 @@ class FeatureFlip extends Equatable {
         withCampagneRecrutement,
         withMonSuiviDemarchesKoMessage,
         abTestingIaFt,
+        loginPageMessage,
       ];
 }
 

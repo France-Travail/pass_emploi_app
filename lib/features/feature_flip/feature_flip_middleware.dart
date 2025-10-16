@@ -1,3 +1,4 @@
+import 'package:pass_emploi_app/features/bootstrap/bootstrap_action.dart';
 import 'package:pass_emploi_app/features/feature_flip/feature_flip_actions.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
@@ -21,6 +22,9 @@ class FeatureFlipMiddleware extends MiddlewareClass<AppState> {
   @override
   void call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
+    if (action is BootstrapAction) {
+      _handleLogiPageFeatureFlip(store);
+    }
     final userId = store.state.userId();
     if (userId == null) return;
     if (action is LoginSuccessAction) {
@@ -57,5 +61,12 @@ class FeatureFlipMiddleware extends MiddlewareClass<AppState> {
   Future<void> _handleAbTestingIaFtFeatureFlip(Store<AppState> store, String userId) async {
     final abTestingIaFt = _remoteConfigRepository.abTestingIaFt();
     store.dispatch(FeatureFlipAbTestingIaFtAction(abTestingIaFt));
+  }
+
+  Future<void> _handleLogiPageFeatureFlip(Store<AppState> store) async {
+    final loginPageMessage = _remoteConfigRepository.loginPageMessage();
+    if (loginPageMessage != null) {
+      store.dispatch(FeatureFlipLoginPageMessageAction(loginPageMessage));
+    }
   }
 }

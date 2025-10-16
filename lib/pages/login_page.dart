@@ -25,6 +25,7 @@ import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/drawables/app_logo.dart';
+import 'package:pass_emploi_app/widgets/login_page_remote_message.dart';
 import 'package:pass_emploi_app/widgets/welcome.dart';
 
 class LoginPage extends StatelessWidget {
@@ -101,6 +102,7 @@ class _Scaffold extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
+                                LoginPageRemoteMessageCard(),
                                 if (viewModel.preferredLoginMode != null) ...[
                                   _PreferredLoginMode(viewModel.preferredLoginMode!),
                                   SizedBox(height: Margins.spacing_base),
