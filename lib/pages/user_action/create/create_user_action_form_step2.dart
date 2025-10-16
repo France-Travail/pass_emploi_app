@@ -212,6 +212,7 @@ class UserActionDescriptionField extends StatelessWidget {
                 maxLength: 1024,
                 onChanged: onDescriptionChanged,
                 isInvalid: isInvalid,
+                onTap: () => Scrollable.ensureVisible(context),
               ),
               if (descriptionController.text.isNotEmpty)
                 Align(
