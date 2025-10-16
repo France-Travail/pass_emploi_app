@@ -87,7 +87,15 @@ class _CreateDemarcheIaFtStep2PageState extends State<CreateDemarcheIaFtStep2Pag
               children: [
                 BaseTextField(
                   controller: _textEditingController,
-                  hintText: Strings.iaFtStep2FieldHint,
+                  hintWidget: Padding(
+                    padding: const EdgeInsets.only(right: Margins.spacing_base),
+                    child: TypewriterHint(
+                      text: Strings.iaFtStep2FieldHint,
+                      style: TextStyles.textSRegular(color: AppColors.grey800),
+                      speed: const Duration(milliseconds: 50),
+                      pauseDuration: const Duration(milliseconds: 2000),
+                    ),
+                  ),
                   minLines: 3,
                   maxLines: null,
                   maxLength: CreateDemarcheIaFtStep2ViewModel.maxLength,
@@ -236,6 +244,99 @@ class _SoundWaveformWidgetState extends State<SoundWaveformWidget> with TickerPr
           ),
         );
       },
+    );
+  }
+}
+
+class TypewriterHint extends StatefulWidget {
+  final String text;
+  final TextStyle? style;
+  final Duration speed;
+  final Duration pauseDuration;
+
+  const TypewriterHint({
+    super.key,
+    required this.text,
+    this.style,
+    this.speed = const Duration(milliseconds: 50),
+    this.pauseDuration = const Duration(milliseconds: 1000),
+  });
+
+  @override
+  State<TypewriterHint> createState() => _TypewriterHintState();
+}
+
+class _TypewriterHintState extends State<TypewriterHint> with TickerProviderStateMixin {
+  late AnimationController _controller;
+  late AnimationController _pauseController;
+  int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: widget.speed,
+    );
+    _pauseController = AnimationController(
+      vsync: this,
+      duration: widget.pauseDuration,
+    );
+
+    _startTyping();
+  }
+
+  void _startTyping() {
+    _controller.forward().then((_) {
+      if (_currentIndex < widget.text.length - 1) {
+        setState(() {
+          _currentIndex++;
+        });
+        _controller.reset();
+        _startTyping();
+      } else {
+        // Fin du texte, pause puis recommence
+        _pauseController.forward().then((_) {
+          setState(() {
+            _currentIndex = 0;
+          });
+          _pauseController.reset();
+          _startTyping();
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _pauseController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ExcludeSemantics(
+      child: AnimatedBuilder(
+        animation: Listenable.merge([_controller, _pauseController]),
+        builder: (context, child) {
+          String displayText = widget.text.substring(0, _currentIndex + 1);
+
+          // Ajouter un curseur clignotant
+          if (_currentIndex < widget.text.length - 1 || _pauseController.isAnimating) {
+            displayText += '|';
+          }
+
+          return RichText(
+            text: TextSpan(
+              text: displayText,
+              style: widget.style,
+            ),
+            softWrap: true,
+            overflow: TextOverflow.visible,
+          );
+        },
+      ),
     );
   }
 }

@@ -19,6 +19,7 @@ class BaseTextField extends StatefulWidget {
   final bool isInvalid;
   final bool autofocus;
   final String? hintText;
+  final Widget? hintWidget;
   final int? maxLength;
   final String? initialValue;
   final void Function()? onTap;
@@ -43,6 +44,7 @@ class BaseTextField extends StatefulWidget {
     this.isInvalid = false,
     this.autofocus = false,
     this.hintText,
+    this.hintWidget,
     this.maxLength,
     this.initialValue,
     this.onTap,
@@ -73,7 +75,7 @@ class _BaseTextFieldState extends State<BaseTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
+    final textField = TextFormField(
       controller: widget.controller,
       focusNode: widget.focusNode,
       autofocus: widget.autofocus,
@@ -84,11 +86,11 @@ class _BaseTextFieldState extends State<BaseTextField> {
       showCursor: widget.showCursor,
       readOnly: widget.readOnly,
       decoration: InputDecoration(
-        hintText: widget.hintText,
+        hintText: widget.hintWidget != null ? null : widget.hintText,
+        hintStyle: widget.hintWidget != null ? null : TextStyles.textSRegular(color: AppColors.grey800),
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.suffixIcon,
         semanticCounterText: "",
-        hintStyle: TextStyles.textSRegular(color: AppColors.grey800),
         contentPadding: const EdgeInsets.all(Margins.spacing_base),
         error: widget.errorText != null
             ? _Error(widget.errorText!)
@@ -111,6 +113,24 @@ class _BaseTextFieldState extends State<BaseTextField> {
       minLines: widget.minLines,
       maxLines: widget.maxLines,
     );
+
+    if (widget.hintWidget != null) {
+      return Stack(
+        children: [
+          textField,
+          Positioned(
+            left: Margins.spacing_base,
+            top: Margins.spacing_base,
+            right: Margins.spacing_base,
+            child: IgnorePointer(
+              child: widget.hintWidget!,
+            ),
+          ),
+        ],
+      );
+    }
+
+    return textField;
   }
 
   void _validateText() {
