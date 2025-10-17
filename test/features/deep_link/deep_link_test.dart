@@ -129,6 +129,12 @@ void main() {
         );
 
         assertStateWithJson(
+          {"type": "MIGRATION_PARCOURS_EMPLOI"},
+          MigrationParcoursEmploiDeepLink(),
+          DeepLinkOrigin.pushNotification,
+        );
+
+        assertStateWithJson(
           {"type": "BENEVOLAT"},
           BenevolatDeepLink(),
           DeepLinkOrigin.pushNotification,

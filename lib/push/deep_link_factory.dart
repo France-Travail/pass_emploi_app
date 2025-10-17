@@ -15,6 +15,7 @@ class DeepLinkFactory {
       _DeepLink.fonctionnalites => NouvellesFonctionnalitesDeepLink(
           lastVersion: Version.fromString(data["version"] as String),
         ),
+      _DeepLink.migrationParcoursEmploi => MigrationParcoursEmploiDeepLink(),
       _DeepLink.eventList => EventListDeepLink(),
       _DeepLink.actualisationPe => ActualisationPeDeepLink(),
       _DeepLink.monSuivi => MonSuiviDeepLink(),
@@ -39,6 +40,7 @@ enum _DeepLink {
   sessionMilo(["DETAIL_SESSION_MILO"]),
   alerte(["NOUVELLE_OFFRE"]),
   fonctionnalites(["NOUVELLES_FONCTIONNALITES"]),
+  migrationParcoursEmploi(["MIGRATION_PARCOURS_EMPLOI"]),
   eventList(["EVENT_LIST"]),
   actualisationPe(["ACTUALISATION_PE"]),
   monSuivi(["MON_SUIVI"]),

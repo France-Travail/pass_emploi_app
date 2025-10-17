@@ -99,6 +99,9 @@ class _RouterPageState extends State<RouterPage> with WidgetsBindingObserver {
       launchExternalUrl(newVm.storeUrl!);
       newVm.onAppStoreOpened();
     }
+    if (newVm.migrationParcoursEmploiUrl != null) {
+      launchExternalUrl(newVm.migrationParcoursEmploiUrl!);
+    }
   }
 
   void _removeAllScreensAboveRouterPage() {

@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/presentation/main_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/external_links.dart';
 import 'package:pass_emploi_app/utils/platform.dart';
 import 'package:pass_emploi_app/utils/store_extensions.dart';
 import 'package:redux/redux.dart';
@@ -19,6 +20,7 @@ class RouterPageViewModel extends Equatable {
   final MainPageDisplayState mainPageDisplayState;
   final int deepLinkKey;
   final String? storeUrl;
+  final String? migrationParcoursEmploiUrl;
   final Function() onAppStoreOpened;
 
   RouterPageViewModel({
@@ -26,6 +28,7 @@ class RouterPageViewModel extends Equatable {
     required this.mainPageDisplayState,
     required this.deepLinkKey,
     required this.storeUrl,
+    required this.migrationParcoursEmploiUrl,
     required this.onAppStoreOpened,
   });
 
@@ -35,6 +38,7 @@ class RouterPageViewModel extends Equatable {
       mainPageDisplayState: _toMainPageDisplayState(store),
       deepLinkKey: store.state.deepLinkState.deepLinkOpenedAt.hashCode,
       storeUrl: _storeUrl(store, platform),
+      migrationParcoursEmploiUrl: _migrationParcoursEmploiUrl(store, platform),
       onAppStoreOpened: () => store.dispatch(ResetDeeplinkAction()),
     );
   }
@@ -51,6 +55,14 @@ String? _storeUrl(Store<AppState> store, Platform platform) {
     if (appVersion != null && appVersion < lastVersion) {
       return platform.getAppStoreUrl(brand);
     }
+  }
+  return null;
+}
+
+String? _migrationParcoursEmploiUrl(Store<AppState> store, Platform platform) {
+  final deepLink = store.getDeepLinkAs<MigrationParcoursEmploiDeepLink>();
+  if (deepLink != null) {
+    return ExternalLinks.parcoursEmploi(platform.isAndroid);
   }
   return null;
 }

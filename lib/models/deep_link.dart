@@ -48,6 +48,8 @@ class NouvellesFonctionnalitesDeepLink extends DeepLink {
   List<Object?> get props => [lastVersion];
 }
 
+class MigrationParcoursEmploiDeepLink extends DeepLink {}
+
 class AlerteDeepLink extends DeepLink {
   final String idAlerte;
 

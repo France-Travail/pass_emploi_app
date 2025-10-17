@@ -5,9 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
+import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/details_jeune/details_jeune_actions.dart';
 import 'package:pass_emploi_app/features/developer_option/activation/developer_options_action.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
+import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/pages/cv/cv_list_page.dart';
 import 'package:pass_emploi_app/pages/diagoriente/diagoriente_entry_page.dart';
 import 'package:pass_emploi_app/pages/notification_preferences_page.dart';
@@ -183,6 +185,11 @@ class _Scaffold extends StatelessWidget {
                           showSnackBarWithSystemError(context, "Token APNs copié ✅");
                         }
                       },
+                    ),
+                    _ListTileData(
+                      title: "Deep link parcours emploi",
+                      onTap: () => context.dispatch(
+                          HandleDeepLinkAction(MigrationParcoursEmploiDeepLink(), DeepLinkOrigin.inAppNavigation)),
                     ),
                     _ListTileData(
                       title: Strings.developerOptionDeleteAllPrefs,
