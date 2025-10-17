@@ -233,56 +233,36 @@ class _ConfettiWrapperState extends State<ConfettiWrapper> {
     return path_0;
   }
 
-  Path _pumpkinPath(Size size) {
+  Path _leafPath(Size size) {
     final Path path_0 = Path();
-    path_0.moveTo(6.5, 6);
-    path_0.cubicTo(7.47, 6, 8.37, 6.5, 9.11, 7.38);
-    path_0.cubicTo(9.66, 6.79, 10.31, 6.36, 11, 6.15);
-    path_0.lineTo(11, 4);
-    path_0.cubicTo(11, 3.46957, 11.2107, 2.96086, 11.5858, 2.58579);
-    path_0.cubicTo(11.9609, 2.21071, 12.4696, 2, 13, 2);
-    path_0.lineTo(15, 2);
-    path_0.lineTo(15, 4);
-    path_0.lineTo(13, 4);
-    path_0.lineTo(13, 6.15);
-    path_0.cubicTo(13.69, 6.36, 14.34, 6.79, 14.89, 7.38);
-    path_0.cubicTo(15.63, 6.5, 16.53, 6, 17.5, 6);
-    path_0.cubicTo(20, 6, 22, 9.36, 22, 13.5);
-    path_0.cubicTo(22, 17.64, 20, 21, 17.5, 21);
-    path_0.cubicTo(16.53, 21, 15.63, 20.5, 14.89, 19.62);
-    path_0.cubicTo(14.08, 20.5, 13.08, 21, 12, 21);
-    path_0.cubicTo(10.92, 21, 9.92, 20.5, 9.11, 19.62);
-    path_0.cubicTo(8.37, 20.5, 7.47, 21, 6.5, 21);
-    path_0.cubicTo(4, 21, 2, 17.64, 2, 13.5);
-    path_0.cubicTo(2, 9.36, 4, 6, 6.5, 6);
+    path_0.moveTo(20.18, 11);
+    path_0.lineTo(14.39, 14);
+    path_0.lineTo(15.39, 16);
+    path_0.lineTo(11.39, 15.25);
+    path_0.lineTo(11.39, 19);
+    path_0.lineTo(9.39, 19);
+    path_0.lineTo(9.39, 15.25);
+    path_0.lineTo(5.39, 16);
+    path_0.lineTo(6.39, 14);
+    path_0.lineTo(0.6, 11);
+    path_0.lineTo(1.6, 9.27);
+    path_0.lineTo(0, 6);
+    path_0.lineTo(3.6, 5.77);
+    path_0.lineTo(4.6, 4);
+    path_0.lineTo(8.02, 7.9);
+    path_0.lineTo(6.39, 3);
+    path_0.lineTo(8.39, 3);
+    path_0.lineTo(10.39, 0);
+    path_0.lineTo(12.39, 3);
+    path_0.lineTo(14.39, 3);
+    path_0.lineTo(12.76, 7.9);
+    path_0.lineTo(16.18, 4);
+    path_0.lineTo(17.18, 5.73);
+    path_0.lineTo(20.78, 5.96);
+    path_0.lineTo(19.18, 9.19);
+    path_0.lineTo(20.18, 11);
     path_0.close();
-    path_0.moveTo(9, 10);
-    path_0.lineTo(7.75, 12.25);
-    path_0.lineTo(10.25, 12.25);
-    path_0.lineTo(9, 10);
-    path_0.close();
-    path_0.moveTo(15, 10);
-    path_0.lineTo(13.75, 12.25);
-    path_0.lineTo(16.25, 12.25);
-    path_0.lineTo(15, 10);
-    path_0.close();
-    path_0.moveTo(8, 17);
-    path_0.lineTo(10, 17);
-    path_0.lineTo(11, 16);
-    path_0.lineTo(12, 17);
-    path_0.lineTo(14, 17);
-    path_0.lineTo(15, 16);
-    path_0.lineTo(16, 17);
-    path_0.lineTo(17.5, 14);
-    path_0.lineTo(13.92, 14.62);
-    path_0.lineTo(13, 16);
-    path_0.lineTo(12, 15);
-    path_0.lineTo(10, 15);
-    path_0.lineTo(9, 16);
-    path_0.lineTo(8, 15);
-    path_0.lineTo(6, 14);
-    path_0.lineTo(8, 17);
-    path_0.close();
+
     return path_0;
   }
 
@@ -303,7 +283,7 @@ class _ConfettiWrapperState extends State<ConfettiWrapper> {
     } else if (isSpring) {
       return (size) => _flowerPath(size);
     } else if (isAutumn) {
-      return (size) => _pumpkinPath(size);
+      return (size) => _leafPath(size);
     }
     return null;
   }
