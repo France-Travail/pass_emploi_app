@@ -179,6 +179,15 @@ class AccueilIaDemarchesItem extends AccueilItem {
   List<Object?> get props => [];
 }
 
+class AccueilDateDeMigrationItem extends AccueilItem {
+  final DateTime dateDeMigration;
+
+  AccueilDateDeMigrationItem(this.dateDeMigration);
+
+  @override
+  List<Object?> get props => [dateDeMigration];
+}
+
 String _actionsOuDemarchesLabel(LoginMode loginMode, int actionsOuDemarches) {
   final usePlural = actionsOuDemarches > 1;
   if (loginMode.isPe()) {

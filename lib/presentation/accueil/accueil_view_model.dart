@@ -90,6 +90,7 @@ List<AccueilItem> _items(Store<AppState> store) {
   if (accueilState is! AccueilSuccessState || user == null) return [];
 
   return [
+    _dateDeMigrationItem(accueilState),
     _accueilZenithMessageItem(store.state),
     _errorDegradeeItem(accueilState),
     _onboardingItem(store.state),
@@ -108,6 +109,12 @@ List<AccueilItem> _items(Store<AppState> store) {
     _alertesItem(accueilState),
     _outilsItem(accueilState, user.accompagnement),
   ].whereNotNull().toList();
+}
+
+AccueilItem? _dateDeMigrationItem(AccueilSuccessState accueilState) {
+  final dateDeMigration = accueilState.accueil.dateDeMigration;
+  if (dateDeMigration == null) return null;
+  return AccueilDateDeMigrationItem(dateDeMigration);
 }
 
 AccueilItem? _iaDemarchesItem(AccueilSuccessState accueilState) {

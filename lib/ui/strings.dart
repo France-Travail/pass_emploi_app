@@ -373,6 +373,11 @@ class Strings {
       Brand.isCej() ? accueilCampagneRecrutementLabelCej : accueilCampagneRecrutementLabelPassEmploi;
   static String accueilCampagneRecrutementPressedTip = "Participer";
 
+  static String vosOutilsEvoluent = "Vos outils évoluent";
+  static String vosOutilsEvoluentDescription(String dateDeMigration) =>
+      "Le $dateDeMigration, l’application du CEJ ne sera plus disponible. Vos services seront accessibles sur l’application Parcours Emploi.";
+  static String downloadParcoursEmploi = "Télécharger l'application";
+
   // Comptage des heures
   static String comptageDesHeures0To5 = "C’est le moment de compléter vos actions\u{00A0}!\u{00A0}🚀";
   static String comptageDesHeures5To10 = "Bon début, continuez comme ça\u{00A0}!\u{00A0}💪";

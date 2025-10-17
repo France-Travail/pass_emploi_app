@@ -8,6 +8,34 @@ extension StringToDateExtensions on String {
 
   DateTime toDateTimeUtcOnLocalTimeZone() => DateFormat("yyyy-MM-DDTHH:mm:ss.SSSz").parseUtc(this).toLocal();
 
+  /// Parse une date en gérant plusieurs formats possibles
+  /// Supporte les formats:
+  /// - "2025-11-20" (format simple)
+  /// - "2025-11-20T10:30:00.000Z" (format ISO avec timezone)
+  /// - "2025-11-20T10:30:00.000+01:00" (format ISO avec offset)
+  DateTime? toDateTimeSafe() {
+    try {
+      // Essayer d'abord le format simple YYYY-MM-DD
+      if (RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(this)) {
+        return DateFormat("yyyy-MM-dd").parse(this);
+      }
+
+      // Essayer le format ISO complet avec timezone
+      if (contains('T') && (contains('Z') || contains('+'))) {
+        return toDateTimeUtcOnLocalTimeZone();
+      }
+
+      // Essayer le format ISO sans timezone
+      if (contains('T')) {
+        return toDateTimeUtcWithoutTimeZone();
+      }
+
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   DateTime toDateTimeUtcWithoutTimeZone() => DateFormat("yyyy-MM-DDTHH:mm:ss.SSS").parseUtc(this).toLocal();
 
   DateTime toDateTimeUnconsideringTimeZone() => DateFormat("yyyy-MM-DDTHH:mm:ss.SSSz").parse(this);

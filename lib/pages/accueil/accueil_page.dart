@@ -12,6 +12,7 @@ import 'package:pass_emploi_app/pages/accueil/accueil_alertes.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_boulanger_card.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_campagne_recrutement.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_cette_semaine.dart';
+import 'package:pass_emploi_app/pages/accueil/accueil_date_de_migration.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_demarche_ia_item.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_evenements.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_loading.dart';
@@ -267,6 +268,7 @@ class _Blocs extends StatelessWidget {
 
   Widget _buildItem(AccueilItem item) {
     return switch (item) {
+      final AccueilDateDeMigrationItem item => AccueilDateDeMigration(dateDeMigration: item.dateDeMigration),
       final AccueilZenithMessageItem item =>
         CardContainer(child: RemoteMessageWidget(remoteMessage: item.accueilZenithMessage)),
       final ErrorDegradeeItem item => InformationBandeau(icon: AppIcons.error_rounded, text: item.message),

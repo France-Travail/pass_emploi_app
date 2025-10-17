@@ -23,6 +23,7 @@ class Accueil extends Equatable {
   final String? accueilErreur;
   final bool? peutVoirLeComptageDesHeures;
   final bool eligibleDemarchesIA;
+  final DateTime? dateDeMigration;
 
   Accueil({
     this.dateDerniereMiseAJour,
@@ -37,6 +38,7 @@ class Accueil extends Equatable {
     this.accueilErreur,
     this.peutVoirLeComptageDesHeures,
     this.eligibleDemarchesIA = false,
+    this.dateDeMigration,
   });
 
   factory Accueil.fromJson(dynamic json) {
@@ -52,6 +54,7 @@ class Accueil extends Equatable {
     final accueilErreur = json["messageDonneesManquantes"] as String?;
     final peutVoirLeComptageDesHeures = json["peutVoirLeComptageDesHeures"] as bool?;
     final eligibleDemarchesIA = json["eligibleDemarchesIA"] as bool? ?? false;
+    final dateDeMigration = _dateDeMigration(json);
 
     return Accueil(
       dateDerniereMiseAJour: dateDerniereMiseAjour,
@@ -66,6 +69,7 @@ class Accueil extends Equatable {
       accueilErreur: accueilErreur,
       peutVoirLeComptageDesHeures: peutVoirLeComptageDesHeures,
       eligibleDemarchesIA: eligibleDemarchesIA,
+      dateDeMigration: dateDeMigration,
     );
   }
 
@@ -81,6 +85,7 @@ class Accueil extends Equatable {
     final String? accueilErreur,
     final bool? peutVoirLeComptageDesHeures,
     final bool? eligibleDemarchesIA,
+    final DateTime? dateDeMigration,
   }) {
     return Accueil(
       dateDerniereMiseAJour: dateDerniereMiseAJour ?? this.dateDerniereMiseAJour,
@@ -94,6 +99,7 @@ class Accueil extends Equatable {
       accueilErreur: accueilErreur ?? this.accueilErreur,
       peutVoirLeComptageDesHeures: peutVoirLeComptageDesHeures ?? this.peutVoirLeComptageDesHeures,
       eligibleDemarchesIA: eligibleDemarchesIA ?? this.eligibleDemarchesIA,
+      dateDeMigration: dateDeMigration ?? this.dateDeMigration,
     );
   }
 
@@ -110,11 +116,22 @@ class Accueil extends Equatable {
         accueilErreur,
         peutVoirLeComptageDesHeures,
         eligibleDemarchesIA,
+        // dateDeMigration,
       ];
 }
 
 DateTime? _dateDerniereMiseAJour(dynamic json) {
-  return (json["dateDerniereMiseAJour"] as String?)?.toDateTimeUtcOnLocalTimeZone();
+  final dateString = json["dateDerniereMiseAJour"] as String?;
+  if (dateString == null) return null;
+
+  return dateString.toDateTimeSafe();
+}
+
+DateTime? _dateDeMigration(dynamic json) {
+  final dateString = json["dateDeMigration"] as String?;
+  if (dateString == null) return null;
+
+  return dateString.toDateTimeSafe();
 }
 
 AccueilCetteSemaine? _cetteSemaine(dynamic json) {
