@@ -24,7 +24,7 @@ class FeatureFlip extends Equatable {
       useCvm: false,
       withCampagneRecrutement: false,
       withMonSuiviDemarchesKoMessage: null,
-      abTestingIaFt: AbTestingIaFt.versionA,
+      abTestingIaFt: AbTestingIaFt.defaultVersion,
       loginPageMessage: null,
       accueilZenithMessage: null,
     );
@@ -61,11 +61,12 @@ class FeatureFlip extends Equatable {
 
 enum AbTestingIaFt {
   versionA,
-  versionB;
+  versionB,
+  defaultVersion;
 
   factory AbTestingIaFt.fromJson(String json) => switch (json) {
         "A" => AbTestingIaFt.versionA,
         "B" => AbTestingIaFt.versionB,
-        _ => AbTestingIaFt.versionA,
+        _ => AbTestingIaFt.defaultVersion,
       };
 }

@@ -64,7 +64,7 @@ class RemoteConfigRepository {
   }
 
   AbTestingIaFt abTestingIaFt() {
-    if (_firebaseRemoteConfig == null) return AbTestingIaFt.versionA;
+    if (_firebaseRemoteConfig == null) return AbTestingIaFt.defaultVersion;
     final key = _firebaseRemoteConfig.getString("ab_testing_ia_ft");
     return AbTestingIaFt.fromJson(key);
   }
