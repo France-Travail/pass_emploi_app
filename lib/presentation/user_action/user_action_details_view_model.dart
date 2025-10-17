@@ -37,7 +37,6 @@ class UserActionDetailsViewModel extends Equatable {
   final bool withFinishedButton;
   final bool withUnfinishedButton;
   final bool withUpdateButton;
-  final bool withDescriptionConfirmationPopup;
   final String creationDetails;
   final bool withComments;
   final bool withOfflineBehavior;
@@ -61,7 +60,6 @@ class UserActionDetailsViewModel extends Equatable {
     required this.withFinishedButton,
     required this.withUnfinishedButton,
     required this.withUpdateButton,
-    required this.withDescriptionConfirmationPopup,
     required this.creationDetails,
     required this.withComments,
     required this.withOfflineBehavior,
@@ -103,7 +101,6 @@ class UserActionDetailsViewModel extends Equatable {
       withFinishedButton: _withFinishedButton(userAction),
       withUnfinishedButton: _withUnfinishedButton(userAction),
       withUpdateButton: _withUpdateButton(userAction),
-      withDescriptionConfirmationPopup: userAction.comment.isEmpty,
       creationDetails: _creationDetails(userAction),
       withComments: hasComments,
       withOfflineBehavior: store.state.connectivityState.isOffline(),
@@ -147,7 +144,6 @@ class UserActionDetailsViewModel extends Equatable {
       withFinishedButton: false,
       withUnfinishedButton: false,
       withUpdateButton: false,
-      withDescriptionConfirmationPopup: false,
       creationDetails: '',
       withComments: false,
       withOfflineBehavior: false,
@@ -174,7 +170,6 @@ class UserActionDetailsViewModel extends Equatable {
         withFinishedButton,
         withUnfinishedButton,
         withUpdateButton,
-        withDescriptionConfirmationPopup,
         creationDetails,
         updateDisplayState,
         deleteDisplayState,
