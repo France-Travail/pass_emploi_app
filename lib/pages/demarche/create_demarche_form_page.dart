@@ -14,13 +14,16 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
 
-class CreateDemarcheFormPage extends StatelessWidget {
-  const CreateDemarcheFormPage({super.key});
+enum StartPoint { ftIa }
 
-  static Route<String?> route() {
+class CreateDemarcheFormPage extends StatelessWidget {
+  const CreateDemarcheFormPage({super.key, this.startPoint});
+  final StartPoint? startPoint;
+
+  static Route<String?> route({StartPoint? startPoint}) {
     return MaterialPageRoute(
       fullscreenDialog: true,
-      builder: (context) => const CreateDemarcheFormPage(),
+      builder: (context) => CreateDemarcheFormPage(startPoint: startPoint),
     );
   }
 
@@ -43,6 +46,7 @@ class CreateDemarcheFormPage extends StatelessWidget {
                     return Stack(
                       children: [
                         CreateDemarcheForm(
+                          startPoint: startPoint,
                           onCreateDemarchePersonnalisee: (createRequest) {
                             createDemarchePersonnaliseeVm.onCreateDemarche(
                                 createRequest.commentaire, createRequest.dateEcheance);

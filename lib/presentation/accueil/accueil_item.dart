@@ -172,6 +172,13 @@ class AccueilZenithMessageItem extends AccueilItem {
   AccueilZenithMessageItem(this.accueilZenithMessage);
 }
 
+class AccueilIaDemarchesItem extends AccueilItem {
+  AccueilIaDemarchesItem();
+
+  @override
+  List<Object?> get props => [];
+}
+
 String _actionsOuDemarchesLabel(LoginMode loginMode, int actionsOuDemarches) {
   final usePlural = actionsOuDemarches > 1;
   if (loginMode.isPe()) {

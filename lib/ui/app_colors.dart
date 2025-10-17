@@ -65,4 +65,9 @@ class AppColors {
     primary,
     accent1,
   ];
+
+  static List<Color> gradientTertiary = [
+    accent1,
+    Color(0xFF0C1730),
+  ];
 }

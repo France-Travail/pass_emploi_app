@@ -90,6 +90,7 @@ class _CreateDemarcheIaFtStep2PageState extends State<CreateDemarcheIaFtStep2Pag
                   hintWidget: Padding(
                     padding: const EdgeInsets.only(right: Margins.spacing_base),
                     child: TypewriterHint(
+                      controller: _textEditingController,
                       text: Strings.iaFtStep2FieldHint,
                       style: TextStyles.textSRegular(color: AppColors.grey800),
                       speed: const Duration(milliseconds: 50),
@@ -249,6 +250,7 @@ class _SoundWaveformWidgetState extends State<SoundWaveformWidget> with TickerPr
 }
 
 class TypewriterHint extends StatefulWidget {
+  final TextEditingController controller;
   final String text;
   final TextStyle? style;
   final Duration speed;
@@ -256,6 +258,7 @@ class TypewriterHint extends StatefulWidget {
 
   const TypewriterHint({
     super.key,
+    required this.controller,
     required this.text,
     this.style,
     this.speed = const Duration(milliseconds: 50),
@@ -316,6 +319,10 @@ class _TypewriterHintState extends State<TypewriterHint> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    if (widget.controller.text.isNotEmpty) {
+      return SizedBox.shrink();
+    }
+
     return ExcludeSemantics(
       child: AnimatedBuilder(
         animation: Listenable.merge([_controller, _pauseController]),

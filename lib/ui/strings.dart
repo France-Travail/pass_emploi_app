@@ -875,6 +875,10 @@ class Strings {
   static String topDemarchesSubtitle = "Décrivez vos démarches en une seule fois. L’IA s’occupe du reste";
   static String topDemarchesHint = "Écrivez ou dictez vos démarches...";
 
+  static String iaDemarchesAccueilTitle = "Vos démarches en 1 minute";
+  static String iaDemarchesAccueilSubtitle = "L’IA détecte vos démarches et les organise en un clic";
+  static String iaDemarchesAccueilHint = "Créer vos démarches avec l’IA";
+
   // Recherche
   static String derniereRecherche = "Dernière recherche";
   static String dernieresRecherches = "Dernières recherches";

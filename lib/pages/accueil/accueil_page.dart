@@ -12,6 +12,7 @@ import 'package:pass_emploi_app/pages/accueil/accueil_alertes.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_boulanger_card.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_campagne_recrutement.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_cette_semaine.dart';
+import 'package:pass_emploi_app/pages/accueil/accueil_demarche_ia_item.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_evenements.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_loading.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_onboarding_tile.dart';
@@ -276,6 +277,7 @@ class _Blocs extends StatelessWidget {
           trackingSource: OffreSuiviTrackingSource.accueil,
           showPrimaryBackground: false,
         ),
+      AccueilIaDemarchesItem() => AccueilIaDemarches(),
       final RemoteCampagneAccueilItem item => RemoteCampagneAccueilCard(item),
       final BoulangerCampagneItem item => BoulangerCampagneCard(item),
       final CampagneRecrutementItem item => CampagneRecrutementCard(item),

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
+import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/demarche/create/create_demarche_actions.dart';
+import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche_form_page.dart';
 import 'package:pass_emploi_app/pages/demarche/demarche_detail_page.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_success_view_model.dart';
@@ -172,6 +174,8 @@ class _Buttons extends StatelessWidget {
               label: Strings.consulterMesDemarches,
               onPressed: () {
                 Navigator.pop(context);
+                StoreProvider.of<AppState>(context)
+                    .dispatch(HandleDeepLinkAction(MonSuiviDeepLink(), DeepLinkOrigin.inAppNavigation));
               },
             ),
           ] else ...[

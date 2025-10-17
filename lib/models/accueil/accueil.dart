@@ -22,6 +22,7 @@ class Accueil extends Equatable {
   final Campagne? campagne;
   final String? accueilErreur;
   final bool? peutVoirLeComptageDesHeures;
+  final bool eligibleDemarchesIA;
 
   Accueil({
     this.dateDerniereMiseAJour,
@@ -35,6 +36,7 @@ class Accueil extends Equatable {
     this.campagne,
     this.accueilErreur,
     this.peutVoirLeComptageDesHeures,
+    this.eligibleDemarchesIA = false,
   });
 
   factory Accueil.fromJson(dynamic json) {
@@ -49,6 +51,7 @@ class Accueil extends Equatable {
     final campagne = json["campagne"] != null ? Campagne.fromJson(json["campagne"]) : null;
     final accueilErreur = json["messageDonneesManquantes"] as String?;
     final peutVoirLeComptageDesHeures = json["peutVoirLeComptageDesHeures"] as bool?;
+    final eligibleDemarchesIA = json["eligibleDemarchesIA"] as bool? ?? false;
 
     return Accueil(
       dateDerniereMiseAJour: dateDerniereMiseAjour,
@@ -62,6 +65,7 @@ class Accueil extends Equatable {
       campagne: campagne,
       accueilErreur: accueilErreur,
       peutVoirLeComptageDesHeures: peutVoirLeComptageDesHeures,
+      eligibleDemarchesIA: eligibleDemarchesIA,
     );
   }
 
@@ -76,6 +80,7 @@ class Accueil extends Equatable {
     final List<Favori>? favoris,
     final String? accueilErreur,
     final bool? peutVoirLeComptageDesHeures,
+    final bool? eligibleDemarchesIA,
   }) {
     return Accueil(
       dateDerniereMiseAJour: dateDerniereMiseAJour ?? this.dateDerniereMiseAJour,
@@ -88,6 +93,7 @@ class Accueil extends Equatable {
       favoris: favoris ?? this.favoris,
       accueilErreur: accueilErreur ?? this.accueilErreur,
       peutVoirLeComptageDesHeures: peutVoirLeComptageDesHeures ?? this.peutVoirLeComptageDesHeures,
+      eligibleDemarchesIA: eligibleDemarchesIA ?? this.eligibleDemarchesIA,
     );
   }
 
@@ -103,6 +109,7 @@ class Accueil extends Equatable {
         favoris,
         accueilErreur,
         peutVoirLeComptageDesHeures,
+        eligibleDemarchesIA,
       ];
 }
 

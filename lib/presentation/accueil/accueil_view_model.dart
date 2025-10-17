@@ -94,6 +94,7 @@ List<AccueilItem> _items(Store<AppState> store) {
     _errorDegradeeItem(accueilState),
     _onboardingItem(store.state),
     ..._remoteCampagneAccueilItems(store, store.state),
+    _iaDemarchesItem(accueilState),
     _boulangerCampagneItem(store, store.state),
     _ratingAppItem(store.state),
     _campagneRecrutementItem(store, store.state),
@@ -107,6 +108,11 @@ List<AccueilItem> _items(Store<AppState> store) {
     _alertesItem(accueilState),
     _outilsItem(accueilState, user.accompagnement),
   ].whereNotNull().toList();
+}
+
+AccueilItem? _iaDemarchesItem(AccueilSuccessState accueilState) {
+  if (!accueilState.accueil.eligibleDemarchesIA) return null;
+  return AccueilIaDemarchesItem();
 }
 
 AccueilItem? _accueilZenithMessageItem(AppState state) {
