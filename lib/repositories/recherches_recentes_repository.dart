@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pass_emploi_app/models/alerte/alerte.dart';
 import 'package:pass_emploi_app/models/alerte/evenement_emploi_alerte.dart';
@@ -23,12 +22,15 @@ class RecherchesRecentesRepository {
     }
     final json = jsonDecode(recentSearchesJsonString);
     final list = (json as List).map((search) => AlerteResponse.fromJson(search)).toList();
-    return list.map((e) => AlerteJsonExtractor().extract(e)).whereNotNull().toList();
+    return list.map((e) => AlerteJsonExtractor().extract(e)).nonNulls.toList();
   }
 
   Future<void> save(List<Alerte> alertes) async {
-    final json =
-        alertes.map((alerte) => alerte.toAlerteResponse()).whereNotNull().map((response) => response.toJson()).toList();
+    final json = alertes
+        .map((alerte) => alerte.toAlerteResponse())
+        .nonNulls
+        .map((response) => response.toJson())
+        .toList();
     await _preferences.write(key: recentSearchesKey, value: jsonEncode(json));
   }
 }

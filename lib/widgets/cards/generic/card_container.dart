@@ -27,17 +27,14 @@ class CardContainer extends StatelessWidget {
     this.withShadow = true,
     this.image,
     this.gradient,
-  }) : splashColor = splashColor ?? AppColors.primary.withOpacity(0.2);
+  }) : splashColor = splashColor ?? AppColors.primary.withValues(alpha: 0.2);
 
   @override
   Widget build(BuildContext context) {
     final BorderRadius cardBorderRadius = BorderRadius.circular(Dimens.radius_base);
 
     // a11y 10.2 : to avoid useless tap trigger we should remove inkwell
-    final childWithPadding = Padding(
-      padding: padding,
-      child: child,
-    );
+    final childWithPadding = Padding(padding: padding, child: child);
     return Container(
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(

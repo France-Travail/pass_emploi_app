@@ -10,7 +10,7 @@ class BiseauBackground extends StatelessWidget {
         Container(color: Brand.isCej() ? AppColors.primary : AppColors.primaryDarkenStrong),
         ClipPath(
           clipper: DiagonalClipper(),
-          child: Container(color: AppColors.primaryDarken.withOpacity(0.25)),
+          child: Container(color: AppColors.primaryDarken.withValues(alpha: 0.25)),
         ),
       ],
     );

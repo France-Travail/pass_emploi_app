@@ -62,7 +62,8 @@ List<MotsClesItem> _motsClesFromDiagoriente(Store<AppState> store) {
   if (state is! DiagorientePreferencesMetierSuccessState || state.metiersFavoris.isEmpty) return [];
   return [
     MotsClesTitleItem(Strings.vosPreferencesMetiers),
-    ...state.metiersFavoris //
+    ...state
+        .metiersFavoris //
         .map((e) => e.libelle)
         .toList()
         .sortedAlphabetically()
@@ -74,17 +75,14 @@ List<MotsClesItem> _motsClesFromRechercheRecentes(Store<AppState> store) {
   final motCles = _derniersMotsCles(store);
   if (motCles.isEmpty) return [];
   final title = motCles.length == 1 ? Strings.derniereRecherche : Strings.dernieresRecherches;
-  return [
-    MotsClesTitleItem(title),
-    ...motCles.map((e) => MotsClesSuggestionItem(e, MotCleSource.dernieresRecherches)),
-  ];
+  return [MotsClesTitleItem(title), ...motCles.map((e) => MotsClesSuggestionItem(e, MotCleSource.dernieresRecherches))];
 }
 
 List<String> _derniersMotsCles(Store<AppState> store) {
   return store.state.recherchesRecentesState.recentSearches
       .whereType<OffreEmploiAlerte>()
       .map((offre) => offre.keyword)
-      .whereNotNull()
+      .nonNulls
       .whereNot((keyword) => keyword.isEmpty)
       .distinct()
       .take(3)

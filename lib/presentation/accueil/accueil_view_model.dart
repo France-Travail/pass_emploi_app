@@ -56,12 +56,7 @@ class AccueilViewModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
-        displayState,
-        items,
-        deepLink,
-        withNewNotifications,
-      ];
+  List<Object?> get props => [displayState, items, deepLink, withNewNotifications];
 }
 
 DisplayState _displayState(Store<AppState> store) {
@@ -108,7 +103,7 @@ List<AccueilItem> _items(Store<AppState> store) {
     _evenementsItem(accueilState),
     _alertesItem(accueilState),
     _outilsItem(accueilState, user.accompagnement),
-  ].whereNotNull().toList();
+  ].nonNulls.toList();
 }
 
 AccueilItem? _dateDeMigrationItem(AccueilSuccessState accueilState) {
@@ -152,9 +147,10 @@ AccueilItem? _prochainRendezvousItem(User user, AccueilSuccessState successState
     (null, null) => null,
     (null, _) => AccueilProchaineSessionMiloItem(prochaineSessionMilo!.id),
     (_, null) => AccueilProchainRendezvousItem(prochainRendezVous!.id),
-    (_, _) => prochainRendezVous!.date.isBefore(prochaineSessionMilo!.dateDeDebut)
-        ? AccueilProchainRendezvousItem(prochainRendezVous.id)
-        : AccueilProchaineSessionMiloItem(prochaineSessionMilo.id),
+    (_, _) =>
+      prochainRendezVous!.date.isBefore(prochaineSessionMilo!.dateDeDebut)
+          ? AccueilProchainRendezvousItem(prochainRendezVous.id)
+          : AccueilProchaineSessionMiloItem(prochaineSessionMilo.id),
   };
 }
 
@@ -188,30 +184,29 @@ AccueilItem? _suiviDesOffresItem() {
 AccueilItem? _outilsItem(AccueilSuccessState successState, Accompagnement accompagnement) {
   return switch (accompagnement) {
     Accompagnement.cej => AccueilOutilsItem([
-        Outil.immersionBoulanger.withoutImage(),
-        Outil.benevolatCej.withoutImage(),
-        Outil.mesAidesFt.withoutImage(),
-      ]),
+      Outil.immersionBoulanger.withoutImage(),
+      Outil.benevolatCej.withoutImage(),
+      Outil.mesAidesFt.withoutImage(),
+    ]),
     Accompagnement.rsaFranceTravail ||
     Accompagnement.rsaConseilsDepartementaux ||
     Accompagnement.accompagnementIntensif ||
     Accompagnement.accompagnementGlobal ||
-    Accompagnement.equipEmploiRecrut =>
-      AccueilOutilsItem([
-        Outil.mesAidesFt.withoutImage(),
-        Outil.emploiSolidaire.withoutImage(),
-        Outil.emploiStore.withoutImage(),
-      ]),
+    Accompagnement.equipEmploiRecrut => AccueilOutilsItem([
+      Outil.mesAidesFt.withoutImage(),
+      Outil.emploiSolidaire.withoutImage(),
+      Outil.emploiStore.withoutImage(),
+    ]),
     Accompagnement.avenirPro => AccueilOutilsItem([
-        Outil.benevolatPassEmploi.withoutImage(),
-        Outil.metierScope.withoutImage(),
-        Outil.formation.withoutImage(),
-      ]),
+      Outil.benevolatPassEmploi.withoutImage(),
+      Outil.metierScope.withoutImage(),
+      Outil.formation.withoutImage(),
+    ]),
     Accompagnement.aij => AccueilOutilsItem([
-        Outil.immersionBoulanger.withoutImage(),
-        Outil.benevolatPassEmploi.withoutImage(),
-        Outil.mesAidesFt.withoutImage(),
-      ])
+      Outil.immersionBoulanger.withoutImage(),
+      Outil.benevolatPassEmploi.withoutImage(),
+      Outil.mesAidesFt.withoutImage(),
+    ]),
   };
 }
 

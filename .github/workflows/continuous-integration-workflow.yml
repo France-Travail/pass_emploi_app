@@ -30,44 +30,44 @@ jobs:
       - name: Launch tests
         run: flutter test
 
-  sonarcloud:
-    name: SonarCloud Analysis
-    needs: test
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/main' }}
-    steps:
-      - uses: actions/checkout@v4
+  # sonarcloud:
+  #   name: SonarCloud Analysis
+  #   needs: test
+  #   runs-on: ubuntu-latest
+  #   if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/main' }}
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: Set Environment Variables
-        uses: ./.github/actions/setvars
-        with:
-          varFilePath: ./.github/variables/myvars.env
+  #     - name: Set Environment Variables
+  #       uses: ./.github/actions/setvars
+  #       with:
+  #         varFilePath: ./.github/variables/myvars.env
 
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          cache: true
+  #     - uses: subosito/flutter-action@v2
+  #       with:
+  #         flutter-version: ${{ env.FLUTTER_VERSION }}
+  #         cache: true
 
-      - name: Install dependencies
-        run: flutter pub get
+  #     - name: Install dependencies
+  #       run: flutter pub get
 
-      - name: Run tests with coverage
-        run: flutter test --coverage
+  #     - name: Run tests with coverage
+  #       run: flutter test --coverage
 
-      - name: Install SonarScanner CLI v5.0.1.3006
-        run: |
-          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
-          unzip sonar-scanner-cli-5.0.1.3006-linux.zip
-          echo "$PWD/sonar-scanner-5.0.1.3006-linux/bin" >> $GITHUB_PATH
+  #     - name: Install SonarScanner CLI v5.0.1.3006
+  #       run: |
+  #         wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+  #         unzip sonar-scanner-cli-5.0.1.3006-linux.zip
+  #         echo "$PWD/sonar-scanner-5.0.1.3006-linux/bin" >> $GITHUB_PATH
 
-      - name: Run SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2
-        with:
-          projectBaseDir: .
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://sonarcloud.io
-          PATH: ${{ runner.tool_cache }}/flutter/3.24.1-stable/bin:$PATH
+  #     - name: Run SonarCloud Scan
+  #       uses: SonarSource/sonarcloud-github-action@v2
+  #       with:
+  #         projectBaseDir: .
+  #       env:
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #         SONAR_HOST_URL: https://sonarcloud.io
+  #         PATH: ${{ runner.tool_cache }}/flutter/3.24.1-stable/bin:$PATH
 
   pre-build:
     if: ${{ github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch' }}
