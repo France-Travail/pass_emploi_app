@@ -32,46 +32,47 @@ class CreateDemarcheFormPage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.createDemarcheHome,
       child: _CreateDemarcheBatchConnector(
-          onCreateSuccess: () => onCreateDemarcheSuccess(context, CreateDemarcheSource.iaFt),
-          onCreateFailure: () => _showError(context),
-          builder: (context, createDemarcheBatchDisplayState) {
-            return _CreateDemarchePersonnaliseeConnector(
-              onCreateSuccess: () => onCreateDemarcheSuccess(context, CreateDemarcheSource.personnalisee),
-              onCreateFailure: () => _showError(context),
-              builder: (context, createDemarchePersonnaliseeVm) {
-                return _CreateDemarcheConnector(
-                  onCreateSuccess: () => onCreateDemarcheSuccess(context, CreateDemarcheSource.fromReferentiel),
-                  onCreateFailure: () => _showError(context),
-                  builder: (context, createDemarcheVm) {
-                    return Stack(
-                      children: [
-                        CreateDemarcheForm(
-                          startPoint: startPoint,
-                          onCreateDemarchePersonnalisee: (createRequest) {
-                            createDemarchePersonnaliseeVm.onCreateDemarche(
-                                createRequest.commentaire, createRequest.dateEcheance);
-                          },
-                          onCreateDemarcheFromReferentiel: (createRequest) {
-                            createDemarcheVm.onCreateDemarche(createRequest);
-                          },
-                          onCreateDemarcheIaFt: (createRequests) {
-                            final store = StoreProvider.of<AppState>(context);
-                            store.dispatch(CreateDemarcheBatchRequestAction(createRequests, genereParIA: true));
-                          },
-                        ),
-                        if (createDemarchePersonnaliseeVm.displayState == DisplayState.LOADING ||
-                            createDemarcheVm.displayState == DisplayState.LOADING ||
-                            createDemarcheBatchDisplayState == DisplayState.LOADING)
-                          Center(
-                            child: CircularProgressIndicator(),
-                          )
-                      ],
-                    );
-                  },
-                );
-              },
-            );
-          }),
+        onCreateSuccess: () => onCreateDemarcheSuccess(context, CreateDemarcheSource.iaFt),
+        onCreateFailure: () => _showError(context),
+        builder: (context, createDemarcheBatchDisplayState) {
+          return _CreateDemarchePersonnaliseeConnector(
+            onCreateSuccess: () => onCreateDemarcheSuccess(context, CreateDemarcheSource.personnalisee),
+            onCreateFailure: () => _showError(context),
+            builder: (context, createDemarchePersonnaliseeVm) {
+              return _CreateDemarcheConnector(
+                onCreateSuccess: () => onCreateDemarcheSuccess(context, CreateDemarcheSource.fromReferentiel),
+                onCreateFailure: () => _showError(context),
+                builder: (context, createDemarcheVm) {
+                  return Stack(
+                    children: [
+                      CreateDemarcheForm(
+                        startPoint: startPoint,
+                        onCreateDemarchePersonnalisee: (createRequest) {
+                          createDemarchePersonnaliseeVm.onCreateDemarche(
+                            createRequest.commentaire,
+                            createRequest.dateEcheance,
+                          );
+                        },
+                        onCreateDemarcheFromReferentiel: (createRequest) {
+                          createDemarcheVm.onCreateDemarche(createRequest);
+                        },
+                        onCreateDemarcheIaFt: (createRequests) {
+                          final store = StoreProvider.of<AppState>(context);
+                          store.dispatch(CreateDemarcheBatchRequestAction(createRequests, genereParIA: true));
+                        },
+                      ),
+                      if (createDemarchePersonnaliseeVm.displayState == DisplayState.LOADING ||
+                          createDemarcheVm.displayState == DisplayState.LOADING ||
+                          createDemarcheBatchDisplayState == DisplayState.LOADING)
+                        Center(child: CircularProgressIndicator()),
+                    ],
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
@@ -86,8 +87,11 @@ class CreateDemarcheFormPage extends StatelessWidget {
 }
 
 class _CreateDemarchePersonnaliseeConnector extends StatelessWidget {
-  const _CreateDemarchePersonnaliseeConnector(
-      {required this.builder, required this.onCreateSuccess, required this.onCreateFailure});
+  const _CreateDemarchePersonnaliseeConnector({
+    required this.builder,
+    required this.onCreateSuccess,
+    required this.onCreateFailure,
+  });
   final Widget Function(BuildContext, CreateDemarchePersonnaliseeViewModel) builder;
   final void Function() onCreateSuccess;
   final void Function() onCreateFailure;
@@ -102,10 +106,7 @@ class _CreateDemarchePersonnaliseeConnector extends StatelessWidget {
     );
   }
 
-  void _onDidChange(
-    CreateDemarchePersonnaliseeViewModel? oldVm,
-    CreateDemarchePersonnaliseeViewModel newVm,
-  ) {
+  void _onDidChange(CreateDemarchePersonnaliseeViewModel? oldVm, CreateDemarchePersonnaliseeViewModel newVm) {
     if (oldVm?.demarcheCreationState is! DemarcheCreationSuccessState &&
         newVm.demarcheCreationState is DemarcheCreationSuccessState) {
       onCreateSuccess();
@@ -132,10 +133,7 @@ class _CreateDemarcheConnector extends StatelessWidget {
     );
   }
 
-  void _onDidChange(
-    CreateDemarcheViewModel? oldVm,
-    CreateDemarcheViewModel newVm,
-  ) {
+  void _onDidChange(CreateDemarcheViewModel? oldVm, CreateDemarcheViewModel newVm) {
     if (oldVm?.demarcheCreationState is! DemarcheCreationSuccessState &&
         newVm.demarcheCreationState is DemarcheCreationSuccessState) {
       onCreateSuccess();
@@ -147,8 +145,11 @@ class _CreateDemarcheConnector extends StatelessWidget {
 }
 
 class _CreateDemarcheBatchConnector extends StatelessWidget {
-  const _CreateDemarcheBatchConnector(
-      {required this.builder, required this.onCreateSuccess, required this.onCreateFailure});
+  const _CreateDemarcheBatchConnector({
+    required this.builder,
+    required this.onCreateSuccess,
+    required this.onCreateFailure,
+  });
   final Widget Function(BuildContext, DisplayState) builder;
   final void Function() onCreateSuccess;
   final void Function() onCreateFailure;
@@ -168,10 +169,7 @@ class _CreateDemarcheBatchConnector extends StatelessWidget {
     );
   }
 
-  void _onDidChange(
-    DisplayState? oldVm,
-    DisplayState newVm,
-  ) {
+  void _onDidChange(DisplayState? oldVm, DisplayState newVm) {
     if (oldVm != DisplayState.CONTENT && newVm == DisplayState.CONTENT) {
       onCreateSuccess();
     }
