@@ -40,7 +40,8 @@ extension on RequestOptions {
       !_isMonSuiviRequest() &&
       !_isDetailsJeuneRequest() &&
       !_isSessionsDetailsRequest() &&
-      !_isComptageDesHeuresRequest();
+      !_isComptageDesHeuresRequest() &&
+      !_isUserActionRequest();
 
   bool _isMonSuiviRequest() => uri.toString().contains('mon-suivi');
 
@@ -49,4 +50,6 @@ extension on RequestOptions {
   bool _isSessionsDetailsRequest() => uri.toString().contains('sessions/');
 
   bool _isComptageDesHeuresRequest() => uri.toString().contains('comptage');
+
+  bool _isUserActionRequest() => uri.toString().contains('actions/');
 }
