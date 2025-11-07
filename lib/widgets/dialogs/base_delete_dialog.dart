@@ -24,17 +24,10 @@ class BaseDeleteDialog extends StatelessWidget {
   final bool withError;
   final void Function()? onDelete;
 
-  static Future<bool?> show(
-    BuildContext context, {
-    required String title,
-    required String subtitle,
-  }) {
+  static Future<bool?> show(BuildContext context, {required String title, required String subtitle}) {
     return showDialog<bool>(
       context: context,
-      builder: (context) => BaseDeleteDialog(
-        title: title,
-        subtitle: subtitle,
-      ),
+      builder: (context) => BaseDeleteDialog(title: title, subtitle: subtitle),
     );
   }
 
@@ -42,15 +35,13 @@ class BaseDeleteDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       surfaceTintColor: Colors.white,
+      backgroundColor: Colors.white,
       title: Stack(
         children: [
           Column(
             children: [
               SizedBox(height: Margins.spacing_m),
-              SizedBox.square(
-                dimension: 120,
-                child: Illustration.red(AppIcons.delete),
-              ),
+              SizedBox.square(dimension: 120, child: Illustration.red(AppIcons.delete)),
               SizedBox(height: Margins.spacing_m),
               Text(title, style: TextStyles.textBaseBold, textAlign: TextAlign.center),
               SizedBox(height: Margins.spacing_m),
@@ -66,18 +57,26 @@ class BaseDeleteDialog extends StatelessWidget {
               icon: Icon(Icons.close, color: AppColors.primaryDarken),
               onPressed: () => Navigator.pop(context),
             ),
-          )
+          ),
         ],
       ),
       actions: [
-        SecondaryButton(
-          label: Strings.cancelLabel,
-          onPressed: () => Navigator.pop(context, false),
-        ),
-        SizedBox(width: Margins.spacing_s),
-        PrimaryActionButton(
-          label: Strings.suppressionLabel,
-          onPressed: withLoading ? null : () => _onDelete(context),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_m),
+          child: Row(
+            children: [
+              Expanded(
+                child: SecondaryButton(label: Strings.cancelLabel, onPressed: () => Navigator.pop(context, false)),
+              ),
+              SizedBox(width: Margins.spacing_s),
+              Expanded(
+                child: PrimaryActionButton(
+                  label: Strings.suppressionLabel,
+                  onPressed: withLoading ? null : () => _onDelete(context),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
       actionsAlignment: MainAxisAlignment.center,
