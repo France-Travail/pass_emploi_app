@@ -114,7 +114,9 @@ extension AppStateDSL on AppState {
   AppState loggedIn() => copyWith(loginState: successMiloUserState());
 
   AppState loggedInUser({LoginMode loginMode = LoginMode.MILO, Accompagnement accompagnement = Accompagnement.cej}) {
-    return copyWith(loginState: successUserState(loginMode: loginMode, accompagnement: accompagnement));
+    return copyWith(
+      loginState: successUserState(loginMode: loginMode, accompagnement: accompagnement),
+    );
   }
 
   AppState loggedInMiloUser() => copyWith(loginState: successMiloUserState());
@@ -123,20 +125,15 @@ extension AppStateDSL on AppState {
 
   AppState withDeepLink(DeepLinkState deepLinkState) => copyWith(deepLinkState: deepLinkState);
 
-  AppState withHandleDeepLink(DeepLink deepLink) => withDeepLink(HandleDeepLinkState(
-        deepLink,
-        DeepLinkOrigin.inAppNavigation,
-      ));
+  AppState withHandleDeepLink(DeepLink deepLink) =>
+      withDeepLink(HandleDeepLinkState(deepLink, DeepLinkOrigin.inAppNavigation));
 
   AppState withDemoMode() => copyWith(demoState: true);
 
-  AppState withFeatureFlip({
-    bool? useCvm,
-    bool? withCampagneRecrutement,
-  }) {
+  AppState withFeatureFlip({bool? withCampagneRecrutement}) {
     return copyWith(
       featureFlipState: FeatureFlipState(
-        FeatureFlip.initial().copyWith(useCvm: useCvm, withCampagneRecrutement: withCampagneRecrutement),
+        FeatureFlip.initial().copyWith(withCampagneRecrutement: withCampagneRecrutement),
       ),
     );
   }
@@ -162,21 +159,11 @@ extension AppStateDSL on AppState {
   AppState chatBrouillon(String message) => copyWith(chatBrouillonState: ChatBrouillonState(message));
 
   AppState deeplinkToRendezvous(String id) {
-    return copyWith(
-      deepLinkState: HandleDeepLinkState(
-        RendezvousDeepLink(id),
-        DeepLinkOrigin.inAppNavigation,
-      ),
-    );
+    return copyWith(deepLinkState: HandleDeepLinkState(RendezvousDeepLink(id), DeepLinkOrigin.inAppNavigation));
   }
 
   AppState deeplinkToSessionMilo(String id) {
-    return copyWith(
-      deepLinkState: HandleDeepLinkState(
-        SessionMiloDeepLink(id),
-        DeepLinkOrigin.inAppNavigation,
-      ),
-    );
+    return copyWith(deepLinkState: HandleDeepLinkState(SessionMiloDeepLink(id), DeepLinkOrigin.inAppNavigation));
   }
 
   AppState searchDemarchesSuccess(List<DemarcheDuReferentiel> demarches) {
@@ -193,7 +180,8 @@ extension AppStateDSL on AppState {
 
   AppState offreEmploiDetailsSuccess({OffreEmploiDetails? offreEmploiDetails}) {
     return copyWith(
-        offreEmploiDetailsState: OffreEmploiDetailsSuccessState(offreEmploiDetails ?? mockOffreEmploiDetails()));
+      offreEmploiDetailsState: OffreEmploiDetailsSuccessState(offreEmploiDetails ?? mockOffreEmploiDetails()),
+    );
   }
 
   AppState offreEmploiDetailsIncompleteData({OffreEmploi? offreEmploi}) {
@@ -214,8 +202,8 @@ extension AppStateDSL on AppState {
 
   AppState serviceCiviqueDetailsSuccess({ServiceCiviqueDetail? serviceCiviqueDetail}) {
     return copyWith(
-        serviceCiviqueDetailState:
-            ServiceCiviqueDetailSuccessState(serviceCiviqueDetail ?? mockServiceCiviqueDetail()));
+      serviceCiviqueDetailState: ServiceCiviqueDetailSuccessState(serviceCiviqueDetail ?? mockServiceCiviqueDetail()),
+    );
   }
 
   AppState serviceCiviqueDetailsFailure() {
@@ -387,9 +375,7 @@ extension AppStateDSL on AppState {
   }
 
   AppState succeedAccepterSuggestionRecherche() {
-    return copyWith(
-      traiterSuggestionRechercheState: AccepterSuggestionRechercheSuccessState(offreEmploiAlerte()),
-    );
+    return copyWith(traiterSuggestionRechercheState: AccepterSuggestionRechercheSuccessState(offreEmploiAlerte()));
   }
 
   AppState succeedRefuserSuggestionRecherche() {
@@ -424,9 +410,7 @@ extension AppStateDSL on AppState {
   }
 
   AppState failureRechercheEmploiState() {
-    return copyWith(
-      rechercheEmploiState: RechercheEmploiState.initial().copyWith(status: RechercheStatus.failure),
-    );
+    return copyWith(rechercheEmploiState: RechercheEmploiState.initial().copyWith(status: RechercheStatus.failure));
   }
 
   AppState withRechercheEmploiState({
@@ -454,11 +438,7 @@ extension AppStateDSL on AppState {
       status: status,
       request: RechercheRequest(
         criteres ??
-            EmploiCriteresRecherche(
-              location: null,
-              keyword: '',
-              rechercheType: RechercheType.offreEmploiAndAlternance,
-            ),
+            EmploiCriteresRecherche(location: null, keyword: '', rechercheType: RechercheType.offreEmploiAndAlternance),
         filtres ?? EmploiFiltresRecherche.noFiltre(),
         1,
       ),
@@ -482,11 +462,7 @@ extension AppStateDSL on AppState {
     EmploiCriteresRecherche? criteres,
     EmploiFiltresRecherche? filtres,
   }) {
-    return rechercheEmploiStateWithRequest(
-      status: RechercheStatus.success,
-      criteres: criteres,
-      filtres: filtres,
-    );
+    return rechercheEmploiStateWithRequest(status: RechercheStatus.success, criteres: criteres, filtres: filtres);
   }
 
   AppState initialRechercheServiceCiviqueState() {
@@ -495,15 +471,17 @@ extension AppStateDSL on AppState {
 
   AppState initialLoadingRechercheServiceCiviqueState() {
     return copyWith(
-      rechercheServiceCiviqueState:
-          RechercheServiceCiviqueState.initial().copyWith(status: RechercheStatus.initialLoading),
+      rechercheServiceCiviqueState: RechercheServiceCiviqueState.initial().copyWith(
+        status: RechercheStatus.initialLoading,
+      ),
     );
   }
 
   AppState updateLoadingRechercheServiceCiviqueState() {
     return copyWith(
-      rechercheServiceCiviqueState:
-          RechercheServiceCiviqueState.initial().copyWith(status: RechercheStatus.updateLoading),
+      rechercheServiceCiviqueState: RechercheServiceCiviqueState.initial().copyWith(
+        status: RechercheStatus.updateLoading,
+      ),
     );
   }
 
@@ -597,15 +575,17 @@ extension AppStateDSL on AppState {
 
   AppState initialLoadingRechercheEvenementEmploiState() {
     return copyWith(
-      rechercheEvenementEmploiState:
-          RechercheEvenementEmploiState.initial().copyWith(status: RechercheStatus.initialLoading),
+      rechercheEvenementEmploiState: RechercheEvenementEmploiState.initial().copyWith(
+        status: RechercheStatus.initialLoading,
+      ),
     );
   }
 
   AppState updateLoadingRechercheEvenementEmploiState() {
     return copyWith(
-      rechercheEvenementEmploiState:
-          RechercheEvenementEmploiState.initial().copyWith(status: RechercheStatus.updateLoading),
+      rechercheEvenementEmploiState: RechercheEvenementEmploiState.initial().copyWith(
+        status: RechercheStatus.updateLoading,
+      ),
     );
   }
 
@@ -644,9 +624,7 @@ extension AppStateDSL on AppState {
   }
 
   AppState withImmersionDetailsSuccess({ImmersionDetails? immersionDetails}) {
-    return copyWith(
-      immersionDetailsState: ImmersionDetailsSuccessState(immersionDetails ?? mockImmersionDetails()),
-    );
+    return copyWith(immersionDetailsState: ImmersionDetailsSuccessState(immersionDetails ?? mockImmersionDetails()));
   }
 
   AppState withImmersionDetailsLoading() {
@@ -711,20 +689,22 @@ extension AppStateDSL on AppState {
   }
 
   AppState withCvSuccess() {
-    return copyWith(cvState: CvSuccessState(cvList: mockCvPoleEmploiList(), cvDownloadStatus: {}));
+    return copyWith(
+      cvState: CvSuccessState(cvList: mockCvPoleEmploiList(), cvDownloadStatus: {}),
+    );
   }
 
   AppState withCvEmptySuccess() {
-    return copyWith(cvState: CvSuccessState(cvList: [], cvDownloadStatus: {}));
+    return copyWith(
+      cvState: CvSuccessState(cvList: [], cvDownloadStatus: {}),
+    );
   }
 
   AppState withCvDownloadInProgress() {
     return copyWith(
       cvState: CvSuccessState(
         cvList: mockCvPoleEmploiList(),
-        cvDownloadStatus: {
-          mockCvPoleEmploi().url: CvDownloadStatus.loading,
-        },
+        cvDownloadStatus: {mockCvPoleEmploi().url: CvDownloadStatus.loading},
       ),
     );
   }
@@ -733,9 +713,7 @@ extension AppStateDSL on AppState {
     return copyWith(
       cvState: CvSuccessState(
         cvList: mockCvPoleEmploiList(),
-        cvDownloadStatus: {
-          mockCvPoleEmploi().url: CvDownloadStatus.success,
-        },
+        cvDownloadStatus: {mockCvPoleEmploi().url: CvDownloadStatus.success},
       ),
     );
   }
@@ -744,9 +722,7 @@ extension AppStateDSL on AppState {
     return copyWith(
       cvState: CvSuccessState(
         cvList: mockCvPoleEmploiList(),
-        cvDownloadStatus: {
-          mockCvPoleEmploi().url: CvDownloadStatus.failure,
-        },
+        cvDownloadStatus: {mockCvPoleEmploi().url: CvDownloadStatus.failure},
       ),
     );
   }
@@ -839,8 +815,10 @@ extension AppStateDSL on AppState {
 
   AppState offreDateDerniereConsultation(Map<String, DateTime>? offreIdToDateConsultation) {
     return copyWith(
-        dateConsultationOffreState:
-            DateConsultationOffreState(offreIdToDateConsultation: offreIdToDateConsultation ?? {}));
+      dateConsultationOffreState: DateConsultationOffreState(
+        offreIdToDateConsultation: offreIdToDateConsultation ?? {},
+      ),
+    );
   }
 
   AppState withInAppNotificationsNotInitialized() {
@@ -869,23 +847,28 @@ extension AppStateDSL on AppState {
 
   AppState withComptageDesHeuresSuccess({ComptageDesHeures? comptageDesHeures, int? heuresEnCoursDeCalcul}) {
     return copyWith(
-        comptageDesHeuresState: ComptageDesHeuresSuccessState(
-      comptageDesHeures: comptageDesHeures ?? mockComptageDesHeures(),
-      heuresEnCoursDeCalcul: heuresEnCoursDeCalcul ?? 0,
-    ));
+      comptageDesHeuresState: ComptageDesHeuresSuccessState(
+        comptageDesHeures: comptageDesHeures ?? mockComptageDesHeures(),
+        heuresEnCoursDeCalcul: heuresEnCoursDeCalcul ?? 0,
+      ),
+    );
   }
 
   AppState withBoulangerCampagneState({bool result = false}) {
     return copyWith(boulangerCampagneState: BoulangerCampagneState(result: result));
   }
 
-  AppState withOffreSuiviState(List<OffreSuivie> offresSuivies,
-      {ConfirmationOffre? confirmationOffre, List<String> blackListedOffreIds = const []}) {
+  AppState withOffreSuiviState(
+    List<OffreSuivie> offresSuivies, {
+    ConfirmationOffre? confirmationOffre,
+    List<String> blackListedOffreIds = const [],
+  }) {
     return copyWith(
-        offresSuiviesState: OffresSuiviesState(
-      offresSuivies: offresSuivies,
-      confirmationOffre: confirmationOffre,
-      blackListedOffreIds: blackListedOffreIds,
-    ));
+      offresSuiviesState: OffresSuiviesState(
+        offresSuivies: offresSuivies,
+        confirmationOffre: confirmationOffre,
+        blackListedOffreIds: blackListedOffreIds,
+      ),
+    );
   }
 }

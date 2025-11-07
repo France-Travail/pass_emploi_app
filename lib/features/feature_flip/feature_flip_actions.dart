@@ -1,13 +1,5 @@
 import 'package:pass_emploi_app/models/accueil_zenith_message.dart';
-import 'package:pass_emploi_app/models/feature_flip.dart';
 import 'package:pass_emploi_app/models/login_page_remote_message.dart';
-
-// TODO: à retirer après avoir informé les utilisateurs de la suppression de CVM
-class FeatureFlipUseCvmAction {
-  final bool useCvm;
-
-  FeatureFlipUseCvmAction(this.useCvm);
-}
 
 class FeatureFlipCampagneRecrutementAction {
   final bool withCampagneRecrutement;
@@ -19,12 +11,6 @@ class FeatureFlipMonSuiviDemarchesKoMessageAction {
   final String? withMonSuiviDemarchesKoMessage;
 
   FeatureFlipMonSuiviDemarchesKoMessageAction(this.withMonSuiviDemarchesKoMessage);
-}
-
-class FeatureFlipAbTestingIaFtAction {
-  final AbTestingIaFt abTestingIaFt;
-
-  FeatureFlipAbTestingIaFtAction(this.abTestingIaFt);
 }
 
 class FeatureFlipLoginPageMessageAction {

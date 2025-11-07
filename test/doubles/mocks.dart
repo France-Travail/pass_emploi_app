@@ -4,14 +4,12 @@ import 'package:mocktail/mocktail.dart';
 import 'package:pass_emploi_app/auth/auth_wrapper.dart';
 import 'package:pass_emploi_app/auth/authenticator.dart';
 import 'package:pass_emploi_app/models/demarche_ia_dto.dart';
-import 'package:pass_emploi_app/models/feature_flip.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/matching_demarche_du_referentiel.dart';
 import 'package:pass_emploi_app/models/offre_dto.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
 import 'package:pass_emploi_app/push/push_notification_manager.dart';
 import 'package:pass_emploi_app/repositories/auto_inscription_repository.dart';
-import 'package:pass_emploi_app/repositories/backend_config_repository.dart';
 import 'package:pass_emploi_app/repositories/boulanger_campagne_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_recrutement_repository.dart';
 import 'package:pass_emploi_app/repositories/comptage_des_heures_repository.dart';
@@ -97,7 +95,12 @@ class MockTutorialRepository extends Mock implements TutorialRepository {}
 class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {
   MockFlutterSecureStorage() {
     when(() => read(key: any(named: "key"))).thenAnswer((_) async => null);
-    when(() => write(key: any(named: "key"), value: any(named: "value"))).thenAnswer((_) async {});
+    when(
+      () => write(
+        key: any(named: "key"),
+        value: any(named: "value"),
+      ),
+    ).thenAnswer((_) async {});
     when(() => delete(key: any(named: "key"))).thenAnswer((_) async {});
     when(() => readAll()).thenAnswer((_) async => {});
   }
@@ -150,23 +153,39 @@ class MockPushNotificationManager extends Mock implements PushNotificationManage
 
 class MockSessionMiloRepository extends Mock implements SessionMiloRepository {
   void mockGetListSuccess() {
-    when(() => getList(userId: any(named: "userId"), filtrerEstInscrit: any(named: "filtrerEstInscrit")))
-        .thenAnswer((_) async => [mockSessionMilo()]);
+    when(
+      () => getList(
+        userId: any(named: "userId"),
+        filtrerEstInscrit: any(named: "filtrerEstInscrit"),
+      ),
+    ).thenAnswer((_) async => [mockSessionMilo()]);
   }
 
   void mockGetListFailure() {
-    when(() => getList(userId: any(named: "userId"), filtrerEstInscrit: any(named: "filtrerEstInscrit")))
-        .thenAnswer((_) async => null);
+    when(
+      () => getList(
+        userId: any(named: "userId"),
+        filtrerEstInscrit: any(named: "filtrerEstInscrit"),
+      ),
+    ).thenAnswer((_) async => null);
   }
 
   void mockGetDetailsFailure() {
-    when(() => getDetails(sessionId: any(named: "sessionId"), userId: any(named: "userId")))
-        .thenAnswer((_) async => null);
+    when(
+      () => getDetails(
+        sessionId: any(named: "sessionId"),
+        userId: any(named: "userId"),
+      ),
+    ).thenAnswer((_) async => null);
   }
 
   void mockGetDetailsSuccess() {
-    when(() => getDetails(sessionId: any(named: "sessionId"), userId: any(named: "userId")))
-        .thenAnswer((_) async => mockSessionMiloDetails());
+    when(
+      () => getDetails(
+        sessionId: any(named: "sessionId"),
+        userId: any(named: "userId"),
+      ),
+    ).thenAnswer((_) async => mockSessionMiloDetails());
   }
 }
 
@@ -232,16 +251,8 @@ class MockRemoteConfigRepository extends Mock implements RemoteConfigRepository 
   MockRemoteConfigRepository() {
     when(() => maxLivingTimeInSecondsForMilo()).thenReturn(null);
     when(() => lastCampagneRecrutementId()).thenReturn(null);
-    when(() => cvmActivationByAccompagnement()).thenReturn({});
     when(() => monSuiviPoleEmploiStartDateInMonths()).thenReturn(1);
     when(() => campagnesAccueil()).thenReturn([]);
-    when(() => abTestingIaFt()).thenReturn(AbTestingIaFt.versionA);
-  }
-}
-
-class MockBackendConfigRepository extends Mock implements BackendConfigRepository {
-  MockBackendConfigRepository() {
-    when(() => getIdsConseillerCvmEarlyAdopters()).thenAnswer((_) async => []);
   }
 }
 
@@ -261,8 +272,9 @@ class FakeMatchingDemarcheDuReferentiel extends Fake implements MatchingDemarche
 
 class MockMatchingDemarcheRepository extends Mock implements MatchingDemarcheRepository {
   void withGetMatchingDemarcheDuReferentielFromCode(MatchingDemarcheDuReferentiel? matchingDemarche) {
-    when(() => getMatchingDemarcheDuReferentielFromCode(codeQuoi: any(named: "codeQuoi")))
-        .thenAnswer((_) async => matchingDemarche);
+    when(
+      () => getMatchingDemarcheDuReferentielFromCode(codeQuoi: any(named: "codeQuoi")),
+    ).thenAnswer((_) async => matchingDemarche);
   }
 }
 
@@ -322,13 +334,9 @@ class MockBoulangerCampagneRepository extends Mock implements BoulangerCampagneR
 
 class MockIaFtSuggestionsRepository extends Mock implements IaFtSuggestionsRepository {
   void withGetAndReturnSuccess() {
-    when(() => get(any(), any())).thenAnswer((_) async => [
-          DemarcheIaDto(
-            codeQuoi: "codeQuoi",
-            codePourquoi: "codePourquoi",
-            description: "description",
-          )
-        ]);
+    when(() => get(any(), any())).thenAnswer(
+      (_) async => [DemarcheIaDto(codeQuoi: "codeQuoi", codePourquoi: "codePourquoi", description: "description")],
+    );
   }
 
   void withGetAndReturnFailure() {

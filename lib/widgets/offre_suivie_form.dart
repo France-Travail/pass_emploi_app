@@ -36,23 +36,24 @@ class OffreSuivieForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, OffreSuivieFormViewmodel>(
-        converter: (store) => OffreSuivieFormViewmodel.create(store, offreId, showOffreDetails),
-        onInit: (store) => PassEmploiMatomoTracker.instance.trackCandidature(
-              source: trackingSource,
-              event: OffreSuiviTrackingOption.affiche,
-            ),
-        distinct: true,
-        builder: (context, viewModel) {
-          return CardContainer(
-            backgroundColor: showPrimaryBackground ? AppColors.primary : Colors.white,
-            child: AnimatedSwitcher(
-              duration: AnimationDurations.fast,
-              child: viewModel.showConfirmation
-                  ? _Confirmation(viewModel, showPrimaryBackground)
-                  : _Content(viewModel, offreId, trackingSource, showPrimaryBackground),
-            ),
-          );
-        });
+      converter: (store) => OffreSuivieFormViewmodel.create(store, offreId, showOffreDetails),
+      onInit: (store) => PassEmploiMatomoTracker.instance.trackCandidature(
+        source: trackingSource,
+        event: OffreSuiviTrackingOption.affiche,
+      ),
+      distinct: true,
+      builder: (context, viewModel) {
+        return CardContainer(
+          backgroundColor: showPrimaryBackground ? AppColors.primary : Colors.white,
+          child: AnimatedSwitcher(
+            duration: AnimationDurations.fast,
+            child: viewModel.showConfirmation
+                ? _Confirmation(viewModel, showPrimaryBackground)
+                : _Content(viewModel, offreId, trackingSource, showPrimaryBackground),
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -68,14 +69,17 @@ class _Confirmation extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Icon(AppIcons.check_circle_outline_rounded,
-                color: showPrimaryBackground ? Colors.white : AppColors.contentColor),
+            Icon(
+              AppIcons.check_circle_outline_rounded,
+              color: showPrimaryBackground ? Colors.white : AppColors.contentColor,
+            ),
             SizedBox(height: Margins.spacing_s),
             Text(
               Strings.merciPourVotreReponse,
               textAlign: TextAlign.center,
-              style: TextStyles.textBaseRegular
-                  .copyWith(color: showPrimaryBackground ? Colors.white : AppColors.contentColor),
+              style: TextStyles.textBaseRegular.copyWith(
+                color: showPrimaryBackground ? Colors.white : AppColors.contentColor,
+              ),
             ),
             if (viewModel.onCreateActionOrDemarche != null) ...[
               if (viewModel.confirmationMessage != null) ...[
@@ -83,8 +87,9 @@ class _Confirmation extends StatelessWidget {
                 Text(
                   viewModel.confirmationMessage!,
                   textAlign: TextAlign.center,
-                  style: TextStyles.textSRegular()
-                      .copyWith(color: showPrimaryBackground ? Colors.white : AppColors.contentColor),
+                  style: TextStyles.textSRegular().copyWith(
+                    color: showPrimaryBackground ? Colors.white : AppColors.contentColor,
+                  ),
                 ),
               ],
               SizedBox(height: Margins.spacing_base),
@@ -97,9 +102,7 @@ class _Confirmation extends StatelessWidget {
                   viewModel.onHideForever();
                   if (viewModel.useDemarche) {
                     PassEmploiMatomoTracker.instance.trackEvent(
-                      eventCategory: AnalyticsEventNames.createDemarcheEventCategory(
-                        StoreProvider.of<AppState>(context).state.featureFlipState.featureFlip.abTestingIaFt.name,
-                      ),
+                      eventCategory: AnalyticsEventNames.createDemarcheEventCategory,
                       action: AnalyticsEventNames.createDemarcheFromOffreSuiviAction,
                     );
                     Navigator.of(context).push(CreateDemarcheSuccessPage.route(CreateDemarcheSource.fromReferentiel));
@@ -115,10 +118,7 @@ class _Confirmation extends StatelessWidget {
             ],
             if (viewModel.onNextOffer != null) ...[
               SizedBox(height: Margins.spacing_base),
-              SecondaryButton(
-                label: Strings.seeNextOffer,
-                onPressed: viewModel.onNextOffer,
-              ),
+              SecondaryButton(label: Strings.seeNextOffer, onPressed: viewModel.onNextOffer),
             ],
           ],
         ),
@@ -136,12 +136,7 @@ class _Confirmation extends StatelessWidget {
 }
 
 class _Content extends StatelessWidget {
-  const _Content(
-    this.viewModel,
-    this.offreId,
-    this.trackingSource,
-    this.showPrimaryBackground,
-  );
+  const _Content(this.viewModel, this.offreId, this.trackingSource, this.showPrimaryBackground);
   final OffreSuivieFormViewmodel viewModel;
   final String offreId;
   final OffreSuiviTrackingSource trackingSource;
@@ -152,22 +147,22 @@ class _Content extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (viewModel.dateConsultation != null) ...[
-          Text(viewModel.dateConsultation!,
-              style: TextStyles.textSRegular()
-                  .copyWith(color: showPrimaryBackground ? Colors.white : AppColors.contentColor)),
-          SizedBox(height: Margins.spacing_s),
-        ],
-        if (viewModel.offreLien != null) ...[
-          _OffreLien(
-            offreId: offreId,
-            fromAlternance: viewModel.fromAlternance,
-            offreLien: viewModel.offreLien!,
+          Text(
+            viewModel.dateConsultation!,
+            style: TextStyles.textSRegular().copyWith(
+              color: showPrimaryBackground ? Colors.white : AppColors.contentColor,
+            ),
           ),
           SizedBox(height: Margins.spacing_s),
         ],
-        Text(Strings.ouEnEtesVous,
-            style:
-                TextStyles.textBaseBold.copyWith(color: showPrimaryBackground ? Colors.white : AppColors.contentColor)),
+        if (viewModel.offreLien != null) ...[
+          _OffreLien(offreId: offreId, fromAlternance: viewModel.fromAlternance, offreLien: viewModel.offreLien!),
+          SizedBox(height: Margins.spacing_s),
+        ],
+        Text(
+          Strings.ouEnEtesVous,
+          style: TextStyles.textBaseBold.copyWith(color: showPrimaryBackground ? Colors.white : AppColors.contentColor),
+        ),
         SizedBox(height: Margins.spacing_s),
         _Options(viewModel, trackingSource),
       ],
@@ -186,11 +181,10 @@ class _OffreLien extends StatelessWidget {
     return Semantics(
       link: true,
       child: TextButton(
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.zero,
-        ),
-        onPressed: () => Navigator.of(context)
-            .push(OffreEmploiDetailsPage.materialPageRoute(offreId, fromAlternance: fromAlternance)),
+        style: TextButton.styleFrom(padding: EdgeInsets.zero),
+        onPressed: () => Navigator.of(
+          context,
+        ).push(OffreEmploiDetailsPage.materialPageRoute(offreId, fromAlternance: fromAlternance)),
         child: Text(
           offreLien,
           style: TextStyles.textBaseMedium.copyWith(
@@ -216,10 +210,8 @@ class _Options extends StatefulWidget {
 }
 
 class _OptionsState extends State<_Options> {
-  void trackEvent(OffreSuiviTrackingOption event) => PassEmploiMatomoTracker.instance.trackCandidature(
-        source: widget.trackingSource,
-        event: event,
-      );
+  void trackEvent(OffreSuiviTrackingOption event) =>
+      PassEmploiMatomoTracker.instance.trackCandidature(source: widget.trackingSource, event: event);
 
   _OffreSuivieStatus? _selectedValue;
   @override

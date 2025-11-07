@@ -34,10 +34,7 @@ class CreateDemarcheIaFtStep3Page extends StatelessWidget {
         converter: (store) => CreateDemarcheIaFtStep3ViewModel.create(store),
         onInit: (store) =>
             store.dispatch(IaFtSuggestionsRequestAction(query: formViewModel.iaFtStep2ViewModel.description)),
-        builder: (context, viewModel) => _Body(
-          formViewModel: formViewModel,
-          viewModel: viewModel,
-        ),
+        builder: (context, viewModel) => _Body(formViewModel: formViewModel, viewModel: viewModel),
       ),
     );
   }
@@ -51,10 +48,7 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (viewModel.loadDisplayState) {
-      DisplayState.CONTENT => _Content(
-          viewModel,
-          formViewModel,
-        ),
+      DisplayState.CONTENT => _Content(viewModel, formViewModel),
       DisplayState.FAILURE => _Failure(formViewModel),
       _ => const _Loading(),
     };
@@ -70,17 +64,9 @@ class _Loading extends StatelessWidget {
       padding: const EdgeInsets.all(Margins.spacing_base),
       child: Column(
         children: [
-          Image.asset(
-            Drawables.iaFtSuggestionsLoading,
-            width: 200,
-            height: 200,
-          ),
+          Image.asset(Drawables.iaFtSuggestionsLoading, width: 200, height: 200),
           const SizedBox(height: Margins.spacing_base),
-          Text(
-            Strings.iaFtSuggestionsLoading,
-            style: TextStyles.textMBold,
-            textAlign: TextAlign.center,
-          ),
+          Text(Strings.iaFtSuggestionsLoading, style: TextStyles.textMBold, textAlign: TextAlign.center),
           const SizedBox(height: Margins.spacing_l),
           CircularProgressIndicator(),
         ],
@@ -100,22 +86,11 @@ class _Failure extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Image.asset(
-            Drawables.iaFtSuggestionsFailure,
-            width: 200,
-            height: 200,
-          ),
+          Image.asset(Drawables.iaFtSuggestionsFailure, width: 200, height: 200),
           const SizedBox(height: Margins.spacing_m),
-          Text(
-            Strings.iaFtSuggestionsFailure,
-            style: TextStyles.textMBold,
-            textAlign: TextAlign.center,
-          ),
+          Text(Strings.iaFtSuggestionsFailure, style: TextStyles.textMBold, textAlign: TextAlign.center),
           const SizedBox(height: Margins.spacing_m),
-          PrimaryActionButton(
-            onPressed: () => viewModel.navigateToCreateDemarcheIaFtStep2(),
-            label: Strings.back,
-          ),
+          PrimaryActionButton(onPressed: () => viewModel.navigateToCreateDemarcheIaFtStep2(), label: Strings.back),
         ],
       ),
     );
@@ -134,22 +109,11 @@ class _Empty extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Image.asset(
-              Drawables.iaFtSuggestionsEmpty,
-              width: 200,
-              height: 200,
-            ),
+            Image.asset(Drawables.iaFtSuggestionsEmpty, width: 200, height: 200),
             const SizedBox(height: Margins.spacing_m),
-            Text(
-              Strings.iaFtSuggestionsEmpty,
-              style: TextStyles.textMBold,
-              textAlign: TextAlign.center,
-            ),
+            Text(Strings.iaFtSuggestionsEmpty, style: TextStyles.textMBold, textAlign: TextAlign.center),
             const SizedBox(height: Margins.spacing_m),
-            PrimaryActionButton(
-              onPressed: () => viewModel.navigateToCreateDemarcheIaFtStep2(),
-              label: Strings.back,
-            ),
+            PrimaryActionButton(onPressed: () => viewModel.navigateToCreateDemarcheIaFtStep2(), label: Strings.back),
           ],
         ),
       ),
@@ -210,10 +174,7 @@ class _ContentState extends State<_Content> {
                 ),
                 const SizedBox(height: Margins.spacing_base),
               ],
-              Text(
-                Strings.iaFtSuggestionsContent(suggestions.length),
-                style: TextStyles.textMBold,
-              ),
+              Text(Strings.iaFtSuggestionsContent(suggestions.length), style: TextStyles.textMBold),
               const SizedBox(height: Margins.spacing_base),
               ListView.builder(
                 shrinkWrap: true,
@@ -227,9 +188,7 @@ class _ContentState extends State<_Content> {
                   onDelete: (id) {
                     notifier.deleteSuggestion(id);
                     PassEmploiMatomoTracker.instance.trackEvent(
-                      eventCategory: AnalyticsEventNames.createDemarcheEventCategory(
-                        StoreProvider.of<AppState>(context).state.featureFlipState.featureFlip.abTestingIaFt.name,
-                      ),
+                      eventCategory: AnalyticsEventNames.createDemarcheEventCategory,
                       action: AnalyticsEventNames.createDemarcheIaSuggestionsListDeleted,
                       eventValue: 1,
                     );
@@ -269,42 +228,44 @@ class _DemarcheIaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Builder(builder: (context) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: Margins.spacing_s),
-        child: BaseCard(
-          tag: CardTag(
-            icon: AppIcons.work_outline_rounded,
-            text: suggestion.label ?? Strings.otherDemarche,
-            contentColor: AppColors.primary,
-            backgroundColor: AppColors.primaryLighten,
-          ),
-          iconButton: IconButton(
-            onPressed: () => onDelete(suggestion.id),
-            icon: Icon(
-              AppIcons.close_rounded,
-              color: AppColors.primary,
-              semanticLabel: "${Strings.suppressionLabel} ${suggestion.sousTitre ?? ""}",
+    return Builder(
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: Margins.spacing_s),
+          child: BaseCard(
+            tag: CardTag(
+              icon: AppIcons.work_outline_rounded,
+              text: suggestion.label ?? Strings.otherDemarche,
+              contentColor: AppColors.primary,
+              backgroundColor: AppColors.primaryLighten,
+            ),
+            iconButton: IconButton(
+              onPressed: () => onDelete(suggestion.id),
+              icon: Icon(
+                AppIcons.close_rounded,
+                color: AppColors.primary,
+                semanticLabel: "${Strings.suppressionLabel} ${suggestion.sousTitre ?? ""}",
+              ),
+            ),
+            title: suggestion.titre ?? '',
+            body: suggestion.sousTitre ?? '',
+            additionalChild: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(Strings.dateShortMandatory, style: TextStyles.textBaseMedium),
+                const SizedBox(height: Margins.spacing_s),
+                DatePicker(
+                  errorText: showError ? Strings.dateShortMandatory : null,
+                  initialDateValue: date,
+                  isActiveDate: true,
+                  onDateSelected: (date) => onDateChanged(suggestion.id, date),
+                ),
+              ],
             ),
           ),
-          title: suggestion.titre ?? '',
-          body: suggestion.sousTitre ?? '',
-          additionalChild: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(Strings.dateShortMandatory, style: TextStyles.textBaseMedium),
-              const SizedBox(height: Margins.spacing_s),
-              DatePicker(
-                errorText: showError ? Strings.dateShortMandatory : null,
-                initialDateValue: date,
-                isActiveDate: true,
-                onDateSelected: (date) => onDateChanged(suggestion.id, date),
-              ),
-            ],
-          ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }
 
@@ -316,20 +277,15 @@ class _SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: PrimaryActionButton(
-        onPressed: () => notifier.submit(),
-        label: Strings.iaFtSuggestionsSubmit,
-      ),
+      child: PrimaryActionButton(onPressed: () => notifier.submit(), label: Strings.iaFtSuggestionsSubmit),
     );
   }
 }
 
 class DemarcheIaSuggestionsChangeNotifier extends ChangeNotifier {
-  DemarcheIaSuggestionsChangeNotifier({
-    required List<DemarcheIaSuggestion> suggestions,
-    required this.onSubmit,
-  })  : _suggestions = List.from(suggestions),
-        _dates = {for (var s in suggestions) s.id: null};
+  DemarcheIaSuggestionsChangeNotifier({required List<DemarcheIaSuggestion> suggestions, required this.onSubmit})
+    : _suggestions = List.from(suggestions),
+      _dates = {for (var s in suggestions) s.id: null};
 
   final void Function(List<CreateDemarcheRequestAction>) onSubmit;
   final List<DemarcheIaSuggestion> _suggestions;

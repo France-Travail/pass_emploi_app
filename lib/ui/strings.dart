@@ -273,20 +273,20 @@ class Strings {
 
   static const List<String> loginBottomSheetEmailInfosCej = [
     "L’adresse mail",
-    " que vous avez fourni à votre conseiller"
+    " que vous avez fourni à votre conseiller",
   ];
   static const List<String> loginBottomSheetPasswordInfosCej = [
     "Le mot de passe",
-    " créé lors de la réception du mail d’activation"
+    " créé lors de la réception du mail d’activation",
   ];
 
   static const List<String> loginBottomSheetEmailInfosPoleEmploi = [
     "Le nom d’utilisateur",
-    " créé lors de votre inscription à France Travail"
+    " créé lors de votre inscription à France Travail",
   ];
   static const List<String> loginBottomSheetPasswordInfosPoleEmploi = [
     "Le mot de passe",
-    " de votre espace personnel France Travail"
+    " de votre espace personnel France Travail",
   ];
 
   static String loginBottomSheetRecuperationInfos(bool isPoleEmploi) =>
@@ -369,8 +369,9 @@ class Strings {
   static String accueilVoirLesOutils = "Voir tous les outils";
   static String accueilCampagneRecrutementLabelCej = "Aidez-nous à améliorer l’application du CEJ\u{00A0}!";
   static String accueilCampagneRecrutementLabelPassEmploi = "Aidez-nous à améliorer l’application pass emploi\u{00A0}!";
-  static String accueilCampagneRecrutementLabel =
-      Brand.isCej() ? accueilCampagneRecrutementLabelCej : accueilCampagneRecrutementLabelPassEmploi;
+  static String accueilCampagneRecrutementLabel = Brand.isCej()
+      ? accueilCampagneRecrutementLabelCej
+      : accueilCampagneRecrutementLabelPassEmploi;
   static String accueilCampagneRecrutementPressedTip = "Participer";
 
   static String vosOutilsEvoluent = "Vos outils évoluent";
@@ -424,8 +425,9 @@ class Strings {
   static String rendezvousDetailsAnnule = "Rendez-vous annulé";
   static String rendezVousConseillerCommentLabel = "Commentaire de mon conseiller";
   static String cannotGoToRendezvous = "Vous ne pouvez pas vous rendre au rendez-vous ?";
-  static String shouldInformConseiller =
-      Brand.isCej() ? _CejStrings.shouldInformConseiller : _PassEmploiStrings.shouldInformConseiller;
+  static String shouldInformConseiller = Brand.isCej()
+      ? _CejStrings.shouldInformConseiller
+      : _PassEmploiStrings.shouldInformConseiller;
 
   static String rendezVousDetailsError = "Erreur lors de la récupération de l'événement";
   static String conseillerIsPresent = "Votre conseiller sera présent";
@@ -875,9 +877,7 @@ class Strings {
   static String consulterMesDemarches = "Consulter mes démarches";
   static String iaFtShowcaseTitle = "Nouveau ! Créez vos démarches avec l'IA";
 
-  static String topDemarchesTitle = "Vos démarches en 1 minute";
-  static String topDemarchesTitleB = "Vos démarches en 1 minute avec l'IA";
-  static String topDemarchesSubtitle = "Décrivez vos démarches en une seule fois. L’IA s’occupe du reste";
+  static String topDemarchesTitle = "Vos démarches en 1 minute avec l'IA";
   static String topDemarchesHint = "Écrivez ou dictez vos démarches...";
 
   static String iaDemarchesAccueilTitle = "Vos démarches en 1 minute";
@@ -999,7 +999,8 @@ class Strings {
       "Cette entreprise peut recruter sur ce métier et être intéressée pour vous recevoir en immersion. Contactez-la en expliquant votre projet professionnel et vos motivations.";
   static String immersionAccueillanteExplanation =
       "Cette entreprise recherche activement des candidats à l’immersion. Contactez-la en expliquant votre projet professionnel et vos motivations.";
-  static String immersionDescriptionLabel = "Si l’entreprise est d’accord pour vous accueillir :\n\n"
+  static String immersionDescriptionLabel =
+      "Si l’entreprise est d’accord pour vous accueillir :\n\n"
       "· Prévenez votre conseiller\n"
       "· Remplissez une convention d’immersion avec lui";
   static String immersionContactBlocTitle = "Contact";
@@ -1178,15 +1179,17 @@ class Strings {
 
   static String legalNoticeUrl = Brand.isCej() ? _CejStrings.legalNoticeUrl : _PassEmploiStrings.legalNoticeUrl;
   static String privacyPolicyUrl = Brand.isCej() ? _CejStrings.privacyPolicyUrl : _PassEmploiStrings.privacyPolicyUrl;
-  static String termsOfServiceUrl =
-      Brand.isCej() ? _CejStrings.termsOfServiceUrl : _PassEmploiStrings.termsOfServiceUrl;
+  static String termsOfServiceUrl = Brand.isCej()
+      ? _CejStrings.termsOfServiceUrl
+      : _PassEmploiStrings.termsOfServiceUrl;
   static String accessibilityUrl = Brand.isCej() ? _CejStrings.accessibilityUrl : _PassEmploiStrings.accessibilityUrl;
 
   // Profil: Settings & account suppression
   static String settingsLabel = "Paramètres application";
   static String suppressionPageTitle = "Suppression de compte";
-  static String suppressionAccountLabel =
-      Brand.isCej() ? _CejStrings.suppressionAccountLabel : _PassEmploiStrings.suppressionAccountLabel;
+  static String suppressionAccountLabel = Brand.isCej()
+      ? _CejStrings.suppressionAccountLabel
+      : _PassEmploiStrings.suppressionAccountLabel;
   static String activityShareLabel = "Partage de votre activité";
   static String notificationsLabel = "Gérer vos notifications";
 
@@ -1196,27 +1199,30 @@ class Strings {
       "Autorisez le partage pour permettre au conseiller d’avoir un suivi de votre activité.";
   static String warning = "Attention";
   static String suppressionButtonLabel = "Supprimer mon compte";
-  static String warningInformationParagraph1 =
-      Brand.isCej() ? _CejStrings.warningInformationParagraph1 : _PassEmploiStrings.warningInformationParagraph1;
-  static String warningInformationParagraph2 =
-      Brand.isCej() ? _CejStrings.warningInformationParagraph2 : _PassEmploiStrings.warningInformationParagraph2;
+  static String warningInformationParagraph1 = Brand.isCej()
+      ? _CejStrings.warningInformationParagraph1
+      : _PassEmploiStrings.warningInformationParagraph1;
+  static String warningInformationParagraph2 = Brand.isCej()
+      ? _CejStrings.warningInformationParagraph2
+      : _PassEmploiStrings.warningInformationParagraph2;
   static String warningInformationPoleEmploi =
       "Vos démarches et rendez-vous seront toujours disponibles dans votre portail France Travail.";
   static List<String> warningPointsMilo = [
     "vos actions",
     "vos messages avec votre conseiller",
     "vos rendez-vous",
-    "vos recherches et offres sauvegardées"
+    "vos recherches et offres sauvegardées",
   ];
 
   static List<String> warningPointsPoleEmploi = [
     "vos messages avec votre conseiller",
-    "vos recherches et offres sauvegardées"
+    "vos recherches et offres sauvegardées",
   ];
   static String lastWarningBeforeSuppression = "Tapez “supprimer” pour confirmer la suppression de votre compte.";
   static String mandatorySuppressionLabelError = "Champs invalide. Vérifiez que vous avez bien tapé “supprimer”";
-  static String accountDeletionSuccess =
-      Brand.isCej() ? _CejStrings.accountDeletionSuccess : _PassEmploiStrings.accountDeletionSuccess;
+  static String accountDeletionSuccess = Brand.isCej()
+      ? _CejStrings.accountDeletionSuccess
+      : _PassEmploiStrings.accountDeletionSuccess;
 
   static String shareFavoriteLabel = "Partager mes offres suivies";
 
@@ -1493,8 +1499,9 @@ class Strings {
   static String suggestionLocalisationAddAlerteButton = "Ajouter l’alerte";
 
   // CGU
-  static String cguNeverAcceptedTitle =
-      Brand.isCej() ? "Bienvenue sur l’application du CEJ" : "Bienvenue sur l’application pass emploi";
+  static String cguNeverAcceptedTitle = Brand.isCej()
+      ? "Bienvenue sur l’application du CEJ"
+      : "Bienvenue sur l’application pass emploi";
   static String cguUpdateRequiredTitle = "Mise à jour des Conditions Générales d'Utilisation (CGU)";
   static List<String> cguNeverAcceptedDescription = [
     "L’utilisation de notre service est soumise à l’acception préalable de nos ",
@@ -1507,16 +1514,10 @@ class Strings {
     "Nous avons mis à jour nos CGU le ",
     ". L’utilisation de notre service est soumise à l’acception préalable de nos ",
     "↗ CGU.",
-    "\n\nPoints clés de la mise à jour :\n"
+    "\n\nPoints clés de la mise à jour :\n",
   ];
-  static List<String> cguNeverAcceptedSwitch = [
-    "J’ai lu et j’accepte les",
-    " ↗ Conditions Générales d’Utilisation",
-  ];
-  static List<String> cguUpdateRequiredSwitch = [
-    "J’ai lu et j’accepte les nouvelles",
-    " ↗ CGU",
-  ];
+  static List<String> cguNeverAcceptedSwitch = ["J’ai lu et j’accepte les", " ↗ Conditions Générales d’Utilisation"];
+  static List<String> cguUpdateRequiredSwitch = ["J’ai lu et j’accepte les nouvelles", " ↗ CGU"];
   static String cguSwitchError = "Acceptez les Conditions Générales d’Utilisation pour utiliser l’application.";
   static String cguAccept = "Valider";
   static String cguRefuse = "Refuser et se déconnecter";
@@ -1657,7 +1658,6 @@ class Strings {
     return "J’ai postulé à l’offre $offre de la société $societe";
   }
 
-  // TODO: Remove after 15 sept 2025
   static String boulangerCampagneTitle = "1000 immersions dans les métiers de la vente et de la logistique";
   static String boulangerCampagneDescription = "Découvrez les métiers de la vente et de la logistique.";
 }

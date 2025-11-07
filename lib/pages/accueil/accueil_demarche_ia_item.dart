@@ -19,7 +19,7 @@ class AccueilIaDemarches extends StatelessWidget {
     void onPressed() {
       Navigator.push(context, CreateDemarcheFormPage.route(startPoint: StartPoint.ftIa));
       PassEmploiMatomoTracker.instance.trackEvent(
-        eventCategory: AnalyticsEventNames.createDemarcheEventCategory(null),
+        eventCategory: AnalyticsEventNames.createDemarcheEventCategory,
         action: AnalyticsEventNames.createDemarcheFromAccueilAction,
       );
     }
@@ -35,13 +35,7 @@ class AccueilIaDemarches extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            Positioned(
-              top: 0,
-              right: 0,
-              child: ExcludeSemantics(
-                child: SvgPicture.asset(Drawables.iaFtIllustration),
-              ),
-            ),
+            Positioned(top: 0, right: 0, child: ExcludeSemantics(child: SvgPicture.asset(Drawables.iaFtIllustration))),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -50,11 +44,15 @@ class AccueilIaDemarches extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(Strings.iaDemarchesAccueilTitle,
-                          style: TextStyles.textBaseBold.copyWith(color: Colors.white)),
+                      Text(
+                        Strings.iaDemarchesAccueilTitle,
+                        style: TextStyles.textBaseBold.copyWith(color: Colors.white),
+                      ),
                       SizedBox(height: Margins.spacing_s),
-                      Text(Strings.iaDemarchesAccueilSubtitle,
-                          style: TextStyles.textSRegular().copyWith(color: Colors.white)),
+                      Text(
+                        Strings.iaDemarchesAccueilSubtitle,
+                        style: TextStyles.textSRegular().copyWith(color: Colors.white),
+                      ),
                     ],
                   ),
                 ),
@@ -65,9 +63,9 @@ class AccueilIaDemarches extends StatelessWidget {
                   textColor: AppColors.primary,
                   label: Strings.iaDemarchesAccueilHint,
                   onPressed: onPressed,
-                )
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),

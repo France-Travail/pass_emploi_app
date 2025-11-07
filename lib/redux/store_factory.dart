@@ -111,7 +111,6 @@ import 'package:pass_emploi_app/repositories/alerte/service_civique_alerte_repos
 import 'package:pass_emploi_app/repositories/animations_collectives_repository.dart';
 import 'package:pass_emploi_app/repositories/auth/chat_security_repository.dart';
 import 'package:pass_emploi_app/repositories/auto_inscription_repository.dart';
-import 'package:pass_emploi_app/repositories/backend_config_repository.dart';
 import 'package:pass_emploi_app/repositories/boulanger_campagne_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_recrutement_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_repository.dart';
@@ -189,7 +188,6 @@ class StoreFactory {
   final ConnectivityWrapper connectivityWrapper;
   final PushNotificationManager pushNotificationManager;
   final RemoteConfigRepository remoteConfigRepository;
-  final BackendConfigRepository backendConfigRepository;
   final DeveloperOptionRepository developerOptionRepository;
   final UserActionRepository userActionRepository;
   final UserActionPendingCreationRepository userActionPendingCreationRepository;
@@ -274,7 +272,6 @@ class StoreFactory {
     this.connectivityWrapper,
     this.pushNotificationManager,
     this.remoteConfigRepository,
-    this.backendConfigRepository,
     this.developerOptionRepository,
     this.userActionRepository,
     this.userActionPendingCreationRepository,
@@ -358,7 +355,7 @@ class StoreFactory {
         CrashlyticsMiddleware(crashlytics).call,
         BootstrapMiddleware().call,
         LoginMiddleware(authenticator, firebaseAuthWrapper, modeDemoRepository, matomoTracker).call,
-        FeatureFlipMiddleware(remoteConfigRepository, backendConfigRepository, detailsJeuneRepository).call,
+        FeatureFlipMiddleware(remoteConfigRepository).call,
         CacheInvalidatorMiddleware(cacheManager).call,
         UserActionDetailsMiddleware(userActionRepository).call,
         UserActionCreateMiddleware(userActionRepository).call,
@@ -467,9 +464,6 @@ class StoreFactory {
 
   List<redux.Middleware<AppState>> _stagingMiddlewares(Flavor flavor) {
     if (flavor == Flavor.PROD) return [];
-    return [
-      DeveloperOptionsMiddleware(developerOptionRepository).call,
-      MatomoLoggingMiddleware().call,
-    ];
+    return [DeveloperOptionsMiddleware(developerOptionRepository).call, MatomoLoggingMiddleware().call];
   }
 }

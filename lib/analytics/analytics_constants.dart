@@ -223,8 +223,7 @@ class AnalyticsEventNames {
   static const createActionStep3StatusCategory = "Création action v3 étape 3 - Statut";
   static const createActionStep3RappelCategory = "Création action v3 étape 3 - Rappel";
 
-  static String createDemarcheEventCategory(String? version) =>
-      "Création démarche${version != null ? " $version" : ""}";
+  static const createDemarcheEventCategory = "Création démarche";
   static const createDemarcheIaDicterPressed = "Dicter le prompt";
   static const createDemarcheIaSuggestionsListCount = "Nombre de suggestions";
   static const createDemarcheIaSuggestionsListDeleted = "Nombre de suggestions supprimées";

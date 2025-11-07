@@ -49,9 +49,7 @@ class IaFtSuggestionsMiddleware extends MiddlewareClass<AppState> {
 
         store.dispatch(IaFtSuggestionsSuccessAction(demarchesSuggestions));
         PassEmploiMatomoTracker.instance.trackEvent(
-          eventCategory: AnalyticsEventNames.createDemarcheEventCategory(
-            store.state.featureFlipState.featureFlip.abTestingIaFt.name,
-          ),
+          eventCategory: AnalyticsEventNames.createDemarcheEventCategory,
           action: AnalyticsEventNames.createDemarcheIaSuggestionsListCount,
           eventValue: demarchesSuggestionsRaw.length,
         );

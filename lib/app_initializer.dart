@@ -40,7 +40,6 @@ import 'package:pass_emploi_app/repositories/app_version_repository.dart';
 import 'package:pass_emploi_app/repositories/auth/chat_security_repository.dart';
 import 'package:pass_emploi_app/repositories/auth/logout_repository.dart';
 import 'package:pass_emploi_app/repositories/auto_inscription_repository.dart';
-import 'package:pass_emploi_app/repositories/backend_config_repository.dart';
 import 'package:pass_emploi_app/repositories/boulanger_campagne_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_recrutement_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_repository.dart';
@@ -145,10 +144,9 @@ class AppInitializer {
 
   Future<FirebaseRemoteConfig?> _remoteConfig() async {
     final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
-    await remoteConfig.setConfigSettings(RemoteConfigSettings(
-      fetchTimeout: Duration(seconds: 5),
-      minimumFetchInterval: Duration(minutes: 5),
-    ));
+    await remoteConfig.setConfigSettings(
+      RemoteConfigSettings(fetchTimeout: Duration(seconds: 5), minimumFetchInterval: Duration(minutes: 5)),
+    );
     try {
       await remoteConfig.fetchAndActivate();
     } catch (e) {
@@ -173,9 +171,7 @@ class AppInitializer {
     final crashlytics = CrashlyticsWithFirebase(FirebaseCrashlytics.instance);
     final pushNotificationManager = PushNotificationManager();
     final securedPreferences = SecureStorageInMemoryDecorator(
-      SecureStorageExceptionHandlerDecorator(
-        FlutterSecureStorage(aOptions: AndroidOptions()),
-      ),
+      SecureStorageExceptionHandlerDecorator(FlutterSecureStorage(aOptions: AndroidOptions())),
     );
     final remoteConfigRepository = RemoteConfigRepository(firebaseRemoteConfig);
     final logoutRepository = LogoutRepository(
@@ -230,7 +226,6 @@ class AppInitializer {
       ConnectivityWrapper.fromConnectivity(),
       pushNotificationManager,
       remoteConfigRepository,
-      BackendConfigRepository(dioClient, crashlytics),
       DeveloperOptionRepository(securedPreferences),
       UserActionRepository(dioClient, crashlytics),
       UserActionPendingCreationRepository(securedPreferences),
@@ -316,10 +311,7 @@ class AppInitializer {
 
   /// MUST BE called to make http clients work on older Android devices.
   /// See: https://stackoverflow.com/questions/69511057/flutter-on-android-7-certificate-verify-failed-with-letsencrypt-ssl-cert-after-s
-  void _setTrustedCertificatesForOldDevices(
-    Configuration configuration,
-    CrashlyticsWithFirebase crashlytics,
-  ) {
+  void _setTrustedCertificatesForOldDevices(Configuration configuration, CrashlyticsWithFirebase crashlytics) {
     try {
       SecurityContext.defaultContext.setTrustedCertificatesBytes(
         utf8.encode(configuration.iSRGX1CertificateForOldDevices),

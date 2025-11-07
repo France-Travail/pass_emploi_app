@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/accueil_zenith_message.dart';
 import 'package:pass_emploi_app/models/cgu.dart';
-import 'package:pass_emploi_app/models/feature_flip.dart';
 import 'package:pass_emploi_app/models/feedback_for_feature.dart';
 import 'package:pass_emploi_app/models/login_page_remote_message.dart';
 import 'package:pass_emploi_app/models/remote_campagne_accueil.dart';
@@ -63,12 +61,6 @@ class RemoteConfigRepository {
     return key;
   }
 
-  AbTestingIaFt abTestingIaFt() {
-    if (_firebaseRemoteConfig == null) return AbTestingIaFt.defaultVersion;
-    final key = _firebaseRemoteConfig.getString("ab_testing_ia_ft");
-    return AbTestingIaFt.fromJson(key);
-  }
-
   LoginPageRemoteMessage? loginPageMessage() {
     if (_firebaseRemoteConfig == null) return null;
     final key = _firebaseRemoteConfig.getString("login_page_message");
@@ -81,21 +73,6 @@ class RemoteConfigRepository {
     final key = _firebaseRemoteConfig.getString("zenith_accueil_message_milo");
     if (key.isEmpty || key == "null") return null;
     return AccueilZenithMessage.fromJson(json.decode(key) as Map<String, dynamic>);
-  }
-
-  Map<Accompagnement, bool> cvmActivationByAccompagnement() {
-    if (_firebaseRemoteConfig == null) return {};
-    final String cvmAsString = _firebaseRemoteConfig.getString('cvm');
-    // Despite Remote config documentation, Firebase returns "null" string value when key is not found
-    if (cvmAsString.isEmpty || cvmAsString == "null") return {};
-    final cvmAsJson = json.decode(cvmAsString);
-    return {
-      Accompagnement.cej: cvmAsJson['cej'] as bool,
-      Accompagnement.rsaFranceTravail: cvmAsJson['rsaFranceTravail'] as bool,
-      Accompagnement.rsaConseilsDepartementaux: cvmAsJson['rsaConseilsDepartementaux'] as bool,
-      Accompagnement.aij: cvmAsJson['aij'] as bool,
-      Accompagnement.avenirPro: cvmAsJson['avenirPro'] as bool,
-    };
   }
 
   Cgu? getCgu() {

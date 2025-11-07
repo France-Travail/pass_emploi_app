@@ -21,97 +21,77 @@ class PostulerConfirmationPage extends StatelessWidget {
   final String offreId;
 
   static Route<void> route(String offreId) {
-    return MaterialPageRoute<void>(
-      fullscreenDialog: true,
-      builder: (_) => PostulerConfirmationPage(offreId: offreId),
-    );
+    return MaterialPageRoute<void>(fullscreenDialog: true, builder: (_) => PostulerConfirmationPage(offreId: offreId));
   }
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, PostulerConfirmationViewModel>(
-        converter: (store) => PostulerConfirmationViewModel.create(store, offreId),
-        builder: (context, viewModel) {
-          return Scaffold(
-            backgroundColor: Colors.white,
-            appBar: SecondaryAppBar(
-              title: Strings.offrePostuleeConfirmationAppBar,
-              backgroundColor: Colors.white,
-            ),
-            body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(height: Margins.spacing_xl),
-                    Center(
-                      child: SizedBox(
-                        height: 130,
-                        width: 130,
-                        child: Illustration.green(AppIcons.check_rounded),
-                      ),
-                    ),
-                    SizedBox(height: Margins.spacing_xl),
+      converter: (store) => PostulerConfirmationViewModel.create(store, offreId),
+      builder: (context, viewModel) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: SecondaryAppBar(title: Strings.offrePostuleeConfirmationAppBar, backgroundColor: Colors.white),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(height: Margins.spacing_xl),
+                  Center(child: SizedBox(height: 130, width: 130, child: Illustration.green(AppIcons.check_rounded))),
+                  SizedBox(height: Margins.spacing_xl),
+                  Text(
+                    Strings.offreSuivieConfirmationPageTitle,
+                    textAlign: TextAlign.center,
+                    style: TextStyles.textMBold,
+                  ),
+                  SizedBox(height: Margins.spacing_base),
+                  Text(
+                    Strings.offreSuivieConfirmationPageDescription,
+                    textAlign: TextAlign.center,
+                    style: TextStyles.textBaseRegular,
+                  ),
+                  SizedBox(height: Margins.spacing_l),
+                  if (viewModel.onCreateActionOrDemarche != null) ...[
                     Text(
-                      Strings.offreSuivieConfirmationPageTitle,
-                      textAlign: TextAlign.center,
-                      style: TextStyles.textMBold,
-                    ),
-                    SizedBox(height: Margins.spacing_base),
-                    Text(
-                      Strings.offreSuivieConfirmationPageDescription,
+                      viewModel.wishToCreateActionOrDemarche,
                       textAlign: TextAlign.center,
                       style: TextStyles.textBaseRegular,
                     ),
-                    SizedBox(height: Margins.spacing_l),
-                    if (viewModel.onCreateActionOrDemarche != null) ...[
-                      Text(
-                        viewModel.wishToCreateActionOrDemarche,
-                        textAlign: TextAlign.center,
-                        style: TextStyles.textBaseRegular,
-                      ),
-                      SizedBox(height: Margins.spacing_base),
-                      PrimaryActionButton(
-                        label: viewModel.onCreateActionOrDemarcheLabel,
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          viewModel.onCreateActionOrDemarche?.call();
-                          if (viewModel.useDemarche) {
-                            PassEmploiMatomoTracker.instance.trackEvent(
-                              eventCategory: AnalyticsEventNames.createDemarcheEventCategory(
-                                StoreProvider.of<AppState>(context)
-                                    .state
-                                    .featureFlipState
-                                    .featureFlip
-                                    .abTestingIaFt
-                                    .name,
-                              ),
-                              action: AnalyticsEventNames.createDemarcheFromOffreSuiviAction,
-                            );
-                            Navigator.of(context)
-                                .push(CreateDemarcheSuccessPage.route(CreateDemarcheSource.fromReferentiel));
-                          } else {
-                            PassEmploiMatomoTracker.instance.trackEvent(
-                              eventCategory: AnalyticsEventNames.createActionEventCategory,
-                              action: AnalyticsEventNames.createActionResultFromOffreSuiviAction,
-                            );
-                            Navigator.of(context).push(CreateUserActionConfirmationOffreSuiviPage.route());
-                          }
-                        },
-                      ),
-                    ],
                     SizedBox(height: Margins.spacing_base),
-                    SecondaryButton(
-                      label: Strings.close,
-                      onPressed: () => Navigator.pop(context),
+                    PrimaryActionButton(
+                      label: viewModel.onCreateActionOrDemarcheLabel,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        viewModel.onCreateActionOrDemarche?.call();
+                        if (viewModel.useDemarche) {
+                          PassEmploiMatomoTracker.instance.trackEvent(
+                            eventCategory: AnalyticsEventNames.createDemarcheEventCategory,
+                            action: AnalyticsEventNames.createDemarcheFromOffreSuiviAction,
+                          );
+                          Navigator.of(
+                            context,
+                          ).push(CreateDemarcheSuccessPage.route(CreateDemarcheSource.fromReferentiel));
+                        } else {
+                          PassEmploiMatomoTracker.instance.trackEvent(
+                            eventCategory: AnalyticsEventNames.createActionEventCategory,
+                            action: AnalyticsEventNames.createActionResultFromOffreSuiviAction,
+                          );
+                          Navigator.of(context).push(CreateUserActionConfirmationOffreSuiviPage.route());
+                        }
+                      },
                     ),
                   ],
-                ),
+                  SizedBox(height: Margins.spacing_base),
+                  SecondaryButton(label: Strings.close, onPressed: () => Navigator.pop(context)),
+                ],
               ),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }
