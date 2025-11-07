@@ -179,10 +179,10 @@ jobs:
           ssh-add ~/.ssh/id_ed25519
           ssh-keyscan -t rsa gitlab.com >> ~/.ssh/known_hosts
 
-      - name: Select Xcode 16.2
+      - name: Select Xcode 16.1
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.2'
+          xcode-version: '16.1'
 
       - name: Verify iOS SDK
         run: |
@@ -289,7 +289,9 @@ jobs:
             --platform IOS \
             --type IOS_APP_ADHOC \
             --certificate-key=@env:APPLE_P12_PRIVATE_KEY \
-            --create
+            --create \
+            --verbose || { echo "Failed to fetch signing files"; exit 1; }
+          echo "✅ Successfully fetched signing files"
         env:
           APPLE_PROD_API_ISSUER: ${{ secrets.APPLE_PROD_API_ISSUER }}
           APPLE_PROD_API_KEY: ${{ secrets.APPLE_PROD_API_KEY }}
@@ -299,6 +301,16 @@ jobs:
         shell: bash
         run: |
           keychain add-certificates
+          
+      - name: CEJ - Debug certificates
+        shell: bash
+        run: |
+          echo "=== Available certificates ==="
+          security find-identity -v -p codesigning
+          echo "=== Available provisioning profiles ==="
+          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/
+          echo "=== Keychain status ==="
+          keychain list
 
       - name: CEJ - Update Xcode project settings with fetched code signing profiles and create staging_export_options.plist
         shell: bash
