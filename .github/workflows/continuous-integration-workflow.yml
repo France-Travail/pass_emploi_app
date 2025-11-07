@@ -179,10 +179,10 @@ jobs:
           ssh-add ~/.ssh/id_ed25519
           ssh-keyscan -t rsa gitlab.com >> ~/.ssh/known_hosts
 
-      - name: Select Xcode 16.1
+      - name: Select Xcode 15.4
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.1'
+          xcode-version: '15.4'
 
       - name: Verify iOS SDK
         run: |
