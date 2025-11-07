@@ -17,7 +17,6 @@ import 'package:pass_emploi_app/repositories/alerte/service_civique_alerte_repos
 import 'package:pass_emploi_app/repositories/animations_collectives_repository.dart';
 import 'package:pass_emploi_app/repositories/auth/chat_security_repository.dart';
 import 'package:pass_emploi_app/repositories/auto_inscription_repository.dart';
-import 'package:pass_emploi_app/repositories/backend_config_repository.dart';
 import 'package:pass_emploi_app/repositories/boulanger_campagne_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_recrutement_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_repository.dart';
@@ -100,7 +99,6 @@ class TestStoreFactory {
   ConnectivityWrapper connectivityWrapper = MockConnectivityWrapper();
   PushNotificationManager pushNotificationManager = MockPushNotificationManager();
   RemoteConfigRepository remoteConfigRepository = MockRemoteConfigRepository();
-  BackendConfigRepository backendConfigRepository = MockBackendConfigRepository();
   DeveloperOptionRepository developerOptionRepository = MockDeveloperOptionRepository();
   OffreEmploiRepository offreEmploiRepository = DummyOffreEmploiRepository();
   OffreEmploiDetailsRepository detailedOfferRepository = DummyDetailedRepository();
@@ -186,7 +184,6 @@ class TestStoreFactory {
       connectivityWrapper,
       pushNotificationManager,
       remoteConfigRepository,
-      backendConfigRepository,
       developerOptionRepository,
       userActionRepository,
       userActionPendingCreationRepository,
