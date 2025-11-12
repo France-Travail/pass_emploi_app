@@ -2,7 +2,7 @@ name: pass_emploi_app
 description: Pass Emploi iOS and Android app.
 
 publish_to: "none"
-version: 4.6.1
+version: 4.7.0
 
 environment:
   sdk: 3.9.2 # Dart version
