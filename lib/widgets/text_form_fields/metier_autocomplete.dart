@@ -91,11 +91,7 @@ class _MetierAutocompletePage extends StatefulWidget {
   }) {
     return MaterialPageRoute(
       fullscreenDialog: true,
-      builder: (context) => _MetierAutocompletePage(
-        title: title,
-        hint: hint,
-        selectedMetier: selectedMetier,
-      ),
+      builder: (context) => _MetierAutocompletePage(title: title, hint: hint, selectedMetier: selectedMetier),
     );
   }
 
@@ -119,12 +115,6 @@ class _MetierAutocompletePageState extends State<_MetierAutocompletePage> {
   }
 
   void _onInitialBuild(MetierViewModel viewModel) {
-    if (viewModel.containsMetiersRecents) {
-      PassEmploiMatomoTracker.instance.trackEvent(
-        eventCategory: AnalyticsEventNames.lastRechercheMetierEventCategory,
-        action: AnalyticsEventNames.lastRechercheMetierDisplayAction,
-      );
-    }
     if (viewModel.containsDiagorienteFavoris) {
       PassEmploiMatomoTracker.instance.trackEvent(
         eventCategory: AnalyticsEventNames.autocompleteMetierDiagorienteMetiersFavorisEventCategory,
@@ -206,12 +196,6 @@ class _MetierListTile extends StatelessWidget {
           ],
         ),
         onTap: () {
-          if (source == MetierSource.dernieresRecherches) {
-            PassEmploiMatomoTracker.instance.trackEvent(
-              eventCategory: AnalyticsEventNames.lastRechercheMetierEventCategory,
-              action: AnalyticsEventNames.lastRechercheMetierClickAction,
-            );
-          }
           if (source == MetierSource.diagorienteMetiersFavoris) {
             PassEmploiMatomoTracker.instance.trackEvent(
               eventCategory: AnalyticsEventNames.autocompleteMetierDiagorienteMetiersFavorisEventCategory,

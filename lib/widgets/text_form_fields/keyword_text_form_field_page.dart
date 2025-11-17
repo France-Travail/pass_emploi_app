@@ -33,12 +33,8 @@ class KeywordTextFormFieldPage extends StatelessWidget {
   }) {
     return MaterialPageRoute(
       fullscreenDialog: true,
-      builder: (context) => KeywordTextFormFieldPage(
-        title: title,
-        hint: hint,
-        selectedKeyword: selectedKeyword,
-        heroTag: heroTag,
-      ),
+      builder: (context) =>
+          KeywordTextFormFieldPage(title: title, hint: hint, selectedKeyword: selectedKeyword, heroTag: heroTag),
     );
   }
 
@@ -64,12 +60,6 @@ class KeywordTextFormFieldPage extends StatelessWidget {
   }
 
   void _onInitialBuild(MotsClesViewModel viewModel) {
-    if (viewModel.containsMotsClesRecents) {
-      PassEmploiMatomoTracker.instance.trackEvent(
-        eventCategory: AnalyticsEventNames.lastRechercheMotsClesEventCategory,
-        action: AnalyticsEventNames.lastRechercheMotsClesDisplayAction,
-      );
-    }
     if (viewModel.containsDiagorienteFavoris) {
       PassEmploiMatomoTracker.instance.trackEvent(
         eventCategory: AnalyticsEventNames.autocompleteMotCleDiagorienteMetiersFavorisEventCategory,
@@ -133,12 +123,7 @@ class _BodyState extends State<_Body> {
                     motCle: item.text,
                     source: item.source,
                     onTap: (selectedMotCle) {
-                      if (item.source == MotCleSource.dernieresRecherches) {
-                        PassEmploiMatomoTracker.instance.trackEvent(
-                          eventCategory: AnalyticsEventNames.lastRechercheMotsClesEventCategory,
-                          action: AnalyticsEventNames.lastRechercheMotsClesClickAction,
-                        );
-                      } else if (item.source == MotCleSource.diagorienteMetiersFavoris) {
+                      if (item.source == MotCleSource.diagorienteMetiersFavoris) {
                         PassEmploiMatomoTracker.instance.trackEvent(
                           eventCategory: AnalyticsEventNames.autocompleteMotCleDiagorienteMetiersFavorisEventCategory,
                           action: AnalyticsEventNames.autocompleteMotCleDiagorienteMetiersFavorisClickAction,

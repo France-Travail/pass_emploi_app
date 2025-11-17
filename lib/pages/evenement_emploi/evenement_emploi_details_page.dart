@@ -17,7 +17,6 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
-import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/share_button.dart';
@@ -87,10 +86,8 @@ class _Body extends StatelessWidget {
     return switch (viewModel.displayState) {
       DisplayState.LOADING => Center(child: CircularProgressIndicator()),
       DisplayState.CONTENT => _Content(viewModel: viewModel),
-      DisplayState.EMPTY || DisplayState.FAILURE => Retry(
-          Strings.miscellaneousErrorRetry,
-          () => viewModel.retry(eventId),
-        ),
+      DisplayState.EMPTY ||
+      DisplayState.FAILURE => Retry(Strings.miscellaneousErrorRetry, () => viewModel.retry(eventId)),
     };
   }
 }
@@ -146,10 +143,7 @@ class _Header extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (viewModel.tag != null) ...[
-          CardTag.evenement(text: viewModel.tag!),
-          SizedBox(height: Margins.spacing_s),
-        ],
+        if (viewModel.tag != null) ...[CardTag.evenement(text: viewModel.tag!), SizedBox(height: Margins.spacing_s)],
         Text(viewModel.titre, style: TextStyles.textLBold()),
         SizedBox(height: Margins.spacing_base),
         Wrap(
@@ -218,10 +212,6 @@ class _FooterButtons extends StatelessWidget {
   void _openInscriptionUrl(BuildContext context) {
     if (viewModel.url == null) return;
     context.trackEvenementEngagement(EvenementEngagement.EVENEMENT_EXTERNE_INSCRIPTION);
-    PassEmploiMatomoTracker.instance.trackEvent(
-      eventCategory: AnalyticsEventNames.evenementEmploiDetailsCategory,
-      action: AnalyticsEventNames.evenementEmploiDetailsInscriptionAction,
-    );
     launchExternalUrl(viewModel.url!);
   }
 }

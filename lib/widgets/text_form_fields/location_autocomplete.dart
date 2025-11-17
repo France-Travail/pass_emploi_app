@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/ignore_tracking_context_provider.dart';
 import 'package:pass_emploi_app/features/localisation_persist/localisation_persist_actions.dart';
 import 'package:pass_emploi_app/features/location/search_location_actions.dart';
@@ -14,7 +13,6 @@ import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/utils/debounce_text_form_field.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/utils/full_screen_text_form_field_scaffold.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/utils/multiline_app_bar.dart';
@@ -97,11 +95,8 @@ class _LocationAutocompletePage extends StatefulWidget {
   }) {
     return MaterialPageRoute(
       fullscreenDialog: true,
-      builder: (context) => _LocationAutocompletePage(
-        hint: hint,
-        villesOnly: villesOnly,
-        selectedLocation: selectedLocation,
-      ),
+      builder: (context) =>
+          _LocationAutocompletePage(hint: hint, villesOnly: villesOnly, selectedLocation: selectedLocation),
     );
   }
 
@@ -124,12 +119,6 @@ class _LocationAutocompletePageState extends State<_LocationAutocompletePage> {
   }
 
   void _onInitialBuild(LocationViewModel viewModel) {
-    if (viewModel.dernieresLocations.isNotEmpty) {
-      PassEmploiMatomoTracker.instance.trackEvent(
-        eventCategory: AnalyticsEventNames.lastRechercheLocationEventCategory,
-        action: AnalyticsEventNames.lastRechercheLocationDisplayAction,
-      );
-    }
     viewModel.onInputLocation(widget.selectedLocation?.libelle);
   }
 
@@ -144,9 +133,10 @@ class _LocationAutocompletePageState extends State<_LocationAutocompletePage> {
             onCloseButtonPressed: () => Navigator.pop(context, widget.selectedLocation),
           ),
           Semantics(
-            label: '${Strings.locationTitle} ${widget.villesOnly ? //
-                Strings.a11YLocationWithoutDepartmentExplanationLabel : //
-                Strings.a11YLocationWithDepartmentsExplanationLabel}',
+            label:
+                '${Strings.locationTitle} ${widget.villesOnly ? //
+                      Strings.a11YLocationWithoutDepartmentExplanationLabel : //
+                      Strings.a11YLocationWithDepartmentsExplanationLabel}',
             child: DebounceTextFormField(
               heroTag: _heroTag,
               initialValue: widget.selectedLocation?.displayableLabel(),
@@ -213,12 +203,6 @@ class _LocationListTile extends StatelessWidget {
           ],
         ),
         onTap: () {
-          if (source == LocationSource.dernieresRecherches) {
-            PassEmploiMatomoTracker.instance.trackEvent(
-              eventCategory: AnalyticsEventNames.lastRechercheLocationEventCategory,
-              action: AnalyticsEventNames.lastRechercheLocationClickAction,
-            );
-          }
           onLocationTap(location);
         },
       ),

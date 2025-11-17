@@ -22,7 +22,6 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
-import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/animated_list_loader.dart';
@@ -408,25 +407,11 @@ class _TodayCenteredMonSuiviList extends StatelessWidget {
   void _loadNextPeriod(BuildContext context) {
     viewModel.onLoadNextPeriod();
     _StateProvider.maybeOf(context)?.nextPeriodCount++;
-
-    PassEmploiMatomoTracker.instance.trackEvent(
-      eventCategory: AnalyticsEventNames.monSuiviCategory,
-      action: AnalyticsEventNames.monSuiviNextPeriodAction,
-      eventName: AnalyticsEventNames.monSuiviPeriodName,
-      eventValue: _StateProvider.maybeOf(context)?.nextPeriodCount,
-    );
   }
 
   void _loadPreviousPeriod(BuildContext context) {
     viewModel.onLoadPreviousPeriod();
     _StateProvider.maybeOf(context)?.previousPeriodCount--;
-
-    PassEmploiMatomoTracker.instance.trackEvent(
-      eventCategory: AnalyticsEventNames.monSuiviCategory,
-      action: AnalyticsEventNames.monSuiviPreviousPeriodAction,
-      eventName: AnalyticsEventNames.monSuiviPeriodName,
-      eventValue: _StateProvider.maybeOf(context)?.previousPeriodCount,
-    );
   }
 }
 

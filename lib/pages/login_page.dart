@@ -88,8 +88,9 @@ class _Scaffold extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           GestureDetector(
-                              child: AppLogo(width: 120),
-                              onDoubleTap: () => Navigator.push(context, ExplicationModeDemoPage.materialPageRoute())),
+                            child: AppLogo(width: 120),
+                            onDoubleTap: () => Navigator.push(context, ExplicationModeDemoPage.materialPageRoute()),
+                          ),
                           SizedBox(height: shrink ? Margins.spacing_base : Margins.spacing_m),
                           Welcome(),
                           SizedBox(height: shrink ? 0 : Margins.spacing_xl),
@@ -120,10 +121,7 @@ class _Scaffold extends StatelessWidget {
                                   ),
                                   SizedBox(height: Margins.spacing_m),
                                 ],
-                                Divider(
-                                  height: 1,
-                                  color: AppColors.primaryLighten,
-                                ),
+                                Divider(height: 1, color: AppColors.primaryLighten),
                                 _InformationsLegales(),
                               ],
                             ),
@@ -137,7 +135,7 @@ class _Scaffold extends StatelessWidget {
                           SizedBox(height: Margins.spacing_xl),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -162,12 +160,6 @@ class _LoginButton extends StatelessWidget {
       backgroundColor: Brand.isCej() ? AppColors.primary : AppColors.primaryDarkenStrong,
       onPressed: () {
         viewModel.onLogin != null ? viewModel.onLogin!.call() : LoginBottomSheet.show(context);
-        if (viewModel.preferredLoginMode != null) {
-          PassEmploiMatomoTracker.instance.trackEvent(
-            eventCategory: AnalyticsEventNames.loginPageLoginModeCategory,
-            action: AnalyticsEventNames.loginPageLoginDefaultModeAction,
-          );
-        }
       },
     );
   }
@@ -209,10 +201,9 @@ class _InformationsLegales extends StatelessWidget {
         onExpansionChanged: (_) {
           Future.delayed(AnimationDurations.medium, () {
             if (context.mounted) {
-              Scrollable.of(context).position.ensureVisible(
-                    context.findRenderObject()!,
-                    duration: AnimationDurations.fast,
-                  );
+              Scrollable.of(
+                context,
+              ).position.ensureVisible(context.findRenderObject()!, duration: AnimationDurations.fast);
             }
           });
         },
@@ -234,7 +225,7 @@ class _InformationsLegales extends StatelessWidget {
               Link(Strings.accessibilityLevelLabel, Strings.accessibilityUrl),
               SizedBox(height: Margins.spacing_m),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -261,11 +252,7 @@ class Link extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 3),
-              child: Icon(
-                AppIcons.open_in_new_rounded,
-                color: AppColors.primary,
-                size: Dimens.icon_size_base,
-              ),
+              child: Icon(AppIcons.open_in_new_rounded, color: AppColors.primary, size: Dimens.icon_size_base),
             ),
             SizedBox(width: Margins.spacing_s),
             Text(label, style: TextStyles.internalLink),
@@ -285,14 +272,8 @@ class _GenericError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: _ErrorBanner(
-        title: Strings.loginGenericError,
-        description: Strings.loginGenericErrorDescription,
-      ),
-      onDoubleTap: () => showDialog(
-        context: context,
-        builder: (context) => _ErrorInfoDialog(technicalErrorMessage),
-      ),
+      child: _ErrorBanner(title: Strings.loginGenericError, description: Strings.loginGenericErrorDescription),
+      onDoubleTap: () => showDialog(context: context, builder: (context) => _ErrorInfoDialog(technicalErrorMessage)),
     );
   }
 }
@@ -332,12 +313,7 @@ class _ErrorInfoDialog extends StatelessWidget {
     return AlertDialog(
       title: const Text('Erreur technique'),
       content: Text(message),
-      actions: [
-        TextButton(
-          child: Text(Strings.close),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ],
+      actions: [TextButton(child: Text(Strings.close), onPressed: () => Navigator.of(context).pop())],
     );
   }
 }
@@ -352,22 +328,11 @@ class _PreferredLoginMode extends StatelessWidget {
     return ElevatedButtonTile(
       onPressed: () {
         LoginBottomSheet.show(context);
-        PassEmploiMatomoTracker.instance.trackEvent(
-          eventCategory: AnalyticsEventNames.loginPageLoginModeCategory,
-          action: AnalyticsEventNames.loginPageLoginChoseModeAction,
-        );
       },
       label: loginMode.title,
       leading: Semantics(
         excludeSemantics: true,
-        child: SizedBox(
-          width: 40,
-          height: 40,
-          child: Image.asset(
-            loginMode.logo,
-            fit: BoxFit.cover,
-          ),
-        ),
+        child: SizedBox(width: 40, height: 40, child: Image.asset(loginMode.logo, fit: BoxFit.cover)),
       ),
       suffix: Icon(AppIcons.chevron_right_rounded),
     );

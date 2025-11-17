@@ -197,18 +197,12 @@ class AnalyticsActionNames {
 class AnalyticsEventNames {
   AnalyticsEventNames._();
 
-  static const loginPageLoginModeCategory = "Login - mode de connexion";
-  static const loginPageLoginChoseModeAction = "Connexion en choisissant un mode";
-  static const loginPageLoginDefaultModeAction = "Connexion sans choisir de mode";
-
   static const createActionEventCategory = "Création action/démarche";
   static const createActionDisplaySnackBarAction = "Affichage SnackBar succès";
   static const createActionClickOnSnackBarAction = "Clic détail action/démarche";
   static const createActionOfflineAction = "Action créée hors connexion";
 
   static const monSuiviCategory = "Mon suivi v2";
-  static const monSuiviPreviousPeriodAction = "Affichage semaines précédentes";
-  static const monSuiviNextPeriodAction = "Affichage semaines suivantes";
   static const monSuiviPeriodName = "Période";
 
   static const createActionv2EventCategory = "Création action v3";
@@ -247,18 +241,6 @@ class AnalyticsEventNames {
   static const autocompleteMetierDiagorienteMetiersFavorisDisplayAction = "Affichage des préférences métiers";
   static const autocompleteMetierDiagorienteMetiersFavorisClickAction = "Clic préférences métiers";
 
-  static const lastRechercheMotsClesEventCategory = "Dernières recherches mots clés";
-  static const lastRechercheMotsClesDisplayAction = "Affichage dernières recherches mots clés";
-  static const lastRechercheMotsClesClickAction = "Clic dernières recherches mots clés";
-
-  static const lastRechercheMetierEventCategory = "Dernières recherches métiers";
-  static const lastRechercheMetierDisplayAction = "Affichage dernières recherches métiers";
-  static const lastRechercheMetierClickAction = "Clic dernières recherches métiers";
-
-  static const lastRechercheLocationEventCategory = "Dernières recherches localisation";
-  static const lastRechercheLocationDisplayAction = "Affichage dernières recherches localisation";
-  static const lastRechercheLocationClickAction = "Clic dernières recherches localisation";
-
   static const webAuthPageEventCategory = "Mire connexion mobile";
   static const webAuthPageSuccessAction = "Connexion post mire OK";
   static const webAuthPageErrorAction = "Connexion post mire KO";
@@ -276,9 +258,6 @@ class AnalyticsEventNames {
   static const onboardingCategory = "Onboarding";
   static const onboardingSkipOnboardingAction = "Skip";
   static const onboardingCompletedOnboardingAction = "Terminé";
-
-  static const evenementEmploiDetailsCategory = "Détails événement emploi";
-  static const evenementEmploiDetailsInscriptionAction = "Clic inscription événement emploi";
 
   static const rendezvousVisioCategory = "Rendez-vous bénéficiaire - visio";
   static const rendezvousVisioDisplayAction = "Affichage";
