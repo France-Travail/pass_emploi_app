@@ -13,8 +13,8 @@ class DeepLinkFactory {
       _DeepLink.sessionMilo => id != null ? SessionMiloDeepLink(id) : null,
       _DeepLink.alerte => AlerteDeepLink(idAlerte: data["id"] as String),
       _DeepLink.fonctionnalites => NouvellesFonctionnalitesDeepLink(
-          lastVersion: Version.fromString(data["version"] as String),
-        ),
+        lastVersion: Version.fromString(data["version"] as String),
+      ),
       _DeepLink.migrationParcoursEmploi => MigrationParcoursEmploiDeepLink(),
       _DeepLink.eventList => EventListDeepLink(),
       _DeepLink.actualisationPe => ActualisationPeDeepLink(),
@@ -34,6 +34,7 @@ class DeepLinkFactory {
 }
 
 enum _DeepLink {
+  // ⚠️ Envisager d'ajouter les notification également à in_app_notification.dart
   rendezvous(["DETAIL_RENDEZVOUS", "NEW_RENDEZVOUS", "RAPPEL_RENDEZVOUS"]),
   action(["DETAIL_ACTION", "NEW_ACTION"]),
   message(["NEW_MESSAGE"]),

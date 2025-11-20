@@ -10,11 +10,7 @@ import 'package:pass_emploi_app/utils/date_extensions.dart';
 import 'package:redux/redux.dart';
 
 class NotificationsCenterViewModel extends Equatable {
-  NotificationsCenterViewModel({
-    required this.notifications,
-    required this.displayState,
-    required this.retry,
-  });
+  NotificationsCenterViewModel({required this.notifications, required this.displayState, required this.retry});
 
   final DisplayState displayState;
   final List<NotificationViewModel> notifications;
@@ -58,12 +54,7 @@ List<NotificationViewModel> _notifications(Store<AppState> store) {
       description: notification.description,
       date: notification.date.toDayWithFullMonthContextualized(),
       onPressed: deepLink != null
-          ? () => store.dispatch(
-                HandleDeepLinkAction(
-                  deepLink,
-                  DeepLinkOrigin.inAppNavigation,
-                ),
-              )
+          ? () => store.dispatch(HandleDeepLinkAction(deepLink, DeepLinkOrigin.inAppNavigation))
           : null,
     );
   }).toList();
@@ -77,6 +68,7 @@ DeepLink? _fromInAppNotification(InAppNotificationType type, String? idObjet) {
     InAppNotificationType.newRendezvous => idObjet != null ? RendezvousDeepLink(idObjet) : null,
     InAppNotificationType.updatedRendezvous => idObjet != null ? RendezvousDeepLink(idObjet) : null,
     InAppNotificationType.nouvelleOffre => idObjet != null ? AlerteDeepLink(idAlerte: idObjet) : null,
+    InAppNotificationType.migrationParcoursEmploi => MigrationParcoursEmploiDeepLink(),
     InAppNotificationType.detailSessionMilo => idObjet != null ? SessionMiloDeepLink(idObjet) : null,
     InAppNotificationType.rappelCreationAction => CreationActionDeepLink(),
     InAppNotificationType.rappelCreationDemarche => CreationDemarcheDeepLink(),
