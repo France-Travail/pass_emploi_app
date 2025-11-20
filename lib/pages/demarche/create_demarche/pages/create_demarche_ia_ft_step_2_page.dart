@@ -81,15 +81,6 @@ class _CreateDemarcheIaFtStep2PageState extends State<CreateDemarcheIaFtStep2Pag
             Text(Strings.iaFtStep2Title, style: TextStyles.textMBold),
             Text(Strings.iaFtStep2Mandatory, style: TextStyles.textSRegular(color: AppColors.contentColor)),
             const SizedBox(height: Margins.spacing_base),
-            InformationBandeau(
-              text: Strings.iaFtStep2Warning,
-              icon: AppIcons.info,
-              backgroundColor: AppColors.primaryLighten,
-              textColor: AppColors.primary,
-              borderRadius: Dimens.radius_base,
-              padding: EdgeInsets.symmetric(vertical: Margins.spacing_s, horizontal: Margins.spacing_base),
-            ),
-            const SizedBox(height: Margins.spacing_base),
             Stack(
               children: [
                 BaseTextField(
@@ -132,45 +123,16 @@ class _CreateDemarcheIaFtStep2PageState extends State<CreateDemarcheIaFtStep2Pag
                 ),
               ],
             ),
-            const SizedBox(height: Margins.spacing_base),
-            PrimaryActionButton(
-              label: _isListening ? Strings.iaFtStep2ButtonStop : Strings.iaFtStep2ButtonDicter,
-              onPressed: () {
-                if (_isListening) {
-                  _stopListening();
-                } else {
-                  _startListening();
-                }
-              },
-              suffix: _isListening ? SizedBox(height: 24, child: SoundWaveformWidget()) : null,
+
+            const SizedBox(height: Margins.spacing_s),
+            InformationBandeau(
+              text: Strings.iaFtStep2Warning,
+              icon: AppIcons.info,
               backgroundColor: AppColors.primaryLighten,
               textColor: AppColors.primary,
-              iconColor: AppColors.primary,
-              icon: _isListening ? Icons.stop_circle_rounded : Icons.mic,
-              rippleColor: AppColors.primary.withValues(alpha: 0.3),
+              borderRadius: Dimens.radius_base,
+              padding: EdgeInsets.symmetric(vertical: Margins.spacing_base, horizontal: Margins.spacing_base),
             ),
-            // const SizedBox(height: Margins.spacing_base),
-            // PrimaryActionButton(
-            //   label: _isListening ? Strings.iaFtStep2ButtonStop : Strings.iaFtStep2ButtonDicter,
-            //   onPressed: () {
-            //     if (_isListening) {
-            //       _stopListening();
-            //     } else {
-            //       _startListening();
-            //     }
-            //   },
-            //   suffix: _isListening
-            //       ? SizedBox(
-            //           height: 24,
-            //           child: SoundWaveformWidget(),
-            //         )
-            //       : null,
-            //   backgroundColor: AppColors.primaryLighten,
-            //   textColor: AppColors.primary,
-            //   iconColor: AppColors.primary,
-            //   icon: _isListening ? Icons.stop_circle_rounded : Icons.mic,
-            //   rippleColor: AppColors.primary.withOpacity(0.3),
-            // ),
             const SizedBox(height: Margins.spacing_base),
             PrimaryActionButton(
               label: Strings.iaFtStep2Button,
