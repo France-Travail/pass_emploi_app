@@ -289,6 +289,7 @@ class AnalyticsEventNames {
 
   static const accueilCategory = "Accueil";
   static const accueilDetailSemainePressed = "Clic sur le détail de la semaine";
+  static const acceuilClicSurSuiviDesOffres = "Clic sur le suivi des offres";
 }
 
 class AnalyticsCustomDimensions {
