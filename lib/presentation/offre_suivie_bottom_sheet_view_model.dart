@@ -12,11 +12,7 @@ class OffreSuivieBottomSheetViewModel extends Equatable {
   final void Function() onPostule;
   final void Function() onInteresse;
 
-  OffreSuivieBottomSheetViewModel({
-    required this.onNotInterested,
-    required this.onPostule,
-    required this.onInteresse,
-  });
+  OffreSuivieBottomSheetViewModel({required this.onNotInterested, required this.onPostule, required this.onInteresse});
 
   factory OffreSuivieBottomSheetViewModel.create(Store<AppState> store, String offreId) {
     final offreSuivie = store.state.offresSuiviesState.getOffre(offreId);
@@ -36,11 +32,7 @@ class OffreSuivieBottomSheetViewModel extends Equatable {
   }
 
   factory OffreSuivieBottomSheetViewModel.empty() {
-    return OffreSuivieBottomSheetViewModel(
-      onNotInterested: () {},
-      onPostule: () {},
-      onInteresse: () {},
-    );
+    return OffreSuivieBottomSheetViewModel(onNotInterested: () {}, onPostule: () {}, onInteresse: () {});
   }
 
   @override

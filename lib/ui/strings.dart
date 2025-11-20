@@ -1651,12 +1651,9 @@ class Strings {
   static String addDemarche = "Créer la démarche";
   static String wishToCreateAction = "Souhaitez-vous créer l’action ? ";
   static String wishToCreateDemarche = "Souhaitez-vous créer la démarche ? ";
-  static String jaiPostuleA(String? offre, String? societe) {
-    if (offre == null || societe == null) {
-      return "J’ai postulé à une offre";
-    }
-    return "J’ai postulé à l’offre $offre de la société $societe";
-  }
+  static String jaiPostuleAOffre = "J’ai postulé à une offre";
+  static String jaiPostuleA(String offre, String societe) => "J’ai postulé à l’offre $offre de la société $societe";
+  static String unknown = "Inconnu";
 
   static String boulangerCampagneTitle = "1000 immersions dans les métiers de la vente et de la logistique";
   static String boulangerCampagneDescription = "Découvrez les métiers de la vente et de la logistique.";
