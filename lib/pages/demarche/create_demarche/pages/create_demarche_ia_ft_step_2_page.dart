@@ -10,6 +10,7 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
+import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/information_bandeau.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -81,20 +82,20 @@ class _CreateDemarcheIaFtStep2PageState extends State<CreateDemarcheIaFtStep2Pag
             Text(Strings.iaFtStep2Title, style: TextStyles.textMBold),
             Text(Strings.iaFtStep2Mandatory, style: TextStyles.textSRegular(color: AppColors.contentColor)),
             const SizedBox(height: Margins.spacing_base),
+            InformationBandeau(
+              text: Strings.iaFtStep2Warning,
+              icon: AppIcons.info,
+              backgroundColor: AppColors.primaryLighten,
+              textColor: AppColors.primary,
+              borderRadius: Dimens.radius_base,
+              padding: EdgeInsets.symmetric(vertical: Margins.spacing_base, horizontal: Margins.spacing_base),
+            ),
+            const SizedBox(height: Margins.spacing_base),
             Stack(
               children: [
                 BaseTextField(
                   controller: _textEditingController,
-                  hintWidget: Padding(
-                    padding: const EdgeInsets.only(right: Margins.spacing_base),
-                    child: TypewriterHint(
-                      controller: _textEditingController,
-                      text: Strings.iaFtStep2FieldHint,
-                      style: TextStyles.textSRegular(color: AppColors.grey800),
-                      speed: const Duration(milliseconds: 50),
-                      pauseDuration: const Duration(milliseconds: 2000),
-                    ),
-                  ),
+                  hintText: Strings.iaFtStep2FieldHint,
                   minLines: 3,
                   maxLines: null,
                   maxLength: CreateDemarcheIaFtStep2ViewModel.maxLength,
@@ -107,35 +108,35 @@ class _CreateDemarcheIaFtStep2PageState extends State<CreateDemarcheIaFtStep2Pag
                     ),
                   ),
                 ),
-                Positioned(
-                  right: 0,
-                  child: IconButton(
-                    tooltip: _isListening ? Strings.iaFtStep2ButtonStop : Strings.iaFtStep2ButtonDicter,
-                    onPressed: () {
-                      if (_isListening) {
-                        _stopListening();
-                      } else {
-                        _startListening();
-                      }
-                    },
-                    icon: Icon(_isListening ? Icons.stop_circle_rounded : Icons.mic, color: AppColors.primary),
+                if (_textEditingController.text.isNotEmpty)
+                  Positioned(
+                    right: 0,
+                    child: IconButton(
+                      onPressed: () => _textEditingController.clear(),
+                      icon: Icon(Icons.close),
+                      color: AppColors.primary,
+                    ),
                   ),
-                ),
               ],
             ),
-
-            const SizedBox(height: Margins.spacing_s),
-            InformationBandeau(
-              text: Strings.iaFtStep2Warning,
-              icon: AppIcons.info,
-              backgroundColor: AppColors.primaryLighten,
-              textColor: AppColors.primary,
-              borderRadius: Dimens.radius_base,
-              padding: EdgeInsets.symmetric(vertical: Margins.spacing_base, horizontal: Margins.spacing_base),
+            const SizedBox(height: Margins.spacing_base),
+            SecondaryButton(
+              label: _isListening ? Strings.iaFtStep2ButtonStop : Strings.iaFtStep2ButtonDicter,
+              onPressed: () {
+                if (_isListening) {
+                  _stopListening();
+                } else {
+                  _startListening();
+                }
+              },
+              suffix: _isListening ? SizedBox(height: 24, child: SoundWaveformWidget()) : null,
+              icon: _isListening ? Icons.stop_circle_rounded : Icons.mic,
             ),
+
             const SizedBox(height: Margins.spacing_base),
             PrimaryActionButton(
               label: Strings.iaFtStep2Button,
+              disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.5),
               onPressed: _textEditingController.text.isNotEmpty
                   ? () => widget.viewModel.navigateToCreateDemarcheIaFtStep3()
                   : null,
@@ -210,96 +211,6 @@ class _SoundWaveformWidgetState extends State<SoundWaveformWidget> with TickerPr
           ),
         );
       },
-    );
-  }
-}
-
-class TypewriterHint extends StatefulWidget {
-  final TextEditingController controller;
-  final String text;
-  final TextStyle? style;
-  final Duration speed;
-  final Duration pauseDuration;
-
-  const TypewriterHint({
-    super.key,
-    required this.controller,
-    required this.text,
-    this.style,
-    this.speed = const Duration(milliseconds: 50),
-    this.pauseDuration = const Duration(milliseconds: 1000),
-  });
-
-  @override
-  State<TypewriterHint> createState() => _TypewriterHintState();
-}
-
-class _TypewriterHintState extends State<TypewriterHint> with TickerProviderStateMixin {
-  late AnimationController _controller;
-  late AnimationController _pauseController;
-  int _currentIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this, duration: widget.speed);
-    _pauseController = AnimationController(vsync: this, duration: widget.pauseDuration);
-
-    _startTyping();
-  }
-
-  void _startTyping() {
-    _controller.forward().then((_) {
-      if (_currentIndex < widget.text.length - 1) {
-        setState(() {
-          _currentIndex++;
-        });
-        _controller.reset();
-        _startTyping();
-      } else {
-        // Fin du texte, pause puis recommence
-        _pauseController.forward().then((_) {
-          setState(() {
-            _currentIndex = 0;
-          });
-          _pauseController.reset();
-          _startTyping();
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _pauseController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (widget.controller.text.isNotEmpty) {
-      return SizedBox.shrink();
-    }
-
-    return ExcludeSemantics(
-      child: AnimatedBuilder(
-        animation: Listenable.merge([_controller, _pauseController]),
-        builder: (context, child) {
-          String displayText = widget.text.substring(0, _currentIndex + 1);
-
-          // Ajouter un curseur clignotant
-          if (_currentIndex < widget.text.length - 1 || _pauseController.isAnimating) {
-            displayText += '|';
-          }
-
-          return RichText(
-            text: TextSpan(text: displayText, style: widget.style),
-            softWrap: true,
-            overflow: TextOverflow.visible,
-          );
-        },
-      ),
     );
   }
 }

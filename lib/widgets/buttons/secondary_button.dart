@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
+import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/buttons/focused_border_builder.dart';
 
@@ -13,6 +14,7 @@ class SecondaryButton extends StatefulWidget {
   final double? fontSize;
   final String? iconLabel;
   final bool isEnabled;
+  final Widget? suffix;
 
   const SecondaryButton({
     super.key,
@@ -24,6 +26,7 @@ class SecondaryButton extends StatefulWidget {
     this.fontSize,
     this.iconLabel,
     this.isEnabled = true,
+    this.suffix,
   });
 
   @override
@@ -52,13 +55,13 @@ class _SecondaryButtonState extends State<SecondaryButton> {
             side: BorderSide(color: textColor, width: 2),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
+            padding: const EdgeInsets.symmetric(vertical: Margins.spacing_base),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (widget.icon != null)
                   Padding(
-                    padding: const EdgeInsets.only(right: 12),
+                    padding: const EdgeInsets.only(right: Margins.spacing_s),
                     child: Icon(widget.icon, color: textColor, size: Dimens.icon_size_m),
                   ),
                 Flexible(
@@ -69,6 +72,11 @@ class _SecondaryButtonState extends State<SecondaryButton> {
                   ),
                 ),
                 Semantics(label: widget.iconLabel),
+                if (widget.suffix != null)
+                  Padding(
+                    padding: EdgeInsets.only(left: Margins.spacing_s),
+                    child: widget.suffix!,
+                  ),
               ],
             ),
           ),
