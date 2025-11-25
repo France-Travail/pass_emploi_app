@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
+import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_onboarding_tile.dart';
 import 'package:pass_emploi_app/presentation/onboarding_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -21,148 +22,137 @@ class OnboardingPage extends StatelessWidget {
   const OnboardingPage({super.key});
 
   static Route<void> route() {
-    return MaterialPageRoute<void>(
-      fullscreenDialog: true,
-      builder: (BuildContext context) => const OnboardingPage(),
-    );
+    return MaterialPageRoute<void>(fullscreenDialog: true, builder: (BuildContext context) => const OnboardingPage());
   }
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, OnboardingViewModel>(
-      converter: (store) => OnboardingViewModel.create(store),
-      builder: (context, viewModel) {
-        return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: SecondaryAppBar(title: ""),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(Margins.spacing_base),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: [
-                      OnboardingStepper(
-                        completedSteps: viewModel.completedSteps,
-                        totalSteps: viewModel.totalSteps,
-                        textColor: AppColors.contentColor,
-                      ),
-                      const SizedBox(width: Margins.spacing_base),
-                      Expanded(
-                        child: Text(
-                          Strings.onboardingTitle,
-                          style: TextStyles.textMBold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: Margins.spacing_m),
-                  IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Tracker(
+      tracking: AnalyticsScreenNames.onboardingAccueil,
+      child: StoreConnector<AppState, OnboardingViewModel>(
+        converter: (store) => OnboardingViewModel.create(store),
+        builder: (context, viewModel) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: SecondaryAppBar(title: ""),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(Margins.spacing_base),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
                       children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: Margins.spacing_s,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryLighten,
-                            borderRadius: BorderRadius.circular(Dimens.radius_l),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              _Icon(AppIcons.smartphone_outlined),
-                              SizedBox(height: Margins.spacing_base),
-                              _Icon(AppIcons.chat_outlined),
-                              if (viewModel.withActionStep) ...[
-                                SizedBox(height: Margins.spacing_base),
-                                _Icon(AppIcons.bolt_outlined),
-                              ],
-                              SizedBox(height: Margins.spacing_base),
-                              _Icon(AppIcons.pageview_outlined),
-                              SizedBox(height: Margins.spacing_base),
-                              _Icon(AppIcons.calendar_today_outlined),
-                              SizedBox(height: Margins.spacing_base),
-                              _Icon(AppIcons.handyman_outlined),
-                            ],
-                          ),
+                        OnboardingStepper(
+                          completedSteps: viewModel.completedSteps,
+                          totalSteps: viewModel.totalSteps,
+                          textColor: AppColors.contentColor,
                         ),
-                        SizedBox(width: Margins.spacing_base),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              _StepTile(
-                                title: Strings.installOnboardingSection,
-                                isCompleted: true,
-                                onTap: () {},
-                              ),
-                              SizedBox(height: Margins.spacing_base),
-                              _StepTile(
-                                title: Strings.messageOnboardingSection,
-                                isCompleted: viewModel.messageCompleted,
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  viewModel.onMessageOnboarding.call();
-                                },
-                              ),
-                              SizedBox(height: Margins.spacing_base),
-                              if (viewModel.withActionStep) ...[
+                        const SizedBox(width: Margins.spacing_base),
+                        Expanded(child: Text(Strings.onboardingTitle, style: TextStyles.textMBold)),
+                      ],
+                    ),
+                    SizedBox(height: Margins.spacing_m),
+                    IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: Margins.spacing_s),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryLighten,
+                              borderRadius: BorderRadius.circular(Dimens.radius_l),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                _Icon(AppIcons.smartphone_outlined),
+                                SizedBox(height: Margins.spacing_base),
+                                _Icon(AppIcons.chat_outlined),
+                                if (viewModel.withActionStep) ...[
+                                  SizedBox(height: Margins.spacing_base),
+                                  _Icon(AppIcons.bolt_outlined),
+                                ],
+                                SizedBox(height: Margins.spacing_base),
+                                _Icon(AppIcons.pageview_outlined),
+                                SizedBox(height: Margins.spacing_base),
+                                _Icon(AppIcons.calendar_today_outlined),
+                                SizedBox(height: Margins.spacing_base),
+                                _Icon(AppIcons.handyman_outlined),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: Margins.spacing_base),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                _StepTile(title: Strings.installOnboardingSection, isCompleted: true, onTap: () {}),
+                                SizedBox(height: Margins.spacing_base),
                                 _StepTile(
-                                  title: viewModel.actionStepLabel,
-                                  isCompleted: viewModel.actionCompleted,
+                                  title: Strings.messageOnboardingSection,
+                                  isCompleted: viewModel.messageCompleted,
                                   onTap: () {
                                     Navigator.of(context).pop();
-                                    viewModel.onActionOnboarding.call();
+                                    viewModel.onMessageOnboarding.call();
+                                  },
+                                ),
+                                SizedBox(height: Margins.spacing_base),
+                                if (viewModel.withActionStep) ...[
+                                  _StepTile(
+                                    title: viewModel.actionStepLabel,
+                                    isCompleted: viewModel.actionCompleted,
+                                    onTap: () {
+                                      Navigator.of(context).pop();
+                                      viewModel.onActionOnboarding.call();
+                                    },
+                                  ),
+                                ],
+                                SizedBox(height: Margins.spacing_base),
+                                _StepTile(
+                                  title: Strings.offreOnboardingSection,
+                                  isCompleted: viewModel.offreCompleted,
+                                  onTap: () {
+                                    Navigator.of(context).pop();
+                                    viewModel.onOffreOnboarding.call();
+                                  },
+                                ),
+                                SizedBox(height: Margins.spacing_base),
+                                _StepTile(
+                                  title: Strings.evenementOnboardingSection,
+                                  isCompleted: viewModel.evenementCompleted,
+                                  onTap: () {
+                                    Navigator.of(context).pop();
+                                    viewModel.onEvenementOnboarding.call();
+                                  },
+                                ),
+                                SizedBox(height: Margins.spacing_base),
+                                _StepTile(
+                                  title: Strings.outilsOnboardingSection,
+                                  isCompleted: viewModel.outilsCompleted,
+                                  onTap: () {
+                                    Navigator.of(context).pop();
+                                    viewModel.onOutilsOnboarding.call();
                                   },
                                 ),
                               ],
-                              SizedBox(height: Margins.spacing_base),
-                              _StepTile(
-                                title: Strings.offreOnboardingSection,
-                                isCompleted: viewModel.offreCompleted,
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  viewModel.onOffreOnboarding.call();
-                                },
-                              ),
-                              SizedBox(height: Margins.spacing_base),
-                              _StepTile(
-                                title: Strings.evenementOnboardingSection,
-                                isCompleted: viewModel.evenementCompleted,
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  viewModel.onEvenementOnboarding.call();
-                                },
-                              ),
-                              SizedBox(height: Margins.spacing_base),
-                              _StepTile(
-                                title: Strings.outilsOnboardingSection,
-                                isCompleted: viewModel.outilsCompleted,
-                                onTap: () {
-                                  Navigator.of(context).pop();
-                                  viewModel.onOutilsOnboarding.call();
-                                },
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: Margins.spacing_l),
-                  SecondaryButton(
-                    label: Strings.skipOnboarding,
-                    onPressed: () => _showSkipOnboardingDialog(context, viewModel),
-                  ),
-                ],
+                    SizedBox(height: Margins.spacing_l),
+                    SecondaryButton(
+                      label: Strings.skipOnboarding,
+                      onPressed: () => _showSkipOnboardingDialog(context, viewModel),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
@@ -178,11 +168,7 @@ class OnboardingPage extends StatelessWidget {
 }
 
 class _StepTile extends StatelessWidget {
-  const _StepTile({
-    required this.title,
-    required this.isCompleted,
-    required this.onTap,
-  });
+  const _StepTile({required this.title, required this.isCompleted, required this.onTap});
 
   final String title;
   final bool isCompleted;
@@ -195,16 +181,10 @@ class _StepTile extends StatelessWidget {
         padding: EdgeInsets.all(Margins.spacing_base),
         child: Row(
           children: [
-            Icon(
-              Icons.check_circle,
-              color: AppColors.success,
-            ),
+            Icon(Icons.check_circle, color: AppColors.success),
             const SizedBox(width: Margins.spacing_base),
             Expanded(
-              child: Text(
-                title,
-                style: TextStyles.textBaseBold.copyWith(color: AppColors.grey800),
-              ),
+              child: Text(title, style: TextStyles.textBaseBold.copyWith(color: AppColors.grey800)),
             ),
           ],
         ),
@@ -214,17 +194,9 @@ class _StepTile extends StatelessWidget {
       onTap: onTap,
       child: Row(
         children: [
-          Expanded(
-            child: Text(
-              title,
-              style: TextStyles.textBaseBold,
-            ),
-          ),
+          Expanded(child: Text(title, style: TextStyles.textBaseBold)),
           const SizedBox(width: Margins.spacing_base),
-          Icon(
-            Icons.chevron_right_rounded,
-            color: AppColors.primary,
-          ),
+          Icon(Icons.chevron_right_rounded, color: AppColors.primary),
         ],
       ),
     );
@@ -237,10 +209,7 @@ class _Icon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Icon(
-      icon,
-      color: AppColors.primary,
-    );
+    return Icon(icon, color: AppColors.primary);
   }
 }
 

@@ -20,10 +20,10 @@ class AuthAccessTokenRetriever {
   }
 
   Future<String> _accessToken() async {
-    final idToken = await _authenticator.idToken();
-    if (idToken == null) throw Exception("ID Token is null");
+    final accessToken = await _authenticator.idToken();
+    if (accessToken == null) throw Exception("ID Token is null");
 
-    if (idToken.isValid(now: DateTime.now(), maxLivingTimeInSeconds: maxLivingTimeInSeconds(idToken))) {
+    if (accessToken.isValid(now: DateTime.now(), maxLivingTimeInSeconds: maxLivingTimeInSeconds(accessToken))) {
       return (await _authenticator.accessToken())!;
     }
 
