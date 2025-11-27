@@ -114,8 +114,12 @@ class Authenticator {
   }
 
   Future<bool> logout(String userId, LogoutReason reason) async {
-    _crashlytics?.recordNonNetworkException("Authenticator: logout : $userId : $reason");
+    final String? idToken = await _preferences.read(key: _idTokenKey);
+    final String? accessToken = await _preferences.read(key: _accessTokenKey);
     final String? refreshToken = await _preferences.read(key: _refreshTokenKey);
+    _crashlytics?.recordNonNetworkException(
+      "Authenticator: logout : $userId : $reason, refreshToken: $refreshToken, idToken: $idToken, accessToken: $accessToken",
+    );
     if (refreshToken == null) return false;
     await _logoutRepository.logout(refreshToken, userId, reason);
     await _deleteToken();
