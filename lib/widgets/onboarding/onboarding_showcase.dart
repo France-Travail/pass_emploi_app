@@ -27,13 +27,7 @@ class ShowcaseWrapper extends StatelessWidget {
   }
 }
 
-enum ShowcaseSource {
-  message,
-  action,
-  offre,
-  evenement,
-  outils,
-}
+enum ShowcaseSource { message, action, offre, evenement, outils }
 
 class OnboardingShowcase extends StatefulWidget {
   const OnboardingShowcase({super.key, required this.child, required this.source, this.bottom = false});
@@ -53,13 +47,15 @@ class _OnboardingShowcaseState extends State<OnboardingShowcase> {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, bool>(
-      converter: (store) => switch (widget.source) {
-        ShowcaseSource.message => store.state.onboardingState.showMessageOnboarding,
-        ShowcaseSource.action => store.state.onboardingState.showActionOnboarding,
-        ShowcaseSource.offre => store.state.onboardingState.showOffreOnboarding,
-        ShowcaseSource.evenement => store.state.onboardingState.showEvenementOnboarding,
-        ShowcaseSource.outils => store.state.onboardingState.showOutilsOnboarding,
-      },
+      converter: (store) =>
+          (switch (widget.source) {
+            ShowcaseSource.message => store.state.onboardingState.showMessageOnboarding,
+            ShowcaseSource.action => store.state.onboardingState.showActionOnboarding,
+            ShowcaseSource.offre => store.state.onboardingState.showOffreOnboarding,
+            ShowcaseSource.evenement => store.state.onboardingState.showEvenementOnboarding,
+            ShowcaseSource.outils => store.state.onboardingState.showOutilsOnboarding,
+          }) &&
+          (store.state.onboardingState.onboarding?.showOnboarding ?? false),
       builder: (context, show) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (show && !shown) {
