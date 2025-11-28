@@ -88,6 +88,7 @@ class AppIcons {
   static const IconData smartphone_outlined = Icons.smartphone_outlined;
   static const IconData calendar_today_outlined = Icons.calendar_today_outlined;
   static const IconData handyman_outlined = Icons.handyman_outlined;
+  static const IconData block = Icons.block;
 
   // Solution
   static const IconData immersion = AppIconsAdditional.immersion;
