@@ -52,4 +52,6 @@ class Drawables {
   static String iaFtSuggestionsFailure = "${_assets}ia_ft_suggestions_failure.webp";
 
   static String evalImage = "${_assets}evalluation_illustration.webp";
+
+  static String success = "${_assets}success.webp";
 }

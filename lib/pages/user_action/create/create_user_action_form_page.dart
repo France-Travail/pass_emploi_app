@@ -4,6 +4,7 @@ import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/models/user_action_type.dart';
+import 'package:pass_emploi_app/pages/generic_success_page.dart';
 import 'package:pass_emploi_app/pages/user_action/create/create_user_action_confirmation_page.dart';
 import 'package:pass_emploi_app/pages/user_action/create/create_user_action_form.dart';
 import 'package:pass_emploi_app/pages/user_action/user_action_detail_page.dart';
@@ -13,7 +14,6 @@ import 'package:pass_emploi_app/presentation/user_action/user_action_state_sourc
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
 import 'package:redux/redux.dart';
 
 sealed class CreateActionFormResult {}
@@ -43,8 +43,8 @@ class CreateUserActionFormPage extends StatefulWidget {
     navigator
         .push(_route(source)) //
         .then((result) {
-      _handleResult(store, navigator, result, source);
-    });
+          _handleResult(store, navigator, result, source);
+        });
   }
 
   static Route<CreateActionFormResult> _route(UserActionStateSource source) {
@@ -73,12 +73,7 @@ class CreateUserActionFormPage extends StatefulWidget {
       );
       _openDetails(navigator, result.userActionId, result.source);
     } else if (result is NavigateToMonSuivi) {
-      store.dispatch(
-        HandleDeepLinkAction(
-          MonSuiviDeepLink(),
-          DeepLinkOrigin.inAppNavigation,
-        ),
-      );
+      store.dispatch(HandleDeepLinkAction(MonSuiviDeepLink(), DeepLinkOrigin.inAppNavigation));
     } else {
       PassEmploiMatomoTracker.instance.trackEvent(
         eventCategory: AnalyticsEventNames.createActionv2EventCategory,
@@ -91,12 +86,12 @@ class CreateUserActionFormPage extends StatefulWidget {
     navigator.push(UserActionDetailPage.materialPageRoute(userActionId, source));
   }
 
-  static void showSnackBarForOfflineCreation(BuildContext context) {
+  static void showSuccessPageForOfflineCreation(BuildContext context) {
     PassEmploiMatomoTracker.instance.trackEvent(
       eventCategory: AnalyticsEventNames.createActionEventCategory,
       action: AnalyticsEventNames.createActionOfflineAction,
     );
-    showSnackBarWithSuccess(context, Strings.createActionPostponed);
+    Navigator.push(context, GenericSuccessPage.route(title: Strings.createActionPostponed));
   }
 
   @override
@@ -124,8 +119,8 @@ class _CreateUserActionFormPageState extends State<CreateUserActionFormPage> {
   Future<void> _handleDisplayState(BuildContext context, UserActionCreateViewModel viewModel) async {
     final displayState = viewModel.displayState;
     if (displayState is DismissWithFailure) {
-      CreateUserActionFormPage.showSnackBarForOfflineCreation(context);
       Navigator.pop(context);
+      CreateUserActionFormPage.showSuccessPageForOfflineCreation(context);
     } else if (displayState is ShowConfirmationPage) {
       if (successShown) return;
       Navigator.push(
@@ -158,10 +153,7 @@ class _Body extends StatelessWidget {
           },
           onAbort: () => Navigator.pop(context),
         ),
-        if (_viewModel.displayState.isLoading)
-          const Center(
-            child: CircularProgressIndicator(),
-          ),
+        if (_viewModel.displayState.isLoading) const Center(child: CircularProgressIndicator()),
       ],
     );
   }

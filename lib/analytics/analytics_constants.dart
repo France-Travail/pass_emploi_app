@@ -37,6 +37,7 @@ class AnalyticsScreenNames {
   static const createDemarcheIaFtSuccess = "demarches/creer_demarche/ia-ft/success";
   static const createDemarchePersonnaliseeSuccess = "demarches/creer_demarche/personnalisee/success";
   static const createDemarcheFromReferentielSuccess = "demarches/creer_demarche/referentiel/success";
+  static const createDemarcheDuplicateSuccess = "demarches/creer_demarche/duplicate/success";
   static const thematiquesDemarche = "demarches/thematiques";
 
   static String thematiquesDemarcheDetails(String thematique) => "demarches/thematiques/$thematique";
@@ -198,8 +199,6 @@ class AnalyticsEventNames {
   AnalyticsEventNames._();
 
   static const createActionEventCategory = "Création action/démarche";
-  static const createActionDisplaySnackBarAction = "Affichage SnackBar succès";
-  static const createActionClickOnSnackBarAction = "Clic détail action/démarche";
   static const createActionOfflineAction = "Action créée hors connexion";
 
   static const monSuiviCategory = "Mon suivi v2";

@@ -42,8 +42,8 @@ class DuplicateUserActionPage extends StatelessWidget {
   Future<void> _handleDisplayState(BuildContext context, DuplicateUserActionViewModel viewModel) async {
     final displayState = viewModel.displayState;
     if (displayState is DismissWithFailure) {
-      CreateUserActionFormPage.showSnackBarForOfflineCreation(context);
       Navigator.pop(context);
+      CreateUserActionFormPage.showSuccessPageForOfflineCreation(context);
     } else if (displayState is ShowConfirmationPage) {
       Navigator.push(context, DuplicateUserActionConfirmationPage.route(displayState.userActionCreatedId, source)).then(
         (result) {

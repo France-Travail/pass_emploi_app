@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:pass_emploi_app/features/demarche/create/create_demarche_actions.dart';
 import 'package:pass_emploi_app/features/demarche/create/create_demarche_state.dart';
-import 'package:pass_emploi_app/pages/demarche/create_demarche_personnalisee_form.dart';
+import 'package:pass_emploi_app/pages/demarche/create_demarche/create_demarche_success_page.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_step3_view_model.dart';
 import 'package:pass_emploi_app/presentation/demarche/demarche_creation_state.dart';
 import 'package:pass_emploi_app/presentation/demarche/demarche_source.dart';
@@ -76,16 +75,12 @@ class _CreateDemarcheDuReferentielFormState extends State<CreateDemarcheDuRefere
   void _onSuccess(String demarcheId) {
     final context = this.context;
     // To avoid poping during the build
-    Future.delayed(
-      AnimationDurations.veryFast,
-      () {
-        if (!context.mounted) return;
-        DemarchePersonnaliseeForm.showDemarcheSnackBarWithDetail(context, demarcheId);
-        widget.onCreateDemarcheSuccess?.call(demarcheId);
-        StoreProvider.of<AppState>(context).dispatch(CreateDemarcheResetAction());
-        Navigator.of(context).popAll();
-      },
-    );
+    Future.delayed(AnimationDurations.veryFast, () {
+      if (!context.mounted) return;
+      widget.onCreateDemarcheSuccess?.call(demarcheId);
+      Navigator.of(context).popAll();
+      Navigator.of(context).push(CreateDemarcheSuccessPage.route(CreateDemarcheSource.fromReferentiel));
+    });
   }
 }
 
@@ -151,7 +146,7 @@ class _FormState extends State<_Form> {
                       : null,
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -175,17 +170,18 @@ class _Comments extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-        children: comments.map((comment) {
-      if (comment is CommentTextItem) {
-        return Text(comment.label, style: TextStyles.textBaseBold);
-      }
-      return CustomRadioGroup<String>(
-        title: comment.label,
-        value: comment.code,
-        groupValue: codeComment,
-        onChanged: onCommentSelected,
-      );
-    }).toList());
+      children: comments.map((comment) {
+        if (comment is CommentTextItem) {
+          return Text(comment.label, style: TextStyles.textBaseBold);
+        }
+        return CustomRadioGroup<String>(
+          title: comment.label,
+          value: comment.code,
+          groupValue: codeComment,
+          onChanged: onCommentSelected,
+        );
+      }).toList(),
+    );
   }
 }
 

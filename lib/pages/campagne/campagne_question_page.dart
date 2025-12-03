@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/models/campagne.dart';
+import 'package:pass_emploi_app/pages/generic_success_page.dart';
 import 'package:pass_emploi_app/presentation/question_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
@@ -11,7 +12,6 @@ import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/radio_list_tile.dart';
-import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
 
 const maxAnswerLength = 255;
@@ -111,7 +111,7 @@ class _CampagneQuestionPageState extends State<CampagneQuestionPage> {
       Navigator.push(context, CampagneQuestionPage.materialPageRoute(widget.questionOffset + 1));
     } else {
       Navigator.of(context).popAll();
-      showSnackBarWithSuccess(context, Strings.evaluationSuccessfullySent);
+      Navigator.push(context, GenericSuccessPage.route(title: Strings.evaluationSuccessfullySent));
     }
   }
 
@@ -123,7 +123,8 @@ class _CampagneQuestionPageState extends State<CampagneQuestionPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: options
-          .map((option) => CustomRadioGroup<int>(
+          .map(
+            (option) => CustomRadioGroup<int>(
               title: option.libelle,
               value: option.id,
               groupValue: _answerId,
@@ -131,7 +132,9 @@ class _CampagneQuestionPageState extends State<CampagneQuestionPage> {
                 setState(() {
                   _answerId = value;
                 });
-              }))
+              },
+            ),
+          )
           .toList(),
     );
   }
