@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:pass_emploi_app/analytics/analytics_constants.dart';
-import 'package:pass_emploi_app/features/demarche/create/create_demarche_actions.dart';
 import 'package:pass_emploi_app/features/demarche/create/create_demarche_state.dart';
-import 'package:pass_emploi_app/pages/demarche/demarche_detail_page.dart';
+import 'package:pass_emploi_app/pages/demarche/create_demarche/create_demarche_success_page.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_personnalisee_view_model.dart';
 import 'package:pass_emploi_app/presentation/demarche/demarche_creation_state.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
@@ -15,12 +13,10 @@ import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
-import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/a11y/mandatory_fields_label.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/date_pickers/date_picker.dart';
 import 'package:pass_emploi_app/widgets/errors/error_text.dart';
-import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
 import 'package:redux/redux.dart';
 
@@ -35,26 +31,6 @@ class DemarchePersonnaliseeForm extends StatefulWidget {
   final String createDemarcheLabel;
   final String? initialCommentaire;
   final bool estDuplicata;
-
-  static void showDemarcheSnackBarWithDetail(BuildContext context, String demarcheId) {
-    PassEmploiMatomoTracker.instance.trackEvent(
-      eventCategory: AnalyticsEventNames.createActionEventCategory,
-      action: AnalyticsEventNames.createActionDisplaySnackBarAction,
-    );
-    // As context is not available anymore in callback, navigator needs to be instantiated here.
-    final navigator = Navigator.of(context);
-    showSnackBarWithSuccess(
-      context,
-      Strings.createDemarcheSuccess,
-      () {
-        PassEmploiMatomoTracker.instance.trackEvent(
-          eventCategory: AnalyticsEventNames.createActionEventCategory,
-          action: AnalyticsEventNames.createActionClickOnSnackBarAction,
-        );
-        navigator.push(DemarcheDetailPage.materialPageRoute(demarcheId));
-      },
-    );
-  }
 
   @override
   State<DemarchePersonnaliseeForm> createState() => _DemarchePersonnaliseeFormState();
@@ -93,15 +69,11 @@ class _DemarchePersonnaliseeFormState extends State<DemarchePersonnaliseeForm> {
   void _onSuccess(String demarcheId) {
     final context = this.context;
     // To avoid poping during the build
-    Future.delayed(
-      AnimationDurations.veryFast,
-      () {
-        if (!context.mounted) return;
-        DemarchePersonnaliseeForm.showDemarcheSnackBarWithDetail(context, demarcheId);
-        context.dispatch(CreateDemarcheResetAction());
-        Navigator.of(context).popAll();
-      },
-    );
+    Future.delayed(AnimationDurations.veryFast, () {
+      if (!context.mounted) return;
+      Navigator.of(context).popAll();
+      Navigator.of(context).push(CreateDemarcheSuccessPage.route(CreateDemarcheSource.personnalisee));
+    });
   }
 }
 
@@ -202,10 +174,7 @@ class _PremierTitre extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 24, right: 24, top: 16),
-      child: Text(
-        Strings.createDemarcheAppBarTitle,
-        style: TextStyles.textBaseBoldWithColor(AppColors.primary),
-      ),
+      child: Text(Strings.createDemarcheAppBarTitle, style: TextStyles.textBaseBoldWithColor(AppColors.primary)),
     );
   }
 }
@@ -213,10 +182,7 @@ class _PremierTitre extends StatelessWidget {
 class _SecondTitre extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 24, right: 24, top: 12),
-      child: MandatoryFieldsLabel.all(),
-    );
+    return Padding(padding: const EdgeInsets.only(left: 24, right: 24, top: 12), child: MandatoryFieldsLabel.all());
   }
 }
 
@@ -225,10 +191,7 @@ class _Separateur extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 24, right: 24, top: 32),
-      child: Container(
-        color: AppColors.primaryLighten,
-        height: 2,
-      ),
+      child: Container(color: AppColors.primaryLighten, height: 2),
     );
   }
 }
@@ -238,10 +201,7 @@ class _CommentaireTitre extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
-      child: Text(
-        Strings.commentaire,
-        style: TextStyles.textBaseBold,
-      ),
+      child: Text(Strings.commentaire, style: TextStyles.textBaseBold),
     );
   }
 }
@@ -251,10 +211,7 @@ class _DescriptionTitre extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
-      child: Text(
-        Strings.descriptionDemarche,
-        style: TextStyles.textBaseMedium,
-      ),
+      child: Text(Strings.descriptionDemarche, style: TextStyles.textBaseMedium),
     );
   }
 }
@@ -264,10 +221,7 @@ class _Separateur2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 24, right: 24, top: 32),
-      child: Container(
-        color: AppColors.primaryLighten,
-        height: 2,
-      ),
+      child: Container(color: AppColors.primaryLighten, height: 2),
     );
   }
 }
@@ -277,10 +231,7 @@ class _QuandTitre extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
-      child: Text(
-        Strings.quand,
-        style: TextStyles.textBaseBold,
-      ),
+      child: Text(Strings.quand, style: TextStyles.textBaseBold),
     );
   }
 }
@@ -290,10 +241,7 @@ class _EcheanceTitre extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
-      child: Text(
-        Strings.selectEcheance,
-        style: TextStyles.textBaseMedium,
-      ),
+      child: Text(Strings.selectEcheance, style: TextStyles.textBaseMedium),
     );
   }
 }
@@ -311,10 +259,7 @@ class _NombreCaracteresCompteur extends StatelessWidget {
       alignment: Alignment.centerRight,
       child: Padding(
         padding: const EdgeInsets.only(right: 24, top: 8),
-        child: Text(
-          "$_nombreCarateres/255",
-          style: TextStyles.textXsRegular(color: textColor),
-        ),
+        child: Text("$_nombreCarateres/255", style: TextStyles.textXsRegular(color: textColor)),
       ),
     );
   }
@@ -325,11 +270,7 @@ class _ChampCommentaire extends StatelessWidget {
   final bool isCommentaireValid;
   final String? initialCommentaire;
 
-  _ChampCommentaire({
-    required this.onChanged,
-    required this.isCommentaireValid,
-    this.initialCommentaire,
-  });
+  _ChampCommentaire({required this.onChanged, required this.isCommentaireValid, this.initialCommentaire});
 
   @override
   Widget build(BuildContext context) {
@@ -354,18 +295,11 @@ class _MessageError extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
-          Icon(
-            AppIcons.error_rounded,
-            size: Dimens.icon_size_m,
-            color: AppColors.warning,
-          ),
+          Icon(AppIcons.error_rounded, size: Dimens.icon_size_m, color: AppColors.warning),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(left: 13),
-              child: Text(
-                Strings.addAMessageError,
-                style: TextStyles.textBaseMediumWithColor(AppColors.warning),
-              ),
+              child: Text(Strings.addAMessageError, style: TextStyles.textBaseMediumWithColor(AppColors.warning)),
             ),
           ),
         ],

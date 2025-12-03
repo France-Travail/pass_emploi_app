@@ -9,6 +9,7 @@ import 'package:pass_emploi_app/features/user_action/delete/user_action_delete_a
 import 'package:pass_emploi_app/features/user_action/details/user_action_details_actions.dart';
 import 'package:pass_emploi_app/features/user_action/update/user_action_update_actions.dart';
 import 'package:pass_emploi_app/models/user_action.dart';
+import 'package:pass_emploi_app/pages/generic_success_page.dart';
 import 'package:pass_emploi_app/pages/user_action/action_commentaires_page.dart';
 import 'package:pass_emploi_app/pages/user_action/user_action_detail_bottom_sheet.dart';
 import 'package:pass_emploi_app/pages/user_action/user_action_done_bottom_sheet.dart';
@@ -98,7 +99,7 @@ class _ActionDetailPageState extends State<UserActionDetailPage> {
       _trackSuccessfulUpdate();
     } else if (viewModel.deleteDisplayState == DeleteDisplayState.TO_DISMISS_AFTER_DELETION) {
       _popBothUpdateAndDetailsPages();
-      showSnackBarWithSuccess(context, Strings.deleteActionSuccess);
+      Navigator.push(context, GenericSuccessPage.route(title: Strings.deleteActionSuccess));
     } else if (viewModel.deleteDisplayState == DeleteDisplayState.SHOW_DELETE_ERROR) {
       showSnackBarWithSystemError(context, Strings.deleteActionError);
     }
@@ -119,12 +120,7 @@ class _Scaffold extends StatelessWidget {
   final UserActionStateSource source;
   final void Function() onActionDone;
 
-  const _Scaffold({
-    required this.body,
-    required this.viewModel,
-    required this.source,
-    required this.onActionDone,
-  });
+  const _Scaffold({required this.body, required this.viewModel, required this.source, required this.onActionDone});
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +157,7 @@ class _Body extends StatelessWidget {
     return switch (viewModel.displayState) {
       DisplayState.CONTENT => _Content(viewModel),
       DisplayState.LOADING => Center(child: CircularProgressIndicator()),
-      _ => Retry(Strings.userActionDetailsError, () => viewModel.onRetry())
+      _ => Retry(Strings.userActionDetailsError, () => viewModel.onRetry()),
     };
   }
 }
@@ -200,10 +196,7 @@ class _Content extends StatelessWidget {
                       ),
                       if (viewModel.withSubtitle) ...[
                         SizedBox(height: Margins.spacing_base),
-                        _Description(
-                          withSubtitle: viewModel.withSubtitle,
-                          subtitle: viewModel.subtitle,
-                        ),
+                        _Description(withSubtitle: viewModel.withSubtitle, subtitle: viewModel.subtitle),
                       ],
                       SizedBox(height: Margins.spacing_l),
                       _DateAndCategory(viewModel),
@@ -351,7 +344,7 @@ class _CommentCard extends StatelessWidget {
     return switch (viewModel.displayState) {
       DisplayState.CONTENT => _content(context, viewModel, actionId, actionTitle),
       DisplayState.FAILURE => Retry(Strings.miscellaneousErrorRetry, () => viewModel.onRetry()),
-      _ => Center(child: CircularProgressIndicator())
+      _ => Center(child: CircularProgressIndicator()),
     };
   }
 
@@ -377,7 +370,9 @@ class _CommentCard extends StatelessWidget {
     PassEmploiMatomoTracker.instance.trackScreen(AnalyticsActionNames.accessToActionComments);
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ActionCommentairesPage(actionId: actionId, actionTitle: actionTitle)),
+      MaterialPageRoute(
+        builder: (context) => ActionCommentairesPage(actionId: actionId, actionTitle: actionTitle),
+      ),
     );
   }
 }
@@ -409,11 +404,7 @@ class _DateAndCategory extends StatelessWidget {
         spacing: Margins.spacing_m,
         runSpacing: Margins.spacing_s,
         children: [
-          _section(
-            sectionIcon: AppIcons.event,
-            sectionTitle: Strings.userActionDate,
-            value: viewModel.date,
-          ),
+          _section(sectionIcon: AppIcons.event, sectionTitle: Strings.userActionDate, value: viewModel.date),
           _section(
             sectionIcon: Icons.account_tree_rounded,
             sectionTitle: Strings.userActionCategory,
@@ -440,9 +431,9 @@ class _DateAndCategory extends StatelessWidget {
           children: [
             Text(sectionTitle, style: TextStyles.textSRegular(color: AppColors.grey700)),
             SizedBox(height: Margins.spacing_xs),
-            Text(value, style: TextStyles.textSBold)
+            Text(value, style: TextStyles.textSBold),
           ],
-        )
+        ),
       ],
     );
   }

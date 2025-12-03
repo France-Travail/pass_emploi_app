@@ -4,6 +4,7 @@ import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/user_action/details/user_action_details_actions.dart';
 import 'package:pass_emploi_app/features/user_action/update/user_action_update_actions.dart';
+import 'package:pass_emploi_app/pages/generic_success_page.dart';
 import 'package:pass_emploi_app/pages/user_action/edit/edit_user_action_form.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/user_action/update_form/update_user_action_view_model.dart';
@@ -13,7 +14,6 @@ import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
-import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
 
 class UpdateUserActionPage extends StatelessWidget {
   final UserActionStateSource source;
@@ -57,8 +57,8 @@ class UpdateUserActionPage extends StatelessWidget {
     UpdateUserActionViewModel viewModel,
   ) {
     if (viewModel.shouldPop && (previousViewModel?.shouldPop != viewModel.shouldPop)) {
-      showSnackBarWithSuccess(context, Strings.updateUserActionConfirmation);
       Navigator.of(context).pop();
+      Navigator.push(context, GenericSuccessPage.route(title: Strings.updateUserActionConfirmation));
     }
   }
 }

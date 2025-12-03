@@ -3,6 +3,7 @@ import 'package:flutter/semantics.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
+import 'package:pass_emploi_app/pages/generic_success_page.dart';
 import 'package:pass_emploi_app/presentation/chat/chat_partage_bottom_sheet_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -65,10 +66,7 @@ class ChatPartageBottomSheetState extends State<ChatPartageBottomSheet> {
 
   Widget _builder(BuildContext context, ChatPartageBottomSheetViewModel viewModel) {
     _controller ??= TextEditingController(text: viewModel.defaultMessage);
-    return BottomSheetWrapper(
-      title: viewModel.pageTitle,
-      body: _Body(viewModel, _controller),
-    );
+    return BottomSheetWrapper(title: viewModel.pageTitle, body: _Body(viewModel, _controller));
   }
 
   void _onWillChange(ChatPartageBottomSheetViewModel? _, ChatPartageBottomSheetViewModel viewModel) {
@@ -76,13 +74,13 @@ class ChatPartageBottomSheetState extends State<ChatPartageBottomSheet> {
       case DisplayState.CONTENT:
         PassEmploiMatomoTracker.instance.trackScreen(viewModel.snackbarSuccessTracking);
         A11yUtils.announce(viewModel.snackbarSuccessText);
-        showSnackBarWithSuccess(context, viewModel.snackbarSuccessText);
-        viewModel.snackbarDisplayed();
+        viewModel.confirmationDisplayed();
         Navigator.pop(context);
+        Navigator.push(context, GenericSuccessPage.route(title: viewModel.snackbarSuccessText));
         break;
       case DisplayState.FAILURE:
         showSnackBarWithSystemError(context);
-        viewModel.snackbarDisplayed();
+        viewModel.confirmationDisplayed();
         break;
       case DisplayState.EMPTY:
       case DisplayState.LOADING:
@@ -114,11 +112,7 @@ class _Body extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  Strings.messagePourConseiller,
-                  style: TextStyles.textBaseMedium,
-                  semanticsLabel: ' ',
-                ),
+                Text(Strings.messagePourConseiller, style: TextStyles.textBaseMedium, semanticsLabel: ' '),
                 SizedBox(height: Margins.spacing_base),
                 _TextField(_controller),
               ],
@@ -181,9 +175,9 @@ class _PartageButton extends StatelessWidget {
     return switch (_viewModel.snackbarState) {
       DisplayState.LOADING => Center(child: CircularProgressIndicator()),
       _ => PrimaryActionButton(
-          label: _viewModel.shareButtonTitle,
-          onPressed: () => _viewModel.onShare(_controller?.text ?? ''),
-        )
+        label: _viewModel.shareButtonTitle,
+        onPressed: () => _viewModel.onShare(_controller?.text ?? ''),
+      ),
     };
   }
 }

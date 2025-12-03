@@ -3,6 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/contact_immersion/contact_immersion_actions.dart';
+import 'package:pass_emploi_app/pages/generic_success_page.dart';
 import 'package:pass_emploi_app/presentation/immersion/immersion_contact_form_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
@@ -18,10 +19,7 @@ import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.da
 
 class ImmersionContactFormBottomSheet extends StatelessWidget {
   static Future<void> show(BuildContext context) {
-    return showPassEmploiBottomSheet(
-      context: context,
-      builder: (context) => ImmersionContactFormBottomSheet(),
-    );
+    return showPassEmploiBottomSheet(context: context, builder: (context) => ImmersionContactFormBottomSheet());
   }
 
   @override
@@ -50,7 +48,7 @@ class ImmersionContactFormBottomSheet extends StatelessWidget {
     } else if (viewModel.sendingState.isSuccess()) {
       PassEmploiMatomoTracker.instance.trackScreen(AnalyticsScreenNames.immersionFormSent(true));
       Navigator.pop(context);
-      showSnackBarWithSuccess(context, Strings.immersionContactSucceed);
+      Navigator.push(context, GenericSuccessPage.route(title: Strings.immersionContactSucceed));
     }
   }
 }
@@ -114,23 +112,17 @@ class _ContentState extends State<_Content> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: Margins.spacing_base),
-                  Text(
-                    Strings.immersitionContactFormSubtitle,
-                    style: TextStyles.textBaseRegular,
-                  ),
+                  Text(Strings.immersitionContactFormSubtitle, style: TextStyles.textBaseRegular),
                   SizedBox(height: Margins.spacing_m),
-                  Text(
-                    Strings.immersitionContactFormHint,
-                    style: TextStyles.textBaseBold,
-                  ),
+                  Text(Strings.immersitionContactFormHint, style: TextStyles.textBaseBold),
                   SizedBox(height: Margins.spacing_m),
                   ImmersionTextFormField(
                     isMandatory: true,
                     mandatoryError: state.isEmailValid()
                         ? null
                         : state.isEmailEmpty()
-                            ? Strings.immersionContactFormEmailEmpty
-                            : Strings.immersionContactFormEmailInvalid,
+                        ? Strings.immersionContactFormEmailEmpty
+                        : Strings.immersionContactFormEmailInvalid,
                     controller: state.userEmailController,
                     focusNode: state.userEmailFocus,
                     label: Strings.immersitionContactFormEmailHint,
@@ -255,9 +247,7 @@ class ImmersionContactFormChangeNotifier extends ChangeNotifier {
 
   bool isEmailValid() {
     // simplified RFC 5322 standard
-    final RegExp emailRegex = RegExp(
-      r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$',
-    );
+    final RegExp emailRegex = RegExp(r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
     final value = userEmailController.text;
     return emailRegex.hasMatch(value) && !isEmailEmpty();
   }

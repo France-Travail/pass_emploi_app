@@ -12,6 +12,7 @@ import 'package:pass_emploi_app/models/alerte/offre_emploi_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/service_civique_alerte.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/models/offre_type.dart';
+import 'package:pass_emploi_app/pages/generic_success_page.dart';
 import 'package:pass_emploi_app/pages/offre_filters_bottom_sheet.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_emploi_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_immersion_page.dart';
@@ -36,7 +37,6 @@ import 'package:pass_emploi_app/widgets/dialogs/alerte_delete_dialog.dart';
 import 'package:pass_emploi_app/widgets/illustration/empty_state_placeholder.dart';
 import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
-import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
 import 'package:pass_emploi_app/widgets/voir_suggestions_recherche_card.dart';
 
 class AlertePage extends StatefulWidget {
@@ -133,30 +133,33 @@ class _AlertePageState extends State<AlertePage> {
     final List<Alerte> alertes = viewModel.getAlertesFiltered(_selectedFilter);
     if (alertes.isEmpty) return _noAlerte();
     return ListView.separated(
-        separatorBuilder: (context, index) => SizedBox(height: Margins.spacing_base),
-        padding: EdgeInsets.all(Margins.spacing_base),
-        itemCount: alertes.length,
-        controller: _scrollController,
-        itemBuilder: (context, index) {
-          final alerte = alertes[index];
-          return Column(
-            children: [
-              Builder(builder: (context) {
+      separatorBuilder: (context, index) => SizedBox(height: Margins.spacing_base),
+      padding: EdgeInsets.all(Margins.spacing_base),
+      itemCount: alertes.length,
+      controller: _scrollController,
+      itemBuilder: (context, index) {
+        final alerte = alertes[index];
+        return Column(
+          children: [
+            Builder(
+              builder: (context) {
                 return switch (alerte) {
                   OffreEmploiAlerte() => _buildEmploiCard(context, alerte, viewModel),
                   ImmersionAlerte() => _buildImmersionCard(context, alerte, viewModel),
                   ServiceCiviqueAlerte() => _buildServiceCiviqueCard(context, alerte, viewModel),
                   _ => SizedBox.shrink(),
                 };
-              }),
-              if (index == alertes.length - 1) ...[
-                SizedBox(height: Margins.spacing_base),
-                VoirSuggestionsRechercheCard(onTapShowSuggestions: _onTapShowSuggestions),
-                SizedBox(height: Margins.spacing_huge),
-              ],
+              },
+            ),
+            if (index == alertes.length - 1) ...[
+              SizedBox(height: Margins.spacing_base),
+              VoirSuggestionsRechercheCard(onTapShowSuggestions: _onTapShowSuggestions),
+              SizedBox(height: Margins.spacing_huge),
             ],
-          );
-        });
+          ],
+        );
+      },
+    );
   }
 
   Widget _noAlerte() {
@@ -188,11 +191,7 @@ class _AlertePageState extends State<AlertePage> {
     );
   }
 
-  Widget _buildImmersionCard(
-    BuildContext context,
-    ImmersionAlerte alertesImmersion,
-    AlerteListViewModel viewModel,
-  ) {
+  Widget _buildImmersionCard(BuildContext context, ImmersionAlerte alertesImmersion, AlerteListViewModel viewModel) {
     return AlerteDeletableCard(
       offreType: OffreType.immersion,
       onTap: () => viewModel.offreImmersionSelected(alertesImmersion),
@@ -218,12 +217,9 @@ class _AlertePageState extends State<AlertePage> {
 
   void _goToRecherche(BuildContext context) {
     Navigator.of(context).pop();
-    StoreProvider.of<AppState>(context).dispatch(
-      HandleDeepLinkAction(
-        RechercheDeepLink(),
-        DeepLinkOrigin.inAppNavigation,
-      ),
-    );
+    StoreProvider.of<AppState>(
+      context,
+    ).dispatch(HandleDeepLinkAction(RechercheDeepLink(), DeepLinkOrigin.inAppNavigation));
   }
 
   void _onTapShowSuggestions() {
@@ -233,11 +229,10 @@ class _AlertePageState extends State<AlertePage> {
 
   void _showDeleteDialog(AlerteListViewModel viewModel, String alerteId, AlerteType type) {
     final context = this.context;
-    showDialog(
-      context: context,
-      builder: (_) => AlerteDeleteDialog(alerteId, type),
-    ).then((result) {
-      if (result == true && context.mounted) showSnackBarWithSuccess(context, Strings.alerteDeleteSuccess);
+    showDialog(context: context, builder: (_) => AlerteDeleteDialog(alerteId, type)).then((result) {
+      if (result == true && context.mounted) {
+        Navigator.push(context, GenericSuccessPage.route(title: Strings.alerteDeleteSuccess));
+      }
     });
   }
 
@@ -249,7 +244,7 @@ class _AlertePageState extends State<AlertePage> {
       OffreFilter.emploi => AnalyticsScreenNames.alerteListFilterEmploi,
       OffreFilter.alternance => AnalyticsScreenNames.alerteListFilterAlternance,
       OffreFilter.immersion => AnalyticsScreenNames.alerteListFilterImmersion,
-      OffreFilter.serviceCivique => AnalyticsScreenNames.alerteListFilterServiceCivique
+      OffreFilter.serviceCivique => AnalyticsScreenNames.alerteListFilterServiceCivique,
     });
   }
 }
@@ -261,10 +256,7 @@ class _EmptyListPlaceholder extends StatelessWidget {
   _EmptyListPlaceholder({required this.title, required this.subtitle});
 
   factory _EmptyListPlaceholder.noFavori() {
-    return _EmptyListPlaceholder(
-      title: Strings.alertesListEmptyTitle,
-      subtitle: Strings.alertesListEmptySubtitle,
-    );
+    return _EmptyListPlaceholder(title: Strings.alertesListEmptyTitle, subtitle: Strings.alertesListEmptySubtitle);
   }
 
   factory _EmptyListPlaceholder.noFavoriFiltered() {
@@ -293,35 +285,18 @@ class _AlerteLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final placeholders = _placeholders(screenWidth);
-    return AnimatedListLoader(
-      placeholders: placeholders,
-    );
+    return AnimatedListLoader(placeholders: placeholders);
   }
 
   List<Widget> _placeholders(double screenWidth) => [
-        AnimatedListLoader.placeholderBuilder(
-          width: screenWidth,
-          height: 170,
-        ),
-        SizedBox(height: Margins.spacing_base),
-        AnimatedListLoader.placeholderBuilder(
-          width: screenWidth,
-          height: 170,
-        ),
-        SizedBox(height: Margins.spacing_base),
-        AnimatedListLoader.placeholderBuilder(
-          width: screenWidth,
-          height: 170,
-        ),
-        SizedBox(height: Margins.spacing_base),
-        AnimatedListLoader.placeholderBuilder(
-          width: screenWidth,
-          height: 170,
-        ),
-        SizedBox(height: Margins.spacing_base),
-        AnimatedListLoader.placeholderBuilder(
-          width: screenWidth,
-          height: 170,
-        ),
-      ];
+    AnimatedListLoader.placeholderBuilder(width: screenWidth, height: 170),
+    SizedBox(height: Margins.spacing_base),
+    AnimatedListLoader.placeholderBuilder(width: screenWidth, height: 170),
+    SizedBox(height: Margins.spacing_base),
+    AnimatedListLoader.placeholderBuilder(width: screenWidth, height: 170),
+    SizedBox(height: Margins.spacing_base),
+    AnimatedListLoader.placeholderBuilder(width: screenWidth, height: 170),
+    SizedBox(height: Margins.spacing_base),
+    AnimatedListLoader.placeholderBuilder(width: screenWidth, height: 170),
+  ];
 }

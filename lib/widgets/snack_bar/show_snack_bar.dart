@@ -9,6 +9,7 @@ import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 final GlobalKey<ScaffoldMessengerState> snackBarKey = GlobalKey<ScaffoldMessengerState>();
 final GlobalKey<ScaffoldMessengerState> modeDemoSnackBarKey = GlobalKey<ScaffoldMessengerState>();
 
+@Deprecated('Do not use snackbar for a11y reasons')
 void showSnackBarWithSuccess(BuildContext context, String label, [VoidCallback? onActionTap]) {
   _showSnackBar(
     context: context,
@@ -82,11 +83,7 @@ void _showSnackBar({
             SizedBox(width: Margins.spacing_s),
             if (onActionTap == null)
               IconButton(
-                icon: Icon(
-                  AppIcons.close_rounded,
-                  color: textColor,
-                  semanticLabel: Strings.closeInformationMessage,
-                ),
+                icon: Icon(AppIcons.close_rounded, color: textColor, semanticLabel: Strings.closeInformationMessage),
                 onPressed: () => clearAllSnackBars(),
                 alignment: Alignment.topRight,
                 padding: EdgeInsets.zero,

@@ -30,8 +30,10 @@ void main() {
       expect(viewModel.defaultMessage, "Bonjour, je vous partage un événement afin d’avoir votre avis");
       expect(viewModel.information, "L’événement sera partagé à votre conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager à mon conseiller");
-      expect(viewModel.snackbarSuccessText,
-          "L’événement a été partagé à votre conseiller sur la messagerie de l’application");
+      expect(
+        viewModel.snackbarSuccessText,
+        "L’événement a été partagé à votre conseiller sur la messagerie de l’application",
+      );
       expect(viewModel.snackbarSuccessTracking, "animation_collective/detail?partage-conseiller=true");
     });
 
@@ -95,8 +97,10 @@ void main() {
       expect(viewModel.defaultMessage, "Bonjour, je vous partage un événement afin d’avoir votre avis");
       expect(viewModel.information, "L’événement sera partagé à votre conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager à mon conseiller");
-      expect(viewModel.snackbarSuccessText,
-          "L’événement a été partagé à votre conseiller sur la messagerie de l’application");
+      expect(
+        viewModel.snackbarSuccessText,
+        "L’événement a été partagé à votre conseiller sur la messagerie de l’application",
+      );
       expect(viewModel.snackbarSuccessTracking, "evenement_emploi/detail?partage-conseiller=true");
     });
 
@@ -139,8 +143,10 @@ void main() {
       final store = givenState().offreEmploiDetailsSuccess().store();
 
       // When
-      final viewModel =
-          ChatPartageBottomSheetViewModel.fromSource(store, ChatPartageOffreEmploiSource(OffreType.alternance));
+      final viewModel = ChatPartageBottomSheetViewModel.fromSource(
+        store,
+        ChatPartageOffreEmploiSource(OffreType.alternance),
+      );
 
       // Then
       expect(viewModel.pageTitle, "Partage de l’offre d’alternance");
@@ -148,8 +154,10 @@ void main() {
       expect(viewModel.defaultMessage, "Bonjour, je vous partage une offre d’emploi afin d’avoir votre avis");
       expect(viewModel.information, "L’offre d’emploi sera partagée à votre conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager l’offre d’alternance");
-      expect(viewModel.snackbarSuccessText,
-          "L’offre d’emploi a été partagée à votre conseiller sur la messagerie de l’application");
+      expect(
+        viewModel.snackbarSuccessText,
+        "L’offre d’emploi a été partagée à votre conseiller sur la messagerie de l’application",
+      );
       expect(viewModel.snackbarSuccessTracking, "/recherche/emploi/detail?partage-conseiller=true");
     });
 
@@ -158,8 +166,10 @@ void main() {
       final store = givenState().offreEmploiDetailsSuccess().store();
 
       // When
-      final viewModel =
-          ChatPartageBottomSheetViewModel.fromSource(store, ChatPartageOffreEmploiSource(OffreType.emploi));
+      final viewModel = ChatPartageBottomSheetViewModel.fromSource(
+        store,
+        ChatPartageOffreEmploiSource(OffreType.emploi),
+      );
 
       // Then
       expect(viewModel.pageTitle, "Partage de l’offre d’emploi");
@@ -167,8 +177,10 @@ void main() {
       expect(viewModel.defaultMessage, "Bonjour, je vous partage une offre d’emploi afin d’avoir votre avis");
       expect(viewModel.information, "L’offre d’emploi sera partagée à votre conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager l’offre d’emploi");
-      expect(viewModel.snackbarSuccessText,
-          "L’offre d’emploi a été partagée à votre conseiller sur la messagerie de l’application");
+      expect(
+        viewModel.snackbarSuccessText,
+        "L’offre d’emploi a été partagée à votre conseiller sur la messagerie de l’application",
+      );
       expect(viewModel.snackbarSuccessTracking, "/recherche/emploi/detail?partage-conseiller=true");
     });
 
@@ -185,8 +197,10 @@ void main() {
       final store = givenState().offreEmploiDetailsSuccess().store();
 
       // When
-      final viewModel =
-          ChatPartageBottomSheetViewModel.fromSource(store, ChatPartageOffreEmploiSource(OffreType.emploi));
+      final viewModel = ChatPartageBottomSheetViewModel.fromSource(
+        store,
+        ChatPartageOffreEmploiSource(OffreType.emploi),
+      );
 
       // Then
       expect(viewModel.shareableTitle, "Technicien / Technicienne d'installation de réseaux câblés  (H/F)");
@@ -195,8 +209,10 @@ void main() {
     test('should partager offre emploi', () {
       // Given
       final store = givenState().offreEmploiDetailsSuccess().spyStore();
-      final viewModel =
-          ChatPartageBottomSheetViewModel.fromSource(store, ChatPartageOffreEmploiSource(OffreType.emploi));
+      final viewModel = ChatPartageBottomSheetViewModel.fromSource(
+        store,
+        ChatPartageOffreEmploiSource(OffreType.emploi),
+      );
 
       // When
       viewModel.onShare("Regardes ça");
@@ -231,8 +247,10 @@ void main() {
       expect(viewModel.shareableTitle, "ANIMATION COLLECTIVE POUR TEST - SESSION TEST");
       expect(viewModel.information, "L’événement sera partagé à votre conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager à mon conseiller");
-      expect(viewModel.snackbarSuccessText,
-          "L’événement a été partagé à votre conseiller sur la messagerie de l’application");
+      expect(
+        viewModel.snackbarSuccessText,
+        "L’événement a été partagé à votre conseiller sur la messagerie de l’application",
+      );
       expect(viewModel.snackbarSuccessTracking, "session_milo/detail?partage-conseiller=true");
     });
 
@@ -256,11 +274,7 @@ void main() {
       expect(store.dispatchedAction, isA<ChatPartagerSessionMiloAction>());
       expect(
         (store.dispatchedAction as ChatPartagerSessionMiloAction).sessionMilo,
-        SessionMiloPartage(
-          id: "1",
-          titre: "ANIMATION COLLECTIVE POUR TEST - SESSION TEST",
-          message: "Regardes ça",
-        ),
+        SessionMiloPartage(id: "1", titre: "ANIMATION COLLECTIVE POUR TEST - SESSION TEST", message: "Regardes ça"),
       );
     });
   });
@@ -273,8 +287,10 @@ void main() {
           final store = givenState().offreEmploiDetailsSuccess().copyWith(chatPartageState: state).store();
 
           // When
-          final viewModel =
-              ChatPartageBottomSheetViewModel.fromSource(store, ChatPartageOffreEmploiSource(OffreType.emploi));
+          final viewModel = ChatPartageBottomSheetViewModel.fromSource(
+            store,
+            ChatPartageOffreEmploiSource(OffreType.emploi),
+          );
 
           // Then
           expect(viewModel.snackbarState, expected);
@@ -290,11 +306,13 @@ void main() {
     test('should reset snackbar', () {
       // Given
       final store = givenState().offreEmploiDetailsSuccess().spyStore();
-      final viewModel =
-          ChatPartageBottomSheetViewModel.fromSource(store, ChatPartageOffreEmploiSource(OffreType.emploi));
+      final viewModel = ChatPartageBottomSheetViewModel.fromSource(
+        store,
+        ChatPartageOffreEmploiSource(OffreType.emploi),
+      );
 
       // When
-      viewModel.snackbarDisplayed();
+      viewModel.confirmationDisplayed();
 
       // Then
       expect(store.dispatchedAction, isA<ChatPartageResetAction>());
