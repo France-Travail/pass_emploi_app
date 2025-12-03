@@ -54,4 +54,5 @@ class Drawables {
   static String evalImage = "${_assets}evalluation_illustration.webp";
 
   static String success = "${_assets}success.webp";
+  static String notFound = "${_assets}not_found.webp";
 }

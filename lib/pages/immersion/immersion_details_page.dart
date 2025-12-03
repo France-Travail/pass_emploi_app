@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/models/immersion.dart';
 import 'package:pass_emploi_app/network/post_evenement_engagement.dart';
 import 'package:pass_emploi_app/pages/immersion/immersion_contact_bottom_sheet.dart';
 import 'package:pass_emploi_app/pages/immersion/immersion_contact_form_bottom_sheet.dart';
+import 'package:pass_emploi_app/pages/offre_not_found_page.dart';
 import 'package:pass_emploi_app/pages/offre_page.dart';
 import 'package:pass_emploi_app/presentation/immersion/immersion_details_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -38,10 +39,7 @@ class ImmersionDetailsPage extends StatelessWidget {
   final String _immersionId;
   final bool popPageWhenFavoriIsRemoved;
 
-  ImmersionDetailsPage._(
-    this._immersionId, {
-    this.popPageWhenFavoriIsRemoved = false,
-  });
+  ImmersionDetailsPage._(this._immersionId, {this.popPageWhenFavoriIsRemoved = false});
 
   static MaterialPageRoute<void> materialPageRoute(String id, {bool popPageWhenFavoriIsRemoved = false}) {
     return MaterialPageRoute(
@@ -65,7 +63,9 @@ class ImmersionDetailsPage extends StatelessWidget {
         converter: (store) => ImmersionDetailsViewModel.create(store, platform),
         builder: (context, viewModel) => FavorisStateContext(
           selectState: (store) => store.state.immersionFavorisIdsState,
-          child: _scaffold(_body(context, viewModel), context, viewModel.id),
+          child: viewModel.isNotFound
+              ? OffreNotFoundPage()
+              : _scaffold(_body(context, viewModel), context, viewModel.id),
         ),
         distinct: true,
       ),
@@ -78,9 +78,9 @@ class ImmersionDetailsPage extends StatelessWidget {
       ImmersionDetailsPageDisplayState.SHOW_INCOMPLETE_DETAILS => _content(context, viewModel),
       ImmersionDetailsPageDisplayState.SHOW_LOADER => Center(child: CircularProgressIndicator()),
       ImmersionDetailsPageDisplayState.SHOW_ERROR => Retry(
-          Strings.offreDetailsError,
-          () => viewModel.onRetry(_immersionId),
-        ),
+        Strings.offreDetailsError,
+        () => viewModel.onRetry(_immersionId),
+      ),
     };
   }
 
@@ -134,21 +134,15 @@ class ImmersionDetailsPage extends StatelessWidget {
                   SizedBox(height: Margins.spacing_m),
                   _contactBlock(viewModel),
                   if (viewModel.withSecondaryCallToActions == true) ..._secondaryCallToActions(context, viewModel),
-                ]
+                ],
               ],
             ),
           ),
         ),
         if (viewModel.displayState == ImmersionDetailsPageDisplayState.SHOW_INCOMPLETE_DETAILS)
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: _incompleteDataFooter(viewModel),
-          )
+          Align(alignment: Alignment.bottomCenter, child: _incompleteDataFooter(viewModel))
         else
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: _footer(context, viewModel),
-          )
+          Align(alignment: Alignment.bottomCenter, child: _footer(context, viewModel)),
       ],
     );
   }
@@ -159,7 +153,9 @@ class ImmersionDetailsPage extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
-          Expanded(child: DeleteFavoriButton<Immersion>(offreId: viewModel.id, from: OffrePage.immersionDetails)),
+          Expanded(
+            child: DeleteFavoriButton<Immersion>(offreId: viewModel.id, from: OffrePage.immersionDetails),
+          ),
         ],
       ),
     );

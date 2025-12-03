@@ -33,6 +33,7 @@ class ImmersionDetailsViewModel extends Equatable {
   final bool withDataWarningMessage;
   final List<CallToAction>? secondaryCallToActions;
   final Function(String immersionId) onRetry;
+  final bool isNotFound;
 
   ImmersionDetailsViewModel._({
     required this.displayState,
@@ -51,6 +52,7 @@ class ImmersionDetailsViewModel extends Equatable {
     required this.withDataWarningMessage,
     this.secondaryCallToActions,
     required this.onRetry,
+    this.isNotFound = false,
   });
 
   factory ImmersionDetailsViewModel.create(Store<AppState> store, Platform platform) {
@@ -69,30 +71,26 @@ class ImmersionDetailsViewModel extends Equatable {
       );
     } else if (state is ImmersionDetailsIncompleteDataState) {
       final immersion = state.immersion;
-      return _incompleteViewModel(
-        immersion,
-        store,
-        store.getOffreDateDerniereConsultationOrNull(immersion.id),
-      );
+      return _incompleteViewModel(immersion, store, store.getOffreDateDerniereConsultationOrNull(immersion.id));
     } else {
-      return _otherCasesViewModel(state, store);
+      return _viewModelForNotFound(state, store);
     }
   }
 
   @override
   List<Object?> get props => [
-        displayState,
-        id,
-        title,
-        companyName,
-        secteurActivite,
-        ville,
-        address,
-        contactLabel,
-        contactInformation,
-        withDataWarningMessage,
-        withContactForm,
-      ];
+    displayState,
+    id,
+    title,
+    companyName,
+    secteurActivite,
+    ville,
+    address,
+    contactLabel,
+    contactInformation,
+    withDataWarningMessage,
+    withContactForm,
+  ];
 }
 
 ImmersionDetailsPageDisplayState _displayState(ImmersionDetailsState state) {
@@ -153,7 +151,7 @@ ImmersionDetailsViewModel _incompleteViewModel(
   );
 }
 
-ImmersionDetailsViewModel _otherCasesViewModel(ImmersionDetailsState state, Store<AppState> store) {
+ImmersionDetailsViewModel _viewModelForNotFound(ImmersionDetailsState state, Store<AppState> store) {
   return ImmersionDetailsViewModel._(
     displayState: _displayState(state),
     id: "",
@@ -165,6 +163,7 @@ ImmersionDetailsViewModel _otherCasesViewModel(ImmersionDetailsState state, Stor
     withContactForm: false,
     withDataWarningMessage: false,
     onRetry: (immersionId) => _retry(store, immersionId),
+    isNotFound: true,
   );
 }
 

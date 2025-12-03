@@ -14,6 +14,7 @@ class ServiceCiviqueDetailViewModel {
   final ServiceCiviqueDetail? detail;
   final ServiceCivique? serviceCivique;
   final DateTime? dateDerniereConsultation;
+  final bool isNotFound;
 
   ServiceCiviqueDetailViewModel._({
     required this.displayState,
@@ -21,6 +22,7 @@ class ServiceCiviqueDetailViewModel {
     this.serviceCivique,
     this.detail,
     this.dateDerniereConsultation,
+    this.isNotFound = false,
   });
 
   factory ServiceCiviqueDetailViewModel.create(Store<AppState> store) {
@@ -33,6 +35,7 @@ class ServiceCiviqueDetailViewModel {
       detail: detail,
       serviceCivique: _serviceCivique(state),
       dateDerniereConsultation: store.getOffreDateDerniereConsultationOrNull(detail?.id ?? ""),
+      isNotFound: detail == null,
     );
   }
 

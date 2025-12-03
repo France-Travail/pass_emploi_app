@@ -916,6 +916,9 @@ class Strings {
   static String rechercheCriteresActifsPlural(int count) => "($count) critères actifs";
 
   // Solutions
+  static String offreNotFoundTitle = "Offre expirée";
+  static String offreNotFoundBodyTitle = "Cette offre n'est plus disponible";
+  static String offreNotFoundBodySubtitle = "Consulter les dernières offres ou demandez de l'aide à votre conseiller";
   static String keywordTitle = "Mot clé";
   static String keywordEmploiHint = "Saisissez un métier, une compétence, un secteur d'activité…";
   static String metierLabel = "Métier";

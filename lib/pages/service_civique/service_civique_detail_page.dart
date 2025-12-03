@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/models/service_civique.dart';
 import 'package:pass_emploi_app/models/service_civique/domain.dart';
 import 'package:pass_emploi_app/models/service_civique/service_civique_detail.dart';
 import 'package:pass_emploi_app/network/post_evenement_engagement.dart';
+import 'package:pass_emploi_app/pages/offre_not_found_page.dart';
 import 'package:pass_emploi_app/pages/offre_page.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/service_civique/service_civique_detail_view_model.dart';
@@ -40,9 +41,7 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
   ServiceCiviqueDetailPage(this.idOffre, [this.popPageWhenFavoriIsRemoved = false]);
 
   static MaterialPageRoute<void> materialPageRoute(String idOffre, [bool popPageWhenFavoriIsRemoved = false]) {
-    return MaterialPageRoute(
-      builder: (context) => ServiceCiviqueDetailPage(idOffre, popPageWhenFavoriIsRemoved),
-    );
+    return MaterialPageRoute(builder: (context) => ServiceCiviqueDetailPage(idOffre, popPageWhenFavoriIsRemoved));
   }
 
   @override
@@ -57,8 +56,9 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
         converter: (store) => ServiceCiviqueDetailViewModel.create(store),
         builder: (context, viewModel) {
           return FavorisStateContext(
-            child:
-                _scaffold(_body(context, viewModel), context, viewModel.detail?.lienAnnonce, viewModel.detail?.titre),
+            child: viewModel.isNotFound
+                ? OffreNotFoundPage()
+                : _scaffold(_body(context, viewModel), context, viewModel.detail?.lienAnnonce, viewModel.detail?.titre),
             selectState: (store) => store.state.serviceCiviqueFavorisIdsState,
           );
         },
@@ -69,12 +69,7 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
     );
   }
 
-  Scaffold _scaffold(
-    Widget body,
-    BuildContext context,
-    String? url,
-    String? title,
-  ) {
+  Scaffold _scaffold(Widget body, BuildContext context, String? url, String? title) {
     const backgroundColor = Colors.white;
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -107,7 +102,7 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
       DisplayState.EMPTY => _content(context, viewModel),
       DisplayState.CONTENT => _content(context, viewModel),
       DisplayState.LOADING => _loading(),
-      DisplayState.FAILURE => _error()
+      DisplayState.FAILURE => _error(),
     };
   }
 
@@ -131,10 +126,7 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (viewModel.displayState == DisplayState.EMPTY)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: FavoriNotFoundError(),
-                  ),
+                  Padding(padding: const EdgeInsets.only(bottom: 20), child: FavoriNotFoundError()),
                 Text(domaine, style: TextStyles.textBaseRegular),
                 _spacer(Margins.spacing_s),
                 Padding(
@@ -154,10 +146,7 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
                 if (detail != null) _organisation(detail),
                 if (detail != null) _spacer(60),
                 if (viewModel.displayState == DisplayState.EMPTY)
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: _incompleteDataFooter(),
-                  )
+                  Align(alignment: Alignment.bottomCenter, child: _incompleteDataFooter()),
               ],
             ),
           ),
@@ -166,7 +155,7 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: _footer(context, detail!.lienAnnonce!, viewModel.shouldShowCvBottomSheet),
-          )
+          ),
       ],
     );
   }
@@ -207,16 +196,9 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
       children: [
         TitleSection(label: Strings.serviceCiviqueMissionTitle),
         _spacer(Margins.spacing_m),
-        Text(
-          missionFullAdresse,
-          style: TextStyles.textBaseRegular,
-        ),
+        Text(missionFullAdresse, style: TextStyles.textBaseRegular),
         if (detail.description != null) _spacer(Margins.spacing_s),
-        if (detail.description != null)
-          Text(
-            detail.description!,
-            style: TextStyles.textBaseRegular,
-          ),
+        if (detail.description != null) Text(detail.description!, style: TextStyles.textBaseRegular),
         _spacer(Margins.spacing_m),
       ],
     );
@@ -229,28 +211,14 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
       children: [
         TitleSection(label: Strings.serviceCiviqueOrganisationTitle),
         _spacer(Margins.spacing_m),
-        Text(
-          detail.organisation,
-          style: TextStyles.textBaseBold,
-        ),
+        Text(detail.organisation, style: TextStyles.textBaseBold),
         if (detail.urlOrganisation != null) _spacer(Margins.spacing_s),
-        if (detail.urlOrganisation != null)
-          ExternalLink(
-            label: detail.urlOrganisation!,
-            url: detail.urlOrganisation!,
-          ),
+        if (detail.urlOrganisation != null) ExternalLink(label: detail.urlOrganisation!, url: detail.urlOrganisation!),
         if (detail.adresseOrganisation != null) _spacer(Margins.spacing_s),
-        if (detail.adresseOrganisation != null)
-          Text(
-            detail.adresseOrganisation!,
-            style: TextStyles.textBaseRegular,
-          ),
+        if (detail.adresseOrganisation != null) Text(detail.adresseOrganisation!, style: TextStyles.textBaseRegular),
         if (detail.descriptionOrganisation != null) _spacer(Margins.spacing_s),
         if (detail.descriptionOrganisation != null)
-          Text(
-            detail.descriptionOrganisation!,
-            style: TextStyles.textBaseRegular,
-          ),
+          Text(detail.descriptionOrganisation!, style: TextStyles.textBaseRegular),
       ],
     );
   }
@@ -272,9 +240,7 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
                   if (shouldShowCvBottomSheet) {
                     showPassEmploiBottomSheet(
                       context: context,
-                      builder: (context) => PostulerOffreBottomSheet(
-                        onPostuler: () => _applyToOffer(context, url),
-                      ),
+                      builder: (context) => PostulerOffreBottomSheet(onPostuler: () => _applyToOffer(context, url)),
                     );
                   } else {
                     _applyToOffer(context, url);
@@ -307,7 +273,9 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
-          Expanded(child: DeleteFavoriButton<ServiceCivique>(offreId: idOffre, from: OffrePage.serviceCiviqueDetails)),
+          Expanded(
+            child: DeleteFavoriButton<ServiceCivique>(offreId: idOffre, from: OffrePage.serviceCiviqueDetails),
+          ),
         ],
       ),
     );

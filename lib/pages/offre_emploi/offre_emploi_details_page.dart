@@ -10,6 +10,7 @@ import 'package:pass_emploi_app/models/offre_emploi.dart';
 import 'package:pass_emploi_app/models/offre_emploi_details.dart';
 import 'package:pass_emploi_app/network/post_evenement_engagement.dart';
 import 'package:pass_emploi_app/pages/chat/chat_partage_bottom_sheet.dart';
+import 'package:pass_emploi_app/pages/offre_not_found_page.dart';
 import 'package:pass_emploi_app/pages/offre_page.dart';
 import 'package:pass_emploi_app/presentation/chat/chat_partage_bottom_sheet_view_model.dart';
 import 'package:pass_emploi_app/presentation/offre_emploi/offre_emploi_details_page_view_model.dart';
@@ -47,24 +48,18 @@ class OffreEmploiDetailsPage extends StatelessWidget {
   final bool _fromAlternance;
   final bool popPageWhenFavoriIsRemoved;
 
-  OffreEmploiDetailsPage._(
-    this._offreId,
-    this._fromAlternance, {
-    this.popPageWhenFavoriIsRemoved = false,
-  });
+  OffreEmploiDetailsPage._(this._offreId, this._fromAlternance, {this.popPageWhenFavoriIsRemoved = false});
 
   static MaterialPageRoute<void> materialPageRoute(
     String id, {
     required bool fromAlternance,
     bool popPageWhenFavoriIsRemoved = false,
   }) {
-    return MaterialPageRoute(builder: (context) {
-      return OffreEmploiDetailsPage._(
-        id,
-        fromAlternance,
-        popPageWhenFavoriIsRemoved: popPageWhenFavoriIsRemoved,
-      );
-    });
+    return MaterialPageRoute(
+      builder: (context) {
+        return OffreEmploiDetailsPage._(id, fromAlternance, popPageWhenFavoriIsRemoved: popPageWhenFavoriIsRemoved);
+      },
+    );
   }
 
   @override
@@ -79,13 +74,15 @@ class OffreEmploiDetailsPage extends StatelessWidget {
         converter: (store) => OffreEmploiDetailsPageViewModel.create(store),
         builder: (context, viewModel) => FavorisStateContext<OffreEmploi>(
           selectState: (store) => store.state.offreEmploiFavorisIdsState,
-          child: _scaffold(
-            _body(context, viewModel),
-            context,
-            viewModel.urlRedirectPourPostulation,
-            viewModel.id,
-            viewModel.title,
-          ),
+          child: viewModel.isNotFound
+              ? OffreNotFoundPage()
+              : _scaffold(
+                  _body(context, viewModel),
+                  context,
+                  viewModel.urlRedirectPourPostulation,
+                  viewModel.id,
+                  viewModel.title,
+                ),
         ),
         onDispose: (store) {
           store.dispatch(DateConsultationWriteOffreAction(_offreId));
@@ -101,12 +98,13 @@ class OffreEmploiDetailsPage extends StatelessWidget {
       OffreEmploiDetailsPageDisplayState.SHOW_DETAILS => _content(context, viewModel),
       OffreEmploiDetailsPageDisplayState.SHOW_INCOMPLETE_DETAILS => _content(context, viewModel),
       OffreEmploiDetailsPageDisplayState.SHOW_LOADER => _loading(),
-      OffreEmploiDetailsPageDisplayState.SHOW_ERROR => _error()
+      OffreEmploiDetailsPageDisplayState.SHOW_ERROR => _error(),
     };
   }
 
-  Scaffold _scaffold(Widget body, BuildContext context, String? url, String? offreId, String? title) {
+  Widget _scaffold(Widget body, BuildContext context, String? url, String? offreId, String? title) {
     const backgroundColor = Colors.white;
+
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: SecondaryAppBar(
@@ -165,10 +163,7 @@ class OffreEmploiDetailsPage extends StatelessWidget {
                 if (title != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: Margins.spacing_m),
-                    child: Semantics(
-                      header: true,
-                      child: Text(title, style: TextStyles.textLBold()),
-                    ),
+                    child: Semantics(header: true, child: Text(title, style: TextStyles.textLBold())),
                   ),
                 if (companyName != null)
                   Padding(
@@ -183,10 +178,7 @@ class OffreEmploiDetailsPage extends StatelessWidget {
                   if (lastUpdate != null)
                     Padding(
                       padding: const EdgeInsets.only(top: Margins.spacing_xs),
-                      child: Text(
-                        Strings.offreDetailLastUpdate(lastUpdate),
-                        style: TextStyles.textSRegular(),
-                      ),
+                      child: Text(Strings.offreDetailLastUpdate(lastUpdate), style: TextStyles.textSRegular()),
                     ),
                 ],
                 SizedBox(height: Margins.spacing_base),
@@ -216,15 +208,9 @@ class OffreEmploiDetailsPage extends StatelessWidget {
           ),
         ),
         if (url != null && id != null)
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: _footer(context, viewModel),
-          )
+          Align(alignment: Alignment.bottomCenter, child: _footer(context, viewModel))
         else if (viewModel.displayState == OffreEmploiDetailsPageDisplayState.SHOW_INCOMPLETE_DETAILS && id != null)
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: _incompleteDataFooter(context, id),
-          )
+          Align(alignment: Alignment.bottomCenter, child: _incompleteDataFooter(context, id)),
       ],
     );
   }
@@ -269,9 +255,7 @@ class OffreEmploiDetailsPage extends StatelessWidget {
         ...paragraphs.map((paragraph) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(paragraph, style: TextStyles.textSRegular()),
-            ],
+            children: [Text(paragraph, style: TextStyles.textSRegular())],
           );
         }),
         SizedBox(height: Margins.spacing_l),
@@ -291,10 +275,7 @@ class OffreEmploiDetailsPage extends StatelessWidget {
       children: [
         _descriptionTitle(title: Strings.profileTitle),
         SizedBox(height: Margins.spacing_m),
-        Semantics(
-          header: true,
-          child: Text(Strings.experienceTitle, style: TextStyles.textBaseBold),
-        ),
+        Semantics(header: true, child: Text(Strings.experienceTitle, style: TextStyles.textBaseBold)),
         SizedBox(height: Margins.spacing_base),
         if (experience != null) _setRequiredElement(element: experience, criteria: viewModel.requiredExperience),
         SepLine(Margins.spacing_m, Margins.spacing_m),
@@ -331,12 +312,15 @@ class OffreEmploiDetailsPage extends StatelessWidget {
   }
 
   Widget _companyDescriptionBlock({required String content}) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(Strings.companyDescriptionTitle, style: TextStyles.textBaseBold),
-      SizedBox(height: Margins.spacing_base),
-      Text(content, style: TextStyles.textSRegular()),
-      SepLine(Margins.spacing_base, Margins.spacing_m),
-    ]);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(Strings.companyDescriptionTitle, style: TextStyles.textBaseBold),
+        SizedBox(height: Margins.spacing_base),
+        Text(content, style: TextStyles.textSRegular()),
+        SepLine(Margins.spacing_base, Margins.spacing_m),
+      ],
+    );
   }
 
   Widget? _skillsBlock({required List<Skill>? skills}) {
@@ -344,10 +328,7 @@ class OffreEmploiDetailsPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Semantics(
-          header: true,
-          child: Text(Strings.skillsTitle, style: TextStyles.textBaseBold),
-        ),
+        Semantics(header: true, child: Text(Strings.skillsTitle, style: TextStyles.textBaseBold)),
         SizedBox(height: Margins.spacing_base),
         for (final skill in skills) _setRequiredElement(element: skill.description, criteria: skill.requirement),
       ],
@@ -458,16 +439,10 @@ class OffreEmploiDetailsPage extends StatelessWidget {
   }
 
   Widget _companyNameWithUrl({required String companyName, required String url}) {
-    return ExternalLink(
-      label: companyName,
-      url: url,
-    );
+    return ExternalLink(label: companyName, url: url);
   }
 
-  Widget _footer(
-    BuildContext context,
-    OffreEmploiDetailsPageViewModel viewModel,
-  ) {
+  Widget _footer(BuildContext context, OffreEmploiDetailsPageViewModel viewModel) {
     final url = viewModel.urlRedirectPourPostulation;
     assert(url != null);
     final shouldShowCvBottomSheet = viewModel.shouldShowCvBottomSheet;
@@ -512,7 +487,9 @@ class OffreEmploiDetailsPage extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: [
-          Expanded(child: DeleteFavoriButton<OffreEmploi>(offreId: id, from: OffrePage.emploiDetails)),
+          Expanded(
+            child: DeleteFavoriButton<OffreEmploi>(offreId: id, from: OffrePage.emploiDetails),
+          ),
         ],
       ),
     );

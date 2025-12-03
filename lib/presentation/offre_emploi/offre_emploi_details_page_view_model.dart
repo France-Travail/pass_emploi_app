@@ -45,6 +45,7 @@ class OffreEmploiDetailsPageViewModel {
   final List<EducationViewModel>? educations;
   final List<Language>? languages;
   final List<DriverLicence>? driverLicences;
+  final bool isNotFound;
 
   OffreEmploiDetailsPageViewModel._({
     required this.displayState,
@@ -76,6 +77,7 @@ class OffreEmploiDetailsPageViewModel {
     this.educations,
     this.languages,
     this.driverLicences,
+    this.isNotFound = false,
   });
 
   factory OffreEmploiDetailsPageViewModel.create(Store<AppState> store) {
@@ -99,11 +101,7 @@ class OffreEmploiDetailsPageViewModel {
         store.getOffreDateDerniereConsultationOrNull(offreId),
       );
     } else {
-      return _viewModelForOtherCases(
-        store,
-        offreEmploiDetailsState,
-        loginMode,
-      );
+      return _viewModelForNotFound(store, offreEmploiDetailsState, loginMode);
     }
   }
 }
@@ -192,7 +190,7 @@ OffreEmploiDetailsPageViewModel _viewModelFromIncompleteData(
   );
 }
 
-OffreEmploiDetailsPageViewModel _viewModelForOtherCases(
+OffreEmploiDetailsPageViewModel _viewModelForNotFound(
   Store<AppState> store,
   OffreEmploiDetailsState state,
   LoginMode loginMode,
@@ -204,6 +202,7 @@ OffreEmploiDetailsPageViewModel _viewModelForOtherCases(
     shouldShowOffreSuiviForm: false,
     onPostuler: () {},
     datePostulation: null,
+    isNotFound: true,
   );
 }
 
