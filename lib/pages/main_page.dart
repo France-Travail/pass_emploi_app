@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:gaimon/gaimon.dart';
 import 'package:pass_emploi_app/features/chat/status/chat_status_actions.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_page.dart';
 import 'package:pass_emploi_app/pages/chat/chat_page.dart';
@@ -118,6 +119,7 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
   }
 
   void _onItemTapped(int index, MainPageViewModel viewModel) {
+    Gaimon.selection();
     setState(() => _selectedIndex = index);
   }
 
