@@ -48,7 +48,10 @@ class ImmersionContactFormBottomSheet extends StatelessWidget {
     } else if (viewModel.sendingState.isSuccess()) {
       PassEmploiMatomoTracker.instance.trackScreen(AnalyticsScreenNames.immersionFormSent(true));
       Navigator.pop(context);
-      Navigator.push(context, GenericSuccessPage.route(title: Strings.immersionContactSucceed));
+      Navigator.push(
+        context,
+        GenericSuccessPage.route(title: Strings.immersionContactTitle, content: Strings.immersionContactSucceed),
+      );
     }
   }
 }

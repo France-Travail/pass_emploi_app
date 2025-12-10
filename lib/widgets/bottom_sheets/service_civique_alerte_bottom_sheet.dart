@@ -31,7 +31,10 @@ class ServiceCiviqueAlerteBottomSheet extends AbstractAlerteBottomSheet<ServiceC
   void dismissBottomSheetIfNeeded(BuildContext context, ServiceCiviqueAlerteViewModel newVm) {
     if (newVm.displayState == CreateAlerteDisplayState.TO_DISMISS) {
       Navigator.pop(context);
-      Navigator.push(context, GenericSuccessPage.route(title: Strings.alerteSuccessfullyCreated));
+      Navigator.push(
+        context,
+        GenericSuccessPage.route(title: Strings.createAlertSuccessTitle, content: Strings.alerteSuccessfullyCreated),
+      );
     }
   }
 }

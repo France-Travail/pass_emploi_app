@@ -699,6 +699,7 @@ class Strings {
       "Félicitations !\n\nLa mise à jour de votre action a bien été prise en compte";
   static String understood = "J'ai compris";
   static String deleteActionError = "Erreur lors de la suppression de l'action. Veuillez réessayer";
+  static String deleteActionSuccessTitle = "Action supprimée";
   static String deleteActionSuccess = "L’action a bien été supprimée";
   static String createActionSuccess = "Votre action a bien été créée.";
   static String createActionPostponed =
@@ -738,6 +739,7 @@ class Strings {
   static String updateUserActionCategory = "Catégorie";
   static String updateUserActionCategoryPressedTip = "Modifier";
   static String updateUserActionSaveButton = "Enregistrer les modifications";
+  static String updateUserActionConfirmationTitle = "Modification enregistrée";
   static String updateUserActionConfirmation = "Vos modifications ont été enregistrées.";
   static String deleteAction = "Supprimer l'action";
   static String deleteActionDescription = "Vous ne pourrez plus consulter ni modifier l'action.";
@@ -918,7 +920,7 @@ class Strings {
   // Solutions
   static String offreNotFoundTitle = "Offre expirée";
   static String offreNotFoundBodyTitle = "Cette offre n'est plus disponible";
-  static String offreNotFoundBodySubtitle = "Consulter les dernières offres ou demandez de l'aide à votre conseiller";
+  static String offreNotFoundBodySubtitle = "Consultez les dernières offres ou demandez de l'aide à votre conseiller";
   static String keywordTitle = "Mot clé";
   static String keywordEmploiHint = "Saisissez un métier, une compétence, un secteur d'activité…";
   static String metierLabel = "Métier";
@@ -942,7 +944,8 @@ class Strings {
   static String partageOffreNavTitle = "Partage de l’offre d’emploi";
   static String souhaitDePartagerOffre = "L’offre que vous souhaitez partager";
   static String partageOffreDefaultMessage = "Bonjour, je vous partage une offre d’emploi afin d’avoir votre avis";
-  static String partageOffreSuccess =
+  static String partageOffreSuccessTitle = "Partage offre d’emploi";
+  static String partageOffreSuccessContent =
       "L’offre d’emploi a été partagée à votre conseiller sur la messagerie de l’application";
   static String messagePourConseiller = "Message destiné à votre conseiller";
   static String infoOffrePartageChat = "L’offre d’emploi sera partagée à votre conseiller dans la messagerie";
@@ -1293,6 +1296,7 @@ class Strings {
 
   // alertes
   static String createAlert = "Créer une alerte";
+  static String createAlertSuccessTitle = "Recherche enregistrée";
   static String createAlerteTitle = "Créer une alerte pour la recherche";
   static String alerteTitle = "Nom de la recherche";
   static String mandatoryAlerteTitleError = "Renseigner un nom pour votre recherche";
@@ -1319,7 +1323,9 @@ class Strings {
   static String alerteDeleteMessageTitle = "Souhaitez-vous supprimer l’alerte ?";
   static String alerteDeleteMessageSubtitle = "Vous n’aurez plus accès à la page de résultats ni aux notifications.";
   static String alerteDeleteError = "Erreur lors de la suppression de la recherche.";
-  static String alerteDeleteSuccess = "Votre alerte a été supprimée avec succès.";
+
+  static String alerteDeleteSuccessTitle = "Votre alerte a été supprimée avec succès.";
+  static String alerteDeleteSuccessContent = "Votre alerte a été supprimée avec succès.";
 
   // Mode démo
   static String passerEnDemo = "Passer en mode démo";

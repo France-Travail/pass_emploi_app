@@ -30,10 +30,7 @@ void main() {
       expect(viewModel.defaultMessage, "Bonjour, je vous partage un événement afin d’avoir votre avis");
       expect(viewModel.information, "L’événement sera partagé à votre conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager à mon conseiller");
-      expect(
-        viewModel.snackbarSuccessText,
-        "L’événement a été partagé à votre conseiller sur la messagerie de l’application",
-      );
+      expect(viewModel.shareSuccessTitle, "Partage d’événement");
       expect(viewModel.snackbarSuccessTracking, "animation_collective/detail?partage-conseiller=true");
     });
 
@@ -97,10 +94,7 @@ void main() {
       expect(viewModel.defaultMessage, "Bonjour, je vous partage un événement afin d’avoir votre avis");
       expect(viewModel.information, "L’événement sera partagé à votre conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager à mon conseiller");
-      expect(
-        viewModel.snackbarSuccessText,
-        "L’événement a été partagé à votre conseiller sur la messagerie de l’application",
-      );
+      expect(viewModel.shareSuccessTitle, "Partage de l’événement");
       expect(viewModel.snackbarSuccessTracking, "evenement_emploi/detail?partage-conseiller=true");
     });
 
@@ -154,10 +148,7 @@ void main() {
       expect(viewModel.defaultMessage, "Bonjour, je vous partage une offre d’emploi afin d’avoir votre avis");
       expect(viewModel.information, "L’offre d’emploi sera partagée à votre conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager l’offre d’alternance");
-      expect(
-        viewModel.snackbarSuccessText,
-        "L’offre d’emploi a été partagée à votre conseiller sur la messagerie de l’application",
-      );
+      expect(viewModel.shareSuccessTitle, "Partage offre d’emploi");
       expect(viewModel.snackbarSuccessTracking, "/recherche/emploi/detail?partage-conseiller=true");
     });
 
@@ -177,10 +168,7 @@ void main() {
       expect(viewModel.defaultMessage, "Bonjour, je vous partage une offre d’emploi afin d’avoir votre avis");
       expect(viewModel.information, "L’offre d’emploi sera partagée à votre conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager l’offre d’emploi");
-      expect(
-        viewModel.snackbarSuccessText,
-        "L’offre d’emploi a été partagée à votre conseiller sur la messagerie de l’application",
-      );
+      expect(viewModel.shareSuccessTitle, "Partage offre d’emploi");
       expect(viewModel.snackbarSuccessTracking, "/recherche/emploi/detail?partage-conseiller=true");
     });
 
@@ -247,10 +235,7 @@ void main() {
       expect(viewModel.shareableTitle, "ANIMATION COLLECTIVE POUR TEST - SESSION TEST");
       expect(viewModel.information, "L’événement sera partagé à votre conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager à mon conseiller");
-      expect(
-        viewModel.snackbarSuccessText,
-        "L’événement a été partagé à votre conseiller sur la messagerie de l’application",
-      );
+      expect(viewModel.shareSuccessTitle, "Partage d’événement");
       expect(viewModel.snackbarSuccessTracking, "session_milo/detail?partage-conseiller=true");
     });
 

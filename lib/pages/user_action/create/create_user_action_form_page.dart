@@ -91,7 +91,13 @@ class CreateUserActionFormPage extends StatefulWidget {
       eventCategory: AnalyticsEventNames.createActionEventCategory,
       action: AnalyticsEventNames.createActionOfflineAction,
     );
-    Navigator.push(context, GenericSuccessPage.route(title: Strings.createActionPostponed));
+    Navigator.push(
+      context,
+      GenericSuccessPage.route(
+        title: Strings.userActionConfirmationTitleSingular,
+        content: Strings.createActionPostponed,
+      ),
+    );
   }
 
   @override

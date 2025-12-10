@@ -231,7 +231,13 @@ class _AlertePageState extends State<AlertePage> {
     final context = this.context;
     showDialog(context: context, builder: (_) => AlerteDeleteDialog(alerteId, type)).then((result) {
       if (result == true && context.mounted) {
-        Navigator.push(context, GenericSuccessPage.route(title: Strings.alerteDeleteSuccess));
+        Navigator.push(
+          context,
+          GenericSuccessPage.route(
+            title: Strings.alerteDeleteSuccessTitle,
+            content: Strings.alerteDeleteSuccessContent,
+          ),
+        );
       }
     });
   }

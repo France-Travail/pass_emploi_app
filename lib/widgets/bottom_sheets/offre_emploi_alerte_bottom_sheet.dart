@@ -42,7 +42,10 @@ class OffreEmploiAlerteBottomSheet extends AbstractAlerteBottomSheet<OffreEmploi
   void dismissBottomSheetIfNeeded(BuildContext context, OffreEmploiAlerteViewModel newVm) {
     if (newVm.displayState == CreateAlerteDisplayState.TO_DISMISS) {
       Navigator.pop(context);
-      Navigator.push(context, GenericSuccessPage.route(title: Strings.alerteSuccessfullyCreated));
+      Navigator.push(
+        context,
+        GenericSuccessPage.route(title: Strings.createAlertSuccessTitle, content: Strings.alerteSuccessfullyCreated),
+      );
     }
   }
 }

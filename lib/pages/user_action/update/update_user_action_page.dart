@@ -58,7 +58,13 @@ class UpdateUserActionPage extends StatelessWidget {
   ) {
     if (viewModel.shouldPop && (previousViewModel?.shouldPop != viewModel.shouldPop)) {
       Navigator.of(context).pop();
-      Navigator.push(context, GenericSuccessPage.route(title: Strings.updateUserActionConfirmation));
+      Navigator.push(
+        context,
+        GenericSuccessPage.route(
+          title: Strings.updateUserActionConfirmationTitle,
+          content: Strings.updateUserActionConfirmation,
+        ),
+      );
     }
   }
 }

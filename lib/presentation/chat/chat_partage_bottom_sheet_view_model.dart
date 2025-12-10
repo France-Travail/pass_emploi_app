@@ -66,7 +66,8 @@ class ChatPartageBottomSheetViewModel extends Equatable {
   final Function(String message) onShare;
   final DisplayState snackbarState;
   final Function confirmationDisplayed;
-  final String snackbarSuccessText;
+  final String shareSuccessTitle;
+  final String shareSuccessContent;
   final String snackbarSuccessTracking;
 
   ChatPartageBottomSheetViewModel({
@@ -79,7 +80,8 @@ class ChatPartageBottomSheetViewModel extends Equatable {
     required this.onShare,
     required this.snackbarState,
     required this.confirmationDisplayed,
-    required this.snackbarSuccessText,
+    required this.shareSuccessTitle,
+    required this.shareSuccessContent,
     required this.snackbarSuccessTracking,
   });
 
@@ -111,7 +113,8 @@ class ChatPartageBottomSheetViewModel extends Equatable {
       onShare: (message) => _partagerOffre(store, offreEmploiDetailsState.offre, source.type, message),
       snackbarState: _snackbarState(store),
       confirmationDisplayed: () => store.dispatch(ChatPartageResetAction()),
-      snackbarSuccessText: Strings.partageOffreSuccess,
+      shareSuccessTitle: Strings.partageOffreSuccessTitle,
+      shareSuccessContent: Strings.partageOffreSuccessContent,
       snackbarSuccessTracking: AnalyticsScreenNames.emploiPartagePageSuccess,
     );
   }
@@ -144,7 +147,8 @@ class ChatPartageBottomSheetViewModel extends Equatable {
       onShare: (message) => _partagerEvent(store, event!, message),
       snackbarState: _snackbarState(store),
       confirmationDisplayed: () => store.dispatch(ChatPartageResetAction()),
-      snackbarSuccessText: Strings.partageEventSuccess,
+      shareSuccessTitle: Strings.partageEventNavTitle,
+      shareSuccessContent: Strings.partageEventSuccess,
       snackbarSuccessTracking: AnalyticsScreenNames.animationCollectivePartagePageSuccess,
     );
   }
@@ -168,7 +172,8 @@ class ChatPartageBottomSheetViewModel extends Equatable {
       onShare: (message) => _partagerEvenementEmploi(store, evenementEmploiDetailsState.details, message),
       snackbarState: _snackbarState(store),
       confirmationDisplayed: () => store.dispatch(ChatPartageResetAction()),
-      snackbarSuccessText: Strings.partageEvenementEmploiSuccess,
+      shareSuccessTitle: Strings.partageEvenementEmploiNavTitle,
+      shareSuccessContent: Strings.partageEvenementEmploiSuccess,
       snackbarSuccessTracking: AnalyticsScreenNames.evenementEmploiPartagePageSuccess,
     );
   }
@@ -192,7 +197,8 @@ class ChatPartageBottomSheetViewModel extends Equatable {
       onShare: (message) => _partagerSessionMilo(store, sessionMiloDetailsState.details.toRendezVous, message),
       snackbarState: _snackbarState(store),
       confirmationDisplayed: () => store.dispatch(ChatPartageResetAction()),
-      snackbarSuccessText: Strings.partageSessionMiloSuccess,
+      shareSuccessTitle: Strings.partageSessionMiloNavTitle,
+      shareSuccessContent: Strings.partageSessionMiloSuccess,
       snackbarSuccessTracking: AnalyticsScreenNames.sessionMiloPartagePageSuccess,
     );
   }
