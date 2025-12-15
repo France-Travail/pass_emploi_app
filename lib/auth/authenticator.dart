@@ -84,7 +84,6 @@ class Authenticator {
   Future<RefreshTokenStatus> performRefreshToken() async {
     final String? refreshToken = await _preferences.read(key: _refreshTokenKey);
     if (refreshToken == null) {
-      _crashlytics?.recordNonNetworkException("Authenticator: not logged in : $refreshToken");
       return RefreshTokenStatus.USER_NOT_LOGGED_IN;
     }
 
@@ -101,25 +100,16 @@ class Authenticator {
       await _saveToken(response);
       return RefreshTokenStatus.SUCCESSFUL;
     } on AuthWrapperNetworkException {
-      _crashlytics?.recordNonNetworkException("Authenticator: Network unreachable");
       return RefreshTokenStatus.NETWORK_UNREACHABLE;
     } on AuthWrapperRefreshTokenExpiredException {
-      final String? refreshToken = await _preferences.read(key: _refreshTokenKey);
-      final String? idToken = await _preferences.read(key: _idTokenKey);
-      final String? accessToken = await _preferences.read(key: _accessTokenKey);
-      _crashlytics?.recordNonNetworkException(
-        "Authenticator: Refresh token expired, refreshToken: $refreshToken, idToken: $idToken, accessToken: $accessToken",
-      );
       await _deleteToken();
       return RefreshTokenStatus.EXPIRED_REFRESH_TOKEN;
     } on AuthWrapperRefreshTokenException {
-      _crashlytics?.recordNonNetworkException("Authenticator: Refresh token exception");
       return RefreshTokenStatus.GENERIC_ERROR;
     }
   }
 
   Future<bool> logout(String userId, LogoutReason reason) async {
-    _crashlytics?.recordNonNetworkException("Authenticator: logout : $userId : $reason");
     final String? refreshToken = await _preferences.read(key: _refreshTokenKey);
     if (refreshToken == null) return false;
     await _logoutRepository.logout(refreshToken, userId, reason);
