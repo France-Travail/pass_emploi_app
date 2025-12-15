@@ -22,6 +22,7 @@ import 'package:pass_emploi_app/utils/platform.dart';
 import 'package:pass_emploi_app/widgets/buttons/lien_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
+import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_pillule.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/info_card.dart';
@@ -44,12 +45,8 @@ class RendezvousDetailsPage extends StatefulWidget {
         return RendezvousDetailsPage._(
           rendezvousId,
           source,
-          (store) => RendezvousDetailsViewModel.create(
-            store: store,
-            source: source,
-            rdvId: rendezvousId,
-            platform: _platform,
-          ),
+          (store) =>
+              RendezvousDetailsViewModel.create(store: store, source: source, rdvId: rendezvousId, platform: _platform),
         );
       },
     );
@@ -107,7 +104,7 @@ class _RendezvousDetailsPageState extends State<RendezvousDetailsPage> {
     return switch (viewModel.displayState) {
       DisplayState.CONTENT => _content(context, viewModel),
       DisplayState.LOADING => Center(child: CircularProgressIndicator()),
-      _ => Retry(Strings.rendezVousDetailsError, () => viewModel.onRetry())
+      _ => Retry(Strings.rendezVousDetailsError, () => viewModel.onRetry()),
     };
   }
 
@@ -137,11 +134,8 @@ class _RendezvousDetailsPageState extends State<RendezvousDetailsPage> {
                     icon: AppIcons.check_circle_outline_rounded,
                   ),
                 ],
-                if (viewModel.isComplet) ...[
-                  CardTag.warning(
-                    text: Strings.eventComplet,
-                  ),
-                ],
+                if (viewModel.isComplet) ...[CardTag.warning(text: Strings.eventComplet)],
+                if (viewModel.isAnnule) CardPillule.evenementCanceled(),
               ],
             ),
             SizedBox(height: Margins.spacing_base),
@@ -180,7 +174,6 @@ class _Header extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (viewModel.isAnnule) _Annule(),
         if (viewModel.title != null) Text(viewModel.title!, style: TextStyles.textLBold()),
         SizedBox(height: Margins.spacing_m),
         Wrap(
@@ -236,9 +229,7 @@ class _Modality extends StatelessWidget {
               padding: const EdgeInsets.only(top: Margins.spacing_s),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  PrimaryActionButton(label: Strings.seeVisio),
-                ],
+                children: [PrimaryActionButton(label: Strings.seeVisio)],
               ),
             ),
           if (_withActiveVisioButton())
@@ -333,10 +324,7 @@ class _AnimateurPart extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Semantics(
-          header: true,
-          child: Text(Strings.withAnimateurTitle, style: TextStyles.textBaseBold),
-        ),
+        Semantics(header: true, child: Text(Strings.withAnimateurTitle, style: TextStyles.textBaseBold)),
         Padding(
           padding: const EdgeInsets.only(top: Margins.spacing_s),
           child: TextWithClickableLinks(withAnimateur, style: TextStyles.textBaseRegular),
@@ -386,35 +374,10 @@ class _InformIfAbsent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Semantics(
-          header: true,
-          child: Text(Strings.cannotGoToRendezvous, style: TextStyles.textBaseBold),
-        ),
+        Semantics(header: true, child: Text(Strings.cannotGoToRendezvous, style: TextStyles.textBaseBold)),
         SizedBox(height: Margins.spacing_s),
         Text(Strings.shouldInformConseiller, style: TextStyles.textBaseRegular),
       ],
-    );
-  }
-}
-
-class _Annule extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: Margins.spacing_base),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(40)),
-          color: AppColors.warningLighten,
-          border: Border.all(color: AppColors.warning),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: Margins.spacing_xs, horizontal: Margins.spacing_base),
-        child: Text(
-          Strings.rendezvousDetailsAnnule,
-          style: TextStyles.textSRegularWithColor(AppColors.warning),
-          overflow: TextOverflow.ellipsis,
-        ),
-      ),
     );
   }
 }
@@ -512,13 +475,11 @@ class _AutoInscriptionButton extends StatelessWidget {
           label: share.label,
           onPressed: () {
             share.onPressed?.call();
-            Navigator.of(context).push(AutoInscriptionPage.route()).then(
-              (value) {
-                if (value == true && context.mounted) {
-                  Navigator.of(context).pop();
-                }
-              },
-            );
+            Navigator.of(context).push(AutoInscriptionPage.route()).then((value) {
+              if (value == true && context.mounted) {
+                Navigator.of(context).pop();
+              }
+            });
           },
         ),
       ),
@@ -537,10 +498,7 @@ class _CardIllustration extends StatelessWidget {
       width: double.infinity,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(Dimens.radius_base),
-        child: Image.asset(
-          "assets/${imagePath!}",
-          fit: BoxFit.fitWidth,
-        ),
+        child: Image.asset("assets/${imagePath!}", fit: BoxFit.fitWidth),
       ),
     );
   }

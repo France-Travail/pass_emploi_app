@@ -109,9 +109,9 @@ class CardPillule extends StatelessWidget {
 
   CardPillule.demarcheCanceled([this.excludeSemantics = false])
     : text = Strings.canceledPillule,
-      contentColor = AppColors.disabled,
-      backgroundColor = AppColors.grey100,
-      icon = null;
+      contentColor = AppColors.primaryDarken,
+      backgroundColor = AppColors.accent3Lighten,
+      icon = AppIcons.block;
 
   CardPillule.evenementCanceled([this.excludeSemantics = false])
     : text = Strings.rendezvousCardAnnule,
