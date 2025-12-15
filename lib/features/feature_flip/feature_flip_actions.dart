@@ -24,3 +24,9 @@ class FeatureFlipAccueilZenithMessageAction {
 
   FeatureFlipAccueilZenithMessageAction(this.accueilZenithMessage);
 }
+
+class FeatureFlipDiagorienteEnabledAction {
+  final bool isDiagorienteEnabled;
+
+  FeatureFlipDiagorienteEnabledAction(this.isDiagorienteEnabled);
+}

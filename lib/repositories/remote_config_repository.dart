@@ -75,6 +75,12 @@ class RemoteConfigRepository {
     return AccueilZenithMessage.fromJson(json.decode(key) as Map<String, dynamic>);
   }
 
+  bool? isDiagorienteEnabled() {
+    if (_firebaseRemoteConfig == null) return null;
+    final key = _firebaseRemoteConfig.getBool("is_diagoriente_enabled");
+    return key;
+  }
+
   Cgu? getCgu() {
     if (_firebaseRemoteConfig == null) return null;
     final String cguAsString = _firebaseRemoteConfig.getString('cgu');

@@ -7,12 +7,13 @@ class FeatureFlip extends Equatable {
   final String? withMonSuiviDemarchesKoMessage;
   final LoginPageRemoteMessage? loginPageMessage;
   final AccueilZenithMessage? accueilZenithMessage;
-
+  final bool isDiagorienteEnabled;
   FeatureFlip({
     required this.withCampagneRecrutement,
     required this.withMonSuiviDemarchesKoMessage,
     required this.loginPageMessage,
     required this.accueilZenithMessage,
+    required this.isDiagorienteEnabled,
   });
 
   factory FeatureFlip.initial() {
@@ -21,6 +22,7 @@ class FeatureFlip extends Equatable {
       withMonSuiviDemarchesKoMessage: null,
       loginPageMessage: null,
       accueilZenithMessage: null,
+      isDiagorienteEnabled: true,
     );
   }
 
@@ -29,12 +31,14 @@ class FeatureFlip extends Equatable {
     String? withMonSuiviDemarchesKoMessage,
     LoginPageRemoteMessage? loginPageMessage,
     AccueilZenithMessage? accueilZenithMessage,
+    bool? isDiagorienteEnabled,
   }) {
     return FeatureFlip(
       withCampagneRecrutement: withCampagneRecrutement ?? this.withCampagneRecrutement,
       withMonSuiviDemarchesKoMessage: withMonSuiviDemarchesKoMessage ?? this.withMonSuiviDemarchesKoMessage,
       loginPageMessage: loginPageMessage ?? this.loginPageMessage,
       accueilZenithMessage: accueilZenithMessage ?? this.accueilZenithMessage,
+      isDiagorienteEnabled: isDiagorienteEnabled ?? this.isDiagorienteEnabled,
     );
   }
 
@@ -44,5 +48,6 @@ class FeatureFlip extends Equatable {
     withMonSuiviDemarchesKoMessage,
     loginPageMessage,
     accueilZenithMessage,
+    isDiagorienteEnabled,
   ];
 }

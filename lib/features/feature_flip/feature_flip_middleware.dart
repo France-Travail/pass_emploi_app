@@ -16,6 +16,7 @@ class FeatureFlipMiddleware extends MiddlewareClass<AppState> {
     next(action);
     if (action is BootstrapAction) {
       _handleLogiPageFeatureFlip(store);
+      _handleDiagorienteFeatureFlip(store);
     }
     final userId = store.state.userId();
     if (userId == null) return;
@@ -46,6 +47,13 @@ class FeatureFlipMiddleware extends MiddlewareClass<AppState> {
     final accueilZenithMessage = _remoteConfigRepository.accueilZenithMessage();
     if (accueilZenithMessage != null) {
       store.dispatch(FeatureFlipAccueilZenithMessageAction(accueilZenithMessage));
+    }
+  }
+
+  Future<void> _handleDiagorienteFeatureFlip(Store<AppState> store) async {
+    final isDiagorienteEnabled = _remoteConfigRepository.isDiagorienteEnabled();
+    if (isDiagorienteEnabled != null) {
+      store.dispatch(FeatureFlipDiagorienteEnabledAction(isDiagorienteEnabled));
     }
   }
 }

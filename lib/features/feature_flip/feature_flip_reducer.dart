@@ -16,5 +16,8 @@ FeatureFlipState featureFlipReducer(FeatureFlipState current, dynamic action) {
   if (action is FeatureFlipAccueilZenithMessageAction) {
     return FeatureFlipState(current.featureFlip.copyWith(accueilZenithMessage: action.accueilZenithMessage));
   }
+  if (action is FeatureFlipDiagorienteEnabledAction) {
+    return FeatureFlipState(current.featureFlip.copyWith(isDiagorienteEnabled: action.isDiagorienteEnabled));
+  }
   return current;
 }

@@ -63,11 +63,7 @@ class _Scaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.grey100,
-      appBar: PrimaryAppBar(
-        title: Strings.menuProfil,
-        withProfileButton: false,
-        canPop: true,
-      ),
+      appBar: PrimaryAppBar(title: Strings.menuProfil, withProfileButton: false, canPop: true),
       body: Semantics(
         container: true,
         child: SingleChildScrollView(
@@ -78,36 +74,29 @@ class _Scaffold extends StatelessWidget {
               children: [
                 _UsernameTitle(userName: viewModel.userName, onTitleTap: viewModel.onTitleTap),
                 SizedBox(height: Margins.spacing_base),
-                _OutilCard(
-                  title: Strings.diagorienteDiscoverCardTitle,
-                  subtitle: Strings.diagorienteDiscoverCardSubtitle,
-                  imagePath: Drawables.diagorienteLogo,
-                  onTap: () => Navigator.push(context, DiagorienteEntryPage.materialPageRoute()),
-                ),
-                SizedBox(height: Margins.spacing_base),
-                if (viewModel.withDownloadCv) ...[
-                  _CurriculumVitaeCard(),
-                  SizedBox(height: Margins.spacing_base),
-                ],
+                _Diagoriente(paddingIfEnabled: EdgeInsets.only(bottom: Margins.spacing_base)),
+                if (viewModel.withDownloadCv) ...[_CurriculumVitaeCard(), SizedBox(height: Margins.spacing_base)],
                 _MailCard(userEmail: viewModel.userEmail),
                 SizedBox(height: Margins.spacing_base),
                 if (viewModel.displayMonConseiller) MonConseillerCard(),
                 _SectionTitle(Strings.settingsLabel),
                 SizedBox(height: Margins.spacing_base),
-                _ListTileCard(tiles: [
-                  _ListTileData(
-                    title: Strings.notificationsLabel,
-                    onTap: () => Navigator.push(context, NotificationPreferencesPage.materialPageRoute()),
-                  ),
-                  _ListTileData(
-                    title: Strings.suppressionAccountLabel,
-                    onTap: () => Navigator.push(context, SuppressionComptePage.materialPageRoute()),
-                  ),
-                  _ListTileData(
-                    title: Strings.activityShareLabel,
-                    onTap: () => Navigator.push(context, PartageActivitePage.materialPageRoute()),
-                  ),
-                ]),
+                _ListTileCard(
+                  tiles: [
+                    _ListTileData(
+                      title: Strings.notificationsLabel,
+                      onTap: () => Navigator.push(context, NotificationPreferencesPage.materialPageRoute()),
+                    ),
+                    _ListTileData(
+                      title: Strings.suppressionAccountLabel,
+                      onTap: () => Navigator.push(context, SuppressionComptePage.materialPageRoute()),
+                    ),
+                    _ListTileData(
+                      title: Strings.activityShareLabel,
+                      onTap: () => Navigator.push(context, PartageActivitePage.materialPageRoute()),
+                    ),
+                  ],
+                ),
                 SizedBox(height: Margins.spacing_m),
                 _SectionTitle(Strings.legalInformation),
                 SizedBox(height: Margins.spacing_base),
@@ -135,70 +124,75 @@ class _Scaffold extends StatelessWidget {
                 SizedBox(height: Margins.spacing_m),
                 _SectionTitle(Strings.helpTitle),
                 SizedBox(height: Margins.spacing_base),
-                _ListTileCard(tiles: [
-                  _ListTileData(
-                    title: Strings.ratingAppLabel,
-                    onTap: () => Navigator.push(context, RatingPage.materialPageRoute()),
-                  ),
-                  _ListTileData(
-                    title: Strings.contactTeamLabel,
-                    onTap: () => Navigator.push(context, ContactPage.materialPageRoute()),
-                  ),
-                ]),
+                _ListTileCard(
+                  tiles: [
+                    _ListTileData(
+                      title: Strings.ratingAppLabel,
+                      onTap: () => Navigator.push(context, RatingPage.materialPageRoute()),
+                    ),
+                    _ListTileData(
+                      title: Strings.contactTeamLabel,
+                      onTap: () => Navigator.push(context, ContactPage.materialPageRoute()),
+                    ),
+                  ],
+                ),
                 SizedBox(height: Margins.spacing_m),
                 if (kDebugMode || viewModel.displayDeveloperOptions) ...[
                   _SectionTitle(Strings.developerOptions),
                   SizedBox(height: Margins.spacing_base),
-                  _ListTileCard(tiles: [
-                    _ListTileData(
-                      title: Strings.developerOptionMatomo,
-                      onTap: () => Navigator.push(context, MatomoLoggingPage.materialPageRoute()),
-                    ),
-                    _ListTileData(
-                      title: Strings.developerOptionFCM,
-                      onTap: () async {
-                        final String? token = await FirebaseMessaging.instance.getToken();
-                        // copy to clipboard
-                        if (token != null) {
-                          await Clipboard.setData(ClipboardData(text: token));
-                          if (context.mounted) {
-                            showSnackBarWithSystemError(context, "Token copié ✅");
+                  _ListTileCard(
+                    tiles: [
+                      _ListTileData(
+                        title: Strings.developerOptionMatomo,
+                        onTap: () => Navigator.push(context, MatomoLoggingPage.materialPageRoute()),
+                      ),
+                      _ListTileData(
+                        title: Strings.developerOptionFCM,
+                        onTap: () async {
+                          final String? token = await FirebaseMessaging.instance.getToken();
+                          // copy to clipboard
+                          if (token != null) {
+                            await Clipboard.setData(ClipboardData(text: token));
+                            if (context.mounted) {
+                              showSnackBarWithSystemError(context, "Token copié ✅");
+                            }
                           }
-                        }
-                      },
-                    ),
-                    _ListTileData(
-                      title: Strings.developerOptionFCMDelete,
-                      onTap: () async {
-                        await FirebaseMessaging.instance.deleteToken();
-                        if (context.mounted) {
-                          showSnackBarWithSystemError(context, "Token supprimé ❌");
-                        }
-                      },
-                    ),
-                    _ListTileData(
-                      title: "Récupérer le token APNs",
-                      onTap: () async {
-                        final String? token = await getApnsToken();
-                        await Clipboard.setData(ClipboardData(text: token ?? ""));
-                        if (context.mounted) {
-                          showSnackBarWithSystemError(context, "Token APNs copié ✅");
-                        }
-                      },
-                    ),
-                    _ListTileData(
-                      title: "Deep link parcours emploi",
-                      onTap: () => context.dispatch(
-                          HandleDeepLinkAction(MigrationParcoursEmploiDeepLink(), DeepLinkOrigin.inAppNavigation)),
-                    ),
-                    _ListTileData(
-                      title: Strings.developerOptionDeleteAllPrefs,
-                      onTap: () {
-                        context.dispatch(DeveloperOptionsDeleteAllPrefsAction());
-                        showSnackBarWithSystemError(context, "Killez 💀- voire supprimer 🗑 - l'app");
-                      },
-                    ),
-                  ]),
+                        },
+                      ),
+                      _ListTileData(
+                        title: Strings.developerOptionFCMDelete,
+                        onTap: () async {
+                          await FirebaseMessaging.instance.deleteToken();
+                          if (context.mounted) {
+                            showSnackBarWithSystemError(context, "Token supprimé ❌");
+                          }
+                        },
+                      ),
+                      _ListTileData(
+                        title: "Récupérer le token APNs",
+                        onTap: () async {
+                          final String? token = await getApnsToken();
+                          await Clipboard.setData(ClipboardData(text: token ?? ""));
+                          if (context.mounted) {
+                            showSnackBarWithSystemError(context, "Token APNs copié ✅");
+                          }
+                        },
+                      ),
+                      _ListTileData(
+                        title: "Deep link parcours emploi",
+                        onTap: () => context.dispatch(
+                          HandleDeepLinkAction(MigrationParcoursEmploiDeepLink(), DeepLinkOrigin.inAppNavigation),
+                        ),
+                      ),
+                      _ListTileData(
+                        title: Strings.developerOptionDeleteAllPrefs,
+                        onTap: () {
+                          context.dispatch(DeveloperOptionsDeleteAllPrefsAction());
+                          showSnackBarWithSystemError(context, "Killez 💀- voire supprimer 🗑 - l'app");
+                        },
+                      ),
+                    ],
+                  ),
                   SizedBox(height: Margins.spacing_l),
                 ],
                 SecondaryButton(
@@ -224,6 +218,32 @@ class _Scaffold extends StatelessWidget {
   }
 }
 
+class _Diagoriente extends StatelessWidget {
+  const _Diagoriente({super.key, required this.paddingIfEnabled});
+  final EdgeInsetsGeometry paddingIfEnabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return StoreConnector<AppState, bool>(
+      converter: (store) => store.state.featureFlipState.featureFlip.isDiagorienteEnabled,
+      builder: (context, isDiagorienteEnabled) {
+        if (isDiagorienteEnabled) {
+          return Padding(
+            padding: paddingIfEnabled,
+            child: _OutilCard(
+              title: Strings.diagorienteDiscoverCardTitle,
+              subtitle: Strings.diagorienteDiscoverCardSubtitle,
+              imagePath: Drawables.diagorienteLogo,
+              onTap: () => Navigator.push(context, DiagorienteEntryPage.materialPageRoute()),
+            ),
+          );
+        }
+        return SizedBox.shrink();
+      },
+    );
+  }
+}
+
 class _SectionTitle extends StatelessWidget {
   final String title;
 
@@ -231,10 +251,7 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      header: true,
-      child: Text(title, style: TextStyles.textLBold()),
-    );
+    return Semantics(header: true, child: Text(title, style: TextStyles.textLBold()));
   }
 }
 
@@ -244,12 +261,7 @@ class _OutilCard extends StatelessWidget {
   final String imagePath;
   final VoidCallback onTap;
 
-  const _OutilCard({
-    required this.title,
-    required this.subtitle,
-    required this.imagePath,
-    required this.onTap,
-  });
+  const _OutilCard({required this.title, required this.subtitle, required this.imagePath, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -306,10 +318,7 @@ class _UsernameTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onDoubleTap: onTitleTap,
-      child: _SectionTitle(userName),
-    );
+    return GestureDetector(onDoubleTap: onTitleTap, child: _SectionTitle(userName));
   }
 }
 
@@ -333,9 +342,7 @@ class _MailCard extends StatelessWidget {
               Text(
                 userEmail,
                 textAlign: TextAlign.right,
-                style: TextStyles.textBaseBold.copyWith(
-                  color: AppColors.primary,
-                ),
+                style: TextStyles.textBaseBold.copyWith(color: AppColors.primary),
               ),
             ],
           ),
@@ -359,39 +366,38 @@ class _ListTileCard extends StatelessWidget {
         padding: EdgeInsets.zero,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: tiles
-              .map(
-                (data) {
-                  return [
-                    Semantics(
-                      link: externalRedirect,
-                      button: !externalRedirect,
-                      child: ListTile(
-                        onTap: data.onTap,
-                        title: Text(data.title, style: TextStyles.textBaseRegular),
-                        leading: externalRedirect
-                            ? Icon(
-                                AppIcons.open_in_new_rounded,
-                                size: Dimens.icon_size_base,
-                                color: AppColors.contentColor,
-                              )
-                            : null,
-                        trailing: externalRedirect
-                            ? SizedBox()
-                            : Icon(
-                                AppIcons.chevron_right_rounded,
-                                size: Dimens.icon_size_m,
-                                color: AppColors.contentColor,
-                              ),
+          children:
+              tiles
+                  .map((data) {
+                    return [
+                      Semantics(
+                        link: externalRedirect,
+                        button: !externalRedirect,
+                        child: ListTile(
+                          onTap: data.onTap,
+                          title: Text(data.title, style: TextStyles.textBaseRegular),
+                          leading: externalRedirect
+                              ? Icon(
+                                  AppIcons.open_in_new_rounded,
+                                  size: Dimens.icon_size_base,
+                                  color: AppColors.contentColor,
+                                )
+                              : null,
+                          trailing: externalRedirect
+                              ? SizedBox()
+                              : Icon(
+                                  AppIcons.chevron_right_rounded,
+                                  size: Dimens.icon_size_m,
+                                  color: AppColors.contentColor,
+                                ),
+                        ),
                       ),
-                    ),
-                    Divider(color: AppColors.grey100, height: 0),
-                  ];
-                },
-              )
-              .expand((e) => e)
-              .toList()
-            ..removeLast(),
+                      Divider(color: AppColors.grey100, height: 0),
+                    ];
+                  })
+                  .expand((e) => e)
+                  .toList()
+                ..removeLast(),
         ),
       ),
     );
