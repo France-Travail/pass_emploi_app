@@ -90,7 +90,6 @@ List<AccueilItem> _items(Store<AppState> store) {
     _errorDegradeeItem(accueilState),
     _onboardingItem(store.state),
     ..._remoteCampagneAccueilItems(store, store.state),
-    _iaDemarchesItem(accueilState),
     _boulangerCampagneItem(store, store.state),
     _ratingAppItem(store.state),
     _campagneRecrutementItem(store, store.state),
@@ -110,11 +109,6 @@ AccueilItem? _dateDeMigrationItem(AccueilSuccessState accueilState) {
   final dateDeMigration = accueilState.accueil.dateDeMigration;
   if (dateDeMigration == null) return null;
   return AccueilDateDeMigrationItem(dateDeMigration);
-}
-
-AccueilItem? _iaDemarchesItem(AccueilSuccessState accueilState) {
-  if (!accueilState.accueil.eligibleDemarchesIA) return null;
-  return AccueilIaDemarchesItem();
 }
 
 AccueilItem? _accueilZenithMessageItem(AppState state) {

@@ -38,13 +38,16 @@ class MonSuivi extends Equatable {
   }
 
   factory MonSuivi.fromPoleEmploiJson(dynamic json) {
-    final eligibleDemarchesIA = json["resultat"]['eligibleDemarchesIA'] as bool? ?? false;
+    // final eligibleDemarchesIA = json["resultat"]['eligibleDemarchesIA'] as bool? ?? false;
+    // TODO: Remove this
+    final eligibleDemarchesIA = true;
     return MonSuivi(
       demarches: (json["resultat"]["demarches"] as List).map(Demarche.fromJson).toList(),
-      rendezvous: (json["resultat"]["rendezVous"] as List) //
-          .map(JsonRendezvous.fromJson)
-          .map((e) => e.toRendezvous())
-          .toList(),
+      rendezvous:
+          (json["resultat"]["rendezVous"] as List) //
+              .map(JsonRendezvous.fromJson)
+              .map((e) => e.toRendezvous())
+              .toList(),
       actions: [],
       sessionsMilo: [],
       errorOnSessionMiloRetrieval: false,
@@ -87,12 +90,12 @@ class MonSuivi extends Equatable {
 
   @override
   List<Object?> get props => [
-        actions,
-        demarches,
-        rendezvous,
-        sessionsMilo,
-        errorOnSessionMiloRetrieval,
-        dateDerniereMiseAJourPoleEmploi,
-        eligibleDemarchesIA,
-      ];
+    actions,
+    demarches,
+    rendezvous,
+    sessionsMilo,
+    errorOnSessionMiloRetrieval,
+    dateDerniereMiseAJourPoleEmploi,
+    eligibleDemarchesIA,
+  ];
 }

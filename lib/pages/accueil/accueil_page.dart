@@ -13,7 +13,6 @@ import 'package:pass_emploi_app/pages/accueil/accueil_boulanger_card.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_campagne_recrutement.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_cette_semaine.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_date_de_migration.dart';
-import 'package:pass_emploi_app/pages/accueil/accueil_demarche_ia_item.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_evenements.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_loading.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_onboarding_tile.dart';
@@ -84,9 +83,7 @@ class _AccueilPageState extends State<AccueilPage> {
   Widget _builder(BuildContext context, AccueilViewModel viewModel) {
     return Scaffold(
       backgroundColor: Brand.isCej() ? AppColors.primary : AppColors.primaryDarkenStrong,
-      body: ConnectivityContainer(
-        child: _Body(viewModel),
-      ),
+      body: ConnectivityContainer(child: _Body(viewModel)),
     );
   }
 
@@ -98,17 +95,17 @@ class _AccueilPageState extends State<AccueilPage> {
     } else {
       final route = switch (newViewModel.deepLink) {
         final RendezvousDeepLink deeplink => RendezvousDetailsPage.materialPageRoute(
-            RendezvousStateSource.noSource,
-            deeplink.idRendezvous,
-          ),
+          RendezvousStateSource.noSource,
+          deeplink.idRendezvous,
+        ),
         final SessionMiloDeepLink deeplink => RendezvousDetailsPage.materialPageRoute(
-            RendezvousStateSource.sessionMiloDetails,
-            deeplink.idSessionMilo,
-          ),
+          RendezvousStateSource.sessionMiloDetails,
+          deeplink.idSessionMilo,
+        ),
         final ActionDeepLink deeplink => UserActionDetailPage.materialPageRoute(
-            deeplink.idAction,
-            UserActionStateSource.noSource,
-          ),
+          deeplink.idAction,
+          UserActionStateSource.noSource,
+        ),
         AlerteDeepLink() => AlertePage.materialPageRoute(),
         AlertesDeepLink() => AlertePage.materialPageRoute(),
         BenevolatDeepLink() => BenevolatPage.materialPageRoute(),
@@ -140,9 +137,9 @@ class _AccueilPageState extends State<AccueilPage> {
   }
 
   dynamic _displayMonSuiviPage() {
-    StoreProvider.of<AppState>(context).dispatch(
-      HandleDeepLinkAction(MonSuiviDeepLink(), DeepLinkOrigin.inAppNavigation),
-    );
+    StoreProvider.of<AppState>(
+      context,
+    ).dispatch(HandleDeepLinkAction(MonSuiviDeepLink(), DeepLinkOrigin.inAppNavigation));
   }
 
   void _handleNotificationsBottomSheet(AccueilViewModel viewModel) {
@@ -163,10 +160,7 @@ class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        PrimarySliverAppbar(
-          title: Strings.accueilAppBarTitle,
-          withNewNotifications: viewModel.withNewNotifications,
-        ),
+        PrimarySliverAppbar(title: Strings.accueilAppBarTitle, withNewNotifications: viewModel.withNewNotifications),
         SliverToBoxAdapter(
           child: AnimatedSwitcher(
             duration: AnimationDurations.fast,
@@ -204,18 +198,13 @@ class _Blocs extends StatelessWidget {
                   colors: AppColors.gradientPrimary,
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: _buildItemsWithGradient(),
-              ),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: _buildItemsWithGradient()),
             ),
             ColoredBox(
               color: AppColors.grey100,
               child: Padding(
                 padding: const EdgeInsets.all(Margins.spacing_base),
-                child: Column(
-                  children: _buildItemsWithoutGradient(),
-                ),
+                child: Column(children: _buildItemsWithoutGradient()),
               ),
             ),
           ],
@@ -269,17 +258,17 @@ class _Blocs extends StatelessWidget {
   Widget _buildItem(AccueilItem item) {
     return switch (item) {
       final AccueilDateDeMigrationItem item => AccueilDateDeMigration(dateDeMigration: item.dateDeMigration),
-      final AccueilZenithMessageItem item =>
-        CardContainer(child: RemoteMessageWidget(remoteMessage: item.accueilZenithMessage)),
+      final AccueilZenithMessageItem item => CardContainer(
+        child: RemoteMessageWidget(remoteMessage: item.accueilZenithMessage),
+      ),
       final ErrorDegradeeItem item => InformationBandeau(icon: AppIcons.error_rounded, text: item.message),
       final OnboardingItem item => AccueilOnboardingTile(item),
       final OffreSuivieAccueilItem item => OffreSuivieForm(
-          offreId: item.offreId,
-          showOffreDetails: true,
-          trackingSource: OffreSuiviTrackingSource.accueil,
-          showPrimaryBackground: false,
-        ),
-      AccueilIaDemarchesItem() => AccueilIaDemarches(),
+        offreId: item.offreId,
+        showOffreDetails: true,
+        trackingSource: OffreSuiviTrackingSource.accueil,
+        showPrimaryBackground: false,
+      ),
       final RemoteCampagneAccueilItem item => RemoteCampagneAccueilCard(item),
       final BoulangerCampagneItem item => BoulangerCampagneCard(item),
       final CampagneRecrutementItem item => CampagneRecrutementCard(item),
