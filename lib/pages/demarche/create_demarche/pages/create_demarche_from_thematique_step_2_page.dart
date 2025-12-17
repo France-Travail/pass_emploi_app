@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/features/thematiques_demarche/thematiques_demarche_actions.dart';
-import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_view_model.dart';
+import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
 import 'package:pass_emploi_app/presentation/demarche/demarche_du_referentiel_card_view_model.dart';
 import 'package:pass_emploi_app/presentation/demarche/demarche_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -12,7 +12,7 @@ import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 
 class CreateDemarcheFromThematiqueStep2Page extends StatelessWidget {
   const CreateDemarcheFromThematiqueStep2Page(this.viewModel);
-  final CreateDemarcheFormViewModel viewModel;
+  final CreateDemarcheFormChangeNotifier viewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class CreateDemarcheFromThematiqueStep2Page extends StatelessWidget {
 class _ThematiqueDemarcheList extends StatelessWidget {
   const _ThematiqueDemarcheList({required this.thematiqueCode, required this.viewModel});
   final String thematiqueCode;
-  final CreateDemarcheFormViewModel viewModel;
+  final CreateDemarcheFormChangeNotifier viewModel;
 
   @override
   Widget build(BuildContext context) {

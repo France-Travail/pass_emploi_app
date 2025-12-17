@@ -15,10 +15,10 @@ part 'steps/create_demarche_personnalisee_step_2.dart';
 part 'steps/create_demarche_personnalisee_step_3.dart';
 part 'steps/create_demarche_step_1.dart';
 
-class CreateDemarcheFormViewModel extends ChangeNotifier {
+class CreateDemarcheFormChangeNotifier extends ChangeNotifier {
   CreateDemarcheDisplayState displayState;
 
-  CreateDemarcheFormViewModel({
+  CreateDemarcheFormChangeNotifier({
     CreateDemarcheDisplayState? displayState,
     CreateDemarcheStep1ViewModel? initialStep1ViewModel,
     CreateDemarcheFromThematiqueStep2ViewModel? initialThematiqueStep2ViewModel,
@@ -27,15 +27,15 @@ class CreateDemarcheFormViewModel extends ChangeNotifier {
     CreateDemarcheFromThematiqueStep3ViewModel? initialFromThematiqueStep3ViewModel,
     CreateDemarchePersonnaliseeStep3ViewModel? initialPersonnaliseeStep3ViewModel,
     CreateDemarcheConfirmationStepViewModel? initialConfirmationStepViewModel,
-  })  : displayState = displayState ?? CreateDemarcheStep1(),
-        step1ViewModel = initialStep1ViewModel ?? CreateDemarcheStep1ViewModel(),
-        thematiqueStep2ViewModel = initialThematiqueStep2ViewModel ?? CreateDemarcheFromThematiqueStep2ViewModel(),
-        personnaliseeStep2ViewModel = initialPersonnaliseeStep2ViewModel ?? CreateDemarchePersonnaliseeStep2ViewModel(),
-        iaFtStep2ViewModel = initialIaFtStep2ViewModel ?? CreateDemarcheIaFtStep2ViewModel(),
-        fromThematiqueStep3ViewModel =
-            initialFromThematiqueStep3ViewModel ?? CreateDemarcheFromThematiqueStep3ViewModel(),
-        personnaliseeStep3ViewModel = initialPersonnaliseeStep3ViewModel ?? CreateDemarchePersonnaliseeStep3ViewModel(),
-        confirmationStepViewModel = initialConfirmationStepViewModel ?? CreateDemarcheConfirmationStepViewModel();
+  }) : displayState = displayState ?? CreateDemarcheStep1(),
+       step1ViewModel = initialStep1ViewModel ?? CreateDemarcheStep1ViewModel(),
+       thematiqueStep2ViewModel = initialThematiqueStep2ViewModel ?? CreateDemarcheFromThematiqueStep2ViewModel(),
+       personnaliseeStep2ViewModel = initialPersonnaliseeStep2ViewModel ?? CreateDemarchePersonnaliseeStep2ViewModel(),
+       iaFtStep2ViewModel = initialIaFtStep2ViewModel ?? CreateDemarcheIaFtStep2ViewModel(),
+       fromThematiqueStep3ViewModel =
+           initialFromThematiqueStep3ViewModel ?? CreateDemarcheFromThematiqueStep3ViewModel(),
+       personnaliseeStep3ViewModel = initialPersonnaliseeStep3ViewModel ?? CreateDemarchePersonnaliseeStep3ViewModel(),
+       confirmationStepViewModel = initialConfirmationStepViewModel ?? CreateDemarcheConfirmationStepViewModel();
 
   CreateDemarcheStep1ViewModel step1ViewModel;
   CreateDemarcheFromThematiqueStep2ViewModel thematiqueStep2ViewModel;

@@ -5,14 +5,33 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 
-class PassEmploiStepperTexts extends StatelessWidget {
-  const PassEmploiStepperTexts({
-    super.key,
-    required this.stepCount,
-    required this.currentStep,
-  });
+class CreateDemarcheStepper extends StatelessWidget {
+  const CreateDemarcheStepper({super.key, required this.stepCount, required this.currentStepIndex});
   final int stepCount;
-  final int currentStep;
+  final int currentStepIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+          child: PassEmploiStepperProgressBar(stepCount: stepCount, currentStep: currentStepIndex),
+        ),
+        SizedBox(height: Margins.spacing_xs),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+          child: PassEmploiStepperTexts(stepCount: stepCount, currentStepIndex: currentStepIndex),
+        ),
+      ],
+    );
+  }
+}
+
+class PassEmploiStepperTexts extends StatelessWidget {
+  const PassEmploiStepperTexts({super.key, required this.stepCount, required this.currentStepIndex});
+  final int stepCount;
+  final int currentStepIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +42,8 @@ class PassEmploiStepperTexts extends StatelessWidget {
         label: " ",
         child: AutoFocusA11y(
           child: Text(
-            Strings.stepCounter(currentStep, stepCount),
-            style: TextStyles.textSRegular(
-              color: AppColors.contentColor,
-            ),
+            Strings.stepCounter(currentStepIndex + 1, stepCount),
+            style: TextStyles.textSRegular(color: AppColors.contentColor),
           ),
         ),
       ),
@@ -35,11 +52,7 @@ class PassEmploiStepperTexts extends StatelessWidget {
 }
 
 class PassEmploiStepperProgressBar extends StatelessWidget {
-  const PassEmploiStepperProgressBar({
-    required this.stepCount,
-    required this.currentStep,
-    super.key,
-  });
+  const PassEmploiStepperProgressBar({required this.stepCount, required this.currentStep, super.key});
 
   final int stepCount;
   final int currentStep;
@@ -49,10 +62,7 @@ class PassEmploiStepperProgressBar extends StatelessWidget {
     return Row(
       children: [
         for (var i = 0; i < stepCount; i++) ...[
-          _AnimatedStepProgressIndicator(
-            isActive: i <= currentStep,
-            key: ValueKey(i),
-          ),
+          _AnimatedStepProgressIndicator(isActive: i <= currentStep, key: ValueKey(i)),
           if (i < stepCount - 1) const SizedBox(width: Margins.spacing_s),
         ],
       ],
@@ -61,10 +71,7 @@ class PassEmploiStepperProgressBar extends StatelessWidget {
 }
 
 class _AnimatedStepProgressIndicator extends StatelessWidget {
-  const _AnimatedStepProgressIndicator({
-    required this.isActive,
-    super.key,
-  });
+  const _AnimatedStepProgressIndicator({required this.isActive, super.key});
 
   final bool isActive;
 
@@ -80,10 +87,7 @@ class _AnimatedStepProgressIndicator extends StatelessWidget {
             children: [
               Container(
                 height: 8,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(2),
-                ),
+                decoration: BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(2)),
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -91,10 +95,7 @@ class _AnimatedStepProgressIndicator extends StatelessWidget {
                   widthFactor: value,
                   child: Container(
                     height: 8,
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
+                    decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(2)),
                   ),
                 ),
               ),

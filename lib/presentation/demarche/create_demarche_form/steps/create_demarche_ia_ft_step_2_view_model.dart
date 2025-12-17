@@ -1,4 +1,4 @@
-part of '../create_demarche_form_view_model.dart';
+part of '../create_demarche_form_change_notifier.dart';
 
 class CreateDemarcheIaFtStep2ViewModel extends CreateDemarcheViewModel {
   CreateDemarcheIaFtStep2ViewModel({this.description = ''});

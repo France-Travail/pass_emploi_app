@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_view_model.dart';
+import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -8,7 +8,7 @@ import 'package:pass_emploi_app/widgets/date_pickers/date_picker_suggestions.dar
 
 class CreateDemarchePersonnaliseeStep3Page extends StatelessWidget {
   const CreateDemarchePersonnaliseeStep3Page(this.viewModel);
-  final CreateDemarcheFormViewModel viewModel;
+  final CreateDemarcheFormChangeNotifier viewModel;
 
   @override
   Widget build(BuildContext context) {

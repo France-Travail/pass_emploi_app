@@ -6,7 +6,7 @@ import 'package:pass_emploi_app/features/demarche/create/create_demarche_actions
 import 'package:pass_emploi_app/features/ia_ft_suggestions/ia_ft_suggestions_actions.dart';
 import 'package:pass_emploi_app/models/demarche_ia_suggestion.dart';
 import 'package:pass_emploi_app/presentation/create_demarche_ia_ft_step_3_view_model.dart';
-import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_view_model.dart';
+import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
@@ -24,7 +24,7 @@ import 'package:pass_emploi_app/widgets/date_pickers/date_picker.dart';
 
 class CreateDemarcheIaFtStep3Page extends StatelessWidget {
   const CreateDemarcheIaFtStep3Page(this.formViewModel);
-  final CreateDemarcheFormViewModel formViewModel;
+  final CreateDemarcheFormChangeNotifier formViewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class CreateDemarcheIaFtStep3Page extends StatelessWidget {
 
 class _Body extends StatelessWidget {
   const _Body({required this.formViewModel, required this.viewModel});
-  final CreateDemarcheFormViewModel formViewModel;
+  final CreateDemarcheFormChangeNotifier formViewModel;
   final CreateDemarcheIaFtStep3ViewModel viewModel;
 
   @override
@@ -77,7 +77,7 @@ class _Loading extends StatelessWidget {
 
 class _Failure extends StatelessWidget {
   const _Failure(this.viewModel);
-  final CreateDemarcheFormViewModel viewModel;
+  final CreateDemarcheFormChangeNotifier viewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +99,7 @@ class _Failure extends StatelessWidget {
 
 class _Empty extends StatelessWidget {
   const _Empty(this.viewModel);
-  final CreateDemarcheFormViewModel viewModel;
+  final CreateDemarcheFormChangeNotifier viewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +124,7 @@ class _Empty extends StatelessWidget {
 class _Content extends StatefulWidget {
   const _Content(this.viewModel, this.formViewModel);
   final CreateDemarcheIaFtStep3ViewModel viewModel;
-  final CreateDemarcheFormViewModel formViewModel;
+  final CreateDemarcheFormChangeNotifier formViewModel;
 
   @override
   State<_Content> createState() => _ContentState();

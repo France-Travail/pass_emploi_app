@@ -9,8 +9,8 @@ import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_dema
 import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_personnalisee_step_3_page.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_step_1_page.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche_form_page.dart';
+import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_display_state.dart';
-import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_view_model.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -36,23 +36,23 @@ class CreateDemarcheForm extends StatefulWidget {
 }
 
 class _CreateDemarcheFormState extends State<CreateDemarcheForm> {
-  late final CreateDemarcheFormViewModel _viewModel;
+  late final CreateDemarcheFormChangeNotifier _changeNotifier;
 
   @override
   void initState() {
     super.initState();
-    _viewModel = CreateDemarcheFormViewModel(displayState: widget.startPoint?.toDisplayState());
-    _viewModel.addListener(_onFormStateChanged);
+    _changeNotifier = CreateDemarcheFormChangeNotifier(displayState: widget.startPoint?.toDisplayState());
+    _changeNotifier.addListener(_onFormStateChanged);
   }
 
   void _onFormStateChanged() {
-    final displayState = _viewModel.displayState;
+    final displayState = _changeNotifier.displayState;
     if (displayState is CreateDemarcheFromThematiqueSubmitted) {
-      widget.onCreateDemarcheFromReferentiel(_viewModel.createDemarcheRequestAction());
+      widget.onCreateDemarcheFromReferentiel(_changeNotifier.createDemarcheRequestAction());
     }
 
     if (displayState is CreateDemarchePersonnaliseeSubmitted) {
-      widget.onCreateDemarchePersonnalisee(_viewModel.createDemarchePersonnaliseeRequestAction());
+      widget.onCreateDemarchePersonnalisee(_changeNotifier.createDemarchePersonnaliseeRequestAction());
     }
 
     if (displayState is CreateDemarcheIaFtSubmitted) {
@@ -67,59 +67,45 @@ class _CreateDemarcheFormState extends State<CreateDemarcheForm> {
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
-      appBar: SecondaryAppBar(
-        title: Strings.createDemarcheAppBarTitle,
-        leading: AppBarBackButton(_viewModel),
-      ),
-      body: _Body(_viewModel),
+      appBar: SecondaryAppBar(title: Strings.createDemarcheAppBarTitle, leading: AppBarBackButton(_changeNotifier)),
+      body: _Body(_changeNotifier),
     );
   }
 }
 
 class _Body extends StatelessWidget {
-  final CreateDemarcheFormViewModel viewModel;
+  final CreateDemarcheFormChangeNotifier changeNotifier;
 
-  const _Body(this.viewModel);
+  const _Body(this.changeNotifier);
 
   @override
   Widget build(BuildContext context) {
+    final currentStepIndex = changeNotifier.displayState.index();
     return Column(
       children: [
         SizedBox(height: Margins.spacing_base),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-          child: PassEmploiStepperProgressBar(
+        if (currentStepIndex != null)
+          CreateDemarcheStepper(
             stepCount: CreateDemarcheDisplayState.stepsTotalCount,
-            currentStep: viewModel.displayState.index(),
+            currentStepIndex: currentStepIndex,
           ),
-        ),
         Expanded(
           child: AnimatedSwitcher(
             duration: AnimationDurations.fast,
             child: Column(
               children: [
-                SizedBox(height: Margins.spacing_xs),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-                  child: PassEmploiStepperTexts(
-                    stepCount: CreateDemarcheDisplayState.stepsTotalCount,
-                    currentStep: viewModel.displayState.index() + 1,
-                  ),
-                ),
                 Expanded(
-                  child: switch (viewModel.displayState) {
-                    CreateDemarcheStep1() => CreateDemarcheStep1Page(viewModel),
-                    CreateDemarcheFromThematiqueStep2() => CreateDemarcheFromThematiqueStep2Page(viewModel),
-                    CreateDemarchePersonnaliseeStep2() => CreateDemarchePersonnaliseeStep2Page(viewModel),
-                    CreateDemarcheIaFtStep2() => CreateDemarcheIaFtStep2Page(viewModel),
+                  child: switch (changeNotifier.displayState) {
+                    CreateDemarcheStep1() => CreateDemarcheStep1Page(changeNotifier),
+                    CreateDemarcheFromThematiqueStep2() => CreateDemarcheFromThematiqueStep2Page(changeNotifier),
+                    CreateDemarchePersonnaliseeStep2() => CreateDemarchePersonnaliseeStep2Page(changeNotifier),
+                    CreateDemarcheIaFtStep2() => CreateDemarcheIaFtStep2Page(changeNotifier),
                     CreateDemarcheFromThematiqueStep3() ||
-                    CreateDemarcheFromThematiqueSubmitted() =>
-                      CreateDemarcheFromThematiqueStep3Page(viewModel),
+                    CreateDemarcheFromThematiqueSubmitted() => CreateDemarcheFromThematiqueStep3Page(changeNotifier),
                     CreateDemarchePersonnaliseeStep3() ||
-                    CreateDemarchePersonnaliseeSubmitted() =>
-                      CreateDemarchePersonnaliseeStep3Page(viewModel),
-                    CreateDemarcheIaFtStep3() => CreateDemarcheIaFtStep3Page(viewModel),
-                    CreateDemarcheIaFtSubmitted() => CreateDemarcheIaFtStep3Page(viewModel),
+                    CreateDemarchePersonnaliseeSubmitted() => CreateDemarchePersonnaliseeStep3Page(changeNotifier),
+                    CreateDemarcheIaFtStep3() => CreateDemarcheIaFtStep3Page(changeNotifier),
+                    CreateDemarcheIaFtSubmitted() => CreateDemarcheIaFtStep3Page(changeNotifier),
                   },
                 ),
               ],

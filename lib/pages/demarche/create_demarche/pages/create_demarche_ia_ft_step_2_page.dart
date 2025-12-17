@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
-import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_view_model.dart';
+import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
@@ -17,7 +17,7 @@ import 'package:speech_to_text/speech_to_text.dart';
 
 class CreateDemarcheIaFtStep2Page extends StatefulWidget {
   const CreateDemarcheIaFtStep2Page(this.viewModel);
-  final CreateDemarcheFormViewModel viewModel;
+  final CreateDemarcheFormChangeNotifier viewModel;
 
   @override
   State<CreateDemarcheIaFtStep2Page> createState() => _CreateDemarcheIaFtStep2PageState();

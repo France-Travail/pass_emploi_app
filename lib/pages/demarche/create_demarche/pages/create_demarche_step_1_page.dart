@@ -6,7 +6,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_state.dart';
 import 'package:pass_emploi_app/features/thematiques_demarche/thematiques_demarche_actions.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/widgets/ia_ft_card.dart';
-import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_view_model.dart';
+import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
 import 'package:pass_emploi_app/presentation/demarche/thematiques_demarche_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -25,7 +25,7 @@ import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
 
 class CreateDemarcheStep1Page extends StatelessWidget {
   const CreateDemarcheStep1Page(this.formViewModel, {super.key});
-  final CreateDemarcheFormViewModel formViewModel;
+  final CreateDemarcheFormChangeNotifier formViewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class CreateDemarcheStep1Page extends StatelessWidget {
 class _Content extends StatelessWidget {
   const _Content({required this.thematiqueViewModel, required this.formViewModel});
   final ThematiqueDemarchePageViewModel thematiqueViewModel;
-  final CreateDemarcheFormViewModel formViewModel;
+  final CreateDemarcheFormChangeNotifier formViewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +144,7 @@ class _Success extends StatelessWidget {
   const _Success(this.thematiqueViewModel, this.formViewModel, {required this.onCreateCustomDemarche});
   final ThematiqueDemarchePageViewModel thematiqueViewModel;
   final void Function() onCreateCustomDemarche;
-  final CreateDemarcheFormViewModel formViewModel;
+  final CreateDemarcheFormChangeNotifier formViewModel;
 
   @override
   Widget build(BuildContext context) {

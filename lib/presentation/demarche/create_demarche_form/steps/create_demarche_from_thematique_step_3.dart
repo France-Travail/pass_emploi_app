@@ -1,10 +1,10 @@
-part of '../create_demarche_form_view_model.dart';
+part of '../create_demarche_form_change_notifier.dart';
 
 class CreateDemarcheFromThematiqueStep3ViewModel extends CreateDemarcheViewModel {
   final DateInputSource dateSource;
   final CommentItem? commentItem;
   CreateDemarcheFromThematiqueStep3ViewModel({DateInputSource? initialDateInput, this.commentItem})
-      : dateSource = initialDateInput ?? DateNotInitialized();
+    : dateSource = initialDateInput ?? DateNotInitialized();
 
   @override
   List<Object?> get props => [dateSource];
