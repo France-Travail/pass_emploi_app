@@ -7,9 +7,6 @@ class UserActionStepperTexts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PassEmploiStepperTexts(
-      stepCount: 3,
-      currentStep: index,
-    );
+    return PassEmploiStepperTexts(stepCount: 3, currentStepIndex: index);
   }
 }

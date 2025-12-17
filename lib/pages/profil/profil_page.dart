@@ -219,7 +219,7 @@ class _Scaffold extends StatelessWidget {
 }
 
 class _Diagoriente extends StatelessWidget {
-  const _Diagoriente({super.key, required this.paddingIfEnabled});
+  const _Diagoriente({required this.paddingIfEnabled});
   final EdgeInsetsGeometry paddingIfEnabled;
 
   @override

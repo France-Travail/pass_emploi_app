@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_display_state.dart';
-import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_view_model.dart';
 
 class AppBarBackButton extends StatelessWidget {
   const AppBarBackButton(this.viewModel);
-  final CreateDemarcheFormViewModel viewModel;
+  final CreateDemarcheFormChangeNotifier viewModel;
 
   @override
   Widget build(BuildContext context) {

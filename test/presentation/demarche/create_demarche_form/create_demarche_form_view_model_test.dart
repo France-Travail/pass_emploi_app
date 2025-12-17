@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_display_state.dart';
-import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_view_model.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_step3_view_model.dart';
 import 'package:pass_emploi_app/presentation/demarche/demarche_du_referentiel_card_view_model.dart';
 import 'package:pass_emploi_app/presentation/demarche/thematiques_demarche_view_model.dart';
@@ -20,7 +20,8 @@ void main() {
       group('onNavigateBackward', () {
         test('should stay on step 1 when current step is step 1', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel(displayState: CreateDemarcheStep1())..addListener(notify);
+          final viewModel = CreateDemarcheFormChangeNotifier(displayState: CreateDemarcheStep1Thematique())
+            ..addListener(notify);
 
           // When
           viewModel.onNavigateBackward();
@@ -32,7 +33,7 @@ void main() {
 
         test('should go back to step 1 when current step is thematique step 2', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel(displayState: CreateDemarcheFromThematiqueStep2())
+          final viewModel = CreateDemarcheFormChangeNotifier(displayState: CreateDemarcheFromThematiqueStep2())
             ..addListener(notify);
 
           // When
@@ -45,7 +46,7 @@ void main() {
 
         test('should go back to step 1 when current step is personnalisee step 2', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel(displayState: CreateDemarchePersonnaliseeStep2())
+          final viewModel = CreateDemarcheFormChangeNotifier(displayState: CreateDemarchePersonnaliseeStep2())
             ..addListener(notify);
 
           // When
@@ -58,7 +59,7 @@ void main() {
 
         test('should go back to thematique step 2 when current step is thematique step 3', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel(displayState: CreateDemarcheFromThematiqueStep3())
+          final viewModel = CreateDemarcheFormChangeNotifier(displayState: CreateDemarcheFromThematiqueStep3())
             ..addListener(notify);
 
           // When
@@ -71,7 +72,7 @@ void main() {
 
         test('should go back to personnalisee step 2 when current step is personnalisee step 3', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel(displayState: CreateDemarchePersonnaliseeStep3())
+          final viewModel = CreateDemarcheFormChangeNotifier(displayState: CreateDemarchePersonnaliseeStep3())
             ..addListener(notify);
 
           // When
@@ -84,7 +85,7 @@ void main() {
 
         test('should go back on step 2 state when current step is submitted', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel(displayState: CreateDemarcheFromThematiqueSubmitted())
+          final viewModel = CreateDemarcheFormChangeNotifier(displayState: CreateDemarcheFromThematiqueSubmitted())
             ..addListener(notify);
 
           // When
@@ -99,7 +100,7 @@ void main() {
       group('navigateToCreateCustomDemarche', () {
         test('should navigate to personnalisee step 2', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel()..addListener(notify);
+          final viewModel = CreateDemarcheFormChangeNotifier()..addListener(notify);
 
           // When
           viewModel.navigateToCreateCustomDemarche();
@@ -113,7 +114,7 @@ void main() {
       group('navigateToCreateDemarchePersonnaliseeStep3', () {
         test('should navigate to personnalisee step 3', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel()..addListener(notify);
+          final viewModel = CreateDemarcheFormChangeNotifier()..addListener(notify);
 
           // When
           viewModel.navigateToCreateDemarchePersonnaliseeStep3();
@@ -129,7 +130,7 @@ void main() {
       group('descriptionChanged', () {
         test('should update description and notify listeners', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel()..addListener(notify);
+          final viewModel = CreateDemarcheFormChangeNotifier()..addListener(notify);
 
           // When
           viewModel.descriptionChanged("new description");
@@ -143,7 +144,7 @@ void main() {
       group('dateDemarchePersonnaliseeChanged', () {
         test('should update date and notify listeners', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel()..addListener(notify);
+          final viewModel = CreateDemarcheFormChangeNotifier()..addListener(notify);
           final newDate = DateFromPicker(DateTime(2024));
 
           // When
@@ -158,7 +159,7 @@ void main() {
       group('dateDemarcheThematiqueChanged', () {
         test('should update date and notify listeners', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel()..addListener(notify);
+          final viewModel = CreateDemarcheFormChangeNotifier()..addListener(notify);
           final newDate = DateFromPicker(DateTime(2024));
 
           // When
@@ -173,7 +174,7 @@ void main() {
       group('commentChanged', () {
         test('should update comment and notify listeners', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel()..addListener(notify);
+          final viewModel = CreateDemarcheFormChangeNotifier()..addListener(notify);
           final newComment = CommentTextItem(label: "label", code: "code");
 
           // When
@@ -188,7 +189,7 @@ void main() {
       group('thematiqueSelected', () {
         test('should update selected thematique and navigate to thematique step 2', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel()..addListener(notify);
+          final viewModel = CreateDemarcheFormChangeNotifier()..addListener(notify);
           final thematique = ThematiqueDemarcheItem(id: "id", title: "title");
 
           // When
@@ -204,12 +205,8 @@ void main() {
       group('demarcheSelected', () {
         test('should update selected demarche and navigate to thematique step 3', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel()..addListener(notify);
-          final demarche = DemarcheDuReferentielCardViewModel(
-            idDemarche: "id",
-            quoi: "quoi",
-            pourquoi: "pourquoi",
-          );
+          final viewModel = CreateDemarcheFormChangeNotifier()..addListener(notify);
+          final demarche = DemarcheDuReferentielCardViewModel(idDemarche: "id", quoi: "quoi", pourquoi: "pourquoi");
 
           // When
           viewModel.demarcheSelected(demarche);
@@ -226,7 +223,7 @@ void main() {
       group('isDescriptionValid', () {
         test('should return true when description is not empty', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel();
+          final viewModel = CreateDemarcheFormChangeNotifier();
           viewModel.descriptionChanged("not empty");
 
           // When & Then
@@ -235,7 +232,7 @@ void main() {
 
         test('should return false when description is empty', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel();
+          final viewModel = CreateDemarcheFormChangeNotifier();
           viewModel.descriptionChanged("");
 
           // When & Then
@@ -246,7 +243,7 @@ void main() {
       group('isDemarchePersonnaliseeDateValid', () {
         test('should return true when date is valid', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel();
+          final viewModel = CreateDemarcheFormChangeNotifier();
           viewModel.dateDemarchePersonnaliseeChanged(DateFromPicker(DateTime(2024)));
 
           // When & Then
@@ -255,7 +252,7 @@ void main() {
 
         test('should return false when date is invalid', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel();
+          final viewModel = CreateDemarcheFormChangeNotifier();
           viewModel.dateDemarchePersonnaliseeChanged(DateNotInitialized());
 
           // When & Then
@@ -268,7 +265,7 @@ void main() {
       group('submitDemarchePersonnalisee', () {
         test('should set state to personnalisee submitted', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel()..addListener(notify);
+          final viewModel = CreateDemarcheFormChangeNotifier()..addListener(notify);
 
           // When
           viewModel.submitDemarchePersonnalisee();
@@ -282,7 +279,7 @@ void main() {
       group('submitDemarcheThematique', () {
         test('should set state to thematique submitted', () {
           // Given
-          final viewModel = CreateDemarcheFormViewModel()..addListener(notify);
+          final viewModel = CreateDemarcheFormChangeNotifier()..addListener(notify);
 
           // When
           viewModel.submitDemarcheThematique();
@@ -297,7 +294,7 @@ void main() {
     group('createDemarcheRequestAction', () {
       test('should create action with correct values', () {
         // Given
-        final viewModel = CreateDemarcheFormViewModel();
+        final viewModel = CreateDemarcheFormChangeNotifier();
         final demarche = DemarcheDuReferentielCardViewModel(
           idDemarche: "id",
           quoi: "test_quoi",

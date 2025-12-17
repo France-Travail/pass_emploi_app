@@ -3,14 +3,13 @@ import 'package:pass_emploi_app/features/demarche/create/create_demarche_actions
 import 'package:pass_emploi_app/pages/demarche/create_demarche/create_demarche_app_bar_back_button.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_from_thematique_step_2_page.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_from_thematique_step_3_page.dart';
+import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_ia_ft_step_1_page.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_ia_ft_step_2_page.dart';
-import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_ia_ft_step_3_page.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_personnalisee_step_2_page.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_personnalisee_step_3_page.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_step_1_page.dart';
-import 'package:pass_emploi_app/pages/demarche/create_demarche_form_page.dart';
+import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_display_state.dart';
-import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_view_model.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -20,13 +19,13 @@ import 'package:pass_emploi_app/widgets/pass_emploi_stepper.dart';
 class CreateDemarcheForm extends StatefulWidget {
   const CreateDemarcheForm({
     super.key,
-    this.startPoint,
+    required this.hasDemarcheIa,
     required this.onCreateDemarchePersonnalisee,
     required this.onCreateDemarcheFromReferentiel,
     required this.onCreateDemarcheIaFt,
   });
 
-  final StartPoint? startPoint;
+  final bool hasDemarcheIa;
   final void Function(CreateDemarchePersonnaliseeRequestAction) onCreateDemarchePersonnalisee;
   final void Function(CreateDemarcheRequestAction) onCreateDemarcheFromReferentiel;
   final void Function(List<CreateDemarcheRequestAction>) onCreateDemarcheIaFt;
@@ -36,23 +35,25 @@ class CreateDemarcheForm extends StatefulWidget {
 }
 
 class _CreateDemarcheFormState extends State<CreateDemarcheForm> {
-  late final CreateDemarcheFormViewModel _viewModel;
+  late final CreateDemarcheFormChangeNotifier _changeNotifier;
 
   @override
   void initState() {
     super.initState();
-    _viewModel = CreateDemarcheFormViewModel(displayState: widget.startPoint?.toDisplayState());
-    _viewModel.addListener(_onFormStateChanged);
+    _changeNotifier = CreateDemarcheFormChangeNotifier(
+      displayState: widget.hasDemarcheIa ? CreateDemarcheIaFtStep1() : CreateDemarcheStep1Thematique(),
+    );
+    _changeNotifier.addListener(_onFormStateChanged);
   }
 
   void _onFormStateChanged() {
-    final displayState = _viewModel.displayState;
+    final displayState = _changeNotifier.displayState;
     if (displayState is CreateDemarcheFromThematiqueSubmitted) {
-      widget.onCreateDemarcheFromReferentiel(_viewModel.createDemarcheRequestAction());
+      widget.onCreateDemarcheFromReferentiel(_changeNotifier.createDemarcheRequestAction());
     }
 
     if (displayState is CreateDemarchePersonnaliseeSubmitted) {
-      widget.onCreateDemarchePersonnalisee(_viewModel.createDemarchePersonnaliseeRequestAction());
+      widget.onCreateDemarchePersonnalisee(_changeNotifier.createDemarchePersonnaliseeRequestAction());
     }
 
     if (displayState is CreateDemarcheIaFtSubmitted) {
@@ -67,59 +68,45 @@ class _CreateDemarcheFormState extends State<CreateDemarcheForm> {
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
-      appBar: SecondaryAppBar(
-        title: Strings.createDemarcheAppBarTitle,
-        leading: AppBarBackButton(_viewModel),
-      ),
-      body: _Body(_viewModel),
+      appBar: SecondaryAppBar(title: Strings.createDemarcheAppBarTitle, leading: AppBarBackButton(_changeNotifier)),
+      body: _Body(_changeNotifier),
     );
   }
 }
 
 class _Body extends StatelessWidget {
-  final CreateDemarcheFormViewModel viewModel;
+  final CreateDemarcheFormChangeNotifier changeNotifier;
 
-  const _Body(this.viewModel);
+  const _Body(this.changeNotifier);
 
   @override
   Widget build(BuildContext context) {
+    final currentStepIndex = changeNotifier.displayState.index();
     return Column(
       children: [
         SizedBox(height: Margins.spacing_base),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-          child: PassEmploiStepperProgressBar(
+        if (currentStepIndex != null)
+          CreateDemarcheStepper(
             stepCount: CreateDemarcheDisplayState.stepsTotalCount,
-            currentStep: viewModel.displayState.index(),
+            currentStepIndex: currentStepIndex,
           ),
-        ),
         Expanded(
           child: AnimatedSwitcher(
             duration: AnimationDurations.fast,
             child: Column(
               children: [
-                SizedBox(height: Margins.spacing_xs),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-                  child: PassEmploiStepperTexts(
-                    stepCount: CreateDemarcheDisplayState.stepsTotalCount,
-                    currentStep: viewModel.displayState.index() + 1,
-                  ),
-                ),
                 Expanded(
-                  child: switch (viewModel.displayState) {
-                    CreateDemarcheStep1() => CreateDemarcheStep1Page(viewModel),
-                    CreateDemarcheFromThematiqueStep2() => CreateDemarcheFromThematiqueStep2Page(viewModel),
-                    CreateDemarchePersonnaliseeStep2() => CreateDemarchePersonnaliseeStep2Page(viewModel),
-                    CreateDemarcheIaFtStep2() => CreateDemarcheIaFtStep2Page(viewModel),
+                  child: switch (changeNotifier.displayState) {
+                    CreateDemarcheStep1Thematique() => CreateDemarcheStep1Page(changeNotifier),
+                    CreateDemarcheIaFtStep1() => CreateDemarcheIaFtStep1Page(changeNotifier),
+                    CreateDemarcheFromThematiqueStep2() => CreateDemarcheFromThematiqueStep2Page(changeNotifier),
+                    CreateDemarchePersonnaliseeStep2() => CreateDemarchePersonnaliseeStep2Page(changeNotifier),
+                    CreateDemarcheIaFtStep2() => CreateDemarcheIaFtStep2Page(changeNotifier),
                     CreateDemarcheFromThematiqueStep3() ||
-                    CreateDemarcheFromThematiqueSubmitted() =>
-                      CreateDemarcheFromThematiqueStep3Page(viewModel),
+                    CreateDemarcheFromThematiqueSubmitted() => CreateDemarcheFromThematiqueStep3Page(changeNotifier),
                     CreateDemarchePersonnaliseeStep3() ||
-                    CreateDemarchePersonnaliseeSubmitted() =>
-                      CreateDemarchePersonnaliseeStep3Page(viewModel),
-                    CreateDemarcheIaFtStep3() => CreateDemarcheIaFtStep3Page(viewModel),
-                    CreateDemarcheIaFtSubmitted() => CreateDemarcheIaFtStep3Page(viewModel),
+                    CreateDemarchePersonnaliseeSubmitted() => CreateDemarchePersonnaliseeStep3Page(changeNotifier),
+                    CreateDemarcheIaFtSubmitted() => CreateDemarcheIaFtStep2Page(changeNotifier),
                   },
                 ),
               ],
@@ -128,14 +115,5 @@ class _Body extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-extension StartPointExt on StartPoint? {
-  CreateDemarcheDisplayState toDisplayState() {
-    return switch (this) {
-      StartPoint.ftIa => CreateDemarcheIaFtStep2(),
-      _ => CreateDemarcheStep1(),
-    };
   }
 }

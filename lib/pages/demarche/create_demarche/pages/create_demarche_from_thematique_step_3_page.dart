@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/features/thematiques_demarche/thematiques_demarche_actions.dart';
-import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_view_model.dart';
+import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_from_referentiel_step_3_view_model.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_step3_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -15,7 +15,7 @@ import 'package:pass_emploi_app/widgets/date_pickers/date_picker_suggestions.dar
 
 class CreateDemarcheFromThematiqueStep3Page extends StatelessWidget {
   const CreateDemarcheFromThematiqueStep3Page(this.formVm);
-  final CreateDemarcheFormViewModel formVm;
+  final CreateDemarcheFormChangeNotifier formVm;
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +29,8 @@ class CreateDemarcheFromThematiqueStep3Page extends StatelessWidget {
 
     return StoreConnector<AppState, CreateDemarcheFromReferentielStep3ViewModel>(
       onInit: (store) => store.dispatch(ThematiqueDemarcheRequestAction()),
-      converter: (store) => CreateDemarcheFromReferentielStep3ViewModel.create(
-        store,
-        selectedDemarche.idDemarche,
-        selectedThematique.id,
-      ),
+      converter: (store) =>
+          CreateDemarcheFromReferentielStep3ViewModel.create(store, selectedDemarche.idDemarche, selectedThematique.id),
       builder: (context, storeVm) => Stack(
         children: [
           SingleChildScrollView(
@@ -83,7 +80,7 @@ class CreateDemarcheFromThematiqueStep3Page extends StatelessWidget {
                 label: Strings.validateLaDemarche,
                 onPressed: () => formVm.submitDemarcheThematique(),
               ),
-            )
+            ),
         ],
       ),
     );

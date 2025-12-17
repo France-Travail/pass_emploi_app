@@ -157,10 +157,7 @@ class OnboardingItem extends AccueilItem {
   final int completedSteps;
   final int totalSteps;
 
-  OnboardingItem({
-    required this.completedSteps,
-    required this.totalSteps,
-  });
+  OnboardingItem({required this.completedSteps, required this.totalSteps});
 
   @override
   List<Object?> get props => [completedSteps, totalSteps];
@@ -170,13 +167,6 @@ class AccueilZenithMessageItem extends AccueilItem {
   final AccueilZenithMessage accueilZenithMessage;
 
   AccueilZenithMessageItem(this.accueilZenithMessage);
-}
-
-class AccueilIaDemarchesItem extends AccueilItem {
-  AccueilIaDemarchesItem();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class AccueilDateDeMigrationItem extends AccueilItem {
