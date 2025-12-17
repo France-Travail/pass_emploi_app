@@ -98,6 +98,11 @@ class CreateDemarcheFormChangeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  void navigateToThematiquesDemarche() {
+    displayState = CreateDemarcheStep1Thematique();
+    notifyListeners();
+  }
+
   void navigateToCreateDemarchePersonnaliseeStep3() {
     displayState = CreateDemarchePersonnaliseeStep3();
     notifyListeners();

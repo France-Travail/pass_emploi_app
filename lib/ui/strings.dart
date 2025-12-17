@@ -53,7 +53,7 @@ class Strings {
   static String close = "Fermer";
   static String yes = "Oui";
   static String no = "Non";
-  static String or = "OU";
+  static String or = "ou";
   static String ajouter = "Ajouter";
   static String cancelLabel = "Annuler";
   static String suppressionLabel = "Supprimer";
@@ -885,6 +885,8 @@ class Strings {
   static String iaDemarchesAccueilTitle = "Vos démarches en 1 minute";
   static String iaDemarchesAccueilSubtitle = "L’IA détecte vos démarches et les organise en un clic";
   static String iaDemarchesAccueilHint = "Créer vos démarches avec l’IA";
+
+  static String thematiquesDemarcheButton = "Accéder aux thématiques";
 
   // Recherche
   static String derniereRecherche = "Dernière recherche";

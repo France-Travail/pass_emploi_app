@@ -141,7 +141,10 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
                   ? () => widget.viewModel.navigateToCreateDemarcheIaFtStep2()
                   : null,
             ),
-            const SizedBox(height: Margins.spacing_base),
+            const SizedBox(height: Margins.spacing_l),
+            _OrDivider(),
+            const SizedBox(height: Margins.spacing_l),
+            ThematiqueButton(viewModel: widget.viewModel),
             SizedBox(height: Margins.spacing_huge),
             SizedBox(height: Margins.spacing_huge),
             SizedBox(height: Margins.spacing_huge),
@@ -211,6 +214,38 @@ class _SoundWaveformWidgetState extends State<SoundWaveformWidget> with TickerPr
           ),
         );
       },
+    );
+  }
+}
+
+class _OrDivider extends StatelessWidget {
+  const _OrDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    final color = AppColors.grey500;
+    return Row(
+      children: [
+        Expanded(child: Divider(color: color, height: 1)),
+        const SizedBox(width: Margins.spacing_base),
+        Text(Strings.or, style: TextStyles.textBaseRegular.copyWith(color: color)),
+        const SizedBox(width: Margins.spacing_base),
+        Expanded(child: Divider(color: color, height: 1)),
+      ],
+    );
+  }
+}
+
+class ThematiqueButton extends StatelessWidget {
+  const ThematiqueButton({super.key, required this.viewModel});
+  final CreateDemarcheFormChangeNotifier viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return SecondaryButton(
+      label: Strings.thematiquesDemarcheButton,
+      suffix: Icon(Icons.arrow_forward_rounded, color: AppColors.primary),
+      onPressed: () => viewModel.navigateToThematiquesDemarche(),
     );
   }
 }

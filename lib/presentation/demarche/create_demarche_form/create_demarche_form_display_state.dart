@@ -10,7 +10,7 @@ sealed class CreateDemarcheDisplayState {
 
 sealed class CreateDemarcheStep1 extends CreateDemarcheDisplayState {}
 
-class CreateDemarcheStep1Thematique extends CreateDemarcheDisplayState {
+class CreateDemarcheStep1Thematique extends CreateDemarcheStep1 {
   @override
   int? index() => 0;
 }
