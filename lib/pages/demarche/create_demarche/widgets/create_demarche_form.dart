@@ -3,8 +3,8 @@ import 'package:pass_emploi_app/features/demarche/create/create_demarche_actions
 import 'package:pass_emploi_app/pages/demarche/create_demarche/create_demarche_app_bar_back_button.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_from_thematique_step_2_page.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_from_thematique_step_3_page.dart';
+import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_ia_ft_step_1_page.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_ia_ft_step_2_page.dart';
-import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_ia_ft_step_3_page.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_personnalisee_step_2_page.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_personnalisee_step_3_page.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_step_1_page.dart';
@@ -41,7 +41,7 @@ class _CreateDemarcheFormState extends State<CreateDemarcheForm> {
   void initState() {
     super.initState();
     _changeNotifier = CreateDemarcheFormChangeNotifier(
-      displayState: widget.hasDemarcheIa ? CreateDemarcheIaFtStep2() : CreateDemarcheStep1(),
+      displayState: widget.hasDemarcheIa ? CreateDemarcheIaFtStep1() : CreateDemarcheStep1Thematique(),
     );
     _changeNotifier.addListener(_onFormStateChanged);
   }
@@ -97,7 +97,8 @@ class _Body extends StatelessWidget {
               children: [
                 Expanded(
                   child: switch (changeNotifier.displayState) {
-                    CreateDemarcheStep1() => CreateDemarcheStep1Page(changeNotifier),
+                    CreateDemarcheStep1Thematique() => CreateDemarcheStep1Page(changeNotifier),
+                    CreateDemarcheIaFtStep1() => CreateDemarcheIaFtStep1Page(changeNotifier),
                     CreateDemarcheFromThematiqueStep2() => CreateDemarcheFromThematiqueStep2Page(changeNotifier),
                     CreateDemarchePersonnaliseeStep2() => CreateDemarchePersonnaliseeStep2Page(changeNotifier),
                     CreateDemarcheIaFtStep2() => CreateDemarcheIaFtStep2Page(changeNotifier),
@@ -105,8 +106,7 @@ class _Body extends StatelessWidget {
                     CreateDemarcheFromThematiqueSubmitted() => CreateDemarcheFromThematiqueStep3Page(changeNotifier),
                     CreateDemarchePersonnaliseeStep3() ||
                     CreateDemarchePersonnaliseeSubmitted() => CreateDemarchePersonnaliseeStep3Page(changeNotifier),
-                    CreateDemarcheIaFtStep3() => CreateDemarcheIaFtStep3Page(changeNotifier),
-                    CreateDemarcheIaFtSubmitted() => CreateDemarcheIaFtStep3Page(changeNotifier),
+                    CreateDemarcheIaFtSubmitted() => CreateDemarcheIaFtStep2Page(changeNotifier),
                   },
                 ),
               ],

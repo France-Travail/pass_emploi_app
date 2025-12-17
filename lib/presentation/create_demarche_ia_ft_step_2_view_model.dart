@@ -5,18 +5,15 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:redux/redux.dart';
 
-class CreateDemarcheIaFtStep3ViewModel extends Equatable {
+class CreateDemarcheIaFtStep2ViewModel extends Equatable {
   final DisplayState loadDisplayState;
   final List<DemarcheIaSuggestion> suggestions;
 
-  CreateDemarcheIaFtStep3ViewModel({
-    required this.loadDisplayState,
-    required this.suggestions,
-  });
+  CreateDemarcheIaFtStep2ViewModel({required this.loadDisplayState, required this.suggestions});
 
-  factory CreateDemarcheIaFtStep3ViewModel.create(Store<AppState> store) {
+  factory CreateDemarcheIaFtStep2ViewModel.create(Store<AppState> store) {
     final iaFtSuggestionsState = store.state.iaFtSuggestionsState;
-    return CreateDemarcheIaFtStep3ViewModel(
+    return CreateDemarcheIaFtStep2ViewModel(
       loadDisplayState: _loadDisplayState(iaFtSuggestionsState),
       suggestions: _suggestions(iaFtSuggestionsState),
     );

@@ -20,7 +20,8 @@ void main() {
       group('onNavigateBackward', () {
         test('should stay on step 1 when current step is step 1', () {
           // Given
-          final viewModel = CreateDemarcheFormChangeNotifier(displayState: CreateDemarcheStep1())..addListener(notify);
+          final viewModel = CreateDemarcheFormChangeNotifier(displayState: CreateDemarcheStep1Thematique())
+            ..addListener(notify);
 
           // When
           viewModel.onNavigateBackward();

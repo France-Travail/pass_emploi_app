@@ -10,7 +10,7 @@ import 'package:pass_emploi_app/presentation/model/date_input_source.dart';
 part 'steps/create_demarche_confirmation_step.dart';
 part 'steps/create_demarche_from_thematique_step_2.dart';
 part 'steps/create_demarche_from_thematique_step_3.dart';
-part 'steps/create_demarche_ia_ft_step_2_view_model.dart';
+part 'steps/create_demarche_ia_ft_step_1_view_model.dart';
 part 'steps/create_demarche_personnalisee_step_2.dart';
 part 'steps/create_demarche_personnalisee_step_3.dart';
 part 'steps/create_demarche_step_1.dart';
@@ -23,15 +23,15 @@ class CreateDemarcheFormChangeNotifier extends ChangeNotifier {
     CreateDemarcheStep1ViewModel? initialStep1ViewModel,
     CreateDemarcheFromThematiqueStep2ViewModel? initialThematiqueStep2ViewModel,
     CreateDemarchePersonnaliseeStep2ViewModel? initialPersonnaliseeStep2ViewModel,
-    CreateDemarcheIaFtStep2ViewModel? initialIaFtStep2ViewModel,
+    CreateDemarcheIaFtStep1ViewModel? initialIaFtStep2ViewModel,
     CreateDemarcheFromThematiqueStep3ViewModel? initialFromThematiqueStep3ViewModel,
     CreateDemarchePersonnaliseeStep3ViewModel? initialPersonnaliseeStep3ViewModel,
     CreateDemarcheConfirmationStepViewModel? initialConfirmationStepViewModel,
-  }) : displayState = displayState ?? CreateDemarcheStep1(),
+  }) : displayState = displayState ?? CreateDemarcheStep1Thematique(),
        step1ViewModel = initialStep1ViewModel ?? CreateDemarcheStep1ViewModel(),
        thematiqueStep2ViewModel = initialThematiqueStep2ViewModel ?? CreateDemarcheFromThematiqueStep2ViewModel(),
        personnaliseeStep2ViewModel = initialPersonnaliseeStep2ViewModel ?? CreateDemarchePersonnaliseeStep2ViewModel(),
-       iaFtStep2ViewModel = initialIaFtStep2ViewModel ?? CreateDemarcheIaFtStep2ViewModel(),
+       iaFtStep2ViewModel = initialIaFtStep2ViewModel ?? CreateDemarcheIaFtStep1ViewModel(),
        fromThematiqueStep3ViewModel =
            initialFromThematiqueStep3ViewModel ?? CreateDemarcheFromThematiqueStep3ViewModel(),
        personnaliseeStep3ViewModel = initialPersonnaliseeStep3ViewModel ?? CreateDemarchePersonnaliseeStep3ViewModel(),
@@ -40,7 +40,7 @@ class CreateDemarcheFormChangeNotifier extends ChangeNotifier {
   CreateDemarcheStep1ViewModel step1ViewModel;
   CreateDemarcheFromThematiqueStep2ViewModel thematiqueStep2ViewModel;
   CreateDemarchePersonnaliseeStep2ViewModel personnaliseeStep2ViewModel;
-  CreateDemarcheIaFtStep2ViewModel iaFtStep2ViewModel;
+  CreateDemarcheIaFtStep1ViewModel iaFtStep2ViewModel;
   CreateDemarcheFromThematiqueStep3ViewModel fromThematiqueStep3ViewModel;
   CreateDemarchePersonnaliseeStep3ViewModel personnaliseeStep3ViewModel;
   CreateDemarcheConfirmationStepViewModel confirmationStepViewModel;
@@ -51,13 +51,13 @@ class CreateDemarcheFormChangeNotifier extends ChangeNotifier {
     }
 
     displayState = switch (displayState) {
-      CreateDemarcheStep1() => displayState,
-      CreateDemarcheFromThematiqueStep2() => CreateDemarcheStep1(),
-      CreateDemarchePersonnaliseeStep2() => CreateDemarcheStep1(),
-      CreateDemarcheIaFtStep2() => CreateDemarcheStep1(),
+      CreateDemarcheStep1Thematique() => displayState,
+      CreateDemarcheIaFtStep1() => displayState,
+      CreateDemarcheFromThematiqueStep2() => CreateDemarcheStep1Thematique(),
+      CreateDemarchePersonnaliseeStep2() => CreateDemarcheStep1Thematique(),
+      CreateDemarcheIaFtStep2() => CreateDemarcheIaFtStep1(),
       CreateDemarcheFromThematiqueStep3() => CreateDemarcheFromThematiqueStep2(),
       CreateDemarchePersonnaliseeStep3() => CreateDemarchePersonnaliseeStep2(),
-      CreateDemarcheIaFtStep3() => CreateDemarcheIaFtStep2(),
       CreateDemarcheFromThematiqueSubmitted() => CreateDemarcheFromThematiqueStep2(),
       CreateDemarchePersonnaliseeSubmitted() => CreateDemarchePersonnaliseeStep2(),
       CreateDemarcheIaFtSubmitted() => CreateDemarcheIaFtStep2(),
@@ -88,13 +88,13 @@ class CreateDemarcheFormChangeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void navigateToCreateDemarcheIaFtStep2() {
-    displayState = CreateDemarcheIaFtStep2();
+  void navigateToCreateDemarcheIaFtStep1() {
+    displayState = CreateDemarcheIaFtStep1();
     notifyListeners();
   }
 
-  void navigateToCreateDemarcheIaFtStep3() {
-    displayState = CreateDemarcheIaFtStep3();
+  void navigateToCreateDemarcheIaFtStep2() {
+    displayState = CreateDemarcheIaFtStep2();
     notifyListeners();
   }
 

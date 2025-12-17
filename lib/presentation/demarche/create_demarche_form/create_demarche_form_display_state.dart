@@ -7,9 +7,17 @@ sealed class CreateDemarcheDisplayState {
 }
 
 // step 1
-class CreateDemarcheStep1 extends CreateDemarcheDisplayState {
+
+sealed class CreateDemarcheStep1 extends CreateDemarcheDisplayState {}
+
+class CreateDemarcheStep1Thematique extends CreateDemarcheDisplayState {
   @override
   int? index() => 0;
+}
+
+class CreateDemarcheIaFtStep1 extends CreateDemarcheStep1 {
+  @override
+  int? index() => null;
 }
 
 // step 2
@@ -44,11 +52,6 @@ class CreateDemarcheFromThematiqueStep3 extends CreateDemarcheStep3 {
 class CreateDemarchePersonnaliseeStep3 extends CreateDemarcheStep3 {
   @override
   int? index() => 2;
-}
-
-class CreateDemarcheIaFtStep3 extends CreateDemarcheStep3 {
-  @override
-  int? index() => null;
 }
 
 // confirmation

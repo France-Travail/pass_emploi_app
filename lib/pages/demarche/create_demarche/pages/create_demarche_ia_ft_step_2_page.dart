@@ -1,150 +1,119 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
+import 'package:pass_emploi_app/features/demarche/create/create_demarche_actions.dart';
+import 'package:pass_emploi_app/features/ia_ft_suggestions/ia_ft_suggestions_actions.dart';
+import 'package:pass_emploi_app/models/demarche_ia_suggestion.dart';
+import 'package:pass_emploi_app/presentation/create_demarche_ia_ft_step_2_view_model.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
+import 'package:pass_emploi_app/presentation/display_state.dart';
+import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
+import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
-import 'package:pass_emploi_app/widgets/information_bandeau.dart';
-import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
-import 'package:speech_to_text/speech_to_text.dart';
+import 'package:pass_emploi_app/widgets/cards/base_cards/base_card.dart';
+import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
+import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
+import 'package:pass_emploi_app/widgets/date_pickers/date_picker.dart';
 
-class CreateDemarcheIaFtStep2Page extends StatefulWidget {
-  const CreateDemarcheIaFtStep2Page(this.viewModel);
-  final CreateDemarcheFormChangeNotifier viewModel;
-
-  @override
-  State<CreateDemarcheIaFtStep2Page> createState() => _CreateDemarcheIaFtStep2PageState();
-}
-
-class _CreateDemarcheIaFtStep2PageState extends State<CreateDemarcheIaFtStep2Page> {
-  final SpeechToText _speechToText = SpeechToText();
-  late final TextEditingController _textEditingController;
-  bool _isListening = false;
-  String? _errorText;
-
-  Future<void> _startListening() async {
-    PassEmploiMatomoTracker.instance.trackEvent(
-      eventCategory: AnalyticsEventNames.createDemarcheEventCategory,
-      action: AnalyticsEventNames.createDemarcheIaDicterPressed,
-    );
-    final bool available = await _speechToText.initialize(
-      onError: (error) {
-        setState(() => _errorText = Strings.genericError);
-      },
-    );
-    if (available) {
-      setState(() => _isListening = true);
-      _speechToText.listen(
-        onResult: (result) {
-          setState(() {
-            if (result.recognizedWords.length >= CreateDemarcheIaFtStep2ViewModel.maxLength) {
-              _stopListening();
-            } else {
-              _textEditingController.text = result.recognizedWords;
-            }
-          });
-        },
-      );
-    }
-  }
-
-  void _stopListening() {
-    _speechToText.stop();
-    setState(() => _isListening = false);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _textEditingController = TextEditingController(text: widget.viewModel.iaFtStep2ViewModel.description);
-    _textEditingController.addListener(() {
-      widget.viewModel.iaFtDescriptionChanged(_textEditingController.text);
-    });
-  }
+class CreateDemarcheIaFtStep2Page extends StatelessWidget {
+  const CreateDemarcheIaFtStep2Page(this.formViewModel);
+  final CreateDemarcheFormChangeNotifier formViewModel;
 
   @override
   Widget build(BuildContext context) {
     return Tracker(
-      tracking: AnalyticsScreenNames.createDemarcheIaFtStep2,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+      tracking: AnalyticsScreenNames.createDemarcheIaFtStep3,
+      child: StoreConnector<AppState, CreateDemarcheIaFtStep2ViewModel>(
+        converter: (store) => CreateDemarcheIaFtStep2ViewModel.create(store),
+        onInit: (store) =>
+            store.dispatch(IaFtSuggestionsRequestAction(query: formViewModel.iaFtStep2ViewModel.description)),
+        builder: (context, viewModel) => _Body(formViewModel: formViewModel, viewModel: viewModel),
+      ),
+    );
+  }
+}
+
+class _Body extends StatelessWidget {
+  const _Body({required this.formViewModel, required this.viewModel});
+  final CreateDemarcheFormChangeNotifier formViewModel;
+  final CreateDemarcheIaFtStep2ViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return switch (viewModel.loadDisplayState) {
+      DisplayState.CONTENT => _Content(viewModel, formViewModel),
+      DisplayState.FAILURE => _Failure(formViewModel),
+      _ => const _Loading(),
+    };
+  }
+}
+
+class _Loading extends StatelessWidget {
+  const _Loading();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(Margins.spacing_base),
+      child: Column(
+        children: [
+          Image.asset(Drawables.iaFtSuggestionsLoading, width: 200, height: 200),
+          const SizedBox(height: Margins.spacing_base),
+          Text(Strings.iaFtSuggestionsLoading, style: TextStyles.textMBold, textAlign: TextAlign.center),
+          const SizedBox(height: Margins.spacing_l),
+          CircularProgressIndicator(),
+        ],
+      ),
+    );
+  }
+}
+
+class _Failure extends StatelessWidget {
+  const _Failure(this.viewModel);
+  final CreateDemarcheFormChangeNotifier viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(Margins.spacing_base),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Image.asset(Drawables.iaFtSuggestionsFailure, width: 200, height: 200),
+          const SizedBox(height: Margins.spacing_m),
+          Text(Strings.iaFtSuggestionsFailure, style: TextStyles.textMBold, textAlign: TextAlign.center),
+          const SizedBox(height: Margins.spacing_m),
+          PrimaryActionButton(onPressed: () => viewModel.onNavigateBackward(), label: Strings.back),
+        ],
+      ),
+    );
+  }
+}
+
+class _Empty extends StatelessWidget {
+  const _Empty(this.viewModel);
+  final CreateDemarcheFormChangeNotifier viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(Margins.spacing_base),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(height: Margins.spacing_base),
-            Text(Strings.iaFtStep2Title, style: TextStyles.textMBold),
-            Text(Strings.iaFtStep2Mandatory, style: TextStyles.textSRegular(color: AppColors.contentColor)),
-            const SizedBox(height: Margins.spacing_base),
-            InformationBandeau(
-              text: Strings.iaFtStep2Warning,
-              icon: AppIcons.info,
-              backgroundColor: AppColors.primaryLighten,
-              textColor: AppColors.primary,
-              borderRadius: Dimens.radius_base,
-              padding: EdgeInsets.symmetric(vertical: Margins.spacing_base, horizontal: Margins.spacing_base),
-            ),
-            const SizedBox(height: Margins.spacing_base),
-            Stack(
-              children: [
-                BaseTextField(
-                  controller: _textEditingController,
-                  hintText: Strings.iaFtStep2FieldHint,
-                  minLines: 3,
-                  maxLines: null,
-                  maxLength: CreateDemarcheIaFtStep2ViewModel.maxLength,
-                  errorText: _errorText,
-                  onChanged: (value) => setState(() => _errorText = null),
-                  suffixIcon: Opacity(
-                    opacity: 0,
-                    child: ExcludeSemantics(
-                      child: IconButton(onPressed: null, icon: Icon(Icons.close), color: AppColors.primary),
-                    ),
-                  ),
-                ),
-                if (_textEditingController.text.isNotEmpty)
-                  Positioned(
-                    right: 0,
-                    child: IconButton(
-                      onPressed: () => _textEditingController.clear(),
-                      icon: Icon(Icons.close),
-                      color: AppColors.primary,
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: Margins.spacing_base),
-            SecondaryButton(
-              label: _isListening ? Strings.iaFtStep2ButtonStop : Strings.iaFtStep2ButtonDicter,
-              onPressed: () {
-                if (_isListening) {
-                  _stopListening();
-                } else {
-                  _startListening();
-                }
-              },
-              suffix: _isListening ? SizedBox(height: 24, child: SoundWaveformWidget()) : null,
-              icon: _isListening ? Icons.stop_circle_rounded : Icons.mic,
-            ),
-
-            const SizedBox(height: Margins.spacing_base),
-            PrimaryActionButton(
-              label: Strings.iaFtStep2Button,
-              disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.5),
-              onPressed: _textEditingController.text.isNotEmpty
-                  ? () => widget.viewModel.navigateToCreateDemarcheIaFtStep3()
-                  : null,
-            ),
-            const SizedBox(height: Margins.spacing_base),
-            SizedBox(height: Margins.spacing_huge),
-            SizedBox(height: Margins.spacing_huge),
-            SizedBox(height: Margins.spacing_huge),
+            Image.asset(Drawables.iaFtSuggestionsEmpty, width: 200, height: 200),
+            const SizedBox(height: Margins.spacing_m),
+            Text(Strings.iaFtSuggestionsEmpty, style: TextStyles.textMBold, textAlign: TextAlign.center),
+            const SizedBox(height: Margins.spacing_m),
+            PrimaryActionButton(onPressed: () => viewModel.navigateToCreateDemarcheIaFtStep2(), label: Strings.back),
           ],
         ),
       ),
@@ -152,65 +121,222 @@ class _CreateDemarcheIaFtStep2PageState extends State<CreateDemarcheIaFtStep2Pag
   }
 }
 
-class SoundWaveformWidget extends StatefulWidget {
-  final int count;
-  final double minHeight;
-  final double maxHeight;
-  final int durationInMilliseconds;
+class _Content extends StatefulWidget {
+  const _Content(this.viewModel, this.formViewModel);
+  final CreateDemarcheIaFtStep2ViewModel viewModel;
+  final CreateDemarcheFormChangeNotifier formViewModel;
 
-  const SoundWaveformWidget({
-    super.key,
-    this.count = 6,
-    this.minHeight = 10,
-    this.maxHeight = 20,
-    this.durationInMilliseconds = 1000,
-  });
   @override
-  State<SoundWaveformWidget> createState() => _SoundWaveformWidgetState();
+  State<_Content> createState() => _ContentState();
 }
 
-class _SoundWaveformWidgetState extends State<SoundWaveformWidget> with TickerProviderStateMixin {
-  late AnimationController controller;
+class _ContentState extends State<_Content> {
+  late final DemarcheIaSuggestionsChangeNotifier notifier;
 
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: widget.durationInMilliseconds),
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
+    notifier = DemarcheIaSuggestionsChangeNotifier(
+      suggestions: widget.viewModel.suggestions,
+      onSubmit: (actions) => widget.formViewModel.submitDemarcheIaFt(actions),
+    );
+    notifier.addListener(() => setState(() {}));
   }
 
   @override
   Widget build(BuildContext context) {
-    final count = widget.count;
-    final minHeight = widget.minHeight;
-    final maxHeight = widget.maxHeight;
-    return AnimatedBuilder(
-      animation: controller,
-      builder: (c, child) {
-        final double t = controller.value;
-        final int current = (count * t).floor();
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: List.generate(
-            count,
-            (i) => AnimatedContainer(
-              duration: Duration(milliseconds: widget.durationInMilliseconds ~/ count),
-              margin: i == (count - 1) ? EdgeInsets.zero : const EdgeInsets.only(right: 5),
-              height: i == current ? maxHeight : minHeight,
-              width: 4,
-              decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(9999)),
+    final suggestions = notifier.suggestions;
+    if (suggestions.isEmpty) {
+      return _Empty(widget.formViewModel);
+    }
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        SingleChildScrollView(
+          // clipBehavior: Clip.none,
+          padding: const EdgeInsets.all(Margins.spacing_base),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (notifier.error != null) ...[
+                CardContainer(
+                  backgroundColor: AppColors.warningLighten,
+                  child: Row(
+                    children: [
+                      Icon(AppIcons.error_rounded, color: AppColors.warning),
+                      SizedBox(width: Margins.spacing_s),
+                      Expanded(
+                        child: Text(notifier.error!, style: TextStyles.textSBold.copyWith(color: AppColors.warning)),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: Margins.spacing_base),
+              ],
+              Text(Strings.iaFtSuggestionsContent(suggestions.length), style: TextStyles.textMBold),
+              const SizedBox(height: Margins.spacing_base),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: suggestions.length,
+                itemBuilder: (context, index) => _DemarcheIaCard(
+                  showError: notifier.error != null && notifier.getDate(suggestions[index].id) == null,
+                  suggestion: suggestions[index],
+                  date: notifier.getDate(suggestions[index].id),
+                  onDateChanged: (id, date) => notifier.updateDate(id, date),
+                  onDelete: (id) {
+                    notifier.deleteSuggestion(id);
+                    PassEmploiMatomoTracker.instance.trackEvent(
+                      eventCategory: AnalyticsEventNames.createDemarcheEventCategory,
+                      action: AnalyticsEventNames.createDemarcheIaSuggestionsListDeleted,
+                      eventValue: 1,
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: Margins.spacing_huge),
+              const SizedBox(height: Margins.spacing_huge),
+            ],
+          ),
+        ),
+        Positioned(
+          bottom: MediaQuery.of(context).padding.bottom,
+          left: Margins.spacing_base,
+          right: Margins.spacing_base,
+          child: _SubmitButton(notifier),
+        ),
+      ],
+    );
+  }
+}
+
+class _DemarcheIaCard extends StatelessWidget {
+  const _DemarcheIaCard({
+    required this.showError,
+    required this.suggestion,
+    required this.date,
+    required this.onDateChanged,
+    required this.onDelete,
+  });
+
+  final bool showError;
+  final DemarcheIaSuggestion suggestion;
+  final DateTime? date;
+  final void Function(String id, DateTime? date) onDateChanged;
+  final void Function(String id) onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    return Builder(
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: Margins.spacing_s),
+          child: BaseCard(
+            tag: CardTag(
+              icon: AppIcons.work_outline_rounded,
+              text: suggestion.label ?? Strings.otherDemarche,
+              contentColor: AppColors.primary,
+              backgroundColor: AppColors.primaryLighten,
+            ),
+            iconButton: IconButton(
+              onPressed: () => onDelete(suggestion.id),
+              icon: Icon(
+                AppIcons.close_rounded,
+                color: AppColors.primary,
+                semanticLabel: "${Strings.suppressionLabel} ${suggestion.sousTitre ?? ""}",
+              ),
+            ),
+            title: suggestion.titre ?? '',
+            body: suggestion.sousTitre ?? '',
+            additionalChild: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(Strings.dateShortMandatory, style: TextStyles.textBaseMedium),
+                const SizedBox(height: Margins.spacing_s),
+                DatePicker(
+                  errorText: showError ? Strings.dateShortMandatory : null,
+                  initialDateValue: date,
+                  isActiveDate: true,
+                  onDateSelected: (date) => onDateChanged(suggestion.id, date),
+                ),
+              ],
             ),
           ),
         );
       },
     );
+  }
+}
+
+class _SubmitButton extends StatelessWidget {
+  const _SubmitButton(this.notifier);
+  final DemarcheIaSuggestionsChangeNotifier notifier;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: PrimaryActionButton(onPressed: () => notifier.submit(), label: Strings.iaFtSuggestionsSubmit),
+    );
+  }
+}
+
+class DemarcheIaSuggestionsChangeNotifier extends ChangeNotifier {
+  DemarcheIaSuggestionsChangeNotifier({required List<DemarcheIaSuggestion> suggestions, required this.onSubmit})
+    : _suggestions = List.from(suggestions),
+      _dates = {for (var s in suggestions) s.id: null};
+
+  final void Function(List<CreateDemarcheRequestAction>) onSubmit;
+  final List<DemarcheIaSuggestion> _suggestions;
+  final Map<String, DateTime?> _dates;
+  String? error;
+
+  List<DemarcheIaSuggestion> get suggestions => List.unmodifiable(_suggestions);
+
+  DateTime? getDate(String id) => _dates[id];
+
+  void updateDate(String id, DateTime? date) {
+    if (_dates.containsKey(id)) {
+      _dates[id] = date;
+      error = null;
+      notifyListeners();
+    }
+  }
+
+  void deleteSuggestion(String id) {
+    _suggestions.removeWhere((s) => s.id == id);
+    _dates.remove(id);
+    error = null;
+    notifyListeners();
+  }
+
+  void submit() {
+    int count = 0;
+    for (var suggestion in _suggestions) {
+      if (getDate(suggestion.id) == null) {
+        count++;
+      }
+    }
+    if (count > 0) {
+      error = Strings.iaFtSuggestionsError(count);
+      notifyListeners();
+      return;
+    }
+
+    final List<CreateDemarcheRequestAction> actions = [];
+    for (var suggestion in _suggestions) {
+      actions.add(
+        CreateDemarcheRequestAction(
+          codeQuoi: suggestion.codeQuoi,
+          codePourquoi: suggestion.codePourquoi,
+          description: suggestion.sousTitre,
+          codeComment: null,
+          dateEcheance: getDate(suggestion.id)!,
+          estDuplicata: false,
+        ),
+      );
+    }
+    onSubmit(actions);
   }
 }
