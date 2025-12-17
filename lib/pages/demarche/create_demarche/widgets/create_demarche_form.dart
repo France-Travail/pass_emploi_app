@@ -8,7 +8,6 @@ import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_dema
 import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_personnalisee_step_2_page.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_personnalisee_step_3_page.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_demarche_step_1_page.dart';
-import 'package:pass_emploi_app/pages/demarche/create_demarche_form_page.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_display_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
@@ -20,13 +19,13 @@ import 'package:pass_emploi_app/widgets/pass_emploi_stepper.dart';
 class CreateDemarcheForm extends StatefulWidget {
   const CreateDemarcheForm({
     super.key,
-    this.startPoint,
+    required this.hasDemarcheIa,
     required this.onCreateDemarchePersonnalisee,
     required this.onCreateDemarcheFromReferentiel,
     required this.onCreateDemarcheIaFt,
   });
 
-  final StartPoint? startPoint;
+  final bool hasDemarcheIa;
   final void Function(CreateDemarchePersonnaliseeRequestAction) onCreateDemarchePersonnalisee;
   final void Function(CreateDemarcheRequestAction) onCreateDemarcheFromReferentiel;
   final void Function(List<CreateDemarcheRequestAction>) onCreateDemarcheIaFt;
@@ -41,7 +40,9 @@ class _CreateDemarcheFormState extends State<CreateDemarcheForm> {
   @override
   void initState() {
     super.initState();
-    _changeNotifier = CreateDemarcheFormChangeNotifier(displayState: widget.startPoint?.toDisplayState());
+    _changeNotifier = CreateDemarcheFormChangeNotifier(
+      displayState: widget.hasDemarcheIa ? CreateDemarcheIaFtStep2() : CreateDemarcheStep1(),
+    );
     _changeNotifier.addListener(_onFormStateChanged);
   }
 
@@ -114,14 +115,5 @@ class _Body extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-extension StartPointExt on StartPoint? {
-  CreateDemarcheDisplayState toDisplayState() {
-    return switch (this) {
-      StartPoint.ftIa => CreateDemarcheIaFtStep2(),
-      _ => CreateDemarcheStep1(),
-    };
   }
 }

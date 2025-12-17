@@ -3,9 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_state.dart';
 import 'package:pass_emploi_app/features/thematiques_demarche/thematiques_demarche_actions.dart';
-import 'package:pass_emploi_app/pages/demarche/create_demarche/widgets/ia_ft_card.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
 import 'package:pass_emploi_app/presentation/demarche/thematiques_demarche_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
@@ -32,10 +30,8 @@ class CreateDemarcheStep1Page extends StatelessWidget {
     return StoreConnector<AppState, ThematiqueDemarchePageViewModel>(
       onInit: (store) => store.dispatch(ThematiqueDemarcheRequestAction()),
       converter: (store) => ThematiqueDemarchePageViewModel.create(store),
-      builder: (context, thematiqueViewModel) => _Content(
-        thematiqueViewModel: thematiqueViewModel,
-        formViewModel: formViewModel,
-      ),
+      builder: (context, thematiqueViewModel) =>
+          _Content(thematiqueViewModel: thematiqueViewModel, formViewModel: formViewModel),
       distinct: true,
     );
   }
@@ -54,14 +50,14 @@ class _Content extends StatelessWidget {
         duration: AnimationDurations.fast,
         child: switch (thematiqueViewModel.displayState) {
           DisplayState.FAILURE => _ErrorMessage(
-              thematiqueViewModel,
-              onCreateCustomDemarche: _onCreateCustomDemarcheSelected,
-            ),
+            thematiqueViewModel,
+            onCreateCustomDemarche: _onCreateCustomDemarcheSelected,
+          ),
           DisplayState.CONTENT => _Success(
-              thematiqueViewModel,
-              formViewModel,
-              onCreateCustomDemarche: _onCreateCustomDemarcheSelected,
-            ),
+            thematiqueViewModel,
+            formViewModel,
+            onCreateCustomDemarche: _onCreateCustomDemarcheSelected,
+          ),
           _ => _LoadingPlaceholder(),
         },
       ),
@@ -151,13 +147,6 @@ class _Success extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        IaFtFeatureFlipConnector(
-          builder: (context, useIaFt) => useIaFt
-              ? IaFtCard(
-                  onPressed: () => formViewModel.navigateToCreateDemarcheIaFtStep2(),
-                )
-              : SizedBox.shrink(),
-        ),
         const SizedBox(height: Margins.spacing_base),
         Text(Strings.thematiquesDemarcheDescriptionShort, style: TextStyles.textMBold),
         const SizedBox(height: Margins.spacing_base),
@@ -173,12 +162,9 @@ class _Success extends StatelessWidget {
           padding: EdgeInsets.zero,
           itemCount: thematiqueViewModel.thematiques.length,
           itemBuilder: (context, index) {
-            return _ThematiqueTile(
-              thematiqueViewModel.thematiques[index],
-              (thematique) {
-                formViewModel.thematiqueSelected(thematique);
-              },
-            );
+            return _ThematiqueTile(thematiqueViewModel.thematiques[index], (thematique) {
+              formViewModel.thematiqueSelected(thematique);
+            });
           },
         ),
         const SizedBox(height: Margins.spacing_base),
@@ -212,11 +198,7 @@ class _ThematiqueTile extends StatelessWidget {
           children: [
             Icon(thematique.icon, size: Dimens.icon_size_l, color: AppColors.primary),
             const SizedBox(height: Margins.spacing_base),
-            Text(
-              thematique.title,
-              textAlign: TextAlign.center,
-              style: TextStyles.textSBold,
-            ),
+            Text(thematique.title, textAlign: TextAlign.center, style: TextStyles.textSBold),
           ],
         ),
         onTap: () => onThematiqueSelected(thematique),
@@ -243,39 +225,15 @@ class _CreateCustomDemarche extends StatelessWidget {
             Expanded(
               child: Column(
                 children: [
-                  Text(
-                    Strings.customDemarcheTitle,
-                    style: TextStyles.textBaseBold,
-                  ),
+                  Text(Strings.customDemarcheTitle, style: TextStyles.textBaseBold),
                   SizedBox(height: Margins.spacing_base),
-                  Text(
-                    Strings.customDemarcheSubtitle,
-                    style: TextStyles.textBaseRegular,
-                  ),
+                  Text(Strings.customDemarcheSubtitle, style: TextStyles.textBaseRegular),
                 ],
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class IaFtFeatureFlipConnector extends StatelessWidget {
-  const IaFtFeatureFlipConnector({required this.builder});
-  final Widget Function(BuildContext, bool) builder;
-
-  @override
-  Widget build(BuildContext context) {
-    return StoreConnector<AppState, bool>(
-      builder: builder,
-      converter: (store) {
-        final monsuiviState = store.state.monSuiviState;
-        if (monsuiviState is! MonSuiviSuccessState) return false;
-        return monsuiviState.monSuivi.eligibleDemarchesIA;
-      },
-      distinct: true,
     );
   }
 }
