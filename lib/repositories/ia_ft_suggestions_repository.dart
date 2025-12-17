@@ -12,8 +12,6 @@ class IaFtSuggestionsRepository {
   Future<List<DemarcheIaDto>?> get(String idJeune, String query) async {
     final url = "/jeunes/$idJeune/demarches-ia";
     try {
-      // TODO: remove this
-      if (1 == 1) return [DemarcheIaDto(codeQuoi: "P01", codePourquoi: "P8", description: "description")];
       final response = await _httpClient.post(url, data: {"contenu": query});
       return response.asListOf(DemarcheIaDto.fromJson);
     } catch (e, stack) {

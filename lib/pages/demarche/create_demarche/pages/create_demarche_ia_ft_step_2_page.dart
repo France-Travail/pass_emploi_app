@@ -113,7 +113,7 @@ class _Empty extends StatelessWidget {
             const SizedBox(height: Margins.spacing_m),
             Text(Strings.iaFtSuggestionsEmpty, style: TextStyles.textMBold, textAlign: TextAlign.center),
             const SizedBox(height: Margins.spacing_m),
-            PrimaryActionButton(onPressed: () => viewModel.navigateToCreateDemarcheIaFtStep2(), label: Strings.back),
+            PrimaryActionButton(onPressed: () => viewModel.onNavigateBackward(), label: Strings.back),
           ],
         ),
       ),

@@ -862,7 +862,7 @@ class Strings {
   static String iaFtStep2Mandatory = "(obligatoire)";
   static String iaFtStep2Warning = "Ne renseignez aucune donnée sensible";
   static String iaFtStep2FieldHint =
-      "Exemple : Cette semaine, j’ai déposé mon CV à la librairie pour un emploi saisonnier, etc.";
+      "Décrivez vos démarches :\ncandidatures, entretiens, formations...\nL’IA va vous suggérer des démarches";
   static String iaFtStep2ButtonDicter = "Dicter";
   static String iaFtStep2ButtonStop = "Arrêter";
   static String iaFtStep2Button = "Générer les démarches";
@@ -887,6 +887,7 @@ class Strings {
   static String iaDemarchesAccueilHint = "Créer vos démarches avec l’IA";
 
   static String thematiquesDemarcheButton = "Accéder aux thématiques";
+  static String iaFtEmptyError = "Décrivez vos démarches";
 
   // Recherche
   static String derniereRecherche = "Dernière recherche";

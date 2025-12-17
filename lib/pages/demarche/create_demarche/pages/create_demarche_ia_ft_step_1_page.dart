@@ -93,20 +93,53 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
             const SizedBox(height: Margins.spacing_base),
             Stack(
               children: [
-                BaseTextField(
-                  controller: _textEditingController,
-                  hintText: Strings.iaFtStep2FieldHint,
-                  minLines: 3,
-                  maxLines: null,
-                  maxLength: CreateDemarcheIaFtStep1ViewModel.maxLength,
-                  errorText: _errorText,
-                  onChanged: (value) => setState(() => _errorText = null),
-                  suffixIcon: Opacity(
-                    opacity: 0,
-                    child: ExcludeSemantics(
-                      child: IconButton(onPressed: null, icon: Icon(Icons.close), color: AppColors.primary),
+                Stack(
+                  children: [
+                    BaseTextField(
+                      controller: _textEditingController,
+                      hintText: Strings.iaFtStep2FieldHint,
+                      minLines: 3,
+                      maxLines: null,
+                      maxLength: CreateDemarcheIaFtStep1ViewModel.maxLength,
+                      errorText: _errorText,
+                      onChanged: (value) => setState(() => _errorText = null),
+                      suffixIcon: Opacity(
+                        opacity: 0,
+                        child: ExcludeSemantics(
+                          child: IconButton(onPressed: null, icon: Icon(Icons.close), color: AppColors.primary),
+                        ),
+                      ),
                     ),
-                  ),
+                    Positioned(
+                      // manually ajusted
+                      right: -8,
+                      bottom: Margins.spacing_base,
+                      child: IconButton(
+                        onPressed: () => _textEditingController.clear(),
+                        icon: IconButton(
+                          tooltip: _isListening ? Strings.iaFtStep2ButtonStop : Strings.iaFtStep2ButtonDicter,
+                          onPressed: () {
+                            if (_isListening) {
+                              _stopListening();
+                            } else {
+                              _startListening();
+                            }
+                          },
+                          icon: Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: _isListening
+                                ? null
+                                : BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: AppColors.primary, width: 2),
+                                  ),
+                            child: Icon(_isListening ? Icons.stop_circle_rounded : Icons.mic, color: AppColors.primary),
+                          ),
+                        ),
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ],
                 ),
                 if (_textEditingController.text.isNotEmpty)
                   Positioned(
@@ -120,26 +153,16 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
               ],
             ),
             const SizedBox(height: Margins.spacing_base),
-            SecondaryButton(
-              label: _isListening ? Strings.iaFtStep2ButtonStop : Strings.iaFtStep2ButtonDicter,
-              onPressed: () {
-                if (_isListening) {
-                  _stopListening();
-                } else {
-                  _startListening();
-                }
-              },
-              suffix: _isListening ? SizedBox(height: 24, child: SoundWaveformWidget()) : null,
-              icon: _isListening ? Icons.stop_circle_rounded : Icons.mic,
-            ),
-
-            const SizedBox(height: Margins.spacing_base),
             PrimaryActionButton(
               label: Strings.iaFtStep2Button,
               disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.5),
-              onPressed: _textEditingController.text.isNotEmpty
-                  ? () => widget.viewModel.navigateToCreateDemarcheIaFtStep2()
-                  : null,
+              onPressed: () {
+                if (_textEditingController.text.isNotEmpty) {
+                  widget.viewModel.navigateToCreateDemarcheIaFtStep2();
+                } else {
+                  setState(() => _errorText = Strings.iaFtEmptyError);
+                }
+              },
             ),
             const SizedBox(height: Margins.spacing_l),
             _OrDivider(),
@@ -151,69 +174,6 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
           ],
         ),
       ),
-    );
-  }
-}
-
-class SoundWaveformWidget extends StatefulWidget {
-  final int count;
-  final double minHeight;
-  final double maxHeight;
-  final int durationInMilliseconds;
-
-  const SoundWaveformWidget({
-    super.key,
-    this.count = 6,
-    this.minHeight = 10,
-    this.maxHeight = 20,
-    this.durationInMilliseconds = 1000,
-  });
-  @override
-  State<SoundWaveformWidget> createState() => _SoundWaveformWidgetState();
-}
-
-class _SoundWaveformWidgetState extends State<SoundWaveformWidget> with TickerProviderStateMixin {
-  late AnimationController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: widget.durationInMilliseconds),
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final count = widget.count;
-    final minHeight = widget.minHeight;
-    final maxHeight = widget.maxHeight;
-    return AnimatedBuilder(
-      animation: controller,
-      builder: (c, child) {
-        final double t = controller.value;
-        final int current = (count * t).floor();
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: List.generate(
-            count,
-            (i) => AnimatedContainer(
-              duration: Duration(milliseconds: widget.durationInMilliseconds ~/ count),
-              margin: i == (count - 1) ? EdgeInsets.zero : const EdgeInsets.only(right: 5),
-              height: i == current ? maxHeight : minHeight,
-              width: 4,
-              decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(9999)),
-            ),
-          ),
-        );
-      },
     );
   }
 }

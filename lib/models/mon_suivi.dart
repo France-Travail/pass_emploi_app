@@ -38,9 +38,7 @@ class MonSuivi extends Equatable {
   }
 
   factory MonSuivi.fromPoleEmploiJson(dynamic json) {
-    // final eligibleDemarchesIA = json["resultat"]['eligibleDemarchesIA'] as bool? ?? false;
-    // TODO: Remove this
-    final eligibleDemarchesIA = true;
+    final eligibleDemarchesIA = json["resultat"]['eligibleDemarchesIA'] as bool? ?? false;
     return MonSuivi(
       demarches: (json["resultat"]["demarches"] as List).map(Demarche.fromJson).toList(),
       rendezvous:
