@@ -20,7 +20,7 @@ void main() {
       group('onNavigateBackward', () {
         test('should stay on step 1 when current step is step 1', () {
           // Given
-          final viewModel = CreateDemarcheFormChangeNotifier(displayState: CreateDemarcheStep1Thematique())
+          final viewModel = CreateDemarcheFormChangeNotifier(initialDisplayState: CreateDemarcheStep1Thematique())
             ..addListener(notify);
 
           // When
@@ -33,7 +33,7 @@ void main() {
 
         test('should go back to step 1 when current step is thematique step 2', () {
           // Given
-          final viewModel = CreateDemarcheFormChangeNotifier(displayState: CreateDemarcheFromThematiqueStep2())
+          final viewModel = CreateDemarcheFormChangeNotifier(initialDisplayState: CreateDemarcheFromThematiqueStep2())
             ..addListener(notify);
 
           // When
@@ -46,7 +46,7 @@ void main() {
 
         test('should go back to step 1 when current step is personnalisee step 2', () {
           // Given
-          final viewModel = CreateDemarcheFormChangeNotifier(displayState: CreateDemarchePersonnaliseeStep2())
+          final viewModel = CreateDemarcheFormChangeNotifier(initialDisplayState: CreateDemarchePersonnaliseeStep2())
             ..addListener(notify);
 
           // When
@@ -59,7 +59,7 @@ void main() {
 
         test('should go back to thematique step 2 when current step is thematique step 3', () {
           // Given
-          final viewModel = CreateDemarcheFormChangeNotifier(displayState: CreateDemarcheFromThematiqueStep3())
+          final viewModel = CreateDemarcheFormChangeNotifier(initialDisplayState: CreateDemarcheFromThematiqueStep3())
             ..addListener(notify);
 
           // When
@@ -72,7 +72,7 @@ void main() {
 
         test('should go back to personnalisee step 2 when current step is personnalisee step 3', () {
           // Given
-          final viewModel = CreateDemarcheFormChangeNotifier(displayState: CreateDemarchePersonnaliseeStep3())
+          final viewModel = CreateDemarcheFormChangeNotifier(initialDisplayState: CreateDemarchePersonnaliseeStep3())
             ..addListener(notify);
 
           // When
@@ -85,8 +85,9 @@ void main() {
 
         test('should go back on step 2 state when current step is submitted', () {
           // Given
-          final viewModel = CreateDemarcheFormChangeNotifier(displayState: CreateDemarcheFromThematiqueSubmitted())
-            ..addListener(notify);
+          final viewModel = CreateDemarcheFormChangeNotifier(
+            initialDisplayState: CreateDemarcheFromThematiqueSubmitted(),
+          )..addListener(notify);
 
           // When
           viewModel.onNavigateBackward();

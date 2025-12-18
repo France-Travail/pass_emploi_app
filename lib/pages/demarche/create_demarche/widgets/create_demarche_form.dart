@@ -41,7 +41,7 @@ class _CreateDemarcheFormState extends State<CreateDemarcheForm> {
   void initState() {
     super.initState();
     _changeNotifier = CreateDemarcheFormChangeNotifier(
-      displayState: widget.hasDemarcheIa ? CreateDemarcheIaFtStep1() : CreateDemarcheStep1Thematique(),
+      initialDisplayState: widget.hasDemarcheIa ? CreateDemarcheIaFtStep1() : CreateDemarcheStep1Thematique(),
     );
     _changeNotifier.addListener(_onFormStateChanged);
   }

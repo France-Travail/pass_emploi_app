@@ -98,7 +98,7 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
                     BaseTextField(
                       controller: _textEditingController,
                       hintText: Strings.iaFtStep2FieldHint,
-                      minLines: 3,
+                      minLines: 5,
                       maxLines: null,
                       maxLength: CreateDemarcheIaFtStep1ViewModel.maxLength,
                       errorText: _errorText,
@@ -204,7 +204,6 @@ class ThematiqueButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SecondaryButton(
       label: Strings.thematiquesDemarcheButton,
-      suffix: Icon(Icons.arrow_forward_rounded, color: AppColors.primary),
       onPressed: () => viewModel.navigateToThematiquesDemarche(),
     );
   }

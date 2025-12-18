@@ -17,9 +17,10 @@ part 'steps/create_demarche_step_1.dart';
 
 class CreateDemarcheFormChangeNotifier extends ChangeNotifier {
   CreateDemarcheDisplayState displayState;
+  late final CreateDemarcheDisplayState _initialDisplayState;
 
   CreateDemarcheFormChangeNotifier({
-    CreateDemarcheDisplayState? displayState,
+    CreateDemarcheDisplayState? initialDisplayState,
     CreateDemarcheStep1ViewModel? initialStep1ViewModel,
     CreateDemarcheFromThematiqueStep2ViewModel? initialThematiqueStep2ViewModel,
     CreateDemarchePersonnaliseeStep2ViewModel? initialPersonnaliseeStep2ViewModel,
@@ -27,7 +28,8 @@ class CreateDemarcheFormChangeNotifier extends ChangeNotifier {
     CreateDemarcheFromThematiqueStep3ViewModel? initialFromThematiqueStep3ViewModel,
     CreateDemarchePersonnaliseeStep3ViewModel? initialPersonnaliseeStep3ViewModel,
     CreateDemarcheConfirmationStepViewModel? initialConfirmationStepViewModel,
-  }) : displayState = displayState ?? CreateDemarcheStep1Thematique(),
+  }) : displayState = initialDisplayState ?? CreateDemarcheStep1Thematique(),
+       _initialDisplayState = initialDisplayState ?? CreateDemarcheStep1Thematique(),
        step1ViewModel = initialStep1ViewModel ?? CreateDemarcheStep1ViewModel(),
        thematiqueStep2ViewModel = initialThematiqueStep2ViewModel ?? CreateDemarcheFromThematiqueStep2ViewModel(),
        personnaliseeStep2ViewModel = initialPersonnaliseeStep2ViewModel ?? CreateDemarchePersonnaliseeStep2ViewModel(),
@@ -51,8 +53,8 @@ class CreateDemarcheFormChangeNotifier extends ChangeNotifier {
     }
 
     displayState = switch (displayState) {
-      CreateDemarcheStep1Thematique() => displayState,
-      CreateDemarcheIaFtStep1() => displayState,
+      CreateDemarcheStep1Thematique() => _initialDisplayState,
+      CreateDemarcheIaFtStep1() => _initialDisplayState,
       CreateDemarcheFromThematiqueStep2() => CreateDemarcheStep1Thematique(),
       CreateDemarchePersonnaliseeStep2() => CreateDemarcheStep1Thematique(),
       CreateDemarcheIaFtStep2() => CreateDemarcheIaFtStep1(),
@@ -162,6 +164,18 @@ class CreateDemarcheFormChangeNotifier extends ChangeNotifier {
       false,
     );
   }
+
+  bool get shouldPop => switch (displayState) {
+    CreateDemarcheStep1Thematique() => switch (_initialDisplayState) {
+      CreateDemarcheStep1Thematique() => true,
+      _ => false,
+    },
+    CreateDemarcheIaFtStep1() => switch (_initialDisplayState) {
+      CreateDemarcheIaFtStep1() => true,
+      _ => false,
+    },
+    _ => false,
+  };
 }
 
 sealed class CreateDemarcheViewModel extends Equatable {}
