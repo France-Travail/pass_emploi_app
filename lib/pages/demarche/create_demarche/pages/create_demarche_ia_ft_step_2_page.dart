@@ -29,7 +29,7 @@ class CreateDemarcheIaFtStep2Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Tracker(
-      tracking: AnalyticsScreenNames.createDemarcheIaFtStep3,
+      tracking: AnalyticsScreenNames.createDemarcheIaFtSuggestions,
       child: StoreConnector<AppState, CreateDemarcheIaFtStep2ViewModel>(
         converter: (store) => CreateDemarcheIaFtStep2ViewModel.create(store),
         onInit: (store) =>

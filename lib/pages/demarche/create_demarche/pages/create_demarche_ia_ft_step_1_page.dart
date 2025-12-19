@@ -72,7 +72,7 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
   @override
   Widget build(BuildContext context) {
     return Tracker(
-      tracking: AnalyticsScreenNames.createDemarcheIaFtStep2,
+      tracking: AnalyticsScreenNames.createDemarcheIaFtStepPrompt,
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
         child: Column(
@@ -205,7 +205,13 @@ class ThematiqueButton extends StatelessWidget {
     return SecondaryButton(
       label: Strings.thematiquesDemarcheButton,
       suffix: Icon(Icons.arrow_forward_rounded, color: AppColors.primary),
-      onPressed: () => viewModel.navigateToThematiquesDemarche(),
+      onPressed: () {
+        viewModel.navigateToThematiquesDemarche();
+        PassEmploiMatomoTracker.instance.trackEvent(
+          eventCategory: AnalyticsEventNames.createDemarcheEventCategory,
+          action: AnalyticsEventNames.createDemarcheThematiquesPressed,
+        );
+      },
     );
   }
 }

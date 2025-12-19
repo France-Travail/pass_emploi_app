@@ -32,8 +32,8 @@ class AnalyticsScreenNames {
   static const createUserActionStep3 = "actions/create/v3/step3";
   static const createDemarchePersonnalisee = "demarches/creer_demarche_personalisee";
   static const createDemarcheHome = "demarches/creer_demarche";
-  static const createDemarcheIaFtStep2 = "demarches/creer_demarche/ia-ft/step2";
-  static const createDemarcheIaFtStep3 = "demarches/creer_demarche/ia-ft/step3";
+  static const createDemarcheIaFtStepPrompt = "demarches/creer_demarche/ia-ft/prompt_v3";
+  static const createDemarcheIaFtSuggestions = "demarches/creer_demarche/ia-ft/suggestions_v3";
   static const createDemarcheIaFtSuccess = "demarches/creer_demarche/ia-ft/success";
   static const createDemarchePersonnaliseeSuccess = "demarches/creer_demarche/personnalisee/success";
   static const createDemarcheFromReferentielSuccess = "demarches/creer_demarche/referentiel/success";
@@ -224,6 +224,7 @@ class AnalyticsEventNames {
   static const createDemarcheIaSuggestionsListDeleted = "Nombre de suggestions supprimées";
   static const createDemarcheFromOffreSuiviAction = "Créer une démarche à partir du suivi des offres";
   static const createDemarcheFromAccueilAction = "Clic - créer une démarche IA - accueil";
+  static const createDemarcheThematiquesPressed = "Clic - thématiques";
 
   static String createActionStep1Action(String category) => "Catégorie : $category";
 
