@@ -77,7 +77,7 @@ class RemoteConfigRepository {
 
   bool? isDiagorienteEnabled() {
     if (_firebaseRemoteConfig == null) return null;
-    final key = _firebaseRemoteConfig.getBool("is_diagoriente_enabled");
+    final key = _firebaseRemoteConfig.getBool("diagoriente_enabled");
     return key;
   }
 
