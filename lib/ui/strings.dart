@@ -895,16 +895,14 @@ class Strings {
   static String vosPreferencesMetiers = "Vos préférences métiers";
   static String rechercheHomeNosOffres = "Nos offres";
   static String rechercheDerniereOffreConsultee = "Dernière offre consultée";
-  static String rechercheHomeOffresEmploiTitle = "Offres d’emploi";
+  static String rechercheHomeOffresEmploiTitle = "Emploi";
   static String rechercheHomeOffresEmploiSubtitle = "Trouvez un emploi qui vous correspond.";
-  static String rechercheHomeOffresAlternanceTitle = "Offres d’alternance";
-  static String rechercheHomeOffresAlternanceSubtitle =
-      "Professionnalisez-vous en associant travail en entreprise et formation.";
-  static String rechercheHomeOffresImmersionTitle = "Offres d’immersion";
+  static String rechercheHomeOffresAlternanceTitle = "Alternance";
+  static String rechercheHomeOffresAlternanceSubtitle = "Alliez travail en entreprise et formation.";
+  static String rechercheHomeOffresImmersionTitle = "Immersion";
   static String rechercheHomeOffresImmersionSubtitle = "Découvrez un métier au sein d’une entreprise.";
-  static String rechercheHomeOffresServiceCiviqueTitle = "Offres de service civique";
-  static String rechercheHomeOffresServiceCiviqueSubtitle =
-      "Engagez-vous dans une mission d’intérêt général pour aider les autres.";
+  static String rechercheHomeOffresServiceCiviqueTitle = "Service civique";
+  static String rechercheHomeOffresServiceCiviqueSubtitle = "Engagez-vous dans une mission d’intérêt général.";
   static String rechercheOffresEmploiTitle = "Offres d’emploi";
   static String rechercheOffresAlternanceTitle = "Offres d’alternance";
   static String rechercheOffresImmersionTitle = "Offres d’immersion";
@@ -1379,7 +1377,7 @@ class Strings {
 
   // Suggestions de recherche
   static String vosSuggestionsAlertesError = "Erreur lors de la récupération de vos suggestions d'alertes";
-  static String vosSuggestionsAlertes = "Vos suggestions d'alertes";
+  static String mesSuggestionsAlertes = "Mes suggestions d'alertes";
   static String nouvellesSuggestionsDeRechercheTitre = "Vous avez des suggestions d’alertes";
   static String nouvellesSuggestionsDeRechercheDescription =
       "Sur la base de votre profil France Travail, voici des suggestions d'alertes à sauvegarder";

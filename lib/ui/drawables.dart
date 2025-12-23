@@ -55,4 +55,9 @@ class Drawables {
 
   static String success = "${_assets}success.webp";
   static String notFound = "${_assets}not_found.webp";
+
+  static String rechercheHomeOffresEmploi = "${_assets}emploi.svg";
+  static String rechercheHomeOffresAlternance = "${_assets}alternance.svg";
+  static String rechercheHomeOffresImmersion = "${_assets}immersion.svg";
+  static String rechercheHomeOffresServiceCivique = "${_assets}service_civique.svg";
 }

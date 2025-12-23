@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/models/offre_type.dart';
@@ -10,9 +11,8 @@ import 'package:pass_emploi_app/pages/recherche/recherches_recentes.dart';
 import 'package:pass_emploi_app/pages/suggestions_recherche/suggestions_recherche_list_page.dart';
 import 'package:pass_emploi_app/presentation/recherche/recherche_home_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
+import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -43,11 +43,7 @@ class _RechercheHomePageState extends State<RechercheHomePage> {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(Margins.spacing_base),
-        child: Column(
-          children: [
-            _NosOffres(offreTypes: viewModel.offreTypes),
-          ],
-        ),
+        child: Column(children: [_NosOffres(offreTypes: viewModel.offreTypes)]),
       ),
     );
   }
@@ -66,66 +62,122 @@ class _NosOffres extends StatelessWidget {
         MediumSectionTitle(Strings.rechercheHomeNosOffres),
         SizedBox(height: Margins.spacing_base),
         RecherchesRecentesBandeau(paddingIfExists: EdgeInsets.only(bottom: Margins.spacing_base)),
+
+        _SolutionGrid(
+          tiles: [
+            if (offreTypes.contains(OffreType.emploi))
+              OnboardingShowcase(
+                source: ShowcaseSource.offre,
+                child: _BlocSolution(
+                  gradientColors: [
+                    Color(0xFF274996),
+                    Color(0xFF3B69D1),
+                  ],
+                  title: Strings.rechercheHomeOffresEmploiTitle,
+                  subtitle: Strings.rechercheHomeOffresEmploiSubtitle,
+                  svgPath: Drawables.rechercheHomeOffresEmploi,
+                  onTap: () =>
+                      Navigator.push(context, RechercheOffreEmploiPage.materialPageRoute(onlyAlternance: false)),
+                ),
+              ),
+            if (offreTypes.contains(OffreType.alternance))
+              _BlocSolution(
+                gradientColors: [
+                  Color(0xFF172B5A),
+                  Color(0xFF2186C7),
+                ],
+                title: Strings.rechercheHomeOffresAlternanceTitle,
+                subtitle: Strings.rechercheHomeOffresAlternanceSubtitle,
+                svgPath: Drawables.rechercheHomeOffresAlternance,
+                onTap: () => Navigator.push(context, RechercheOffreEmploiPage.materialPageRoute(onlyAlternance: true)),
+              ),
+            if (offreTypes.contains(OffreType.immersion))
+              _BlocSolution(
+                gradientColors: [
+                  Color(0xFF5149A8),
+                  Color(0xFF603CBC),
+                  Color(0xFF950EFF),
+                ],
+                title: Strings.rechercheHomeOffresImmersionTitle,
+                subtitle: Strings.rechercheHomeOffresImmersionSubtitle,
+                svgPath: Drawables.rechercheHomeOffresImmersion,
+                onTap: () => Navigator.push(context, RechercheOffreImmersionPage.materialPageRoute()),
+              ),
+            if (offreTypes.contains(OffreType.serviceCivique))
+              _BlocSolution(
+                gradientColors: [
+                  Color(0xFF15616D),
+                  Color(0xFF0C7A81),
+                ],
+                title: Strings.rechercheHomeOffresServiceCiviqueTitle,
+                subtitle: Strings.rechercheHomeOffresServiceCiviqueSubtitle,
+                svgPath: Drawables.rechercheHomeOffresServiceCivique,
+                onTap: () => Navigator.push(context, RechercheOffreServiceCiviquePage.materialPageRoute()),
+              ),
+          ],
+          gap: Margins.spacing_base,
+        ),
+        SizedBox(height: Margins.spacing_base),
         VoirSuggestionsRechercheBandeau(
           onTapShowSuggestions: () {
             PassEmploiMatomoTracker.instance.trackScreen(AnalyticsScreenNames.rechercheSuggestionsListe);
             Navigator.push(context, SuggestionsRechercheListPage.materialPageRoute());
           },
         ),
-        SizedBox(height: Margins.spacing_base),
-        if (offreTypes.contains(OffreType.emploi)) ...[
-          OnboardingShowcase(
-            source: ShowcaseSource.offre,
-            child: _BlocSolution(
-              title: Strings.rechercheHomeOffresEmploiTitle,
-              subtitle: Strings.rechercheHomeOffresEmploiSubtitle,
-              icon: AppIcons.description_rounded,
-              onTap: () => Navigator.push(context, RechercheOffreEmploiPage.materialPageRoute(onlyAlternance: false)),
-            ),
-          ),
-          SizedBox(height: Margins.spacing_base),
-        ],
-        if (offreTypes.contains(OffreType.alternance)) ...[
-          _BlocSolution(
-            title: Strings.rechercheHomeOffresAlternanceTitle,
-            subtitle: Strings.rechercheHomeOffresAlternanceSubtitle,
-            icon: AppIcons.signpost_rounded,
-            onTap: () => Navigator.push(context, RechercheOffreEmploiPage.materialPageRoute(onlyAlternance: true)),
-          ),
-          SizedBox(height: Margins.spacing_base),
-        ],
-        if (offreTypes.contains(OffreType.immersion)) ...[
-          _BlocSolution(
-            title: Strings.rechercheHomeOffresImmersionTitle,
-            subtitle: Strings.rechercheHomeOffresImmersionSubtitle,
-            icon: AppIcons.immersion,
-            onTap: () => Navigator.push(context, RechercheOffreImmersionPage.materialPageRoute()),
-          ),
-          SizedBox(height: Margins.spacing_base),
-        ],
-        if (offreTypes.contains(OffreType.serviceCivique)) ...[
-          _BlocSolution(
-            title: Strings.rechercheHomeOffresServiceCiviqueTitle,
-            subtitle: Strings.rechercheHomeOffresServiceCiviqueSubtitle,
-            icon: AppIcons.service_civique,
-            onTap: () => Navigator.push(context, RechercheOffreServiceCiviquePage.materialPageRoute()),
-          ),
-        ],
       ],
     );
+  }
+}
+
+class _SolutionGrid extends StatelessWidget {
+  final List<Widget> tiles;
+  final double gap;
+
+  const _SolutionGrid({required this.tiles, required this.gap});
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final totalWidth = constraints.maxWidth;
+        final tileWidth = (totalWidth - gap) / 2;
+
+        return Wrap(
+          spacing: gap,
+          runSpacing: gap,
+          children: [
+            for (final tile in tiles)
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: tileWidth,
+                  minHeight: _responsiveChildHeight(context),
+                ),
+                child: tile,
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  double _responsiveChildHeight(BuildContext context) {
+    final textScaleFactor = MediaQuery.textScalerOf(context).scale(1);
+    return 200 * textScaleFactor;
   }
 }
 
 class _BlocSolution extends StatelessWidget {
   final String title;
   final String subtitle;
-  final IconData icon;
+  final String svgPath;
+  final List<Color> gradientColors;
   final void Function() onTap;
 
   const _BlocSolution({
     required this.title,
     required this.subtitle,
-    required this.icon,
+    required this.svgPath,
+    required this.gradientColors,
     required this.onTap,
   });
 
@@ -134,15 +186,20 @@ class _BlocSolution extends StatelessWidget {
     return Semantics(
       button: true,
       child: CardContainer(
+        gradient: LinearGradient(
+          colors: gradientColors,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
         onTap: onTap,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, color: AppColors.accent3, size: Dimens.icon_size_m),
+            SvgPicture.asset(svgPath, width: Dimens.icon_size_m, height: Dimens.icon_size_m),
             SizedBox(height: Margins.spacing_s),
-            Text(title, style: TextStyles.textMBold),
+            Text(title, style: TextStyles.textMBold.copyWith(color: Colors.white)),
             SizedBox(height: Margins.spacing_s),
-            Text(subtitle, style: TextStyles.textBaseRegular),
+            Text(subtitle, style: TextStyles.textBaseRegular.copyWith(color: Colors.white)),
           ],
         ),
       ),
