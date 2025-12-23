@@ -867,6 +867,10 @@ class Strings {
   static String iaFtStep2ButtonStop = "Arrêter";
   static String iaFtStep2Button = "Générer les démarches";
 
+  // Dictée vocale (speech-to-text)
+  static String dictationStart = "Dicter";
+  static String dictationStop = "Arrêter";
+
   static String iaFtSuggestionsLoading = "Nous générons vos démarches, cela peut prendre quelques instants";
   static String iaFtSuggestionsFailure = "Oups, quelque chose s’est mal passé lors de la création des démarches.";
   static String iaFtSuggestionsEmpty = "Aucune démarche n’a pu être créée automatiquement.";

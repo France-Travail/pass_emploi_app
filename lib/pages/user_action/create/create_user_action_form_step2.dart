@@ -10,6 +10,7 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/pass_emploi_chip.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 class CreateUserActionFormStep2 extends StatefulWidget {
   final UserActionReferentielType actionType;
@@ -127,44 +128,47 @@ class _SuggestionTagWrap extends StatelessWidget {
       runSpacing: Margins.spacing_s,
       children: switch (titleSource) {
         CreateActionTitleNotInitialized() => [
-            ...suggestionList.map(
-              (suggestion) => PassEmploiChip<UserActionCategory>(
-                label: suggestion.value,
-                value: suggestion,
-                isSelected: false,
-                onTagSelected: (value) => onSelected(CreateActionTitleFromSuggestions(value)),
-                onTagDeleted: () => onSelected(CreateActionTitleNotInitialized()),
-              ),
+          ...suggestionList.map(
+            (suggestion) => PassEmploiChip<UserActionCategory>(
+              label: suggestion.value,
+              value: suggestion,
+              isSelected: false,
+              onTagSelected: (value) => onSelected(CreateActionTitleFromSuggestions(value)),
+              onTagDeleted: () => onSelected(CreateActionTitleNotInitialized()),
             ),
-            PassEmploiChip<String>(
-                label: Strings.userActionOther,
-                value: '',
-                isSelected: false,
-                onTagSelected: (value) => onSelected(CreateActionTitleFromUserInput(value)),
-                onTagDeleted: () => onSelected(CreateActionTitleNotInitialized()))
-          ],
+          ),
+          PassEmploiChip<String>(
+            label: Strings.userActionOther,
+            value: '',
+            isSelected: false,
+            onTagSelected: (value) => onSelected(CreateActionTitleFromUserInput(value)),
+            onTagDeleted: () => onSelected(CreateActionTitleNotInitialized()),
+          ),
+        ],
         CreateActionTitleFromSuggestions() => [
-            PassEmploiChip<String>(
-                label: titleSource.title,
-                value: titleSource.title,
-                isSelected: true,
-                onTagSelected: (value) => onSelected(CreateActionTitleFromUserInput(value)),
-                onTagDeleted: () => onSelected(CreateActionTitleNotInitialized()))
-          ],
+          PassEmploiChip<String>(
+            label: titleSource.title,
+            value: titleSource.title,
+            isSelected: true,
+            onTagSelected: (value) => onSelected(CreateActionTitleFromUserInput(value)),
+            onTagDeleted: () => onSelected(CreateActionTitleNotInitialized()),
+          ),
+        ],
         CreateActionTitleFromUserInput() => [
-            PassEmploiChip<String>(
-                label: Strings.userActionOther,
-                value: '',
-                isSelected: true,
-                onTagSelected: (value) => onSelected(CreateActionTitleFromUserInput(value)),
-                onTagDeleted: () => onSelected(CreateActionTitleNotInitialized()))
-          ],
+          PassEmploiChip<String>(
+            label: Strings.userActionOther,
+            value: '',
+            isSelected: true,
+            onTagSelected: (value) => onSelected(CreateActionTitleFromUserInput(value)),
+            onTagDeleted: () => onSelected(CreateActionTitleNotInitialized()),
+          ),
+        ],
       },
     );
   }
 }
 
-class UserActionDescriptionField extends StatelessWidget {
+class UserActionDescriptionField extends StatefulWidget {
   const UserActionDescriptionField({
     super.key,
     this.descriptionKey,
@@ -185,6 +189,86 @@ class UserActionDescriptionField extends StatelessWidget {
   final bool isInvalid;
 
   @override
+  State<UserActionDescriptionField> createState() => _UserActionDescriptionFieldState();
+}
+
+class _UserActionDescriptionFieldState extends State<UserActionDescriptionField> {
+  static const int _maxLength = 1024;
+
+  final SpeechToText _speechToText = SpeechToText();
+  bool _isListening = false;
+  String? _errorText;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.descriptionController.addListener(_onControllerChanged);
+  }
+
+  @override
+  void didUpdateWidget(covariant UserActionDescriptionField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.descriptionController != widget.descriptionController) {
+      oldWidget.descriptionController.removeListener(_onControllerChanged);
+      widget.descriptionController.addListener(_onControllerChanged);
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.descriptionController.removeListener(_onControllerChanged);
+    _speechToText.stop();
+    super.dispose();
+  }
+
+  void _onControllerChanged() {
+    if (!mounted) return;
+    setState(() {});
+  }
+
+  Future<void> _startListening() async {
+    setState(() => _errorText = null);
+
+    final bool available = await _speechToText.initialize(
+      onError: (error) {
+        if (!mounted) return;
+        setState(() {
+          _isListening = false;
+          _errorText = Strings.genericError;
+        });
+      },
+    );
+    if (!mounted) return;
+
+    if (available) {
+      setState(() => _isListening = true);
+      _speechToText.listen(
+        onResult: (result) {
+          if (!mounted) return;
+
+          final recognized = result.recognizedWords;
+          final clamped = recognized.length > _maxLength ? recognized.substring(0, _maxLength) : recognized;
+
+          widget.descriptionController.value = widget.descriptionController.value.copyWith(
+            text: clamped,
+            selection: TextSelection.collapsed(offset: clamped.length),
+            composing: TextRange.empty,
+          );
+          widget.onDescriptionChanged(clamped);
+
+          if (recognized.length >= _maxLength) _stopListening();
+        },
+      );
+    }
+  }
+
+  void _stopListening() {
+    _speechToText.stop();
+    if (!mounted) return;
+    setState(() => _isListening = false);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Semantics(
       container: true,
@@ -193,7 +277,7 @@ class UserActionDescriptionField extends StatelessWidget {
         children: [
           Text(
             Strings.userActionDescriptionTextfieldStep2,
-            key: descriptionKey,
+            key: widget.descriptionKey,
             style: TextStyles.textBaseBold,
           ),
           const SizedBox(height: Margins.spacing_s),
@@ -204,25 +288,73 @@ class UserActionDescriptionField extends StatelessWidget {
           const SizedBox(height: Margins.spacing_base),
           Stack(
             children: [
-              BaseTextField(
-                focusNode: descriptionFocusNode,
-                controller: descriptionController,
-                hintText: hintText,
-                maxLines: 5,
-                minLines: 1,
-                maxLength: 1024,
-                onChanged: onDescriptionChanged,
-                isInvalid: isInvalid,
-              ),
-              if (descriptionController.text.isNotEmpty)
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    tooltip: Strings.clear,
-                    icon: Icon(Icons.clear),
-                    onPressed: onClear,
+              Stack(
+                children: [
+                  BaseTextField(
+                    focusNode: widget.descriptionFocusNode,
+                    controller: widget.descriptionController,
+                    hintText: widget.hintText,
+                    maxLines: 5,
+                    minLines: 1,
+                    maxLength: _maxLength,
+                    errorText: _errorText,
+                    onChanged: (value) {
+                      setState(() => _errorText = null);
+                      widget.onDescriptionChanged(value);
+                    },
+                    isInvalid: widget.isInvalid,
+                    suffixIcon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Opacity(
+                          opacity: widget.descriptionController.text.isNotEmpty ? 1.0 : 0.0,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                tooltip: Strings.clear,
+                                icon: Icon(Icons.clear),
+                                onPressed: widget.onClear,
+                              ),
+                              SizedBox(
+                                height: 28.0,
+                                child: VerticalDivider(
+                                  color: AppColors.grey500,
+                                  thickness: 1,
+                                  width: 1,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        IconButton(
+                          tooltip: _isListening ? Strings.dictationStop : Strings.dictationStart,
+                          onPressed: () {
+                            if (_isListening) {
+                              _stopListening();
+                            } else {
+                              _startListening();
+                            }
+                          },
+                          icon: Container(
+                            padding: EdgeInsets.all(2),
+                            decoration: _isListening
+                                ? null
+                                : BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: AppColors.primary, width: 2),
+                                  ),
+                            child: Icon(
+                              _isListening ? Icons.stop_circle_rounded : Icons.mic,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                )
+                ],
+              ),
             ],
           ),
         ],
