@@ -37,6 +37,7 @@ class EditCriteresButton<Result> extends StatelessWidget {
       distinct: true,
       builder: (context, viewModel) {
         return CardContainer(
+          border: Border.all(color: AppColors.grey500, width: 1),
           padding: EdgeInsets.all(Margins.spacing_base),
           onTap: () => context.dispatch(RechercheOpenCriteresAction<Result>()),
           child: Row(

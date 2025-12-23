@@ -15,6 +15,7 @@ class CardContainer extends StatelessWidget {
   final bool withShadow;
   final DecorationImage? image;
   final Gradient? gradient;
+  final Border? border;
 
   CardContainer({
     super.key,
@@ -27,6 +28,7 @@ class CardContainer extends StatelessWidget {
     this.withShadow = true,
     this.image,
     this.gradient,
+    this.border,
   }) : splashColor = splashColor ?? AppColors.primary.withValues(alpha: 0.2);
 
   @override
@@ -41,6 +43,7 @@ class CardContainer extends StatelessWidget {
         color: gradient != null ? null : backgroundColor,
         borderRadius: cardBorderRadius,
         boxShadow: withShadow ? [Shadows.radius_base] : [],
+        border: border,
         image: image,
         gradient: gradient,
       ),
