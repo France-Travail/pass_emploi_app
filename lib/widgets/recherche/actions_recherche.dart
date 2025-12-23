@@ -8,29 +8,24 @@ import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
-import 'package:pass_emploi_app/widgets/buttons/filtre_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:redux/redux.dart';
 
 class ActionsRecherche extends StatelessWidget {
   final ActionsRechercheViewModel Function(Store<AppState> store) buildViewModel;
   final Widget Function() buildAlertBottomSheet;
-  final Future<bool?>? Function() buildFiltresBottomSheet;
-  final Function() onFiltreApplied;
 
   ActionsRecherche({
     required this.buildViewModel,
     required this.buildAlertBottomSheet,
-    required this.buildFiltresBottomSheet,
-    required this.onFiltreApplied,
   });
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, ActionsRechercheViewModel>(
       converter: buildViewModel,
-      builder: _builder,
       distinct: true,
+      builder: _builder,
     );
   }
 
@@ -48,24 +43,11 @@ class ActionsRecherche extends StatelessWidget {
             iconSize: Dimens.icon_size_base,
             onPressed: () => _onAlertButtonPressed(context),
           ),
-        if (viewModel.withFiltreButton)
-          FiltreButton(
-            filtresCount: viewModel.filtresCount,
-            onPressed: () => _onFiltreButtonPressed(context),
-          ),
       ],
     );
   }
 
   void _onAlertButtonPressed(BuildContext context) {
     showPassEmploiBottomSheet(context: context, builder: (_) => buildAlertBottomSheet());
-  }
-
-  Future<void> _onFiltreButtonPressed(BuildContext context) {
-    final bottomSheet = buildFiltresBottomSheet();
-    if (bottomSheet == null) return Future(() => {});
-    return bottomSheet.then((value) {
-      if (value == true) onFiltreApplied();
-    });
   }
 }

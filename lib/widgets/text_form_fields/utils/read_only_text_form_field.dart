@@ -14,7 +14,7 @@ class ReadOnlyTextFormField extends StatefulWidget {
   final Function() onTextTap;
   final Function() onDeleteTap;
   final String a11ySuppressionLabel;
-  final String hint;
+  final String? hint;
   final String? initialValue;
   final Widget? prefixIcon;
 
@@ -42,13 +42,15 @@ class _ReadOnlyTextFormFieldState extends State<ReadOnlyTextFormField> {
   @override
   void initState() {
     super.initState();
-    _focusNode = FocusNode(onKeyEvent: (node, event) {
-      if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.enter) {
-        widget.onTextTap();
-        return KeyEventResult.handled;
-      }
-      return KeyEventResult.ignored;
-    });
+    _focusNode = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.enter) {
+          widget.onTextTap();
+          return KeyEventResult.handled;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
   }
 
   @override
@@ -57,10 +59,11 @@ class _ReadOnlyTextFormFieldState extends State<ReadOnlyTextFormField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Semantics(header: true, child: Text(widget.title, style: TextStyles.textBaseBold)),
-        Semantics(
-          excludeSemantics: true,
-          child: Text(widget.hint, style: TextStyles.textSRegularWithColor(AppColors.contentColor)),
-        ),
+        if (widget.hint != null)
+          Semantics(
+            excludeSemantics: true,
+            child: Text(widget.hint!, style: TextStyles.textSRegularWithColor(AppColors.contentColor)),
+          ),
         SizedBox(height: Margins.spacing_base),
         Stack(
           alignment: Alignment.centerRight,
@@ -69,7 +72,7 @@ class _ReadOnlyTextFormFieldState extends State<ReadOnlyTextFormField> {
               tag: widget.heroTag,
               child: Semantics(
                 button: true,
-                label: widget.hint + (widget.initialValue != null ? Strings.chosenValue : ""),
+                label: widget.hint ?? (widget.initialValue != null ? Strings.chosenValue : ""),
                 child: Material(
                   type: MaterialType.transparency,
                   child: BaseTextField(

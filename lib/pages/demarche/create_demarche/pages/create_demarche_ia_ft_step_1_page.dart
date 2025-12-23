@@ -115,28 +115,24 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
                       right: -8,
                       bottom: Margins.spacing_base,
                       child: IconButton(
-                        onPressed: () => _textEditingController.clear(),
-                        icon: IconButton(
-                          tooltip: _isListening ? Strings.iaFtStep2ButtonStop : Strings.iaFtStep2ButtonDicter,
-                          onPressed: () {
-                            if (_isListening) {
-                              _stopListening();
-                            } else {
-                              _startListening();
-                            }
-                          },
-                          icon: Container(
-                            padding: EdgeInsets.all(2),
-                            decoration: _isListening
-                                ? null
-                                : BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(color: AppColors.primary, width: 2),
-                                  ),
-                            child: Icon(_isListening ? Icons.stop_circle_rounded : Icons.mic, color: AppColors.primary),
-                          ),
+                        tooltip: _isListening ? Strings.iaFtStep2ButtonStop : Strings.iaFtStep2ButtonDicter,
+                        onPressed: () {
+                          if (_isListening) {
+                            _stopListening();
+                          } else {
+                            _startListening();
+                          }
+                        },
+                        icon: Container(
+                          padding: EdgeInsets.all(2),
+                          decoration: _isListening
+                              ? null
+                              : BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: AppColors.primary, width: 2),
+                                ),
+                          child: Icon(_isListening ? Icons.stop_circle_rounded : Icons.mic, color: AppColors.primary),
                         ),
-                        color: AppColors.primary,
                       ),
                     ),
                   ],
