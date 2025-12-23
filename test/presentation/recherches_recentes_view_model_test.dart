@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/presentation/recherches_recentes_view_model.dart';
+import 'package:pass_emploi_app/ui/strings.dart';
 
 import '../doubles/fixtures.dart';
 import '../dsl/app_state_dsl.dart';
@@ -32,5 +33,50 @@ void main() {
     final viewModel = RecherchesRecentesViewModel.create(store);
     // Then
     expect(viewModel.rechercheRecente, getMockedAlerte().first);
+  });
+
+  test('should display the correct title for the recent search', () {
+    // Given
+    final store = givenState().loggedIn().withRecentsSearches([
+      mockOffreEmploiAlerte(),
+      mockImmersionAlerte(),
+    ]).store();
+    // When
+    final viewModel = RecherchesRecentesViewModel.create(store);
+    // Then
+    expect(viewModel.title, Strings.rechercheHomeOffresEmploiTitle);
+  });
+
+  test('should display the correct title for the recent search', () {
+    // Given
+    final store = givenState().loggedIn().withRecentsSearches([
+      mockImmersionAlerte(),
+    ]).store();
+    // When
+    final viewModel = RecherchesRecentesViewModel.create(store);
+    // Then
+    expect(viewModel.title, Strings.rechercheHomeOffresImmersionTitle);
+  });
+
+  test('should display the correct title for the recent search', () {
+    // Given
+    final store = givenState().loggedIn().withRecentsSearches([
+      mockServiceCiviqueAlerte(),
+    ]).store();
+    // When
+    final viewModel = RecherchesRecentesViewModel.create(store);
+    // Then
+    expect(viewModel.title, Strings.rechercheHomeOffresServiceCiviqueTitle);
+  });
+
+  test('should display the correct title for the recent search', () {
+    // Given
+    final store = givenState().loggedIn().withRecentsSearches([
+      mockOffreAlternanceAlerte(),
+    ]).store();
+    // When
+    final viewModel = RecherchesRecentesViewModel.create(store);
+    // Then
+    expect(viewModel.title, Strings.rechercheHomeOffresAlternanceTitle);
   });
 }

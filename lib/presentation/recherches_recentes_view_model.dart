@@ -22,9 +22,10 @@ class RecherchesRecentesViewModel extends Equatable {
 
   static RecherchesRecentesViewModel create(Store<AppState> store) {
     final state = store.state.recherchesRecentesState;
+    final rechercheRecente = state.recentSearches.derniereRechercheOffre();
     return RecherchesRecentesViewModel(
       rechercheRecente: state.recentSearches.derniereRechercheOffre(),
-      title: state.recentSearches.typeTitle(),
+      title: _title(rechercheRecente),
       fetchAlerteResult: (alerte) => store.dispatch(FetchAlerteResultsAction(alerte)),
     );
   }
@@ -33,19 +34,24 @@ class RecherchesRecentesViewModel extends Equatable {
   List<Object?> get props => [rechercheRecente];
 }
 
+String _title(Alerte? rechercheRecente) {
+  if (rechercheRecente is OffreEmploiAlerte) {
+    return rechercheRecente.onlyAlternance
+        ? Strings.rechercheHomeOffresAlternanceTitle
+        : Strings.rechercheHomeOffresEmploiTitle;
+  } else if (rechercheRecente is ImmersionAlerte) {
+    return Strings.rechercheHomeOffresImmersionTitle;
+  } else if (rechercheRecente is ServiceCiviqueAlerte) {
+    return Strings.rechercheHomeOffresServiceCiviqueTitle;
+  } else {
+    return Strings.rechercheHomeOffresEmploiTitle;
+  }
+}
+
 extension _RechercheRecentesList on List<Alerte> {
   Alerte? derniereRechercheOffre() {
     return firstWhereOrNull((element) {
       return element is OffreEmploiAlerte || element is ImmersionAlerte || element is ServiceCiviqueAlerte;
     });
-  }
-
-  String typeTitle() {
-    return switch (this) {
-      [OffreEmploiAlerte()] => Strings.rechercheHomeOffresEmploiTitle,
-      [ImmersionAlerte()] => Strings.rechercheHomeOffresImmersionTitle,
-      [ServiceCiviqueAlerte()] => Strings.rechercheHomeOffresServiceCiviqueTitle,
-      _ => Strings.rechercheHomeNosOffres,
-    };
   }
 }
