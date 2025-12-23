@@ -72,7 +72,7 @@ class _Icon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 10),
-      child: Icon(AppIcons.add_alert_rounded, color: AppColors.accent1, size: Dimens.icon_size_m),
+      child: Icon(AppIcons.add_alert_rounded, color: AppColors.primary, size: Dimens.icon_size_m),
     );
   }
 }
@@ -81,7 +81,7 @@ class _Text extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Text(Strings.vosSuggestionsAlertes, style: TextStyles.textBaseBold),
+      child: Text(Strings.mesSuggestionsAlertes, style: TextStyles.textBaseBold),
     );
   }
 }

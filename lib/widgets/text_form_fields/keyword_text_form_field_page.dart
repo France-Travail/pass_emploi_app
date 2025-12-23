@@ -19,15 +19,15 @@ import 'package:pass_emploi_app/widgets/text_form_fields/utils/title_tile.dart';
 
 class KeywordTextFormFieldPage extends StatelessWidget {
   final String title;
-  final String hint;
+  final String? hint;
   final String? selectedKeyword;
   final String heroTag;
 
-  KeywordTextFormFieldPage({required this.title, required this.hint, this.selectedKeyword, required this.heroTag});
+  KeywordTextFormFieldPage({required this.title, this.hint, this.selectedKeyword, required this.heroTag});
 
   static MaterialPageRoute<String?> materialPageRoute({
     required String title,
-    required String hint,
+    required String? hint,
     required String? selectedKeyword,
     required final String heroTag,
   }) {
@@ -72,14 +72,14 @@ class KeywordTextFormFieldPage extends StatelessWidget {
 class _Body extends StatefulWidget {
   final MotsClesViewModel viewModel;
   final String title;
-  final String hint;
+  final String? hint;
   final String? selectedKeyword;
   final String heroTag;
 
   const _Body({
     required this.viewModel,
     required this.title,
-    required this.hint,
+    this.hint,
     required this.selectedKeyword,
     required this.heroTag,
   });

@@ -1,6 +1,5 @@
 # Doc can be [found here](https://dart.dev/guides/language/analysis-options)
-include:
-  package:flutter_lints/flutter.yaml
+include: package:flutter_lints/flutter.yaml
 linter:
   rules:
     always_declare_return_types: true
@@ -17,7 +16,7 @@ linter:
     always_use_package_imports: true
 
 analyzer:
-  exclude: [ build/** ]
+  exclude: [build/**]
   language:
     strict-casts: true
     strict-raw-types: true
@@ -25,3 +24,5 @@ analyzer:
     missing_return: error
     dead_code: error
     unused_element: error
+formatter:
+  trailing_commas: preserve

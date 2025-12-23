@@ -85,9 +85,12 @@ class _ScaffoldState extends State<_Scaffold> {
           onDateDebutValueChange: (dateTime) => _setDateDebutFiltreState(dateTime),
           onDateFinValueChange: (dateTime) => _setDateFinFiltreState(dateTime),
         ),
-        floatingActionButton: FilterButton(
-          isEnabled: _isButtonEnabled(widget.viewModel.displayState),
-          onPressed: () => {_onButtonClick(widget.viewModel)},
+        floatingActionButton: SizedBox(
+          width: double.infinity,
+          child: FilterButton(
+            isEnabled: _isButtonEnabled(widget.viewModel.displayState),
+            onPressed: () => {_onButtonClick(widget.viewModel)},
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
@@ -216,14 +219,17 @@ class _TypeFiltreState extends State<_TypeFiltre> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [null, ...EvenementEmploiType.values]
-                  .map((type) => CustomRadioGroup<EvenementEmploiType?>(
+                  .map(
+                    (type) => CustomRadioGroup<EvenementEmploiType?>(
                       title: type?.label ?? Strings.evenementEmploiTypeAll,
                       value: type,
                       groupValue: _currentValue,
                       onChanged: (value) {
                         widget.onValueChange(value);
                         setState(() => _currentValue = value);
-                      }))
+                      },
+                    ),
+                  )
                   .toList(),
             ),
           ),

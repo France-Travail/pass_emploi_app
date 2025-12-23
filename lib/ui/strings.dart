@@ -893,18 +893,15 @@ class Strings {
   static String derniereRecherche = "Dernière recherche";
   static String dernieresRecherches = "Dernières recherches";
   static String vosPreferencesMetiers = "Vos préférences métiers";
-  static String rechercheHomeNosOffres = "Nos offres";
   static String rechercheDerniereOffreConsultee = "Dernière offre consultée";
-  static String rechercheHomeOffresEmploiTitle = "Offres d’emploi";
+  static String rechercheHomeOffresEmploiTitle = "Emploi";
   static String rechercheHomeOffresEmploiSubtitle = "Trouvez un emploi qui vous correspond.";
-  static String rechercheHomeOffresAlternanceTitle = "Offres d’alternance";
-  static String rechercheHomeOffresAlternanceSubtitle =
-      "Professionnalisez-vous en associant travail en entreprise et formation.";
-  static String rechercheHomeOffresImmersionTitle = "Offres d’immersion";
+  static String rechercheHomeOffresAlternanceTitle = "Alternance";
+  static String rechercheHomeOffresAlternanceSubtitle = "Alliez travail en entreprise et formation.";
+  static String rechercheHomeOffresImmersionTitle = "Immersion";
   static String rechercheHomeOffresImmersionSubtitle = "Découvrez un métier au sein d’une entreprise.";
-  static String rechercheHomeOffresServiceCiviqueTitle = "Offres de service civique";
-  static String rechercheHomeOffresServiceCiviqueSubtitle =
-      "Engagez-vous dans une mission d’intérêt général pour aider les autres.";
+  static String rechercheHomeOffresServiceCiviqueTitle = "Service civique";
+  static String rechercheHomeOffresServiceCiviqueSubtitle = "Engagez-vous dans une mission d’intérêt général.";
   static String rechercheOffresEmploiTitle = "Offres d’emploi";
   static String rechercheOffresAlternanceTitle = "Offres d’alternance";
   static String rechercheOffresImmersionTitle = "Offres d’immersion";
@@ -912,6 +909,8 @@ class Strings {
   static String rechercheAfficherPlus = "Afficher plus d'offres";
   static String recherchePlaceholderTitle = "Effectuez votre recherche pour afficher des résultats";
   static String rechercheLancerUneRechercheHint = "Lancez une recherche pour afficher les offres vous correspondant";
+  static String rechercheEditButton = "Modifier ma recherche";
+  static String rechercheRecentesTitle = "Recherches récentes";
 
   static String rechercheCriteresActifsZero = "0 critère actif";
   static String rechercheCriteresActifsOne = "(1) critère actif";
@@ -925,18 +924,9 @@ class Strings {
   static String offreNotFoundBodyTitle = "Cette offre n'est plus disponible";
   static String offreNotFoundBodySubtitle = "Consultez les dernières offres ou demandez de l'aide à votre conseiller";
   static String keywordTitle = "Mot clé";
-  static String keywordEmploiHint = "Saisissez un métier, une compétence, un secteur d'activité…";
   static String metierLabel = "Métier";
-  static String metierImmersionHint = "Renseignez le métier pour lequel vous souhaitez faire une immersion.";
-  static String locationTitle = "Localisation";
-  static String locationMandatoryTitle = "*Localisation";
-  static String jobLocationEmploiHint = "Sélectionnez une ville ou un département dans lequel vous cherchez un emploi.";
-  static String jobLocationAlternanceHint =
-      "Sélectionnez une ville ou un département dans lequel vous cherchez une alternance.";
-  static String jobLocationImmersionHint = "Sélectionnez une ville dans laquelle vous cherchez une immersion.";
-  static String jobLocationServiceCiviqueHint =
-      "Sélectionnez une ville dans laquelle vous cherchez un service civique.";
-  static String jobEvenementEmploiHint = "Sélectionnez une ville dans laquelle vous cherchez un événement.";
+  static String locationTitle = "Lieu";
+  static String locationMandatoryTitle = "*Lieu";
   static String searchButton = "Rechercher";
   static String offreDetails = "Détails de l'offre";
   static String rechercheTabTitle = "Recherche";
@@ -1379,7 +1369,7 @@ class Strings {
 
   // Suggestions de recherche
   static String vosSuggestionsAlertesError = "Erreur lors de la récupération de vos suggestions d'alertes";
-  static String vosSuggestionsAlertes = "Vos suggestions d'alertes";
+  static String mesSuggestionsAlertes = "Mes suggestions d'alertes";
   static String nouvellesSuggestionsDeRechercheTitre = "Vous avez des suggestions d’alertes";
   static String nouvellesSuggestionsDeRechercheDescription =
       "Sur la base de votre profil France Travail, voici des suggestions d'alertes à sauvegarder";

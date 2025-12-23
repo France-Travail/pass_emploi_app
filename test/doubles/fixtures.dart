@@ -83,15 +83,14 @@ User mockUser({
   String id = "",
   LoginMode loginMode = LoginMode.MILO,
   Accompagnement accompagnement = Accompagnement.cej,
-}) =>
-    User(
-      id: id,
-      firstName: "",
-      lastName: "",
-      email: "",
-      loginMode: loginMode,
-      accompagnement: accompagnement,
-    );
+}) => User(
+  id: id,
+  firstName: "",
+  lastName: "",
+  email: "",
+  loginMode: loginMode,
+  accompagnement: accompagnement,
+);
 
 LoginState successUserState({required LoginMode loginMode, required Accompagnement accompagnement}) {
   return LoginSuccessState(mockUser(loginMode: loginMode, accompagnement: accompagnement));
@@ -143,45 +142,47 @@ AppState loggedInMiloState() => AppState.initialState().copyWith(loginState: suc
 AppState loggedInPoleEmploiState() => AppState.initialState().copyWith(loginState: successPoleEmploiCejUserState());
 
 OffreEmploiDetails mockOffreEmploiDetails({Origin? origin}) => OffreEmploiDetails(
-      id: "123TZKB",
-      title: "Technicien / Technicienne d'installation de réseaux câblés  (H/F)",
-      urlRedirectPourPostulation: "https://candidat.pole-emploi.fr/offres/recherche/detail/123TZKB",
-      description: "Vos Missions :\n\nRéaliser du tirage de câbles,\n"
-          "Effectuer des raccordements en fibre optique et câble coaxial,\n\n"
-          "Le permis B est requis pour ce poste car vous vous déplacerez à bord "
-          "d'un véhicule de service mis à votre disposition.",
-      contractType: "Contrat à durée indéterminée",
-      duration: "35H Horaires normaux",
-      location: "59 - Nord",
-      salary: "Mensuel de 1590 Euros sur 12 mois",
-      companyName: "LTD INTERNATIONAL",
-      companyDescription: "LTD international est à la fois un cabinet de recrutement et une agence de travail "
-          "temporaire spécialisé dans le tertiaire haut de gamme et le luxe.",
-      companyUrl: "http://www.ltd-international.com/",
-      companyAdapted: false,
-      companyAccessibility: false,
-      experience: "Débutant accepté - Expérience électricité/VRD appréciée",
-      requiredExperience: "D",
-      educations: [
-        Education(level: "Bac+5 et plus ou équivalents", field: "conduite projet industriel", requirement: "E")
-      ],
-      languages: [Language(type: "Anglais", requirement: "E"), Language(type: "Espagnol", requirement: "S")],
-      driverLicences: [
-        DriverLicence(category: "B - Véhicule léger", requirement: "E"),
-      ],
-      skills: [
-        Skill(description: "Chiffrage/calcul de coût", requirement: "S"),
-        Skill(
-            description: "Installer l'équipement sur le site et le connecter aux réseaux extérieurs", requirement: "E"),
-        Skill(description: "Identifier les matériels à intégrer", requirement: "E"),
-        Skill(description: "Assembler les éléments de l'équipement", requirement: "E"),
-        Skill(description: "Connecter une boîte de raccordements", requirement: "E")
-      ],
-      softSkills: ["Autonomie", "Capacité de décision", "Persévérance"],
-      lastUpdate: parseDateTimeUtcWithCurrentTimeZone("2021-11-22T14:47:29.000Z"),
-      isAlternance: false,
-      origin: origin ?? FranceTravailOrigin(),
-    );
+  id: "123TZKB",
+  title: "Technicien / Technicienne d'installation de réseaux câblés  (H/F)",
+  urlRedirectPourPostulation: "https://candidat.pole-emploi.fr/offres/recherche/detail/123TZKB",
+  description:
+      "Vos Missions :\n\nRéaliser du tirage de câbles,\n"
+      "Effectuer des raccordements en fibre optique et câble coaxial,\n\n"
+      "Le permis B est requis pour ce poste car vous vous déplacerez à bord "
+      "d'un véhicule de service mis à votre disposition.",
+  contractType: "Contrat à durée indéterminée",
+  duration: "35H Horaires normaux",
+  location: "59 - Nord",
+  salary: "Mensuel de 1590 Euros sur 12 mois",
+  companyName: "LTD INTERNATIONAL",
+  companyDescription:
+      "LTD international est à la fois un cabinet de recrutement et une agence de travail "
+      "temporaire spécialisé dans le tertiaire haut de gamme et le luxe.",
+  companyUrl: "http://www.ltd-international.com/",
+  companyAdapted: false,
+  companyAccessibility: false,
+  experience: "Débutant accepté - Expérience électricité/VRD appréciée",
+  requiredExperience: "D",
+  educations: [Education(level: "Bac+5 et plus ou équivalents", field: "conduite projet industriel", requirement: "E")],
+  languages: [
+    Language(type: "Anglais", requirement: "E"),
+    Language(type: "Espagnol", requirement: "S"),
+  ],
+  driverLicences: [
+    DriverLicence(category: "B - Véhicule léger", requirement: "E"),
+  ],
+  skills: [
+    Skill(description: "Chiffrage/calcul de coût", requirement: "S"),
+    Skill(description: "Installer l'équipement sur le site et le connecter aux réseaux extérieurs", requirement: "E"),
+    Skill(description: "Identifier les matériels à intégrer", requirement: "E"),
+    Skill(description: "Assembler les éléments de l'équipement", requirement: "E"),
+    Skill(description: "Connecter une boîte de raccordements", requirement: "E"),
+  ],
+  softSkills: ["Autonomie", "Capacité de décision", "Persévérance"],
+  lastUpdate: parseDateTimeUtcWithCurrentTimeZone("2021-11-22T14:47:29.000Z"),
+  isAlternance: false,
+  origin: origin ?? FranceTravailOrigin(),
+);
 
 OffreEmploi mockOffreEmploi({
   String id = "123DXPM",
@@ -205,13 +206,16 @@ OffreEmploi mockOffreEmploi({
 List<OffreEmploi> mockOffresEmploi10() => List.generate(10, (index) => mockOffreEmploi());
 
 AuthTokenResponse authTokenResponse() => AuthTokenResponse(
-      accessToken: 'accessToken',
-      idToken: 'idToken',
-      refreshToken: 'refreshToken',
-    );
+  accessToken: 'accessToken',
+  idToken: 'idToken',
+  refreshToken: 'refreshToken',
+);
 
-Configuration configuration(
-    {Version version = const Version(1, 0, 0), Flavor flavor = Flavor.STAGING, Brand brand = Brand.cej}) {
+Configuration configuration({
+  Version version = const Version(1, 0, 0),
+  Flavor flavor = Flavor.STAGING,
+  Brand brand = Brand.cej,
+}) {
   return Configuration(
     version,
     flavor,
@@ -236,29 +240,29 @@ Configuration configuration(
 Configuration passEmploiConfiguration() => configuration(brand: Brand.passEmploi);
 
 Location mockLocationParis() => Location(
-      libelle: "Paris",
-      code: "75",
-      type: LocationType.DEPARTMENT,
-      latitude: 1,
-      longitude: 2,
-    );
+  libelle: "Paris",
+  code: "75",
+  type: LocationType.DEPARTMENT,
+  latitude: 1,
+  longitude: 2,
+);
 
 Location mockLocation({double? lat, double? lon}) => Location(
-      libelle: "",
-      code: "code",
-      type: LocationType.DEPARTMENT,
-      latitude: lat,
-      longitude: lon,
-    );
+  libelle: "",
+  code: "code",
+  type: LocationType.DEPARTMENT,
+  latitude: lat,
+  longitude: lon,
+);
 
 Location mockCommuneLocation({double? lat, double? lon, String label = ""}) => Location(
-      libelle: label,
-      code: "code",
-      codePostal: "codePostal",
-      type: LocationType.COMMUNE,
-      latitude: lat,
-      longitude: lon,
-    );
+  libelle: label,
+  code: "code",
+  codePostal: "codePostal",
+  type: LocationType.COMMUNE,
+  latitude: lat,
+  longitude: lon,
+);
 
 List<Location> mockLocations() {
   return [
@@ -354,13 +358,13 @@ ContactImmersionRequest mockContactImmersionRequest() {
 }
 
 ServiceCivique mockServiceCivique({String id = "123DXPM"}) => ServiceCivique(
-      id: id,
-      startDate: '17/02/2022',
-      title: "Technicien / Technicienne en froid et climatisation",
-      companyName: "RH TT INTERIM",
-      domain: 'Informatique',
-      location: "77 - LOGNES",
-    );
+  id: id,
+  startDate: '17/02/2022',
+  title: "Technicien / Technicienne en froid et climatisation",
+  companyName: "RH TT INTERIM",
+  domain: 'Informatique',
+  location: "77 - LOGNES",
+);
 
 List<ServiceCivique> mockOffresServiceCivique10() => List.generate(10, (index) => mockServiceCivique());
 
@@ -386,22 +390,22 @@ List<ServiceCivique> mockOffresServiceCiviqueAccompagnementInsertion() {
 }
 
 ServiceCiviqueDetail mockServiceCiviqueDetail() => ServiceCiviqueDetail(
-      id: "123DXPM",
-      dateDeDebut: '17/02/2022',
-      dateDeFin: '17/02/2022',
-      titre: "Technicien / Technicienne en froid et climatisation",
-      organisation: "RH TT INTERIM",
-      domaine: 'Informatique',
-      ville: "LOGNES",
-      urlOrganisation: "url de l'organisation",
-      adresseMission: "je suis une addresse",
-      adresseOrganisation: "je suis une addresse",
-      codeDepartement: "77",
-      description: "C'est toi la description",
-      descriptionOrganisation: "Bon ça va là les description, ça suffit",
-      lienAnnonce: "Bonjour, moi c'est le lien (social ?) mwahaha",
-      codePostal: "75002",
-    );
+  id: "123DXPM",
+  dateDeDebut: '17/02/2022',
+  dateDeFin: '17/02/2022',
+  titre: "Technicien / Technicienne en froid et climatisation",
+  organisation: "RH TT INTERIM",
+  domaine: 'Informatique',
+  ville: "LOGNES",
+  urlOrganisation: "url de l'organisation",
+  adresseMission: "je suis une addresse",
+  adresseOrganisation: "je suis une addresse",
+  codeDepartement: "77",
+  description: "C'est toi la description",
+  descriptionOrganisation: "Bon ça va là les description, ça suffit",
+  lienAnnonce: "Bonjour, moi c'est le lien (social ?) mwahaha",
+  codePostal: "75002",
+);
 
 Rendezvous mockAnimationCollective() {
   return Rendezvous(
@@ -631,7 +635,8 @@ DemarcheDuReferentiel mockDemarcheDuReferentiel([String? id, List<Comment>? comm
     pourquoi: 'pourquoi',
     codeQuoi: 'codeQuoi',
     codePourquoi: 'codePourquoi',
-    comments: comments ??
+    comments:
+        comments ??
         [
           Comment(label: 'label1', code: 'code1'),
           Comment(label: 'label2', code: 'code2'),
@@ -665,7 +670,7 @@ Demarche demarcheStub({String? id, DateTime? dateEcheance}) {
       DemarcheStatus.CANCELLED,
       DemarcheStatus.DONE,
       DemarcheStatus.NOT_STARTED,
-      DemarcheStatus.IN_PROGRESS
+      DemarcheStatus.IN_PROGRESS,
     ],
     creationDate: parseDateTimeUtcWithCurrentTimeZone('2022-05-11T09:04:00.000Z'),
     modifiedByAdvisor: false,
@@ -763,21 +768,21 @@ Preferences mockPreferences({
 }
 
 List<Commentaire> mockCommentaires() => [
-      Commentaire(
-        id: "8392839",
-        content: "Premier commentaire",
-        creationDate: parseDateTimeUtcWithCurrentTimeZone("2022-07-23T12:08:10.000"),
-        createdByAdvisor: true,
-        creatorName: "Nils Tavernier",
-      ),
-      Commentaire(
-        id: "8802034",
-        content: "Deuxieme commentaire",
-        creationDate: parseDateTimeUtcWithCurrentTimeZone("2022-07-23T17:08:10.000"),
-        createdByAdvisor: false,
-        creatorName: null,
-      )
-    ];
+  Commentaire(
+    id: "8392839",
+    content: "Premier commentaire",
+    creationDate: parseDateTimeUtcWithCurrentTimeZone("2022-07-23T12:08:10.000"),
+    createdByAdvisor: true,
+    creatorName: "Nils Tavernier",
+  ),
+  Commentaire(
+    id: "8802034",
+    content: "Deuxieme commentaire",
+    creationDate: parseDateTimeUtcWithCurrentTimeZone("2022-07-23T17:08:10.000"),
+    createdByAdvisor: false,
+    creatorName: null,
+  ),
+];
 
 List<Demarche> mockDemarches() {
   return [
@@ -796,66 +801,68 @@ List<Demarche> mockDemarches() {
       titre: null,
       modificationDate: null,
       attributs: [],
-    )
+    ),
   ];
 }
 
 SuggestionRecherche suggestionCaristeFromPoleEmploi() => SuggestionRecherche(
-      id: "1",
-      titre: "Cariste",
-      type: OffreType.emploi,
-      source: SuggestionSource.poleEmploi,
-      metier: "Conduite d'engins de déplacement des charges",
-      localisation: "Nord",
-      dateCreation: parseDateTimeUtcWithCurrentTimeZone("2022-09-22T12:00:00.000Z"),
-      dateRafraichissement: parseDateTimeUtcWithCurrentTimeZone("2022-09-26T13:00:00.000Z"),
-    );
+  id: "1",
+  titre: "Cariste",
+  type: OffreType.emploi,
+  source: SuggestionSource.poleEmploi,
+  metier: "Conduite d'engins de déplacement des charges",
+  localisation: "Nord",
+  dateCreation: parseDateTimeUtcWithCurrentTimeZone("2022-09-22T12:00:00.000Z"),
+  dateRafraichissement: parseDateTimeUtcWithCurrentTimeZone("2022-09-26T13:00:00.000Z"),
+);
 
 SuggestionRecherche suggestionBoulangerFromConseiller() => SuggestionRecherche(
-      id: "2",
-      titre: "Boulanger",
-      type: OffreType.immersion,
-      source: SuggestionSource.conseiller,
-      metier: "Chef boulanger",
-      localisation: "Valence",
-      dateCreation: parseDateTimeUtcWithCurrentTimeZone("2022-10-12T22:00:00.000Z"),
-      dateRafraichissement: parseDateTimeUtcWithCurrentTimeZone("2022-10-16T23:00:00.000Z"),
-    );
+  id: "2",
+  titre: "Boulanger",
+  type: OffreType.immersion,
+  source: SuggestionSource.conseiller,
+  metier: "Chef boulanger",
+  localisation: "Valence",
+  dateCreation: parseDateTimeUtcWithCurrentTimeZone("2022-10-12T22:00:00.000Z"),
+  dateRafraichissement: parseDateTimeUtcWithCurrentTimeZone("2022-10-16T23:00:00.000Z"),
+);
 
 SuggestionRecherche suggestionPlombier() => SuggestionRecherche(
-      id: "3",
-      titre: "Plombier",
-      type: OffreType.immersion,
-      source: null,
-      metier: "Plombier",
-      localisation: "Valence",
-      dateCreation: parseDateTimeUtcWithCurrentTimeZone("2022-10-12T22:00:00.000Z"),
-      dateRafraichissement: parseDateTimeUtcWithCurrentTimeZone("2022-10-16T23:00:00.000Z"),
-    );
+  id: "3",
+  titre: "Plombier",
+  type: OffreType.immersion,
+  source: null,
+  metier: "Plombier",
+  localisation: "Valence",
+  dateCreation: parseDateTimeUtcWithCurrentTimeZone("2022-10-12T22:00:00.000Z"),
+  dateRafraichissement: parseDateTimeUtcWithCurrentTimeZone("2022-10-16T23:00:00.000Z"),
+);
 
 SuggestionRecherche suggestionCoiffeurFormDiagoriente() => SuggestionRecherche(
-      id: "4",
-      titre: "Coiffeur",
-      type: OffreType.immersion,
-      source: SuggestionSource.diagoriente,
-      metier: "Coiffeur en salon",
-      localisation: null,
-      dateCreation: parseDateTimeUtcWithCurrentTimeZone("2022-10-12T22:00:00.000Z"),
-      dateRafraichissement: parseDateTimeUtcWithCurrentTimeZone("2022-10-16T23:00:00.000Z"),
-    );
+  id: "4",
+  titre: "Coiffeur",
+  type: OffreType.immersion,
+  source: SuggestionSource.diagoriente,
+  metier: "Coiffeur en salon",
+  localisation: null,
+  dateCreation: parseDateTimeUtcWithCurrentTimeZone("2022-10-12T22:00:00.000Z"),
+  dateRafraichissement: parseDateTimeUtcWithCurrentTimeZone("2022-10-16T23:00:00.000Z"),
+);
 
-List<SuggestionRecherche> mockSuggestionsRecherche() =>
-    [suggestionCaristeFromPoleEmploi(), suggestionBoulangerFromConseiller()];
+List<SuggestionRecherche> mockSuggestionsRecherche() => [
+  suggestionCaristeFromPoleEmploi(),
+  suggestionBoulangerFromConseiller(),
+];
 
 OffreEmploiAlerte offreEmploiAlerte() => OffreEmploiAlerte(
-      id: "id",
-      title: "Maître-chien / Maîtresse-chien d'avalanche",
-      metier: "Sécurité civile et secours",
-      location: Location(type: LocationType.DEPARTMENT, libelle: "Gironde", code: "33"),
-      keyword: "Maître-chien / Maîtresse-chien d'avalanche",
-      onlyAlternance: false,
-      filters: EmploiFiltresRecherche.withFiltres(distance: 0),
-    );
+  id: "id",
+  title: "Maître-chien / Maîtresse-chien d'avalanche",
+  metier: "Sécurité civile et secours",
+  location: Location(type: LocationType.DEPARTMENT, libelle: "Gironde", code: "33"),
+  keyword: "Maître-chien / Maîtresse-chien d'avalanche",
+  onlyAlternance: false,
+  filters: EmploiFiltresRecherche.withFiltres(distance: 0),
+);
 
 OffreEmploiAlerte mockOffreEmploiAlerteWithFilters({required bool isAlternance}) {
   return OffreEmploiAlerte(
@@ -866,11 +873,12 @@ OffreEmploiAlerte mockOffreEmploiAlerteWithFilters({required bool isAlternance})
     keyword: "secteur privé",
     onlyAlternance: isAlternance,
     filters: EmploiFiltresRecherche.withFiltres(
-        distance: 40,
-        contrat: [ContratFiltre.cdi],
-        debutantOnly: true,
-        experience: [ExperienceFiltre.trois_ans_et_plus, ExperienceFiltre.de_un_a_trois_ans],
-        duree: [DureeFiltre.temps_plein]),
+      distance: 40,
+      contrat: [ContratFiltre.cdi],
+      debutantOnly: true,
+      experience: [ExperienceFiltre.trois_ans_et_plus, ExperienceFiltre.de_un_a_trois_ans],
+      duree: [DureeFiltre.temps_plein],
+    ),
   );
 }
 
@@ -908,34 +916,52 @@ List<Metier> mockAutocompleteMetiers() {
 }
 
 Alerte mockOffreEmploiAlerte({String? keyword = 'keyword', Location? location}) => OffreEmploiAlerte(
-      id: 'id',
-      title: 'title',
-      metier: 'metier',
-      location: location,
-      keyword: keyword,
-      onlyAlternance: false,
-      filters: EmploiFiltresRecherche.noFiltre(),
-    );
+  id: 'id',
+  title: 'title',
+  metier: 'metier',
+  location: location,
+  keyword: keyword,
+  onlyAlternance: false,
+  filters: EmploiFiltresRecherche.noFiltre(),
+);
+
+Alerte mockOffreAlternanceAlerte({String? keyword = 'keyword', Location? location}) => OffreEmploiAlerte(
+  id: 'id',
+  title: 'title',
+  metier: 'metier',
+  location: location,
+  keyword: keyword,
+  onlyAlternance: true,
+  filters: EmploiFiltresRecherche.noFiltre(),
+);
 
 Alerte mockImmersionAlerte({String metier = 'metier', String codeRome = 'codeRome'}) => ImmersionAlerte(
-      id: 'id',
-      title: 'title',
-      metier: metier,
-      codeRome: codeRome,
-      filtres: ImmersionFiltresRecherche.noFiltre(),
-      location: mockLocation(),
-      ville: '',
-    );
+  id: 'id',
+  title: 'title',
+  metier: metier,
+  codeRome: codeRome,
+  filtres: ImmersionFiltresRecherche.noFiltre(),
+  location: mockLocation(),
+  ville: '',
+);
+
+Alerte mockServiceCiviqueAlerte({String? title = 'title', Location? location}) => ServiceCiviqueAlerte(
+  id: 'id',
+  titre: title ?? '',
+  location: location,
+  filtres: ServiceCiviqueFiltresParameters.distance(0),
+  ville: '',
+);
 
 OffreEmploiAlerte rechercheEmploiSauvegardeeChevalierValenceCDI() => OffreEmploiAlerte(
-      id: "recherche-recente-id",
-      title: "chevalier - Valence",
-      metier: null,
-      keyword: "chevalier",
-      location: Location(type: LocationType.COMMUNE, libelle: "Valence", code: "26000"),
-      onlyAlternance: false,
-      filters: EmploiFiltresRecherche.withFiltres(contrat: [ContratFiltre.cdi]),
-    );
+  id: "recherche-recente-id",
+  title: "chevalier - Valence",
+  metier: null,
+  keyword: "chevalier",
+  location: Location(type: LocationType.COMMUNE, libelle: "Valence", code: "26000"),
+  onlyAlternance: false,
+  filters: EmploiFiltresRecherche.withFiltres(contrat: [ContratFiltre.cdi]),
+);
 
 RechercheRequest<EmploiCriteresRecherche, EmploiFiltresRecherche> rechercheEmploiChevalierValenceCDI() {
   return RechercheRequest(
@@ -970,7 +996,7 @@ RechercheRequest<ImmersionCriteresRecherche, ImmersionFiltresRecherche> initialR
 }
 
 RechercheRequest<ServiceCiviqueCriteresRecherche, ServiceCiviqueFiltresRecherche>
-    initialRechercheServiceCiviqueRequest() {
+initialRechercheServiceCiviqueRequest() {
   return RechercheRequest(
     ServiceCiviqueCriteresRecherche(location: null),
     ServiceCiviqueFiltresRecherche.noFiltre(),
@@ -979,7 +1005,7 @@ RechercheRequest<ServiceCiviqueCriteresRecherche, ServiceCiviqueFiltresRecherche
 }
 
 RechercheRequest<ServiceCiviqueCriteresRecherche, ServiceCiviqueFiltresRecherche>
-    mockRechercheServiceCiviqueRequestWithFiltres() {
+mockRechercheServiceCiviqueRequestWithFiltres() {
   return RechercheRequest(
     ServiceCiviqueCriteresRecherche(location: null),
     ServiceCiviqueFiltresRecherche(distance: 500, startDate: DateTime(2023), domain: Domaine.all),
@@ -988,7 +1014,7 @@ RechercheRequest<ServiceCiviqueCriteresRecherche, ServiceCiviqueFiltresRecherche
 }
 
 RechercheRequest<EvenementEmploiCriteresRecherche, EvenementEmploiFiltresRecherche>
-    initialRechercheEvenementEmploiRequest() {
+initialRechercheEvenementEmploiRequest() {
   return RechercheRequest(
     EvenementEmploiCriteresRecherche(location: mockLocation(), secteurActivite: null),
     EvenementEmploiFiltresRecherche.noFiltre(),
@@ -1203,49 +1229,49 @@ List<CvPoleEmploi> mockCvPoleEmploiList() {
 }
 
 OffrePartagee dummyOffrePartagee() => OffrePartagee(
-      id: "123TZKB",
-      titre: "Technicien / Technicienne d'installation de réseaux câblés  (H/F)",
-      url: "https://candidat.pole-emploi.fr/offres/recherche/detail/123TZKB",
-      message: "Regardes ça",
-      type: message.OffreType.emploi,
-    );
+  id: "123TZKB",
+  titre: "Technicien / Technicienne d'installation de réseaux câblés  (H/F)",
+  url: "https://candidat.pole-emploi.fr/offres/recherche/detail/123TZKB",
+  message: "Regardes ça",
+  type: message.OffreType.emploi,
+);
 
 EvenementEmploiPartage dummyEvenementEmploiPartage() => EvenementEmploiPartage(
-      id: "106757",
-      titre: "Devenir conseiller à France Travail",
-      url: "https://mesevenementsemploi-t.pe-qvr.fr/mes-evenements-emploi/mes-evenements-emploi/evenement/106757",
-      message: "Regardes ça",
-    );
+  id: "106757",
+  titre: "Devenir conseiller à France Travail",
+  url: "https://mesevenementsemploi-t.pe-qvr.fr/mes-evenements-emploi/mes-evenements-emploi/evenement/106757",
+  message: "Regardes ça",
+);
 
 EventPartage dummyEventPartage() => EventPartage(
-      id: "123TZKB",
-      titre: "Technicien / Technicienne d'installation de réseaux câblés  (H/F)",
-      message: "Regardes ça",
-      date: DateTime(2023),
-      type: RendezvousType(RendezvousTypeCode.ACTIVITE_EXTERIEURES, "label"),
-    );
+  id: "123TZKB",
+  titre: "Technicien / Technicienne d'installation de réseaux câblés  (H/F)",
+  message: "Regardes ça",
+  date: DateTime(2023),
+  type: RendezvousType(RendezvousTypeCode.ACTIVITE_EXTERIEURES, "label"),
+);
 
 SessionMilo mockSessionMiloAtelierCv() => SessionMilo(
-      id: "id-cv-2023",
-      nomSession: "Session CV",
-      nomOffre: "Mon premier CV",
-      dateDeDebut: parseDateTimeUtcWithCurrentTimeZone('2023-01-01T00:00:00.000Z'),
-      type: mockSessionMiloType(),
-      theme: null,
-      estInscrit: true,
-      autoinscription: null,
-    );
+  id: "id-cv-2023",
+  nomSession: "Session CV",
+  nomOffre: "Mon premier CV",
+  dateDeDebut: parseDateTimeUtcWithCurrentTimeZone('2023-01-01T00:00:00.000Z'),
+  type: mockSessionMiloType(),
+  theme: null,
+  estInscrit: true,
+  autoinscription: null,
+);
 
 SessionMilo mockSessionMiloAtelierDecouverte() => SessionMilo(
-      id: "id-cv-2023-2",
-      nomSession: "Session Découverte",
-      nomOffre: "Découverte des métiers",
-      dateDeDebut: parseDateTimeUtcWithCurrentTimeZone('2023-01-02T00:00:00.000Z'),
-      type: mockSessionMiloType(),
-      theme: null,
-      estInscrit: false,
-      autoinscription: null,
-    );
+  id: "id-cv-2023-2",
+  nomSession: "Session Découverte",
+  nomOffre: "Découverte des métiers",
+  dateDeDebut: parseDateTimeUtcWithCurrentTimeZone('2023-01-02T00:00:00.000Z'),
+  type: mockSessionMiloType(),
+  theme: null,
+  estInscrit: false,
+  autoinscription: null,
+);
 
 SessionMiloDetails mockSessionMiloDetails({
   String id = "1",
@@ -1255,23 +1281,22 @@ SessionMiloDetails mockSessionMiloDetails({
   bool? autoinscription,
   int? nombreDePlacesRestantes,
   DateTime? dateMaxInscription,
-}) =>
-    SessionMiloDetails(
-      id: id,
-      nomSession: "SESSION TEST",
-      nomOffre: "ANIMATION COLLECTIVE POUR TEST",
-      type: mockSessionMiloType(),
-      dateHeureDebut: dateDeDebut ?? parseDateTimeUtcWithCurrentTimeZone("2042-01-01T09:00:00.000+00:00"),
-      dateHeureFin: dateDeFin ?? parseDateTimeUtcWithCurrentTimeZone("2042-01-01T11:00:00.000+00:00"),
-      lieu: "Paris",
-      animateur: "SIMILO SIMILO",
-      description: null,
-      commentaire: "Lorem ipsus",
-      estInscrit: estInscrit ?? true,
-      autoinscription: autoinscription,
-      nombreDePlacesRestantes: nombreDePlacesRestantes,
-      dateMaxInscription: dateMaxInscription,
-    );
+}) => SessionMiloDetails(
+  id: id,
+  nomSession: "SESSION TEST",
+  nomOffre: "ANIMATION COLLECTIVE POUR TEST",
+  type: mockSessionMiloType(),
+  dateHeureDebut: dateDeDebut ?? parseDateTimeUtcWithCurrentTimeZone("2042-01-01T09:00:00.000+00:00"),
+  dateHeureFin: dateDeFin ?? parseDateTimeUtcWithCurrentTimeZone("2042-01-01T11:00:00.000+00:00"),
+  lieu: "Paris",
+  animateur: "SIMILO SIMILO",
+  description: null,
+  commentaire: "Lorem ipsus",
+  estInscrit: estInscrit ?? true,
+  autoinscription: autoinscription,
+  nombreDePlacesRestantes: nombreDePlacesRestantes,
+  dateMaxInscription: dateMaxInscription,
+);
 
 SessionMilo mockSessionMilo({
   String? id,
@@ -1367,12 +1392,11 @@ MessageImportant dummyMessageImportant({
   String? message,
   DateTime? dateDebut,
   DateTime? dateFin,
-}) =>
-    MessageImportant(
-      message: message ?? "Message informatif",
-      dateDebut: dateDebut ?? DateTime(2023),
-      dateFin: dateFin ?? DateTime(2024),
-    );
+}) => MessageImportant(
+  message: message ?? "Message informatif",
+  dateDebut: dateDebut ?? DateTime(2023),
+  dateFin: dateFin ?? DateTime(2024),
+);
 
 message.Message mockMessage({
   String id = "123",
@@ -1406,9 +1430,9 @@ RemoteCampagneAccueil mockRemoteCampagneAccueil({String? id, DateTime? dateDebut
 }
 
 OffreSuivie mockOffreSuivie({String? id}) => OffreSuivie(
-      offreDto: OffreEmploiDto(mockOffreEmploi(id: id ?? "offre1")),
-      dateConsultation: DateTime(2025),
-    );
+  offreDto: OffreEmploiDto(mockOffreEmploi(id: id ?? "offre1")),
+  dateConsultation: DateTime(2025),
+);
 
 Onboarding mockOnboarding({
   bool? showAccueilOnboarding,

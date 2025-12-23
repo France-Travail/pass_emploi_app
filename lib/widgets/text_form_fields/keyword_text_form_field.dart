@@ -9,13 +9,13 @@ const _heroTag = 'keyword';
 
 class KeywordTextFormField extends StatefulWidget {
   final String title;
-  final String hint;
+  final String? hint;
   final Function(String? keyword) onKeywordSelected;
   final String? initialValue;
 
   const KeywordTextFormField({
     required this.title,
-    required this.hint,
+    this.hint,
     required this.onKeywordSelected,
     this.initialValue,
   });

@@ -37,9 +37,10 @@ class SuggestionsRechercheListPage extends StatelessWidget {
 
   static MaterialPageRoute<void> materialPageRoute({bool fetchSuggestions = false}) {
     return MaterialPageRoute(
-        builder: (context) => SuggestionsRechercheListPage._(
-              fetchSuggestions: fetchSuggestions,
-            ));
+      builder: (context) => SuggestionsRechercheListPage._(
+        fetchSuggestions: fetchSuggestions,
+      ),
+    );
   }
 
   @override
@@ -53,8 +54,11 @@ class SuggestionsRechercheListPage extends StatelessWidget {
     );
   }
 
-  void _onDidChange(BuildContext context, SuggestionsRechercheListViewModel? oldViewModel,
-      SuggestionsRechercheListViewModel newViewModel) {
+  void _onDidChange(
+    BuildContext context,
+    SuggestionsRechercheListViewModel? oldViewModel,
+    SuggestionsRechercheListViewModel newViewModel,
+  ) {
     _displaySuccessSnackbar(context, oldViewModel, newViewModel);
     _navigateToSearch(context, newViewModel.searchNavigationState);
   }
@@ -93,7 +97,7 @@ class _Scaffold extends StatelessWidget {
     const backgroundColor = AppColors.grey100;
     return Scaffold(
       backgroundColor: backgroundColor,
-      appBar: SecondaryAppBar(title: Strings.vosSuggestionsAlertes, backgroundColor: backgroundColor),
+      appBar: SecondaryAppBar(title: Strings.mesSuggestionsAlertes, backgroundColor: backgroundColor),
       body: _Body(viewModel: viewModel),
     );
   }
@@ -241,8 +245,9 @@ class _Card extends StatelessWidget {
     OffreType type, {
     required void Function(Location? location, double? rayon) onSelected,
   }) async {
-    final locationAndRayon =
-        await Navigator.of(context).push(SuggestionsAlerteLocationForm.materialPageRoute(type: type));
+    final locationAndRayon = await Navigator.of(
+      context,
+    ).push(SuggestionsAlerteLocationForm.materialPageRoute(type: type));
 
     if (locationAndRayon != null) {
       final (Location location, double rayon) = locationAndRayon;

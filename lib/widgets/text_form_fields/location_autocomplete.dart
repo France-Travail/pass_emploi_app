@@ -24,14 +24,14 @@ const _heroTag = 'location';
 
 class LocationAutocomplete extends StatefulWidget {
   final String title;
-  final String hint;
+  final String? hint;
   final Function(Location? location) onLocationSelected;
   final bool villesOnly;
   final Location? initialValue;
 
   const LocationAutocomplete({
     required this.title,
-    required this.hint,
+    this.hint,
     required this.onLocationSelected,
     this.villesOnly = false,
     this.initialValue,

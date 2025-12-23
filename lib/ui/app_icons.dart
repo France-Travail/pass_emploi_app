@@ -66,7 +66,7 @@ class AppIcons {
   static const IconData edit_rounded = Icons.edit_rounded;
   static const IconData search_rounded = Icons.search_rounded;
   static const IconData check_rounded = Icons.check_rounded;
-  static const IconData add_alert_rounded = Icons.add_alert_rounded;
+  static const IconData add_alert_rounded = Icons.add_alert_outlined;
   static const IconData remove_alert_rounded = Icons.notifications_off_rounded;
   static const IconData construction = Icons.construction;
   static const IconData connectivity_off = Icons.wifi_off_rounded;

@@ -82,9 +82,12 @@ class _ContentState extends State<_Content> {
         ),
         Align(
           alignment: Alignment.bottomCenter,
-          child: FilterButton(
-            isEnabled: _isButtonEnabled(widget.viewModel),
-            onPressed: () => _onButtonClick(widget.viewModel),
+          child: SizedBox(
+            width: double.infinity,
+            child: FilterButton(
+              isEnabled: _isButtonEnabled(widget.viewModel),
+              onPressed: () => _onButtonClick(widget.viewModel),
+            ),
           ),
         ),
       ],
@@ -221,7 +224,7 @@ class _StartDateFilters extends StatelessWidget {
           onDateSelected: onDateChange,
           initialDateValue: initialDateValue,
           isActiveDate: isActiveDate,
-        )
+        ),
       ],
     );
   }
@@ -278,14 +281,17 @@ class _DomainListState extends State<_DomainList> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: Domaine.values
-          .map((domain) => CustomRadioGroup<Domaine>(
+          .map(
+            (domain) => CustomRadioGroup<Domaine>(
               title: domain.titre,
               value: domain,
               groupValue: _currentValue,
               onChanged: (value) {
                 widget.onValueChange(value!);
                 setState(() => _currentValue = value);
-              }))
+              },
+            ),
+          )
           .toList(),
     );
   }

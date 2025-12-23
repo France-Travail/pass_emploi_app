@@ -65,9 +65,15 @@ class _SecteurActiviteSelectionPageState extends State<SecteurActiviteSelectionP
           ),
         ],
       ),
-      floatingActionButton: PrimaryActionButton(
-        label: Strings.validateButtonTitle,
-        onPressed: () => Navigator.pop(context, _selectedValue),
+      floatingActionButton: SizedBox(
+        width: double.infinity,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+          child: PrimaryActionButton(
+            label: Strings.validateButtonTitle,
+            onPressed: () => Navigator.pop(context, _selectedValue),
+          ),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

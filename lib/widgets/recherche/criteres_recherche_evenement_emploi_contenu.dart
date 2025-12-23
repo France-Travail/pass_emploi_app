@@ -57,21 +57,20 @@ class _CriteresRechercheEvenementEmploiContenuState extends State<CriteresRecher
         children: [
           MandatoryFieldsLabel.some(),
           const SizedBox(height: Margins.spacing_base),
-          LocationAutocomplete(
-            title: Strings.locationMandatoryTitle,
-            hint: Strings.jobEvenementEmploiHint,
-            initialValue: _selectedLocation,
-            villesOnly: true,
-            onLocationSelected: (location) {
-              _selectedLocation = location;
-              _updateCriteresActifsCount();
-            },
-          ),
-          const SizedBox(height: Margins.spacing_m),
           SecteurActiviteSelector(
             initialValue: _secteurSecteurActivite,
             onSecteurActiviteSelected: (secteur) {
               _secteurSecteurActivite = secteur;
+              _updateCriteresActifsCount();
+            },
+          ),
+          const SizedBox(height: Margins.spacing_m),
+          LocationAutocomplete(
+            title: Strings.locationMandatoryTitle,
+            initialValue: _selectedLocation,
+            villesOnly: true,
+            onLocationSelected: (location) {
+              _selectedLocation = location;
               _updateCriteresActifsCount();
             },
           ),
@@ -101,9 +100,11 @@ class _CriteresRechercheEvenementEmploiContenuState extends State<CriteresRecher
 
   void _search(CriteresRechercheEvenementEmploiContenuViewModel viewModel) {
     if (_selectedLocation == null) return;
-    viewModel.onSearchingRequest(EvenementEmploiCriteresRecherche(
-      location: _selectedLocation!,
-      secteurActivite: _secteurSecteurActivite,
-    ));
+    viewModel.onSearchingRequest(
+      EvenementEmploiCriteresRecherche(
+        location: _selectedLocation!,
+        secteurActivite: _secteurSecteurActivite,
+      ),
+    );
   }
 }
