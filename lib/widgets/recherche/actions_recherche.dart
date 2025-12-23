@@ -30,20 +30,22 @@ class ActionsRecherche extends StatelessWidget {
   }
 
   Widget _builder(BuildContext context, ActionsRechercheViewModel viewModel) {
-    return Wrap(
-      alignment: WrapAlignment.center,
-      spacing: Margins.spacing_base,
-      runSpacing: Margins.spacing_base,
-      children: [
-        if (viewModel.withAlertButton)
-          PrimaryActionButton(
-            label: Strings.createAlert,
-            icon: AppIcons.notifications_rounded,
-            rippleColor: AppColors.primaryDarken,
-            iconSize: Dimens.icon_size_base,
-            onPressed: () => _onAlertButtonPressed(context),
-          ),
-      ],
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+      child: Row(
+        children: [
+          if (viewModel.withAlertButton)
+            Expanded(
+              child: PrimaryActionButton(
+                label: Strings.createAlert,
+                icon: AppIcons.notifications_rounded,
+                rippleColor: AppColors.primaryDarken,
+                iconSize: Dimens.icon_size_base,
+                onPressed: () => _onAlertButtonPressed(context),
+              ),
+            ),
+        ],
+      ),
     );
   }
 

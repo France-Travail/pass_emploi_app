@@ -105,6 +105,7 @@ class _RechercheOffrePageState<Result> extends State<RechercheOffrePage<Result>>
               child: showCriteresFullScreen
                   ? RechercheCriteresFullScreen<Result>(
                       key: const ValueKey("rechercheCriteresFullScreen"),
+                      analyticsType: widget.analyticsType(),
                       rechercheState: widget.rechercheState,
                       buildCriteresContentWidget: widget.buildCriteresContentWidget,
                     )
