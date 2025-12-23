@@ -95,9 +95,12 @@ class _ContentState extends State<_Content> {
         ),
         Align(
           alignment: Alignment.bottomCenter,
-          child: FilterButton(
-            isEnabled: _isButtonEnabled(widget.viewModel.displayState),
-            onPressed: () => _onButtonClick(widget.viewModel),
+          child: SizedBox(
+            width: double.infinity,
+            child: FilterButton(
+              isEnabled: _isButtonEnabled(widget.viewModel.displayState),
+              onPressed: () => _onButtonClick(widget.viewModel),
+            ),
           ),
         ),
       ],
@@ -258,7 +261,7 @@ class _FiltreDebutantState extends State<_FiltreDebutant> {
               ),
             ],
           ),
-        )
+        ),
       ],
     );
   }
