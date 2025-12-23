@@ -4,6 +4,7 @@ import 'package:pass_emploi_app/models/alerte/evenement_emploi_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/immersion_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/offre_emploi_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/service_civique_alerte.dart';
+import 'package:pass_emploi_app/models/evenement_emploi/secteur_activite.dart';
 import 'package:pass_emploi_app/models/location.dart';
 import 'package:pass_emploi_app/models/service_civique/domain.dart';
 import 'package:pass_emploi_app/models/service_civique_filtres_pameters.dart';
@@ -70,6 +71,7 @@ class AlerteResponseCriteres {
   final String? domaine;
   final int? distance;
   final String? dateDeDebutMinimum;
+  final String? secteurActivite;
 
   AlerteResponseCriteres({
     this.q,
@@ -87,6 +89,7 @@ class AlerteResponseCriteres {
     this.domaine,
     this.distance,
     this.dateDeDebutMinimum,
+    this.secteurActivite,
   });
 
   factory AlerteResponseCriteres.fromJson(dynamic json) {
@@ -106,6 +109,7 @@ class AlerteResponseCriteres {
       domaine: json["domaine"] as String?,
       distance: (json["distance"] as num?)?.toInt(),
       dateDeDebutMinimum: json["dateDeDebutMinimum"] as String?,
+      secteurActivite: json["secteurActivite"] as String?,
     );
   }
 
@@ -126,6 +130,7 @@ class AlerteResponseCriteres {
       "domaine": domaine,
       "distance": distance,
       "dateDeDebutMinimum": dateDeDebutMinimum,
+      "secteurActivite": secteurActivite,
     };
   }
 }
@@ -238,7 +243,12 @@ class AlerteServiceCiviqueExtractor {
 
 class AlerteEvenementEmploiExtractor {
   EvenementEmploiAlerte extract(AlerteResponse alerte) {
-    return EvenementEmploiAlerte(id: alerte.id, titre: alerte.titre, location: _getLocation(alerte));
+    return EvenementEmploiAlerte(
+      id: alerte.id,
+      titre: alerte.titre,
+      location: _getLocation(alerte),
+      secteurActivite: SecteurActivite.fromLabel(alerte.criteres.secteurActivite),
+    );
   }
 
   Location _getLocation(AlerteResponse alerte) {
@@ -371,6 +381,7 @@ extension AlerteEvenementEmploiExtractorExt on EvenementEmploiAlerte {
         domaine: null,
         distance: null,
         dateDeDebutMinimum: null,
+        secteurActivite: secteurActivite?.label,
       ),
     );
   }

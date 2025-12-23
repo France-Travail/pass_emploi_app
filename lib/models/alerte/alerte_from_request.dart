@@ -63,6 +63,7 @@ Alerte? createAlerteFromRequest(RechercheRequest<Equatable, Equatable> request) 
       titre:
           "${request.criteres.secteurActivite?.label ?? Strings.secteurActiviteAll}  - ${request.criteres.location.libelle}",
       location: request.criteres.location,
+      secteurActivite: request.criteres.secteurActivite,
     );
   }
 

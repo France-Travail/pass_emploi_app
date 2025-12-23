@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 
 enum SecteurActivite {
@@ -19,4 +20,8 @@ enum SecteurActivite {
   const SecteurActivite(this.label);
 
   final String label;
+
+  static SecteurActivite? fromLabel(String? label) {
+    return SecteurActivite.values.firstWhereOrNull((secteur) => secteur.label == label);
+  }
 }

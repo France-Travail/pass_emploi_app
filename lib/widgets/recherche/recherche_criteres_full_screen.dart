@@ -230,7 +230,7 @@ class _RecentSearchesViewModel extends Equatable {
           store.dispatch(
             RechercheRequestAction(
               RechercheRequest(
-                EvenementEmploiCriteresRecherche(location: alerte.location, secteurActivite: null),
+                EvenementEmploiCriteresRecherche(location: alerte.location, secteurActivite: alerte.secteurActivite),
                 EvenementEmploiFiltresRecherche.noFiltre(),
                 1,
               ),
