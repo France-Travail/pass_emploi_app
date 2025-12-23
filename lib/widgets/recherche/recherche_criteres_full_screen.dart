@@ -134,7 +134,7 @@ class _RecentSearches<Result> extends StatelessWidget {
               for (final item in viewModel.items) ...[
                 _RechercheRecenteTile(
                   alerte: item.alerte,
-                  text: item.subtitle,
+                  text: item.title,
                   onTap: () => viewModel.onTapRecentSearch(item.alerte),
                 ),
                 Divider(
@@ -189,9 +189,9 @@ class _RechercheRecenteTile extends StatelessWidget {
 
 class _RecentSearchesItem {
   final Alerte alerte;
-  final String subtitle;
+  final String title;
 
-  _RecentSearchesItem({required this.alerte, required this.subtitle});
+  _RecentSearchesItem({required this.alerte, required this.title});
 }
 
 class _RecentSearchesViewModel extends Equatable {
@@ -208,14 +208,13 @@ class _RecentSearchesViewModel extends Equatable {
     final type = _rechercheTypeFromAnalytics(analyticsType);
 
     final filtered = all.where((a) => _matchesType(a, type)).take(5).toList();
-    final title = _typeTitle(type);
 
     return _RecentSearchesViewModel(
       items: [
         for (final alerte in filtered)
           _RecentSearchesItem(
             alerte: alerte,
-            subtitle: title + alerte.getTitle(),
+            title: alerte.getTitle(),
           ),
       ],
       onTapRecentSearch: (alerte) {
@@ -273,14 +272,5 @@ bool _matchesType(Alerte alerte, _RechercheType type) {
       return alerte is EvenementEmploiAlerte;
     case _RechercheType.unknown:
       return false;
-  }
-}
-
-String _typeTitle(_RechercheType type) {
-  switch (type) {
-    case _RechercheType.evenementEmploi:
-      return '${Strings.eventAppBarTitle} - ';
-    default:
-      return '';
   }
 }

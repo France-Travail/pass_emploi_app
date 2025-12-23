@@ -172,16 +172,14 @@ class _EditCriteresTitleSubtitleViewModel extends Equatable {
 
     final subtitle = alerte?.getTitle() ?? "";
 
-    // Exception: for Evenement Emploi, title is the selected Secteur d'activité (or "Tous les secteurs...").
     if (typedRequest is RechercheRequest<EvenementEmploiCriteresRecherche, EvenementEmploiFiltresRecherche>) {
       final secteur = typedRequest.criteres.secteurActivite;
       return _EditCriteresTitleSubtitleViewModel(
         title: secteur?.label ?? Strings.secteurActiviteAll,
-        subtitle: subtitle,
+        subtitle: alerte?.getLocation()?.libelle ?? "",
       );
     }
 
-    // Default: title is the "type de recherche", like recent searches bandeau.
     if (alerte is OffreEmploiAlerte) {
       return _EditCriteresTitleSubtitleViewModel(
         title: alerte.onlyAlternance

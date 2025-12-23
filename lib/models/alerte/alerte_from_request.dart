@@ -14,6 +14,7 @@ import 'package:pass_emploi_app/models/alerte/offre_emploi_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/service_civique_alerte.dart';
 import 'package:pass_emploi_app/models/recherche/recherche_request.dart';
 import 'package:pass_emploi_app/models/service_civique_filtres_pameters.dart';
+import 'package:pass_emploi_app/ui/strings.dart';
 
 /// Generates an [Alerte] matching what we store for "recherches récentes".
 /// Useful to reuse the same human-readable "criteria summary" title in other UIs.
@@ -59,7 +60,8 @@ Alerte? createAlerteFromRequest(RechercheRequest<Equatable, Equatable> request) 
   if (request is RechercheRequest<EvenementEmploiCriteresRecherche, EvenementEmploiFiltresRecherche>) {
     return EvenementEmploiAlerte(
       id: id,
-      titre: request.criteres.location.libelle,
+      titre:
+          "${request.criteres.secteurActivite?.label ?? Strings.secteurActiviteAll}  - ${request.criteres.location.libelle}",
       location: request.criteres.location,
     );
   }
