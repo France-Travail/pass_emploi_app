@@ -62,7 +62,6 @@ class _NosOffres extends StatelessWidget {
         MediumSectionTitle(Strings.rechercheHomeNosOffres),
         SizedBox(height: Margins.spacing_base),
         RecherchesRecentesBandeau(paddingIfExists: EdgeInsets.only(bottom: Margins.spacing_base)),
-
         _SolutionGrid(
           tiles: [
             if (offreTypes.contains(OffreType.emploi))

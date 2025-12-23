@@ -6,14 +6,17 @@ import 'package:pass_emploi_app/models/alerte/immersion_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/offre_emploi_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/service_civique_alerte.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:redux/redux.dart';
 
 class RecherchesRecentesViewModel extends Equatable {
   final Alerte? rechercheRecente;
+  final String title;
   final Function(Alerte) fetchAlerteResult;
 
   RecherchesRecentesViewModel({
     required this.rechercheRecente,
+    required this.title,
     required this.fetchAlerteResult,
   });
 
@@ -21,6 +24,7 @@ class RecherchesRecentesViewModel extends Equatable {
     final state = store.state.recherchesRecentesState;
     return RecherchesRecentesViewModel(
       rechercheRecente: state.recentSearches.derniereRechercheOffre(),
+      title: state.recentSearches.typeTitle(),
       fetchAlerteResult: (alerte) => store.dispatch(FetchAlerteResultsAction(alerte)),
     );
   }
@@ -34,5 +38,14 @@ extension _RechercheRecentesList on List<Alerte> {
     return firstWhereOrNull((element) {
       return element is OffreEmploiAlerte || element is ImmersionAlerte || element is ServiceCiviqueAlerte;
     });
+  }
+
+  String typeTitle() {
+    return switch (this) {
+      [OffreEmploiAlerte()] => Strings.rechercheHomeOffresEmploiTitle,
+      [ImmersionAlerte()] => Strings.rechercheHomeOffresImmersionTitle,
+      [ServiceCiviqueAlerte()] => Strings.rechercheHomeOffresServiceCiviqueTitle,
+      _ => Strings.rechercheHomeNosOffres,
+    };
   }
 }

@@ -6,7 +6,6 @@ import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
-import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/alerte_card.dart';
 import 'package:pass_emploi_app/widgets/apparition_animation.dart';
@@ -36,22 +35,22 @@ class RecherchesRecentesBandeau extends StatelessWidget {
                           children: [
                             Icon(
                               AppIcons.search_rounded,
-                              color: AppColors.accent1,
+                              color: AppColors.primary,
                               size: Dimens.icon_size_m,
                             ),
-                            SizedBox(width: Margins.spacing_s),
+                            SizedBox(width: Margins.spacing_base),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    Strings.derniereRecherche,
+                                    viewModel.title,
                                     style: TextStyles.textBaseBold,
                                   ),
                                   Text(
                                     recherche.getTitle(),
                                     style: TextStyles.textSRegular(),
-                                  )
+                                  ),
                                 ],
                               ),
                             ),
