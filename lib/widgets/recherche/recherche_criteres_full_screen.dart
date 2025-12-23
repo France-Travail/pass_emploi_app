@@ -208,13 +208,14 @@ class _RecentSearchesViewModel extends Equatable {
     final type = _rechercheTypeFromAnalytics(analyticsType);
 
     final filtered = all.where((a) => _matchesType(a, type)).take(5).toList();
+    final title = _typeTitle(type);
 
     return _RecentSearchesViewModel(
       items: [
         for (final alerte in filtered)
           _RecentSearchesItem(
             alerte: alerte,
-            subtitle: alerte.getTitle(),
+            subtitle: title + alerte.getTitle(),
           ),
       ],
       onTapRecentSearch: (alerte) {
@@ -272,5 +273,14 @@ bool _matchesType(Alerte alerte, _RechercheType type) {
       return alerte is EvenementEmploiAlerte;
     case _RechercheType.unknown:
       return false;
+  }
+}
+
+String _typeTitle(_RechercheType type) {
+  switch (type) {
+    case _RechercheType.evenementEmploi:
+      return '${Strings.eventAppBarTitle} - ';
+    default:
+      return '';
   }
 }
