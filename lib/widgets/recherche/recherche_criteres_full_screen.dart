@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/alerte/get/alerte_get_action.dart';
+import 'package:pass_emploi_app/features/recherche/emploi/emploi_criteres_recherche.dart';
+import 'package:pass_emploi_app/features/recherche/emploi/emploi_filtres_recherche.dart';
 import 'package:pass_emploi_app/features/recherche/evenement_emploi/evenement_emploi_criteres_recherche.dart';
 import 'package:pass_emploi_app/features/recherche/evenement_emploi/evenement_emploi_filtres_recherche.dart';
+import 'package:pass_emploi_app/features/recherche/immersion/immersion_criteres_recherche.dart';
+import 'package:pass_emploi_app/features/recherche/immersion/immersion_filtres_recherche.dart';
 import 'package:pass_emploi_app/features/recherche/recherche_actions.dart';
 import 'package:pass_emploi_app/features/recherche/recherche_state.dart';
+import 'package:pass_emploi_app/features/recherche/service_civique/service_civique_criteres_recherche.dart';
+import 'package:pass_emploi_app/features/recherche/service_civique/service_civique_filtres_recherche.dart';
 import 'package:pass_emploi_app/models/alerte/alerte.dart';
 import 'package:pass_emploi_app/models/alerte/evenement_emploi_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/immersion_alerte.dart';
@@ -24,13 +29,11 @@ import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:redux/redux.dart';
 
 class RechercheCriteresFullScreen<Result> extends StatefulWidget {
-  final String analyticsType;
   final RechercheState Function(AppState) rechercheState;
   final Widget Function({required Function(int) onNumberOfCriteresChanged}) buildCriteresContentWidget;
 
   const RechercheCriteresFullScreen({
     super.key,
-    required this.analyticsType,
     required this.rechercheState,
     required this.buildCriteresContentWidget,
   });
@@ -75,7 +78,7 @@ class _RechercheCriteresFullScreenState<Result> extends State<RechercheCriteresF
                     ),
                     const SizedBox(height: Margins.spacing_base),
                     _RecentSearches<Result>(
-                      analyticsType: widget.analyticsType,
+                      rechercheState: widget.rechercheState,
                     ),
                   ],
                 ),
@@ -110,15 +113,15 @@ class _RechercheCriteresFullScreenViewModel<Result> extends Equatable {
 }
 
 class _RecentSearches<Result> extends StatelessWidget {
-  final String analyticsType;
+  final RechercheState Function(AppState) rechercheState;
 
-  const _RecentSearches({required this.analyticsType});
+  const _RecentSearches({required this.rechercheState});
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, _RecentSearchesViewModel>(
       distinct: true,
-      converter: (store) => _RecentSearchesViewModel.create(store, analyticsType),
+      converter: (store) => _RecentSearchesViewModel.create(store, rechercheState),
       builder: (context, viewModel) {
         if (viewModel.items.isEmpty) return const SizedBox.shrink();
         return Padding(
@@ -203,9 +206,14 @@ class _RecentSearchesViewModel extends Equatable {
     required this.onTapRecentSearch,
   });
 
-  factory _RecentSearchesViewModel.create(Store<AppState> store, String analyticsType) {
+  factory _RecentSearchesViewModel.create(
+    Store<AppState> store,
+    RechercheState Function(AppState) rechercheState,
+  ) {
     final all = store.state.recherchesRecentesState.recentSearches;
-    final type = _rechercheTypeFromAnalytics(analyticsType);
+    final request = rechercheState(store.state).request;
+    if (request == null) return _RecentSearchesViewModel(items: const [], onTapRecentSearch: (_) {});
+    final type = _rechercheTypeFromRequest(request);
 
     final filtered = all.where((a) => _matchesType(a, type)).take(5).toList();
 
@@ -241,21 +249,20 @@ class _RecentSearchesViewModel extends Equatable {
 
 enum _RechercheType { emploi, alternance, immersion, serviceCivique, evenementEmploi, unknown }
 
-_RechercheType _rechercheTypeFromAnalytics(String analyticsType) {
-  switch (analyticsType) {
-    case AnalyticsScreenNames.emploiRecherche:
-      return _RechercheType.emploi;
-    case AnalyticsScreenNames.alternanceRecherche:
-      return _RechercheType.alternance;
-    case AnalyticsScreenNames.immersionRecherche:
-      return _RechercheType.immersion;
-    case AnalyticsScreenNames.serviceCiviqueRecherche:
-      return _RechercheType.serviceCivique;
-    case AnalyticsScreenNames.evenementEmploiRecherche:
-      return _RechercheType.evenementEmploi;
-    default:
-      return _RechercheType.unknown;
+_RechercheType _rechercheTypeFromRequest(RechercheRequest request) {
+  if (request is RechercheRequest<EmploiCriteresRecherche, EmploiFiltresRecherche>) {
+    return request.criteres.rechercheType.isOnlyAlternance() ? _RechercheType.alternance : _RechercheType.emploi;
   }
+  if (request is RechercheRequest<ImmersionCriteresRecherche, ImmersionFiltresRecherche>) {
+    return _RechercheType.immersion;
+  }
+  if (request is RechercheRequest<ServiceCiviqueCriteresRecherche, ServiceCiviqueFiltresRecherche>) {
+    return _RechercheType.serviceCivique;
+  }
+  if (request is RechercheRequest<EvenementEmploiCriteresRecherche, EvenementEmploiFiltresRecherche>) {
+    return _RechercheType.evenementEmploi;
+  }
+  return _RechercheType.unknown;
 }
 
 bool _matchesType(Alerte alerte, _RechercheType type) {
