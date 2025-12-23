@@ -15,7 +15,7 @@ import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/pass_emploi_tab_bar.dart';
-import 'package:redux/src/store.dart';
+import 'package:redux/redux.dart';
 
 class EventsTabPage extends StatefulWidget {
   final EventTab? initialTab;
