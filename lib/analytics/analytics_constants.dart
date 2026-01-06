@@ -220,6 +220,7 @@ class AnalyticsEventNames {
 
   static const createDemarcheEventCategory = "Création démarche";
   static const createDemarcheIaDicterPressed = "Dicter le prompt";
+  static const createUserActionDescriptionDicterPressed = "Dicter la description";
   static const createDemarcheIaSuggestionsListCount = "Nombre de suggestions";
   static const createDemarcheIaSuggestionsListDeleted = "Nombre de suggestions supprimées";
   static const createDemarcheFromOffreSuiviAction = "Créer une démarche à partir du suivi des offres";

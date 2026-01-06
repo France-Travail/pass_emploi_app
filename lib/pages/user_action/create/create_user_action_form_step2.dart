@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
+import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/pass_emploi_chip.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -227,6 +228,10 @@ class _UserActionDescriptionFieldState extends State<UserActionDescriptionField>
   }
 
   Future<void> _startListening() async {
+    PassEmploiMatomoTracker.instance.trackEvent(
+      eventCategory: AnalyticsEventNames.createActionEventCategory,
+      action: AnalyticsEventNames.createUserActionDescriptionDicterPressed,
+    );
     setState(() => _errorText = null);
 
     final bool available = await _speechToText.initialize(
