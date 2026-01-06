@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -59,11 +58,6 @@ class _ReadOnlyTextFormFieldState extends State<ReadOnlyTextFormField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Semantics(header: true, child: Text(widget.title, style: TextStyles.textBaseBold)),
-        if (widget.hint != null)
-          Semantics(
-            excludeSemantics: true,
-            child: Text(widget.hint!, style: TextStyles.textSRegularWithColor(AppColors.contentColor)),
-          ),
         SizedBox(height: Margins.spacing_base),
         Stack(
           alignment: Alignment.centerRight,
@@ -77,6 +71,7 @@ class _ReadOnlyTextFormFieldState extends State<ReadOnlyTextFormField> {
                   type: MaterialType.transparency,
                   child: BaseTextField(
                     focusNode: _focusNode,
+                    hintText: widget.hint,
                     key: widget.textFormFieldKey,
                     readOnly: true,
                     prefixIcon: widget.prefixIcon,

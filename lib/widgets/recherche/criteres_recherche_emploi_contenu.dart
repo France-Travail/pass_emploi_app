@@ -57,6 +57,7 @@ class _CriteresRechercheEmploiContenuState extends State<CriteresRechercheEmploi
           KeywordTextFormField(
             title: Strings.keywordTitle,
             initialValue: _keyword,
+            hint: Strings.metierHint,
             onKeywordSelected: (keyword) {
               _keyword = keyword;
               _updateCriteresActifsCount();
@@ -65,6 +66,7 @@ class _CriteresRechercheEmploiContenuState extends State<CriteresRechercheEmploi
           const SizedBox(height: Margins.spacing_m),
           LocationAutocomplete(
             title: Strings.locationTitle,
+            hint: Strings.locationHint,
             initialValue: _selectedLocation,
             onLocationSelected: (location) {
               _selectedLocation = location;

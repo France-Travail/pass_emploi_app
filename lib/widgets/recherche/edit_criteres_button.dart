@@ -36,51 +36,56 @@ class EditCriteresButton<Result> extends StatelessWidget {
       converter: buildViewModel,
       distinct: true,
       builder: (context, viewModel) {
-        return CardContainer(
-          border: Border.all(color: AppColors.primary, width: 1),
-          padding: EdgeInsets.all(Margins.spacing_base),
-          onTap: () => context.dispatch(RechercheOpenCriteresAction<Result>()),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Icon(
-                AppIcons.search_rounded,
-                color: AppColors.primary,
-                size: Dimens.icon_size_m,
-              ),
-              SizedBox(width: Margins.spacing_base),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+        return Row(
+          children: [
+            Expanded(
+              child: CardContainer(
+                border: Border.all(color: AppColors.primary, width: 1),
+                padding: EdgeInsets.all(Margins.spacing_base),
+                onTap: () => context.dispatch(RechercheOpenCriteresAction<Result>()),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
                   children: [
-                    Text(
-                      title,
-                      style: TextStyles.textBaseBold,
+                    Icon(
+                      AppIcons.search_rounded,
+                      color: AppColors.primary,
+                      size: Dimens.icon_size_m,
                     ),
-                    Text(
-                      subtitle,
-                      style: TextStyles.textSRegular(),
+                    SizedBox(width: Margins.spacing_base),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: TextStyles.textBaseBold,
+                          ),
+                          Text(
+                            subtitle,
+                            style: TextStyles.textSRegular(),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
-              if (viewModel.withFiltreButton)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_xs),
-                  child: IconButton(
-                    onPressed: () => _onFiltreButtonPressed(context),
-                    icon: Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.primary, width: 2),
-                      ),
-                      child: Icon(AppIcons.tune_rounded, color: AppColors.primary),
-                    ),
+            ),
+            if (viewModel.withFiltreButton) ...[
+              SizedBox(width: Margins.spacing_base),
+              IconButton(
+                onPressed: () => _onFiltreButtonPressed(context),
+                icon: Container(
+                  padding: EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.primary, width: 2),
                   ),
+                  child: Icon(AppIcons.tune_rounded, color: AppColors.primary),
                 ),
+              ),
             ],
-          ),
+          ],
         );
       },
     );

@@ -58,6 +58,7 @@ class _CriteresRechercheImmersionContenuState extends State<CriteresRechercheImm
           const SizedBox(height: Margins.spacing_base),
           MetierAutocomplete(
             title: Strings.metierLabel,
+            hint: Strings.metierHint,
             initialValue: viewModel.initialMetier,
             onMetierSelected: (metier) {
               _selectedMetier = metier;
@@ -68,6 +69,7 @@ class _CriteresRechercheImmersionContenuState extends State<CriteresRechercheImm
           LocationAutocomplete(
             title: Strings.locationTitle,
             villesOnly: true,
+            hint: Strings.locationHint,
             initialValue: viewModel.initialLocation,
             onLocationSelected: (location) {
               _selectedLocation = location;

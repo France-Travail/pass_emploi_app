@@ -59,6 +59,7 @@ class _CriteresRechercheEvenementEmploiContenuState extends State<CriteresRecher
           const SizedBox(height: Margins.spacing_base),
           SecteurActiviteSelector(
             initialValue: _secteurSecteurActivite,
+            // hint: Strings.secteurActiviteHint,
             onSecteurActiviteSelected: (secteur) {
               _secteurSecteurActivite = secteur;
               _updateCriteresActifsCount();

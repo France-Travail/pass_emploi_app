@@ -930,9 +930,11 @@ class Strings {
   static String keywordTitle = "Mot clé";
   static String metierLabel = "Métier";
   static String locationTitle = "Lieu";
+  static String locationHint = "Ville ou département";
   static String locationMandatoryTitle = "*Lieu";
   static String searchButton = "Rechercher";
   static String offreDetails = "Détails de l'offre";
+  static String metierHint = "Métier, compétence, secteur...";
   static String rechercheTabTitle = "Recherche";
   static String offresEnregistreesTabTitle = "Suivi des offres";
   static String boiteAOutilsTabTitle = "Outils";
