@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:pass_emploi_app/analytics/ignore_tracking_context_provider.dart';
 import 'package:pass_emploi_app/models/evenement_emploi/secteur_activite.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
+import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -67,13 +68,15 @@ class _SecteurActiviteFieldState extends State<_SecteurActiviteField> {
   @override
   void initState() {
     super.initState();
-    _focusNode = FocusNode(onKeyEvent: (node, event) {
-      if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.enter) {
-        widget.onFieldTap();
-        return KeyEventResult.handled;
-      }
-      return KeyEventResult.ignored;
-    });
+    _focusNode = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.enter) {
+          widget.onFieldTap();
+          return KeyEventResult.handled;
+        }
+        return KeyEventResult.ignored;
+      },
+    );
   }
 
   @override
@@ -98,7 +101,12 @@ class _SecteurActiviteFieldState extends State<_SecteurActiviteField> {
                   borderRadius: BorderRadius.circular(Dimens.radius_base),
                   border: Border.all(color: AppColors.contentColor),
                 ),
-                child: _SelectedSecteurActivite(widget.value?.label ?? Strings.secteurActiviteAll),
+                child: Row(
+                  children: [
+                    Expanded(child: _SelectedSecteurActivite(widget.value?.label ?? Strings.secteurActiviteAll)),
+                    Icon(AppIcons.chevron_down_rounded, color: AppColors.primary),
+                  ],
+                ),
               ),
             ),
           ),

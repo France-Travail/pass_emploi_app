@@ -7,6 +7,7 @@ class AppIcons {
   static const IconData close_rounded = Icons.close_rounded;
   static const IconData chevron_right_rounded = Icons.chevron_right_rounded;
   static const IconData chevron_left_rounded = Icons.chevron_left_rounded;
+  static const IconData chevron_down_rounded = Icons.keyboard_arrow_down_rounded;
 
   // Action
   static const IconData outgoing_mail = Icons.outgoing_mail;
