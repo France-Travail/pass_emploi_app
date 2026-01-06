@@ -50,7 +50,7 @@ class _CriteresRechercheServiceCiviqueContenuState extends State<CriteresRecherc
           LocationAutocomplete(
             title: Strings.locationTitle,
             villesOnly: true,
-            hint: Strings.locationHint,
+            hint: Strings.locationHintServiceCivique,
             initialValue: viewModel.initialLocation,
             onLocationSelected: (location) {
               _selectedLocation = location;

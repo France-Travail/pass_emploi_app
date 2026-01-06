@@ -931,6 +931,7 @@ class Strings {
   static String metierLabel = "Métier";
   static String locationTitle = "Lieu";
   static String locationHint = "Ville ou département";
+  static String locationHintServiceCivique = "Ville";
   static String locationMandatoryTitle = "*Lieu";
   static String searchButton = "Rechercher";
   static String offreDetails = "Détails de l'offre";
