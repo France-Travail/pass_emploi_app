@@ -338,12 +338,6 @@ class _UserActionDescriptionFieldState extends State<UserActionDescriptionField>
                           },
                           icon: Container(
                             padding: EdgeInsets.all(2),
-                            decoration: _isListening
-                                ? null
-                                : BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(color: AppColors.primary, width: 2),
-                                  ),
                             child: Icon(
                               _isListening ? Icons.stop_circle_rounded : Icons.mic,
                               color: AppColors.primary,

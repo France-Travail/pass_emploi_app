@@ -112,7 +112,7 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
                     ),
                     Positioned(
                       // manually ajusted
-                      right: -8,
+                      right: 0,
                       bottom: Margins.spacing_base,
                       child: IconButton(
                         tooltip: _isListening ? Strings.iaFtStep2ButtonStop : Strings.iaFtStep2ButtonDicter,
@@ -125,12 +125,6 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
                         },
                         icon: Container(
                           padding: EdgeInsets.all(2),
-                          decoration: _isListening
-                              ? null
-                              : BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: AppColors.primary, width: 2),
-                                ),
                           child: Icon(_isListening ? Icons.stop_circle_rounded : Icons.mic, color: AppColors.primary),
                         ),
                       ),
@@ -200,7 +194,6 @@ class ThematiqueButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SecondaryButton(
       label: Strings.thematiquesDemarcheButton,
-      suffix: Icon(Icons.arrow_forward_rounded, color: AppColors.primary),
       onPressed: () {
         viewModel.navigateToThematiquesDemarche();
         PassEmploiMatomoTracker.instance.trackEvent(
