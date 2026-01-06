@@ -68,6 +68,7 @@ class _CriteresRechercheEvenementEmploiContenuState extends State<CriteresRecher
           LocationAutocomplete(
             title: Strings.locationMandatoryTitle,
             initialValue: _selectedLocation,
+            hint: Strings.locationHint,
             villesOnly: true,
             onLocationSelected: (location) {
               _selectedLocation = location;
