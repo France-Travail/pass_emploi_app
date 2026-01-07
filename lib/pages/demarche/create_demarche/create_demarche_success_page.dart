@@ -112,6 +112,11 @@ class _Body extends StatelessWidget {
                     CreateDemarcheSource.iaFt => InAppFeedback(
                       feature: "create-demarche-ia-ft-suggestions",
                       label: Strings.feedbackCreateDemarcheSuggestions,
+                      responses: [
+                        Strings.feedbackCreateDemarcheSuggestionsResponse1,
+                        Strings.feedbackCreateDemarcheSuggestionsResponse2,
+                        Strings.feedbackCreateDemarcheSuggestionsResponse3,
+                      ],
                     ),
                     _ => null,
                   },

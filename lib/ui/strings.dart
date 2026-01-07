@@ -1543,7 +1543,11 @@ class Strings {
       "Connaître la source d’une offre ($provenance, etc) m’intéresse.";
   static String feedbackCentreNotification = "Retrouver mes notifications dans l'app m'intéresse.";
   static String feedbackCreateDemarche = "Qu’avez-vous pensé de la nouvelle saisie des démarches ?";
-  static String feedbackCreateDemarcheSuggestions = "Qu’avez-vous pensé des démarches suggérées ?";
+  static String feedbackCreateDemarcheSuggestions =
+      "Qu'avez-vous pensé de cette fonctionnalité et des démarches suggérées ?";
+  static String feedbackCreateDemarcheSuggestionsResponse1 = "Très insatisfait·e";
+  static String feedbackCreateDemarcheSuggestionsResponse2 = "Neutre";
+  static String feedbackCreateDemarcheSuggestionsResponse3 = "Très satisfait·e";
 
   // centre de notifications
   static String notificationsCenterTooltip = "Centre de notifications";

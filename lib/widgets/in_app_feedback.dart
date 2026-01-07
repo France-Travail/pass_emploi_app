@@ -65,6 +65,7 @@ class InAppFeedback extends StatefulWidget {
   final EdgeInsetsGeometry padding;
   final Color backgroundColor;
   final Widget? disabledPlaceholder;
+  final List<String>? responses;
 
   const InAppFeedback({
     required this.feature,
@@ -72,6 +73,7 @@ class InAppFeedback extends StatefulWidget {
     this.padding = EdgeInsets.zero,
     this.backgroundColor = AppColors.primaryLighten,
     this.disabledPlaceholder,
+    this.responses,
   });
 
   @override
@@ -115,17 +117,19 @@ class _InAppFeedbackState extends State<InAppFeedback> with TickerProviderStateM
     final isActivated = activation?.isActivated ?? false;
     return switch (isActivated) {
       true => AnimatedBuilder(
-          animation: _animation,
-          child: _InAppFeedbackWidget(
-            feature: widget.feature,
-            label: widget.label,
-            padding: widget.padding,
-            backgroundColor: widget.backgroundColor,
-            commentaireEnabled: activation?.commentaireEnabled ?? false,
-            dismissable: activation?.dismissable ?? true,
-            onDismiss: activation?.dismissable ?? true ? () => _shouldDismiss = true : () {},
-          ),
-          builder: (context, child) => Transform.scale(scale: _animation.value, child: child)),
+        animation: _animation,
+        child: _InAppFeedbackWidget(
+          feature: widget.feature,
+          label: widget.label,
+          padding: widget.padding,
+          backgroundColor: widget.backgroundColor,
+          commentaireEnabled: activation?.commentaireEnabled ?? false,
+          dismissable: activation?.dismissable ?? true,
+          onDismiss: activation?.dismissable ?? true ? () => _shouldDismiss = true : () {},
+          responses: widget.responses,
+        ),
+        builder: (context, child) => Transform.scale(scale: _animation.value, child: child),
+      ),
       false => widget.disabledPlaceholder ?? SizedBox.shrink(),
     };
   }
@@ -139,6 +143,7 @@ class _InAppFeedbackWidget extends StatefulWidget {
   final bool commentaireEnabled;
   final bool dismissable;
   final VoidCallback onDismiss;
+  final List<String>? responses;
 
   const _InAppFeedbackWidget({
     required this.feature,
@@ -148,6 +153,7 @@ class _InAppFeedbackWidget extends StatefulWidget {
     required this.commentaireEnabled,
     required this.dismissable,
     required this.onDismiss,
+    this.responses,
   });
 
   @override
@@ -171,11 +177,13 @@ class _InAppFeedbackWidgetState extends State<_InAppFeedbackWidget> {
     final note = selectedFeedback!.index + 1;
     final commentaire = _commentaireController.text.trim();
 
-    StoreProvider.of<AppState>(context).dispatch(ModuleFeedbackRequestAction(
-      tag: widget.feature,
-      note: note,
-      commentaire: commentaire,
-    ));
+    StoreProvider.of<AppState>(context).dispatch(
+      ModuleFeedbackRequestAction(
+        tag: widget.feature,
+        note: note,
+        commentaire: commentaire,
+      ),
+    );
 
     setState(() => state = _WidgetState.thanks);
     widget.onDismiss();
@@ -190,88 +198,101 @@ class _InAppFeedbackWidgetState extends State<_InAppFeedbackWidget> {
       transitionBuilder: (child, animation) => SizeTransition(sizeFactor: animation, child: child),
       child: switch (state) {
         _WidgetState.feedback => Padding(
-            key: ValueKey<String>('${widget.feature}-0'),
-            padding: widget.padding,
-            child: Stack(
-              children: [
-                _BorderedContainer(
-                  backgroundColor: widget.backgroundColor,
-                  child: Column(
-                    children: [
-                      _Description(icon: AppIcons.help, label: widget.label),
-                      SizedBox(height: Margins.spacing_m),
-                      _FeedbackOptionsGroup(
-                        backgroundColor: widget.backgroundColor,
-                        tracking: widget.feature,
-                        onOptionTap: (feedback) {
-                          selectedFeedback = feedback;
-                          if (widget.commentaireEnabled) {
-                            setState(() => state = _WidgetState.commentaire);
-                          } else {
-                            _submitFeedback();
-                          }
-                          PassEmploiMatomoTracker.instance.trackEvent(
-                            eventCategory: AnalyticsEventNames.feedbackCategory(widget.feature),
-                            action: feedback.analyticsEvent,
-                          );
-                        },
-                      ),
-                      SizedBox(height: 12),
-                      _FeedbackCaption(),
-                      SizedBox(height: Margins.spacing_base),
-                    ],
-                  ),
+          key: ValueKey<String>('${widget.feature}-0'),
+          padding: widget.padding,
+          child: Stack(
+            children: [
+              _BorderedContainer(
+                backgroundColor: widget.backgroundColor,
+                child: Column(
+                  children: [
+                    _Description(icon: AppIcons.help, label: widget.label),
+                    SizedBox(height: Margins.spacing_m),
+                    _FeedbackOptionsGroup(
+                      backgroundColor: widget.backgroundColor,
+                      tracking: widget.feature,
+                      onOptionTap: (feedback) {
+                        selectedFeedback = feedback;
+                        if (widget.commentaireEnabled) {
+                          setState(() => state = _WidgetState.commentaire);
+                        } else {
+                          _submitFeedback();
+                        }
+                        PassEmploiMatomoTracker.instance.trackEvent(
+                          eventCategory: AnalyticsEventNames.feedbackCategory(widget.feature),
+                          action: feedback.analyticsEvent,
+                        );
+                      },
+                    ),
+                    SizedBox(height: 12),
+                    _FeedbackCaption(
+                      responses:
+                          widget.responses ??
+                          [
+                            Strings.feedbackBad,
+                            Strings.feedbackNeutral,
+                            Strings.feedbackGood,
+                          ],
+                    ),
+                    SizedBox(height: Margins.spacing_base),
+                  ],
                 ),
-                if (widget.dismissable) ...[
-                  _CloseButton(onPressed: () {
+              ),
+              if (widget.dismissable) ...[
+                _CloseButton(
+                  onPressed: () {
                     setState(() => state = _WidgetState.closed);
-                    PassEmploiMatomoTracker.instance
-                        .trackScreen(AnalyticsScreenNames.inAppFeedbackFeatureFermeture(widget.feature));
+                    PassEmploiMatomoTracker.instance.trackScreen(
+                      AnalyticsScreenNames.inAppFeedbackFeatureFermeture(widget.feature),
+                    );
                     widget.onDismiss();
-                  })
-                ],
-              ],
-            ),
-          ),
-        _WidgetState.commentaire => Padding(
-            key: ValueKey<String>('${widget.feature}-1'),
-            padding: widget.padding,
-            child: Stack(
-              children: [
-                _BorderedContainer(
-                  backgroundColor: widget.backgroundColor,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _Description(label: Strings.feedbackCommentaire),
-                      SizedBox(height: Margins.spacing_m),
-                      BaseTextField(
-                        controller: _commentaireController,
-                        maxLength: 255,
-                        maxLines: 3,
-                      ),
-                      SizedBox(height: Margins.spacing_base),
-                      PrimaryActionButton(
-                        onPressed: _submitFeedback,
-                        label: Strings.submitFeedback,
-                      ),
-                    ],
-                  ),
+                  },
                 ),
-                _CloseButton(onPressed: () {
-                  _submitFeedback();
-                })
               ],
-            ),
+            ],
           ),
+        ),
+        _WidgetState.commentaire => Padding(
+          key: ValueKey<String>('${widget.feature}-1'),
+          padding: widget.padding,
+          child: Stack(
+            children: [
+              _BorderedContainer(
+                backgroundColor: widget.backgroundColor,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _Description(label: Strings.feedbackCommentaire),
+                    SizedBox(height: Margins.spacing_m),
+                    BaseTextField(
+                      controller: _commentaireController,
+                      maxLength: 255,
+                      maxLines: 3,
+                    ),
+                    SizedBox(height: Margins.spacing_base),
+                    PrimaryActionButton(
+                      onPressed: _submitFeedback,
+                      label: Strings.submitFeedback,
+                    ),
+                  ],
+                ),
+              ),
+              _CloseButton(
+                onPressed: () {
+                  _submitFeedback();
+                },
+              ),
+            ],
+          ),
+        ),
         _WidgetState.thanks => Padding(
-            key: ValueKey<String>('${widget.feature}-2'),
-            padding: widget.padding,
-            child: _Thanks(
-              backgroundColor: widget.backgroundColor,
-              onPressed: () => setState(() => state = _WidgetState.closed),
-            ),
+          key: ValueKey<String>('${widget.feature}-2'),
+          padding: widget.padding,
+          child: _Thanks(
+            backgroundColor: widget.backgroundColor,
+            onPressed: () => setState(() => state = _WidgetState.closed),
           ),
+        ),
         _WidgetState.closed => SizedBox.shrink(),
       },
     );
@@ -392,8 +413,13 @@ class _FeedbackOption extends StatelessWidget {
 }
 
 class _FeedbackCaption extends StatelessWidget {
+  final List<String> responses;
+
+  const _FeedbackCaption({required this.responses});
+
   @override
   Widget build(BuildContext context) {
+    assert(responses.length == 3, 'Responses must have exactly 3 elements');
     final maxWidthForLargeTextScale = MediaQuery.of(context).size.width < MediaSizes.width_s ? 60.0 : 100.0;
     return ExcludeSemantics(
       child: Stack(
@@ -402,7 +428,7 @@ class _FeedbackCaption extends StatelessWidget {
             alignment: Alignment.topLeft,
             child: SizedBox(
               width: maxWidthForLargeTextScale,
-              child: Text(Strings.feedbackBad, style: TextStyles.textSMedium(color: AppColors.grey800)),
+              child: Text(responses[0], style: TextStyles.textSMedium(color: AppColors.grey800)),
             ),
           ),
           Align(
@@ -411,7 +437,7 @@ class _FeedbackCaption extends StatelessWidget {
               width: maxWidthForLargeTextScale,
               child: Align(
                 alignment: Alignment.topCenter,
-                child: Text(Strings.feedbackNeutral, style: TextStyles.textSMedium(color: AppColors.grey800)),
+                child: Text(responses[1], style: TextStyles.textSMedium(color: AppColors.grey800)),
               ),
             ),
           ),
@@ -421,7 +447,7 @@ class _FeedbackCaption extends StatelessWidget {
               width: maxWidthForLargeTextScale,
               child: Align(
                 alignment: Alignment.topRight,
-                child: Text(Strings.feedbackGood, style: TextStyles.textSMedium(color: AppColors.grey800)),
+                child: Text(responses[2], style: TextStyles.textSMedium(color: AppColors.grey800)),
               ),
             ),
           ),
