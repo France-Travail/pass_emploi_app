@@ -18,10 +18,11 @@ class DashedBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DottedBorder(
-      borderType: BorderType.RRect,
-      radius: Radius.circular(Dimens.radius_base),
-      color: color,
-      dashPattern: [8, 8],
+      options: RoundedRectDottedBorderOptions(
+        dashPattern: [8, 8],
+        radius: Radius.circular(Dimens.radius_base),
+        color: color,
+      ),
       child: Padding(padding: padding, child: child),
     );
   }

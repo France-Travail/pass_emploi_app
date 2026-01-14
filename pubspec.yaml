@@ -42,7 +42,7 @@ dependencies:
   flutter_staggered_animations: "1.1.1"
   shimmer: "3.0.0"
   confetti: ^0.8.0
-  dotted_border: "2.1.0"
+  dotted_border: "3.1.0"
   flutter_linkify: "6.0.0"
   showcaseview: "4.0.1"
   # Native features
