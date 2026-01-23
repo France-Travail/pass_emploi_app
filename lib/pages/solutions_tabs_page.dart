@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:pass_emploi_app/pages/boite_a_outils_page.dart';
+import 'package:pass_emploi_app/pages/alerte_page.dart';
 import 'package:pass_emploi_app/pages/offre_favoris_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_home_page.dart';
 import 'package:pass_emploi_app/presentation/solutions_tabs_page_view_model.dart';
@@ -72,7 +72,7 @@ extension _Tabs on List<SolutionsTab> {
       return switch (tab) {
         SolutionsTab.recherche => RechercheHomePage(),
         SolutionsTab.offresEnregistrees => OffreFavorisPage(),
-        SolutionsTab.outils => BoiteAOutilsPage(),
+        SolutionsTab.alertes => AlertePage(), // TODO: alertes
       };
     }).toList();
   }

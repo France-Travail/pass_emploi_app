@@ -32,7 +32,6 @@ import 'package:pass_emploi_app/widgets/animated_list_loader.dart';
 import 'package:pass_emploi_app/widgets/buttons/filtre_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/cards/alerte_deletable_card.dart';
-import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/dialogs/alerte_delete_dialog.dart';
 import 'package:pass_emploi_app/widgets/illustration/empty_state_placeholder.dart';
 import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
@@ -40,10 +39,6 @@ import 'package:pass_emploi_app/widgets/retry.dart';
 import 'package:pass_emploi_app/widgets/voir_suggestions_recherche_card.dart';
 
 class AlertePage extends StatefulWidget {
-  static MaterialPageRoute<void> materialPageRoute() {
-    return MaterialPageRoute(builder: (context) => AlertePage());
-  }
-
   @override
   State<AlertePage> createState() => _AlertePageState();
 }
@@ -93,7 +88,6 @@ class _AlertePageState extends State<AlertePage> {
 
   Widget _body(AlerteListViewModel viewModel) {
     return Scaffold(
-      appBar: SecondaryAppBar(title: Strings.mesAlertesPageTitle),
       backgroundColor: AppColors.grey100,
       body: _content(viewModel),
       floatingActionButton: _floatingActionButton(context, viewModel),

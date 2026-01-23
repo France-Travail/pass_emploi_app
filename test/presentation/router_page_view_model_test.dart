@@ -38,10 +38,11 @@ void main() {
 
   group("RouterPageViewModel.create when user not logged in…", () {
     test('…with first launch onboarding should display onboarding page', () {
-      final store = givenState() //
-          .copyWith(loginState: UserNotLoggedInState())
-          .withFirstLaunchOnboardingSuccessState(true)
-          .store();
+      final store =
+          givenState() //
+              .copyWith(loginState: UserNotLoggedInState())
+              .withFirstLaunchOnboardingSuccessState(true)
+              .store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
 
@@ -60,10 +61,11 @@ void main() {
     });
 
     test('…with not logged state in should display login page', () {
-      final store = givenState() //
-          .copyWith(loginState: UserNotLoggedInState())
-          .withFirstLaunchOnboardingSuccessState(false)
-          .store();
+      final store =
+          givenState() //
+              .copyWith(loginState: UserNotLoggedInState())
+              .withFirstLaunchOnboardingSuccessState(false)
+              .store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
 
@@ -71,10 +73,11 @@ void main() {
     });
 
     test('…with not logged state in should display login page', () {
-      final store = givenState() //
-          .copyWith(loginState: UserNotLoggedInState())
-          .withFirstLaunchOnboardingSuccessState(false)
-          .store();
+      final store =
+          givenState() //
+              .copyWith(loginState: UserNotLoggedInState())
+              .withFirstLaunchOnboardingSuccessState(false)
+              .store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
 
@@ -82,10 +85,11 @@ void main() {
     });
 
     test('…with login loading state should display login page', () {
-      final store = givenState() //
-          .copyWith(loginState: LoginLoadingState())
-          .withFirstLaunchOnboardingSuccessState(false)
-          .store();
+      final store =
+          givenState() //
+              .copyWith(loginState: LoginLoadingState())
+              .withFirstLaunchOnboardingSuccessState(false)
+              .store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
 
@@ -106,10 +110,11 @@ void main() {
 
   group("RouterPageViewModel.create when user logged in…", () {
     test('…with first launch onboarding should not display onboarding page', () {
-      final store = givenState() //
-          .loggedIn()
-          .withFirstLaunchOnboardingSuccessState(true)
-          .store();
+      final store =
+          givenState() //
+              .loggedIn()
+              .withFirstLaunchOnboardingSuccessState(true)
+              .store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
 
@@ -143,11 +148,12 @@ void main() {
     });
 
     test('…and deep link is set to rendezvous should display main page with accueil display state', () {
-      final store = givenState() //
-          .loggedIn()
-          .withFirstLaunchOnboardingSuccessState(false)
-          .withHandleDeepLink(RendezvousDeepLink('id'))
-          .store();
+      final store =
+          givenState() //
+              .loggedIn()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withHandleDeepLink(RendezvousDeepLink('id'))
+              .store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
 
@@ -169,11 +175,12 @@ void main() {
     });
 
     test('…and deep link is set to action should display main page with accueil display state', () {
-      final store = givenState() //
-          .loggedIn()
-          .withFirstLaunchOnboardingSuccessState(false)
-          .withHandleDeepLink(ActionDeepLink('id'))
-          .store();
+      final store =
+          givenState() //
+              .loggedIn()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withHandleDeepLink(ActionDeepLink('id'))
+              .store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
 
@@ -182,11 +189,12 @@ void main() {
     });
 
     test('…and deep link is set to offres enregistrees should display main page with accueil display state', () {
-      final store = givenState() //
-          .loggedIn()
-          .withFirstLaunchOnboardingSuccessState(false)
-          .withHandleDeepLink(OffresEnregistreesDeepLink())
-          .store();
+      final store =
+          givenState() //
+              .loggedIn()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withHandleDeepLink(OffresEnregistreesDeepLink())
+              .store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
 
@@ -194,37 +202,42 @@ void main() {
     });
 
     test('…and deep link is set to alertes should display main page with accueil display state', () {
-      final store = givenState() //
-          .loggedIn()
-          .withFirstLaunchOnboardingSuccessState(false)
-          .withHandleDeepLink(AlertesDeepLink())
-          .store();
+      final store =
+          givenState() //
+              .loggedIn()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withHandleDeepLink(AlertesDeepLink())
+              .store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
 
       expect(viewModel.routerPageDisplayState, RouterPageDisplayState.main);
-      expect(viewModel.mainPageDisplayState, MainPageDisplayState.accueil);
+      expect(viewModel.mainPageDisplayState, MainPageDisplayState.solutionsAlertes);
     });
 
-    test('…and deep link is set to actualisation pole emploi should display main page with actualisation pole emploi',
-        () {
-      final store = givenState() //
-          .loggedIn()
-          .withFirstLaunchOnboardingSuccessState(false)
-          .withHandleDeepLink(ActualisationPeDeepLink())
-          .store();
+    test(
+      '…and deep link is set to actualisation pole emploi should display main page with actualisation pole emploi',
+      () {
+        final store =
+            givenState() //
+                .loggedIn()
+                .withFirstLaunchOnboardingSuccessState(false)
+                .withHandleDeepLink(ActualisationPeDeepLink())
+                .store();
 
-      final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
+        final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
 
-      expect(viewModel.mainPageDisplayState, MainPageDisplayState.actualisationPoleEmploi);
-    });
+        expect(viewModel.mainPageDisplayState, MainPageDisplayState.actualisationPoleEmploi);
+      },
+    );
 
     test('…and deep link is set to chat should display main page with chat display state', () {
-      final store = givenState() //
-          .loggedIn()
-          .withFirstLaunchOnboardingSuccessState(false)
-          .withHandleDeepLink(NouveauMessageDeepLink())
-          .store();
+      final store =
+          givenState() //
+              .loggedIn()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withHandleDeepLink(NouveauMessageDeepLink())
+              .store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
 
@@ -233,35 +246,38 @@ void main() {
     });
 
     test('…and deep link is set to recherche should display main page with recherche', () {
-      final store = givenState() //
-          .loggedIn()
-          .withFirstLaunchOnboardingSuccessState(false)
-          .withHandleDeepLink(RechercheDeepLink())
-          .store();
+      final store =
+          givenState() //
+              .loggedIn()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withHandleDeepLink(RechercheDeepLink())
+              .store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
 
       expect(viewModel.mainPageDisplayState, MainPageDisplayState.solutionsRecherche);
     });
 
-    test('…and deep link is set to outils should display main page with outils', () {
-      final store = givenState() //
-          .loggedIn()
-          .withFirstLaunchOnboardingSuccessState(false)
-          .withHandleDeepLink(OutilsDeepLink())
-          .store();
+    test('…and deep link is set to alertes should display main page with alertes', () {
+      final store =
+          givenState() //
+              .loggedIn()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withHandleDeepLink(AlertesDeepLink())
+              .store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
 
-      expect(viewModel.mainPageDisplayState, MainPageDisplayState.solutionsOutils);
+      expect(viewModel.mainPageDisplayState, MainPageDisplayState.solutionsAlertes);
     });
 
     test('…and deep link is set to event list should display main page with event list display state', () {
-      final store = givenState() //
-          .loggedIn()
-          .withFirstLaunchOnboardingSuccessState(false)
-          .withHandleDeepLink(EventListDeepLink())
-          .store();
+      final store =
+          givenState() //
+              .loggedIn()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withHandleDeepLink(EventListDeepLink())
+              .store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
 
@@ -270,11 +286,12 @@ void main() {
     });
 
     test('should show tutorial if user did not read it yet', () {
-      final store = givenState() //
-          .loggedIn()
-          .withFirstLaunchOnboardingSuccessState(false)
-          .copyWith(tutorialState: ShowTutorialState(Tutorial.milo))
-          .store();
+      final store =
+          givenState() //
+              .loggedIn()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .copyWith(tutorialState: ShowTutorialState(Tutorial.milo))
+              .store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.IOS);
 
@@ -282,11 +299,12 @@ void main() {
     });
 
     test('should show cgu if user has never accepted them', () {
-      final store = givenState() //
-          .loggedIn()
-          .withFirstLaunchOnboardingSuccessState(false)
-          .withCguNeverAccepted()
-          .store();
+      final store =
+          givenState() //
+              .loggedIn()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withCguNeverAccepted()
+              .store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.IOS);
 
@@ -294,11 +312,12 @@ void main() {
     });
 
     test('should show cgu if user has accepted an older version', () {
-      final store = givenState() //
-          .loggedIn()
-          .withFirstLaunchOnboardingSuccessState(false)
-          .withCguUpdateRequired(Cgu(lastUpdate: DateTime(2022), changes: []))
-          .store();
+      final store =
+          givenState() //
+              .loggedIn()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withCguUpdateRequired(Cgu(lastUpdate: DateTime(2022), changes: []))
+              .store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.IOS);
 
@@ -308,9 +327,9 @@ void main() {
 
   group("RouterPageViewModel.create when user comes from deep link", () {
     test("it does nothing when the version is same", () {
-      final store = givenState(configuration(version: Version(1, 0, 0)))
-          .withHandleDeepLink(NouvellesFonctionnalitesDeepLink(lastVersion: Version(1, 0, 0)))
-          .store();
+      final store = givenState(
+        configuration(version: Version(1, 0, 0)),
+      ).withHandleDeepLink(NouvellesFonctionnalitesDeepLink(lastVersion: Version(1, 0, 0))).store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
 
@@ -318,9 +337,9 @@ void main() {
     });
 
     test("it does nothing when the version is greater", () {
-      final store = givenState(configuration(version: Version(1, 2, 3)))
-          .withHandleDeepLink(NouvellesFonctionnalitesDeepLink(lastVersion: Version(1, 0, 0)))
-          .store();
+      final store = givenState(
+        configuration(version: Version(1, 2, 3)),
+      ).withHandleDeepLink(NouvellesFonctionnalitesDeepLink(lastVersion: Version(1, 0, 0))).store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
 
@@ -328,9 +347,9 @@ void main() {
     });
 
     test("it redirect to the android store when the version is too old", () {
-      final store = givenState(configuration(version: Version(1, 0, 0)))
-          .withHandleDeepLink(NouvellesFonctionnalitesDeepLink(lastVersion: Version(2, 1, 2)))
-          .store();
+      final store = givenState(
+        configuration(version: Version(1, 0, 0)),
+      ).withHandleDeepLink(NouvellesFonctionnalitesDeepLink(lastVersion: Version(2, 1, 2))).store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
 
@@ -338,9 +357,9 @@ void main() {
     });
 
     test("it redirect to the ios store when the version is too old", () {
-      final store = givenState(configuration(version: Version(1, 0, 0)))
-          .withHandleDeepLink(NouvellesFonctionnalitesDeepLink(lastVersion: Version(2, 1, 2)))
-          .store();
+      final store = givenState(
+        configuration(version: Version(1, 0, 0)),
+      ).withHandleDeepLink(NouvellesFonctionnalitesDeepLink(lastVersion: Version(2, 1, 2))).store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.IOS);
 
@@ -400,23 +419,24 @@ void main() {
   });
 
   test(
-      '2 RouterPageViewModel with same login states and same deep link but different deep link date should be different',
-      () {
-    final state1 = AppState.initialState().copyWith(
-      loginState: successMiloUserState(),
-      deepLinkState: HandleDeepLinkState(NouveauMessageDeepLink(), DeepLinkOrigin.pushNotification),
-    );
-    final store1 = Store<AppState>(reducer, initialState: state1);
+    '2 RouterPageViewModel with same login states and same deep link but different deep link date should be different',
+    () {
+      final state1 = AppState.initialState().copyWith(
+        loginState: successMiloUserState(),
+        deepLinkState: HandleDeepLinkState(NouveauMessageDeepLink(), DeepLinkOrigin.pushNotification),
+      );
+      final store1 = Store<AppState>(reducer, initialState: state1);
 
-    final state2 = AppState.initialState().copyWith(
-      loginState: successMiloUserState(),
-      deepLinkState: HandleDeepLinkState(NouveauMessageDeepLink(), DeepLinkOrigin.pushNotification),
-    );
-    final store2 = Store<AppState>(reducer, initialState: state2);
+      final state2 = AppState.initialState().copyWith(
+        loginState: successMiloUserState(),
+        deepLinkState: HandleDeepLinkState(NouveauMessageDeepLink(), DeepLinkOrigin.pushNotification),
+      );
+      final store2 = Store<AppState>(reducer, initialState: state2);
 
-    final viewModel1 = RouterPageViewModel.create(store1, Platform.ANDROID);
-    final viewModel2 = RouterPageViewModel.create(store2, Platform.ANDROID);
+      final viewModel1 = RouterPageViewModel.create(store1, Platform.ANDROID);
+      final viewModel2 = RouterPageViewModel.create(store2, Platform.ANDROID);
 
-    expect(viewModel1 == viewModel2, false);
-  });
+      expect(viewModel1 == viewModel2, false);
+    },
+  );
 }

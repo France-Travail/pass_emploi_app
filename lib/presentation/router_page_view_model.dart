@@ -111,7 +111,7 @@ MainPageDisplayState _toMainPageDisplayStateByDeepLink(DeepLink deepLink) {
     EventSearchDeepLink() => MainPageDisplayState.evenementsRecherche,
     RechercheDeepLink() => MainPageDisplayState.solutionsRecherche,
     OffresEnregistreesDeepLink() => MainPageDisplayState.solutionsOffresEnregistrees,
-    OutilsDeepLink() => MainPageDisplayState.solutionsOutils,
+    AlertesDeepLink() => MainPageDisplayState.solutionsAlertes,
     _ => MainPageDisplayState.accueil,
   };
 }

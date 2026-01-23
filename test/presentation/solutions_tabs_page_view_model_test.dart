@@ -12,6 +12,6 @@ void main() {
     final viewModel = SolutionsTabPageViewModel.create(store);
 
     // Then
-    expect(viewModel.tabs, [SolutionsTab.recherche, SolutionsTab.offresEnregistrees, SolutionsTab.outils]);
+    expect(viewModel.tabs, [SolutionsTab.recherche, SolutionsTab.offresEnregistrees, SolutionsTab.alertes]);
   });
 }

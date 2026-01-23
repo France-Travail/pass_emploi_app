@@ -941,7 +941,7 @@ class Strings {
   static String metierHint = "Métier, compétence, secteur...";
   static String rechercheTabTitle = "Recherche";
   static String offresEnregistreesTabTitle = "Suivi des offres";
-  static String boiteAOutilsTabTitle = "Outils";
+  static String alertesTabTitle = "Alertes";
   static String solutionsAppBarTitle = "Offres";
   static String partagerOffreConseiller = "Partager l’offre à mon conseiller";
   static String partageOffreNavTitle = "Partage de l’offre d’emploi";
@@ -1136,7 +1136,6 @@ class Strings {
 
   // Favoris
   static String mesFavorisPageTitle = "Mon suivis des offres";
-  static String mesAlertesPageTitle = "Mes alertes";
   static String miscellaneousErrorRetry = "Une erreur est survenue. Veuillez réessayer";
 
   static String offreNumberAndLastUpdate(String offreId, String lastUpdate) =>
