@@ -12,7 +12,6 @@ import 'package:pass_emploi_app/features/remote_campagne_accueil/remote_campagne
 import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
-import 'package:pass_emploi_app/models/outil.dart';
 import 'package:pass_emploi_app/models/user.dart';
 import 'package:pass_emploi_app/presentation/accueil/accueil_item.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
@@ -101,7 +100,6 @@ List<AccueilItem> _items(Store<AppState> store) {
     _suiviDesOffresItem(),
     _evenementsItem(accueilState),
     _alertesItem(accueilState),
-    _outilsItem(accueilState, user.accompagnement),
   ].nonNulls.toList();
 }
 
@@ -173,35 +171,6 @@ AccueilItem? _alertesItem(AccueilSuccessState successState) {
 
 AccueilItem? _suiviDesOffresItem() {
   return AccueilSuiviDesOffresItem();
-}
-
-AccueilItem? _outilsItem(AccueilSuccessState successState, Accompagnement accompagnement) {
-  return switch (accompagnement) {
-    Accompagnement.cej => AccueilOutilsItem([
-      Outil.immersionBoulanger.withoutImage(),
-      Outil.benevolatCej.withoutImage(),
-      Outil.mesAidesFt.withoutImage(),
-    ]),
-    Accompagnement.rsaFranceTravail ||
-    Accompagnement.rsaConseilsDepartementaux ||
-    Accompagnement.accompagnementIntensif ||
-    Accompagnement.accompagnementGlobal ||
-    Accompagnement.equipEmploiRecrut => AccueilOutilsItem([
-      Outil.mesAidesFt.withoutImage(),
-      Outil.emploiSolidaire.withoutImage(),
-      Outil.emploiStore.withoutImage(),
-    ]),
-    Accompagnement.avenirPro => AccueilOutilsItem([
-      Outil.benevolatPassEmploi.withoutImage(),
-      Outil.metierScope.withoutImage(),
-      Outil.formation.withoutImage(),
-    ]),
-    Accompagnement.aij => AccueilOutilsItem([
-      Outil.immersionBoulanger.withoutImage(),
-      Outil.benevolatPassEmploi.withoutImage(),
-      Outil.mesAidesFt.withoutImage(),
-    ]),
-  };
 }
 
 AccueilItem? _offreSuivies(Store<AppState> store) {

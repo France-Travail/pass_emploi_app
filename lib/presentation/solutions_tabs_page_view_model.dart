@@ -3,7 +3,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:redux/redux.dart';
 
-enum SolutionsTab { recherche, offresEnregistrees, outils }
+enum SolutionsTab { recherche, offresEnregistrees, alertes }
 
 class SolutionsTabPageViewModel extends Equatable {
   final List<SolutionsTab> tabs;
@@ -13,11 +13,13 @@ class SolutionsTabPageViewModel extends Equatable {
   });
 
   factory SolutionsTabPageViewModel.create(Store<AppState> store) {
-    return SolutionsTabPageViewModel._(tabs: [
-      SolutionsTab.recherche,
-      SolutionsTab.offresEnregistrees,
-      SolutionsTab.outils,
-    ]);
+    return SolutionsTabPageViewModel._(
+      tabs: [
+        SolutionsTab.recherche,
+        SolutionsTab.offresEnregistrees,
+        SolutionsTab.alertes,
+      ],
+    );
   }
 
   @override
@@ -30,7 +32,7 @@ extension SolutionsTabTitles on List<SolutionsTab> {
       return switch (tab) {
         SolutionsTab.recherche => Strings.rechercheTabTitle,
         SolutionsTab.offresEnregistrees => Strings.offresEnregistreesTabTitle,
-        SolutionsTab.outils => Strings.boiteAOutilsTabTitle
+        SolutionsTab.alertes => Strings.alertesTabTitle,
       };
     }).toList();
   }

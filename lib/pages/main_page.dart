@@ -33,7 +33,7 @@ class MainPage extends StatefulWidget {
   final int deepLinkKey;
 
   MainPage({this.displayState = MainPageDisplayState.accueil, this.deepLinkKey = 0})
-      : super(key: ValueKey(displayState.hashCode + deepLinkKey));
+    : super(key: ValueKey(displayState.hashCode + deepLinkKey));
 
   @override
   MainPageState createState() => MainPageState();
@@ -148,7 +148,7 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
   SolutionsTab? _initialSolutionsTab() {
     return switch (widget.displayState) {
       MainPageDisplayState.solutionsOffresEnregistrees => SolutionsTab.offresEnregistrees,
-      MainPageDisplayState.solutionsOutils => SolutionsTab.outils,
+      MainPageDisplayState.solutionsAlertes => SolutionsTab.alertes,
       _ => null,
     };
   }
@@ -171,7 +171,7 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
       MainPageDisplayState.chat => tabs.indexOf(MainTab.chat),
       MainPageDisplayState.solutionsRecherche => tabs.indexOf(MainTab.solutions),
       MainPageDisplayState.solutionsOffresEnregistrees => tabs.indexOf(MainTab.solutions),
-      MainPageDisplayState.solutionsOutils => tabs.indexOf(MainTab.solutions),
+      MainPageDisplayState.solutionsAlertes => tabs.indexOf(MainTab.solutions),
       MainPageDisplayState.evenements => tabs.indexOf(MainTab.evenements),
       MainPageDisplayState.evenementsRecherche => tabs.indexOf(MainTab.evenements),
     };

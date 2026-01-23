@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:pass_emploi_app/models/accueil_zenith_message.dart';
 import 'package:pass_emploi_app/models/alerte/alerte.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
-import 'package:pass_emploi_app/models/outil.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 
 enum MonSuiviType { actions, demarches }
@@ -88,15 +87,6 @@ class AccueilSuiviDesOffresItem extends AccueilItem {
 
   @override
   List<Object?> get props => [];
-}
-
-class AccueilOutilsItem extends AccueilItem {
-  final List<Outil> outils;
-
-  AccueilOutilsItem(this.outils);
-
-  @override
-  List<Object?> get props => [outils];
 }
 
 class CampagneEvaluationItem extends AccueilItem {

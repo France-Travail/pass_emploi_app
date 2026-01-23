@@ -15,7 +15,7 @@ enum MainPageDisplayState {
   evenementsRecherche,
   solutionsRecherche,
   solutionsOffresEnregistrees,
-  solutionsOutils,
+  solutionsAlertes,
   actualisationPoleEmploi,
 }
 

@@ -254,6 +254,9 @@ class Strings {
 
   static String onboardingStepFinished = "🎉 Bravo vous avez validé une étape du tutoriel !";
 
+  static String mesOutils = "Mes outils";
+  static String mesOutilsDescription = "Trouver l’aide adaptée à votre projet professionel";
+
   // Login bottom sheet
   static const String loginBottomSeetFranceTravailButton = "France travail";
   static const String loginBottomSeetMissionLocaleButton = "Mission Locale";
@@ -938,7 +941,7 @@ class Strings {
   static String metierHint = "Métier, compétence, secteur...";
   static String rechercheTabTitle = "Recherche";
   static String offresEnregistreesTabTitle = "Suivi des offres";
-  static String boiteAOutilsTabTitle = "Outils";
+  static String alertesTabTitle = "Alertes";
   static String solutionsAppBarTitle = "Offres";
   static String partagerOffreConseiller = "Partager l’offre à mon conseiller";
   static String partageOffreNavTitle = "Partage de l’offre d’emploi";
@@ -1133,7 +1136,6 @@ class Strings {
 
   // Favoris
   static String mesFavorisPageTitle = "Mon suivis des offres";
-  static String mesAlertesPageTitle = "Mes alertes";
   static String miscellaneousErrorRetry = "Une erreur est survenue. Veuillez réessayer";
 
   static String offreNumberAndLastUpdate(String offreId, String lastUpdate) =>
@@ -1381,6 +1383,7 @@ class Strings {
   static String nouvellesSuggestionsDeRechercheDescription =
       "Sur la base de votre profil France Travail, voici des suggestions d'alertes à sauvegarder";
   static String voirSuggestionsDeRecherche = "Voir les suggestions";
+  static String suggestionsDeRechercheTitle = "Suggestions d'alertes";
   static String suggestionsDeRechercheHeader =
       "Vos suggestions peuvent venir de différentes sources. Après l’ajout, vous serez notifié si une nouvelle offre est disponible.";
   static String suggestionSourcePoleEmploi = "Profil France Travail";

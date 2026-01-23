@@ -11,39 +11,46 @@ import 'package:pass_emploi_app/models/alerte/immersion_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/offre_emploi_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/service_civique_alerte.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
+import 'package:pass_emploi_app/models/location.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/offre_type.dart';
 import 'package:pass_emploi_app/pages/generic_success_page.dart';
 import 'package:pass_emploi_app/pages/offre_filters_bottom_sheet.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_emploi_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_immersion_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_service_civique_page.dart';
-import 'package:pass_emploi_app/pages/suggestions_recherche/suggestions_recherche_list_page.dart';
+import 'package:pass_emploi_app/pages/suggestions_recherche/suggestions_alerte_location_form.dart';
 import 'package:pass_emploi_app/presentation/alerte/alerte_list_view_model.dart';
 import 'package:pass_emploi_app/presentation/alerte/alerte_navigation_state.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
+import 'package:pass_emploi_app/presentation/suggestions/suggestion_recherche_card_view_model.dart';
+import 'package:pass_emploi_app/presentation/suggestions/suggestions_recherche_list_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/redux/store_connector_aware.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
+import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/utils/store_extensions.dart';
 import 'package:pass_emploi_app/widgets/animated_list_loader.dart';
 import 'package:pass_emploi_app/widgets/buttons/filtre_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
+import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/cards/alerte_deletable_card.dart';
-import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/cards/base_cards/base_card.dart';
+import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
+import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
 import 'package:pass_emploi_app/widgets/dialogs/alerte_delete_dialog.dart';
 import 'package:pass_emploi_app/widgets/illustration/empty_state_placeholder.dart';
 import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
+import 'package:pass_emploi_app/widgets/loading_overlay.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
-import 'package:pass_emploi_app/widgets/voir_suggestions_recherche_card.dart';
+import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
 
 class AlertePage extends StatefulWidget {
-  static MaterialPageRoute<void> materialPageRoute() {
-    return MaterialPageRoute(builder: (context) => AlertePage());
-  }
-
   @override
   State<AlertePage> createState() => _AlertePageState();
 }
@@ -93,7 +100,6 @@ class _AlertePageState extends State<AlertePage> {
 
   Widget _body(AlerteListViewModel viewModel) {
     return Scaffold(
-      appBar: SecondaryAppBar(title: Strings.mesAlertesPageTitle),
       backgroundColor: AppColors.grey100,
       body: _content(viewModel),
       floatingActionButton: _floatingActionButton(context, viewModel),
@@ -118,65 +124,92 @@ class _AlertePageState extends State<AlertePage> {
   }
 
   Widget _content(AlerteListViewModel viewModel) {
-    final displayState = viewModel.displayState;
-    return AnimatedSwitcher(
-      duration: AnimationDurations.fast,
-      child: switch (displayState) {
-        DisplayState.LOADING => _AlerteLoading(),
-        DisplayState.FAILURE => Retry(Strings.alerteGetError, () => viewModel.onRetry()),
-        _ => _alertes(viewModel),
-      },
-    );
-  }
-
-  Widget _alertes(AlerteListViewModel viewModel) {
-    final List<Alerte> alertes = viewModel.getAlertesFiltered(_selectedFilter);
-    if (alertes.isEmpty) return _noAlerte();
-    return ListView.separated(
-      separatorBuilder: (context, index) => SizedBox(height: Margins.spacing_base),
-      padding: EdgeInsets.all(Margins.spacing_base),
-      itemCount: alertes.length,
-      controller: _scrollController,
-      itemBuilder: (context, index) {
-        final alerte = alertes[index];
-        return Column(
+    return StoreConnectorAware<SuggestionsRechercheListViewModel>(
+      converter: (store) => SuggestionsRechercheListViewModel.create(store),
+      onDidChange: (oldVM, newVM) => _displaySuccessSnackbar(context, oldVM, newVM),
+      distinct: true,
+      builder: (context, suggestionsViewModel) {
+        final displayState = viewModel.displayState;
+        return Stack(
           children: [
-            Builder(
-              builder: (context) {
-                return switch (alerte) {
-                  OffreEmploiAlerte() => _buildEmploiCard(context, alerte, viewModel),
-                  ImmersionAlerte() => _buildImmersionCard(context, alerte, viewModel),
-                  ServiceCiviqueAlerte() => _buildServiceCiviqueCard(context, alerte, viewModel),
-                  _ => SizedBox.shrink(),
-                };
+            AnimatedSwitcher(
+              duration: AnimationDurations.fast,
+              child: switch (displayState) {
+                DisplayState.LOADING => _AlerteLoading(),
+                DisplayState.FAILURE => Retry(Strings.alerteGetError, () => viewModel.onRetry()),
+                _ => _alertesWithSuggestions(viewModel, suggestionsViewModel),
               },
             ),
-            if (index == alertes.length - 1) ...[
-              SizedBox(height: Margins.spacing_base),
-              VoirSuggestionsRechercheCard(onTapShowSuggestions: _onTapShowSuggestions),
-              SizedBox(height: Margins.spacing_huge),
-            ],
+            if (suggestionsViewModel.traiterDisplayState == DisplayState.LOADING) LoadingOverlay(),
           ],
         );
       },
     );
   }
 
-  Widget _noAlerte() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(Margins.spacing_base),
-            child: VoirSuggestionsRechercheCard(onTapShowSuggestions: _onTapShowSuggestions),
+  Widget _alertesWithSuggestions(
+    AlerteListViewModel viewModel,
+    SuggestionsRechercheListViewModel suggestionsViewModel,
+  ) {
+    final List<Alerte> alertes = viewModel.getAlertesFiltered(_selectedFilter);
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: Margins.spacing_base,
+              left: Margins.spacing_base,
+              right: Margins.spacing_base,
+            ),
+            child: _SectionTitle(title: Strings.alertesTabTitle),
           ),
-          SizedBox(height: Margins.spacing_base),
-          _selectedFilter == OffreFilter.tous
-              ? _EmptyListPlaceholder.noFavori()
-              : _EmptyListPlaceholder.noFavoriFiltered(),
-          SizedBox(height: Margins.spacing_huge),
-        ],
-      ),
+        ),
+        if (alertes.isEmpty)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+              child: _noAlerte(),
+            ),
+          )
+        else
+          SliverPadding(
+            padding: const EdgeInsets.all(Margins.spacing_base),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  if (index.isOdd) return SizedBox(height: Margins.spacing_base);
+                  final itemIndex = index ~/ 2;
+                  final alerte = alertes[itemIndex];
+                  return switch (alerte) {
+                    OffreEmploiAlerte() => _buildEmploiCard(context, alerte, viewModel),
+                    ImmersionAlerte() => _buildImmersionCard(context, alerte, viewModel),
+                    ServiceCiviqueAlerte() => _buildServiceCiviqueCard(context, alerte, viewModel),
+                    _ => SizedBox.shrink(),
+                  };
+                },
+                childCount: alertes.isEmpty ? 0 : alertes.length * 2 - 1,
+              ),
+            ),
+          ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.all(Margins.spacing_base),
+            child: _suggestionsSection(suggestionsViewModel),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _noAlerte() {
+    return Column(
+      children: [
+        _selectedFilter == OffreFilter.tous
+            ? _EmptyListPlaceholder.noFavori()
+            : _EmptyListPlaceholder.noFavoriFiltered(),
+        SizedBox(height: Margins.spacing_huge),
+      ],
     );
   }
 
@@ -220,11 +253,6 @@ class _AlertePageState extends State<AlertePage> {
     StoreProvider.of<AppState>(
       context,
     ).dispatch(HandleDeepLinkAction(RechercheDeepLink(), DeepLinkOrigin.inAppNavigation));
-  }
-
-  void _onTapShowSuggestions() {
-    PassEmploiMatomoTracker.instance.trackScreen(AnalyticsScreenNames.alerteSuggestionsList);
-    Navigator.push(context, SuggestionsRechercheListPage.materialPageRoute());
   }
 
   void _showDeleteDialog(AlerteListViewModel viewModel, String alerteId, AlerteType type) {
@@ -305,4 +333,326 @@ class _AlerteLoading extends StatelessWidget {
     SizedBox(height: Margins.spacing_base),
     AnimatedListLoader.placeholderBuilder(width: screenWidth, height: 170),
   ];
+}
+
+Widget _suggestionsSection(SuggestionsRechercheListViewModel viewModel) {
+  final content = switch (viewModel.displayState) {
+    DisplayState.EMPTY => _SuggestionsEmpty(viewModel: viewModel),
+    DisplayState.CONTENT => _SuggestionsList(viewModel: viewModel),
+    DisplayState.LOADING => Center(child: CircularProgressIndicator()),
+    DisplayState.FAILURE => Retry(Strings.vosSuggestionsAlertesError, () => viewModel.retryFetchSuggestions()),
+  };
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      _SectionTitle(title: Strings.suggestionsDeRechercheTitle),
+      SizedBox(height: Margins.spacing_base),
+      content,
+      SizedBox(height: Margins.spacing_base),
+    ],
+  );
+}
+
+class _SuggestionsList extends StatelessWidget {
+  final SuggestionsRechercheListViewModel viewModel;
+
+  _SuggestionsList({required this.viewModel});
+
+  @override
+  Widget build(BuildContext context) {
+    final suggestionIds = viewModel.suggestionIds;
+    return Column(
+      children: [
+        for (int index = 0; index < suggestionIds.length; index++) ...[
+          index == 0
+              ? _SuggestionsHeader(suggestionId: suggestionIds[index])
+              : _SuggestionCard(suggestionId: suggestionIds[index]),
+          if (index < suggestionIds.length - 1) SizedBox(height: Margins.spacing_base),
+        ],
+      ],
+    );
+  }
+}
+
+class _SuggestionsEmpty extends StatelessWidget {
+  final SuggestionsRechercheListViewModel viewModel;
+
+  _SuggestionsEmpty({required this.viewModel});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_xl),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: Margins.spacing_xl),
+          Center(
+            child: SizedBox(
+              height: 130,
+              width: 130,
+              child: Illustration.grey(AppIcons.checklist_rounded),
+            ),
+          ),
+          SizedBox(height: Margins.spacing_base),
+          Text(Strings.emptySuggestionAlerteListTitre, style: TextStyles.textBaseBold, textAlign: TextAlign.center),
+          SizedBox(height: Margins.spacing_base),
+          Text(
+            viewModel.loginMode?.isMiLo() == true
+                ? Strings.emptySuggestionAlerteListDescriptionMilo
+                : Strings.emptySuggestionAlerteListDescriptionPoleEmploi,
+            style: TextStyles.textBaseRegular,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: Margins.spacing_xl),
+        ],
+      ),
+    );
+  }
+}
+
+class _SuggestionsHeader extends StatelessWidget {
+  final String suggestionId;
+
+  _SuggestionsHeader({required this.suggestionId});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(Strings.suggestionsDeRechercheHeader, style: TextStyles.textBaseRegular),
+        SizedBox(height: Margins.spacing_base),
+        _SuggestionCard(suggestionId: suggestionId),
+      ],
+    );
+  }
+}
+
+class _SuggestionCard extends StatelessWidget {
+  final String suggestionId;
+
+  _SuggestionCard({required this.suggestionId});
+
+  @override
+  Widget build(BuildContext context) {
+    return StoreConnector<AppState, SuggestionRechercheCardViewModel?>(
+      builder: _builder,
+      converter: (store) => SuggestionRechercheCardViewModel.create(store, suggestionId),
+      distinct: true,
+    );
+  }
+
+  Widget _builder(BuildContext context, SuggestionRechercheCardViewModel? viewModel) {
+    if (viewModel == null) return SizedBox(height: 0);
+    final source = viewModel.source;
+
+    return BaseCard(
+      title: viewModel.titre,
+      tag: viewModel.type.toCardTag(),
+      complements: [if (viewModel.localisation != null) CardComplement.place(text: viewModel.localisation!)],
+      secondaryTags: [
+        if (source != null) CardTag.secondary(text: source, semanticsLabel: Strings.source + source),
+      ],
+      actions: [
+        _SuggestionButtons(
+          onTapAjouter: () async {
+            if (viewModel.withLocationForm) {
+              await _selectLocationAndRayon(
+                context,
+                viewModel.type,
+                onSelected: (location, rayon) => viewModel.ajouterSuggestion(location: location, rayon: rayon),
+              );
+            } else {
+              viewModel.ajouterSuggestion();
+            }
+          },
+          onTapRefuser: viewModel.refuserSuggestion,
+        ),
+      ],
+    );
+  }
+
+  Future<void> _selectLocationAndRayon(
+    BuildContext context,
+    OffreType type, {
+    required void Function(Location? location, double? rayon) onSelected,
+  }) async {
+    final locationAndRayon = await Navigator.of(
+      context,
+    ).push(SuggestionsAlerteLocationForm.materialPageRoute(type: type));
+
+    if (locationAndRayon != null) {
+      final (Location location, double rayon) = locationAndRayon;
+      onSelected(location, rayon);
+    }
+  }
+}
+
+class _SuggestionButtons extends StatelessWidget {
+  final Function() onTapAjouter;
+  final Function() onTapRefuser;
+
+  _SuggestionButtons({required this.onTapAjouter, required this.onTapRefuser});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(child: _Refuser(onTapRefuser: onTapRefuser)),
+        SizedBox(width: Margins.spacing_base),
+        Expanded(child: _Ajouter(onTapAjouter: onTapAjouter)),
+      ],
+    );
+  }
+}
+
+class _Refuser extends StatelessWidget {
+  final Function() onTapRefuser;
+
+  _Refuser({required this.onTapRefuser});
+
+  @override
+  Widget build(BuildContext context) {
+    return SecondaryButton(
+      label: Strings.refuserLabel,
+      icon: AppIcons.remove_alert_rounded,
+      onPressed: onTapRefuser,
+    );
+  }
+}
+
+class _Ajouter extends StatelessWidget {
+  final Function() onTapAjouter;
+
+  _Ajouter({required this.onTapAjouter});
+
+  @override
+  Widget build(BuildContext context) {
+    return PrimaryActionButton(
+      heightPadding: Margins.spacing_base,
+      label: Strings.ajouter,
+      icon: AppIcons.add_alert_rounded,
+      iconRightPadding: Margins.spacing_xs,
+      withShadow: false,
+      onPressed: onTapAjouter,
+    );
+  }
+}
+
+void _displaySuccessSnackbar(
+  BuildContext context,
+  SuggestionsRechercheListViewModel? oldViewModel,
+  SuggestionsRechercheListViewModel newViewModel,
+) {
+  if (newViewModel.traiterDisplayState != DisplayState.CONTENT) return;
+  if (oldViewModel?.traiterDisplayState == DisplayState.CONTENT) return;
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      padding: const EdgeInsets.only(left: 24, bottom: 14),
+      duration: Duration(days: 365),
+      backgroundColor: AppColors.successLighten,
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  color: AppColors.success,
+                  shape: BoxShape.circle,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: Icon(
+                    AppIcons.check_rounded,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(width: 10.0),
+              Expanded(
+                child: Text(
+                  Strings.suggestionRechercheAjoutee,
+                  style: TextStyles.textBaseBoldWithColor(AppColors.success),
+                ),
+              ),
+              _CloseSnackbar(newViewModel),
+            ],
+          ),
+          Text(
+            Strings.suggestionRechercheAjouteeDescription,
+            style: TextStyles.textBaseRegularWithColor(AppColors.success),
+          ),
+          SizedBox(height: Margins.spacing_s),
+          _SeeResults(newViewModel),
+        ],
+      ),
+    ),
+  );
+}
+
+class _CloseSnackbar extends StatelessWidget {
+  final SuggestionsRechercheListViewModel viewModel;
+
+  _CloseSnackbar(this.viewModel);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        viewModel.resetTraiterState();
+        clearAllSnackBars();
+      },
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 16, 24, 16),
+        child: Icon(
+          AppIcons.close_rounded,
+          color: AppColors.success,
+        ),
+      ),
+    );
+  }
+}
+
+class _SeeResults extends StatelessWidget {
+  final SuggestionsRechercheListViewModel viewModel;
+
+  _SeeResults(this.viewModel);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        viewModel.seeOffreResults();
+        viewModel.resetTraiterState();
+        clearAllSnackBars();
+      },
+      child: Row(
+        children: [
+          Text(
+            Strings.voirResultatsSuggestion,
+            style: TextStyles.textBaseBoldWithColor(AppColors.success).copyWith(decoration: TextDecoration.underline),
+          ),
+          Icon(
+            AppIcons.chevron_right_rounded,
+            color: AppColors.success,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SectionTitle extends StatelessWidget {
+  final String title;
+  const _SectionTitle({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(title, style: TextStyles.textMBold.copyWith(color: AppColors.primary));
+  }
 }

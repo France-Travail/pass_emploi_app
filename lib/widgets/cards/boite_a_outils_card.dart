@@ -17,9 +17,10 @@ class BoiteAOutilsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseCard(
+      imageHeight: 50,
       title: outil.title,
       body: outil.description,
-      imagePath: outil.imagePath,
+      imagePath: outil.logoPath,
       imageAlt: outil.imageAlt,
       pressedTip: outil.actionLabel != null ? PressedTip.externalLink(outil.actionLabel!) : null,
       linkRole: outil.redirectMode is OutilExternalRedirectMode,

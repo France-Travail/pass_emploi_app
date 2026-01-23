@@ -11,7 +11,6 @@ import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/models/favori.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
-import 'package:pass_emploi_app/models/outil.dart';
 import 'package:pass_emploi_app/models/remote_campagne_accueil.dart';
 import 'package:pass_emploi_app/presentation/accueil/accueil_item.dart';
 import 'package:pass_emploi_app/presentation/accueil/accueil_view_model.dart';
@@ -60,13 +59,14 @@ void main() {
   group('milo', () {
     test('should have all items', () {
       // Given
-      final store = givenState() //
-          .loggedInMiloUser()
-          .showRating()
-          .withAccueilMiloSuccess()
-          .withFeatureFlip(withCampagneRecrutement: true)
-          .withCampagne(campagne())
-          .store();
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .showRating()
+              .withAccueilMiloSuccess()
+              .withFeatureFlip(withCampagneRecrutement: true)
+              .withCampagne(campagne())
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -92,11 +92,6 @@ void main() {
             (mockSessionMiloAtelierDecouverte().id, AccueilEvenementsType.sessionMilo),
           ]),
           AccueilAlertesItem(getMockedAlerte()),
-          AccueilOutilsItem([
-            Outil.immersionBoulanger.withoutImage(),
-            Outil.benevolatCej.withoutImage(),
-            Outil.mesAidesFt.withoutImage(),
-          ]),
         ],
       );
     });
@@ -105,21 +100,22 @@ void main() {
       // Given
       final rdv = mockRendezvous(date: DateTime(2030));
       final sessionMilo = mockSessionMilo(dateDeDebut: DateTime(2025));
-      final store = givenState() //
-          .loggedInMiloUser()
-          .withAccueilMiloSuccess(
-            mockAccueilMilo().copyWith(
-              prochainRendezVous: rdv,
-              prochaineSessionMilo: sessionMilo,
-              peutVoirLeComptageDesHeures: false,
-              cetteSemaine: AccueilCetteSemaine(
-                nombreRendezVous: 3,
-                nombreActionsDemarchesARealiser: 2,
-              ),
-            ),
-          )
-          .withCampagne(campagne())
-          .store();
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withAccueilMiloSuccess(
+                mockAccueilMilo().copyWith(
+                  prochainRendezVous: rdv,
+                  prochaineSessionMilo: sessionMilo,
+                  peutVoirLeComptageDesHeures: false,
+                  cetteSemaine: AccueilCetteSemaine(
+                    nombreRendezVous: 3,
+                    nombreActionsDemarchesARealiser: 2,
+                  ),
+                ),
+              )
+              .withCampagne(campagne())
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -143,11 +139,6 @@ void main() {
             (mockSessionMiloAtelierDecouverte().id, AccueilEvenementsType.sessionMilo),
           ]),
           AccueilAlertesItem(getMockedAlerte()),
-          AccueilOutilsItem([
-            Outil.immersionBoulanger.withoutImage(),
-            Outil.benevolatCej.withoutImage(),
-            Outil.mesAidesFt.withoutImage(),
-          ]),
         ],
       );
     });
@@ -156,12 +147,13 @@ void main() {
   group('pe', () {
     test('should have all items', () {
       // Given
-      final store = givenState() //
-          .loggedInPoleEmploiUser()
-          .withAccueilPoleEmploiSuccess()
-          .withFeatureFlip(withCampagneRecrutement: true)
-          .withCampagne(campagne())
-          .store();
+      final store =
+          givenState() //
+              .loggedInPoleEmploiUser()
+              .withAccueilPoleEmploiSuccess()
+              .withFeatureFlip(withCampagneRecrutement: true)
+              .withCampagne(campagne())
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -182,23 +174,19 @@ void main() {
           AccueilProchainRendezvousItem(mockRendezvousPoleEmploi().id),
           AccueilSuiviDesOffresItem(),
           AccueilAlertesItem(getMockedAlerte()),
-          AccueilOutilsItem([
-            Outil.immersionBoulanger.withoutImage(),
-            Outil.benevolatCej.withoutImage(),
-            Outil.mesAidesFt.withoutImage(),
-          ]),
         ],
       );
     });
 
     test('should have erreur degradee', () {
       // Given
-      final store = givenState() //
-          .loggedInPoleEmploiUser()
-          .withAccueilPoleEmploiSuccessErreurDegradee()
-          .withFeatureFlip(withCampagneRecrutement: true)
-          .withCampagne(campagne())
-          .store();
+      final store =
+          givenState() //
+              .loggedInPoleEmploiUser()
+              .withAccueilPoleEmploiSuccessErreurDegradee()
+              .withFeatureFlip(withCampagneRecrutement: true)
+              .withCampagne(campagne())
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -220,21 +208,17 @@ void main() {
           AccueilProchainRendezvousItem(mockRendezvousPoleEmploi().id),
           AccueilSuiviDesOffresItem(),
           AccueilAlertesItem(getMockedAlerte()),
-          AccueilOutilsItem([
-            Outil.immersionBoulanger.withoutImage(),
-            Outil.benevolatCej.withoutImage(),
-            Outil.mesAidesFt.withoutImage(),
-          ]),
         ],
       );
     });
 
     test('should hide rendezvous count section when 0 and accompagnement RSA Conseils Départementaux', () {
       // Given
-      final store = givenState() //
-          .loggedInUser(loginMode: LoginMode.POLE_EMPLOI, accompagnement: Accompagnement.rsaConseilsDepartementaux)
-          .copyWith(accueilState: AccueilSuccessState(mockAccueilPoleEmploi(nombreRendezVous: 0)))
-          .store();
+      final store =
+          givenState() //
+              .loggedInUser(loginMode: LoginMode.POLE_EMPLOI, accompagnement: Accompagnement.rsaConseilsDepartementaux)
+              .copyWith(accueilState: AccueilSuccessState(mockAccueilPoleEmploi(nombreRendezVous: 0)))
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -248,100 +232,6 @@ void main() {
           actionsOuDemarchesLabel: "Démarche",
           withComptageDesHeures: true,
         ),
-      );
-    });
-  });
-
-  group('outils items…', () {
-    test('on CEJ accompagnement should highlight Mes Aides FT, Benevolat CEJ and Formations', () {
-      // Given
-      final store = givenState() //
-          .loggedInUser(accompagnement: Accompagnement.cej)
-          .withAccueilPoleEmploiSuccess()
-          .store();
-      final viewModel = AccueilViewModel.create(store);
-
-      // When
-      final outilsItem = viewModel.items.firstWhereOrNull((item) => item is AccueilOutilsItem);
-
-      // Then
-      expect(outilsItem, isNotNull);
-      expect(
-        (outilsItem as AccueilOutilsItem).outils,
-        [
-          Outil.immersionBoulanger.withoutImage(),
-          Outil.benevolatCej.withoutImage(),
-          Outil.mesAidesFt.withoutImage(),
-        ],
-      );
-    });
-
-    test('on AIJ accompagnement should highlight Mes Aides FT, Benevolat Pass emploi and Formations', () {
-      // Given
-      final store = givenState() //
-          .loggedInUser(accompagnement: Accompagnement.aij)
-          .withAccueilPoleEmploiSuccess()
-          .store();
-      final viewModel = AccueilViewModel.create(store);
-
-      // When
-      final outilsItem = viewModel.items.firstWhereOrNull((item) => item is AccueilOutilsItem);
-
-      // Then
-      expect(outilsItem, isNotNull);
-      expect(
-        (outilsItem as AccueilOutilsItem).outils,
-        [
-          Outil.immersionBoulanger.withoutImage(),
-          Outil.benevolatPassEmploi.withoutImage(),
-          Outil.mesAidesFt.withoutImage(),
-        ],
-      );
-    });
-
-    test('on AVENIR_PRO accompagnement should highlight Mes Aides FT, Benevolat Pass emploi and Formations', () {
-      // Given
-      final store = givenState() //
-          .loggedInUser(accompagnement: Accompagnement.avenirPro)
-          .withAccueilPoleEmploiSuccess()
-          .store();
-      final viewModel = AccueilViewModel.create(store);
-
-      // When
-      final outilsItem = viewModel.items.firstWhereOrNull((item) => item is AccueilOutilsItem);
-
-      // Then
-      expect(outilsItem, isNotNull);
-      expect(
-        (outilsItem as AccueilOutilsItem).outils,
-        [
-          Outil.benevolatPassEmploi.withoutImage(),
-          Outil.metierScope.withoutImage(),
-          Outil.formation.withoutImage(),
-        ],
-      );
-    });
-
-    test('on RSA accompagnement should highlight Mes Aides FT, Emploi solidaire and Emploi store', () {
-      // Given
-      final store = givenState() //
-          .loggedInUser(accompagnement: Accompagnement.rsaFranceTravail)
-          .withAccueilPoleEmploiSuccess()
-          .store();
-      final viewModel = AccueilViewModel.create(store);
-
-      // When
-      final outilsItem = viewModel.items.firstWhereOrNull((item) => item is AccueilOutilsItem);
-
-      // Then
-      expect(outilsItem, isNotNull);
-      expect(
-        (outilsItem as AccueilOutilsItem).outils,
-        [
-          Outil.mesAidesFt.withoutImage(),
-          Outil.emploiSolidaire.withoutImage(),
-          Outil.emploiStore.withoutImage(),
-        ],
       );
     });
   });
@@ -465,8 +355,10 @@ void main() {
 
   test('should not show cetteSemaine and prochainRendezVous items when accompagnement is Avenir Pro', () {
     // Given
-    final store =
-        givenState().loggedInUser(accompagnement: Accompagnement.avenirPro).withAccueilPoleEmploiSuccess().store();
+    final store = givenState()
+        .loggedInUser(accompagnement: Accompagnement.avenirPro)
+        .withAccueilPoleEmploiSuccess()
+        .store();
 
     // When
     final viewModel = AccueilViewModel.create(store);
@@ -499,9 +391,11 @@ void main() {
 
     test('should not show new notifications when there is no notification', () {
       // Given
-      final store = givenState() //
-          .loggedInMiloUser()
-          .withInAppNotificationsSuccess([]).store();
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withInAppNotificationsSuccess([])
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -515,10 +409,12 @@ void main() {
 
     test('should not show new notifications when notification is older than last consultation date', () {
       // Given
-      final store = givenState() //
-          .loggedInMiloUser()
-          .copyWith(dateConsultationNotificationState: DateConsultationNotificationState(date: DateTime(2025)))
-          .withInAppNotificationsSuccess([mockInAppNotification(date: DateTime(2024))]).store();
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .copyWith(dateConsultationNotificationState: DateConsultationNotificationState(date: DateTime(2025)))
+              .withInAppNotificationsSuccess([mockInAppNotification(date: DateTime(2024))])
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -532,10 +428,12 @@ void main() {
 
     test('should show new notifications when notification is newer than last consultation date', () {
       // Given
-      final store = givenState() //
-          .loggedInMiloUser()
-          .copyWith(dateConsultationNotificationState: DateConsultationNotificationState(date: DateTime(2024)))
-          .withInAppNotificationsSuccess([mockInAppNotification(date: DateTime(2025))]).store();
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .copyWith(dateConsultationNotificationState: DateConsultationNotificationState(date: DateTime(2024)))
+              .withInAppNotificationsSuccess([mockInAppNotification(date: DateTime(2025))])
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -561,11 +459,12 @@ void main() {
         dateDebut: DateTime(2024),
         accompagnements: [Accompagnement.cej],
       );
-      final store = givenState() //
-          .loggedInPoleEmploiUser()
-          .withAccueilPoleEmploiSuccess()
-          .withRemoteCampagneAccueil(campagnes: [campagne]) //
-          .store();
+      final store =
+          givenState() //
+              .loggedInPoleEmploiUser()
+              .withAccueilPoleEmploiSuccess()
+              .withRemoteCampagneAccueil(campagnes: [campagne]) //
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -594,11 +493,12 @@ void main() {
         dateDebut: DateTime(2024),
         accompagnements: [Accompagnement.avenirPro],
       );
-      final store = givenState() //
-          .loggedInPoleEmploiUser()
-          .withAccueilPoleEmploiSuccess()
-          .withRemoteCampagneAccueil(campagnes: [campagne]) //
-          .store();
+      final store =
+          givenState() //
+              .loggedInPoleEmploiUser()
+              .withAccueilPoleEmploiSuccess()
+              .withRemoteCampagneAccueil(campagnes: [campagne]) //
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -606,12 +506,14 @@ void main() {
       // Then
       expect(
         viewModel.items.first,
-        isNot(RemoteCampagneAccueilItem(
-          title: "title",
-          cta: "cta",
-          url: "url",
-          onDismissed: () {},
-        )),
+        isNot(
+          RemoteCampagneAccueilItem(
+            title: "title",
+            cta: "cta",
+            url: "url",
+            onDismissed: () {},
+          ),
+        ),
       );
     });
 
@@ -627,11 +529,12 @@ void main() {
         dateDebut: DateTime(2024),
         accompagnements: [Accompagnement.cej],
       );
-      final store = givenPassEmploiState() //
-          .loggedInPoleEmploiUser()
-          .withAccueilPoleEmploiSuccess()
-          .withRemoteCampagneAccueil(campagnes: [campagne]) //
-          .store();
+      final store =
+          givenPassEmploiState() //
+              .loggedInPoleEmploiUser()
+              .withAccueilPoleEmploiSuccess()
+              .withRemoteCampagneAccueil(campagnes: [campagne]) //
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -639,12 +542,14 @@ void main() {
       // Then
       expect(
         viewModel.items.first,
-        isNot(RemoteCampagneAccueilItem(
-          title: "title",
-          cta: "cta",
-          url: "url",
-          onDismissed: () {},
-        )),
+        isNot(
+          RemoteCampagneAccueilItem(
+            title: "title",
+            cta: "cta",
+            url: "url",
+            onDismissed: () {},
+          ),
+        ),
       );
     });
 
@@ -660,11 +565,12 @@ void main() {
         dateDebut: DateTime(2024),
         accompagnements: [Accompagnement.cej],
       );
-      final store = givenPassEmploiState() //
-          .loggedInPoleEmploiUser()
-          .withAccueilPoleEmploiSuccess()
-          .withRemoteCampagneAccueil(campagnes: [campagne]) //
-          .store();
+      final store =
+          givenPassEmploiState() //
+              .loggedInPoleEmploiUser()
+              .withAccueilPoleEmploiSuccess()
+              .withRemoteCampagneAccueil(campagnes: [campagne]) //
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -672,12 +578,14 @@ void main() {
       // Then
       expect(
         viewModel.items.first,
-        isNot(RemoteCampagneAccueilItem(
-          title: "title",
-          cta: "cta",
-          url: "url",
-          onDismissed: () {},
-        )),
+        isNot(
+          RemoteCampagneAccueilItem(
+            title: "title",
+            cta: "cta",
+            url: "url",
+            onDismissed: () {},
+          ),
+        ),
       );
     });
 
@@ -693,11 +601,12 @@ void main() {
         dateDebut: DateTime(2044),
         accompagnements: [Accompagnement.cej],
       );
-      final store = givenPassEmploiState() //
-          .loggedInPoleEmploiUser()
-          .withAccueilPoleEmploiSuccess()
-          .withRemoteCampagneAccueil(campagnes: [campagne]) //
-          .store();
+      final store =
+          givenPassEmploiState() //
+              .loggedInPoleEmploiUser()
+              .withAccueilPoleEmploiSuccess()
+              .withRemoteCampagneAccueil(campagnes: [campagne]) //
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -705,22 +614,26 @@ void main() {
       // Then
       expect(
         viewModel.items.first,
-        isNot(RemoteCampagneAccueilItem(
-          title: "title",
-          cta: "cta",
-          url: "url",
-          onDismissed: () {},
-        )),
+        isNot(
+          RemoteCampagneAccueilItem(
+            title: "title",
+            cta: "cta",
+            url: "url",
+            onDismissed: () {},
+          ),
+        ),
       );
     });
   });
   group('offre suivi item', () {
     test('should display offre suivi item when offre suivie is present', () {
       // Given
-      final store = givenPassEmploiState() //
-          .loggedInPoleEmploiUser()
-          .withAccueilPoleEmploiSuccess()
-          .withOffreSuiviState([mockOffreSuivie()]).store();
+      final store =
+          givenPassEmploiState() //
+              .loggedInPoleEmploiUser()
+              .withAccueilPoleEmploiSuccess()
+              .withOffreSuiviState([mockOffreSuivie()])
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -734,12 +647,14 @@ void main() {
 
     test('should not display any favori created before 3 days', () {
       // Given
-      final store = givenPassEmploiState() //
-          .loggedInPoleEmploiUser()
-          .withAccueilPoleEmploiSuccess()
-          .favoriListSuccessState(
-        [mockFavori(dateDeCreation: DateTime.now().subtract(Duration(days: 2)))],
-      ).store();
+      final store =
+          givenPassEmploiState() //
+              .loggedInPoleEmploiUser()
+              .withAccueilPoleEmploiSuccess()
+              .favoriListSuccessState(
+                [mockFavori(dateDeCreation: DateTime.now().subtract(Duration(days: 2)))],
+              )
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -750,12 +665,14 @@ void main() {
 
     test('should display favori created after 3 days', () {
       // Given
-      final store = givenPassEmploiState() //
-          .loggedInPoleEmploiUser()
-          .withAccueilPoleEmploiSuccess()
-          .favoriListSuccessState(
-        [mockFavori(dateDeCreation: DateTime.now().subtract(Duration(days: 4)))],
-      ).store();
+      final store =
+          givenPassEmploiState() //
+              .loggedInPoleEmploiUser()
+              .withAccueilPoleEmploiSuccess()
+              .favoriListSuccessState(
+                [mockFavori(dateDeCreation: DateTime.now().subtract(Duration(days: 4)))],
+              )
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -769,13 +686,15 @@ void main() {
 
     test('should not display favori blacklisted', () {
       // Given
-      final store = givenPassEmploiState() //
-          .loggedInPoleEmploiUser()
-          .withAccueilPoleEmploiSuccess()
-          .withOffreSuiviState([], blackListedOffreIds: [mockFavori().id]) //
-          .favoriListSuccessState(
-        [mockFavori(dateDeCreation: DateTime.now().subtract(Duration(days: 4)))],
-      ).store();
+      final store =
+          givenPassEmploiState() //
+              .loggedInPoleEmploiUser()
+              .withAccueilPoleEmploiSuccess()
+              .withOffreSuiviState([], blackListedOffreIds: [mockFavori().id]) //
+              .favoriListSuccessState(
+                [mockFavori(dateDeCreation: DateTime.now().subtract(Duration(days: 4)))],
+              )
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -786,47 +705,60 @@ void main() {
 
     test('should display offre suivi when favori update confirmation ID is present', () {
       // Given
-      final store = givenPassEmploiState() //
-          .loggedInPoleEmploiUser()
-          .withAccueilPoleEmploiSuccess()
-          .copyWith(
-              favoriUpdateState: FavoriUpdateState({},
-                  confirmationOffre: ConfirmationOffre(offreId: "test", newStatus: FavoriStatus.removed)))
-          .store();
+      final store =
+          givenPassEmploiState() //
+              .loggedInPoleEmploiUser()
+              .withAccueilPoleEmploiSuccess()
+              .copyWith(
+                favoriUpdateState: FavoriUpdateState(
+                  {},
+                  confirmationOffre: ConfirmationOffre(offreId: "test", newStatus: FavoriStatus.removed),
+                ),
+              )
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
 
       // Then
-      expect(viewModel.items.firstWhere((element) => element is OffreSuivieAccueilItem),
-          OffreSuivieAccueilItem(offreId: "test"));
+      expect(
+        viewModel.items.firstWhere((element) => element is OffreSuivieAccueilItem),
+        OffreSuivieAccueilItem(offreId: "test"),
+      );
     });
 
     test('should display offre suivi when offre suivi confirmation ID is present', () {
       // Given
-      final store = givenPassEmploiState() //
-          .loggedInPoleEmploiUser()
-          .withAccueilPoleEmploiSuccess()
-          .withOffreSuiviState([],
-              confirmationOffre: ConfirmationOffre(offreId: "test", newStatus: FavoriStatus.removed)).store();
+      final store =
+          givenPassEmploiState() //
+              .loggedInPoleEmploiUser()
+              .withAccueilPoleEmploiSuccess()
+              .withOffreSuiviState(
+                [],
+                confirmationOffre: ConfirmationOffre(offreId: "test", newStatus: FavoriStatus.removed),
+              )
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
 
       // Then
-      expect(viewModel.items.firstWhere((element) => element is OffreSuivieAccueilItem),
-          OffreSuivieAccueilItem(offreId: "test"));
+      expect(
+        viewModel.items.firstWhere((element) => element is OffreSuivieAccueilItem),
+        OffreSuivieAccueilItem(offreId: "test"),
+      );
     });
   });
 
   group('shouldShowAllowNotifications', () {
     test('should show allow notifications when not asked before', () {
       // Given
-      final store = givenState() //
-          .loggedInMiloUser()
-          .withOnboardingSuccessState(mockOnboarding(showNotificationsOnboarding: true))
-          .withAccueilMiloSuccess()
-          .store();
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withOnboardingSuccessState(mockOnboarding(showNotificationsOnboarding: true))
+              .withAccueilMiloSuccess()
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -837,13 +769,16 @@ void main() {
 
     test('should not show allow notifications when already asked', () {
       // Given
-      final store = givenState() //
-          .loggedInMiloUser()
-          .withAccueilMiloSuccess()
-          .withOnboardingSuccessState(mockOnboarding(
-            showNotificationsOnboarding: false,
-          ))
-          .store();
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withAccueilMiloSuccess()
+              .withOnboardingSuccessState(
+                mockOnboarding(
+                  showNotificationsOnboarding: false,
+                ),
+              )
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);
@@ -856,11 +791,12 @@ void main() {
   group('onboarding', () {
     test('should show onboarding when not completed', () {
       // Given
-      final store = givenState() //
-          .loggedInMiloUser()
-          .withOnboardingSuccessState(mockOnboarding(showNotificationsOnboarding: true))
-          .withAccueilMiloSuccess()
-          .store();
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withOnboardingSuccessState(mockOnboarding(showNotificationsOnboarding: true))
+              .withAccueilMiloSuccess()
+              .store();
 
       // When
       final viewModel = AccueilViewModel.create(store);

@@ -16,13 +16,12 @@ import 'package:pass_emploi_app/pages/accueil/accueil_date_de_migration.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_evenements.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_loading.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_onboarding_tile.dart';
-import 'package:pass_emploi_app/pages/accueil/accueil_outils.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_prochain_rendezvous.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_rating_app.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_suivi_des_offres.dart';
 import 'package:pass_emploi_app/pages/accueil/remote_campagne_accueil_card.dart';
-import 'package:pass_emploi_app/pages/alerte_page.dart';
 import 'package:pass_emploi_app/pages/benevolat_page.dart';
+import 'package:pass_emploi_app/pages/boite_a_outils_page.dart';
 import 'package:pass_emploi_app/pages/campagne/campagne_question_page.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche_form_page.dart';
 import 'package:pass_emploi_app/pages/la_bonne_alternance_page.dart';
@@ -106,8 +105,9 @@ class _AccueilPageState extends State<AccueilPage> {
           deeplink.idAction,
           UserActionStateSource.noSource,
         ),
-        AlerteDeepLink() => AlertePage.materialPageRoute(),
-        AlertesDeepLink() => AlertePage.materialPageRoute(),
+        OutilsDeepLink() => BoiteAOutilsPage.materialPageRoute(),
+        // AlerteDeepLink() => AlertePage.materialPageRoute(), // TODO:
+        // AlertesDeepLink() => AlertePage.materialPageRoute(), // TODO:
         BenevolatDeepLink() => BenevolatPage.materialPageRoute(),
         LaBonneAlternanceDeepLink() => LaBonneAlternancePage.materialPageRoute(),
         CampagneDeepLink() => CampagneQuestionPage.materialPageRoute(0),
@@ -279,7 +279,6 @@ class _Blocs extends StatelessWidget {
       final AccueilEvenementsItem item => AccueilEvenements(item),
       final AccueilAlertesItem item => AccueilAlertes(item),
       final AccueilSuiviDesOffresItem item => AccueilSuiviDesOffres(item),
-      final AccueilOutilsItem item => AccueilOutils(item),
       AccueilColorSeparatorItem() => SizedBox.shrink(),
       RatingAppItem() => AccueilRatingAppCard(),
     };

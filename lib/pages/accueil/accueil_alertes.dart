@@ -4,7 +4,6 @@ import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/models/alerte/alerte.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
-import 'package:pass_emploi_app/pages/alerte_page.dart';
 import 'package:pass_emploi_app/presentation/accueil/accueil_item.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
@@ -60,7 +59,9 @@ class _AvecAlertes extends StatelessWidget {
 
   void goToAlerte(BuildContext context) {
     PassEmploiMatomoTracker.instance.trackScreen(AnalyticsScreenNames.alerteListFromAccueil);
-    Navigator.push(context, AlertePage.materialPageRoute());
+    StoreProvider.of<AppState>(
+      context,
+    ).dispatch(HandleDeepLinkAction(AlertesDeepLink(), DeepLinkOrigin.inAppNavigation));
   }
 }
 
