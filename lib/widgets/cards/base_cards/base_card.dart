@@ -24,6 +24,7 @@ class BaseCard extends StatelessWidget {
   final void Function()? onLongPress;
   final PressedTip? pressedTip;
   final String? imagePath;
+  final double? imageHeight;
   final String? imageAlt;
   final bool linkRole;
 
@@ -42,6 +43,7 @@ class BaseCard extends StatelessWidget {
     this.onLongPress,
     this.pressedTip,
     this.imagePath,
+    this.imageHeight,
     this.imageAlt,
     this.linkRole = false,
   });
@@ -70,9 +72,9 @@ class BaseCard extends StatelessWidget {
                       excludeSemantics: imageAlt != null,
                       image: true,
                       label: imageAlt,
-                      child: _CardIllustration(imagePath: imagePath!),
+                      child: _CardIllustration(imagePath: imagePath!, imageHeight: imageHeight),
                     ),
-                    SizedBox(height: Margins.spacing_base),
+                    SizedBox(height: Margins.spacing_s),
                   ],
                   if (!isSimpleCard && iconButton == null)
                     Wrap(
@@ -92,15 +94,15 @@ class BaseCard extends StatelessWidget {
                     CardTitle(title),
                   ],
                   if (subtitle != null && subtitle!.isNotEmpty) ...[
-                    SizedBox(height: Margins.spacing_base),
+                    SizedBox(height: Margins.spacing_s),
                     CardSubtitle(subtitle!),
                   ],
                   if (body != null && body!.isNotEmpty) ...[
-                    SizedBox(height: Margins.spacing_base),
+                    SizedBox(height: Margins.spacing_s),
                     CardBodyText(body!),
                   ],
                   if (secondaryTags != null && secondaryTags!.isNotEmpty) ...[
-                    SizedBox(height: Margins.spacing_base),
+                    SizedBox(height: Margins.spacing_s),
                     Wrap(
                       spacing: Margins.spacing_s,
                       runSpacing: Margins.spacing_s,
@@ -143,8 +145,8 @@ class BaseCard extends StatelessWidget {
 
 class _CardIllustration extends StatelessWidget {
   final String? imagePath;
-
-  const _CardIllustration({required this.imagePath});
+  final double? imageHeight;
+  const _CardIllustration({required this.imagePath, required this.imageHeight});
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +156,9 @@ class _CardIllustration extends StatelessWidget {
         borderRadius: BorderRadius.circular(Dimens.radius_base),
         child: Image.asset(
           "assets/${imagePath!}",
-          fit: BoxFit.fitWidth,
+          height: imageHeight,
+          fit: BoxFit.contain,
+          alignment: Alignment.topLeft,
         ),
       ),
     );

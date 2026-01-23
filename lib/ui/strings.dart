@@ -254,6 +254,9 @@ class Strings {
 
   static String onboardingStepFinished = "🎉 Bravo vous avez validé une étape du tutoriel !";
 
+  static String mesOutils = "Mes outils";
+  static String mesOutilsDescription = "Trouver l’aide adaptée à votre projet professionel";
+
   // Login bottom sheet
   static const String loginBottomSeetFranceTravailButton = "France travail";
   static const String loginBottomSeetMissionLocaleButton = "Mission Locale";

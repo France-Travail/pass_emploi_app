@@ -89,10 +89,7 @@ class _Text extends StatelessWidget {
 class _Chevron extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-      child: Icon(AppIcons.chevron_right_rounded, color: AppColors.contentColor),
-    );
+    return Icon(AppIcons.chevron_right_rounded, color: AppColors.contentColor);
   }
 }
 

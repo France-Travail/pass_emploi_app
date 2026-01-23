@@ -6,7 +6,7 @@ class Outil extends Equatable {
   final String description;
   final OutilRedirectMode redirectMode;
   final String? actionLabel;
-  final String? imagePath;
+  final String? logoPath;
   final String? imageAlt;
 
   Outil({
@@ -14,17 +14,17 @@ class Outil extends Equatable {
     required this.description,
     required this.redirectMode,
     this.actionLabel,
-    this.imagePath,
+    this.logoPath,
     this.imageAlt,
   });
 
   static Outil diagoriente = Outil(
-    title: "Diagoriente",
+    title: "Valorisez vos expériences",
     description:
         "Explorez vos expériences, analysez vos compétences transversales et identifiez vos intérêts personnels afin de faciliter votre orientation.",
     actionLabel: "Créer mon compte Diagoriente",
     redirectMode: OutilExternalRedirectMode(ExternalLinks.boiteAOutilsDiagoriente),
-    imagePath: "boite_a_outils/diagoriente.webp",
+    logoPath: "boite_a_outils/diagoriente_logo.webp",
   );
 
   static Outil mesAidesFt = Outil(
@@ -33,7 +33,7 @@ class Outil extends Equatable {
         "Besoin d'une aide financière, de conseils ? Permis, voiture, vélo, logement... Consultez les aides qui existent pour vos projets. ",
     actionLabel: "En savoir plus sur Mes aides",
     redirectMode: OutilExternalRedirectMode(ExternalLinks.boiteAOutilsMesAidesFt),
-    imagePath: "boite_a_outils/mes_aides_ft.webp",
+    logoPath: "boite_a_outils/mes_aides_logo.webp",
   );
 
   static Outil mesAides1J1S = Outil(
@@ -42,7 +42,7 @@ class Outil extends Equatable {
         "Trouvez en quelques clics les aides auxquelles vous avez droit : logement, santé, mobilité, emploi, culture, etc.",
     actionLabel: "Lancer ma simulation",
     redirectMode: OutilExternalRedirectMode(ExternalLinks.boiteAOutilsMesAides1J1S),
-    imagePath: "boite_a_outils/mes_aides_1j1s.webp",
+    logoPath: "boite_a_outils/1jeune1solution_logo.webp",
   );
 
   static Outil mentor = Outil(
@@ -51,7 +51,7 @@ class Outil extends Equatable {
         "Expliquez nous votre situation et vos besoins. Nous vous mettrons en relation avec une association qui vous proposera un mentor.",
     actionLabel: "Me faire accompagner",
     redirectMode: OutilExternalRedirectMode(ExternalLinks.boiteAOutilsMentor),
-    imagePath: "boite_a_outils/mentor.webp",
+    logoPath: "boite_a_outils/1jeune1mentor_logo.webp",
   );
 
   static Outil benevolatCej = Outil(
@@ -60,14 +60,14 @@ class Outil extends Equatable {
     description:
         "Trouvez une mission de bénévolat à distance ou en présentiel, comptabilisée dans vos heures d’activités CEJ, sur JeVeuxAider.gouv.fr",
     redirectMode: OutilInternalRedirectMode(OutilInternalLink.benevolat),
-    imagePath: "boite_a_outils/benevolat.webp",
+    logoPath: "boite_a_outils/jeveuxaider_logo.webp",
   );
 
   static Outil benevolatPassEmploi = Outil(
     title: "Je m’engage bénévolement",
     description: "Trouvez une mission de bénévolat à distance ou en présentiel sur JeVeuxAider.gouv.fr",
     redirectMode: OutilInternalRedirectMode(OutilInternalLink.benevolat),
-    imagePath: "boite_a_outils/benevolat.webp",
+    logoPath: "boite_a_outils/jeveuxaider_logo.webp",
   );
 
   static Outil laBonneAlternance = Outil(
@@ -75,7 +75,7 @@ class Outil extends Equatable {
     description:
         "Le service qui réunit toute l’offre de formation ainsi que de nombreuses opportunités d’emploi en alternance.",
     redirectMode: OutilInternalRedirectMode(OutilInternalLink.laBonneAlternance),
-    imagePath: "boite_a_outils/la_bonne_alternance.webp",
+    logoPath: "boite_a_outils/la_bonne_alternance_logo.webp",
   );
 
   static Outil formation = Outil(
@@ -83,7 +83,7 @@ class Outil extends Equatable {
     description: "Trouvez la formation qui vous intéresse pour réaliser votre projet professionnel.",
     actionLabel: "Je recherche une formation",
     redirectMode: OutilExternalRedirectMode(ExternalLinks.boiteAOutilsFormation),
-    imagePath: null,
+    logoPath: "boite_a_outils/1jeune1solution_logo.webp",
   );
 
   static Outil evenement = Outil(
@@ -91,7 +91,7 @@ class Outil extends Equatable {
     description: "Trouvez des centaines d’événements de recrutement pour tous les jeunes partout en France.",
     actionLabel: "Je recherche un événement",
     redirectMode: OutilExternalRedirectMode(ExternalLinks.boiteAOutilsEvenementRecrutement),
-    imagePath: null,
+    logoPath: "boite_a_outils/1jeune1solution_logo.webp",
   );
 
   static Outil emploiStore = Outil(
@@ -100,7 +100,7 @@ class Outil extends Equatable {
         "Une plateforme pour trouver les sites et applications dédiés à la recherche d'emploi ainsi qu’à la formation et à la création d'entreprise en France et à l'international.",
     actionLabel: "Me diriger vers l’Emploi-Store",
     redirectMode: OutilExternalRedirectMode(ExternalLinks.boiteAOutilsEmploiStore),
-    imagePath: null,
+    logoPath: "boite_a_outils/emploi_store_logo.webp",
   );
 
   static Outil emploiSolidaire = Outil(
@@ -108,32 +108,24 @@ class Outil extends Equatable {
     description: "Prenez contact avec un employeur solidaire et postulez aux offres qui correspondent à vos attentes.",
     actionLabel: "Trouver une entreprise solidaire",
     redirectMode: OutilExternalRedirectMode(ExternalLinks.boiteAOutilsEmploiSolidaire),
-    imagePath: null,
+    logoPath: "boite_a_outils/emplois_inclusion_logo.webp",
   );
 
   static Outil laBonneBoite = Outil(
-    title: "La bonne boîte",
+    title: "La Bonne Boîte",
     description:
         "Envoyez votre CV à la bonne entreprise ! Découvrez en un clic les entreprises qui recrutent dans votre métier près de chez vous.",
     actionLabel: "Trouver la bonne boîte",
     redirectMode: OutilExternalRedirectMode(ExternalLinks.boiteAOutilsLaBonneBoite),
-    imagePath: null,
+    logoPath: "boite_a_outils/la_bonne_boite_logo.webp",
   );
 
   static Outil ressourceFormation = Outil(
-    title: "J’accède à Mes Ressources Formation",
+    title: "Mes Ressources Formation",
     description:
         "Découvrez le montant de votre rémunération de formation et son impact sur vos aides et allocations si vous entrez en formation !",
     redirectMode: OutilInternalRedirectMode(OutilInternalLink.ressourceFormation),
-    imagePath: "boite_a_outils/ressource_formation.webp",
-  );
-
-  static Outil immersionBoulanger = Outil(
-    title: "Faites une immersion chez Boulanger !",
-    description:
-        "Avec Boulanger, trouvez une immersion près de chez vous pour découvrir les métiers de la vente, de la réparation ou de la logistique.",
-    redirectMode: OutilInternalRedirectMode(OutilInternalLink.immersionBoulanger),
-    imagePath: "boite_a_outils/immersion_boulanger.webp",
+    logoPath: "boite_a_outils/ft_logo.webp",
   );
 
   static Outil metierScope = Outil(
@@ -142,11 +134,11 @@ class Outil extends Equatable {
         "Retrouvez toutes les informations sur les métiers, le marché du travail et les services utiles pour enclencher votre projet.",
     actionLabel: "Découvrir les métiers",
     redirectMode: OutilExternalRedirectMode(ExternalLinks.boiteAOutilsMetierScope),
-    imagePath: "boite_a_outils/metierscope.webp",
+    logoPath: "boite_a_outils/ft_logo.webp",
   );
 
   @override
-  List<Object?> get props => [title, description, actionLabel, redirectMode, imagePath];
+  List<Object?> get props => [title, description, actionLabel, redirectMode, logoPath];
 }
 
 enum OutilInternalLink { benevolat, laBonneAlternance, ressourceFormation, immersionBoulanger }

@@ -72,7 +72,7 @@ extension _Tabs on List<SolutionsTab> {
       return switch (tab) {
         SolutionsTab.recherche => RechercheHomePage(),
         SolutionsTab.offresEnregistrees => OffreFavorisPage(),
-        SolutionsTab.outils => BoiteAOutilsPage()
+        SolutionsTab.outils => BoiteAOutilsPage(),
       };
     }).toList();
   }
