@@ -1383,6 +1383,7 @@ class Strings {
   static String nouvellesSuggestionsDeRechercheDescription =
       "Sur la base de votre profil France Travail, voici des suggestions d'alertes à sauvegarder";
   static String voirSuggestionsDeRecherche = "Voir les suggestions";
+  static String suggestionsDeRechercheTitle = "Suggestions d'alertes";
   static String suggestionsDeRechercheHeader =
       "Vos suggestions peuvent venir de différentes sources. Après l’ajout, vous serez notifié si une nouvelle offre est disponible.";
   static String suggestionSourcePoleEmploi = "Profil France Travail";
