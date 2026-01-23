@@ -16,7 +16,6 @@ import 'package:pass_emploi_app/pages/accueil/accueil_date_de_migration.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_evenements.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_loading.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_onboarding_tile.dart';
-import 'package:pass_emploi_app/pages/accueil/accueil_outils.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_prochain_rendezvous.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_rating_app.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_suivi_des_offres.dart';
@@ -279,7 +278,6 @@ class _Blocs extends StatelessWidget {
       final AccueilEvenementsItem item => AccueilEvenements(item),
       final AccueilAlertesItem item => AccueilAlertes(item),
       final AccueilSuiviDesOffresItem item => AccueilSuiviDesOffres(item),
-      final AccueilOutilsItem item => AccueilOutils(item),
       AccueilColorSeparatorItem() => SizedBox.shrink(),
       RatingAppItem() => AccueilRatingAppCard(),
     };

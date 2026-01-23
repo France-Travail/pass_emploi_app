@@ -145,16 +145,6 @@ class Outil extends Equatable {
     imagePath: "boite_a_outils/metierscope.webp",
   );
 
-  Outil withoutImage() {
-    return Outil(
-      title: title,
-      description: description,
-      actionLabel: actionLabel,
-      redirectMode: redirectMode,
-      imagePath: null,
-    );
-  }
-
   @override
   List<Object?> get props => [title, description, actionLabel, redirectMode, imagePath];
 }
