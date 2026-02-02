@@ -105,8 +105,6 @@ class _AccueilPageState extends State<AccueilPage> {
           UserActionStateSource.noSource,
         ),
         OutilsDeepLink() => BoiteAOutilsPage.materialPageRoute(),
-        // AlerteDeepLink() => AlertePage.materialPageRoute(), // TODO:
-        // AlertesDeepLink() => AlertePage.materialPageRoute(), // TODO:
         BenevolatDeepLink() => BenevolatPage.materialPageRoute(),
         LaBonneAlternanceDeepLink() => LaBonneAlternancePage.materialPageRoute(),
         CampagneDeepLink() => CampagneQuestionPage.materialPageRoute(0),

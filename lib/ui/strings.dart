@@ -1297,6 +1297,7 @@ class Strings {
   static String corpsPriseDeContact = "Décrivez nous votre problème ou vos suggestions d’évolution : ";
 
   // alertes
+  static String alerte = "Alerte";
   static String createAlert = "Créer une alerte";
   static String createAlertSuccessTitle = "Recherche enregistrée";
   static String createAlerteTitle = "Créer une alerte pour la recherche";

@@ -12,9 +12,12 @@ import 'package:pass_emploi_app/presentation/alerte_card_view_model.dart';
 import 'package:pass_emploi_app/presentation/alerte_navigator_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/redux/store_connector_aware.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/base_card.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
+import 'package:pass_emploi_app/ui/app_icons.dart';
+import 'package:pass_emploi_app/ui/margins.dart';
+import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/text_styles.dart';
+import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 
 class AlerteNavigator extends StatefulWidget {
   final Widget child;
@@ -54,6 +57,59 @@ class _AlerteNavigatorState extends State<AlerteNavigator> {
   }
 }
 
+class AlerteCardContent extends StatelessWidget {
+  const AlerteCardContent({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.onDelete,
+    required this.onTap,
+  });
+
+  final String title;
+  final String subtitle;
+  final void Function()? onDelete;
+  final void Function() onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return CardContainer(
+      onTap: onTap,
+      padding: EdgeInsets.all(Margins.spacing_base),
+      child: Row(
+        children: [
+          Icon(AppIcons.notifications_outlined, color: AppColors.primary),
+          SizedBox(width: Margins.spacing_base),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: TextStyles.textSBold),
+                Text(subtitle, style: TextStyles.textSRegular()),
+              ],
+            ),
+          ),
+          SizedBox(width: Margins.spacing_base),
+          if (onDelete != null)
+            IconButton(
+              onPressed: onDelete,
+              icon: Container(
+                padding: EdgeInsets.all(Margins.spacing_s),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryLighten,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(AppIcons.delete, color: AppColors.primary),
+              ),
+            ),
+          SizedBox(width: Margins.spacing_base),
+          Icon(AppIcons.chevron_right_rounded, color: AppColors.contentColor),
+        ],
+      ),
+    );
+  }
+}
+
 class AlerteCard extends StatelessWidget {
   final Alerte alerte;
 
@@ -88,29 +144,34 @@ class _Body extends StatelessWidget {
 }
 
 Widget _buildEmploiAndAlternanceCard(OffreEmploiAlerte alerte, AlerteCardViewModel viewModel) {
-  final location = alerte.location?.libelle;
-  return BaseCard(
-    tag: alerte.onlyAlternance ? CardTag.alternance() : CardTag.emploi(),
-    title: alerte.title,
-    complements: location != null ? [CardComplement.place(text: location)] : null,
+  return AlerteCardContent(
+    title: _buildAlerteTitle(alerte.onlyAlternance ? Strings.alternanceTag : Strings.emploiTag),
+    subtitle: _buildAlerteSubtitle(alerte.title),
     onTap: () => viewModel.fetchAlerteResult(alerte),
+    onDelete: null,
   );
 }
 
 Widget _buildImmersionCard(ImmersionAlerte alerte, AlerteCardViewModel viewModel) {
-  return BaseCard(
-    tag: CardTag.immersion(),
-    title: alerte.title,
-    complements: [CardComplement.place(text: alerte.ville)],
+  return AlerteCardContent(
+    title: _buildAlerteTitle(Strings.immersionTag),
+    subtitle: _buildAlerteSubtitle(alerte.title),
     onTap: () => viewModel.fetchAlerteResult(alerte),
+    onDelete: null,
   );
 }
 
 Widget _buildServiceCiviqueCard(ServiceCiviqueAlerte alerte, AlerteCardViewModel viewModel) {
-  return BaseCard(
-    tag: CardTag.serviceCivique(),
-    title: alerte.titre,
-    complements: alerte.ville?.isNotEmpty == true ? [CardComplement.place(text: alerte.ville!)] : null,
+  return AlerteCardContent(
+    title: _buildAlerteTitle(Strings.serviceCiviqueTag),
+    subtitle: _buildAlerteSubtitle(alerte.titre),
     onTap: () => viewModel.fetchAlerteResult(alerte),
+    onDelete: null,
   );
+}
+
+String _buildAlerteTitle(String tagLabel) => "Alerte $tagLabel";
+
+String _buildAlerteSubtitle(String title) {
+  return title;
 }
