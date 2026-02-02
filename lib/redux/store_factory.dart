@@ -13,7 +13,6 @@ import 'package:pass_emploi_app/features/alerte/init/alerte_initialize_middlewar
 import 'package:pass_emploi_app/features/alerte/list/alerte_list_middleware.dart';
 import 'package:pass_emploi_app/features/auto_inscription/auto_inscription_middleware.dart';
 import 'package:pass_emploi_app/features/bootstrap/bootstrap_middleware.dart';
-import 'package:pass_emploi_app/features/boulanger_campagne/boulanger_campagne_middleware.dart';
 import 'package:pass_emploi_app/features/cache/cache_invalidator_middleware.dart';
 import 'package:pass_emploi_app/features/campagne/campagne_middleware.dart';
 import 'package:pass_emploi_app/features/campagne_recrutement/campagne_recrutement_middleware.dart';
@@ -111,7 +110,6 @@ import 'package:pass_emploi_app/repositories/alerte/service_civique_alerte_repos
 import 'package:pass_emploi_app/repositories/animations_collectives_repository.dart';
 import 'package:pass_emploi_app/repositories/auth/chat_security_repository.dart';
 import 'package:pass_emploi_app/repositories/auto_inscription_repository.dart';
-import 'package:pass_emploi_app/repositories/boulanger_campagne_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_recrutement_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_repository.dart';
 import 'package:pass_emploi_app/repositories/chat_repository.dart';
@@ -257,7 +255,6 @@ class StoreFactory {
   final AutoInscriptionRepository autoInscriptionRepository;
   final OffresSuiviesRepository offresSuiviesRepository;
   final ComptageDesHeuresRepository comptageDesHeuresRepository;
-  final BoulangerCampagneRepository boulangerCampagneRepository;
   final IaFtSuggestionsRepository iaFtSuggestionsRepository;
   final ModuleFeedbackRepository moduleFeedbackRepository;
   /*AUTOGENERATE-REDUX-STOREFACTORY-PROPERTY-REPOSITORY*/
@@ -341,7 +338,6 @@ class StoreFactory {
     this.autoInscriptionRepository,
     this.offresSuiviesRepository,
     this.comptageDesHeuresRepository,
-    this.boulangerCampagneRepository,
     this.iaFtSuggestionsRepository,
     this.moduleFeedbackRepository,
     /*AUTOGENERATE-REDUX-STOREFACTORY-CONSTRUCTOR-REPOSITORY*/
@@ -445,7 +441,6 @@ class StoreFactory {
         AutoInscriptionMiddleware(autoInscriptionRepository).call,
         OffresSuiviesMiddleware(offresSuiviesRepository).call,
         ComptageDesHeuresMiddleware(comptageDesHeuresRepository).call,
-        BoulangerCampagneMiddleware(boulangerCampagneRepository).call,
         IaFtSuggestionsMiddleware(iaFtSuggestionsRepository, matchingDemarcheRepository).call,
         CreateDemarcheBatchMiddleware(createDemarcheRepository).call,
         ModuleFeedbackMiddleware(moduleFeedbackRepository).call,

@@ -83,6 +83,7 @@ class AppIcons {
   static const IconData sentiment_satisfied = Icons.sentiment_satisfied;
   static const IconData mood = Icons.mood;
   static const IconData notifications_outlined = Icons.notifications_outlined;
+  static const IconData notification_add_outlined = Icons.notification_add_outlined;
   static const IconData rocket_launch_outlined = Icons.rocket_launch_outlined;
   static const IconData health_and_safety_outlined = Icons.health_and_safety_outlined;
   static const IconData person_2_outlined = Icons.person_2_outlined;

@@ -120,7 +120,7 @@ class _VerbatimCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.primaryDarken,
       child: Column(
         children: [
           SizedBox(height: Margins.spacing_s),

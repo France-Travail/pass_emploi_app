@@ -24,59 +24,59 @@ class CardTag extends StatelessWidget {
 
   CardTag.evenement({
     required this.text,
-  })  : icon = AppIcons.event,
-        backgroundColor = AppColors.accent1Lighten,
-        contentColor = AppColors.additional3,
-        semanticsLabel = null;
+  }) : icon = AppIcons.event,
+       backgroundColor = AppColors.accent1Lighten,
+       contentColor = AppColors.additional3,
+       semanticsLabel = null;
 
   CardTag.warning({
     required this.text,
-  })  : icon = null,
-        backgroundColor = AppColors.warningLighten,
-        contentColor = AppColors.warning,
-        semanticsLabel = null;
+  }) : icon = null,
+       backgroundColor = AppColors.warningLighten,
+       contentColor = AppColors.warning,
+       semanticsLabel = null;
 
   CardTag.secondary({
     required this.text,
     this.icon,
     this.semanticsLabel,
-  })  : backgroundColor = AppColors.primaryLighten,
-        contentColor = AppColors.primary;
+  }) : backgroundColor = AppColors.primaryLighten,
+       contentColor = AppColors.primary;
 
   CardTag.emploi()
-      : icon = Icons.business_center_outlined,
-        backgroundColor = AppColors.additional2Lighten,
-        text = Strings.emploiTag,
-        contentColor = AppColors.accent3,
-        semanticsLabel = null;
+    : icon = Icons.business_center_outlined,
+      backgroundColor = AppColors.additional2Lighten,
+      text = Strings.emploiTag,
+      contentColor = AppColors.accent3,
+      semanticsLabel = null;
 
   CardTag.alternance()
-      : icon = Icons.business_center_outlined,
-        backgroundColor = AppColors.additional4Lighten,
-        text = Strings.alternanceTag,
-        contentColor = AppColors.accent3,
-        semanticsLabel = null;
+    : icon = Icons.business_center_outlined,
+      backgroundColor = AppColors.additional4Lighten,
+      text = Strings.alternanceTag,
+      contentColor = AppColors.accent3,
+      semanticsLabel = null;
 
   CardTag.immersion()
-      : icon = Icons.business_center_outlined,
-        backgroundColor = AppColors.accent3Lighten,
-        text = Strings.immersionTag,
-        contentColor = AppColors.accent3,
-        semanticsLabel = null;
+    : icon = Icons.business_center_outlined,
+      backgroundColor = AppColors.accent3Lighten,
+      text = Strings.immersionTag,
+      contentColor = AppColors.accent3,
+      semanticsLabel = null;
 
   CardTag.serviceCivique()
-      : icon = Icons.business_center_outlined,
-        backgroundColor = AppColors.additional5Lighten,
-        text = Strings.serviceCiviqueTag,
-        contentColor = AppColors.accent3,
-        semanticsLabel = null;
+    : icon = Icons.business_center_outlined,
+      backgroundColor = AppColors.additional5Lighten,
+      text = Strings.serviceCiviqueTag,
+      contentColor = AppColors.accent3,
+      semanticsLabel = null;
 
   CardTag.entrepriseAccueillante()
-      : icon = Icons.volunteer_activism,
-        backgroundColor = AppColors.additional1Lighten,
-        text = Strings.entrepriseAccueillante,
-        contentColor = AppColors.accent2,
-        semanticsLabel = null;
+    : icon = Icons.volunteer_activism,
+      backgroundColor = AppColors.additional1Lighten,
+      text = Strings.entrepriseAccueillante,
+      contentColor = AppColors.accent2,
+      semanticsLabel = null;
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +97,7 @@ class CardTag extends StatelessWidget {
                 semanticsLabel: semanticsLabel,
                 style: TextStyles.textXsBold().copyWith(color: contentColor),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -111,7 +111,16 @@ extension OffreTypeTagExt on OffreType {
       OffreType.emploi => CardTag.emploi(),
       OffreType.alternance => CardTag.alternance(),
       OffreType.immersion => CardTag.immersion(),
-      OffreType.serviceCivique => CardTag.serviceCivique()
+      OffreType.serviceCivique => CardTag.serviceCivique(),
+    };
+  }
+
+  String toAlerteTagLabel() {
+    return switch (this) {
+      OffreType.emploi => Strings.emploiTag,
+      OffreType.alternance => Strings.alternanceTag,
+      OffreType.immersion => Strings.immersionTag,
+      OffreType.serviceCivique => Strings.serviceCiviqueTag,
     };
   }
 }

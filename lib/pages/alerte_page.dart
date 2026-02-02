@@ -43,6 +43,7 @@ import 'package:pass_emploi_app/widgets/cards/alerte_deletable_card.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/base_card.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
+import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/dialogs/alerte_delete_dialog.dart';
 import 'package:pass_emploi_app/widgets/illustration/empty_state_placeholder.dart';
 import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
@@ -446,6 +447,38 @@ class _SuggestionCard extends StatelessWidget {
     if (viewModel == null) return SizedBox(height: 0);
     final source = viewModel.source;
 
+    if (1 == 1) {
+      // TODO:
+      return CardContainer(
+        padding: EdgeInsets.all(Margins.spacing_base),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Icon(AppIcons.notification_add_outlined, color: AppColors.primary),
+                SizedBox(width: Margins.spacing_base),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("${Strings.alerte} ${viewModel.type.toAlerteTagLabel()}", style: TextStyles.textSBold),
+                      Text(viewModel.titre, style: TextStyles.textSRegular()),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: Margins.spacing_base),
+            _SuggestionButtons(
+              onTapAjouter: () => viewModel.ajouterSuggestion(),
+              onTapRefuser: () => viewModel.refuserSuggestion(),
+            ),
+          ],
+        ),
+      );
+    }
+
     return BaseCard(
       title: viewModel.titre,
       tag: viewModel.type.toCardTag(),
@@ -515,7 +548,6 @@ class _Refuser extends StatelessWidget {
   Widget build(BuildContext context) {
     return SecondaryButton(
       label: Strings.refuserLabel,
-      icon: AppIcons.remove_alert_rounded,
       onPressed: onTapRefuser,
     );
   }
@@ -531,7 +563,6 @@ class _Ajouter extends StatelessWidget {
     return PrimaryActionButton(
       heightPadding: Margins.spacing_base,
       label: Strings.ajouter,
-      icon: AppIcons.add_alert_rounded,
       iconRightPadding: Margins.spacing_xs,
       withShadow: false,
       onPressed: onTapAjouter,

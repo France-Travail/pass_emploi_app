@@ -17,7 +17,6 @@ import 'package:pass_emploi_app/repositories/alerte/service_civique_alerte_repos
 import 'package:pass_emploi_app/repositories/animations_collectives_repository.dart';
 import 'package:pass_emploi_app/repositories/auth/chat_security_repository.dart';
 import 'package:pass_emploi_app/repositories/auto_inscription_repository.dart';
-import 'package:pass_emploi_app/repositories/boulanger_campagne_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_recrutement_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_repository.dart';
 import 'package:pass_emploi_app/repositories/chat_repository.dart';
@@ -168,7 +167,6 @@ class TestStoreFactory {
   AutoInscriptionRepository autoInscriptionRepository = MockAutoInscriptionRepository();
   OffresSuiviesRepository offresSuiviesRepository = MockOffresSuiviesRepository();
   ComptageDesHeuresRepository comptageDesHeuresRepository = MockComptageDesHeuresRepository();
-  BoulangerCampagneRepository boulangerCampagneRepository = MockBoulangerCampagneRepository();
   IaFtSuggestionsRepository iaFtSuggestionsRepository = MockIaFtSuggestionsRepository();
   ModuleFeedbackRepository moduleFeedbackRepository = MockModuleFeedbackRepository();
   /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-PROPERTY*/
@@ -253,7 +251,6 @@ class TestStoreFactory {
       autoInscriptionRepository,
       offresSuiviesRepository,
       comptageDesHeuresRepository,
-      boulangerCampagneRepository,
       iaFtSuggestionsRepository,
       moduleFeedbackRepository,
       /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-CONSTRUCTOR*/
