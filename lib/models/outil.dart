@@ -141,7 +141,7 @@ class Outil extends Equatable {
   List<Object?> get props => [title, description, actionLabel, redirectMode, logoPath];
 }
 
-enum OutilInternalLink { benevolat, laBonneAlternance, ressourceFormation, immersionBoulanger }
+enum OutilInternalLink { benevolat, laBonneAlternance, ressourceFormation }
 
 sealed class OutilRedirectMode extends Equatable {}
 

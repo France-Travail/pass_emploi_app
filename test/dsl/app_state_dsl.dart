@@ -1,7 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:pass_emploi_app/configuration/configuration.dart';
 import 'package:pass_emploi_app/features/accueil/accueil_state.dart';
-import 'package:pass_emploi_app/features/boulanger_campagne/boulanger_campagne_state.dart';
 import 'package:pass_emploi_app/features/campagne/campagne_state.dart';
 import 'package:pass_emploi_app/features/cgu/cgu_state.dart';
 import 'package:pass_emploi_app/features/chat/brouillon/chat_brouillon_state.dart';
@@ -852,10 +851,6 @@ extension AppStateDSL on AppState {
         heuresEnCoursDeCalcul: heuresEnCoursDeCalcul ?? 0,
       ),
     );
-  }
-
-  AppState withBoulangerCampagneState({bool result = false}) {
-    return copyWith(boulangerCampagneState: BoulangerCampagneState(result: result));
   }
 
   AppState withOffreSuiviState(

@@ -10,7 +10,6 @@ import 'package:pass_emploi_app/models/offre_dto.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
 import 'package:pass_emploi_app/push/push_notification_manager.dart';
 import 'package:pass_emploi_app/repositories/auto_inscription_repository.dart';
-import 'package:pass_emploi_app/repositories/boulanger_campagne_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_recrutement_repository.dart';
 import 'package:pass_emploi_app/repositories/comptage_des_heures_repository.dart';
 import 'package:pass_emploi_app/repositories/configuration_application_repository.dart';
@@ -325,12 +324,6 @@ class MockOffresSuiviesRepository extends Mock implements OffresSuiviesRepositor
 }
 
 class MockComptageDesHeuresRepository extends Mock implements ComptageDesHeuresRepository {}
-
-class MockBoulangerCampagneRepository extends Mock implements BoulangerCampagneRepository {
-  MockBoulangerCampagneRepository() {
-    when(() => get()).thenAnswer((_) async => false);
-  }
-}
 
 class MockIaFtSuggestionsRepository extends Mock implements IaFtSuggestionsRepository {
   void withGetAndReturnSuccess() {

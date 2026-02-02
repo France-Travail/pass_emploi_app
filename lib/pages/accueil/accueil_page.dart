@@ -9,7 +9,6 @@ import 'package:pass_emploi_app/features/in_app_notifications/in_app_notificatio
 import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_alertes.dart';
-import 'package:pass_emploi_app/pages/accueil/accueil_boulanger_card.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_campagne_recrutement.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_cette_semaine.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_date_de_migration.dart';
@@ -270,7 +269,6 @@ class _Blocs extends StatelessWidget {
         showPrimaryBackground: false,
       ),
       final RemoteCampagneAccueilItem item => RemoteCampagneAccueilCard(item),
-      final BoulangerCampagneItem item => BoulangerCampagneCard(item),
       final CampagneRecrutementItem item => CampagneRecrutementCard(item),
       final CampagneEvaluationItem item => _CampagneCard(title: item.titre, description: item.description),
       final AccueilCetteSemaineItem item => AccueilCetteSemaine(item),

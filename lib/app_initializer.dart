@@ -40,7 +40,6 @@ import 'package:pass_emploi_app/repositories/app_version_repository.dart';
 import 'package:pass_emploi_app/repositories/auth/chat_security_repository.dart';
 import 'package:pass_emploi_app/repositories/auth/logout_repository.dart';
 import 'package:pass_emploi_app/repositories/auto_inscription_repository.dart';
-import 'package:pass_emploi_app/repositories/boulanger_campagne_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_recrutement_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_repository.dart';
 import 'package:pass_emploi_app/repositories/chat_repository.dart';
@@ -295,7 +294,6 @@ class AppInitializer {
       AutoInscriptionRepository(dioClient, crashlytics),
       OffresSuiviesRepository(securedPreferences),
       ComptageDesHeuresRepository(dioClient, crashlytics),
-      BoulangerCampagneRepository(securedPreferences),
       IaFtSuggestionsRepository(dioClient, crashlytics),
       ModuleFeedbackRepository(dioClient, crashlytics),
       /*AUTOGENERATE-REDUX-APP-INITIALIZER-REPOSITORY-CONSTRUCTOR*/

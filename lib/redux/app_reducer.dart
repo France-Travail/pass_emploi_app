@@ -3,7 +3,6 @@ import 'package:pass_emploi_app/features/alerte/create/alerte_create_reducer.dar
 import 'package:pass_emploi_app/features/alerte/delete/alerte_delete_reducer.dart';
 import 'package:pass_emploi_app/features/alerte/list/alerte_list_reducer.dart';
 import 'package:pass_emploi_app/features/auto_inscription/auto_inscription_reducer.dart';
-import 'package:pass_emploi_app/features/boulanger_campagne/boulanger_campagne_reducer.dart';
 import 'package:pass_emploi_app/features/campagne/campagne_reducer.dart';
 import 'package:pass_emploi_app/features/cgu/cgu_reducer.dart';
 import 'package:pass_emploi_app/features/chat/brouillon/chat_brouillon_reducer.dart';
@@ -116,8 +115,10 @@ AppState reducer(AppState current, dynamic action) {
       current.offreEmploiFavorisIdsState,
       action,
     ),
-    immersionFavorisIdsState:
-        FavoriIdsReducer<Immersion>().reduceFavorisState(current.immersionFavorisIdsState, action),
+    immersionFavorisIdsState: FavoriIdsReducer<Immersion>().reduceFavorisState(
+      current.immersionFavorisIdsState,
+      action,
+    ),
     serviceCiviqueFavorisIdsState: FavoriIdsReducer<ServiceCivique>().reduceFavorisState(
       current.serviceCiviqueFavorisIdsState,
       action,
@@ -170,16 +171,18 @@ AppState reducer(AppState current, dynamic action) {
     ),
     rechercheServiceCiviqueState:
         rechercheReducer<ServiceCiviqueCriteresRecherche, ServiceCiviqueFiltresRecherche, ServiceCivique>(
-      current.rechercheServiceCiviqueState,
-      action,
-    ),
+          current.rechercheServiceCiviqueState,
+          action,
+        ),
     rechercheEvenementEmploiState:
         rechercheReducer<EvenementEmploiCriteresRecherche, EvenementEmploiFiltresRecherche, EvenementEmploi>(
-      current.rechercheEvenementEmploiState,
+          current.rechercheEvenementEmploiState,
+          action,
+        ),
+    diagorientePreferencesMetierState: diagorientePreferencesMetierReducer(
+      current.diagorientePreferencesMetierState,
       action,
     ),
-    diagorientePreferencesMetierState:
-        diagorientePreferencesMetierReducer(current.diagorientePreferencesMetierState, action),
     recherchesRecentesState: recherchesRecentesReducer(current.recherchesRecentesState, action),
     contactImmersionState: contactImmersionReducer(current.contactImmersionState, action),
     accueilState: accueilReducer(current.accueilState, action),
@@ -199,14 +202,15 @@ AppState reducer(AppState current, dynamic action) {
     dateConsultationOffreState: dateConsultationOffreReducer(current.dateConsultationOffreState, action),
     inAppFeedbackState: inAppFeedbackReducer(current.inAppFeedbackState, action),
     inAppNotificationsState: inAppNotificationsReducer(current.inAppNotificationsState, action),
-    dateConsultationNotificationState:
-        dateConsultationNotificationReducer(current.dateConsultationNotificationState, action),
+    dateConsultationNotificationState: dateConsultationNotificationReducer(
+      current.dateConsultationNotificationState,
+      action,
+    ),
     localisationPersistState: localisationPersistReducer(current.localisationPersistState, action),
     remoteCampagneAccueilState: remoteCampagneAccueilReducer(current.remoteCampagneAccueilState, action),
     autoInscriptionState: autoInscriptionReducer(current.autoInscriptionState, action),
     offresSuiviesState: offresSuiviesReducer(current.offresSuiviesState, action),
     comptageDesHeuresState: comptageDesHeuresReducer(current.comptageDesHeuresState, action),
-    boulangerCampagneState: boulangerCampagneReducer(current.boulangerCampagneState, action),
     iaFtSuggestionsState: iaFtSuggestionsReducer(current.iaFtSuggestionsState, action),
     createDemarcheBatchState: createDemarcheBatchReducer(current.createDemarcheBatchState, action),
     ftIaTutorialState: ftIaTutorialReducer(current.ftIaTutorialState, action),
