@@ -86,12 +86,12 @@ void main() {
           ),
           AccueilColorSeparatorItem(),
           AccueilProchainRendezvousItem(mockRendezvousMiloCV().id),
+          AccueilAlertesItem(getMockedAlerte()),
           AccueilSuiviDesOffresItem(),
           AccueilEvenementsItem([
             (mockAnimationCollective().id, AccueilEvenementsType.animationCollective),
             (mockSessionMiloAtelierDecouverte().id, AccueilEvenementsType.sessionMilo),
           ]),
-          AccueilAlertesItem(getMockedAlerte()),
         ],
       );
     });
@@ -133,12 +133,12 @@ void main() {
           ),
           AccueilColorSeparatorItem(),
           AccueilProchaineSessionMiloItem(sessionMilo.id),
+          AccueilAlertesItem(getMockedAlerte()),
           AccueilSuiviDesOffresItem(),
           AccueilEvenementsItem([
             (mockAnimationCollective().id, AccueilEvenementsType.animationCollective),
             (mockSessionMiloAtelierDecouverte().id, AccueilEvenementsType.sessionMilo),
           ]),
-          AccueilAlertesItem(getMockedAlerte()),
         ],
       );
     });
@@ -172,8 +172,8 @@ void main() {
           ),
           AccueilColorSeparatorItem(),
           AccueilProchainRendezvousItem(mockRendezvousPoleEmploi().id),
-          AccueilSuiviDesOffresItem(),
           AccueilAlertesItem(getMockedAlerte()),
+          AccueilSuiviDesOffresItem(),
         ],
       );
     });
@@ -206,8 +206,8 @@ void main() {
           ),
           AccueilColorSeparatorItem(),
           AccueilProchainRendezvousItem(mockRendezvousPoleEmploi().id),
-          AccueilSuiviDesOffresItem(),
           AccueilAlertesItem(getMockedAlerte()),
+          AccueilSuiviDesOffresItem(),
         ],
       );
     });

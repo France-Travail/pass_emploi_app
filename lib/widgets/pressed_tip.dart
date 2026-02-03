@@ -12,14 +12,17 @@ class PressedTip extends StatelessWidget {
   final bool iconLeading;
   final String? iconLabel;
 
-  const PressedTip(this.tip,
-      {this.textColor = AppColors.contentColor, this.icon = AppIcons.chevron_right_rounded, this.iconLabel})
-      : iconLeading = false;
+  const PressedTip(
+    this.tip, {
+    this.textColor = AppColors.contentColor,
+    this.icon = AppIcons.chevron_right_rounded,
+    this.iconLabel,
+  }) : iconLeading = false;
 
   PressedTip.externalLink(this.tip, {this.textColor = AppColors.contentColor})
-      : icon = AppIcons.open_in_new_rounded,
-        iconLabel = null,
-        iconLeading = false;
+    : icon = AppIcons.open_in_new_rounded,
+      iconLabel = null,
+      iconLeading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +43,7 @@ class PressedTip extends StatelessWidget {
         Semantics(label: iconLabel),
         if (!iconLeading) ...[
           SizedBox(width: Margins.spacing_s),
-          Icon(icon, color: textColor, size: Dimens.icon_size_base)
+          Icon(icon, color: textColor, size: Dimens.icon_size_base),
         ],
       ],
     );

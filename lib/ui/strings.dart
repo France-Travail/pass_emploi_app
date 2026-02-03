@@ -256,6 +256,7 @@ class Strings {
 
   static String mesOutils = "Mes outils";
   static String mesOutilsDescription = "Trouver l’aide adaptée à votre projet professionel";
+  static String decouvrirLeService = "Découvrir le service";
 
   // Login bottom sheet
   static const String loginBottomSeetFranceTravailButton = "France travail";

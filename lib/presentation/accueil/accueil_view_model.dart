@@ -95,9 +95,9 @@ List<AccueilItem> _items(Store<AppState> store) {
     _cetteSemaineItem(user, accueilState),
     ...[AccueilColorSeparatorItem()], // divide home colors from gradient and gray
     _prochainRendezvousItem(user, accueilState),
+    _alertesItem(accueilState),
     _suiviDesOffresItem(),
     _evenementsItem(accueilState),
-    _alertesItem(accueilState),
   ].nonNulls.toList();
 }
 
