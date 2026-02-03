@@ -22,7 +22,7 @@ class AlerteDeletableCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlerteCardContent(
       title: _buildAlerteTitle(_tagLabel(offreType)),
-      subtitle: _buildAlerteSubtitle(title, place),
+      subtitle: _buildAlerteSubtitle(title),
       onDelete: onDelete,
       onTap: onTap,
     );
@@ -40,7 +40,6 @@ String _tagLabel(OffreType offreType) {
 
 String _buildAlerteTitle(String tagLabel) => "${Strings.alerte} $tagLabel";
 
-String _buildAlerteSubtitle(String title, String? ville) {
-  if (ville == null || ville.isEmpty) return title;
-  return "$title - $ville";
+String _buildAlerteSubtitle(String title) {
+  return title;
 }
