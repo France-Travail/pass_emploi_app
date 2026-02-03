@@ -169,7 +169,6 @@ class AnalyticsActionNames {
   static String? offreFavoriUpdateFavori(bool added) => added ? null : "favoris/list?favori=$added";
 
   static const deleteUserAction = "actions/list?deleteSuccess=true";
-
   static String createAlerteEmploi = "/recherche/emploi/search_results?create_saved_search=true";
   static String createAlerteAlternance = "/recherche/alternance/search_results?create_saved_search=true";
   static String createAlerteImmersion = "/recherche/immersion/search_results?create_saved_search=true";
