@@ -35,6 +35,7 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/utils/store_extensions.dart';
+import 'package:pass_emploi_app/widgets/alerte_card.dart';
 import 'package:pass_emploi_app/widgets/animated_list_loader.dart';
 import 'package:pass_emploi_app/widgets/buttons/filtre_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
@@ -222,6 +223,7 @@ class _AlertePageState extends State<AlertePage> {
       onDelete: () => _showDeleteDialog(viewModel, offreEmploi.id, type),
       title: offreEmploi.title,
       place: offreEmploi.location?.libelle,
+      trackingSource: AlerteCardTrackingSource.alertes,
     );
   }
 
@@ -232,6 +234,7 @@ class _AlertePageState extends State<AlertePage> {
       onDelete: () => _showDeleteDialog(viewModel, alertesImmersion.id, AlerteType.IMMERSION),
       title: alertesImmersion.title,
       place: alertesImmersion.ville,
+      trackingSource: AlerteCardTrackingSource.alertes,
     );
   }
 
@@ -246,6 +249,7 @@ class _AlertePageState extends State<AlertePage> {
       onDelete: () => _showDeleteDialog(viewModel, alertesServiceCivique.id, AlerteType.SERVICE_CIVIQUE),
       title: alertesServiceCivique.titre,
       place: alertesServiceCivique.ville?.isNotEmpty == true ? alertesServiceCivique.ville : null,
+      trackingSource: AlerteCardTrackingSource.alertes,
     );
   }
 

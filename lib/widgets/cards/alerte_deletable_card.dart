@@ -9,6 +9,7 @@ class AlerteDeletableCard extends StatelessWidget {
   final String? place;
   final VoidCallback onTap;
   final VoidCallback onDelete;
+  final AlerteCardTrackingSource trackingSource;
 
   AlerteDeletableCard({
     required this.title,
@@ -16,6 +17,7 @@ class AlerteDeletableCard extends StatelessWidget {
     required this.offreType,
     required this.onTap,
     required this.onDelete,
+    required this.trackingSource,
   });
 
   @override
@@ -25,6 +27,7 @@ class AlerteDeletableCard extends StatelessWidget {
       subtitle: _buildAlerteSubtitle(title),
       onDelete: onDelete,
       onTap: onTap,
+      trackingSource: trackingSource,
     );
   }
 }

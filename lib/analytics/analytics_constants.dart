@@ -295,6 +295,9 @@ class AnalyticsEventNames {
 
   static const mesOutilsCategory = "Mes outils";
   static const mesOutilsAction = "Clic sur mes outils";
+
+  static const alerteCategory = "Alertes";
+  static const alerteCardPressed = "Clic sur une alerte";
 }
 
 class AnalyticsCustomDimensions {

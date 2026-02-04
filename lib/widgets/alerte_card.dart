@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/models/alerte/alerte.dart';
 import 'package:pass_emploi_app/models/alerte/immersion_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/offre_emploi_alerte.dart';
@@ -17,6 +18,7 @@ import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
+import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 
 class AlerteNavigator extends StatefulWidget {
@@ -64,17 +66,22 @@ class AlerteCardContent extends StatelessWidget {
     required this.subtitle,
     required this.onDelete,
     required this.onTap,
+    required this.trackingSource,
   });
 
   final String title;
   final String subtitle;
   final void Function()? onDelete;
   final void Function() onTap;
+  final AlerteCardTrackingSource trackingSource;
 
   @override
   Widget build(BuildContext context) {
     return CardContainer(
-      onTap: onTap,
+      onTap: () {
+        _trackAlerteCardPressed(trackingSource);
+        onTap();
+      },
       padding: EdgeInsets.all(Margins.spacing_base),
       child: Row(
         children: [
@@ -108,6 +115,16 @@ class AlerteCardContent extends StatelessWidget {
       ),
     );
   }
+}
+
+enum AlerteCardTrackingSource { accueil, alertes }
+
+void _trackAlerteCardPressed(AlerteCardTrackingSource source) {
+  PassEmploiMatomoTracker.instance.trackEvent(
+    eventCategory: AnalyticsEventNames.alerteCategory,
+    action: AnalyticsEventNames.alerteCardPressed,
+    eventName: source.name,
+  );
 }
 
 class AlerteCard extends StatelessWidget {
@@ -149,6 +166,7 @@ Widget _buildEmploiAndAlternanceCard(OffreEmploiAlerte alerte, AlerteCardViewMod
     subtitle: _buildAlerteSubtitle(alerte.title),
     onTap: () => viewModel.fetchAlerteResult(alerte),
     onDelete: null,
+    trackingSource: AlerteCardTrackingSource.accueil,
   );
 }
 
@@ -158,6 +176,7 @@ Widget _buildImmersionCard(ImmersionAlerte alerte, AlerteCardViewModel viewModel
     subtitle: _buildAlerteSubtitle(alerte.title),
     onTap: () => viewModel.fetchAlerteResult(alerte),
     onDelete: null,
+    trackingSource: AlerteCardTrackingSource.accueil,
   );
 }
 
@@ -167,6 +186,7 @@ Widget _buildServiceCiviqueCard(ServiceCiviqueAlerte alerte, AlerteCardViewModel
     subtitle: _buildAlerteSubtitle(alerte.titre),
     onTap: () => viewModel.fetchAlerteResult(alerte),
     onDelete: null,
+    trackingSource: AlerteCardTrackingSource.accueil,
   );
 }
 
