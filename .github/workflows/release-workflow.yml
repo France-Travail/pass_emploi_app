@@ -145,14 +145,14 @@ jobs:
           whatsNewDirectory: release-notes/brsa
 
   build-ios-prod:
-    runs-on: macos-14
+    runs-on: macos-15
     needs: pre-build
     steps:
       - uses: actions/checkout@v4
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: latest-stable
+          xcode-version: "26.0"
 
       - name: Set Environment Variables
         uses: ./.github/actions/setvars
