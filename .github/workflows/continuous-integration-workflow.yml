@@ -350,6 +350,17 @@ jobs:
         run: |
           keychain add-certificates
 
+      - name: CEJ - Configure keychain for codesigning
+        shell: bash
+        run: |
+          if [[ -n "${KEYCHAIN_PATH:-}" && -n "${KEYCHAIN_PASSWORD:-}" ]]; then
+            security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+            security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+            security find-identity -v -p codesigning "$KEYCHAIN_PATH"
+          else
+            security find-identity -v -p codesigning
+          fi
+
       - name: CEJ - Update Xcode project settings with fetched code signing profiles and create staging_export_options.plist
         shell: bash
         run: |
@@ -402,6 +413,17 @@ jobs:
         shell: bash
         run: |
           keychain add-certificates
+
+      - name: BRSA - Configure keychain for codesigning
+        shell: bash
+        run: |
+          if [[ -n "${KEYCHAIN_PATH:-}" && -n "${KEYCHAIN_PASSWORD:-}" ]]; then
+            security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+            security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+            security find-identity -v -p codesigning "$KEYCHAIN_PATH"
+          else
+            security find-identity -v -p codesigning
+          fi
 
       - name: BRSA - Update Xcode project settings with fetched code signing profiles and create staging_export_options.plist
         shell: bash
