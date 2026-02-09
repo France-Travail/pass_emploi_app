@@ -92,6 +92,7 @@ import 'package:pass_emploi_app/features/user_action/create/user_action_create_m
 import 'package:pass_emploi_app/features/user_action/delete/user_action_delete_middleware.dart';
 import 'package:pass_emploi_app/features/user_action/details/user_action_details_middleware.dart';
 import 'package:pass_emploi_app/features/user_action/update/user_action_update_middleware.dart';
+import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_mission_locale_middleware.dart';
 /*AUTOGENERATE-REDUX-STOREFACTORY-IMPORT-MIDDLEWARE*/
 import 'package:pass_emploi_app/models/immersion.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
@@ -173,6 +174,7 @@ import 'package:pass_emploi_app/repositories/user_action_repository.dart';
 import 'package:pass_emploi_app/usecases/piece_jointe/piece_jointe_use_case.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/wrappers/connectivity_wrapper.dart';
+import 'package:pass_emploi_app/repositories/actualite_mission_locale_repository.dart';
 /*AUTOGENERATE-REDUX-STOREFACTORY-IMPORT-REPOSITORY*/
 import 'package:redux/redux.dart' as redux;
 
@@ -257,6 +259,7 @@ class StoreFactory {
   final ComptageDesHeuresRepository comptageDesHeuresRepository;
   final IaFtSuggestionsRepository iaFtSuggestionsRepository;
   final ModuleFeedbackRepository moduleFeedbackRepository;
+  final ActualiteMissionLocaleRepository actualiteMissionLocaleRepository;
   /*AUTOGENERATE-REDUX-STOREFACTORY-PROPERTY-REPOSITORY*/
 
   StoreFactory(
@@ -340,6 +343,7 @@ class StoreFactory {
     this.comptageDesHeuresRepository,
     this.iaFtSuggestionsRepository,
     this.moduleFeedbackRepository,
+    this.actualiteMissionLocaleRepository,
     /*AUTOGENERATE-REDUX-STOREFACTORY-CONSTRUCTOR-REPOSITORY*/
   );
 
@@ -445,6 +449,7 @@ class StoreFactory {
         CreateDemarcheBatchMiddleware(createDemarcheRepository).call,
         ModuleFeedbackMiddleware(moduleFeedbackRepository).call,
         FtIaTutorialMiddleware(tutorialRepository).call,
+        ActualiteMissionLocaleMiddleware(actualiteMissionLocaleRepository).call,
         /*AUTOGENERATE-REDUX-STOREFACTORY-ADD-MIDDLEWARE*/
         ..._debugMiddlewares(),
         ..._stagingMiddlewares(initialState.configurationState.getFlavor()),

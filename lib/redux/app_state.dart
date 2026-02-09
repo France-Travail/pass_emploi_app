@@ -83,6 +83,7 @@ import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
 import 'package:pass_emploi_app/models/service_civique.dart';
 import 'package:pass_emploi_app/models/user.dart';
+import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_mission_locale_state.dart';
 /*AUTOGENERATE-REDUX-APP-STATE-IMPORT*/
 
 class AppState extends Equatable {
@@ -167,6 +168,7 @@ class AppState extends Equatable {
   final IaFtSuggestionsState iaFtSuggestionsState;
   final CreateDemarcheBatchState createDemarcheBatchState;
   final FtIaTutorialState ftIaTutorialState;
+  final ActualiteMissionLocaleState actualiteMissionLocaleState;
   /*AUTOGENERATE-REDUX-APP-STATE-PROPERTY*/
 
   AppState({
@@ -251,6 +253,7 @@ class AppState extends Equatable {
     required this.iaFtSuggestionsState,
     required this.createDemarcheBatchState,
     required this.ftIaTutorialState,
+    required this.actualiteMissionLocaleState,
     /*AUTOGENERATE-REDUX-APP-STATE-CONSTRUCTOR*/
   });
 
@@ -336,6 +339,7 @@ class AppState extends Equatable {
     final IaFtSuggestionsState? iaFtSuggestionsState,
     final CreateDemarcheBatchState? createDemarcheBatchState,
     final FtIaTutorialState? ftIaTutorialState,
+    final ActualiteMissionLocaleState? actualiteMissionLocaleState,
     /*AUTOGENERATE-REDUX-APP-STATE-COPYPARAM*/
   }) {
     return AppState(
@@ -420,6 +424,7 @@ class AppState extends Equatable {
       iaFtSuggestionsState: iaFtSuggestionsState ?? this.iaFtSuggestionsState,
       createDemarcheBatchState: createDemarcheBatchState ?? this.createDemarcheBatchState,
       ftIaTutorialState: ftIaTutorialState ?? this.ftIaTutorialState,
+      actualiteMissionLocaleState: actualiteMissionLocaleState ?? this.actualiteMissionLocaleState,
       /*AUTOGENERATE-REDUX-APP-STATE-COPYBODY*/
     );
   }
@@ -507,6 +512,7 @@ class AppState extends Equatable {
       iaFtSuggestionsState: IaFtSuggestionsNotInitializedState(),
       createDemarcheBatchState: CreateDemarcheBatchNotInitializedState(),
       ftIaTutorialState: FtIaTutorialState(false),
+      actualiteMissionLocaleState: ActualiteMissionLocaleNotInitializedState(),
       /*AUTOGENERATE-REDUX-APP-STATE-FACTORY*/
     );
   }
@@ -587,6 +593,7 @@ class AppState extends Equatable {
     iaFtSuggestionsState,
     createDemarcheBatchState,
     ftIaTutorialState,
+    actualiteMissionLocaleState,
     /*AUTOGENERATE-REDUX-APP-STATE-EQUATABLE*/
   ];
 

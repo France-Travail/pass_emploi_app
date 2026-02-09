@@ -72,12 +72,12 @@ class DummyRegisterTokenRepository extends ConfigurationApplicationRepository {
 
 class DummyAuthenticator extends Authenticator {
   DummyAuthenticator()
-      : super(
-          DummyAuthWrapper(),
-          DummyLogoutRepository(),
-          configuration(),
-          MockFlutterSecureStorage(),
-        );
+    : super(
+        DummyAuthWrapper(),
+        DummyLogoutRepository(),
+        configuration(),
+        MockFlutterSecureStorage(),
+      );
 }
 
 class DummyAuthWrapper extends AuthWrapper {
@@ -345,11 +345,11 @@ class DummyCvRepository extends CvRepository {
 
 class DummyEvenementEmploiRepository extends EvenementEmploiRepository {
   DummyEvenementEmploiRepository()
-      : super(
-          DioMock(),
-          MockSecteurActiviteQueryMapper(),
-          MockEvenementEmploiTypeQueryMapper(),
-        );
+    : super(
+        DioMock(),
+        MockSecteurActiviteQueryMapper(),
+        MockEvenementEmploiTypeQueryMapper(),
+      );
 }
 
 class DummyEvenementEmploiDetailsRepository extends EvenementEmploiDetailsRepository {
