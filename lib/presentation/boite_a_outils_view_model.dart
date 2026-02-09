@@ -24,6 +24,7 @@ class BoiteAOutilsViewModel extends Equatable {
 List<Outil> _getOutils(Accompagnement accompagnement) {
   return switch (accompagnement) {
     Accompagnement.cej => [
+      Outil.metierScope,
       Outil.ressourceFormation,
       Outil.laBonneAlternance,
       Outil.mesAidesFt,
@@ -38,6 +39,7 @@ List<Outil> _getOutils(Accompagnement accompagnement) {
       Outil.mesAides1J1S,
     ],
     Accompagnement.aij => [
+      Outil.metierScope,
       Outil.laBonneAlternance,
       Outil.mesAidesFt,
       Outil.benevolatPassEmploi,
@@ -51,8 +53,8 @@ List<Outil> _getOutils(Accompagnement accompagnement) {
       Outil.mesAides1J1S,
     ],
     Accompagnement.avenirPro => [
-      Outil.laBonneAlternance,
       Outil.metierScope,
+      Outil.laBonneAlternance,
       Outil.mesAidesFt,
       Outil.benevolatPassEmploi,
       Outil.formation,
@@ -69,6 +71,7 @@ List<Outil> _getOutils(Accompagnement accompagnement) {
     Accompagnement.accompagnementIntensif ||
     Accompagnement.accompagnementGlobal ||
     Accompagnement.equipEmploiRecrut => [
+      Outil.metierScope,
       Outil.ressourceFormation,
       Outil.mesAidesFt,
       Outil.benevolatPassEmploi,

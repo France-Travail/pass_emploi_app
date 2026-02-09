@@ -15,6 +15,7 @@ void main() {
 
     // Then
     expect(viewModel.outils, [
+      Outil.metierScope,
       Outil.ressourceFormation,
       Outil.laBonneAlternance,
       Outil.mesAidesFt,
@@ -39,6 +40,7 @@ void main() {
 
     // Then
     expect(viewModel.outils, [
+      Outil.metierScope,
       Outil.laBonneAlternance,
       Outil.mesAidesFt,
       Outil.benevolatPassEmploi,
@@ -62,8 +64,8 @@ void main() {
 
     // Then
     expect(viewModel.outils, [
-      Outil.laBonneAlternance,
       Outil.metierScope,
+      Outil.laBonneAlternance,
       Outil.mesAidesFt,
       Outil.benevolatPassEmploi,
       Outil.formation,
@@ -86,6 +88,7 @@ void main() {
 
     // Then
     expect(viewModel.outils, [
+      Outil.metierScope,
       Outil.ressourceFormation,
       Outil.mesAidesFt,
       Outil.benevolatPassEmploi,
