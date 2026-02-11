@@ -14,6 +14,7 @@ import 'package:pass_emploi_app/repositories/auto_inscription_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_recrutement_repository.dart';
 import 'package:pass_emploi_app/repositories/comptage_des_heures_repository.dart';
 import 'package:pass_emploi_app/repositories/configuration_application_repository.dart';
+import 'package:pass_emploi_app/repositories/date_consultation_actualite_mission_locale_repository.dart';
 import 'package:pass_emploi_app/repositories/date_consultation_notification_repository.dart';
 import 'package:pass_emploi_app/repositories/date_consultation_offre_repository.dart';
 import 'package:pass_emploi_app/repositories/derniere_offre_consultee_repository.dart';
@@ -342,7 +343,15 @@ class MockModuleFeedbackRepository extends Mock implements ModuleFeedbackReposit
 
 class MockActualiteMissionLocaleRepository extends Mock implements ActualiteMissionLocaleRepository {
   MockActualiteMissionLocaleRepository() {
-    when(() => get()).thenAnswer((_) async => [mockActualiteMissionLocale()]);
+    when(() => get(any())).thenAnswer((_) async => [mockActualiteMissionLocale()]);
+  }
+}
+
+class MockDateConsultationActualiteMissionLocaleRepository extends Mock
+    implements DateConsultationActualiteMissionLocaleRepository {
+  MockDateConsultationActualiteMissionLocaleRepository() {
+    when(() => get()).thenAnswer((_) async => null);
+    when(() => save(any())).thenAnswer((_) async {});
   }
 }
 

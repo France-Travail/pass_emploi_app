@@ -1461,12 +1461,12 @@ ComptageDesHeures mockComptageDesHeures({
 
 ActualiteMissionLocale mockActualiteMissionLocale() {
   return ActualiteMissionLocale(
-    id: '1',
     titre: 'Titre',
-    corps: 'Corps',
-    titreDuLien: 'Titre du lien',
+    contenu: 'Corps',
+    titreLien: 'Titre du lien',
     lien: 'Lien',
-    nomConseiller: 'Nom conseiller',
+    nomPrenomConseiller: 'Nom conseiller',
     dateCreation: DateTime(2026),
+    isSupprime: false,
   );
 }

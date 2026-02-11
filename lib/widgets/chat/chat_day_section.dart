@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 
@@ -14,7 +15,7 @@ class ChatDaySection extends StatelessWidget {
         header: true,
         child: Text(
           dayLabel,
-          style: TextStyles.textSRegular(),
+          style: TextStyles.textXsRegular().copyWith(color: AppColors.grey800),
           semanticsLabel: dayLabel.toDateForScreenReaders(),
         ),
       ),

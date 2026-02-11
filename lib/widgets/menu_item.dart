@@ -13,33 +13,37 @@ class MenuItem extends BottomNavigationBarItem {
     this.withBadge = false,
     Widget Function(Widget child)? iconWrapper,
   }) : super(
-          icon: iconWrapper != null
-              ? iconWrapper(DefaultMenuItem(
-                  icon: inactiveIcon,
-                  label: label,
-                  isActive: false,
-                  withBadge: withBadge,
-                ))
-              : DefaultMenuItem(
-                  icon: inactiveIcon,
-                  label: label,
-                  isActive: false,
-                  withBadge: withBadge,
-                ),
-          activeIcon: iconWrapper != null
-              ? iconWrapper(DefaultMenuItem(
-                  icon: defaultIcon,
-                  label: label,
-                  isActive: true,
-                  withBadge: false,
-                ))
-              : DefaultMenuItem(
-                  icon: defaultIcon,
-                  label: label,
-                  isActive: true,
-                  withBadge: false,
-                ),
-          label: label,
-          tooltip: label,
-        );
+         icon: iconWrapper != null
+             ? iconWrapper(
+                 DefaultMenuItem(
+                   icon: inactiveIcon,
+                   label: label,
+                   isActive: false,
+                   withBadge: withBadge,
+                 ),
+               )
+             : DefaultMenuItem(
+                 icon: inactiveIcon,
+                 label: label,
+                 isActive: false,
+                 withBadge: withBadge,
+               ),
+         activeIcon: iconWrapper != null
+             ? iconWrapper(
+                 DefaultMenuItem(
+                   icon: defaultIcon,
+                   label: label,
+                   isActive: true,
+                   withBadge: withBadge,
+                 ),
+               )
+             : DefaultMenuItem(
+                 icon: defaultIcon,
+                 label: label,
+                 isActive: true,
+                 withBadge: withBadge,
+               ),
+         label: label,
+         tooltip: label,
+       );
 }

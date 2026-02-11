@@ -18,7 +18,7 @@ void main() {
       sut.whenDispatchingAction(() => ActualiteMissionLocaleRequestAction());
 
       test('should load then succeed when request succeeds', () {
-        when(() => repository.get()).thenAnswer((_) async => [mockActualiteMissionLocale()]);
+        when(() => repository.get(any())).thenAnswer((_) async => [mockActualiteMissionLocale()]);
 
         sut.givenStore =
             givenState() //
@@ -29,7 +29,7 @@ void main() {
       });
 
       test('should load then fail when request fails', () {
-        when(() => repository.get()).thenAnswer((_) async => null);
+        when(() => repository.get(any())).thenAnswer((_) async => null);
 
         sut.givenStore =
             givenState() //

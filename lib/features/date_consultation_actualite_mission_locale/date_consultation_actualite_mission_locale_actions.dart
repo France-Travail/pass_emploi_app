@@ -1,5 +1,3 @@
-class DateConsultationActualiteMissionLocaleRequestAction {}
-
 class DateConsultationActualiteMissionLocaleSuccessAction {
   final DateTime? result;
 

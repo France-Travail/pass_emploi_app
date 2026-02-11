@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_miss
 import 'package:pass_emploi_app/models/actualite_mission_locale.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/date_extensions.dart';
 import 'package:redux/redux.dart';
 
@@ -16,7 +17,7 @@ class ActualiteMissionLocaleViewModel extends Equatable {
   });
 
   final DisplayState displayState;
-  final List<ActualiteMissionLocaleItemViewModel> actualites;
+  final List<ActualiteMissionLocaleItem> actualites;
   final VoidCallback onRetry;
 
   factory ActualiteMissionLocaleViewModel.create(Store<AppState> store) {
@@ -41,40 +42,66 @@ DisplayState _displayState(ActualiteMissionLocaleState state) {
   };
 }
 
-List<ActualiteMissionLocaleItemViewModel> _actualites(ActualiteMissionLocaleState state) {
+List<ActualiteMissionLocaleItem> _actualites(ActualiteMissionLocaleState state) {
   if (state is! ActualiteMissionLocaleSuccessState) return [];
   final sorted = [...state.result]..sort((a, b) => b.dateCreation.compareTo(a.dateCreation));
-  return sorted.map(ActualiteMissionLocaleItemViewModel.fromModel).toList();
+  return sorted
+      .map(
+        (actualite) => actualite.isSupprime
+            ? ActualiteMissionLocaleItemSupprimeViewModel(dateCreation: actualite.dateCreation.toDay())
+            : ActualiteMissionLocaleItemViewModel.fromModel(actualite),
+      )
+      .toList();
 }
 
-class ActualiteMissionLocaleItemViewModel extends Equatable {
+sealed class ActualiteMissionLocaleItem extends Equatable {}
+
+class ActualiteMissionLocaleItemSupprimeViewModel extends ActualiteMissionLocaleItem {
+  final String dateCreation;
+
+  ActualiteMissionLocaleItemSupprimeViewModel({
+    required this.dateCreation,
+  });
+
+  @override
+  List<Object?> get props => [dateCreation];
+}
+
+class ActualiteMissionLocaleItemViewModel extends ActualiteMissionLocaleItem {
   final String titre;
   final String corps;
-  final String lien;
-  final String titreDuLien;
-  final String nomConseiller;
+  final String? lien;
+  final String? titreLien;
+  final String heureEtNomConseiller;
   final String dateCreation;
 
   ActualiteMissionLocaleItemViewModel({
     required this.titre,
     required this.corps,
-    required this.lien,
-    required this.titreDuLien,
-    required this.nomConseiller,
+    this.lien,
+    this.titreLien,
+    required this.heureEtNomConseiller,
     required this.dateCreation,
   });
 
   factory ActualiteMissionLocaleItemViewModel.fromModel(ActualiteMissionLocale actualite) {
     return ActualiteMissionLocaleItemViewModel(
       titre: actualite.titre,
-      corps: actualite.corps,
+      corps: actualite.contenu,
       lien: actualite.lien,
-      titreDuLien: actualite.titreDuLien,
-      nomConseiller: actualite.nomConseiller,
-      dateCreation: actualite.dateCreation.toDayWithFullMonthContextualized(),
+      titreLien: actualite.titreLien,
+      heureEtNomConseiller: Strings.hourAndPostOwner(
+        actualite.dateCreation.toHourWithHSeparator(),
+        actualite.nomPrenomConseiller,
+      ),
+      dateCreation: _getDayLabel(actualite.dateCreation),
     );
   }
 
   @override
-  List<Object?> get props => [titre, corps, lien, titreDuLien, nomConseiller, dateCreation];
+  List<Object?> get props => [titre, corps, lien, titreLien, heureEtNomConseiller, dateCreation];
+}
+
+String _getDayLabel(DateTime dateTime) {
+  return dateTime.isAtSameDayAs(DateTime.now()) ? Strings.today : Strings.simpleDayFormat(dateTime.toDay());
 }

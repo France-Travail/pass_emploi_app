@@ -3,7 +3,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:gaimon/gaimon.dart';
 import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_mission_locale_actions.dart';
 import 'package:pass_emploi_app/features/chat/status/chat_status_actions.dart';
-import 'package:pass_emploi_app/features/date_consultation_actualite_mission_locale/date_consultation_actualite_mission_locale_actions.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_page.dart';
 import 'package:pass_emploi_app/pages/chat/chat_home_page.dart';
 import 'package:pass_emploi_app/pages/events_tab_page.dart';
@@ -82,10 +81,7 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
       },
       onInit: (store) {
         store.dispatch(SubscribeToChatStatusAction());
-        store.dispatch(ActualiteMissionLocaleRequestAction()); // TODO: Replace this with login action in middleware
-        store.dispatch(
-          DateConsultationActualiteMissionLocaleRequestAction(),
-        ); // TODO: Replace this with login action in middleware
+        store.dispatch(ActualiteMissionLocaleRequestAction());
       },
       onDispose: (store) => store.dispatch(UnsubscribeFromChatStatusAction()),
       builder: (context, viewModel) => _body(viewModel, context),
