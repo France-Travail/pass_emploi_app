@@ -19,6 +19,7 @@ import 'package:pass_emploi_app/features/connectivity/connectivity_state.dart';
 import 'package:pass_emploi_app/features/contact_immersion/contact_immersion_state.dart';
 import 'package:pass_emploi_app/features/cv/cv_state.dart';
 import 'package:pass_emploi_app/features/date_consultation_notification/date_consultation_notification_state.dart';
+import 'package:pass_emploi_app/features/date_consultation_actualite_mission_locale/date_consultation_actualite_mission_locale_state.dart';
 import 'package:pass_emploi_app/features/date_consultation_offre/date_consultation_offre_state.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_state.dart';
 import 'package:pass_emploi_app/features/demarche/create/create_demarche_state.dart';
@@ -83,6 +84,7 @@ import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
 import 'package:pass_emploi_app/models/service_civique.dart';
 import 'package:pass_emploi_app/models/user.dart';
+import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_mission_locale_state.dart';
 /*AUTOGENERATE-REDUX-APP-STATE-IMPORT*/
 
 class AppState extends Equatable {
@@ -159,6 +161,7 @@ class AppState extends Equatable {
   final InAppFeedbackState inAppFeedbackState;
   final InAppNotificationsState inAppNotificationsState;
   final DateConsultationNotificationState dateConsultationNotificationState;
+  final DateConsultationActualiteMissionLocaleState dateConsultationActualiteMissionLocaleState;
   final LocalisationPersistState localisationPersistState;
   final RemoteCampagneAccueilState remoteCampagneAccueilState;
   final AutoInscriptionState autoInscriptionState;
@@ -167,6 +170,7 @@ class AppState extends Equatable {
   final IaFtSuggestionsState iaFtSuggestionsState;
   final CreateDemarcheBatchState createDemarcheBatchState;
   final FtIaTutorialState ftIaTutorialState;
+  final ActualiteMissionLocaleState actualiteMissionLocaleState;
   /*AUTOGENERATE-REDUX-APP-STATE-PROPERTY*/
 
   AppState({
@@ -243,6 +247,7 @@ class AppState extends Equatable {
     required this.inAppFeedbackState,
     required this.inAppNotificationsState,
     required this.dateConsultationNotificationState,
+    required this.dateConsultationActualiteMissionLocaleState,
     required this.localisationPersistState,
     required this.remoteCampagneAccueilState,
     required this.autoInscriptionState,
@@ -251,6 +256,7 @@ class AppState extends Equatable {
     required this.iaFtSuggestionsState,
     required this.createDemarcheBatchState,
     required this.ftIaTutorialState,
+    required this.actualiteMissionLocaleState,
     /*AUTOGENERATE-REDUX-APP-STATE-CONSTRUCTOR*/
   });
 
@@ -328,6 +334,7 @@ class AppState extends Equatable {
     final InAppFeedbackState? inAppFeedbackState,
     final InAppNotificationsState? inAppNotificationsState,
     final DateConsultationNotificationState? dateConsultationNotificationState,
+    final DateConsultationActualiteMissionLocaleState? dateConsultationActualiteMissionLocaleState,
     final LocalisationPersistState? localisationPersistState,
     final RemoteCampagneAccueilState? remoteCampagneAccueilState,
     final AutoInscriptionState? autoInscriptionState,
@@ -336,6 +343,7 @@ class AppState extends Equatable {
     final IaFtSuggestionsState? iaFtSuggestionsState,
     final CreateDemarcheBatchState? createDemarcheBatchState,
     final FtIaTutorialState? ftIaTutorialState,
+    final ActualiteMissionLocaleState? actualiteMissionLocaleState,
     /*AUTOGENERATE-REDUX-APP-STATE-COPYPARAM*/
   }) {
     return AppState(
@@ -412,6 +420,8 @@ class AppState extends Equatable {
       inAppFeedbackState: inAppFeedbackState ?? this.inAppFeedbackState,
       inAppNotificationsState: inAppNotificationsState ?? this.inAppNotificationsState,
       dateConsultationNotificationState: dateConsultationNotificationState ?? this.dateConsultationNotificationState,
+      dateConsultationActualiteMissionLocaleState:
+          dateConsultationActualiteMissionLocaleState ?? this.dateConsultationActualiteMissionLocaleState,
       localisationPersistState: localisationPersistState ?? this.localisationPersistState,
       remoteCampagneAccueilState: remoteCampagneAccueilState ?? this.remoteCampagneAccueilState,
       autoInscriptionState: autoInscriptionState ?? this.autoInscriptionState,
@@ -420,6 +430,7 @@ class AppState extends Equatable {
       iaFtSuggestionsState: iaFtSuggestionsState ?? this.iaFtSuggestionsState,
       createDemarcheBatchState: createDemarcheBatchState ?? this.createDemarcheBatchState,
       ftIaTutorialState: ftIaTutorialState ?? this.ftIaTutorialState,
+      actualiteMissionLocaleState: actualiteMissionLocaleState ?? this.actualiteMissionLocaleState,
       /*AUTOGENERATE-REDUX-APP-STATE-COPYBODY*/
     );
   }
@@ -499,6 +510,7 @@ class AppState extends Equatable {
       inAppFeedbackState: InAppFeedbackState(),
       inAppNotificationsState: InAppNotificationsNotInitializedState(),
       dateConsultationNotificationState: DateConsultationNotificationState(),
+      dateConsultationActualiteMissionLocaleState: DateConsultationActualiteMissionLocaleState(),
       localisationPersistState: LocalisationPersistNotInitializedState(),
       remoteCampagneAccueilState: RemoteCampagneAccueilState(),
       autoInscriptionState: AutoInscriptionNotInitializedState(),
@@ -507,6 +519,7 @@ class AppState extends Equatable {
       iaFtSuggestionsState: IaFtSuggestionsNotInitializedState(),
       createDemarcheBatchState: CreateDemarcheBatchNotInitializedState(),
       ftIaTutorialState: FtIaTutorialState(false),
+      actualiteMissionLocaleState: ActualiteMissionLocaleNotInitializedState(),
       /*AUTOGENERATE-REDUX-APP-STATE-FACTORY*/
     );
   }
@@ -579,6 +592,7 @@ class AppState extends Equatable {
     inAppFeedbackState,
     inAppNotificationsState,
     dateConsultationNotificationState,
+    dateConsultationActualiteMissionLocaleState,
     localisationPersistState,
     remoteCampagneAccueilState,
     autoInscriptionState,
@@ -587,6 +601,7 @@ class AppState extends Equatable {
     iaFtSuggestionsState,
     createDemarcheBatchState,
     ftIaTutorialState,
+    actualiteMissionLocaleState,
     /*AUTOGENERATE-REDUX-APP-STATE-EQUATABLE*/
   ];
 

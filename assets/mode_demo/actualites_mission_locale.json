@@ -1,0 +1,41 @@
+{
+    "actualites": [
+        {
+            "titre": "Atelier CV : places disponibles jeudi",
+            "contenu": "Il reste 4 places pour l'atelier CV de jeudi a 14h a la Mission Locale. Pense a venir avec ton CV, meme s'il n'est pas finalise.",
+            "titreLien": "Je reserve ma place",
+            "lien": "https://mission-locale-demo.fr/ateliers/cv-jeudi",
+            "nomPrenomConseiller": "Camille Bernard",
+            "dateCreation": "2026-02-05T09:15:00Z"
+        },
+        {
+            "titre": "Forum alternance du 14 fevrier",
+            "contenu": "Le forum alternance se tiendra vendredi de 9h a 16h a la Halle des Expositions. Plus de 30 entreprises seront presentes.",
+            "titreLien": "Voir les offres preparees",
+            "lien": "https://mission-locale-demo.fr/evenements/forum-alternance",
+            "nomPrenomConseiller": "Sofiane El Idrissi",
+            "dateCreation": "2026-02-07T11:30:00Z"
+        },
+        {
+            "titre": "Changement de salle - information collective",
+            "contenu": "L'information collective de demain a 10h est deplacee en salle 2 (rez-de-chaussee). Merci d'arriver 10 minutes avant le debut.",
+            "nomPrenomConseiller": "Emma Lefevre",
+            "dateCreation": "2026-02-09T16:05:00Z",
+            "dateSuppression": "2026-02-10T08:45:00Z"
+        },
+        {
+            "titre": "Aide au permis : nouvelles dates de rendez-vous",
+            "contenu": "De nouveaux creneaux d'accompagnement au permis sont ouverts la semaine prochaine. Tu peux prendre rendez-vous en ligne.",
+            "nomPrenomConseiller": "Nicolas Martin",
+            "dateCreation": "2026-02-10T13:20:00Z"
+        },
+        {
+            "titre": "Job dating restauration - inscription ouverte",
+            "contenu": "Un job dating special restauration est organise mardi prochain. Apporte ton CV et une piece d'identite.",
+            "titreLien": "M'inscrire au job dating",
+            "lien": "https://mission-locale-demo.fr/evenements/job-dating-restauration",
+            "nomPrenomConseiller": "Camille Bernard",
+            "dateCreation": "2026-02-11T08:40:00Z"
+        }
+    ]
+}

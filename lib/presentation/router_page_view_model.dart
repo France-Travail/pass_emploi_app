@@ -107,6 +107,7 @@ MainPageDisplayState _toMainPageDisplayStateByDeepLink(DeepLink deepLink) {
     ActualisationPeDeepLink() => MainPageDisplayState.actualisationPoleEmploi,
     MonSuiviDeepLink() => MainPageDisplayState.monSuivi,
     NouveauMessageDeepLink() => MainPageDisplayState.chat,
+    ActualiteMissionLocaleDeepLink() => MainPageDisplayState.chatActualiteMissionLocale,
     EventListDeepLink() => MainPageDisplayState.evenements,
     EventSearchDeepLink() => MainPageDisplayState.evenementsRecherche,
     RechercheDeepLink() => MainPageDisplayState.solutionsRecherche,

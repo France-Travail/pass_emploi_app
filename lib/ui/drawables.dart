@@ -60,4 +60,6 @@ class Drawables {
   static String rechercheHomeOffresAlternance = "${_assets}alternance.svg";
   static String rechercheHomeOffresImmersion = "${_assets}immersion.svg";
   static String rechercheHomeOffresServiceCivique = "${_assets}service_civique.svg";
+
+  static String megaphone = "${_assets}megaphone.svg";
 }

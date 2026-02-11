@@ -1,4 +1,5 @@
 import 'package:pass_emploi_app/features/accueil/accueil_reducer.dart';
+import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_mission_locale_reducer.dart';
 import 'package:pass_emploi_app/features/alerte/create/alerte_create_reducer.dart';
 import 'package:pass_emploi_app/features/alerte/delete/alerte_delete_reducer.dart';
 import 'package:pass_emploi_app/features/alerte/list/alerte_list_reducer.dart';
@@ -15,6 +16,7 @@ import 'package:pass_emploi_app/features/comptage_des_heures/comptage_des_heures
 import 'package:pass_emploi_app/features/connectivity/connectivity_reducer.dart';
 import 'package:pass_emploi_app/features/contact_immersion/contact_immersion_reducer.dart';
 import 'package:pass_emploi_app/features/cv/cv_reducer.dart';
+import 'package:pass_emploi_app/features/date_consultation_actualite_mission_locale/date_consultation_actualite_mission_locale_reducer.dart';
 import 'package:pass_emploi_app/features/date_consultation_notification/date_consultation_notification_reducer.dart';
 import 'package:pass_emploi_app/features/date_consultation_offre/date_consultation_offre_reducer.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_reducer.dart';
@@ -206,6 +208,10 @@ AppState reducer(AppState current, dynamic action) {
       current.dateConsultationNotificationState,
       action,
     ),
+    dateConsultationActualiteMissionLocaleState: dateConsultationActualiteMissionLocaleReducer(
+      current.dateConsultationActualiteMissionLocaleState,
+      action,
+    ),
     localisationPersistState: localisationPersistReducer(current.localisationPersistState, action),
     remoteCampagneAccueilState: remoteCampagneAccueilReducer(current.remoteCampagneAccueilState, action),
     autoInscriptionState: autoInscriptionReducer(current.autoInscriptionState, action),
@@ -214,6 +220,7 @@ AppState reducer(AppState current, dynamic action) {
     iaFtSuggestionsState: iaFtSuggestionsReducer(current.iaFtSuggestionsState, action),
     createDemarcheBatchState: createDemarcheBatchReducer(current.createDemarcheBatchState, action),
     ftIaTutorialState: ftIaTutorialReducer(current.ftIaTutorialState, action),
+    actualiteMissionLocaleState: actualiteMissionLocaleReducer(current.actualiteMissionLocaleState, action),
     /*AUTOGENERATE-REDUX-APP-REDUCER-STATE*/
   );
 }

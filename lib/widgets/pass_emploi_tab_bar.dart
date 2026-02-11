@@ -9,9 +9,15 @@ import 'package:pass_emploi_app/widgets/sepline.dart';
 
 class PassEmploiTabBar extends StatefulWidget {
   final List<String> tabLabels;
+  final Map<int, int> badgeCountByTabIndex;
   final TabController? controller;
 
-  PassEmploiTabBar({super.key, required this.tabLabels, this.controller});
+  PassEmploiTabBar({
+    super.key,
+    required this.tabLabels,
+    this.badgeCountByTabIndex = const {},
+    this.controller,
+  });
 
   @override
   State<PassEmploiTabBar> createState() => _PassEmploiTabBarState();
@@ -50,21 +56,57 @@ class _PassEmploiTabBarState extends State<PassEmploiTabBar> {
   }
 
   List<Widget> _tabs() {
-    return widget.tabLabels.map(
-      (e) {
-        final tab = Tab(
-          child: Text(e),
-        );
+    return widget.tabLabels.asMap().entries.map((entry) {
+      final index = entry.key;
+      final label = entry.value;
+      final tab = Tab(
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Text(label),
+            if ((widget.badgeCountByTabIndex[index] ?? 0) > 0)
+              Positioned(
+                top: -6,
+                right: -20,
+                child: _TabCountBadge(count: widget.badgeCountByTabIndex[index]!),
+              ),
+          ],
+        ),
+      );
 
-        if (e == Strings.accueilOutilsSection) {
-          return OnboardingShowcase(
-            bottom: true,
-            source: ShowcaseSource.outils,
-            child: tab,
-          );
-        }
-        return tab;
-      },
-    ).toList();
+      if (label == Strings.accueilOutilsSection) {
+        return OnboardingShowcase(
+          bottom: true,
+          source: ShowcaseSource.outils,
+          child: tab,
+        );
+      }
+      return tab;
+    }).toList();
+  }
+}
+
+class _TabCountBadge extends StatelessWidget {
+  final int count;
+
+  const _TabCountBadge({required this.count});
+
+  @override
+  Widget build(BuildContext context) {
+    final text = count > 9 ? '9+' : '$count';
+    return Container(
+      constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: const Color(0xFFFF3F15),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        text,
+        style: TextStyles.textXsBold(color: Colors.white),
+        textAlign: TextAlign.center,
+      ),
+    );
   }
 }

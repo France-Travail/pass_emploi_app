@@ -77,3 +77,5 @@ class CreationDemarcheDeepLink extends DeepLink {}
 class CreationActionDeepLink extends DeepLink {}
 
 class CampagneDeepLink extends DeepLink {}
+
+class ActualiteMissionLocaleDeepLink extends DeepLink {}

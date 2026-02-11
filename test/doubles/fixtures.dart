@@ -12,6 +12,7 @@ import 'package:pass_emploi_app/features/recherche/service_civique/service_civiq
 import 'package:pass_emploi_app/features/recherche/service_civique/service_civique_filtres_recherche.dart';
 import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/accueil/accueil.dart';
+import 'package:pass_emploi_app/models/actualite_mission_locale.dart';
 import 'package:pass_emploi_app/models/alerte/alerte.dart';
 import 'package:pass_emploi_app/models/alerte/evenement_emploi_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/immersion_alerte.dart';
@@ -1455,5 +1456,17 @@ ComptageDesHeures mockComptageDesHeures({
     nbHeuresValidees: nbHeuresValidees ?? 10,
     nbHeuresDeclarees: nbHeuresDeclarees ?? 5,
     dateDerniereMiseAJour: dateDerniereMiseAJour ?? DateTime(2025),
+  );
+}
+
+ActualiteMissionLocale mockActualiteMissionLocale() {
+  return ActualiteMissionLocale(
+    titre: 'Titre',
+    contenu: 'Corps',
+    titreLien: 'Titre du lien',
+    lien: 'Lien',
+    nomPrenomConseiller: 'Nom conseiller',
+    dateCreation: DateTime(2026),
+    isSupprime: false,
   );
 }

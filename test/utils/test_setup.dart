@@ -9,6 +9,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/redux/store_factory.dart';
 import 'package:pass_emploi_app/repositories/accueil_repository.dart';
 import 'package:pass_emploi_app/repositories/action_commentaire_repository.dart';
+import 'package:pass_emploi_app/repositories/actualite_mission_locale_repository.dart';
 import 'package:pass_emploi_app/repositories/alerte/alerte_delete_repository.dart';
 import 'package:pass_emploi_app/repositories/alerte/get_alerte_repository.dart';
 import 'package:pass_emploi_app/repositories/alerte/immersion_alerte_repository.dart';
@@ -26,6 +27,7 @@ import 'package:pass_emploi_app/repositories/contact_immersion_repository.dart';
 import 'package:pass_emploi_app/repositories/crypto/chat_crypto.dart';
 import 'package:pass_emploi_app/repositories/crypto/chat_encryption_local_storage.dart';
 import 'package:pass_emploi_app/repositories/cv_repository.dart';
+import 'package:pass_emploi_app/repositories/date_consultation_actualite_mission_locale_repository.dart';
 import 'package:pass_emploi_app/repositories/date_consultation_notification_repository.dart';
 import 'package:pass_emploi_app/repositories/date_consultation_offre_repository.dart';
 import 'package:pass_emploi_app/repositories/demarche/create_demarche_repository.dart';
@@ -162,6 +164,8 @@ class TestStoreFactory {
   InAppNotificationsRepository inAppNotificationsRepository = MockInAppNotificationsRepository();
   DateConsultationNotificationRepository dateConsultationNotificationRepository =
       MockDateConsultationNotificationRepository();
+  DateConsultationActualiteMissionLocaleRepository dateConsultationActualiteMissionLocaleRepository =
+      MockDateConsultationActualiteMissionLocaleRepository();
   LocalisationPersistRepository localisationPersistRepository = MockLocalisationPersistRepository();
   RemoteCampagneAccueilRepository remoteCampagneAccueilRepository = MockRemoteCampagneAccueilRepository();
   AutoInscriptionRepository autoInscriptionRepository = MockAutoInscriptionRepository();
@@ -169,6 +173,7 @@ class TestStoreFactory {
   ComptageDesHeuresRepository comptageDesHeuresRepository = MockComptageDesHeuresRepository();
   IaFtSuggestionsRepository iaFtSuggestionsRepository = MockIaFtSuggestionsRepository();
   ModuleFeedbackRepository moduleFeedbackRepository = MockModuleFeedbackRepository();
+  ActualiteMissionLocaleRepository actualiteMissionLocaleRepository = MockActualiteMissionLocaleRepository();
   /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-PROPERTY*/
 
   Store<AppState> initializeReduxStore({required AppState initialState}) {
@@ -246,6 +251,7 @@ class TestStoreFactory {
       inAppFeedbackRepository,
       inAppNotificationsRepository,
       dateConsultationNotificationRepository,
+      dateConsultationActualiteMissionLocaleRepository,
       localisationPersistRepository,
       remoteCampagneAccueilRepository,
       autoInscriptionRepository,
@@ -253,6 +259,7 @@ class TestStoreFactory {
       comptageDesHeuresRepository,
       iaFtSuggestionsRepository,
       moduleFeedbackRepository,
+      actualiteMissionLocaleRepository,
       /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-CONSTRUCTOR*/
     ).initializeReduxStore(initialState: initialState);
   }

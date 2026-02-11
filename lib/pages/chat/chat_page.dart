@@ -26,6 +26,11 @@ import 'package:pass_emploi_app/widgets/info_card.dart';
 import 'package:redux/redux.dart';
 
 class ChatPage extends StatefulWidget {
+  final bool withAppBar;
+  final bool withScaffold;
+
+  const ChatPage({super.key, this.withAppBar = true, this.withScaffold = true});
+
   @override
   ChatPageState createState() => ChatPageState();
 }
@@ -97,6 +102,8 @@ class ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     return ChatScaffold(
       displayState: viewModel.displayState,
       onRetry: viewModel.onRetry,
+      withAppBar: widget.withAppBar,
+      withScaffold: widget.withScaffold,
       content: ChatContent(
         reversedItems: viewModel.items.reversed.toList(),
         controller: _controller!,

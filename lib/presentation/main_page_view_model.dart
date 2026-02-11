@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_mission_locale_state.dart';
 import 'package:pass_emploi_app/features/chat/status/chat_status_state.dart';
+import 'package:pass_emploi_app/features/date_consultation_actualite_mission_locale/date_consultation_actualite_mission_locale_state.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -17,6 +19,7 @@ enum MainPageDisplayState {
   solutionsOffresEnregistrees,
   solutionsAlertes,
   actualisationPoleEmploi,
+  chatActualiteMissionLocale,
 }
 
 class MainPageViewModel extends Equatable {
@@ -36,6 +39,12 @@ class MainPageViewModel extends Equatable {
     final chatStatusState = store.state.chatStatusState;
     final user = store.state.user();
 
+    final hasUnreadChat = (chatStatusState is ChatStatusSuccessState) && (chatStatusState.hasUnreadMessages);
+    final hasNewActualite = _hasNewActualite(
+      store.state.actualiteMissionLocaleState,
+      store.state.dateConsultationActualiteMissionLocaleState,
+    );
+
     return MainPageViewModel(
       tabs: [
         MainTab.accueil,
@@ -44,7 +53,7 @@ class MainPageViewModel extends Equatable {
         MainTab.solutions,
         MainTab.evenements,
       ],
-      withChatBadge: (chatStatusState is ChatStatusSuccessState) && (chatStatusState.hasUnreadMessages),
+      withChatBadge: hasUnreadChat || hasNewActualite,
       resetDeeplink: () => store.dispatch(ResetDeeplinkAction()),
       actualisationPoleEmploiUrl: store.state.configurationState.configuration?.actualisationPoleEmploiUrl ?? "",
     );
@@ -52,4 +61,14 @@ class MainPageViewModel extends Equatable {
 
   @override
   List<Object?> get props => [tabs, withChatBadge];
+}
+
+bool _hasNewActualite(
+  ActualiteMissionLocaleState actualiteMissionLocaleState,
+  DateConsultationActualiteMissionLocaleState dateConsultationActualiteMissionLocaleState,
+) {
+  if (actualiteMissionLocaleState is! ActualiteMissionLocaleSuccessState) return false;
+  final lastConsultation = dateConsultationActualiteMissionLocaleState.date;
+  if (lastConsultation == null) return actualiteMissionLocaleState.result.isNotEmpty;
+  return actualiteMissionLocaleState.result.any((actualite) => actualite.dateCreation.isAfter(lastConsultation));
 }

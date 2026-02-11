@@ -9,10 +9,12 @@ import 'package:pass_emploi_app/models/matching_demarche_du_referentiel.dart';
 import 'package:pass_emploi_app/models/offre_dto.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
 import 'package:pass_emploi_app/push/push_notification_manager.dart';
+import 'package:pass_emploi_app/repositories/actualite_mission_locale_repository.dart';
 import 'package:pass_emploi_app/repositories/auto_inscription_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_recrutement_repository.dart';
 import 'package:pass_emploi_app/repositories/comptage_des_heures_repository.dart';
 import 'package:pass_emploi_app/repositories/configuration_application_repository.dart';
+import 'package:pass_emploi_app/repositories/date_consultation_actualite_mission_locale_repository.dart';
 import 'package:pass_emploi_app/repositories/date_consultation_notification_repository.dart';
 import 'package:pass_emploi_app/repositories/date_consultation_offre_repository.dart';
 import 'package:pass_emploi_app/repositories/derniere_offre_consultee_repository.dart';
@@ -338,5 +340,19 @@ class MockIaFtSuggestionsRepository extends Mock implements IaFtSuggestionsRepos
 }
 
 class MockModuleFeedbackRepository extends Mock implements ModuleFeedbackRepository {}
+
+class MockActualiteMissionLocaleRepository extends Mock implements ActualiteMissionLocaleRepository {
+  MockActualiteMissionLocaleRepository() {
+    when(() => get(any())).thenAnswer((_) async => [mockActualiteMissionLocale()]);
+  }
+}
+
+class MockDateConsultationActualiteMissionLocaleRepository extends Mock
+    implements DateConsultationActualiteMissionLocaleRepository {
+  MockDateConsultationActualiteMissionLocaleRepository() {
+    when(() => get()).thenAnswer((_) async => null);
+    when(() => save(any())).thenAnswer((_) async {});
+  }
+}
 
 /*AUTOGENERATE-REDUX-TEST-MOCKS-REPOSITORY-DECLARATION*/

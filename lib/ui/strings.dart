@@ -56,6 +56,7 @@ class Strings {
   static String or = "ou";
   static String ajouter = "Ajouter";
   static String cancelLabel = "Annuler";
+  static String confirmLabel = "Confirmer";
   static String suppressionLabel = "Supprimer";
   static String cacher = "Cacher";
   static String refuserLabel = "Refuser";
@@ -102,6 +103,11 @@ class Strings {
   static String sendMessageTooltip = "Envoyer le message";
   static String sendAttachmentTooltip = "Envoyer une pièce jointe";
   static String chatError = "Erreur lors de la récupération de votre messagerie";
+  static String chatTabMonConseiller = "Mon conseiller";
+  static String chatTabMaMissionLocale = "Ma mission locale";
+  static String actualiteMissionLocaleEmptyTitle = "Aucune actualité pour le moment";
+  static String actualiteMissionLocaleEmptySubtitle = "Retrouvez ici les actualités de votre mission locale";
+  static String actualiteMissionLocaleError = "Erreur lors de la récupération des actualités";
   static String newConseillerTitle = "Vous échangez avec votre nouveau conseiller.";
   static String newConseillerTemporaireTitle = "Vous échangez temporairement avec un nouveau conseiller.";
   static String newConseillerDescription = "Il a accès à l’historique de vos échanges.";
@@ -119,6 +125,7 @@ class Strings {
   static String chatEmpty = "Commencez une conversation avec votre conseiller";
   static String chatEmptySubtitle =
       "Obtenez les informations que vous recherchez en contactant directement votre conseiller";
+  static String hourAndPostOwner(String hour, String owner) => "$hour · Posté par $owner";
 
   static String chatMessageBottomSheetTitle = "Paramètres du message";
   static String chatCopyMessage = "Copier";
@@ -1675,4 +1682,8 @@ class Strings {
 
   static String boulangerCampagneTitle = "1000 immersions dans les métiers de la vente et de la logistique";
   static String boulangerCampagneDescription = "Découvrez les métiers de la vente et de la logistique.";
+
+  // Actualite Mission Locale
+  static String externalUrlAlertTitle = "Ce lien redirige vers un site externe";
+  static String actualiteMissionLocaleSupprime = "Actualité supprimée";
 }
