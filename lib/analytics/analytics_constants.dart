@@ -19,6 +19,7 @@ class AnalyticsScreenNames {
   static const accueil = "accueil";
   static const monSuivi = "mon_suivi/v2";
   static const chat = "chat";
+  static const actualiteMissionLocale = "chat/actualites_mission_locale";
   static const profil = "profil";
 
   static const contactProfil = "profil/contact";

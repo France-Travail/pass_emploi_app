@@ -102,6 +102,12 @@ class Strings {
   static String sendMessageTooltip = "Envoyer le message";
   static String sendAttachmentTooltip = "Envoyer une pièce jointe";
   static String chatError = "Erreur lors de la récupération de votre messagerie";
+  static String chatTabMonConseiller = "Mon conseiller";
+  static String chatTabMaMissionLocale = "Ma mission locale";
+  static String actualiteMissionLocaleEmptyTitle = "Aucune actualité pour le moment";
+  static String actualiteMissionLocaleEmptySubtitle =
+      "Vous retrouverez ici les actualités de votre mission locale";
+  static String actualiteMissionLocaleError = "Erreur lors de la récupération des actualités";
   static String newConseillerTitle = "Vous échangez avec votre nouveau conseiller.";
   static String newConseillerTemporaireTitle = "Vous échangez temporairement avec un nouveau conseiller.";
   static String newConseillerDescription = "Il a accès à l’historique de vos échanges.";

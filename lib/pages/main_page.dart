@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:gaimon/gaimon.dart';
+import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_mission_locale_actions.dart';
 import 'package:pass_emploi_app/features/chat/status/chat_status_actions.dart';
+import 'package:pass_emploi_app/features/date_consultation_actualite_mission_locale/date_consultation_actualite_mission_locale_actions.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_page.dart';
-import 'package:pass_emploi_app/pages/chat/chat_page.dart';
+import 'package:pass_emploi_app/pages/chat/chat_home_page.dart';
 import 'package:pass_emploi_app/pages/events_tab_page.dart';
 import 'package:pass_emploi_app/pages/mon_suivi_page.dart';
 import 'package:pass_emploi_app/pages/solutions_tabs_page.dart';
@@ -78,7 +80,13 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
           _showActualisationPeDialog(viewModel.actualisationPoleEmploiUrl);
         }
       },
-      onInit: (store) => store.dispatch(SubscribeToChatStatusAction()),
+      onInit: (store) {
+        store.dispatch(SubscribeToChatStatusAction());
+        store.dispatch(ActualiteMissionLocaleRequestAction()); // TODO: Replace this with login action in middleware
+        store.dispatch(
+          DateConsultationActualiteMissionLocaleRequestAction(),
+        ); // TODO: Replace this with login action in middleware
+      },
       onDispose: (store) => store.dispatch(UnsubscribeFromChatStatusAction()),
       builder: (context, viewModel) => _body(viewModel, context),
       distinct: true,
@@ -127,7 +135,7 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
     return switch (viewModel.tabs[index]) {
       MainTab.accueil => AccueilPage(),
       MainTab.monSuivi => MonSuiviPage(),
-      MainTab.chat => ChatPage(),
+      MainTab.chat => _chatPage(),
       MainTab.solutions => _solutionsPage(viewModel),
       MainTab.evenements => _eventsPage(viewModel),
     };
@@ -137,6 +145,12 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
     final initialTab = !_deepLinkHandled ? _initialSolutionsTab() : null;
     _deepLinkHandled = true;
     return SolutionsTabPage(initialTab: initialTab);
+  }
+
+  Widget _chatPage() {
+    final initialTab = !_deepLinkHandled ? _initialChatTab() : null;
+    _deepLinkHandled = true;
+    return ChatHomePage(initialTab: initialTab);
   }
 
   Widget _eventsPage(MainPageViewModel viewModel) {
@@ -160,6 +174,13 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
     };
   }
 
+  ChatTab? _initialChatTab() {
+    return switch (widget.displayState) {
+      MainPageDisplayState.chatActualiteMissionLocale => ChatTab.missionLocale,
+      _ => null,
+    };
+  }
+
   void _setInitIndexPage(MainPageViewModel viewModel) {
     if (_selectedIndex != _indexNotInitialized) return;
 
@@ -169,6 +190,7 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
       MainPageDisplayState.actualisationPoleEmploi => tabs.indexOf(MainTab.accueil),
       MainPageDisplayState.monSuivi => tabs.indexOf(MainTab.monSuivi),
       MainPageDisplayState.chat => tabs.indexOf(MainTab.chat),
+      MainPageDisplayState.chatActualiteMissionLocale => tabs.indexOf(MainTab.chat),
       MainPageDisplayState.solutionsRecherche => tabs.indexOf(MainTab.solutions),
       MainPageDisplayState.solutionsOffresEnregistrees => tabs.indexOf(MainTab.solutions),
       MainPageDisplayState.solutionsAlertes => tabs.indexOf(MainTab.solutions),

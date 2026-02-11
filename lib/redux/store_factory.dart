@@ -27,6 +27,7 @@ import 'package:pass_emploi_app/features/connectivity/connectivity_middleware.da
 import 'package:pass_emploi_app/features/contact_immersion/contact_immersion_middleware.dart';
 import 'package:pass_emploi_app/features/cv/cv_middleware.dart';
 import 'package:pass_emploi_app/features/date_consultation_notification/date_consultation_notification_middleware.dart';
+import 'package:pass_emploi_app/features/date_consultation_actualite_mission_locale/date_consultation_actualite_mission_locale_middleware.dart';
 import 'package:pass_emploi_app/features/date_consultation_offre/date_consultation_offre_middleware.dart';
 import 'package:pass_emploi_app/features/demarche/create/create_demarche_middleware.dart';
 import 'package:pass_emploi_app/features/demarche/create_demarche_batch/create_demarche_batch_middleware.dart';
@@ -121,6 +122,7 @@ import 'package:pass_emploi_app/repositories/crypto/chat_crypto.dart';
 import 'package:pass_emploi_app/repositories/crypto/chat_encryption_local_storage.dart';
 import 'package:pass_emploi_app/repositories/cv_repository.dart';
 import 'package:pass_emploi_app/repositories/date_consultation_notification_repository.dart';
+import 'package:pass_emploi_app/repositories/date_consultation_actualite_mission_locale_repository.dart';
 import 'package:pass_emploi_app/repositories/date_consultation_offre_repository.dart';
 import 'package:pass_emploi_app/repositories/demarche/create_demarche_repository.dart';
 import 'package:pass_emploi_app/repositories/demarche/search_demarche_repository.dart';
@@ -252,6 +254,7 @@ class StoreFactory {
   final InAppFeedbackRepository inAppFeedbackRepository;
   final InAppNotificationsRepository inAppNotificationsRepository;
   final DateConsultationNotificationRepository dateConsultationNotificationRepository;
+  final DateConsultationActualiteMissionLocaleRepository dateConsultationActualiteMissionLocaleRepository;
   final LocalisationPersistRepository localisationPersistRepository;
   final RemoteCampagneAccueilRepository remoteCampagneAccueilRepository;
   final AutoInscriptionRepository autoInscriptionRepository;
@@ -336,6 +339,7 @@ class StoreFactory {
     this.inAppFeedbackRepository,
     this.inAppNotificationsRepository,
     this.dateConsultationNotificationRepository,
+    this.dateConsultationActualiteMissionLocaleRepository,
     this.localisationPersistRepository,
     this.remoteCampagneAccueilRepository,
     this.autoInscriptionRepository,
@@ -440,6 +444,7 @@ class StoreFactory {
         InAppFeedbackMiddleware(inAppFeedbackRepository).call,
         InAppNotificationsMiddleware(inAppNotificationsRepository).call,
         DateConsultationNotificationMiddleware(dateConsultationNotificationRepository).call,
+        DateConsultationActualiteMissionLocaleMiddleware(dateConsultationActualiteMissionLocaleRepository).call,
         LocalisationPersistMiddleware(localisationPersistRepository).call,
         RemoteCampagneAccueilMiddleware(remoteCampagneAccueilRepository).call,
         AutoInscriptionMiddleware(autoInscriptionRepository).call,

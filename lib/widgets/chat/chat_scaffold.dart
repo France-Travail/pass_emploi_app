@@ -15,20 +15,23 @@ class ChatScaffold extends StatelessWidget {
   final VoidCallback onRetry;
   final ChatContent content;
   final String title;
+  final bool withAppBar;
+  final bool withScaffold;
 
   const ChatScaffold({
     required this.displayState,
     required this.onRetry,
     required this.content,
     this.title = Strings.menuChat,
+    this.withAppBar = true,
+    this.withScaffold = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.grey100,
-      appBar: PrimaryAppBar(title: title),
-      body: ConnectivityContainer(
+    final body = Container(
+      color: AppColors.grey100,
+      child: ConnectivityContainer(
         child: Column(
           children: [
             SepLine(0, 0),
@@ -45,6 +48,14 @@ class ChatScaffold extends StatelessWidget {
           ],
         ),
       ),
+    );
+
+    if (!withScaffold) return body;
+
+    return Scaffold(
+      backgroundColor: AppColors.grey100,
+      appBar: withAppBar ? PrimaryAppBar(title: title) : null,
+      body: body,
     );
   }
 }

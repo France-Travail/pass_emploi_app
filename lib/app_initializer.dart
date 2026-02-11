@@ -50,6 +50,7 @@ import 'package:pass_emploi_app/repositories/crypto/chat_crypto.dart';
 import 'package:pass_emploi_app/repositories/crypto/chat_encryption_local_storage.dart';
 import 'package:pass_emploi_app/repositories/cv_repository.dart';
 import 'package:pass_emploi_app/repositories/date_consultation_notification_repository.dart';
+import 'package:pass_emploi_app/repositories/date_consultation_actualite_mission_locale_repository.dart';
 import 'package:pass_emploi_app/repositories/date_consultation_offre_repository.dart';
 import 'package:pass_emploi_app/repositories/demarche/create_demarche_repository.dart';
 import 'package:pass_emploi_app/repositories/demarche/search_demarche_repository.dart';
@@ -290,6 +291,7 @@ class AppInitializer {
       InAppFeedbackRepository(securedPreferences, remoteConfigRepository),
       InAppNotificationsRepository(dioClient, crashlytics),
       DateConsultationNotificationRepository(securedPreferences),
+      DateConsultationActualiteMissionLocaleRepository(securedPreferences),
       LocalisationPersistRepository(securedPreferences),
       RemoteCampagneAccueilRepository(remoteConfigRepository, securedPreferences),
       AutoInscriptionRepository(dioClient, crashlytics),

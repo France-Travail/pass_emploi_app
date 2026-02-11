@@ -28,6 +28,7 @@ class DeepLinkFactory {
       _DeepLink.rappelCreationDemarche => CreationDemarcheDeepLink(),
       _DeepLink.rappelCreationAction => CreationActionDeepLink(),
       _DeepLink.campagne => CampagneDeepLink(),
+      _DeepLink.actualiteMissionLocale => ActualiteMissionLocaleDeepLink(),
       null => null,
     };
   }
@@ -53,7 +54,8 @@ enum _DeepLink {
   laBonneAlternance(["LA_BONNE_ALTERNANCE"]),
   rappelCreationDemarche(["RAPPEL_CREATION_DEMARCHE"]),
   rappelCreationAction(["RAPPEL_CREATION_ACTION"]),
-  campagne(["CAMPAGNE"]);
+  campagne(["CAMPAGNE"]),
+  actualiteMissionLocale(["ACTUALITE_MISSION_LOCALE"]);
 
   final List<String> possibleTypes;
 
