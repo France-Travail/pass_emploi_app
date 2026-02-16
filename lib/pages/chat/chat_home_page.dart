@@ -9,10 +9,7 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/pass_emploi_tab_bar.dart';
 
-enum ChatTab {
-  conseiller,
-  missionLocale,
-}
+enum ChatTab { conseiller, missionLocale }
 
 class ChatHomePage extends StatelessWidget {
   final ChatTab? initialTab;
