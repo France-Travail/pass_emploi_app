@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:pass_emploi_app/utils/string_extensions.dart';
 
 enum InAppNotificationType {
+  newActu,
   newAction,
   newRendezvous,
   rappelRendezvous,
@@ -20,6 +21,7 @@ enum InAppNotificationType {
 
   static InAppNotificationType fromString(String type) {
     return switch (type) {
+      "NEW_ACTU" => newActu,
       "NEW_ACTION" => newAction,
       "NEW_RENDEZVOUS" => newRendezvous,
       "RAPPEL_RENDEZVOUS" => rappelRendezvous,

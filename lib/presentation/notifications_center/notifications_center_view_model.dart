@@ -62,6 +62,7 @@ List<NotificationViewModel> _notifications(Store<AppState> store) {
 
 DeepLink? _fromInAppNotification(InAppNotificationType type, String? idObjet) {
   return switch (type) {
+    InAppNotificationType.newActu => ActualiteMissionLocaleDeepLink(),
     InAppNotificationType.newAction => idObjet != null ? ActionDeepLink(idObjet) : null,
     InAppNotificationType.detailAction => idObjet != null ? ActionDeepLink(idObjet) : null,
     InAppNotificationType.rappelRendezvous => idObjet != null ? RendezvousDeepLink(idObjet) : null,
