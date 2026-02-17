@@ -55,7 +55,7 @@ enum _DeepLink {
   rappelCreationDemarche(["RAPPEL_CREATION_DEMARCHE"]),
   rappelCreationAction(["RAPPEL_CREATION_ACTION"]),
   campagne(["CAMPAGNE"]),
-  actualiteMissionLocale(["ACTUALITE_MISSION_LOCALE"]);
+  actualiteMissionLocale(["NEW_ACTU"]);
 
   final List<String> possibleTypes;
 
