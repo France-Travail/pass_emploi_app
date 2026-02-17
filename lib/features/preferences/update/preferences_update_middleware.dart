@@ -32,6 +32,7 @@ class PreferencesUpdateMiddleware extends MiddlewareClass<AppState> {
               pushNotificationCreationAction: action.pushNotificationCreationAction,
               pushNotificationRendezvousSessions: action.pushNotificationRendezvousSessions,
               pushNotificationRappelActions: action.pushNotificationRappelActions,
+              pushNotificationActuMilo: action.pushNotificationActuMilo,
             ),
           ),
         );
@@ -52,6 +53,7 @@ extension on PreferencesUpdateRequestAction {
       pushNotificationCreationAction: pushNotificationCreationAction,
       pushNotificationRendezvousSessions: pushNotificationRendezvousSessions,
       pushNotificationRappelActions: pushNotificationRappelActions,
+      pushNotificationActuMilo: pushNotificationActuMilo,
     );
   }
 }

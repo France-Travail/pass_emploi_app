@@ -757,6 +757,7 @@ Preferences mockPreferences({
   bool pushNotificationCreationActionConseiller = false,
   bool pushNotificationRendezVousSessions = false,
   bool pushNotificationRappelActions = false,
+  bool pushNotificationActuMilo = false,
 }) {
   return Preferences(
     partageFavoris: partageFavoris,
@@ -765,6 +766,7 @@ Preferences mockPreferences({
     pushNotificationCreationAction: pushNotificationCreationActionConseiller,
     pushNotificationRendezvousSessions: pushNotificationRendezVousSessions,
     pushNotificationRappelActions: pushNotificationRappelActions,
+    pushNotificationActuMilo: pushNotificationActuMilo,
   );
 }
 

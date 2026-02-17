@@ -93,6 +93,7 @@ void main() {
                 pushNotificationCreationActionConseiller: true,
                 pushNotificationRendezVousSessions: false,
                 pushNotificationRappelActions: true,
+                pushNotificationActuMilo: true,
               ),
             ),
           )
@@ -106,6 +107,7 @@ void main() {
       expect(viewModel.withCreationAction, true);
       expect(viewModel.withRendezvousSessions, false);
       expect(viewModel.withRappelActions, true);
+      expect(viewModel.withActuMilo, true);
     });
 
     test('should display Cej wording when accompagnement is Cej', () {
@@ -117,6 +119,7 @@ void main() {
 
       // Then
       expect(viewModel.withMiloWording, true);
+      expect(viewModel.withActuMiloPreference, true);
     });
 
     test('should not display Cej wording when accompagnement is not Cej', () {
@@ -128,6 +131,7 @@ void main() {
 
       // Then
       expect(viewModel.withMiloWording, false);
+      expect(viewModel.withActuMiloPreference, false);
     });
 
     test('on AlertesOffres changed should dispatch update preferences action', () {
@@ -180,6 +184,19 @@ void main() {
       // Then
       expect(store.dispatchedAction, isA<PreferencesUpdateRequestAction>());
       expect((store.dispatchedAction as PreferencesUpdateRequestAction).pushNotificationRappelActions, true);
+    });
+
+    test('on ActuMilo changed should dispatch update preferences action', () {
+      // Given
+      final store = StoreSpy();
+      final viewModel = NotificationPreferencesViewModel.create(store);
+
+      // When
+      viewModel.onActuMiloChanged(true);
+
+      // Then
+      expect(store.dispatchedAction, isA<PreferencesUpdateRequestAction>());
+      expect((store.dispatchedAction as PreferencesUpdateRequestAction).pushNotificationActuMilo, true);
     });
   });
 }

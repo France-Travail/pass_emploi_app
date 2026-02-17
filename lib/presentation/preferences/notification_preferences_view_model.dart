@@ -17,12 +17,15 @@ class NotificationPreferencesViewModel extends Equatable {
   final bool withCreationAction;
   final bool withRendezvousSessions;
   final bool withRappelActions;
+  final bool withActuMilo;
   final bool withMiloWording;
+  final bool withActuMiloPreference;
 
   final void Function(bool) onAlertesOffresChanged;
   final void Function(bool) onCreationActionChanged;
   final void Function(bool) onRendezvousSessionsChanged;
   final void Function(bool) onRappelActionsChanged;
+  final void Function(bool) onActuMiloChanged;
 
   final void Function() onOpenAppSettings;
   final void Function() retry;
@@ -34,11 +37,14 @@ class NotificationPreferencesViewModel extends Equatable {
     required this.withCreationAction,
     required this.withRendezvousSessions,
     required this.withRappelActions,
+    required this.withActuMilo,
     required this.withMiloWording,
+    required this.withActuMiloPreference,
     required this.onAlertesOffresChanged,
     required this.onCreationActionChanged,
     required this.onRendezvousSessionsChanged,
     required this.onRappelActionsChanged,
+    required this.onActuMiloChanged,
     required this.onOpenAppSettings,
     required this.retry,
   });
@@ -56,7 +62,9 @@ class NotificationPreferencesViewModel extends Equatable {
       withCreationAction: preferences?.pushNotificationCreationAction ?? false,
       withRendezvousSessions: preferences?.pushNotificationRendezvousSessions ?? false,
       withRappelActions: preferences?.pushNotificationRappelActions ?? false,
+      withActuMilo: preferences?.pushNotificationActuMilo ?? false,
       withMiloWording: store.state.isMiloLoginMode(),
+      withActuMiloPreference: store.state.isMiloLoginMode(),
       onAlertesOffresChanged: (value) => store.dispatch(
         PreferencesUpdateRequestAction(pushNotificationAlertesOffres: value),
       ),
@@ -69,6 +77,9 @@ class NotificationPreferencesViewModel extends Equatable {
       onRappelActionsChanged: (value) => store.dispatch(
         PreferencesUpdateRequestAction(pushNotificationRappelActions: value),
       ),
+      onActuMiloChanged: (value) => store.dispatch(
+        PreferencesUpdateRequestAction(pushNotificationActuMilo: value),
+      ),
       onOpenAppSettings: () => store.dispatch(NotificationsSettingsRequestAction()),
       retry: () => store.dispatch(PreferencesRequestAction()),
     );
@@ -76,18 +87,20 @@ class NotificationPreferencesViewModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        displayState,
-        withUpdateError,
-        withAlertesOffres,
-        withCreationAction,
-        withRendezvousSessions,
-        withRappelActions,
-        withMiloWording,
-      ];
+    displayState,
+    withUpdateError,
+    withAlertesOffres,
+    withCreationAction,
+    withRendezvousSessions,
+    withRappelActions,
+    withActuMilo,
+    withMiloWording,
+    withActuMiloPreference,
+  ];
 }
 
 DisplayState _displayState(PreferencesState preferencesState) => switch (preferencesState) {
-      PreferencesSuccessState() => DisplayState.CONTENT,
-      PreferencesFailureState() => DisplayState.FAILURE,
-      _ => DisplayState.LOADING,
-    };
+  PreferencesSuccessState() => DisplayState.CONTENT,
+  PreferencesFailureState() => DisplayState.FAILURE,
+  _ => DisplayState.LOADING,
+};

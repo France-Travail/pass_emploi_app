@@ -4,5 +4,6 @@
   "messages": true,
   "creationActionConseiller": true,
   "rendezVousSessions": false,
-  "rappelActions": true
+  "rappelActions": true,
+  "actuMilo": true
 }

@@ -36,6 +36,7 @@ void main() {
                 pushNotificationCreationAction: true,
                 pushNotificationRendezvousSessions: false,
                 pushNotificationRappelActions: true,
+                pushNotificationActuMilo: true,
               ),
             );
           });
@@ -62,6 +63,7 @@ void main() {
             pushNotificationCreationAction: false,
             pushNotificationRendezvousSessions: true,
             pushNotificationRappelActions: false,
+            pushNotificationActuMilo: true,
           ),
         ),
       );
@@ -79,7 +81,8 @@ void main() {
               "messages": true,
               "creationActionConseiller": false,
               "rendezVousSessions": true,
-              "rappelActions": false
+              "rappelActions": false,
+              "actuMilo": true,
             },
           );
         });

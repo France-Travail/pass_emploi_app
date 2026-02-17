@@ -21,40 +21,45 @@ void main() {
       sut.whenDispatchingAction(() => PreferencesUpdateRequestAction(pushNotificationMessages: false));
 
       test('should load, update preferences locally then succeed when request succeeds', () {
-        when(() => repository.updatePreferences('id', PutPreferencesRequest(pushNotificationMessages: false)))
-            .thenAnswer((_) async => true);
+        when(
+          () => repository.updatePreferences('id', PutPreferencesRequest(pushNotificationMessages: false)),
+        ).thenAnswer((_) async => true);
 
-        sut.givenStore = givenState() //
-            .loggedIn()
-            .copyWith(
-              preferencesState: PreferencesSuccessState(
-                Preferences(
-                  partageFavoris: true,
-                  pushNotificationAlertesOffres: true,
-                  pushNotificationMessages: true,
-                  pushNotificationCreationAction: true,
-                  pushNotificationRendezvousSessions: true,
-                  pushNotificationRappelActions: true,
-                ),
-              ),
-            )
-            .store((f) => {f.preferencesRepository = repository});
+        sut.givenStore =
+            givenState() //
+                .loggedIn()
+                .copyWith(
+                  preferencesState: PreferencesSuccessState(
+                    Preferences(
+                      partageFavoris: true,
+                      pushNotificationAlertesOffres: true,
+                      pushNotificationMessages: true,
+                      pushNotificationCreationAction: true,
+                      pushNotificationRendezvousSessions: true,
+                      pushNotificationRappelActions: true,
+                      pushNotificationActuMilo: true,
+                    ),
+                  ),
+                )
+                .store((f) => {f.preferencesRepository = repository});
 
         sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldUpdatePreferencesLocallyThenSucceed()]);
       });
 
       test('should load then fail when request fails', () {
-        when(() => repository.updatePreferences('id', PutPreferencesRequest(pushNotificationMessages: false)))
-            .thenAnswer((_) async => false);
+        when(
+          () => repository.updatePreferences('id', PutPreferencesRequest(pushNotificationMessages: false)),
+        ).thenAnswer((_) async => false);
 
-        sut.givenStore = givenState() //
-            .loggedIn()
-            .copyWith(
-              preferencesState: PreferencesSuccessState(
-                mockPreferences(),
-              ),
-            )
-            .store((f) => {f.preferencesRepository = repository});
+        sut.givenStore =
+            givenState() //
+                .loggedIn()
+                .copyWith(
+                  preferencesState: PreferencesSuccessState(
+                    mockPreferences(),
+                  ),
+                )
+                .store((f) => {f.preferencesRepository = repository});
 
         sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldFail()]);
       });
@@ -78,6 +83,7 @@ Matcher _shouldUpdatePreferencesLocallyThenSucceed() {
         pushNotificationCreationAction: true,
         pushNotificationRendezvousSessions: true,
         pushNotificationRappelActions: true,
+        pushNotificationActuMilo: true,
       ),
     ),
   );

@@ -5,6 +5,7 @@ class PreferencesUpdateRequestAction {
   final bool? pushNotificationCreationAction;
   final bool? pushNotificationRendezvousSessions;
   final bool? pushNotificationRappelActions;
+  final bool? pushNotificationActuMilo;
 
   PreferencesUpdateRequestAction({
     this.partageFavoris,
@@ -13,6 +14,7 @@ class PreferencesUpdateRequestAction {
     this.pushNotificationCreationAction,
     this.pushNotificationRendezvousSessions,
     this.pushNotificationRappelActions,
+    this.pushNotificationActuMilo,
   });
 }
 

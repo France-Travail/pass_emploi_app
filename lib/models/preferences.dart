@@ -7,6 +7,7 @@ class Preferences extends Equatable {
   final bool pushNotificationCreationAction;
   final bool pushNotificationRendezvousSessions;
   final bool pushNotificationRappelActions;
+  final bool pushNotificationActuMilo;
 
   Preferences({
     required this.partageFavoris,
@@ -15,6 +16,7 @@ class Preferences extends Equatable {
     required this.pushNotificationCreationAction,
     required this.pushNotificationRendezvousSessions,
     required this.pushNotificationRappelActions,
+    this.pushNotificationActuMilo = false,
   });
 
   factory Preferences.fromJson(dynamic json) {
@@ -25,6 +27,7 @@ class Preferences extends Equatable {
       pushNotificationCreationAction: json['creationActionConseiller'] as bool,
       pushNotificationRendezvousSessions: json['rendezVousSessions'] as bool,
       pushNotificationRappelActions: json['rappelActions'] as bool,
+      pushNotificationActuMilo: json['actuMilo'] as bool? ?? false,
     );
   }
 
@@ -35,6 +38,7 @@ class Preferences extends Equatable {
     bool? pushNotificationCreationAction,
     bool? pushNotificationRendezvousSessions,
     bool? pushNotificationRappelActions,
+    bool? pushNotificationActuMilo,
   }) {
     return Preferences(
       partageFavoris: partageFavoris ?? this.partageFavoris,
@@ -43,16 +47,18 @@ class Preferences extends Equatable {
       pushNotificationCreationAction: pushNotificationCreationAction ?? this.pushNotificationCreationAction,
       pushNotificationRendezvousSessions: pushNotificationRendezvousSessions ?? this.pushNotificationRendezvousSessions,
       pushNotificationRappelActions: pushNotificationRappelActions ?? this.pushNotificationRappelActions,
+      pushNotificationActuMilo: pushNotificationActuMilo ?? this.pushNotificationActuMilo,
     );
   }
 
   @override
   List<Object?> get props => [
-        partageFavoris,
-        pushNotificationAlertesOffres,
-        pushNotificationMessages,
-        pushNotificationCreationAction,
-        pushNotificationRendezvousSessions,
-        pushNotificationRappelActions,
-      ];
+    partageFavoris,
+    pushNotificationAlertesOffres,
+    pushNotificationMessages,
+    pushNotificationCreationAction,
+    pushNotificationRendezvousSessions,
+    pushNotificationRappelActions,
+    pushNotificationActuMilo,
+  ];
 }

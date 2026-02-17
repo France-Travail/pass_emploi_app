@@ -8,6 +8,7 @@ class PutPreferencesRequest extends Equatable implements JsonSerializable {
   final bool? pushNotificationCreationAction;
   final bool? pushNotificationRendezvousSessions;
   final bool? pushNotificationRappelActions;
+  final bool? pushNotificationActuMilo;
 
   PutPreferencesRequest({
     this.partageFavoris,
@@ -16,25 +17,28 @@ class PutPreferencesRequest extends Equatable implements JsonSerializable {
     this.pushNotificationCreationAction,
     this.pushNotificationRendezvousSessions,
     this.pushNotificationRappelActions,
+    this.pushNotificationActuMilo,
   });
 
   @override
   Map<String, dynamic> toJson() => {
-        if (partageFavoris != null) "partageFavoris": partageFavoris,
-        if (pushNotificationAlertesOffres != null) "alertesOffres": pushNotificationAlertesOffres,
-        if (pushNotificationMessages != null) "messages": pushNotificationMessages,
-        if (pushNotificationCreationAction != null) "creationActionConseiller": pushNotificationCreationAction,
-        if (pushNotificationRendezvousSessions != null) "rendezVousSessions": pushNotificationRendezvousSessions,
-        if (pushNotificationRappelActions != null) "rappelActions": pushNotificationRappelActions,
-      };
+    if (partageFavoris != null) "partageFavoris": partageFavoris,
+    if (pushNotificationAlertesOffres != null) "alertesOffres": pushNotificationAlertesOffres,
+    if (pushNotificationMessages != null) "messages": pushNotificationMessages,
+    if (pushNotificationCreationAction != null) "creationActionConseiller": pushNotificationCreationAction,
+    if (pushNotificationRendezvousSessions != null) "rendezVousSessions": pushNotificationRendezvousSessions,
+    if (pushNotificationRappelActions != null) "rappelActions": pushNotificationRappelActions,
+    if (pushNotificationActuMilo != null) "actuMilo": pushNotificationActuMilo,
+  };
 
   @override
   List<Object?> get props => [
-        partageFavoris,
-        pushNotificationAlertesOffres,
-        pushNotificationMessages,
-        pushNotificationCreationAction,
-        pushNotificationRendezvousSessions,
-        pushNotificationRappelActions,
-      ];
+    partageFavoris,
+    pushNotificationAlertesOffres,
+    pushNotificationMessages,
+    pushNotificationCreationAction,
+    pushNotificationRendezvousSessions,
+    pushNotificationRappelActions,
+    pushNotificationActuMilo,
+  ];
 }

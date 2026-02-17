@@ -1279,6 +1279,10 @@ class Strings {
   static const String notificationsSettingsRappelsSubtitleFT =
       "Rappel de complétion des démarches (1 fois par semaine)";
 
+  static const String notificationsSettingsActuMiloTitle = "Ma mission locale";
+  static const String notificationsSettingsActuMiloSubtitle =
+      "Publication d’une nouvelle actualité dans votre Mission Locale";
+
   static const String notificationsSettingsTitle = "Paramètres système";
   static const String openNotificationsSettings = "Ouvrir les paramètres de notifications";
   static const String notificationsA11yEnable = "Activer les notifications pour ";

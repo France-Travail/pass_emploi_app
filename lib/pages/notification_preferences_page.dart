@@ -115,6 +115,15 @@ class _Content extends StatelessWidget {
               enabled: viewModel.withRappelActions,
               onChanged: viewModel.onRappelActionsChanged,
             ),
+            if (viewModel.withActuMiloPreference) ...[
+              SizedBox(height: Margins.spacing_base),
+              _NotificationSwitch(
+                title: Strings.notificationsSettingsActuMiloTitle,
+                description: Strings.notificationsSettingsActuMiloSubtitle,
+                enabled: viewModel.withActuMilo,
+                onChanged: viewModel.onActuMiloChanged,
+              ),
+            ],
             SizedBox(height: Margins.spacing_l),
             Text(Strings.notificationsSettingsTitle, style: TextStyles.textBaseBold),
             SizedBox(height: Margins.spacing_s),
