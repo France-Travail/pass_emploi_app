@@ -3,6 +3,7 @@ import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_actions.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_state.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
+import 'package:pass_emploi_app/models/version.dart';
 import 'package:pass_emploi_app/models/in_app_notification.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -67,6 +68,7 @@ DeepLink? _fromInAppNotification(InAppNotificationType type, String? idObjet) {
     InAppNotificationType.detailAction => idObjet != null ? ActionDeepLink(idObjet) : null,
     InAppNotificationType.rappelRendezvous => idObjet != null ? RendezvousDeepLink(idObjet) : null,
     InAppNotificationType.newRendezvous => idObjet != null ? RendezvousDeepLink(idObjet) : null,
+    InAppNotificationType.detailRendezvous => idObjet != null ? RendezvousDeepLink(idObjet) : null,
     InAppNotificationType.updatedRendezvous => idObjet != null ? RendezvousDeepLink(idObjet) : null,
     InAppNotificationType.nouvelleOffre => idObjet != null ? AlerteDeepLink(idAlerte: idObjet) : null,
     InAppNotificationType.migrationParcoursEmploi => MigrationParcoursEmploiDeepLink(),
@@ -77,6 +79,16 @@ DeepLink? _fromInAppNotification(InAppNotificationType type, String? idObjet) {
     InAppNotificationType.deletedSessionMilo => null,
     InAppNotificationType.deletedRendezvous => null,
     InAppNotificationType.campagne => CampagneDeepLink(),
+    InAppNotificationType.newMessage => NouveauMessageDeepLink(),
+    InAppNotificationType.nouvellesFonctionnalites => NouvellesFonctionnalitesDeepLink(lastVersion: idObjet != null ? Version.fromString(idObjet) : null),
+    InAppNotificationType.eventList => EventListDeepLink(),
+    InAppNotificationType.monSuivi => MonSuiviDeepLink(),
+    InAppNotificationType.offresEnregistrees => OffresEnregistreesDeepLink(),
+    InAppNotificationType.savedSearches => AlertesDeepLink(),
+    InAppNotificationType.recherche => RechercheDeepLink(),
+    InAppNotificationType.outils => OutilsDeepLink(),
+    InAppNotificationType.benevolat => BenevolatDeepLink(),
+    InAppNotificationType.laBonneAlternance => LaBonneAlternanceDeepLink(),
     InAppNotificationType.unknown => null,
   };
 }
