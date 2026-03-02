@@ -90,6 +90,10 @@ class _AccueilPageState extends State<AccueilPage> {
       await _handleRappelCreationDemarcheDeeplink();
     } else if (newViewModel.deepLink is CreationActionDeepLink) {
       await _handleRappelCreationActionDeeplink();
+    } else if (newViewModel.deepLink is BenevolatDeepLink) {
+      await _handleBenevolatDeeplink();
+    } else if (newViewModel.deepLink is LaBonneAlternanceDeepLink) {
+      await _handleLaBonneAlternanceDeeplink();
     } else {
       final route = switch (newViewModel.deepLink) {
         final RendezvousDeepLink deeplink => RendezvousDetailsPage.materialPageRoute(
@@ -105,8 +109,6 @@ class _AccueilPageState extends State<AccueilPage> {
           UserActionStateSource.noSource,
         ),
         OutilsDeepLink() => BoiteAOutilsPage.materialPageRoute(),
-        BenevolatDeepLink() => BenevolatPage.materialPageRoute(),
-        LaBonneAlternanceDeepLink() => LaBonneAlternancePage.materialPageRoute(),
         CampagneDeepLink() => CampagneQuestionPage.materialPageRoute(0),
         _ => null,
       };
@@ -114,6 +116,32 @@ class _AccueilPageState extends State<AccueilPage> {
       if (route != null) Navigator.push(context, route);
       if (newViewModel.shouldResetDeeplink) newViewModel.resetDeeplink();
     }
+  }
+
+  Future<void> _handleBenevolatDeeplink() async {
+    // Navigator must be captured before state changes as context may no longer be available after tab switch.
+    final navigator = Navigator.of(context);
+    await _displaySolutionsPage();
+    if (mounted) {
+      navigator.push(BoiteAOutilsPage.materialPageRoute());
+      navigator.push(BenevolatPage.materialPageRoute());
+    }
+  }
+
+  Future<void> _handleLaBonneAlternanceDeeplink() async {
+    // Navigator must be captured before state changes as context may no longer be available after tab switch.
+    final navigator = Navigator.of(context);
+    await _displaySolutionsPage();
+    if (mounted) {
+      navigator.push(BoiteAOutilsPage.materialPageRoute());
+      navigator.push(LaBonneAlternancePage.materialPageRoute());
+    }
+  }
+
+  dynamic _displaySolutionsPage() {
+    StoreProvider.of<AppState>(context).dispatch(
+      HandleDeepLinkAction(RechercheDeepLink(), DeepLinkOrigin.inAppNavigation),
+    );
   }
 
   Future<void> _handleRappelCreationDemarcheDeeplink() async {
