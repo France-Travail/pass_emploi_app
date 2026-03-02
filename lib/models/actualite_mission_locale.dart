@@ -30,7 +30,7 @@ class ActualiteMissionLocale extends Equatable {
       contenu: json['contenu'] as String? ?? '',
       titreLien: json['titreLien'] as String?,
       lien: json['lien'] as String?,
-      nomPrenomConseiller: json['nomPrenomConseiller'] as String? ?? '',
+      nomPrenomConseiller: json['prenomNomConseiller'] as String? ?? '',
       dateCreation: dateCreation.toDateTimeSafe() ?? DateTime.now(),
       isSupprime: json['dateSuppression'] != null,
     );
