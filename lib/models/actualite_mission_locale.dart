@@ -26,11 +26,11 @@ class ActualiteMissionLocale extends Equatable {
       throw Exception('dateCreation is required');
     }
     return ActualiteMissionLocale(
-      titre: json['titre'] as String,
-      contenu: json['contenu'] as String,
+      titre: json['titre'] as String? ?? '',
+      contenu: json['contenu'] as String? ?? '',
       titreLien: json['titreLien'] as String?,
       lien: json['lien'] as String?,
-      nomPrenomConseiller: json['nomPrenomConseiller'] as String,
+      nomPrenomConseiller: json['nomPrenomConseiller'] as String? ?? '',
       dateCreation: dateCreation.toDateTimeSafe() ?? DateTime.now(),
       isSupprime: json['dateSuppression'] != null,
     );
