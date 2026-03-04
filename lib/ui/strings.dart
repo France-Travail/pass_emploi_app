@@ -1417,6 +1417,7 @@ class Strings {
   static String eventListEmptySubtitle = "Vous retrouverez ici tous les événements programmés de votre mission locale";
   static String eventListHeaderText = "Retrouvez ici l’ensemble des événements organisés par votre Mission locale";
   static String eventVousEtesDejaInscrit = "Je suis déjà inscrit";
+  static String eventAnnulerMonInscription = "Annulation possible";
   static String eventInscrivezVousPourParticiper = "Faire une demande d'inscription";
   static String eventAutoInscription = "M'inscrire pour participer";
   static String eventComplet = "Complet";

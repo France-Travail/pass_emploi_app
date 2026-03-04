@@ -58,29 +58,34 @@ class _Content extends StatelessWidget {
   }
 
   List<Widget>? secondaryTags(InscriptionStatus inscriptionStatus) => switch (inscriptionStatus) {
-        InscriptionStatus.inscrit => [
-            CardTag.secondary(
-              text: Strings.eventVousEtesDejaInscrit,
-              icon: AppIcons.check_circle_outline_rounded,
-            )
-          ],
-        InscriptionStatus.notInscrit => [
-            CardTag.secondary(
-              text: Strings.eventInscrivezVousPourParticiper,
-            )
-          ],
-        InscriptionStatus.autoinscription => [
-            CardTag.secondary(
-              text: Strings.eventAutoInscription,
-            )
-          ],
-        InscriptionStatus.full => [
-            CardTag.warning(
-              text: Strings.eventComplet,
-            )
-          ],
-        InscriptionStatus.hidden => null,
-      };
+    InscriptionStatus.inscrit => [
+      CardTag.secondary(
+        text: Strings.eventVousEtesDejaInscrit,
+        icon: AppIcons.check_circle_outline_rounded,
+      ),
+    ],
+    InscriptionStatus.autodesinscription => [
+      CardTag.secondary(
+        text: Strings.eventAnnulerMonInscription,
+      ),
+    ],
+    InscriptionStatus.notInscrit => [
+      CardTag.secondary(
+        text: Strings.eventInscrivezVousPourParticiper,
+      ),
+    ],
+    InscriptionStatus.autoinscription => [
+      CardTag.secondary(
+        text: Strings.eventAutoInscription,
+      ),
+    ],
+    InscriptionStatus.full => [
+      CardTag.warning(
+        text: Strings.eventComplet,
+      ),
+    ],
+    InscriptionStatus.hidden => null,
+  };
 }
 
 extension RendezvousCardFromId on String {
@@ -109,13 +114,11 @@ RendezvousStateSource _stateSource(RendezvousStateSource stateSource) {
     RendezvousStateSource.accueilProchaineSession ||
     RendezvousStateSource.accueilLesEvenementsSession ||
     RendezvousStateSource.monSuiviSessionMilo ||
-    RendezvousStateSource.sessionMiloDetails =>
-      RendezvousStateSource.sessionMiloDetails,
+    RendezvousStateSource.sessionMiloDetails => RendezvousStateSource.sessionMiloDetails,
     RendezvousStateSource.noSource ||
     RendezvousStateSource.accueilProchainRendezvous ||
     RendezvousStateSource.monSuivi ||
     RendezvousStateSource.eventListAnimationsCollectives ||
-    RendezvousStateSource.accueilLesEvenements =>
-      stateSource,
+    RendezvousStateSource.accueilLesEvenements => stateSource,
   };
 }

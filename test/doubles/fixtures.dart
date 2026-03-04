@@ -465,6 +465,7 @@ Rendezvous mockRendezvous({
   Conseiller? conseiller = const Conseiller(id: 'id', firstName: 'F', lastName: 'L'),
   Conseiller? createur,
   bool? autoinscription,
+  bool? autodesinscription,
   int? nombreDePlacesRestantes,
   DateTime? dateMaxInscription,
 }) {
@@ -491,6 +492,7 @@ Rendezvous mockRendezvous({
     conseiller: conseiller,
     createur: createur,
     autoinscription: autoinscription,
+    autodesinscription: autodesinscription,
     nombreDePlacesRestantes: nombreDePlacesRestantes,
     dateMaxInscription: dateMaxInscription,
   );
@@ -1282,6 +1284,7 @@ SessionMiloDetails mockSessionMiloDetails({
   DateTime? dateDeFin,
   bool? estInscrit,
   bool? autoinscription,
+  bool? autodesinscription,
   int? nombreDePlacesRestantes,
   DateTime? dateMaxInscription,
 }) => SessionMiloDetails(
@@ -1297,6 +1300,7 @@ SessionMiloDetails mockSessionMiloDetails({
   commentaire: "Lorem ipsus",
   estInscrit: estInscrit ?? true,
   autoinscription: autoinscription,
+  autodesinscription: autodesinscription,
   nombreDePlacesRestantes: nombreDePlacesRestantes,
   dateMaxInscription: dateMaxInscription,
 );
