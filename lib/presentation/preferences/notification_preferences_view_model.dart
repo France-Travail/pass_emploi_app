@@ -64,7 +64,8 @@ class NotificationPreferencesViewModel extends Equatable {
       withRappelActions: preferences?.pushNotificationRappelActions ?? false,
       withActuMilo: preferences?.pushNotificationActuMilo ?? false,
       withMiloWording: store.state.isMiloLoginMode(),
-      withActuMiloPreference: store.state.isMiloLoginMode(),
+      withActuMiloPreference:
+          store.state.isMiloLoginMode() && store.state.featureFlipState.featureFlip.isActualiteMissionLocaleEnabled,
       onAlertesOffresChanged: (value) => store.dispatch(
         PreferencesUpdateRequestAction(pushNotificationAlertesOffres: value),
       ),

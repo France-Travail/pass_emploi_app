@@ -8,12 +8,14 @@ class FeatureFlip extends Equatable {
   final LoginPageRemoteMessage? loginPageMessage;
   final AccueilZenithMessage? accueilZenithMessage;
   final bool isDiagorienteEnabled;
+  final bool isActualiteMissionLocaleEnabled;
   FeatureFlip({
     required this.withCampagneRecrutement,
     required this.withMonSuiviDemarchesKoMessage,
     required this.loginPageMessage,
     required this.accueilZenithMessage,
     required this.isDiagorienteEnabled,
+    required this.isActualiteMissionLocaleEnabled,
   });
 
   factory FeatureFlip.initial() {
@@ -23,6 +25,7 @@ class FeatureFlip extends Equatable {
       loginPageMessage: null,
       accueilZenithMessage: null,
       isDiagorienteEnabled: true,
+      isActualiteMissionLocaleEnabled: false,
     );
   }
 
@@ -32,6 +35,7 @@ class FeatureFlip extends Equatable {
     LoginPageRemoteMessage? loginPageMessage,
     AccueilZenithMessage? accueilZenithMessage,
     bool? isDiagorienteEnabled,
+    bool? isActualiteMissionLocaleEnabled,
   }) {
     return FeatureFlip(
       withCampagneRecrutement: withCampagneRecrutement ?? this.withCampagneRecrutement,
@@ -39,6 +43,7 @@ class FeatureFlip extends Equatable {
       loginPageMessage: loginPageMessage ?? this.loginPageMessage,
       accueilZenithMessage: accueilZenithMessage ?? this.accueilZenithMessage,
       isDiagorienteEnabled: isDiagorienteEnabled ?? this.isDiagorienteEnabled,
+      isActualiteMissionLocaleEnabled: isActualiteMissionLocaleEnabled ?? this.isActualiteMissionLocaleEnabled,
     );
   }
 
@@ -49,5 +54,6 @@ class FeatureFlip extends Equatable {
     loginPageMessage,
     accueilZenithMessage,
     isDiagorienteEnabled,
+    isActualiteMissionLocaleEnabled,
   ];
 }

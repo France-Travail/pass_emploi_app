@@ -19,6 +19,7 @@ class ActualiteMissionLocaleMiddleware extends MiddlewareClass<AppState> {
     final user = state is LoginSuccessState ? state.user : null;
     final isMiLo = user?.loginMode.isMiLo() == true;
     if (!isMiLo) return;
+    if (!store.state.featureFlipState.featureFlip.isActualiteMissionLocaleEnabled) return;
     if (action is ActualiteMissionLocaleRequestAction) {
       store.dispatch(ActualiteMissionLocaleLoadingAction());
       final result = await _repository.get(userId);

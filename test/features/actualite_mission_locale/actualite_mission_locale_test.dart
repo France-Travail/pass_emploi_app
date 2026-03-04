@@ -23,6 +23,7 @@ void main() {
         sut.givenStore =
             givenState() //
                 .loggedInUser()
+                .withFeatureFlip(isActualiteMissionLocaleEnabled: true)
                 .store((f) => {f.actualiteMissionLocaleRepository = repository});
 
         sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldSucceed()]);
@@ -34,9 +35,24 @@ void main() {
         sut.givenStore =
             givenState() //
                 .loggedInUser()
+                .withFeatureFlip(isActualiteMissionLocaleEnabled: true)
                 .store((f) => {f.actualiteMissionLocaleRepository = repository});
 
         sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldFail()]);
+      });
+
+      test('should not call repository when feature is disabled', () {
+        final freshRepository = MockActualiteMissionLocaleRepository();
+
+        sut.givenStore =
+            givenState() //
+                .loggedInUser()
+                .withFeatureFlip(isActualiteMissionLocaleEnabled: false)
+                .store((f) => {f.actualiteMissionLocaleRepository = freshRepository});
+
+        sut.then(() {
+          verifyNever(() => freshRepository.get(any()));
+        });
       });
     });
   });

@@ -21,6 +21,8 @@ class ChatHomePageViewModel extends Equatable {
     final state = store.state.loginState;
     final user = state is LoginSuccessState ? state.user : null;
     final isMiLo = user?.loginMode.isMiLo() == true;
+    final isActualiteMissionLocaleEnabled =
+        store.state.featureFlipState.featureFlip.isActualiteMissionLocaleEnabled;
     return ChatHomePageViewModel(
       unreadMissionLocaleCount: _unreadActualiteCount(
         store.state.actualiteMissionLocaleState,
@@ -28,7 +30,7 @@ class ChatHomePageViewModel extends Equatable {
       ),
       tabs: [
         ChatHomePageTab.conseiller,
-        if (isMiLo) ChatHomePageTab.missionLocale,
+        if (isMiLo && isActualiteMissionLocaleEnabled) ChatHomePageTab.missionLocale,
       ],
     );
   }

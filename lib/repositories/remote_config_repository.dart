@@ -81,6 +81,11 @@ class RemoteConfigRepository {
     return key;
   }
 
+  bool? isActualiteMissionLocaleEnabled() {
+    if (_firebaseRemoteConfig == null) return null;
+    return _firebaseRemoteConfig.getBool("actualite_mission_locale_enabled");
+  }
+
   Cgu? getCgu() {
     if (_firebaseRemoteConfig == null) return null;
     final String cguAsString = _firebaseRemoteConfig.getString('cgu');

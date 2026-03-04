@@ -129,10 +129,16 @@ extension AppStateDSL on AppState {
 
   AppState withDemoMode() => copyWith(demoState: true);
 
-  AppState withFeatureFlip({bool? withCampagneRecrutement}) {
+  AppState withFeatureFlip({
+    bool? withCampagneRecrutement,
+    bool? isActualiteMissionLocaleEnabled,
+  }) {
     return copyWith(
       featureFlipState: FeatureFlipState(
-        FeatureFlip.initial().copyWith(withCampagneRecrutement: withCampagneRecrutement),
+        FeatureFlip.initial().copyWith(
+          withCampagneRecrutement: withCampagneRecrutement,
+          isActualiteMissionLocaleEnabled: isActualiteMissionLocaleEnabled,
+        ),
       ),
     );
   }

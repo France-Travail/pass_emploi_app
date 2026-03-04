@@ -2,12 +2,34 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_mission_locale_state.dart';
 import 'package:pass_emploi_app/features/date_consultation_actualite_mission_locale/date_consultation_actualite_mission_locale_state.dart';
 import 'package:pass_emploi_app/models/actualite_mission_locale.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/presentation/chat/chat_home_page_view_model.dart';
 
 import '../../dsl/app_state_dsl.dart';
 
 void main() {
   group('Create ChatHomePageViewModel', () {
+    test('should show only conseiller tab when actualite mission locale is disabled', () {
+      final store = givenState()
+          .loggedInUser(loginMode: LoginMode.MILO)
+          .withFeatureFlip(isActualiteMissionLocaleEnabled: false)
+          .store();
+
+      final viewModel = ChatHomePageViewModel.create(store);
+
+      expect(viewModel.tabs, [ChatHomePageTab.conseiller]);
+    });
+
+    test('should show both tabs when actualite mission locale is enabled', () {
+      final store = givenState()
+          .loggedInUser(loginMode: LoginMode.MILO)
+          .withFeatureFlip(isActualiteMissionLocaleEnabled: true)
+          .store();
+
+      final viewModel = ChatHomePageViewModel.create(store);
+
+      expect(viewModel.tabs, [ChatHomePageTab.conseiller, ChatHomePageTab.missionLocale]);
+    });
     test('should display 0 unread when actualites are not loaded', () {
       final store = givenState().store();
 

@@ -17,6 +17,7 @@ class FeatureFlipMiddleware extends MiddlewareClass<AppState> {
     if (action is BootstrapAction) {
       _handleLogiPageFeatureFlip(store);
       _handleDiagorienteFeatureFlip(store);
+      _handleActualiteMissionLocaleFeatureFlip(store);
     }
     final userId = store.state.userId();
     if (userId == null) return;
@@ -54,6 +55,13 @@ class FeatureFlipMiddleware extends MiddlewareClass<AppState> {
     final isDiagorienteEnabled = _remoteConfigRepository.isDiagorienteEnabled();
     if (isDiagorienteEnabled != null) {
       store.dispatch(FeatureFlipDiagorienteEnabledAction(isDiagorienteEnabled));
+    }
+  }
+
+  Future<void> _handleActualiteMissionLocaleFeatureFlip(Store<AppState> store) async {
+    final isActualiteMissionLocaleEnabled = _remoteConfigRepository.isActualiteMissionLocaleEnabled();
+    if (isActualiteMissionLocaleEnabled != null) {
+      store.dispatch(FeatureFlipActualiteMissionLocaleEnabledAction(isActualiteMissionLocaleEnabled));
     }
   }
 }

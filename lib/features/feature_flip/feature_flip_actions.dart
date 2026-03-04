@@ -30,3 +30,9 @@ class FeatureFlipDiagorienteEnabledAction {
 
   FeatureFlipDiagorienteEnabledAction(this.isDiagorienteEnabled);
 }
+
+class FeatureFlipActualiteMissionLocaleEnabledAction {
+  final bool isActualiteMissionLocaleEnabled;
+
+  FeatureFlipActualiteMissionLocaleEnabledAction(this.isActualiteMissionLocaleEnabled);
+}

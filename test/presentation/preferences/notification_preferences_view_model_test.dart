@@ -112,7 +112,7 @@ void main() {
 
     test('should display Cej wording when accompagnement is Cej', () {
       // Given
-      final store = givenState().loggedInMiloUser().store();
+      final store = givenState().loggedInMiloUser().withFeatureFlip(isActualiteMissionLocaleEnabled: true).store();
 
       // When
       final viewModel = NotificationPreferencesViewModel.create(store);
