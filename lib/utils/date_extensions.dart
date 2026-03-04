@@ -62,7 +62,13 @@ extension DateExtensions on DateTime {
     return toDayWithFullMonth();
   }
 
-  String toDayOfWeekWithFullMonth() => DateFormat('EEEE d MMMM', locale).format(this);
+  String toDayOfWeekWithFullMonth() {
+    final formatted = DateFormat('EEEE d MMMM', locale).format(this);
+    if (day == 1) {
+      return formatted.replaceFirst('1 ', '1er ');
+    }
+    return formatted;
+  }
 
   String toMonth() => DateFormat('MMMM', locale).format(this);
 

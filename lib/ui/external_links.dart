@@ -31,6 +31,6 @@ class ExternalLinks {
       "https://candidat.francetravail.fr/metierscope/?at_medium=CMP&at_campaign=Metierscope&at_cmp_%E2%80%A6=";
 
   static String parcoursEmploi(bool isAndroid) => isAndroid
-      ? "https://play.google.com/store/apps/details?id=com.poleemploi.pemobile&referrer=utm_source=cej&utm_medium=cta&utm_campaign=migration_cej"
+      ? "https://play.google.com/store/apps/details?id=com.poleemploi.pemobile&referrer=utm_source%3Dcej%26utm_medium%3Dcta%26utm_campaign%3Dmigration_cej"
       : "https://apps.apple.com/app/apple-store/id563863597?pt=1432235&ct=migration-cej&mt=8";
 }
