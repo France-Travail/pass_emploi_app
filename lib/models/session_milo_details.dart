@@ -16,6 +16,7 @@ class SessionMiloDetails extends Equatable {
   final String? description;
   final String? commentaire;
   final bool? autoinscription;
+  final bool? autodesinscription;
   final int? nombreDePlacesRestantes;
   final DateTime? dateMaxInscription;
   final String? theme;
@@ -33,6 +34,7 @@ class SessionMiloDetails extends Equatable {
     this.description,
     this.commentaire,
     required this.autoinscription,
+    required this.autodesinscription,
     this.nombreDePlacesRestantes,
     this.dateMaxInscription,
     this.theme,
@@ -52,6 +54,7 @@ class SessionMiloDetails extends Equatable {
       description: json['description'] as String?,
       commentaire: json['commentaire'] as String?,
       autoinscription: json["autoinscription"] as bool?,
+      autodesinscription: json["autodesinscription"] as bool?,
       nombreDePlacesRestantes: json["nbPlacesDisponibles"] as int?,
       dateMaxInscription: (json["dateMaxInscription"] as String?)?.toDateTimeUtcOnLocalTimeZone(),
       theme: json["theme"] as String?,
@@ -60,21 +63,22 @@ class SessionMiloDetails extends Equatable {
 
   @override
   List<Object?> get props => [
-        nomSession,
-        nomOffre,
-        type,
-        dateHeureDebut,
-        dateHeureFin,
-        lieu,
-        estInscrit,
-        animateur,
-        description,
-        commentaire,
-        autoinscription,
-        nombreDePlacesRestantes,
-        dateMaxInscription,
-        theme,
-      ];
+    nomSession,
+    nomOffre,
+    type,
+    dateHeureDebut,
+    dateHeureFin,
+    lieu,
+    estInscrit,
+    animateur,
+    description,
+    commentaire,
+    autoinscription,
+    autodesinscription,
+    nombreDePlacesRestantes,
+    dateMaxInscription,
+    theme,
+  ];
 
   Rendezvous get toRendezVous {
     return Rendezvous(

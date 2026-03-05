@@ -9,7 +9,7 @@ import 'package:pass_emploi_app/utils/date_extensions.dart';
 import 'package:pass_emploi_app/utils/string_extensions.dart';
 import 'package:redux/redux.dart';
 
-enum InscriptionStatus { inscrit, notInscrit, autoinscription, hidden, full }
+enum InscriptionStatus { inscrit, notInscrit, autoinscription, autodesinscription, hidden, full }
 
 class RendezvousCardViewModel extends Equatable {
   final String id;
@@ -75,7 +75,9 @@ class RendezvousCardViewModel extends Equatable {
 InscriptionStatus _inscription(Rendezvous rdv, RendezvousStateSource source) {
   if (!source.isFromEvenements) return InscriptionStatus.hidden;
 
-  if (rdv.estInscrit == true) return InscriptionStatus.inscrit;
+  if (rdv.estInscrit == true) {
+    return rdv.autodesinscription == true ? InscriptionStatus.autodesinscription : InscriptionStatus.inscrit;
+  }
 
   if (rdv.nombreDePlacesRestantes == 0) return InscriptionStatus.full;
 

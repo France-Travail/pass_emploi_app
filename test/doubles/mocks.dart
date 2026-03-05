@@ -51,6 +51,7 @@ import 'package:pass_emploi_app/utils/compress_image.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/wrappers/connectivity_wrapper.dart';
 
+import 'package:pass_emploi_app/repositories/auto_desinscription_repository.dart';
 /*AUTOGENERATE-REDUX-TEST-MOCKS-REPOSITORY-IMPORT*/
 
 import 'dio_mock.dart';
@@ -354,5 +355,7 @@ class MockDateConsultationActualiteMissionLocaleRepository extends Mock
     when(() => save(any())).thenAnswer((_) async {});
   }
 }
+
+class MockAutoDesinscriptionRepository extends Mock implements AutoDesinscriptionRepository {}
 
 /*AUTOGENERATE-REDUX-TEST-MOCKS-REPOSITORY-DECLARATION*/

@@ -26,10 +26,10 @@ class InformationBandeau extends StatelessWidget {
     super.key,
     required this.text,
     required this.icon,
-  })  : backgroundColor = AppColors.primaryLighten,
-        textColor = AppColors.primaryCej,
-        borderRadius = null,
-        padding = null;
+  }) : backgroundColor = AppColors.primaryLighten,
+       textColor = AppColors.primaryCej,
+       borderRadius = null,
+       padding = null;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,9 @@ class InformationBandeau extends StatelessWidget {
           children: [
             Icon(icon, color: textColor ?? Colors.white, size: Dimens.icon_size_m),
             SizedBox(width: Margins.spacing_s),
-            Expanded(child: Text(text, style: TextStyles.textSRegular(color: textColor ?? Colors.white))),
+            Expanded(
+              child: Text(text, style: TextStyles.textSRegular(color: textColor ?? Colors.white)),
+            ),
           ],
         ),
       ),
