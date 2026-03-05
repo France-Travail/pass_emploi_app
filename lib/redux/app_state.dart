@@ -85,6 +85,7 @@ import 'package:pass_emploi_app/models/offre_emploi.dart';
 import 'package:pass_emploi_app/models/service_civique.dart';
 import 'package:pass_emploi_app/models/user.dart';
 import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_mission_locale_state.dart';
+import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription_state.dart';
 /*AUTOGENERATE-REDUX-APP-STATE-IMPORT*/
 
 class AppState extends Equatable {
@@ -171,6 +172,7 @@ class AppState extends Equatable {
   final CreateDemarcheBatchState createDemarcheBatchState;
   final FtIaTutorialState ftIaTutorialState;
   final ActualiteMissionLocaleState actualiteMissionLocaleState;
+  final AutoDesinscriptionState autoDesinscriptionState;
   /*AUTOGENERATE-REDUX-APP-STATE-PROPERTY*/
 
   AppState({
@@ -257,6 +259,7 @@ class AppState extends Equatable {
     required this.createDemarcheBatchState,
     required this.ftIaTutorialState,
     required this.actualiteMissionLocaleState,
+    required this.autoDesinscriptionState,
     /*AUTOGENERATE-REDUX-APP-STATE-CONSTRUCTOR*/
   });
 
@@ -344,6 +347,7 @@ class AppState extends Equatable {
     final CreateDemarcheBatchState? createDemarcheBatchState,
     final FtIaTutorialState? ftIaTutorialState,
     final ActualiteMissionLocaleState? actualiteMissionLocaleState,
+    final AutoDesinscriptionState? autoDesinscriptionState,
     /*AUTOGENERATE-REDUX-APP-STATE-COPYPARAM*/
   }) {
     return AppState(
@@ -431,6 +435,7 @@ class AppState extends Equatable {
       createDemarcheBatchState: createDemarcheBatchState ?? this.createDemarcheBatchState,
       ftIaTutorialState: ftIaTutorialState ?? this.ftIaTutorialState,
       actualiteMissionLocaleState: actualiteMissionLocaleState ?? this.actualiteMissionLocaleState,
+      autoDesinscriptionState: autoDesinscriptionState ?? this.autoDesinscriptionState,
       /*AUTOGENERATE-REDUX-APP-STATE-COPYBODY*/
     );
   }
@@ -520,6 +525,7 @@ class AppState extends Equatable {
       createDemarcheBatchState: CreateDemarcheBatchNotInitializedState(),
       ftIaTutorialState: FtIaTutorialState(false),
       actualiteMissionLocaleState: ActualiteMissionLocaleNotInitializedState(),
+      autoDesinscriptionState: AutoDesinscriptionNotInitializedState(),
       /*AUTOGENERATE-REDUX-APP-STATE-FACTORY*/
     );
   }
@@ -602,6 +608,7 @@ class AppState extends Equatable {
     createDemarcheBatchState,
     ftIaTutorialState,
     actualiteMissionLocaleState,
+    autoDesinscriptionState,
     /*AUTOGENERATE-REDUX-APP-STATE-EQUATABLE*/
   ];
 

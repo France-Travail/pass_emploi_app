@@ -11,7 +11,6 @@ import 'package:pass_emploi_app/models/alerte/immersion_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/offre_emploi_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/service_civique_alerte.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
-import 'package:pass_emploi_app/models/location.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/offre_type.dart';
 import 'package:pass_emploi_app/pages/generic_success_page.dart';
@@ -19,7 +18,6 @@ import 'package:pass_emploi_app/pages/offre_filters_bottom_sheet.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_emploi_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_immersion_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_service_civique_page.dart';
-import 'package:pass_emploi_app/pages/suggestions_recherche/suggestions_alerte_location_form.dart';
 import 'package:pass_emploi_app/presentation/alerte/alerte_list_view_model.dart';
 import 'package:pass_emploi_app/presentation/alerte/alerte_navigation_state.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
@@ -41,8 +39,6 @@ import 'package:pass_emploi_app/widgets/buttons/filtre_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/cards/alerte_deletable_card.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/base_card.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/dialogs/alerte_delete_dialog.dart';
@@ -451,77 +447,35 @@ class _SuggestionCard extends StatelessWidget {
     if (viewModel == null) return SizedBox(height: 0);
     final source = viewModel.source;
 
-    if (1 == 1) {
-      // TODO:
-      return CardContainer(
-        padding: EdgeInsets.all(Margins.spacing_base),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                Icon(AppIcons.notification_add_outlined, color: AppColors.primary),
-                SizedBox(width: Margins.spacing_base),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("${Strings.alerte} ${viewModel.type.toAlerteTagLabel()}", style: TextStyles.textSBold),
-                      Text(viewModel.titre, style: TextStyles.textSRegular()),
-                    ],
-                  ),
+    // TODO:
+    return CardContainer(
+      padding: EdgeInsets.all(Margins.spacing_base),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Icon(AppIcons.notification_add_outlined, color: AppColors.primary),
+              SizedBox(width: Margins.spacing_base),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("${Strings.alerte} ${viewModel.type.toAlerteTagLabel()}", style: TextStyles.textSBold),
+                    Text(viewModel.titre, style: TextStyles.textSRegular()),
+                  ],
                 ),
-              ],
-            ),
-            SizedBox(height: Margins.spacing_base),
-            _SuggestionButtons(
-              onTapAjouter: () => viewModel.ajouterSuggestion(),
-              onTapRefuser: () => viewModel.refuserSuggestion(),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return BaseCard(
-      title: viewModel.titre,
-      tag: viewModel.type.toCardTag(),
-      complements: [if (viewModel.localisation != null) CardComplement.place(text: viewModel.localisation!)],
-      secondaryTags: [
-        if (source != null) CardTag.secondary(text: source, semanticsLabel: Strings.source + source),
-      ],
-      actions: [
-        _SuggestionButtons(
-          onTapAjouter: () async {
-            if (viewModel.withLocationForm) {
-              await _selectLocationAndRayon(
-                context,
-                viewModel.type,
-                onSelected: (location, rayon) => viewModel.ajouterSuggestion(location: location, rayon: rayon),
-              );
-            } else {
-              viewModel.ajouterSuggestion();
-            }
-          },
-          onTapRefuser: viewModel.refuserSuggestion,
-        ),
-      ],
+              ),
+            ],
+          ),
+          SizedBox(height: Margins.spacing_base),
+          _SuggestionButtons(
+            onTapAjouter: () => viewModel.ajouterSuggestion(),
+            onTapRefuser: () => viewModel.refuserSuggestion(),
+          ),
+        ],
+      ),
     );
-  }
-
-  Future<void> _selectLocationAndRayon(
-    BuildContext context,
-    OffreType type, {
-    required void Function(Location? location, double? rayon) onSelected,
-  }) async {
-    final locationAndRayon = await Navigator.of(
-      context,
-    ).push(SuggestionsAlerteLocationForm.materialPageRoute(type: type));
-
-    if (locationAndRayon != null) {
-      final (Location location, double rayon) = locationAndRayon;
-      onSelected(location, rayon);
-    }
   }
 }
 

@@ -44,7 +44,7 @@ class RendezvousDetailsViewModel extends Equatable {
   final bool withIfAbsentPart;
   final String? withAnimateur;
   final String? withDateDerniereMiseAJour;
-  final RendezvousCtaVm? shareToConseillerButton;
+  final RendezvousCtaVm? rdvCta;
   final VisioButtonState visioButtonState;
   final Function() onRetry;
   final String? trackingPageName;
@@ -82,7 +82,7 @@ class RendezvousDetailsViewModel extends Equatable {
     required this.withIfAbsentPart,
     this.withAnimateur,
     this.withDateDerniereMiseAJour,
-    this.shareToConseillerButton,
+    this.rdvCta,
     required this.visioButtonState,
     required this.onRetry,
     this.trackingPageName,
@@ -137,7 +137,7 @@ class RendezvousDetailsViewModel extends Equatable {
       withIfAbsentPart: _estCeQueMaPresenceEstRequise(source, isInscrit),
       withAnimateur: _withAnimateur(source, rdv.animateur),
       withDateDerniereMiseAJour: _withDateDerniereMiseAJour(dateDerniereMiseAJour),
-      shareToConseillerButton: _shareToConseillerButton(store, source, rdv),
+      rdvCta: _shareToConseillerButton(store, source, rdv),
       visioButtonState: _visioButtonState(rdv),
       visioRedirectUrl: rdv.visioRedirectUrl,
       onRetry: () => {},
@@ -209,7 +209,7 @@ class RendezvousDetailsViewModel extends Equatable {
       withModalityPart,
       withIfAbsentPart,
       withDateDerniereMiseAJour,
-      shareToConseillerButton,
+      rdvCta,
       visioButtonState,
       trackingPageName,
       title,
@@ -378,7 +378,9 @@ bool _estCeQueMaPresenceEstRequise(RendezvousStateSource source, bool isInscrit)
 }
 
 RendezvousCtaVm? _shareToConseillerButton(Store<AppState> store, RendezvousStateSource source, Rendezvous rdv) {
-  if (rdv.estInscrit == true) return null;
+  if (rdv.estInscrit == true && rdv.autodesinscription == true) {
+    return RendezVousAnnulerInscription(onPressed: () {});
+  }
   if (rdv.date.isBefore(DateTime.now())) return null;
   if (source.isFromEvenements) {
     return RendezVousShareToConseiller(chatPartageSource: ChatPartageEventSource(rdv.id));
@@ -431,12 +433,16 @@ class RendezVousAutoInscription extends RendezvousCtaVm {
 
 class RendezVousShareToConseillerDemandeInscription extends RendezvousCtaVm {
   RendezVousShareToConseillerDemandeInscription({required super.onPressed})
-      : super(label: Strings.shareToConseillerDemandeInscription);
+    : super(label: Strings.shareToConseillerDemandeInscription);
 }
 
 class RendezVousShareToConseiller extends RendezvousCtaVm {
   final ChatPartageSource chatPartageSource;
 
   RendezVousShareToConseiller({required this.chatPartageSource})
-      : super(label: Strings.shareToConseiller, onPressed: null);
+    : super(label: Strings.shareToConseiller, onPressed: null);
+}
+
+class RendezVousAnnulerInscription extends RendezvousCtaVm {
+  RendezVousAnnulerInscription({required super.onPressed}) : super(label: Strings.annulerInscription);
 }

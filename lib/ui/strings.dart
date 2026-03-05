@@ -455,6 +455,7 @@ class Strings {
   static String shareToConseiller = "Partager à mon conseiller";
   static String shareToConseillerDemandeInscription = "Faire une demande d’inscription";
   static String autoInscriptionCta = "M'inscrire pour participer";
+  static String annulerInscription = "Annuler mon inscription";
   static String withAnimateurTitle = "Animateur de la session";
 
   static String rendezvousWithConseiller(String conseiller) => "votre conseiller $conseiller";
@@ -1429,6 +1430,17 @@ class Strings {
   static String eventEmploiDetailsInscription = "Je m'inscris";
   static String eventPlaceholderTitle = "Trouvez un événement";
   static String eventPlaceholderSubtitle = "Commencez votre recherche en remplissant les champs ci-dessus.";
+
+  // auto desinscription
+  static String autoDesinscriptionFormConfirmation = "Confirmez-vous l’annulation à cet événement ?";
+  static String autoDesinscriptionFormFieldTitle = "* Précisez le motif de votre annulation";
+  static String autoDesinscriptionInformation =
+      "Annulation possible jusqu’à 24h avant la date de l’atelier. Votre conseiller sera informé";
+  static String autoDesinscriptionConfirm = "Confirmer l’annulation";
+  static String autoDesinscriptionCancel = "Garder mon inscription";
+  static String autoDesinscriptionVoirAutresEvenements = "Voir d'autres événements";
+  static String autoDesinscriptionSuccessTitle(String eventTitle) =>
+      "Votre inscription à l'événement $eventTitle a été annulée";
 
   // Événements Emploi
   static const String secteurActiviteLabel = "Secteur d'activité";

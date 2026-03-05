@@ -24,13 +24,14 @@ void main() {
 
       // Then
       expect(
-          () => RendezvousDetailsViewModel.create(
-                store: store,
-                source: RendezvousStateSource.monSuivi,
-                rdvId: '1',
-                platform: Platform.IOS,
-              ),
-          throwsException);
+        () => RendezvousDetailsViewModel.create(
+          store: store,
+          source: RendezvousStateSource.monSuivi,
+          rdvId: '1',
+          platform: Platform.IOS,
+        ),
+        throwsException,
+      );
     });
 
     test('create when mon suivi state is successful but no rendezvous is matching ID throws exception', () {
@@ -39,13 +40,14 @@ void main() {
 
       // Then
       expect(
-          () => RendezvousDetailsViewModel.create(
-                store: store,
-                source: RendezvousStateSource.monSuivi,
-                rdvId: '2',
-                platform: Platform.IOS,
-              ),
-          throwsException);
+        () => RendezvousDetailsViewModel.create(
+          store: store,
+          source: RendezvousStateSource.monSuivi,
+          rdvId: '2',
+          platform: Platform.IOS,
+        ),
+        throwsException,
+      );
     });
 
     group('create when mon suivi state is successful…', () {
@@ -308,11 +310,13 @@ void main() {
 
       test('and comment is set and filled and conseiller is set', () {
         // Given
-        final store = _store(mockRendezvous(
-          id: '1',
-          comment: 'comment',
-          conseiller: Conseiller(id: 'id', firstName: 'Nils', lastName: 'Tavernier'),
-        ));
+        final store = _store(
+          mockRendezvous(
+            id: '1',
+            comment: 'comment',
+            conseiller: Conseiller(id: 'id', firstName: 'Nils', lastName: 'Tavernier'),
+          ),
+        );
 
         // When
         final viewModel = RendezvousDetailsViewModel.create(
@@ -361,12 +365,14 @@ void main() {
 
       test('should display modality with conseiller', () {
         // Given
-        final store = _store(mockRendezvous(
-          id: '1',
-          modality: "en visio",
-          withConseiller: true,
-          conseiller: Conseiller(id: 'id', firstName: 'Nils', lastName: 'Tavernier'),
-        ));
+        final store = _store(
+          mockRendezvous(
+            id: '1',
+            modality: "en visio",
+            withConseiller: true,
+            conseiller: Conseiller(id: 'id', firstName: 'Nils', lastName: 'Tavernier'),
+          ),
+        );
 
         // When
         final viewModel = RendezvousDetailsViewModel.create(
@@ -383,13 +389,15 @@ void main() {
 
       test('should hide conseiller in modality when source is milo', () {
         // Given
-        final store = _store(mockRendezvous(
-          id: '1',
-          source: RendezvousSource.milo,
-          modality: "en visio",
-          withConseiller: true,
-          conseiller: Conseiller(id: 'id', firstName: 'Nils', lastName: 'Tavernier'),
-        ));
+        final store = _store(
+          mockRendezvous(
+            id: '1',
+            source: RendezvousSource.milo,
+            modality: "en visio",
+            withConseiller: true,
+            conseiller: Conseiller(id: 'id', firstName: 'Nils', lastName: 'Tavernier'),
+          ),
+        );
 
         // When
         final viewModel = RendezvousDetailsViewModel.create(
@@ -407,11 +415,13 @@ void main() {
       group("createur", () {
         test('should display createur if present', () {
           // Given
-          final store = _store(mockRendezvous(
-            id: '1',
-            withConseiller: true,
-            createur: Conseiller(id: 'id', firstName: 'Nils', lastName: 'Tavernier'),
-          ));
+          final store = _store(
+            mockRendezvous(
+              id: '1',
+              withConseiller: true,
+              createur: Conseiller(id: 'id', firstName: 'Nils', lastName: 'Tavernier'),
+            ),
+          );
 
           // When
           final viewModel = RendezvousDetailsViewModel.create(
@@ -427,13 +437,15 @@ void main() {
 
         test('should hide createur if source is milo', () {
           // Given
-          final store = _store(mockRendezvous(
-            id: '1',
-            source: RendezvousSource.milo,
-            withConseiller: true,
-            conseiller: Conseiller(id: 'id', firstName: 'Nils', lastName: 'Tavernier'),
-            createur: Conseiller(id: 'id', firstName: 'Système', lastName: 'Milo'),
-          ));
+          final store = _store(
+            mockRendezvous(
+              id: '1',
+              source: RendezvousSource.milo,
+              withConseiller: true,
+              conseiller: Conseiller(id: 'id', firstName: 'Nils', lastName: 'Tavernier'),
+              createur: Conseiller(id: 'id', firstName: 'Système', lastName: 'Milo'),
+            ),
+          );
 
           // When
           final viewModel = RendezvousDetailsViewModel.create(
@@ -649,14 +661,16 @@ void main() {
 
       test('should not display modality part if no relevant info', () {
         // Given
-        final store = _store(mockRendezvous(
-          id: '1',
-          modality: null,
-          address: null,
-          phone: null,
-          organism: null,
-          isInVisio: false,
-        ));
+        final store = _store(
+          mockRendezvous(
+            id: '1',
+            modality: null,
+            address: null,
+            phone: null,
+            organism: null,
+            isInVisio: false,
+          ),
+        );
 
         // When
         final viewModel = RendezvousDetailsViewModel.create(
@@ -692,16 +706,18 @@ void main() {
         group('when événement is from Accueil > Evénements pouvant vous intéresser (user not inscrit)', () {
           setUp(() {
             final store = givenState()
-                .withAccueilMiloSuccess(mockAccueilMilo(
-                  evenements: [
-                    mockRendezvous(
-                      id: '1',
-                      estInscrit: false,
-                      createur: const Conseiller(id: 'id', firstName: 'F', lastName: 'L'),
-                      date: DateTime(2100),
-                    )
-                  ],
-                ))
+                .withAccueilMiloSuccess(
+                  mockAccueilMilo(
+                    evenements: [
+                      mockRendezvous(
+                        id: '1',
+                        estInscrit: false,
+                        createur: const Conseiller(id: 'id', firstName: 'F', lastName: 'L'),
+                        date: DateTime(2100),
+                      ),
+                    ],
+                  ),
+                )
                 .store();
 
             viewModel = RendezvousDetailsViewModel.create(
@@ -726,7 +742,7 @@ void main() {
 
           test('should be shareable', () {
             expect(
-              viewModel.shareToConseillerButton,
+              viewModel.rdvCta,
               isA<RendezVousShareToConseiller>()
                   .having(
                     (item) => item.label,
@@ -743,7 +759,7 @@ void main() {
 
           test('should not be be shareable if rdv is in past', () {
             expect(
-              viewModel.shareToConseillerButton,
+              viewModel.rdvCta,
               isA<RendezVousShareToConseiller>()
                   .having(
                     (item) => item.label,
@@ -762,15 +778,17 @@ void main() {
         group('when événement is from Evénements list', () {
           group('and user is inscrit', () {
             setUp(() {
-              final store = givenState().succeedEventList(
-                animationsCollectives: [
-                  mockRendezvous(
-                    id: '1',
-                    estInscrit: true,
-                    createur: const Conseiller(id: 'id', firstName: 'F', lastName: 'L'),
+              final store = givenState()
+                  .succeedEventList(
+                    animationsCollectives: [
+                      mockRendezvous(
+                        id: '1',
+                        estInscrit: true,
+                        createur: const Conseiller(id: 'id', firstName: 'F', lastName: 'L'),
+                      ),
+                    ],
                   )
-                ],
-              ).store();
+                  .store();
 
               viewModel = RendezvousDetailsViewModel.create(
                 store: store,
@@ -797,20 +815,25 @@ void main() {
             });
 
             test('should not be shareable', () {
-              expect(viewModel.shareToConseillerButton, isNull);
+              expect(viewModel.rdvCta, isNull);
             });
           });
 
           group('and user is not inscrit', () {
             setUp(() {
-              final store = givenState().loggedIn().succeedEventList(animationsCollectives: [
-                mockRendezvous(
-                  id: '1',
-                  estInscrit: false,
-                  createur: const Conseiller(id: 'id', firstName: 'F', lastName: 'L'),
-                  date: DateTime(2100),
-                ),
-              ]).store();
+              final store = givenState()
+                  .loggedIn()
+                  .succeedEventList(
+                    animationsCollectives: [
+                      mockRendezvous(
+                        id: '1',
+                        estInscrit: false,
+                        createur: const Conseiller(id: 'id', firstName: 'F', lastName: 'L'),
+                        date: DateTime(2100),
+                      ),
+                    ],
+                  )
+                  .store();
 
               viewModel = RendezvousDetailsViewModel.create(
                 store: store,
@@ -838,7 +861,7 @@ void main() {
 
             test('should be shareable', () {
               expect(
-                viewModel.shareToConseillerButton,
+                viewModel.rdvCta,
                 isA<RendezVousShareToConseiller>()
                     .having(
                       (item) => item.label,
@@ -872,7 +895,7 @@ void main() {
         );
 
         // Then
-        expect(viewModel.shareToConseillerButton, isA<RendezVousShareToConseillerDemandeInscription>());
+        expect(viewModel.rdvCta, isA<RendezVousShareToConseillerDemandeInscription>());
       });
 
       group('autoinscription available', () {
@@ -949,7 +972,7 @@ void main() {
             );
 
             // Then
-            expect(viewModel.shareToConseillerButton is RendezVousAutoInscription, autoInscriptionTest.expected);
+            expect(viewModel.rdvCta is RendezVousAutoInscription, autoInscriptionTest.expected);
           });
         }
       });
@@ -970,27 +993,29 @@ void main() {
         );
 
         // Then
-        expect(viewModel.shareToConseillerButton is RendezVousShareToConseillerDemandeInscription, true);
+        expect(viewModel.rdvCta is RendezVousShareToConseillerDemandeInscription, true);
       });
 
       test('full view model test', () {
         // Given
-        final store = _store(Rendezvous(
-          id: '1',
-          source: RendezvousSource.passEmploi,
-          title: "Super atelier",
-          date: DateTime(2022, 3, 1),
-          duration: 30,
-          modality: 'Sur place : Mission Locale',
-          isInVisio: false,
-          withConseiller: true,
-          isAnnule: false,
-          type: RendezvousType(RendezvousTypeCode.ENTRETIEN_PARTENAIRE, 'Entretien Partenaire'),
-          comment: 'comment',
-          organism: 'organism',
-          address: 'address',
-          conseiller: Conseiller(id: 'id', firstName: 'Nils', lastName: 'Tavernier'),
-        ));
+        final store = _store(
+          Rendezvous(
+            id: '1',
+            source: RendezvousSource.passEmploi,
+            title: "Super atelier",
+            date: DateTime(2022, 3, 1),
+            duration: 30,
+            modality: 'Sur place : Mission Locale',
+            isInVisio: false,
+            withConseiller: true,
+            isAnnule: false,
+            type: RendezvousType(RendezvousTypeCode.ENTRETIEN_PARTENAIRE, 'Entretien Partenaire'),
+            comment: 'comment',
+            organism: 'organism',
+            address: 'address',
+            conseiller: Conseiller(id: 'id', firstName: 'Nils', lastName: 'Tavernier'),
+          ),
+        );
 
         // When
         final viewModel = RendezvousDetailsViewModel.create(
@@ -1283,10 +1308,11 @@ void main() {
         duration: 60,
         nombreDePlacesRestantes: null,
       );
-      final store = givenState() //
-          .loggedIn()
-          .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
-          .store();
+      final store =
+          givenState() //
+              .loggedIn()
+              .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
+              .store();
 
       // When
       final viewModel = RendezvousDetailsViewModel.create(
@@ -1310,10 +1336,11 @@ void main() {
         duration: 60,
         nombreDePlacesRestantes: 0,
       );
-      final store = givenState() //
-          .loggedIn()
-          .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
-          .store();
+      final store =
+          givenState() //
+              .loggedIn()
+              .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
+              .store();
 
       // When
       final viewModel = RendezvousDetailsViewModel.create(
@@ -1337,10 +1364,11 @@ void main() {
         duration: 60,
         nombreDePlacesRestantes: 1,
       );
-      final store = givenState() //
-          .loggedIn()
-          .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
-          .store();
+      final store =
+          givenState() //
+              .loggedIn()
+              .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
+              .store();
 
       // When
       final viewModel = RendezvousDetailsViewModel.create(
@@ -1364,10 +1392,11 @@ void main() {
         duration: 60,
         nombreDePlacesRestantes: 10,
       );
-      final store = givenState() //
-          .loggedIn()
-          .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
-          .store();
+      final store =
+          givenState() //
+              .loggedIn()
+              .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
+              .store();
 
       // When
       final viewModel = RendezvousDetailsViewModel.create(
@@ -1391,10 +1420,11 @@ void main() {
         duration: 60,
         nombreDePlacesRestantes: 0,
       );
-      final store = givenState() //
-          .loggedIn()
-          .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
-          .store();
+      final store =
+          givenState() //
+              .loggedIn()
+              .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
+              .store();
 
       // When
       final viewModel = RendezvousDetailsViewModel.create(
