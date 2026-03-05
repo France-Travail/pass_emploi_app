@@ -445,9 +445,7 @@ class _SuggestionCard extends StatelessWidget {
 
   Widget _builder(BuildContext context, SuggestionRechercheCardViewModel? viewModel) {
     if (viewModel == null) return SizedBox(height: 0);
-    final source = viewModel.source;
 
-    // TODO:
     return CardContainer(
       padding: EdgeInsets.all(Margins.spacing_base),
       child: Column(
