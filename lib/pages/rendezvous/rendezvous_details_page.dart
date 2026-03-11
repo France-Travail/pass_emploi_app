@@ -3,6 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/rendezvous/details/rendezvous_details_actions.dart';
 import 'package:pass_emploi_app/features/session_milo_details/session_milo_details_actions.dart';
+import 'package:pass_emploi_app/pages/auto_desinscription_page.dart';
 import 'package:pass_emploi_app/pages/auto_inscription_page.dart';
 import 'package:pass_emploi_app/pages/chat/chat_partage_bottom_sheet.dart';
 import 'package:pass_emploi_app/pages/chat/chat_partage_event_page.dart';
@@ -21,6 +22,7 @@ import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/utils/platform.dart';
 import 'package:pass_emploi_app/widgets/buttons/lien_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
+import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_pillule.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
@@ -87,9 +89,14 @@ class _RendezvousDetailsPageState extends State<RendezvousDetailsPage> {
     _trackPageOnRendezvousRetrievalFromState(viewModel);
     const backgroundColor = Colors.white;
     return Scaffold(
-      floatingActionButton: switch (viewModel.shareToConseillerButton) {
+      floatingActionButton: switch (viewModel.rdvCta) {
         null => SizedBox.shrink(),
         final RendezVousAutoInscription rendezvousCta => _AutoInscriptionButton(rendezvousCta),
+        final RendezVousAnnulerInscription rendezvousCta => _AnnulerInscriptionButton(
+          rendezvousCta,
+          widget._source,
+          widget._rendezvousId,
+        ),
         final RendezVousShareToConseillerDemandeInscription rendezvousCta => _DemandeInscriptionButton(rendezvousCta),
         final RendezVousShareToConseiller rendezvousCta => _ShareButton(rendezvousCta),
       },
@@ -480,6 +487,42 @@ class _AutoInscriptionButton extends StatelessWidget {
                 Navigator.of(context).pop();
               }
             });
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _AnnulerInscriptionButton extends StatelessWidget {
+  final RendezVousAnnulerInscription rendezvousCta;
+  final RendezvousStateSource source;
+  final String rdvId;
+
+  _AnnulerInscriptionButton(this.rendezvousCta, this.source, this.rdvId);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+      child: SizedBox(
+        width: double.infinity,
+        child: SecondaryButton(
+          label: rendezvousCta.label,
+          onPressed: () {
+            rendezvousCta.onPressed?.call();
+            Navigator.of(context)
+                .push(
+                  DesinscriptionPage.route(
+                    source: source,
+                    rdvId: rdvId,
+                  ),
+                )
+                .then((value) {
+                  if (value == true && context.mounted) {
+                    Navigator.of(context).pop();
+                  }
+                });
           },
         ),
       ),

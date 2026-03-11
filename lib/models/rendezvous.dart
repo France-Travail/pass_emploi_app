@@ -26,6 +26,7 @@ class Rendezvous extends Equatable {
   final String? animateur;
   final bool? createdFromSessionMilo;
   final bool? autoinscription;
+  final bool? autodesinscription;
   final int? nombreDePlacesRestantes;
   final DateTime? dateMaxInscription;
 
@@ -54,6 +55,7 @@ class Rendezvous extends Equatable {
     this.animateur,
     this.createdFromSessionMilo,
     this.autoinscription,
+    this.autodesinscription,
     this.nombreDePlacesRestantes,
     this.dateMaxInscription,
   });
@@ -90,6 +92,7 @@ class Rendezvous extends Equatable {
       animateur,
       createdFromSessionMilo,
       autoinscription,
+      autodesinscription,
       nombreDePlacesRestantes,
       dateMaxInscription,
     ];
@@ -122,7 +125,7 @@ enum RendezvousTypeCode {
   INFORMATION_COLLECTIVE,
   VISITE,
   PRESTATION,
-  AUTRE
+  AUTRE,
 }
 
 enum RendezvousModalityType { TELEPHONE, NONE }
