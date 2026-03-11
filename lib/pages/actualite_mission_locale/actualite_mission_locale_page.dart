@@ -218,21 +218,18 @@ class _ExternalUrlAlertDialog extends StatelessWidget {
         ],
       ),
       actions: [
-        Row(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              child: SecondaryButton(label: Strings.cancelLabel, onPressed: () => Navigator.pop(context, false)),
+            PrimaryActionButton(
+              label: Strings.confirmLabel,
+              onPressed: () {
+                Navigator.pop(context);
+                launchExternalUrl(url);
+              },
             ),
-            SizedBox(width: Margins.spacing_s),
-            Expanded(
-              child: PrimaryActionButton(
-                label: Strings.confirmLabel,
-                onPressed: () {
-                  Navigator.pop(context);
-                  launchExternalUrl(url);
-                },
-              ),
-            ),
+            SizedBox(height: Margins.spacing_s),
+            SecondaryButton(label: Strings.cancelLabel, onPressed: () => Navigator.pop(context, false)),
           ],
         ),
       ],
