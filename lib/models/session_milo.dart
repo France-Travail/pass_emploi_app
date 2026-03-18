@@ -13,6 +13,7 @@ class SessionMilo extends Equatable {
   final String? theme;
   final bool estInscrit;
   final bool? autoinscription;
+  final bool? autodesinscription;
   final int? nombreDePlacesRestantes;
   final DateTime? dateMaxInscription;
 
@@ -26,6 +27,7 @@ class SessionMilo extends Equatable {
     required this.theme,
     required this.estInscrit,
     required this.autoinscription,
+    required this.autodesinscription,
     this.nombreDePlacesRestantes,
     this.dateMaxInscription,
   });
@@ -41,6 +43,7 @@ class SessionMilo extends Equatable {
       theme: json["theme"] as String?,
       estInscrit: (json["inscription"] as String?) == "INSCRIT",
       autoinscription: json["autoinscription"] as bool?,
+      autodesinscription: json["autodesinscription"] as bool?,
       nombreDePlacesRestantes: json["nbPlacesRestantes"] as int?,
       dateMaxInscription: (json["dateMaxInscription"] as String?)?.toDateTimeUtcOnLocalTimeZone(),
     );
@@ -48,17 +51,18 @@ class SessionMilo extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        nomSession,
-        dateDeDebut,
-        dateDeFin,
-        type,
-        estInscrit,
-        autoinscription,
-        nombreDePlacesRestantes,
-        dateMaxInscription,
-        theme,
-      ];
+    id,
+    nomSession,
+    dateDeDebut,
+    dateDeFin,
+    type,
+    estInscrit,
+    autoinscription,
+    autodesinscription,
+    nombreDePlacesRestantes,
+    dateMaxInscription,
+    theme,
+  ];
 
   Rendezvous get toRendezVous {
     return Rendezvous(
@@ -72,6 +76,7 @@ class SessionMilo extends Equatable {
       estInscrit: estInscrit,
       createdFromSessionMilo: true,
       autoinscription: autoinscription,
+      autodesinscription: autodesinscription,
       nombreDePlacesRestantes: nombreDePlacesRestantes,
       dateMaxInscription: dateMaxInscription,
       theme: theme,
@@ -92,7 +97,7 @@ class SessionMilo extends Equatable {
       "Santé" => Drawables.sessionSanteIllustration,
       "Citoyenneté" => Drawables.sessionCitoyenneteIllustration,
       "Loisirs, sport, culture" => Drawables.sessionLoisirIllustration,
-      _ => null
+      _ => null,
     };
   }
 }

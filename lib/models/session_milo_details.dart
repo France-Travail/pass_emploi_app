@@ -97,6 +97,7 @@ class SessionMiloDetails extends Equatable {
       estInscrit: estInscrit,
       createdFromSessionMilo: true,
       autoinscription: autoinscription,
+      autodesinscription: autodesinscription,
       nombreDePlacesRestantes: nombreDePlacesRestantes,
       dateMaxInscription: dateMaxInscription,
       theme: theme,

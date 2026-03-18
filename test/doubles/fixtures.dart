@@ -1265,6 +1265,7 @@ SessionMilo mockSessionMiloAtelierCv() => SessionMilo(
   theme: null,
   estInscrit: true,
   autoinscription: null,
+  autodesinscription: null,
 );
 
 SessionMilo mockSessionMiloAtelierDecouverte() => SessionMilo(
@@ -1276,6 +1277,7 @@ SessionMilo mockSessionMiloAtelierDecouverte() => SessionMilo(
   theme: null,
   estInscrit: false,
   autoinscription: null,
+  autodesinscription: null,
 );
 
 SessionMiloDetails mockSessionMiloDetails({
@@ -1322,6 +1324,7 @@ SessionMilo mockSessionMilo({
     estInscrit: true,
     autoinscription: autoinscription ?? false,
     nombreDePlacesRestantes: nombreDePlacesRestantes,
+    autodesinscription: false,
   );
 }
 
