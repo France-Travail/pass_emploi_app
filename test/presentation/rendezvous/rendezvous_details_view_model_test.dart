@@ -996,6 +996,45 @@ void main() {
         expect(viewModel.rdvCta is RendezVousShareToConseillerDemandeInscription, true);
       });
 
+      test('when user is inscrit and autodesinscription is available, should display annuler inscription button', () {
+        // Given
+        final store = givenState()
+            .loggedIn() //
+            .withSuccessSessionMiloDetails(estInscrit: true, autodesinscription: true)
+            .store();
+
+        // When
+        final viewModel = RendezvousDetailsViewModel.create(
+          store: store,
+          source: RendezvousStateSource.sessionMiloDetails,
+          rdvId: '1',
+          platform: Platform.IOS,
+        );
+
+        // Then
+        expect(viewModel.rdvCta is RendezVousAnnulerInscription, true);
+        expect((viewModel.rdvCta as RendezVousAnnulerInscription).label, "Annuler mon inscription");
+      });
+
+      test('when user is inscrit but autodesinscription is not available, should not display any button', () {
+        // Given
+        final store = givenState()
+            .loggedIn() //
+            .withSuccessSessionMiloDetails(estInscrit: true, autodesinscription: false)
+            .store();
+
+        // When
+        final viewModel = RendezvousDetailsViewModel.create(
+          store: store,
+          source: RendezvousStateSource.sessionMiloDetails,
+          rdvId: '1',
+          platform: Platform.IOS,
+        );
+
+        // Then
+        expect(viewModel.rdvCta, isNull);
+      });
+
       test('full view model test', () {
         // Given
         final store = _store(

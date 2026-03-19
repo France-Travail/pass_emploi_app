@@ -773,6 +773,7 @@ extension AppStateDSL on AppState {
     DateTime? dateDeFin,
     bool? estInscrit,
     bool? autoinscription,
+    bool? autodesinscription,
     int? nombreDePlacesRestantes,
     DateTime? dateMaxInscription,
   }) {
@@ -783,6 +784,7 @@ extension AppStateDSL on AppState {
           dateDeFin: dateDeFin,
           estInscrit: estInscrit,
           autoinscription: autoinscription,
+          autodesinscription: autodesinscription,
           nombreDePlacesRestantes: nombreDePlacesRestantes,
           dateMaxInscription: dateMaxInscription,
         ),

@@ -389,7 +389,15 @@ RendezvousCtaVm? _shareToConseillerButton(Store<AppState> store, RendezvousState
   return null;
 }
 
-RendezvousCtaVm _miloCta(Store<AppState> store, Rendezvous rdv) {
+RendezvousCtaVm? _miloCta(Store<AppState> store, Rendezvous rdv) {
+  if (rdv.estInscrit == true && rdv.autodesinscription == true) {
+    return RendezVousAnnulerInscription(onPressed: () {});
+  }
+
+  if (rdv.estInscrit == true) {
+    return null;
+  }
+
   if (rdv.autoInscriptionAvailable) {
     return RendezVousAutoInscription(
       onPressed: () {
@@ -398,7 +406,9 @@ RendezvousCtaVm _miloCta(Store<AppState> store, Rendezvous rdv) {
       },
     );
   }
+
   if (rdv.isComplet) return RendezVousShareToConseiller(chatPartageSource: ChatPartageSessionMiloSource(rdv.id));
+
   return RendezVousShareToConseillerDemandeInscription(
     onPressed: () => store.dispatch(
       ChatPartagerSessionMiloAction(
