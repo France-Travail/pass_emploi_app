@@ -4,6 +4,7 @@ import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/events/list/event_list_actions.dart';
 import 'package:pass_emploi_app/network/post_evenement_engagement.dart';
+import 'package:pass_emploi_app/pages/events/event_filtres_page.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/events/event_list_page_view_model.dart';
 import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_state_source.dart';
@@ -13,6 +14,7 @@ import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/animated_list_loader.dart';
+import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/cards/rendezvous_card.dart';
 import 'package:pass_emploi_app/widgets/illustration/empty_state_placeholder.dart';
 import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
@@ -41,14 +43,19 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-      duration: AnimationDurations.fast,
-      child: switch (viewModel.displayState) {
-        DisplayState.LOADING => _EventListLoading(),
-        DisplayState.EMPTY => _EmptyListPlaceholder(viewModel),
-        DisplayState.CONTENT => _Content(viewModel),
-        DisplayState.FAILURE => Retry(Strings.eventListError, () => viewModel.onRetry()),
-      },
+    return Scaffold(
+      body: AnimatedSwitcher(
+        duration: AnimationDurations.fast,
+        child: switch (viewModel.displayState) {
+          DisplayState.LOADING => _EventListLoading(),
+          DisplayState.EMPTY => _EmptyListPlaceholder(viewModel),
+          DisplayState.CONTENT => _Content(viewModel),
+          DisplayState.FAILURE => Retry(Strings.eventListError, () => viewModel.onRetry()),
+        },
+      ),
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.noAnimation,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: viewModel.availableAntennes.isNotEmpty ? _FilterButton(viewModel) : null,
     );
   }
 }
@@ -82,6 +89,10 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (viewModel.hasActiveFilters && viewModel.eventIds.isEmpty) {
+      return _FilteredEmptyState(viewModel);
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
       child: RefreshIndicator.adaptive(
@@ -106,18 +117,19 @@ class _Content extends StatelessWidget {
                   final eventId = viewModel.eventIds[index];
                   return switch (eventId) {
                     final AnimationCollectiveId a => a.id.rendezvousCard(
-                        context: context,
-                        stateSource: RendezvousStateSource.eventListAnimationsCollectives,
-                        evenementEngagement: EvenementEngagement.ANIMATION_COLLECTIVE_AFFICHEE,
-                      ),
+                      context: context,
+                      stateSource: RendezvousStateSource.eventListAnimationsCollectives,
+                      evenementEngagement: EvenementEngagement.ANIMATION_COLLECTIVE_AFFICHEE,
+                    ),
                     final SessionMiloId s => s.id.rendezvousCard(
-                        context: context,
-                        stateSource: RendezvousStateSource.eventListSessionsMilo,
-                        evenementEngagement: EvenementEngagement.SESSION_AFFICHEE,
-                      ),
+                      context: context,
+                      stateSource: RendezvousStateSource.eventListSessionsMilo,
+                      evenementEngagement: EvenementEngagement.SESSION_AFFICHEE,
+                    ),
                   };
                 },
               ),
+              SizedBox(height: Margins.spacing_xx_huge),
             ],
           ),
         ),
@@ -139,29 +151,79 @@ class _EventListLoading extends StatelessWidget {
   }
 
   List<Widget> _placeholders(double screenWidth) => [
-        AnimatedListLoader.placeholderBuilder(
-          width: screenWidth,
-          height: 30,
+    AnimatedListLoader.placeholderBuilder(
+      width: screenWidth,
+      height: 30,
+    ),
+    SizedBox(height: Margins.spacing_s),
+    AnimatedListLoader.placeholderBuilder(
+      width: screenWidth,
+      height: 30,
+    ),
+    SizedBox(height: Margins.spacing_base),
+    AnimatedListLoader.placeholderBuilder(
+      width: screenWidth,
+      height: 170,
+    ),
+    SizedBox(height: Margins.spacing_base),
+    AnimatedListLoader.placeholderBuilder(
+      width: screenWidth,
+      height: 170,
+    ),
+    SizedBox(height: Margins.spacing_base),
+    AnimatedListLoader.placeholderBuilder(
+      width: screenWidth,
+      height: 170,
+    ),
+  ];
+}
+
+class _FilterButton extends StatelessWidget {
+  final EventListPageViewModel viewModel;
+
+  const _FilterButton(this.viewModel);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+        child: PrimaryActionButton(
+          onPressed: () => _showFiltersBottomSheet(context),
+          icon: Icons.filter_list,
+          label:
+              Strings.filtrer +
+              (viewModel.hasActiveFilters ? ' (${Strings.eventListFiltresActifs(viewModel.activeFiltersCount)})' : ''),
         ),
-        SizedBox(height: Margins.spacing_s),
-        AnimatedListLoader.placeholderBuilder(
-          width: screenWidth,
-          height: 30,
+      ),
+    );
+  }
+
+  void _showFiltersBottomSheet(BuildContext context) async {
+    await EventFiltresPage.show(context);
+    // The page will handle updating the Redux state
+  }
+}
+
+class _FilteredEmptyState extends StatelessWidget {
+  final EventListPageViewModel viewModel;
+
+  const _FilteredEmptyState(this.viewModel);
+
+  @override
+  Widget build(BuildContext context) {
+    return RefreshIndicatorAddingScrollview(
+      onRefresh: () async => viewModel.onRetry(),
+      child: SingleChildScrollView(
+        child: Center(
+          child: EmptyStatePlaceholder(
+            illustration: Illustration.grey(Icons.filter_list, withWhiteBackground: true),
+            title: Strings.eventListFiltresEmpty,
+            subtitle: Strings.eventListFiltresEmptySubtitle,
+          ),
         ),
-        SizedBox(height: Margins.spacing_base),
-        AnimatedListLoader.placeholderBuilder(
-          width: screenWidth,
-          height: 170,
-        ),
-        SizedBox(height: Margins.spacing_base),
-        AnimatedListLoader.placeholderBuilder(
-          width: screenWidth,
-          height: 170,
-        ),
-        SizedBox(height: Margins.spacing_base),
-        AnimatedListLoader.placeholderBuilder(
-          width: screenWidth,
-          height: 170,
-        ),
-      ];
+      ),
+    );
+  }
 }

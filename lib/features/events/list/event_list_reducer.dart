@@ -10,5 +10,15 @@ EventListState eventListReducer(EventListState current, dynamic action) {
       action.sessionsMilos,
     );
   }
+  if (action is EventListUpdateFiltersAction) {
+    if (current is EventListSuccessState) {
+      return current.copyWith(selectedAntennes: action.selectedAntennes);
+    }
+  }
+  if (action is EventListClearFiltersAction) {
+    if (current is EventListSuccessState) {
+      return current.copyWith(selectedAntennes: const []);
+    }
+  }
   return current;
 }

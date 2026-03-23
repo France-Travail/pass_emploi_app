@@ -18,3 +18,11 @@ class EventListSuccessAction {
 }
 
 class EventListFailureAction {}
+
+class EventListUpdateFiltersAction {
+  final List<String> selectedAntennes;
+
+  EventListUpdateFiltersAction(this.selectedAntennes);
+}
+
+class EventListClearFiltersAction {}

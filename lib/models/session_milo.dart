@@ -16,6 +16,7 @@ class SessionMilo extends Equatable {
   final bool? autodesinscription;
   final int? nombreDePlacesRestantes;
   final DateTime? dateMaxInscription;
+  final String? antenne;
 
   SessionMilo({
     required this.id,
@@ -27,9 +28,10 @@ class SessionMilo extends Equatable {
     required this.theme,
     required this.estInscrit,
     required this.autoinscription,
-    required this.autodesinscription,
+    required     this.autodesinscription,
     this.nombreDePlacesRestantes,
     this.dateMaxInscription,
+    this.antenne,
   });
 
   factory SessionMilo.fromJson(dynamic json) {
@@ -46,6 +48,7 @@ class SessionMilo extends Equatable {
       autodesinscription: json["autodesinscription"] as bool?,
       nombreDePlacesRestantes: json["nbPlacesRestantes"] as int?,
       dateMaxInscription: (json["dateMaxInscription"] as String?)?.toDateTimeUtcOnLocalTimeZone(),
+      antenne: json["antenne"] as String?,
     );
   }
 
@@ -62,6 +65,7 @@ class SessionMilo extends Equatable {
     nombreDePlacesRestantes,
     dateMaxInscription,
     theme,
+    antenne,
   ];
 
   Rendezvous get toRendezVous {
@@ -81,6 +85,7 @@ class SessionMilo extends Equatable {
       dateMaxInscription: dateMaxInscription,
       theme: theme,
       duration: dateDeFin?.difference(dateDeDebut).inMinutes,
+      antenne: antenne,
     );
   }
 

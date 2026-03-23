@@ -96,6 +96,7 @@ String _hours(Rendezvous rdv) {
 }
 
 String? _place(Rendezvous rdv) {
+  if (rdv.antenne != null) return rdv.antenne;
   if (rdv.modality == null) return null;
   final modality = rdv.modality!.firstLetterUpperCased();
   final conseiller = rdv.conseiller;

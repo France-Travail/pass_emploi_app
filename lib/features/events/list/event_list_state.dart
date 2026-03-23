@@ -16,9 +16,22 @@ class EventListFailureState extends EventListState {}
 class EventListSuccessState extends EventListState {
   final List<Rendezvous> animationsCollectives;
   final List<SessionMilo> sessionsMilos;
+  final List<String> selectedAntennes;
 
-  EventListSuccessState(this.animationsCollectives, this.sessionsMilos);
+  EventListSuccessState(this.animationsCollectives, this.sessionsMilos, {this.selectedAntennes = const []});
 
   @override
-  List<Object?> get props => [animationsCollectives, sessionsMilos];
+  List<Object?> get props => [animationsCollectives, sessionsMilos, selectedAntennes];
+
+  EventListSuccessState copyWith({
+    List<Rendezvous>? animationsCollectives,
+    List<SessionMilo>? sessionsMilos,
+    List<String>? selectedAntennes,
+  }) {
+    return EventListSuccessState(
+      animationsCollectives ?? this.animationsCollectives,
+      sessionsMilos ?? this.sessionsMilos,
+      selectedAntennes: selectedAntennes ?? this.selectedAntennes,
+    );
+  }
 }

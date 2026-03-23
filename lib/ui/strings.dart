@@ -1480,6 +1480,16 @@ class Strings {
   static const String evenementEmploiFiltresDateDebut = "Date de début";
   static const String evenementEmploiFiltresDateFin = "Date de fin";
 
+  // Event List filtres
+  static const String eventListFiltres = "Filtrer les événements";
+  static const String eventListFiltresAntenne = "Par antenne";
+  static const String eventListFiltresAppliquer = "Appliquer les filtres";
+  static const String eventListFiltresEffacer = "Réinitialiser";
+  static String eventListFiltresActifs(int count) =>
+      "$count filtre${count > 1 ? 's' : ''} actif${count > 1 ? 's' : ''}";
+  static const String eventListFiltresEmpty = "Aucun événement pour les antennes sélectionnées";
+  static const String eventListFiltresEmptySubtitle = "Essayez de modifier vos filtres";
+
   // Mode dégradé France Travail
   static String reloadPage = "Recharger la page";
 

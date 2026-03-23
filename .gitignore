@@ -76,3 +76,6 @@ env/.env.audit
 
 # Others
 *tutorial_data.csv
+
+# AI related
+.cursor

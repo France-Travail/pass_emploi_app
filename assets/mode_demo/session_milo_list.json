@@ -12,7 +12,8 @@
     "inscription": "NOT_INSCRIT",
     "autoinscription": true,
     "nbPlacesRestantes": 2,
-    "dateMaxInscription": null
+    "dateMaxInscription": null,
+    "antenne": "Mission Locale Paris Centre"
   },
   {
     "id": "id-entretien-2025",
@@ -26,7 +27,8 @@
     "inscription": "NOT_INSCRIT",
     "autoinscription": true,
     "nbPlacesRestantes": 0,
-    "dateMaxInscription": null
+    "dateMaxInscription": null,
+    "antenne": "Mission Locale Banlieue Sud"
   },
   {
     "id": "id-alternance-2025",
@@ -38,6 +40,55 @@
       "label": "Information collective"
     },
     "inscription": "INSCRIT",
-    "autoinscription": false
+    "autoinscription": false,
+    "antenne": "Mission Locale Paris Centre"
+  },
+  {
+    "id": "id-formation-2025",
+    "nomSession": "Découverte des métiers du numérique",
+    "nomOffre": "Formation aux métiers du digital",
+    "dateHeureDebut": "2025-04-12T09:00:00.000Z",
+    "type": {
+      "code": "WORKSHOP",
+      "label": "Atelier"
+    },
+    "theme": "Formation",
+    "inscription": "NOT_INSCRIT",
+    "autoinscription": true,
+    "nbPlacesRestantes": 8,
+    "dateMaxInscription": "2025-04-10T23:59:59.000Z",
+    "antenne": "Mission Locale Val-de-Marne"
+  },
+  {
+    "id": "id-logement-2025",
+    "nomSession": "Aide au logement",
+    "nomOffre": "Trouver son premier logement",
+    "dateHeureDebut": "2025-04-20T16:00:00.000Z",
+    "type": {
+      "code": "COLLECTIVE_INFORMATION",
+      "label": "Information collective"
+    },
+    "theme": "Logement",
+    "inscription": "NOT_INSCRIT",
+    "autoinscription": false,
+    "nbPlacesRestantes": 15,
+    "dateMaxInscription": null,
+    "antenne": "Mission Locale Banlieue Sud"
+  },
+  {
+    "id": "id-entrepreneur-2025",
+    "nomSession": "Créer son entreprise",
+    "nomOffre": "Les bases de l'entrepreneuriat",
+    "dateHeureDebut": "2025-05-03T14:00:00.000Z",
+    "type": {
+      "code": "WORKSHOP",
+      "label": "Atelier"
+    },
+    "theme": "Projet professionnel",
+    "inscription": "NOT_INSCRIT",
+    "autoinscription": true,
+    "nbPlacesRestantes": 6,
+    "dateMaxInscription": "2025-05-01T12:00:00.000Z",
+    "antenne": "Mission Locale Val-de-Marne"
   }
 ]

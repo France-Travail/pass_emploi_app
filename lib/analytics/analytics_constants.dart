@@ -101,6 +101,7 @@ class AnalyticsScreenNames {
   static const evenementEmploiRecherche = "evenement_emploi";
   static const evenementEmploiDetails = "evenement_emploi/detail";
   static const evenementEmploiFiltres = "evenement_emploi/search_results/filters";
+  static const eventFiltres = "event_list/filters";
   static const evenementEmploiPartagePageSuccess = "evenement_emploi/detail?partage-conseiller=true";
 
   static const offreFavorisList = "favoris/list";

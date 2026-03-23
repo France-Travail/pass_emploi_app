@@ -29,6 +29,7 @@ class Rendezvous extends Equatable {
   final bool? autodesinscription;
   final int? nombreDePlacesRestantes;
   final DateTime? dateMaxInscription;
+  final String? antenne;
 
   Rendezvous({
     required this.id,
@@ -58,6 +59,7 @@ class Rendezvous extends Equatable {
     this.autodesinscription,
     this.nombreDePlacesRestantes,
     this.dateMaxInscription,
+    this.antenne,
   });
 
   RendezvousModalityType modalityType() {
@@ -95,6 +97,7 @@ class Rendezvous extends Equatable {
       autodesinscription,
       nombreDePlacesRestantes,
       dateMaxInscription,
+      antenne,
     ];
   }
 
