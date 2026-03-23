@@ -1477,6 +1477,179 @@ void main() {
       expect(viewModel.isComplet, true);
     });
   });
+
+  group('dateLimiteAnnulation', () {
+    test('should display nothing when dateMaxDesinscription is null', () {
+      // Given
+      final rdv = mockRendezvous(
+        id: '1',
+        source: RendezvousSource.passEmploi,
+        estInscrit: true,
+        date: DateTime(2021, 12, 23, 10, 20),
+        duration: 60,
+        dateMaxDesinscription: null,
+      );
+      final store =
+          givenState() //
+              .loggedIn()
+              .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
+              .store();
+
+      // When
+      final viewModel = RendezvousDetailsViewModel.create(
+        store: store,
+        source: RendezvousStateSource.monSuivi,
+        rdvId: '1',
+        platform: Platform.IOS,
+      );
+
+      // Then
+      expect(viewModel.dateLimiteAnnulation, null);
+    });
+
+    test('should display nothing when user is not inscrit', () {
+      // Given
+      final rdv = mockRendezvous(
+        id: '1',
+        source: RendezvousSource.passEmploi,
+        estInscrit: false,
+        date: DateTime(2021, 12, 23, 10, 20),
+        duration: 60,
+        dateMaxDesinscription: DateTime.now().add(Duration(hours: 24)),
+      );
+      final store =
+          givenState() //
+              .loggedIn()
+              .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
+              .store();
+
+      // When
+      final viewModel = RendezvousDetailsViewModel.create(
+        store: store,
+        source: RendezvousStateSource.monSuivi,
+        rdvId: '1',
+        platform: Platform.IOS,
+      );
+
+      // Then
+      expect(viewModel.dateLimiteAnnulation, null);
+    });
+
+    test('should display formatted date when dateMaxDesinscription is provided', () {
+      // Given
+      final rdv = mockRendezvous(
+        id: '1',
+        source: RendezvousSource.passEmploi,
+        estInscrit: true,
+        date: DateTime(2021, 12, 23, 10, 20),
+        duration: 60,
+        dateMaxDesinscription: DateTime(2026, 4, 17, 14, 30),
+      );
+      final store =
+          givenState() //
+              .loggedIn()
+              .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
+              .store();
+
+      // When
+      final viewModel = RendezvousDetailsViewModel.create(
+        store: store,
+        source: RendezvousStateSource.monSuivi,
+        rdvId: '1',
+        platform: Platform.IOS,
+      );
+
+      // Then
+      expect(viewModel.dateLimiteAnnulation, "Date limite d'annulation : 17 avril 2026");
+    });
+
+    test('should display nothing when dateMaxDesinscription is in the past', () {
+      // Given
+      final rdv = mockRendezvous(
+        id: '1',
+        source: RendezvousSource.passEmploi,
+        estInscrit: true,
+        date: DateTime(2021, 12, 23, 10, 20),
+        duration: 60,
+        dateMaxDesinscription: DateTime(2020, 1, 15, 12, 0),
+      );
+      final store =
+          givenState() //
+              .loggedIn()
+              .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
+              .store();
+
+      // When
+      final viewModel = RendezvousDetailsViewModel.create(
+        store: store,
+        source: RendezvousStateSource.monSuivi,
+        rdvId: '1',
+        platform: Platform.IOS,
+      );
+
+      // Then
+      expect(viewModel.dateLimiteAnnulation, null);
+    });
+
+    test('should display formatted date when dateMaxDesinscription is today', () {
+      // Given
+      final today = DateTime.now();
+      final rdv = mockRendezvous(
+        id: '1',
+        source: RendezvousSource.passEmploi,
+        estInscrit: true,
+        date: DateTime(2021, 12, 23, 10, 20),
+        duration: 60,
+        dateMaxDesinscription: DateTime(today.year, today.month, today.day, 23, 59),
+      );
+      final store =
+          givenState() //
+              .loggedIn()
+              .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
+              .store();
+
+      // When
+      final viewModel = RendezvousDetailsViewModel.create(
+        store: store,
+        source: RendezvousStateSource.monSuivi,
+        rdvId: '1',
+        platform: Platform.IOS,
+      );
+
+      // Then
+      expect(viewModel.dateLimiteAnnulation, isNotNull);
+      expect(viewModel.dateLimiteAnnulation, startsWith("Date limite d'annulation :"));
+    });
+
+    test('should not display withIfAbsentPart when dateLimiteAnnulation is provided', () {
+      // Given
+      final rdv = mockRendezvous(
+        id: '1',
+        source: RendezvousSource.passEmploi,
+        estInscrit: true,
+        date: DateTime(2021, 12, 23, 10, 20),
+        duration: 60,
+        dateMaxDesinscription: DateTime(2026, 4, 17, 14, 30),
+      );
+      final store =
+          givenState() //
+              .loggedIn()
+              .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
+              .store();
+
+      // When
+      final viewModel = RendezvousDetailsViewModel.create(
+        store: store,
+        source: RendezvousStateSource.monSuivi,
+        rdvId: '1',
+        platform: Platform.IOS,
+      );
+
+      // Then
+      expect(viewModel.withIfAbsentPart, isFalse);
+      expect(viewModel.dateLimiteAnnulation, "Date limite d'annulation : 17 avril 2026");
+    });
+  });
 }
 
 Store<AppState> _store(Rendezvous rendezvous) => _storeNotUpToDate(rendezvous, null);

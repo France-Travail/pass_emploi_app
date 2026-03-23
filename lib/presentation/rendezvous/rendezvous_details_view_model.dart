@@ -62,6 +62,7 @@ class RendezvousDetailsViewModel extends Equatable {
   final String? theme;
   final String? description;
   final String? nombreDePlacesRestantes;
+  final String? dateLimiteAnnulation;
   final String? assetImage;
 
   RendezvousDetailsViewModel({
@@ -100,6 +101,7 @@ class RendezvousDetailsViewModel extends Equatable {
     this.theme,
     this.description,
     this.nombreDePlacesRestantes,
+    this.dateLimiteAnnulation,
     this.assetImage,
   });
 
@@ -134,7 +136,7 @@ class RendezvousDetailsViewModel extends Equatable {
       withConseillerPresencePart: _shouldDisplayConseillerPresence(rdv),
       withDescriptionPart: _withDescription(source, rdv),
       withModalityPart: _withModalityPart(rdv),
-      withIfAbsentPart: _estCeQueMaPresenceEstRequise(source, isInscrit),
+      withIfAbsentPart: _estCeQueMaPresenceEstRequise(source, rdv),
       withAnimateur: _withAnimateur(source, rdv.animateur),
       withDateDerniereMiseAJour: _withDateDerniereMiseAJour(dateDerniereMiseAJour),
       rdvCta: _shareToConseillerButton(store, source, rdv),
@@ -152,6 +154,7 @@ class RendezvousDetailsViewModel extends Equatable {
       theme: rdv.theme,
       description: _descriptionFromSource(source, rdv),
       nombreDePlacesRestantes: _nombreDePlacesRestantes(rdv),
+      dateLimiteAnnulation: _dateLimiteAnnulation(rdv),
       assetImage: _assetImage(rdv, source),
     );
   }
@@ -226,6 +229,7 @@ class RendezvousDetailsViewModel extends Equatable {
       theme,
       description,
       nombreDePlacesRestantes,
+      dateLimiteAnnulation,
     ];
   }
 }
@@ -251,6 +255,13 @@ Rendezvous? _getRendezvous(Store<AppState> store, RendezvousStateSource source, 
 String? _nombreDePlacesRestantes(Rendezvous rdv) {
   if (rdv.nombreDePlacesRestantes == null || rdv.nombreDePlacesRestantes == 0) return null;
   return Strings.placesRestantes(rdv.nombreDePlacesRestantes!);
+}
+
+String? _dateLimiteAnnulation(Rendezvous rdv) {
+  if (rdv.estInscrit != true) return null;
+  if (rdv.dateMaxDesinscription == null) return null;
+  if (rdv.dateMaxDesinscription!.isBefore(DateTime.now())) return null;
+  return "${Strings.dateLimiteAnnulation} : ${rdv.dateMaxDesinscription!.toDayWithFullMonth()}";
 }
 
 bool _shouldGetRendezvous(RendezvousStateSource source, Store<AppState> store) {
@@ -373,8 +384,9 @@ String? _comment(RendezvousStateSource source, String? comment) {
   return comment;
 }
 
-bool _estCeQueMaPresenceEstRequise(RendezvousStateSource source, bool isInscrit) {
-  return (!source.isFromEvenements && !source.isFromEvenementMiloDetails) || isInscrit;
+bool _estCeQueMaPresenceEstRequise(RendezvousStateSource source, Rendezvous rdv) {
+  if (rdv.dateMaxDesinscription != null) return false;
+  return (!source.isFromEvenements && !source.isFromEvenementMiloDetails) || rdv.estInscrit == true;
 }
 
 RendezvousCtaVm? _shareToConseillerButton(Store<AppState> store, RendezvousStateSource source, Rendezvous rdv) {

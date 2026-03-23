@@ -468,6 +468,7 @@ Rendezvous mockRendezvous({
   bool? autodesinscription,
   int? nombreDePlacesRestantes,
   DateTime? dateMaxInscription,
+  DateTime? dateMaxDesinscription,
 }) {
   return Rendezvous(
     id: id,
@@ -495,6 +496,7 @@ Rendezvous mockRendezvous({
     autodesinscription: autodesinscription,
     nombreDePlacesRestantes: nombreDePlacesRestantes,
     dateMaxInscription: dateMaxInscription,
+    dateMaxDesinscription: dateMaxDesinscription,
   );
 }
 

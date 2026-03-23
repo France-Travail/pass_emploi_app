@@ -19,6 +19,7 @@ class SessionMiloDetails extends Equatable {
   final bool? autodesinscription;
   final int? nombreDePlacesRestantes;
   final DateTime? dateMaxInscription;
+  final DateTime? dateMaxDesinscription;
   final String? theme;
 
   SessionMiloDetails({
@@ -37,6 +38,7 @@ class SessionMiloDetails extends Equatable {
     required this.autodesinscription,
     this.nombreDePlacesRestantes,
     this.dateMaxInscription,
+    this.dateMaxDesinscription,
     this.theme,
   });
 
@@ -57,6 +59,7 @@ class SessionMiloDetails extends Equatable {
       autodesinscription: json["autodesinscription"] as bool?,
       nombreDePlacesRestantes: json["nbPlacesDisponibles"] as int?,
       dateMaxInscription: (json["dateMaxInscription"] as String?)?.toDateTimeUtcOnLocalTimeZone(),
+      dateMaxDesinscription: (json["dateMaxDesinscription"] as String?)?.toDateTimeUtcOnLocalTimeZone(),
       theme: json["theme"] as String?,
     );
   }
@@ -77,6 +80,7 @@ class SessionMiloDetails extends Equatable {
     autodesinscription,
     nombreDePlacesRestantes,
     dateMaxInscription,
+    dateMaxDesinscription,
     theme,
   ];
 
@@ -100,6 +104,7 @@ class SessionMiloDetails extends Equatable {
       autodesinscription: autodesinscription,
       nombreDePlacesRestantes: nombreDePlacesRestantes,
       dateMaxInscription: dateMaxInscription,
+      dateMaxDesinscription: dateMaxDesinscription,
       theme: theme,
     );
   }

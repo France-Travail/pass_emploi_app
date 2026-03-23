@@ -341,6 +341,20 @@ class _AnimateurPart extends StatelessWidget {
   }
 }
 
+class _DateLimiteAnnulationPart extends StatelessWidget {
+  final String dateLimiteAnnulation;
+
+  const _DateLimiteAnnulationPart(this.dateLimiteAnnulation);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      dateLimiteAnnulation,
+      style: TextStyles.textBaseMedium.copyWith(color: AppColors.grey700),
+    );
+  }
+}
+
 class _ConseillerPart extends StatelessWidget {
   final RendezvousDetailsViewModel viewModel;
 
@@ -356,6 +370,10 @@ class _ConseillerPart extends StatelessWidget {
             viewModel.conseillerPresenceLabel,
             style: TextStyles.textBaseBoldWithColor(viewModel.conseillerPresenceColor),
           ),
+        if (viewModel.dateLimiteAnnulation != null) ...[
+          if (viewModel.withConseillerPresencePart) SizedBox(height: Margins.spacing_base),
+          _DateLimiteAnnulationPart(viewModel.dateLimiteAnnulation!),
+        ],
         if (_withSepLine()) SepLine(Margins.spacing_m, Margins.spacing_m),
         if (viewModel.commentTitle != null)
           Semantics(header: true, child: Text(viewModel.commentTitle!, style: TextStyles.textBaseBold)),
@@ -369,10 +387,14 @@ class _ConseillerPart extends StatelessWidget {
     );
   }
 
-  bool _withSepLine() => viewModel.withConseillerPresencePart && viewModel.comment != null;
+  bool _withSepLine() =>
+      (viewModel.withConseillerPresencePart || viewModel.dateLimiteAnnulation != null) && viewModel.comment != null;
 
   bool _withEndSepLine() =>
-      viewModel.withConseillerPresencePart || viewModel.commentTitle != null || viewModel.comment != null;
+      viewModel.withConseillerPresencePart ||
+      viewModel.commentTitle != null ||
+      viewModel.comment != null ||
+      viewModel.dateLimiteAnnulation != null;
 }
 
 class _InformIfAbsent extends StatelessWidget {

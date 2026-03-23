@@ -1432,15 +1432,15 @@ class Strings {
   static String eventPlaceholderSubtitle = "Commencez votre recherche en remplissant les champs ci-dessus.";
 
   // auto desinscription
+  static String dateLimiteAnnulation = "Date limite d'annulation";
   static String autoDesinscriptionFormConfirmation = "Confirmez-vous l’annulation à cet événement ?";
   static String autoDesinscriptionFormFieldTitle = "* Précisez le motif de votre annulation";
-  static String autoDesinscriptionInformation =
-      "Annulation possible jusqu’à 24h avant la date de l’atelier. Votre conseiller sera informé";
   static String autoDesinscriptionConfirm = "Confirmer l’annulation";
   static String autoDesinscriptionCancel = "Garder mon inscription";
   static String autoDesinscriptionVoirAutresEvenements = "Voir d'autres événements";
   static String autoDesinscriptionSuccessTitle(String eventTitle) =>
       "Votre inscription à l'événement $eventTitle a été annulée";
+  static String autoDesinscriptionSuccessAppBarTitle = "Annulation confirmée";
 
   // Événements Emploi
   static const String secteurActiviteLabel = "Secteur d'activité";
