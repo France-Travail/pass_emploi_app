@@ -5,7 +5,7 @@ import 'package:pass_emploi_app/features/events/list/event_list_actions.dart';
 import 'package:pass_emploi_app/presentation/auto_inscription_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
+import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/media_sizes.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -13,7 +13,6 @@ import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/confetti_wrapper.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
-import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 
 class AutoInscriptionPage extends StatelessWidget {
@@ -97,10 +96,8 @@ class _Content extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox.square(
-                dimension: height < MediaSizes.height_xs ? 60 : 180,
-                child: Illustration.green(
-                  AppIcons.check_rounded,
-                ),
+                dimension: height < MediaSizes.height_xs ? 60 : 130,
+                child: Image.asset(Drawables.success),
               ),
               SizedBox(height: height < MediaSizes.height_xs ? Margins.spacing_base : Margins.spacing_l),
               Column(
