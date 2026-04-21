@@ -93,6 +93,9 @@ Matcher _shouldSucceedWithIncompleteData() {
 Immersion _incompleteImmersion() {
   return Immersion(
     id: 'id',
+    siret: '',
+    appellationCode: '',
+    locationId: '',
     metier: 't',
     nomEtablissement: 'o',
     secteurActivite: 'Secteur d\'activité inconnu',

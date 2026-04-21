@@ -1,13 +1,16 @@
 {
-  "id": "31073855400024-D1502",
+  "siret": "12345678900013",
+  "appellationCode": "12678",
+  "locationId": "loc-lyon-09",
   "metier": "Management/gestion de rayon produits alimentaires",
   "nomEtablissement": "LECLERC CHAMPVERT",
   "secteurActivite": "Commerce de détail en magasin non spécialisé à prédominance alimentaire",
   "ville": "LYON-09",
   "adresse": "Service des ressources humaines, 90 AVENUE BARTHELEMY BUYER, 69009 LYON-09",
-  "codeRome": "D1502",
-  "siret": "12345678900013",
+  "website": "",
   "estVolontaire": false,
+  "fitForDisabledWorkers": false,
+  "contactMode": "INCONNU",
   "localisation": {
     "latitude": 45.76179,
     "longitude": 4.803495

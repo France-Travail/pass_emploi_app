@@ -1,91 +1,119 @@
 [
   {
-    "id": "036383f3-85ca-4dbd-b636-ae2657164439",
+    "siret": "12345678900001",
+    "appellationCode": "11573",
+    "locationId": "loc-001",
     "metier": "xxxx",
     "nomEtablissement": "ACCUEIL DE JOUR POUR PERSONNES AGEES",
     "secteurActivite": "xxxx",
     "ville": "xxxx",
-    "estVolontaire": true
+    "estVolontaire": true,
+    "fitForDisabledWorkers": true
   },
   {
-    "id": "c92290c1-1586-4e97-b6e7-4933756fc406",
+    "siret": "12345678900002",
+    "appellationCode": "11573",
+    "locationId": "loc-002",
     "metier": "xxxx",
     "nomEtablissement": "EHPAD SAINT FRANCOIS",
     "secteurActivite": "xxxx",
-    "ville": "xxxx"
+    "ville": "xxxx",
+    "fitForDisabledWorkers": false
   },
   {
-    "id": "3eaa17fb-a912-4610-863d-93c5db29ea0c",
+    "siret": "12345678900003",
+    "appellationCode": "11573",
+    "locationId": "loc-003",
     "metier": "xxxx",
     "nomEtablissement": "CTRE SOINS SUITE ET READAPTAT EN ADDICTO",
     "secteurActivite": "xxxx",
     "ville": "xxxx"
   },
   {
-    "id": "dc0b84ec-c746-4e01-bf78-bbab5d8db3d9",
+    "siret": "12345678900004",
+    "appellationCode": "11573",
+    "locationId": "loc-004",
     "metier": "xxxx",
     "nomEtablissement": "CENTRE HOSPITALIER GENERAL",
     "secteurActivite": "xxxx",
     "ville": "xxxx"
   },
   {
-    "id": "4e9fd80d-af21-4e72-b936-4d323fcf5683",
+    "siret": "12345678900005",
+    "appellationCode": "11573",
+    "locationId": "loc-005",
     "metier": "xxxx",
     "nomEtablissement": "ASSOCIATION EMMAUS DIACONESSES",
     "secteurActivite": "xxxx",
     "ville": "xxxx"
   },
   {
-    "id": "8b8b9de9-9e68-498f-9018-ec14af7a953b",
+    "siret": "12345678900006",
+    "appellationCode": "11573",
+    "locationId": "loc-006",
     "metier": "xxxx",
     "nomEtablissement": "HOPITAL LA GRAFENBOURG MAISON ST JOSEPH",
     "secteurActivite": "xxxx",
     "ville": "xxxx"
   },
   {
-    "id": "3a08c91d-8832-441c-80f7-a73f5bf89c5b",
+    "siret": "12345678900007",
+    "appellationCode": "11573",
+    "locationId": "loc-007",
     "metier": "xxxx",
     "nomEtablissement": "EHPAD L'ARC-EN-CIEL",
     "secteurActivite": "xxxx",
     "ville": "xxxx"
   },
   {
-    "id": "98286f66-2a8e-4a22-80a8-c6fda3a52980",
+    "siret": "12345678900008",
+    "appellationCode": "11573",
+    "locationId": "loc-008",
     "metier": "xxxx",
     "nomEtablissement": "O2 BRUMATH",
     "secteurActivite": "xxxx",
     "ville": "xxxx"
   },
   {
-    "id": "4f44d3ec-6568-41f0-b66e-e53a9e1fe904",
+    "siret": "12345678900009",
+    "appellationCode": "11573",
+    "locationId": "loc-009",
     "metier": "xxxx",
     "nomEtablissement": "EPSAN",
     "secteurActivite": "xxxx",
     "ville": "xxxx"
   },
   {
-    "id": "4277d7b7-3d86-453d-9375-14aee8fde94d",
+    "siret": "12345678900010",
+    "appellationCode": "11573",
+    "locationId": "loc-010",
     "metier": "xxxx",
     "nomEtablissement": "LES FOURMIS DE L AJPA",
     "secteurActivite": "xxxx",
     "ville": "xxxx"
   },
   {
-    "id": "b2d70bb3-ba69-4dd8-880a-62171b48ecbc",
+    "siret": "12345678900011",
+    "appellationCode": "11573",
+    "locationId": "loc-011",
     "metier": "xxxx",
     "nomEtablissement": "CENTRE SERVICES",
     "secteurActivite": "xxxx",
     "ville": "xxxx"
   },
   {
-    "id": "3e69c342-9307-45ec-aa99-8fcb63f88a4a",
+    "siret": "12345678900012",
+    "appellationCode": "11573",
+    "locationId": "loc-012",
     "metier": "xxxx",
     "nomEtablissement": "MAISON D ACCUEIL LA SOLIDARITE",
     "secteurActivite": "xxxx",
     "ville": "xxxx"
   },
   {
-    "id": "0e32e7bd-b1dd-468d-8faa-d82ae6f5a939",
+    "siret": "12345678900013",
+    "appellationCode": "11573",
+    "locationId": "loc-013",
     "metier": "xxxx",
     "nomEtablissement": "GSF SATURNE",
     "secteurActivite": "xxxx",

@@ -65,15 +65,16 @@ class ImmersionSearchExtractor extends AbstractSearchExtractor<ImmersionAlerte> 
   @override
   ImmersionAlerte getSearchFilters(Store<AppState> store) {
     final state = store.state.rechercheImmersionState;
-    final String metier = state.request!.criteres.metier.libelle;
+    final metier = state.request!.criteres.metier;
+    final String metierLibelle = metier?.libelle ?? '';
     final ville = state.request!.criteres.location.libelle;
     return ImmersionAlerte(
       id: "",
-      title: Strings.alerteTitleField(metier, ville),
-      metier: metier,
+      title: Strings.alerteTitleField(metierLibelle, ville),
+      metier: metierLibelle,
       location: state.request!.criteres.location,
       ville: ville,
-      codeRome: state.request!.criteres.metier.codeRome,
+      codeRome: metier?.codeRome ?? '',
       filtres: state.request!.filtres,
     );
   }

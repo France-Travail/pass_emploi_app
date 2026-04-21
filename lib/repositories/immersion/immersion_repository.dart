@@ -18,7 +18,7 @@ class ImmersionRepository
     required String userId,
     required RechercheRequest<ImmersionCriteresRecherche, ImmersionFiltresRecherche> request,
   }) async {
-    const url = "/offres-immersion";
+    const url = "/offres-immersion/v3";
     try {
       final response = await _httpClient.get(url, queryParameters: _queryParameters(request));
       final immersions = (response.data as List).map((offre) => Immersion.fromJson(offre)).toList();
@@ -32,8 +32,11 @@ class ImmersionRepository
   Map<String, String> _queryParameters(
     RechercheRequest<ImmersionCriteresRecherche, ImmersionFiltresRecherche> request,
   ) {
+    final appellationCode = request.criteres.appellationCode;
+    final codeRome = request.criteres.metier?.codeRome;
     return {
-      'rome': request.criteres.metier.codeRome,
+      if (appellationCode != null) 'appellationCode': appellationCode,
+      if (codeRome != null) 'rome': codeRome,
       'lat': request.criteres.location.latitude.toString(),
       'lon': request.criteres.location.longitude.toString(),
       if (request.filtres.distance != null) 'distance': request.filtres.distance.toString(),

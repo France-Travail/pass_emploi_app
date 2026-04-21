@@ -313,6 +313,9 @@ List<Location> mockLocations() {
 Immersion mockImmersion({String id = "", bool fromEntrepriseAccueillante = false}) {
   return Immersion(
     id: id,
+    siret: "",
+    appellationCode: "",
+    locationId: "",
     metier: "",
     nomEtablissement: "",
     secteurActivite: "",
@@ -326,14 +329,19 @@ List<Immersion> mockOffresImmersion10() => List.generate(10, (index) => mockImme
 ImmersionDetails mockImmersionDetails() {
   return ImmersionDetails(
     id: 'id',
+    siret: 'siret',
+    appellationCode: 'appellationCode',
+    locationId: 'locationId',
     metier: 'metier',
     companyName: 'companyName',
     secteurActivite: 'secteurActivite',
     ville: 'ville',
     address: 'address',
+    website: '',
     codeRome: 'codeRome',
-    siret: 'siret',
     fromEntrepriseAccueillante: true,
+    fitForDisabledWorkers: false,
+    contactMode: ImmersionContactMode.INCONNU,
     contact: ImmersionContact(
       firstName: '',
       lastName: '',

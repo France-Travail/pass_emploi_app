@@ -65,6 +65,9 @@ void main() {
           .copyWith(
         immersionDetailsState: ImmersionDetailsIncompleteDataState(Immersion(
           id: "10298",
+          siret: "",
+          appellationCode: "",
+          locationId: "",
           metier: "incomplete-metier",
           ville: "incomplete-ville",
           secteurActivite: "incomplete-secteur",
@@ -377,14 +380,18 @@ ImmersionDetails _mockImmersion({
 }) {
   return ImmersionDetails(
     id: '12345',
+    siret: 'Siret',
+    appellationCode: 'appellationCode',
+    locationId: 'locationId',
     metier: 'Métier',
     companyName: 'Nom établissement',
     secteurActivite: 'Secteur',
     ville: 'Ville',
     address: 'Adresse',
-    codeRome: 'Code rome',
-    siret: 'Siret',
+    website: '',
     fromEntrepriseAccueillante: fromEntrepriseAccueillante,
+    fitForDisabledWorkers: false,
+    contactMode: mode,
     contact: ImmersionContact(
       firstName: '',
       lastName: '',
@@ -399,14 +406,18 @@ ImmersionDetails _mockImmersion({
 ImmersionDetails _mockImmersionWithContact(ImmersionContact? contact, {String? address}) {
   return ImmersionDetails(
     id: '',
+    siret: '',
+    appellationCode: '',
+    locationId: '',
     metier: '',
     companyName: '',
     secteurActivite: '',
     ville: '',
     address: address ?? '',
-    codeRome: '',
-    siret: '',
+    website: '',
     fromEntrepriseAccueillante: true,
+    fitForDisabledWorkers: false,
+    contactMode: ImmersionContactMode.INCONNU,
     contact: contact,
   );
 }

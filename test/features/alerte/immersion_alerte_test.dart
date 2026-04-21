@@ -86,6 +86,9 @@ void main() {
         results: [
           Immersion(
             id: "id",
+            siret: "",
+            appellationCode: "",
+            locationId: "",
             metier: "metier",
             nomEtablissement: "nomEtablissement",
             secteurActivite: "secteurActivite",
@@ -132,6 +135,9 @@ void main() {
         results: [
           Immersion(
             id: "id",
+            siret: "",
+            appellationCode: "",
+            locationId: "",
             metier: "metier",
             nomEtablissement: "nomEtablissement",
             secteurActivite: "secteurActivite",

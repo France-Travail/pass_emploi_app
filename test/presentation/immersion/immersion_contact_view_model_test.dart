@@ -221,14 +221,18 @@ void main() {
 ImmersionDetails _mockImmersionWithContact(ImmersionContact? contact, {String? address}) {
   return ImmersionDetails(
     id: '',
+    siret: '',
+    appellationCode: '',
+    locationId: '',
     metier: '',
     companyName: '',
     secteurActivite: '',
     ville: '',
     address: address ?? '',
-    codeRome: '',
-    siret: '',
+    website: '',
     fromEntrepriseAccueillante: true,
+    fitForDisabledWorkers: false,
+    contactMode: ImmersionContactMode.INCONNU,
     contact: contact,
   );
 }

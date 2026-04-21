@@ -1,11 +1,14 @@
 {
-  "id": "3eaa17fb-a912-4610-863d-93c5db29ea0c",
+  "siret": "12345678901234",
+  "appellationCode": "11573",
+  "locationId": "loc-without-contact",
   "metier": "xxxx",
   "nomEtablissement": "CTRE SOINS SUITE ET READAPTAT EN ADDICTO",
   "secteurActivite": "xxxx",
   "ville": "xxxx",
   "adresse": "Service des ressources humaines, 40 RUE DU DEPUTE HALLEZ, 67500 HAGUENAU",
-  "codeRome": "G1102",
-  "siret": "12345678901234",
-  "estVolontaire": false
+  "website": "",
+  "estVolontaire": false,
+  "fitForDisabledWorkers": false,
+  "contactMode": "INCONNU"
 }

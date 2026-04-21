@@ -63,6 +63,9 @@ extension FavoriExt on Favori {
 
   Immersion get toImmersion => Immersion(
         id: id,
+        siret: '',
+        appellationCode: '',
+        locationId: '',
         metier: titre,
         nomEtablissement: organisation ?? '',
         secteurActivite: Strings.favorisUnknownSecteur,
