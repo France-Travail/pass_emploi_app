@@ -9,6 +9,7 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/a11y/mandatory_fields_label.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/errors/error_text.dart';
+import 'package:pass_emploi_app/widgets/slider/distance_slider.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/location_autocomplete.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/metier_autocomplete.dart';
 
@@ -27,6 +28,7 @@ class _CriteresRechercheImmersionContenuState extends State<CriteresRechercheImm
   bool initialBuild = true;
   Location? _selectedLocation;
   Metier? _selectedMetier;
+  double? _selectedDistance;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +50,7 @@ class _CriteresRechercheImmersionContenuState extends State<CriteresRechercheImm
     if (initialBuild) {
       _selectedLocation = viewModel.initialLocation;
       _selectedMetier = viewModel.initialMetier;
+      _selectedDistance = viewModel.initialDistance.toDouble();
     }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
@@ -76,6 +79,11 @@ class _CriteresRechercheImmersionContenuState extends State<CriteresRechercheImm
               _updateCriteresActifsCount();
             },
           ),
+          SizedBox(height: Margins.spacing_m),
+          DistanceSlider(
+            initialDistanceValue: viewModel.initialDistance.toDouble(),
+            onValueChange: (value) => _selectedDistance = value,
+          ),
           const SizedBox(height: Margins.spacing_m),
           if (viewModel.displayState.isFailure()) ErrorText(Strings.genericError),
           PrimaryActionButton(
@@ -102,6 +110,7 @@ class _CriteresRechercheImmersionContenuState extends State<CriteresRechercheImm
 
   void _search(CriteresRechercheImmersionContenuViewModel viewModel) {
     if (_selectedMetier == null || _selectedLocation == null) return;
-    viewModel.onSearchingRequest(_selectedMetier!, _selectedLocation!);
+    final distance = (_selectedDistance ?? viewModel.initialDistance.toDouble()).toInt();
+    viewModel.onSearchingRequest(_selectedMetier!, _selectedLocation!, distance);
   }
 }

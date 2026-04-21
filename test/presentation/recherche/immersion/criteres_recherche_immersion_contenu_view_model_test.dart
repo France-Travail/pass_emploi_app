@@ -95,14 +95,39 @@ void main() {
     });
   });
 
+  group('initialDistance', () {
+    test('should default to ImmersionFiltresRecherche.defaultDistanceValue when no request', () {
+      // Given
+      final store = givenState().store();
+
+      // When
+      final viewModel = CriteresRechercheImmersionContenuViewModel.create(store);
+
+      // Then
+      expect(viewModel.initialDistance, ImmersionFiltresRecherche.defaultDistanceValue);
+    });
+
+    test('should use distance from previous filtres when request exists', () {
+      // Given
+      final previousFiltres = ImmersionFiltresRecherche.distance(50);
+      final store = givenState().successRechercheImmersionStateWithRequest(filtres: previousFiltres).store();
+
+      // When
+      final viewModel = CriteresRechercheImmersionContenuViewModel.create(store);
+
+      // Then
+      expect(viewModel.initialDistance, 50);
+    });
+  });
+
   group('onSearchingRequest', () {
-    test('on initial request should dispatch proper action without filtres', () {
+    test('on initial request should dispatch proper action with provided distance', () {
       // Given
       final store = StoreSpy();
       final viewModel = CriteresRechercheImmersionContenuViewModel.create(store);
 
       // When
-      viewModel.onSearchingRequest(mockMetier(), mockLocation());
+      viewModel.onSearchingRequest(mockMetier(), mockLocation(), 30);
 
       // Then
       final dispatchedAction = store.dispatchedAction;
@@ -114,20 +139,20 @@ void main() {
         (dispatchedAction as RechercheRequestAction<ImmersionCriteresRecherche, ImmersionFiltresRecherche>).request,
         RechercheRequest(
           ImmersionCriteresRecherche(metier: mockMetier(), location: mockLocation()),
-          ImmersionFiltresRecherche.noFiltre(),
+          ImmersionFiltresRecherche.distance(30),
           1,
         ),
       );
     });
 
-    test('on updated request should dispatch proper action with previous filtres', () {
+    test('on updated request should dispatch proper action with updated distance', () {
       // Given
       final previousFiltres = ImmersionFiltresRecherche.distance(50);
       final store = givenState().successRechercheImmersionStateWithRequest(filtres: previousFiltres).spyStore();
       final viewModel = CriteresRechercheImmersionContenuViewModel.create(store);
 
       // When
-      viewModel.onSearchingRequest(mockMetier(), mockLocation());
+      viewModel.onSearchingRequest(mockMetier(), mockLocation(), 70);
 
       // Then
       final dispatchedAction = store.dispatchedAction;
@@ -139,7 +164,7 @@ void main() {
         (dispatchedAction as RechercheRequestAction<ImmersionCriteresRecherche, ImmersionFiltresRecherche>).request,
         RechercheRequest(
           ImmersionCriteresRecherche(metier: mockMetier(), location: mockLocation()),
-          ImmersionFiltresRecherche.distance(50),
+          ImmersionFiltresRecherche.distance(70),
           1,
         ),
       );
