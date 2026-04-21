@@ -25,7 +25,7 @@ void main() {
           sut.expectRequestBody(
             method: HttpMethod.get,
             url: "/offres-immersion/v3",
-            queryParameters: {'codeRome': 'J1301', 'lon': '7.7', 'lat': '48.7'},
+            queryParameters: {'rome': 'J1301', 'lon': '7.7', 'lat': '48.7'},
           );
         });
 
@@ -48,7 +48,6 @@ void main() {
                 nomEtablissement: "ACCUEIL DE JOUR POUR PERSONNES AGEES",
                 secteurActivite: "xxxx",
                 ville: "xxxx",
-                fromEntrepriseAccueillante: true,
                 fitForDisabledWorkers: true,
               ),
             );
@@ -87,7 +86,7 @@ void main() {
           sut.expectRequestBody(
             method: HttpMethod.get,
             url: "/offres-immersion/v3",
-            queryParameters: {'codeRome': 'J1301', 'lon': '7.7', 'lat': '48.7', 'distance': '70'},
+            queryParameters: {'rome': 'J1301', 'lon': '7.7', 'lat': '48.7', 'distance': '70'},
           );
         });
       });
@@ -103,7 +102,7 @@ void main() {
           sut.expectRequestBody(
             method: HttpMethod.get,
             url: "/offres-immersion/v3",
-            queryParameters: {'codeRome': 'J1301', 'lon': '7.7', 'lat': '48.7'},
+            queryParameters: {'rome': 'J1301', 'lon': '7.7', 'lat': '48.7'},
           );
         });
       });
@@ -135,7 +134,7 @@ void main() {
             url: "/offres-immersion/v3",
             queryParameters: {
               'appellationCode': '11573',
-              'codeRome': 'J1301',
+              'rome': 'J1301',
               'lon': '7.7',
               'lat': '48.7',
             },
@@ -147,7 +146,8 @@ void main() {
 }
 
 RechercheRequest<ImmersionCriteresRecherche, ImmersionFiltresRecherche> _requestWithFiltres2(
-    ImmersionFiltresRecherche filtres) {
+  ImmersionFiltresRecherche filtres,
+) {
   return RechercheRequest(
     ImmersionCriteresRecherche(
       metier: Metier(codeRome: "J1301", libelle: "xxxx"),

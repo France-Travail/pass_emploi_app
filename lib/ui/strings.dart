@@ -1009,12 +1009,9 @@ class Strings {
   static String partagerSessionMiloAuConseiller = "Partager à mon conseiller";
 
   // Immersion
-  static String entrepriseAccueillante = 'Entreprise accueillante';
-  static String entreprisesAccueillantesHeader =
-      'Les entreprises accueillantes facilitent vos immersions professionnelles';
+  static String lentreprise = 'L\'entreprise';
+  static String disabledWorkersWelcome = 'Personnes en situation de handicap bienvenues';
   static String immersionExpansionTileTitle = "En savoir plus sur l’immersion";
-  static String immersionNonAccueillanteExplanation =
-      "Cette entreprise peut recruter sur ce métier et être intéressée pour vous recevoir en immersion. Contactez-la en expliquant votre projet professionnel et vos motivations.";
   static String immersionAccueillanteExplanation =
       "Cette entreprise recherche activement des candidats à l’immersion. Contactez-la en expliquant votre projet professionnel et vos motivations.";
   static String immersionDescriptionLabel =
@@ -1022,14 +1019,12 @@ class Strings {
       "· Prévenez votre conseiller\n"
       "· Remplissez une convention d’immersion avec lui";
   static String immersionContactBlocTitle = "Contact";
-  static String immersionPhoneButton = "Appeler";
   static String immersionLocationButton = "Localiser l'entreprise";
   static String immersionEmailButton = "Envoyer un e-mail";
   static String immersionEmailSubject = "Candidature pour une période d'immersion";
   static String immersionContactSucceed = "Votre message a bien été transmis à l'entreprise.";
   static String contactImmersionAlreadyDone =
       "Vous avez déjà postulé à cette offre d'immersion, il faut un minimum de 7 jours pour pouvoir postuler à nouveau";
-  static String immersionContact = "Contacter";
   static String immersitionContactFormTitle = "Contacter l’entreprise";
   static String immersitionContactFormSubtitle = "Veuillez compléter ce formulaire qui sera transmis à l'entreprise.";
   static String immersitionContactFormHint = "Tous les champs avec * sont obligatoires";
@@ -1068,6 +1063,14 @@ class Strings {
   static String immersionContactBody3 = ImmersionContactStrings.body3;
   static String immersionContactSubtitle4 = ImmersionContactStrings.subtitle4;
   static String immersionContactBody4 = ImmersionContactStrings.body4;
+  static String contactByMail = "Mise en relation par mail";
+  static String contactByPhone = "Mise en relation par téléphone";
+  static String contactByPresen = "Rendez-vous sur place";
+  static String adresse = "Adresse";
+  static String informationComplementaire = "Informations complémentaires";
+  static String siteWeb = "Site web";
+  static String contactWarning =
+      "Veuillez utiliser les coordonnées de l'entreprise uniquement pour votre usage personnel";
 
   // Service Civique
   static String serviceCiviqueFiltresTitle = "Filtrer les missions";

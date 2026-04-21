@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/date_consultation_offre/date_consultation_offre_actions.dart';
 import 'package:pass_emploi_app/features/immersion/details/immersion_details_actions.dart';
 import 'package:pass_emploi_app/models/immersion.dart';
+import 'package:pass_emploi_app/models/immersion_contact.dart';
 import 'package:pass_emploi_app/network/post_evenement_engagement.dart';
 import 'package:pass_emploi_app/pages/immersion/immersion_contact_bottom_sheet.dart';
 import 'package:pass_emploi_app/pages/immersion/immersion_contact_form_bottom_sheet.dart';
@@ -12,6 +13,8 @@ import 'package:pass_emploi_app/pages/offre_not_found_page.dart';
 import 'package:pass_emploi_app/pages/offre_page.dart';
 import 'package:pass_emploi_app/presentation/immersion/immersion_details_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
+import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -23,7 +26,6 @@ import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/default_animated_switcher.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/errors/favori_not_found_error.dart';
@@ -33,7 +35,6 @@ import 'package:pass_emploi_app/widgets/info_card.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 import 'package:pass_emploi_app/widgets/sepline.dart';
 import 'package:pass_emploi_app/widgets/tags/immersion_tags.dart';
-import 'package:pass_emploi_app/widgets/title_section.dart';
 
 class ImmersionDetailsPage extends StatelessWidget {
   final String _immersionId;
@@ -63,9 +64,7 @@ class ImmersionDetailsPage extends StatelessWidget {
         converter: (store) => ImmersionDetailsViewModel.create(store, platform),
         builder: (context, viewModel) => FavorisStateContext(
           selectState: (store) => store.state.immersionFavorisIdsState,
-          child: viewModel.isNotFound
-              ? OffreNotFoundPage()
-              : _scaffold(_body(context, viewModel), context, viewModel.id),
+          child: _scaffold(_body(context, viewModel), context, viewModel.id),
         ),
         distinct: true,
       ),
@@ -74,7 +73,8 @@ class ImmersionDetailsPage extends StatelessWidget {
 
   Widget _body(BuildContext context, ImmersionDetailsViewModel viewModel) {
     return switch (viewModel.displayState) {
-      ImmersionDetailsPageDisplayState.SHOW_DETAILS => _content(context, viewModel),
+      ImmersionDetailsPageDisplayState.SHOW_DETAILS =>
+        viewModel.isNotFound ? OffreNotFoundPage() : _content(context, viewModel),
       ImmersionDetailsPageDisplayState.SHOW_INCOMPLETE_DETAILS => _content(context, viewModel),
       ImmersionDetailsPageDisplayState.SHOW_LOADER => Center(child: CircularProgressIndicator()),
       ImmersionDetailsPageDisplayState.SHOW_ERROR => Retry(
@@ -113,7 +113,11 @@ class ImmersionDetailsPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(viewModel.title, style: TextStyles.textLBold()),
+                if (viewModel.fitForDisabledWorkers) ...[
+                  CardTag.disabledWorkersWelcome(),
+                  SizedBox(height: Margins.spacing_base),
+                ],
+                _Title(viewModel.title),
                 SizedBox(height: Margins.spacing_m),
                 Text(viewModel.companyName, style: TextStyles.textBaseRegular),
                 SizedBox(height: Margins.spacing_base),
@@ -123,16 +127,35 @@ class ImmersionDetailsPage extends StatelessWidget {
                   CardComplement.dateDerniereConsultation(viewModel.dateDerniereConsultation!),
                 ],
                 SizedBox(height: Margins.spacing_base),
+                Text(Strings.lentreprise, style: TextStyles.textMBold),
+                SizedBox(height: Margins.spacing_m),
+                SepLine(Margins.spacing_s, 0),
+                SizedBox(height: Margins.spacing_base),
+                _contactMode(viewModel.contactMode),
+                SizedBox(height: Margins.spacing_base),
                 if (viewModel.displayState == ImmersionDetailsPageDisplayState.SHOW_INCOMPLETE_DETAILS)
                   FavoriNotFoundError()
                 else ...[
-                  if (viewModel.fromEntrepriseAccueillante) _EntrepriseAccueillanteCard(),
-                  if (!viewModel.fromEntrepriseAccueillante)
-                    Text(Strings.immersionNonAccueillanteExplanation, style: TextStyles.textBaseRegular),
-                  SizedBox(height: Margins.spacing_m),
                   Text(Strings.immersionDescriptionLabel, style: TextStyles.textBaseRegular),
                   SizedBox(height: Margins.spacing_m),
-                  _contactBlock(viewModel),
+                  if (viewModel.address != null) ...[
+                    _Title(Strings.adresse),
+                    Text(viewModel.address ?? '', style: TextStyles.textBaseRegular),
+                    SizedBox(height: Margins.spacing_m),
+                  ],
+                  if (viewModel.informationComplementaire != null) ...[
+                    _Title(Strings.informationComplementaire),
+                    Text(viewModel.informationComplementaire ?? '', style: TextStyles.textBaseRegular),
+                    SizedBox(height: Margins.spacing_m),
+                  ],
+                  if (viewModel.website != null) ...[
+                    _Title(Strings.siteWeb),
+                    Text(viewModel.website ?? '', style: TextStyles.textBaseRegular),
+                    SizedBox(height: Margins.spacing_m),
+                  ],
+                  SizedBox(height: Margins.spacing_m),
+                  InfoCard(message: Strings.contactWarning),
+                  SizedBox(height: Margins.spacing_m),
                   if (viewModel.withSecondaryCallToActions == true) ..._secondaryCallToActions(context, viewModel),
                 ],
               ],
@@ -161,24 +184,6 @@ class ImmersionDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _contactBlock(ImmersionDetailsViewModel viewModel) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TitleSection(label: Strings.immersionContactBlocTitle),
-        if (viewModel.contactLabel!.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: Margins.spacing_m),
-            child: Text(viewModel.contactLabel!, style: TextStyles.textBaseBold),
-          ),
-        SizedBox(height: Margins.spacing_m),
-        Text(viewModel.contactInformation!, style: TextStyles.textBaseRegular),
-        SizedBox(height: Margins.spacing_base),
-        if (viewModel.withDataWarningMessage) InfoCard(message: Strings.immersionDataWarningMessage),
-      ],
-    );
-  }
-
   String? encodeQueryParameters(Map<String, String> params) {
     return params.entries.map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}').join('&');
   }
@@ -186,7 +191,7 @@ class ImmersionDetailsPage extends StatelessWidget {
   Widget _footer(BuildContext context, ImmersionDetailsViewModel viewModel) {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.all(Margins.spacing_base),
+      padding: const EdgeInsets.all(Margins.spacing_m),
       child: Row(
         children: [
           Expanded(
@@ -196,7 +201,7 @@ class ImmersionDetailsPage extends StatelessWidget {
                     ? ImmersionContactFormBottomSheet.show(context)
                     : ImmersionContactBottomSheet.show(context);
               },
-              label: Strings.immersionContact,
+              label: Strings.immersitionContactFormTitle,
             ),
           ),
         ],
@@ -225,18 +230,36 @@ class ImmersionDetailsPage extends StatelessWidget {
   }
 }
 
-class _EntrepriseAccueillanteCard extends StatelessWidget {
+Widget _contactMode(ImmersionContactMode contactMode) {
+  return switch (contactMode) {
+    ImmersionContactMode.MAIL => CardTag(
+      icon: AppIcons.mail,
+      backgroundColor: AppColors.additional5Lighten,
+      text: Strings.contactByMail,
+      contentColor: AppColors.contentColor,
+    ),
+    ImmersionContactMode.PHONE => CardTag(
+      icon: AppIcons.phone,
+      backgroundColor: AppColors.additional5Lighten,
+      text: Strings.contactByPhone,
+      contentColor: AppColors.contentColor,
+    ),
+    ImmersionContactMode.PRESENTIEL => CardTag(
+      icon: AppIcons.place_outlined,
+      backgroundColor: AppColors.additional5Lighten,
+      text: Strings.contactByPresen,
+      contentColor: AppColors.contentColor,
+    ),
+    ImmersionContactMode.INCONNU => SizedBox.shrink(),
+  };
+}
+
+class _Title extends StatelessWidget {
+  final String title;
+  const _Title(this.title);
+
   @override
   Widget build(BuildContext context) {
-    return CardContainer(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CardTag.entrepriseAccueillante(),
-          SizedBox(height: Margins.spacing_s),
-          Text(Strings.immersionAccueillanteExplanation, style: TextStyles.textSRegular()),
-        ],
-      ),
-    );
+    return Text(title, style: TextStyles.textBaseBold);
   }
 }

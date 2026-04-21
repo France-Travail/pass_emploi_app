@@ -52,11 +52,10 @@ void main() {
               secteurActivite: "xxxx",
               ville: "xxxx",
               address: "Service des ressources humaines, 40 RUE DU DEPUTE HALLEZ, 67500 HAGUENAU",
+              informationComplementaire: "Information complémentaire",
               website: "",
-              fromEntrepriseAccueillante: false,
               fitForDisabledWorkers: false,
               contactMode: ImmersionContactMode.INCONNU,
-              contact: null,
             ),
           );
         });
@@ -90,18 +89,10 @@ void main() {
               secteurActivite: "xxxx",
               ville: "xxxx",
               address: "4 RUE DES FRERES LUMIERE 67170 BRUMATH",
+              informationComplementaire: "Information complémentaire",
               website: "https://gsf-saturne.example.com",
-              fromEntrepriseAccueillante: true,
               fitForDisabledWorkers: true,
               contactMode: ImmersionContactMode.MAIL,
-              contact: ImmersionContact(
-                lastName: "PHILIPPE",
-                firstName: "LAUREAU",
-                phone: "",
-                mail: "gsf-responsables@ch-bischwiller.fr",
-                role: "Responsable Nettoyage",
-                mode: ImmersionContactMode.MAIL,
-              ),
             ),
           );
         });

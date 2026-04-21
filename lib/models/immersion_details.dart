@@ -12,12 +12,11 @@ class ImmersionDetails extends Equatable {
   final String secteurActivite;
   final String ville;
   final String address;
-  final String website;
+  final String? informationComplementaire;
+  final String? website;
   final String codeRome;
-  final bool fromEntrepriseAccueillante;
   final bool fitForDisabledWorkers;
   final ImmersionContactMode contactMode;
-  final ImmersionContact? contact;
 
   ImmersionDetails({
     required this.id,
@@ -29,12 +28,11 @@ class ImmersionDetails extends Equatable {
     required this.secteurActivite,
     required this.ville,
     required this.address,
-    required this.website,
+    this.informationComplementaire,
+    this.website,
     this.codeRome = '',
-    required this.fromEntrepriseAccueillante,
     required this.fitForDisabledWorkers,
     required this.contactMode,
-    required this.contact,
   });
 
   factory ImmersionDetails.fromJson(dynamic json) {
@@ -51,46 +49,43 @@ class ImmersionDetails extends Equatable {
       secteurActivite: json['secteurActivite'] as String,
       ville: json['ville'] as String,
       address: json['adresse'] as String,
-      website: json['website'] as String? ?? '',
+      informationComplementaire: json['informationsComplementaires'] as String,
+      website: json['siteWeb'] as String? ?? '',
       codeRome: json['codeRome'] as String? ?? '',
-      fromEntrepriseAccueillante: json['estVolontaire'] as bool,
       fitForDisabledWorkers: json['fitForDisabledWorkers'] as bool? ?? false,
-      contactMode: parseImmersionContactMode(json['contactMode'] as String?),
-      contact: json['contact'] != null ? ImmersionContact.fromJson(json['contact']) : null,
+      contactMode: parseImmersionContactMode(json['contact'] as String?),
     );
   }
 
   @override
   List<Object?> get props => [
-        id,
-        siret,
-        appellationCode,
-        locationId,
-        metier,
-        companyName,
-        secteurActivite,
-        ville,
-        address,
-        website,
-        codeRome,
-        fromEntrepriseAccueillante,
-        fitForDisabledWorkers,
-        contactMode,
-        contact,
-      ];
+    id,
+    siret,
+    appellationCode,
+    locationId,
+    metier,
+    companyName,
+    secteurActivite,
+    ville,
+    address,
+    informationComplementaire,
+    website,
+    codeRome,
+    fitForDisabledWorkers,
+    contactMode,
+  ];
 }
 
 extension ImmersionDetailsExt on ImmersionDetails {
   Immersion get toImmersion => Immersion(
-        id: id,
-        siret: siret,
-        appellationCode: appellationCode,
-        locationId: locationId,
-        metier: metier,
-        nomEtablissement: companyName,
-        secteurActivite: secteurActivite,
-        ville: ville,
-        fromEntrepriseAccueillante: fromEntrepriseAccueillante,
-        fitForDisabledWorkers: fitForDisabledWorkers,
-      );
+    id: id,
+    siret: siret,
+    appellationCode: appellationCode,
+    locationId: locationId,
+    metier: metier,
+    nomEtablissement: companyName,
+    secteurActivite: secteurActivite,
+    ville: ville,
+    fitForDisabledWorkers: fitForDisabledWorkers,
+  );
 }

@@ -10,6 +10,7 @@ import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/pressed_tip.dart';
 
 class BaseCard extends StatelessWidget {
+  final Widget? leading;
   final String title;
   final Widget? tag;
   final CardPillule? pillule;
@@ -29,6 +30,7 @@ class BaseCard extends StatelessWidget {
   final bool linkRole;
 
   const BaseCard({
+    this.leading,
     required this.title,
     this.subtitle,
     this.body,
@@ -89,6 +91,10 @@ class BaseCard extends StatelessWidget {
                     if (tag != null) tag!,
                     SizedBox(height: Margins.spacing_s),
                   ],
+                  if (leading != null) ...[
+                    leading!,
+                    SizedBox(height: Margins.spacing_base),
+                  ],
                   if (title.isNotEmpty) ...[
                     if ((!isSimpleCard && iconButton == null) || imagePath != null) SizedBox(height: Margins.spacing_s),
                     CardTitle(title),
@@ -116,7 +122,7 @@ class BaseCard extends StatelessWidget {
                     ),
                   ],
                   if (secondaryTags != null && secondaryTags!.isNotEmpty) ...[
-                    SizedBox(height: Margins.spacing_s),
+                    SizedBox(height: Margins.spacing_base),
                     Wrap(
                       spacing: Margins.spacing_s,
                       runSpacing: Margins.spacing_s,

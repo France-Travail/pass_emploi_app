@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/widgets/favori_heart.dart';
 import 'package:pass_emploi_app/widgets/tags/data_tag.dart';
 
 class DataCard<T> extends StatelessWidget {
+  final Widget? leading;
   final String titre;
   final String? category;
   final String? sousTitre;
@@ -25,6 +26,7 @@ class DataCard<T> extends StatelessWidget {
 
   const DataCard({
     super.key,
+    this.leading,
     required this.titre,
     required this.sousTitre,
     required this.lieu,
@@ -44,40 +46,42 @@ class DataCard<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DateDerniereActionProvider(
-        id: id ?? "",
-        builder: (dateActionViewModel) {
-          return BaseCard(
-            onTap: onTap,
-            title: titre,
-            subtitle: sousTitre,
-            tag: tag,
-            complements: [
-              if (date != null && date!.isNotEmpty) CardComplement.date(text: date!),
-              if (dateActionViewModel.datePostulation != null)
-                CardComplement.datePostulation(dateActionViewModel.datePostulation!)
-              else if (dateActionViewModel.dateDerniereConsultation != null)
-                CardComplement.dateDerniereConsultation(dateActionViewModel.dateDerniereConsultation!)
-            ],
-            secondaryTags: [
-              if (category?.isNotEmpty == true) CardTag.secondary(text: category!),
-              if (lieu?.isNotEmpty == true) DataTag.location(lieu!),
-              if (contractType?.isNotEmpty == true) DataTag.contractType(contractType!),
-              if (duration?.isNotEmpty == true) DataTag.duration(duration!),
-              if (secteurActivite?.isNotEmpty == true)
-                DataTag(
-                  label: secteurActivite!,
-                ),
-            ],
-            iconButton: (withFavori && id != null && from != null)
-                ? FavoriHeart<T>(
-                    offreId: id!,
-                    a11yLabel: sousTitre != null ? '$titre ${sousTitre!}' : titre,
-                    withBorder: false,
-                    from: from!,
-                  )
-                : null,
-            additionalChild: additionalChild,
-          );
-        });
+      id: id ?? "",
+      builder: (dateActionViewModel) {
+        return BaseCard(
+          onTap: onTap,
+          leading: leading,
+          title: titre,
+          subtitle: sousTitre,
+          tag: tag,
+          complements: [
+            if (date != null && date!.isNotEmpty) CardComplement.date(text: date!),
+          ],
+          secondaryTags: [
+            if (category?.isNotEmpty == true) CardTag.secondary(text: category!),
+            if (lieu?.isNotEmpty == true) DataTag.location(lieu!),
+            if (contractType?.isNotEmpty == true) DataTag.contractType(contractType!),
+            if (duration?.isNotEmpty == true) DataTag.duration(duration!),
+            if (secteurActivite?.isNotEmpty == true)
+              DataTag(
+                label: secteurActivite!,
+              ),
+            if (dateActionViewModel.datePostulation != null)
+              CardComplement.datePostulation(dateActionViewModel.datePostulation!)
+            else if (dateActionViewModel.dateDerniereConsultation != null)
+              CardComplement.dateDerniereConsultation(dateActionViewModel.dateDerniereConsultation!),
+          ],
+          iconButton: (withFavori && id != null && from != null)
+              ? FavoriHeart<T>(
+                  offreId: id!,
+                  a11yLabel: sousTitre != null ? '$titre ${sousTitre!}' : titre,
+                  withBorder: false,
+                  from: from!,
+                )
+              : null,
+          additionalChild: additionalChild,
+        );
+      },
+    );
   }
 }

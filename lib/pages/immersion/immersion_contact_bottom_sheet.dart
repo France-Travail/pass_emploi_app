@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
-import 'package:pass_emploi_app/network/post_evenement_engagement.dart';
-import 'package:pass_emploi_app/presentation/call_to_action.dart';
-import 'package:pass_emploi_app/presentation/immersion/immersion_contact_view_model.dart';
-import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/utils/context_extensions.dart';
-import 'package:pass_emploi_app/utils/launcher_utils.dart';
-import 'package:pass_emploi_app/utils/platform.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 
 class ImmersionContactBottomSheet extends StatelessWidget {
   static Future<void> show(BuildContext context) {
@@ -26,23 +17,12 @@ class ImmersionContactBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final platform = PlatformUtils.getPlatform;
-    return Tracker(
-      tracking: AnalyticsScreenNames.immersionContact,
-      child: StoreConnector<AppState, ImmersionContactViewModel>(
-        onInitialBuild: (_) => context.trackEvenementEngagement(EvenementEngagement.OFFRE_IMMERSION_CONTACT_AFFICHEE),
-        converter: (store) => ImmersionContactViewModel.create(store: store, platform: platform),
-        builder: (context, viewModel) => _Content(viewModel.callToAction),
-        distinct: true,
-      ),
-    );
+    return Tracker(tracking: AnalyticsScreenNames.immersionContact, child: _Content());
   }
 }
 
 class _Content extends StatelessWidget {
-  const _Content(this.callToAction);
-
-  final CallToAction callToAction;
+  const _Content();
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +38,7 @@ class _Content extends StatelessWidget {
             ],
           ),
         ),
-        floatingActionButton: _ContactButton(callToAction),
+        // floatingActionButton: _ContactButton(callToAction),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
@@ -158,29 +138,12 @@ class _Subtitle extends StatelessWidget {
               ),
             ),
             SizedBox(width: Margins.spacing_base),
-            Expanded(child: Text(text, style: TextStyles.textMBold))
+            Expanded(child: Text(text, style: TextStyles.textMBold)),
           ],
         ),
         SizedBox(height: Margins.spacing_base),
         Divider(height: 1),
       ],
-    );
-  }
-}
-
-class _ContactButton extends StatelessWidget {
-  const _ContactButton(this.callToAction);
-
-  final CallToAction callToAction;
-
-  @override
-  Widget build(BuildContext context) {
-    return PrimaryActionButton(
-      onPressed: () {
-        context.trackEvenementEngagement(callToAction.eventType);
-        launchExternalUrl(callToAction.uri.toString());
-      },
-      label: callToAction.label,
     );
   }
 }

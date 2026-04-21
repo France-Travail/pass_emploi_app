@@ -11,7 +11,6 @@ class Immersion extends Equatable {
   final String nomEtablissement;
   final String secteurActivite;
   final String ville;
-  final bool fromEntrepriseAccueillante;
   final bool fitForDisabledWorkers;
 
   Immersion({
@@ -23,7 +22,6 @@ class Immersion extends Equatable {
     required this.nomEtablissement,
     required this.secteurActivite,
     required this.ville,
-    this.fromEntrepriseAccueillante = false,
     this.fitForDisabledWorkers = false,
   });
 
@@ -35,7 +33,6 @@ class Immersion extends Equatable {
     return '$siret$_idSeparator$appellationCode$_idSeparator$locationId';
   }
 
-  @Deprecated('Do not parse ID for retrocompatibility. Pass parameters directly to the constructor instead.')
   static ({String siret, String appellationCode, String locationId}) parseSyntheticId(String id) {
     final parts = id.split(_idSeparator);
     return (siret: parts[0], appellationCode: parts[1], locationId: parts[2]);
@@ -55,7 +52,6 @@ class Immersion extends Equatable {
       nomEtablissement: json['nomEtablissement'] as String,
       secteurActivite: json['secteurActivite'] as String,
       ville: json['ville'] as String,
-      fromEntrepriseAccueillante: json['estVolontaire'] as bool? ?? false,
       fitForDisabledWorkers: json['fitForDisabledWorkers'] as bool? ?? false,
     );
   }
@@ -70,7 +66,6 @@ class Immersion extends Equatable {
       "nomEtablissement": nomEtablissement,
       "secteurActivite": secteurActivite,
       "ville": ville,
-      "estVolontaire": fromEntrepriseAccueillante,
       "fitForDisabledWorkers": fitForDisabledWorkers,
     };
   }
@@ -85,7 +80,6 @@ class Immersion extends Equatable {
     nomEtablissement,
     secteurActivite,
     ville,
-    fromEntrepriseAccueillante,
     fitForDisabledWorkers,
   ];
 }

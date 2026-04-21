@@ -11,12 +11,10 @@ import 'package:pass_emploi_app/presentation/recherche/actions_recherche_view_mo
 import 'package:pass_emploi_app/presentation/recherche/bloc_resultat_recherche_view_model.dart';
 import 'package:pass_emploi_app/presentation/recherche/immersion/actions_recherche_immersion_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/immersion_alerte_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
 import 'package:pass_emploi_app/widgets/cards/data_card.dart';
-import 'package:pass_emploi_app/widgets/info_card.dart';
 import 'package:pass_emploi_app/widgets/recherche/criteres_recherche_immersion_contenu.dart';
 import 'package:redux/redux.dart';
 
@@ -74,17 +72,9 @@ class RechercheOffreImmersionPage extends RechercheOffrePage<Immersion> {
       onTap: () => _showOffreDetailsPage(context, item.id),
       from: OffrePage.immersionResults,
       id: item.id,
-      additionalChild: item.fromEntrepriseAccueillante ? CardTag.entrepriseAccueillante() : null,
+      leading: item.fitForDisabledWorkers ? CardTag.disabledWorkersWelcome() : null,
     );
-    if (_shouldAddEntreprisesAccueillantesHeader(index, resultViewModel)) {
-      return Column(children: [
-        InfoCard(message: Strings.entreprisesAccueillantesHeader),
-        SizedBox(height: Margins.spacing_base),
-        card,
-      ]);
-    } else {
-      return card;
-    }
+    return card;
   }
 
   void _showOffreDetailsPage(BuildContext context, String offreId) {
@@ -92,10 +82,5 @@ class RechercheOffreImmersionPage extends RechercheOffrePage<Immersion> {
       context,
       ImmersionDetailsPage.materialPageRoute(offreId),
     );
-  }
-
-  bool _shouldAddEntreprisesAccueillantesHeader(int index, BlocResultatRechercheViewModel<Immersion> resultViewModel) {
-    if (index != 0) return false;
-    return resultViewModel.items.any((immersion) => immersion.fromEntrepriseAccueillante);
   }
 }
