@@ -26,7 +26,6 @@ class ImmersionDetailsViewModel extends Equatable {
   final String? website;
   final String? contactInformation;
   final bool? withSecondaryCallToActions;
-  final bool withContactForm;
   final ImmersionContactMode contactMode;
   final List<CallToAction>? secondaryCallToActions;
   final Function(String immersionId) onRetry;
@@ -46,7 +45,6 @@ class ImmersionDetailsViewModel extends Equatable {
     this.website,
     this.contactInformation,
     this.withSecondaryCallToActions,
-    required this.withContactForm,
     required this.contactMode,
     this.secondaryCallToActions,
     required this.onRetry,
@@ -85,7 +83,6 @@ class ImmersionDetailsViewModel extends Equatable {
     informationComplementaire,
     website,
     contactInformation,
-    withContactForm,
     contactMode,
     secondaryCallToActions,
     isNotFound,
@@ -124,7 +121,6 @@ ImmersionDetailsViewModel _successViewModel(
     website: immersionDetails.website,
     contactInformation: immersionDetails.address,
     withSecondaryCallToActions: secondaryCallToActions.isNotEmpty,
-    withContactForm: withContactForm,
     secondaryCallToActions: secondaryCallToActions,
     onRetry: (immersionId) => _retry(store, immersionId),
     contactMode: immersionDetails.contactMode,
@@ -145,7 +141,6 @@ ImmersionDetailsViewModel _incompleteViewModel(
     dateDerniereConsultation: dateDerniereConsultation,
     fitForDisabledWorkers: immersion.fitForDisabledWorkers,
     ville: immersion.ville,
-    withContactForm: false,
     onRetry: (immersionId) => _retry(store, immersionId),
     contactMode: ImmersionContactMode.INCONNU,
   );
@@ -160,7 +155,6 @@ ImmersionDetailsViewModel _viewModelForNotFound(ImmersionDetailsState state, Sto
     secteurActivite: "",
     fitForDisabledWorkers: false,
     ville: "",
-    withContactForm: false,
     onRetry: (immersionId) => _retry(store, immersionId),
     isNotFound: true,
     contactMode: ImmersionContactMode.INCONNU,

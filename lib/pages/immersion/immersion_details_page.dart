@@ -5,16 +5,13 @@ import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/date_consultation_offre/date_consultation_offre_actions.dart';
 import 'package:pass_emploi_app/features/immersion/details/immersion_details_actions.dart';
 import 'package:pass_emploi_app/models/immersion.dart';
-import 'package:pass_emploi_app/models/immersion_contact.dart';
 import 'package:pass_emploi_app/network/post_evenement_engagement.dart';
-import 'package:pass_emploi_app/pages/immersion/immersion_contact_bottom_sheet.dart';
-import 'package:pass_emploi_app/pages/immersion/immersion_contact_form_bottom_sheet.dart';
+import 'package:pass_emploi_app/pages/immersion/immersion_contact_form_page.dart';
+import 'package:pass_emploi_app/pages/immersion/immersion_contact_mode.dart';
 import 'package:pass_emploi_app/pages/offre_not_found_page.dart';
 import 'package:pass_emploi_app/pages/offre_page.dart';
 import 'package:pass_emploi_app/presentation/immersion/immersion_details_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -131,7 +128,7 @@ class ImmersionDetailsPage extends StatelessWidget {
                 SizedBox(height: Margins.spacing_m),
                 SepLine(Margins.spacing_s, 0),
                 SizedBox(height: Margins.spacing_base),
-                _contactMode(viewModel.contactMode),
+                ContactModeTag(contactMode: viewModel.contactMode),
                 SizedBox(height: Margins.spacing_base),
                 if (viewModel.displayState == ImmersionDetailsPageDisplayState.SHOW_INCOMPLETE_DETAILS)
                   FavoriNotFoundError()
@@ -196,11 +193,7 @@ class ImmersionDetailsPage extends StatelessWidget {
         children: [
           Expanded(
             child: PrimaryActionButton(
-              onPressed: () {
-                viewModel.withContactForm
-                    ? ImmersionContactFormBottomSheet.show(context)
-                    : ImmersionContactBottomSheet.show(context);
-              },
+              onPressed: () => Navigator.push(context, ImmersionContactFormPage.materialPageRoute()),
               label: Strings.immersitionContactFormTitle,
             ),
           ),
@@ -228,30 +221,6 @@ class ImmersionDetailsPage extends StatelessWidget {
     }).toList();
     return [SepLine(Margins.spacing_m, Margins.spacing_m), ...buttons];
   }
-}
-
-Widget _contactMode(ImmersionContactMode contactMode) {
-  return switch (contactMode) {
-    ImmersionContactMode.MAIL => CardTag(
-      icon: AppIcons.mail,
-      backgroundColor: AppColors.additional5Lighten,
-      text: Strings.contactByMail,
-      contentColor: AppColors.contentColor,
-    ),
-    ImmersionContactMode.PHONE => CardTag(
-      icon: AppIcons.phone,
-      backgroundColor: AppColors.additional5Lighten,
-      text: Strings.contactByPhone,
-      contentColor: AppColors.contentColor,
-    ),
-    ImmersionContactMode.PRESENTIEL => CardTag(
-      icon: AppIcons.place_outlined,
-      backgroundColor: AppColors.additional5Lighten,
-      text: Strings.contactByPresen,
-      contentColor: AppColors.contentColor,
-    ),
-    ImmersionContactMode.INCONNU => SizedBox.shrink(),
-  };
 }
 
 class _Title extends StatelessWidget {

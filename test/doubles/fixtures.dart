@@ -350,7 +350,10 @@ ImmersionContactUserInput mockImmersionContactUserInput() {
     firstName: "Philippe",
     lastName: "Flopflip",
     email: "philippe.flopflip@magiciens.com",
-    message: "Bonjour, j'aimerai faire une immersion dans votre salon de magie.",
+    telephone: "0612345678",
+    datePreferences: "Au plus vite",
+    experience: "10 ans en tant que magicien",
+    linkedinOrCvUrl: "https://linkedin.com/in/philippe-flopflip",
   );
 }
 

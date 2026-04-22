@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-const String _idSeparator = '|';
+const String _idSeparator = '~';
 
 class Immersion extends Equatable {
   final String id;

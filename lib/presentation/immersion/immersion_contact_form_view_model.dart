@@ -3,27 +3,27 @@ import 'package:pass_emploi_app/features/contact_immersion/contact_immersion_act
 import 'package:pass_emploi_app/features/contact_immersion/contact_immersion_state.dart';
 import 'package:pass_emploi_app/features/immersion/details/immersion_details_state.dart';
 import 'package:pass_emploi_app/features/login/login_state.dart';
+import 'package:pass_emploi_app/models/immersion_contact.dart';
 import 'package:pass_emploi_app/models/requests/contact_immersion_request.dart';
 import 'package:pass_emploi_app/presentation/sending_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:redux/redux.dart';
 
 class ImmersionContactFormViewModel extends Equatable {
+  final ImmersionContactMode contactMode;
   final SendingState sendingState;
   final String userEmailInitialValue;
   final String userFirstNameInitialValue;
   final String userLastNameInitialValue;
-  final String messageInitialValue;
   final Function(ImmersionContactUserInput) onFormSubmitted;
   final Function resetSendingState;
 
   ImmersionContactFormViewModel._({
+    required this.contactMode,
     required this.sendingState,
     required this.userEmailInitialValue,
     required this.userFirstNameInitialValue,
     required this.userLastNameInitialValue,
-    required this.messageInitialValue,
     required this.onFormSubmitted,
     required this.resetSendingState,
   });
@@ -32,11 +32,11 @@ class ImmersionContactFormViewModel extends Equatable {
     final state = store.state;
     final user = (state.loginState as LoginSuccessState).user;
     return ImmersionContactFormViewModel._(
+      contactMode: _immersionContactMode(store),
       sendingState: _sendingState(store.state.contactImmersionState),
       userEmailInitialValue: user.email ?? "",
       userFirstNameInitialValue: user.firstName,
       userLastNameInitialValue: user.lastName,
-      messageInitialValue: Strings.immersitionContactFormMessageDefault,
       onFormSubmitted: (userInput) => store.dispatch(
         ContactImmersionRequestAction(
           ContactImmersionRequest(
@@ -51,12 +51,12 @@ class ImmersionContactFormViewModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        sendingState,
-        userEmailInitialValue,
-        userFirstNameInitialValue,
-        userLastNameInitialValue,
-        messageInitialValue,
-      ];
+    contactMode,
+    sendingState,
+    userEmailInitialValue,
+    userFirstNameInitialValue,
+    userLastNameInitialValue,
+  ];
 }
 
 SendingState _sendingState(ContactImmersionState state) {
@@ -71,15 +71,29 @@ class ImmersionContactUserInput extends Equatable {
   final String email;
   final String firstName;
   final String lastName;
-  final String message;
+  final String telephone;
+  final String datePreferences;
+  final String experience;
+  final String linkedinOrCvUrl;
 
   ImmersionContactUserInput({
     required this.email,
     required this.firstName,
     required this.lastName,
-    required this.message,
+    required this.telephone,
+    required this.datePreferences,
+    this.experience = '',
+    this.linkedinOrCvUrl = '',
   });
 
   @override
-  List<Object?> get props => [email, firstName, lastName, message];
+  List<Object?> get props => [email, firstName, lastName, telephone, datePreferences, experience, linkedinOrCvUrl];
+}
+
+ImmersionContactMode _immersionContactMode(Store<AppState> store) {
+  final state = store.state.immersionDetailsState;
+  if (state is ImmersionDetailsSuccessState) {
+    return state.immersion.contactMode;
+  }
+  return ImmersionContactMode.INCONNU;
 }
