@@ -20,8 +20,8 @@ class PostContactImmersionRequest implements JsonSerializable {
       "email": request.userInput.email,
       "contactMode": request.immersionDetails.contactMode.toJson(),
       "datePreferences": request.userInput.datePreferences,
-      "experienceAdditionalInformation": request.userInput.experience,
-      "resumeLink": request.userInput.linkedinOrCvUrl,
+      if (request.userInput.experience.isNotEmpty) "experienceAdditionalInformation": request.userInput.experience,
+      if (request.userInput.linkedinOrCvUrl.isNotEmpty) "resumeLink": request.userInput.linkedinOrCvUrl,
     };
     return map;
   }
