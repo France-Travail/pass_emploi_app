@@ -25,7 +25,7 @@ void main() {
           sut.expectRequestBody(
             method: HttpMethod.get,
             url: "/offres-immersion/v3",
-            queryParameters: {'rome': 'J1301', 'lon': '7.7', 'lat': '48.7'},
+            queryParameters: {'rome': 'J1301', 'lat': 48.7, 'lon': 7.7, 'page': 1, 'limit': 50},
           );
         });
 
@@ -86,7 +86,7 @@ void main() {
           sut.expectRequestBody(
             method: HttpMethod.get,
             url: "/offres-immersion/v3",
-            queryParameters: {'rome': 'J1301', 'lon': '7.7', 'lat': '48.7', 'distance': '70'},
+            queryParameters: {'rome': 'J1301', 'lon': 7.7, 'lat': 48.7, 'distance': 70, 'page': 1, 'limit': 50},
           );
         });
       });
@@ -102,7 +102,7 @@ void main() {
           sut.expectRequestBody(
             method: HttpMethod.get,
             url: "/offres-immersion/v3",
-            queryParameters: {'rome': 'J1301', 'lon': '7.7', 'lat': '48.7'},
+            queryParameters: {'rome': 'J1301', 'lon': 7.7, 'lat': 48.7, 'page': 1, 'limit': 50},
           );
         });
       });
@@ -135,8 +135,10 @@ void main() {
             queryParameters: {
               'appellationCode': '11573',
               'rome': 'J1301',
-              'lon': '7.7',
-              'lat': '48.7',
+              'lon': 7.7,
+              'lat': 48.7,
+              'page': 1,
+              'limit': 50,
             },
           );
         });

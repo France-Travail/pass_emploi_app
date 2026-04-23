@@ -1,122 +1,124 @@
-[
-  {
-    "siret": "12345678900001",
-    "appellationCode": "11573",
-    "locationId": "loc-001",
-    "metier": "xxxx",
-    "nomEtablissement": "ACCUEIL DE JOUR POUR PERSONNES AGEES",
-    "secteurActivite": "xxxx",
-    "ville": "xxxx",
-    "estVolontaire": true,
-    "fitForDisabledWorkers": true
-  },
-  {
-    "siret": "12345678900002",
-    "appellationCode": "11573",
-    "locationId": "loc-002",
-    "metier": "xxxx",
-    "nomEtablissement": "EHPAD SAINT FRANCOIS",
-    "secteurActivite": "xxxx",
-    "ville": "xxxx",
-    "fitForDisabledWorkers": false
-  },
-  {
-    "siret": "12345678900003",
-    "appellationCode": "11573",
-    "locationId": "loc-003",
-    "metier": "xxxx",
-    "nomEtablissement": "CTRE SOINS SUITE ET READAPTAT EN ADDICTO",
-    "secteurActivite": "xxxx",
-    "ville": "xxxx"
-  },
-  {
-    "siret": "12345678900004",
-    "appellationCode": "11573",
-    "locationId": "loc-004",
-    "metier": "xxxx",
-    "nomEtablissement": "CENTRE HOSPITALIER GENERAL",
-    "secteurActivite": "xxxx",
-    "ville": "xxxx"
-  },
-  {
-    "siret": "12345678900005",
-    "appellationCode": "11573",
-    "locationId": "loc-005",
-    "metier": "xxxx",
-    "nomEtablissement": "ASSOCIATION EMMAUS DIACONESSES",
-    "secteurActivite": "xxxx",
-    "ville": "xxxx"
-  },
-  {
-    "siret": "12345678900006",
-    "appellationCode": "11573",
-    "locationId": "loc-006",
-    "metier": "xxxx",
-    "nomEtablissement": "HOPITAL LA GRAFENBOURG MAISON ST JOSEPH",
-    "secteurActivite": "xxxx",
-    "ville": "xxxx"
-  },
-  {
-    "siret": "12345678900007",
-    "appellationCode": "11573",
-    "locationId": "loc-007",
-    "metier": "xxxx",
-    "nomEtablissement": "EHPAD L'ARC-EN-CIEL",
-    "secteurActivite": "xxxx",
-    "ville": "xxxx"
-  },
-  {
-    "siret": "12345678900008",
-    "appellationCode": "11573",
-    "locationId": "loc-008",
-    "metier": "xxxx",
-    "nomEtablissement": "O2 BRUMATH",
-    "secteurActivite": "xxxx",
-    "ville": "xxxx"
-  },
-  {
-    "siret": "12345678900009",
-    "appellationCode": "11573",
-    "locationId": "loc-009",
-    "metier": "xxxx",
-    "nomEtablissement": "EPSAN",
-    "secteurActivite": "xxxx",
-    "ville": "xxxx"
-  },
-  {
-    "siret": "12345678900010",
-    "appellationCode": "11573",
-    "locationId": "loc-010",
-    "metier": "xxxx",
-    "nomEtablissement": "LES FOURMIS DE L AJPA",
-    "secteurActivite": "xxxx",
-    "ville": "xxxx"
-  },
-  {
-    "siret": "12345678900011",
-    "appellationCode": "11573",
-    "locationId": "loc-011",
-    "metier": "xxxx",
-    "nomEtablissement": "CENTRE SERVICES",
-    "secteurActivite": "xxxx",
-    "ville": "xxxx"
-  },
-  {
-    "siret": "12345678900012",
-    "appellationCode": "11573",
-    "locationId": "loc-012",
-    "metier": "xxxx",
-    "nomEtablissement": "MAISON D ACCUEIL LA SOLIDARITE",
-    "secteurActivite": "xxxx",
-    "ville": "xxxx"
-  },
-  {
-    "siret": "12345678900013",
-    "appellationCode": "11573",
-    "locationId": "loc-013",
-    "metier": "xxxx",
-    "nomEtablissement": "GSF SATURNE",
-    "secteurActivite": "xxxx",
-    "ville": "xxxx"
-  }
-]
+{
+  "offres": [
+    {
+      "siret": "12345678900001",
+      "appellationCode": "11573",
+      "locationId": "loc-001",
+      "metier": "xxxx",
+      "nomEtablissement": "ACCUEIL DE JOUR POUR PERSONNES AGEES",
+      "secteurActivite": "xxxx",
+      "ville": "xxxx",
+      "estVolontaire": true,
+      "fitForDisabledWorkers": true
+    },
+    {
+      "siret": "12345678900002",
+      "appellationCode": "11573",
+      "locationId": "loc-002",
+      "metier": "xxxx",
+      "nomEtablissement": "EHPAD SAINT FRANCOIS",
+      "secteurActivite": "xxxx",
+      "ville": "xxxx",
+      "fitForDisabledWorkers": false
+    },
+    {
+      "siret": "12345678900003",
+      "appellationCode": "11573",
+      "locationId": "loc-003",
+      "metier": "xxxx",
+      "nomEtablissement": "CTRE SOINS SUITE ET READAPTAT EN ADDICTO",
+      "secteurActivite": "xxxx",
+      "ville": "xxxx"
+    },
+    {
+      "siret": "12345678900004",
+      "appellationCode": "11573",
+      "locationId": "loc-004",
+      "metier": "xxxx",
+      "nomEtablissement": "CENTRE HOSPITALIER GENERAL",
+      "secteurActivite": "xxxx",
+      "ville": "xxxx"
+    },
+    {
+      "siret": "12345678900005",
+      "appellationCode": "11573",
+      "locationId": "loc-005",
+      "metier": "xxxx",
+      "nomEtablissement": "ASSOCIATION EMMAUS DIACONESSES",
+      "secteurActivite": "xxxx",
+      "ville": "xxxx"
+    },
+    {
+      "siret": "12345678900006",
+      "appellationCode": "11573",
+      "locationId": "loc-006",
+      "metier": "xxxx",
+      "nomEtablissement": "HOPITAL LA GRAFENBOURG MAISON ST JOSEPH",
+      "secteurActivite": "xxxx",
+      "ville": "xxxx"
+    },
+    {
+      "siret": "12345678900007",
+      "appellationCode": "11573",
+      "locationId": "loc-007",
+      "metier": "xxxx",
+      "nomEtablissement": "EHPAD L'ARC-EN-CIEL",
+      "secteurActivite": "xxxx",
+      "ville": "xxxx"
+    },
+    {
+      "siret": "12345678900008",
+      "appellationCode": "11573",
+      "locationId": "loc-008",
+      "metier": "xxxx",
+      "nomEtablissement": "O2 BRUMATH",
+      "secteurActivite": "xxxx",
+      "ville": "xxxx"
+    },
+    {
+      "siret": "12345678900009",
+      "appellationCode": "11573",
+      "locationId": "loc-009",
+      "metier": "xxxx",
+      "nomEtablissement": "EPSAN",
+      "secteurActivite": "xxxx",
+      "ville": "xxxx"
+    },
+    {
+      "siret": "12345678900010",
+      "appellationCode": "11573",
+      "locationId": "loc-010",
+      "metier": "xxxx",
+      "nomEtablissement": "LES FOURMIS DE L AJPA",
+      "secteurActivite": "xxxx",
+      "ville": "xxxx"
+    },
+    {
+      "siret": "12345678900011",
+      "appellationCode": "11573",
+      "locationId": "loc-011",
+      "metier": "xxxx",
+      "nomEtablissement": "CENTRE SERVICES",
+      "secteurActivite": "xxxx",
+      "ville": "xxxx"
+    },
+    {
+      "siret": "12345678900012",
+      "appellationCode": "11573",
+      "locationId": "loc-012",
+      "metier": "xxxx",
+      "nomEtablissement": "MAISON D ACCUEIL LA SOLIDARITE",
+      "secteurActivite": "xxxx",
+      "ville": "xxxx"
+    },
+    {
+      "siret": "12345678900013",
+      "appellationCode": "11573",
+      "locationId": "loc-013",
+      "metier": "xxxx",
+      "nomEtablissement": "GSF SATURNE",
+      "secteurActivite": "xxxx",
+      "ville": "xxxx"
+    }
+  ]
+}

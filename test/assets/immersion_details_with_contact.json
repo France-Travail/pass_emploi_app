@@ -7,17 +7,9 @@
   "secteurActivite": "xxxx",
   "ville": "xxxx",
   "adresse": "4 RUE DES FRERES LUMIERE 67170 BRUMATH",
-  "website": "https://gsf-saturne.example.com",
+  "siteWeb": "https://gsf-saturne.example.com",
   "estVolontaire": true,
   "fitForDisabledWorkers": true,
-  "contactMode": "EMAIL",
-  "contact": {
-    "id": "9c6ca7f3-9598-479c-a745-c227691b0cb3",
-    "nom": "PHILIPPE",
-    "prenom": "LAUREAU",
-    "telephone": null,
-    "email": "gsf-responsables@ch-bischwiller.fr",
-    "role": "Responsable Nettoyage",
-    "modeDeContact": "EMAIL"
-  }
+  "informationsComplementaires": "Information complémentaire",
+  "contact": "EMAIL"
 }

@@ -49,7 +49,7 @@ class ImmersionDetails extends Equatable {
       secteurActivite: json['secteurActivite'] as String,
       ville: json['ville'] as String,
       address: json['adresse'] as String,
-      informationComplementaire: json['informationsComplementaires'] as String,
+      informationComplementaire: json['informationsComplementaires'] as String? ?? '',
       website: json['siteWeb'] as String? ?? '',
       codeRome: json['codeRome'] as String? ?? '',
       fitForDisabledWorkers: json['fitForDisabledWorkers'] as bool? ?? false,

@@ -8,6 +8,7 @@
   "ville": "xxxx",
   "adresse": "Service des ressources humaines, 40 RUE DU DEPUTE HALLEZ, 67500 HAGUENAU",
   "website": "",
+  "informationsComplementaires": "Information complémentaire",
   "estVolontaire": false,
   "fitForDisabledWorkers": false,
   "contactMode": "INCONNU"
