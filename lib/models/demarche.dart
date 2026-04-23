@@ -95,23 +95,23 @@ class Demarche extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        content,
-        label,
-        titre,
-        sousTitre,
-        status,
-        possibleStatus,
-        endDate,
-        beginDate,
-        deletionDate,
-        modificationDate,
-        createdByAdvisor,
-        modifiedByAdvisor,
-        attributs,
-        creationDate,
-        promptIa,
-      ];
+    id,
+    content,
+    label,
+    titre,
+    sousTitre,
+    status,
+    possibleStatus,
+    endDate,
+    beginDate,
+    deletionDate,
+    modificationDate,
+    createdByAdvisor,
+    modifiedByAdvisor,
+    attributs,
+    creationDate,
+    promptIa,
+  ];
 }
 
 DemarcheStatus _statusFromString({required String statusString}) {
@@ -158,11 +158,12 @@ extension DemarcheList on List<Demarche> {
 }
 
 extension DemarcheExt on Demarche {
-  bool get isDemarchePersonnalisee => titre == "Action issue de l’application CEJ";
+  bool get isDemarchePersonnalisee => titre == "Action issue de l'application CEJ";
 
   Demarche transformDemarchePersonnalisee() {
     if (isDemarchePersonnalisee) {
-      final vraiTitre = attributs.firstOrNull?.value;
+      final vraiTitre = attributs.firstWhereOrNull((a) => a.key == 'description')?.value;
+      final localisation = attributs.where((a) => a.key == 'ou').toList();
       return Demarche(
         id: id,
         content: vraiTitre,
@@ -177,9 +178,8 @@ extension DemarcheExt on Demarche {
         createdByAdvisor: createdByAdvisor,
         modifiedByAdvisor: modifiedByAdvisor,
         sousTitre: sousTitre,
-        attributs: [],
+        attributs: localisation,
         creationDate: creationDate,
-        // promptIa: promptIa,
       );
     }
 
