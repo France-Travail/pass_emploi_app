@@ -20,7 +20,7 @@ enum MessageType {
   evenementEmploi,
   inconnu,
   sessionMilo,
-  dissmissed;
+  dissmissed,
 }
 
 enum OffreType { emploi, alternance, immersion, civique, inconnu }
@@ -33,10 +33,10 @@ enum MessageContentStatus {
   edited;
 
   String get toJson => switch (this) {
-        MessageContentStatus.content => "content",
-        MessageContentStatus.deleted => "deleted",
-        MessageContentStatus.edited => "edited",
-      };
+    MessageContentStatus.content => "content",
+    MessageContentStatus.deleted => "deleted",
+    MessageContentStatus.edited => "edited",
+  };
 }
 
 class Message extends Equatable {
@@ -235,7 +235,8 @@ class Message extends Equatable {
         "MESSAGE_SESSION_MILO" => MessageType.sessionMilo,
         "MESSAGE_ACTION" => MessageType.messageAction,
         "AUTO_INSCRIPTION" => MessageType.dissmissed,
-        _ => MessageType.inconnu
+        "AUTO_DESINSCRIPTION" => MessageType.dissmissed,
+        _ => MessageType.inconnu,
       };
     } catch (e) {
       return MessageType.message;
@@ -243,8 +244,18 @@ class Message extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [id, content, creationDate, sentBy, type, pieceJointes, localPieceJointePath, offre, event, evenementEmploi];
+  List<Object?> get props => [
+    id,
+    content,
+    creationDate,
+    sentBy,
+    type,
+    pieceJointes,
+    localPieceJointePath,
+    offre,
+    event,
+    evenementEmploi,
+  ];
 }
 
 extension DecryptString on String {
@@ -272,14 +283,14 @@ enum PieceJointeAnalyseStatut {
   expiree;
 
   static PieceJointeAnalyseStatut? fromJson(String? jsonType) => switch (jsonType) {
-        "analyse_en_cours" => PieceJointeAnalyseStatut.enCours,
-        "analyse_a_faire" => PieceJointeAnalyseStatut.aFaire,
-        "valide" => PieceJointeAnalyseStatut.valide,
-        "erreur_analyse" => PieceJointeAnalyseStatut.erreur,
-        "non_valide" => PieceJointeAnalyseStatut.nonValide,
-        "expiree" => PieceJointeAnalyseStatut.expiree,
-        _ => null,
-      };
+    "analyse_en_cours" => PieceJointeAnalyseStatut.enCours,
+    "analyse_a_faire" => PieceJointeAnalyseStatut.aFaire,
+    "valide" => PieceJointeAnalyseStatut.valide,
+    "erreur_analyse" => PieceJointeAnalyseStatut.erreur,
+    "non_valide" => PieceJointeAnalyseStatut.nonValide,
+    "expiree" => PieceJointeAnalyseStatut.expiree,
+    _ => null,
+  };
 }
 
 class PieceJointe extends Equatable {
