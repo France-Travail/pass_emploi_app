@@ -3,6 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/contact_immersion/contact_immersion_actions.dart';
+import 'package:pass_emploi_app/models/immersion_contact.dart';
 import 'package:pass_emploi_app/pages/generic_success_page.dart';
 import 'package:pass_emploi_app/pages/immersion/immersion_contact_mode.dart';
 import 'package:pass_emploi_app/presentation/immersion/immersion_contact_form_view_model.dart';
@@ -53,7 +54,15 @@ class ImmersionContactFormPage extends StatelessWidget {
       Navigator.pop(context);
       Navigator.push(
         context,
-        GenericSuccessPage.route(title: Strings.immersionContactTitle, content: Strings.immersionContactSucceed),
+        GenericSuccessPage.route(
+          title: Strings.immersionContactTitle,
+          content: switch (viewModel.contactMode) {
+            ImmersionContactMode.MAIL => Strings.immersionContactSucceedMail,
+            ImmersionContactMode.PHONE => Strings.immersionContactSucceedPhone,
+            ImmersionContactMode.PRESENTIEL => Strings.immersionContactSucceedInPerson,
+            ImmersionContactMode.INCONNU => Strings.immersionContactSucceedMail,
+          },
+        ),
       );
     }
   }
@@ -163,6 +172,7 @@ class _FormState extends State<_Form> {
                     focusNode: state.userEmailFocus,
                     label: Strings.immersitionContactFormEmailHint,
                     keyboardType: TextInputType.emailAddress,
+                    textCapitalization: TextCapitalization.none,
                   ),
                   SizedBox(height: Margins.spacing_m),
                   ImmersionTextFormField(
@@ -174,6 +184,7 @@ class _FormState extends State<_Form> {
                     focusNode: state.telephoneFocus,
                     label: Strings.immersitionContactFormPhoneHint,
                     keyboardType: TextInputType.phone,
+                    textCapitalization: TextCapitalization.none,
                   ),
                   SizedBox(height: Margins.spacing_m),
                   ImmersionTextFormField(
@@ -195,10 +206,14 @@ class _FormState extends State<_Form> {
                   SizedBox(height: Margins.spacing_m),
                   ImmersionTextFormField(
                     isMandatory: false,
+                    mandatoryError: state.showValidationErrors && !state.isLinkedinValid()
+                        ? Strings.immersionContactFormLinkedinInvalid
+                        : null,
                     controller: state.linkedinController,
                     focusNode: state.linkedinFocus,
                     label: Strings.immersitionContactFormLinkedinLabel,
                     keyboardType: TextInputType.url,
+                    textCapitalization: TextCapitalization.none,
                   ),
                   SizedBox(height: Margins.spacing_m),
                 ],
@@ -212,7 +227,9 @@ class _FormState extends State<_Form> {
               child: PrimaryActionButton(
                 label: Strings.immersionContactFormButton,
                 icon: AppIcons.outgoing_mail,
-                onPressed: state.isButtonEnabled && !widget.viewModel.sendingState.isLoading() ? _validateAndSubmit : null,
+                onPressed: state.isButtonEnabled && !widget.viewModel.sendingState.isLoading()
+                    ? _validateAndSubmit
+                    : null,
               ),
             ),
           ),
@@ -233,6 +250,7 @@ class ImmersionTextFormField extends StatelessWidget {
   final int? maxLength;
   final String? hintText;
   final TextInputType keyboardType;
+  final TextCapitalization textCapitalization;
 
   const ImmersionTextFormField({
     super.key,
@@ -246,6 +264,7 @@ class ImmersionTextFormField extends StatelessWidget {
     this.maxLength,
     this.hintText,
     this.keyboardType = TextInputType.text,
+    this.textCapitalization = TextCapitalization.sentences,
   });
 
   @override
@@ -264,6 +283,7 @@ class ImmersionTextFormField extends StatelessWidget {
           controller: controller,
           errorText: focusNode.hasFocus ? null : mandatoryError,
           keyboardType: keyboardType,
+          textCapitalization: textCapitalization,
           onChanged: onChanged,
           hintText: hintText,
         ),
@@ -325,7 +345,7 @@ class ImmersionContactFormChangeNotifier extends ChangeNotifier {
   }
 
   bool isFormFullyValid() {
-    return _areMandatoryFieldsNonEmpty() && isEmailValid() && isTelephoneValid();
+    return _areMandatoryFieldsNonEmpty() && isEmailValid() && isTelephoneValid() && isLinkedinValid();
   }
 
   bool isEmailValid() {
@@ -336,6 +356,13 @@ class ImmersionContactFormChangeNotifier extends ChangeNotifier {
   bool isTelephoneValid() {
     final RegExp phoneRegex = RegExp(r'^(?:\+33|0033|0)[1-9](?:[\s.\-]?\d{2}){4}$');
     return phoneRegex.hasMatch(telephoneController.text.trim());
+  }
+
+  bool isLinkedinValid() {
+    final value = linkedinController.text.trim();
+    if (value.isEmpty) return true;
+    final RegExp urlRegex = RegExp(r'^https?://[^\s/$.?#].[^\s]*$', caseSensitive: false);
+    return urlRegex.hasMatch(value);
   }
 
   void onSubmitAttempted() {

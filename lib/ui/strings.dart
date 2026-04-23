@@ -1021,7 +1021,12 @@ class Strings {
   static String immersionLocationButton = "Localiser l'entreprise";
   static String immersionEmailButton = "Envoyer un e-mail";
   static String immersionEmailSubject = "Candidature pour une période d'immersion";
-  static String immersionContactSucceed = "Votre message a bien été transmis à l'entreprise.";
+  static String immersionContactSucceedMail =
+      "L’entreprise a bien reçu votre demande. Laissez-lui un peu de temps pour vous répondre. En cas de réponse positive, vous recevrez un e-mail avec la suite des démarches. Pensez à vérifier vos spams.";
+  static String immersionContactSucceedPhone =
+      "Merci pour votre intérêt. Cette entreprise souhaite être contactée par téléphone. Ses coordonnées vous ont été envoyées par email.";
+  static String immersionContactSucceedInPerson =
+      "Merci pour votre intérêt. Cette entreprise souhaite que vous vous rendiez sur place. Ses coordonnées vous ont été envoyées par email.";
   static String contactImmersionAlreadyDone =
       "Vous avez déjà postulé à cette offre d'immersion, il faut un minimum de 7 jours pour pouvoir postuler à nouveau";
   static String immersitionContactFormTitle = "Contacter l’entreprise";
@@ -1044,6 +1049,7 @@ class Strings {
       "Veuillez renseigner une adresse email valide au format exemple@email.com";
   static String immersionContactFormPhoneEmpty = "Renseignez votre numéro de téléphone";
   static String immersionContactFormPhoneInvalid = "Veuillez renseigner un numéro de téléphone valide";
+  static String immersionContactFormLinkedinInvalid = "Veuillez renseigner une URL valide (ex: https://linkedin.com/in/votre-profil)";
   static const immersionDataWarningMessage =
       "Veuillez utiliser les coordonnées de l'entreprise uniquement pour votre usage personnel";
   static String contactByMail = "Mise en relation par mail";
@@ -1054,7 +1060,7 @@ class Strings {
   static String siteWeb = "Site web";
   static String contactWarning =
       "Veuillez utiliser les coordonnées de l'entreprise uniquement pour votre usage personnel";
-  static String immersionContactTitle = "Contacter l’entreprise";
+  static String immersionContactTitle = "Entreprise contactée";
   static String desQuePossible = "Dès que possible";
 
   // Service Civique
