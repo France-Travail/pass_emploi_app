@@ -5,9 +5,12 @@ import 'package:pass_emploi_app/features/recherche/immersion/immersion_filtres_r
 import 'package:pass_emploi_app/models/immersion.dart';
 import 'package:pass_emploi_app/models/recherche/recherche_repository.dart';
 import 'package:pass_emploi_app/models/recherche/recherche_request.dart';
+import 'package:pass_emploi_app/network/dio_ext.dart';
 
 class ImmersionRepository
     extends RechercheRepository<ImmersionCriteresRecherche, ImmersionFiltresRecherche, Immersion> {
+  static const PAGE_SIZE = 50;
+
   final Dio _httpClient;
   final Crashlytics? _crashlytics;
 
@@ -21,15 +24,15 @@ class ImmersionRepository
     const url = "/offres-immersion/v3";
     try {
       final response = await _httpClient.get(url, queryParameters: _queryParameters(request));
-      final immersions = (response.data as List).map((offre) => Immersion.fromJson(offre)).toList();
-      return RechercheResponse(results: immersions, canLoadMore: false);
+      final list = response.asListOfWithKey('offres', (json) => Immersion.fromJson(json));
+      return RechercheResponse(results: list, canLoadMore: list.length == PAGE_SIZE);
     } catch (e, stack) {
       _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
     }
     return null;
   }
 
-  Map<String, String> _queryParameters(
+  Map<String, dynamic> _queryParameters(
     RechercheRequest<ImmersionCriteresRecherche, ImmersionFiltresRecherche> request,
   ) {
     final appellationCode = request.criteres.appellationCode;
@@ -37,9 +40,11 @@ class ImmersionRepository
     return {
       if (appellationCode != null) 'appellationCode': appellationCode,
       if (codeRome != null) 'rome': codeRome,
-      'lat': request.criteres.location.latitude.toString(),
-      'lon': request.criteres.location.longitude.toString(),
-      if (request.filtres.distance != null) 'distance': request.filtres.distance.toString(),
+      'lat': request.criteres.location.latitude,
+      'lon': request.criteres.location.longitude,
+      if (request.filtres.distance != null) 'distance': request.filtres.distance,
+      'page': request.page,
+      'limit': PAGE_SIZE,
     };
   }
 }

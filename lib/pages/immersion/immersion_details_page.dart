@@ -135,17 +135,18 @@ class ImmersionDetailsPage extends StatelessWidget {
                 else ...[
                   Text(Strings.immersionDescriptionLabel, style: TextStyles.textBaseRegular),
                   SizedBox(height: Margins.spacing_m),
-                  if (viewModel.address != null) ...[
+                  if (viewModel.address != null && viewModel.address!.isNotEmpty) ...[
                     _Title(Strings.adresse),
                     Text(viewModel.address ?? '', style: TextStyles.textBaseRegular),
                     SizedBox(height: Margins.spacing_m),
                   ],
-                  if (viewModel.informationComplementaire != null) ...[
+                  if (viewModel.informationComplementaire != null &&
+                      viewModel.informationComplementaire!.isNotEmpty) ...[
                     _Title(Strings.informationComplementaire),
                     Text(viewModel.informationComplementaire ?? '', style: TextStyles.textBaseRegular),
                     SizedBox(height: Margins.spacing_m),
                   ],
-                  if (viewModel.website != null) ...[
+                  if (viewModel.website != null && viewModel.website!.isNotEmpty) ...[
                     _Title(Strings.siteWeb),
                     Text(viewModel.website ?? '', style: TextStyles.textBaseRegular),
                     SizedBox(height: Margins.spacing_m),
