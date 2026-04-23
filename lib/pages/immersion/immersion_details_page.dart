@@ -115,18 +115,18 @@ class ImmersionDetailsPage extends StatelessWidget {
                   SizedBox(height: Margins.spacing_base),
                 ],
                 _Title(viewModel.title),
-                SizedBox(height: Margins.spacing_m),
+                SizedBox(height: Margins.spacing_s),
                 Text(viewModel.companyName, style: TextStyles.textBaseRegular),
-                SizedBox(height: Margins.spacing_base),
+                SizedBox(height: Margins.spacing_s),
                 ImmersionTags(secteurActivite: viewModel.secteurActivite, ville: viewModel.ville),
                 if (viewModel.dateDerniereConsultation != null) ...[
-                  SizedBox(height: Margins.spacing_base),
+                  SizedBox(height: Margins.spacing_m),
                   CardComplement.dateDerniereConsultation(viewModel.dateDerniereConsultation!),
                 ],
-                SizedBox(height: Margins.spacing_base),
+                SizedBox(height: Margins.spacing_m),
                 Text(Strings.lentreprise, style: TextStyles.textMBold),
                 SizedBox(height: Margins.spacing_m),
-                SepLine(Margins.spacing_s, 0),
+                SepLine(0, 0),
                 SizedBox(height: Margins.spacing_base),
                 ContactModeTag(contactMode: viewModel.contactMode),
                 SizedBox(height: Margins.spacing_base),
@@ -189,14 +189,16 @@ class ImmersionDetailsPage extends StatelessWidget {
   Widget _footer(BuildContext context, ImmersionDetailsViewModel viewModel) {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.all(Margins.spacing_m),
-      child: Row(
+      padding: const EdgeInsets.only(left: Margins.spacing_m, right: Margins.spacing_m, bottom: Margins.spacing_m),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Expanded(
-            child: PrimaryActionButton(
-              onPressed: () => Navigator.push(context, ImmersionContactFormPage.materialPageRoute()),
-              label: Strings.immersitionContactFormTitle,
-            ),
+          SepLine(0, 0),
+          SizedBox(height: Margins.spacing_base),
+          PrimaryActionButton(
+            onPressed: () => Navigator.push(context, ImmersionContactFormPage.materialPageRoute()),
+            label: Strings.immersitionContactFormTitle,
           ),
         ],
       ),
