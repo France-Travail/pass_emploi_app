@@ -310,14 +310,17 @@ List<Location> mockLocations() {
   ];
 }
 
-Immersion mockImmersion({String id = "", bool fromEntrepriseAccueillante = false}) {
+Immersion mockImmersion({String id = "", bool fitForDisabledWorkers = false}) {
   return Immersion(
     id: id,
+    siret: "",
+    appellationCode: "",
+    locationId: "",
     metier: "",
     nomEtablissement: "",
     secteurActivite: "",
     ville: "",
-    fromEntrepriseAccueillante: fromEntrepriseAccueillante,
+    fitForDisabledWorkers: fitForDisabledWorkers,
   );
 }
 
@@ -326,22 +329,19 @@ List<Immersion> mockOffresImmersion10() => List.generate(10, (index) => mockImme
 ImmersionDetails mockImmersionDetails() {
   return ImmersionDetails(
     id: 'id',
+    siret: 'siret',
+    appellationCode: 'appellationCode',
+    locationId: 'locationId',
     metier: 'metier',
     companyName: 'companyName',
     secteurActivite: 'secteurActivite',
     ville: 'ville',
     address: 'address',
+    informationComplementaire: 'informationComplementaire',
+    website: '',
     codeRome: 'codeRome',
-    siret: 'siret',
-    fromEntrepriseAccueillante: true,
-    contact: ImmersionContact(
-      firstName: '',
-      lastName: '',
-      phone: '',
-      mail: '',
-      role: '',
-      mode: ImmersionContactMode.INCONNU,
-    ),
+    fitForDisabledWorkers: false,
+    contactMode: ImmersionContactMode.INCONNU,
   );
 }
 
@@ -350,7 +350,10 @@ ImmersionContactUserInput mockImmersionContactUserInput() {
     firstName: "Philippe",
     lastName: "Flopflip",
     email: "philippe.flopflip@magiciens.com",
-    message: "Bonjour, j'aimerai faire une immersion dans votre salon de magie.",
+    telephone: "0612345678",
+    datePreferences: "Au plus vite",
+    experience: "10 ans en tant que magicien",
+    linkedinOrCvUrl: "https://linkedin.com/in/philippe-flopflip",
   );
 }
 

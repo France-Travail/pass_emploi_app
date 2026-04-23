@@ -18,16 +18,20 @@ void main() {
         test('request should be valid', () async {
           await sut.expectRequestBody(
             method: HttpMethod.post,
-            url: "/jeunes/UID/offres-immersion/contact",
+            url: "/jeunes/UID/offres-immersion/v3/contact",
             jsonBody: {
-              "codeRome": "codeRome",
+              "appellationCode": "appellationCode",
               "labelRome": "metier",
               "siret": "siret",
+              "locationId": "locationId",
+              "numeroTelephone": "0612345678",
               "prenom": "Philippe",
               "nom": "Flopflip",
               "email": "philippe.flopflip@magiciens.com",
-              "message": "Bonjour, j'aimerai faire une immersion dans votre salon de magie.",
               "contactMode": "EMAIL",
+              "datePreferences": "Au plus vite",
+              "experienceAdditionalInformation": "10 ans en tant que magicien",
+              "resumeLink": "https://linkedin.com/in/philippe-flopflip",
             },
           );
         });

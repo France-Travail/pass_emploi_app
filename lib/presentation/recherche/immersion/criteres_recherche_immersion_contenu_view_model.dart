@@ -15,12 +15,14 @@ class CriteresRechercheImmersionContenuViewModel extends Equatable {
   final DisplayState displayState;
   final Metier? initialMetier;
   final Location? initialLocation;
-  final Function(Metier metier, Location location) onSearchingRequest;
+  final int initialDistance;
+  final Function(Metier metier, Location location, int distance) onSearchingRequest;
 
   CriteresRechercheImmersionContenuViewModel({
     required this.displayState,
     required this.initialMetier,
     required this.initialLocation,
+    required this.initialDistance,
     required this.onSearchingRequest,
   });
 
@@ -30,7 +32,9 @@ class CriteresRechercheImmersionContenuViewModel extends Equatable {
       initialMetier: store.state.rechercheImmersionState.request?.criteres.metier,
       initialLocation:
           store.state.rechercheImmersionState.request?.criteres.location ?? store.getLastLocationSelected(),
-      onSearchingRequest: (metier, location) => _onSearchingRequest(store, metier, location),
+      initialDistance: store.state.rechercheImmersionState.request?.filtres.distance ??
+          ImmersionFiltresRecherche.defaultDistanceValue,
+      onSearchingRequest: (metier, location, distance) => _onSearchingRequest(store, metier, location, distance),
     );
   }
 
@@ -38,14 +42,12 @@ class CriteresRechercheImmersionContenuViewModel extends Equatable {
   List<Object?> get props => [displayState];
 }
 
-void _onSearchingRequest(Store<AppState> store, Metier metier, Location location) {
-  final previousRequest = store.state.rechercheImmersionState.request;
-  final initialRecherche = previousRequest == null;
+void _onSearchingRequest(Store<AppState> store, Metier metier, Location location, int distance) {
   store.dispatch(
     RechercheRequestAction<ImmersionCriteresRecherche, ImmersionFiltresRecherche>(
       RechercheRequest(
         ImmersionCriteresRecherche(metier: metier, location: location),
-        initialRecherche ? ImmersionFiltresRecherche.noFiltre() : previousRequest.filtres,
+        ImmersionFiltresRecherche.distance(distance),
         1,
       ),
     ),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:pass_emploi_app/crashlytics/crashlytics.dart';
+import 'package:pass_emploi_app/models/immersion.dart';
 import 'package:pass_emploi_app/models/immersion_details.dart';
 import 'package:pass_emploi_app/repositories/offre_emploi/offre_emploi_details_repository.dart';
 
@@ -13,7 +14,8 @@ class ImmersionDetailsRepository {
   ImmersionDetailsRepository(this._httpClient, [this._crashlytics]);
 
   Future<OffreDetailsResponse<ImmersionDetails>> fetch(String offreId) async {
-    final url = '/offres-immersion/$offreId';
+    final parts = Immersion.parseSyntheticId(offreId);
+    final url = '/offres-immersion/v3/${parts.siret}/${parts.appellationCode}/${parts.locationId}';
     try {
       final response = await _httpClient.get(url);
       return OffreDetailsResponse(

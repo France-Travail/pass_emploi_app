@@ -1543,7 +1543,7 @@ void main() {
         estInscrit: true,
         date: DateTime(2021, 12, 23, 10, 20),
         duration: 60,
-        dateMaxDesinscription: DateTime(2026, 4, 17, 14, 30),
+        dateMaxDesinscription: DateTime(2055, 4, 17, 14, 30),
       );
       final store =
           givenState() //
@@ -1560,7 +1560,7 @@ void main() {
       );
 
       // Then
-      expect(viewModel.dateLimiteAnnulation, "Date limite d'annulation : 17 avril 2026");
+      expect(viewModel.dateLimiteAnnulation, "Date limite d'annulation : 17 avril 2055");
     });
 
     test('should display nothing when dateMaxDesinscription is in the past', () {
@@ -1629,7 +1629,7 @@ void main() {
         estInscrit: true,
         date: DateTime(2021, 12, 23, 10, 20),
         duration: 60,
-        dateMaxDesinscription: DateTime(2026, 4, 17, 14, 30),
+        dateMaxDesinscription: DateTime(2055, 4, 17, 14, 30),
       );
       final store =
           givenState() //
@@ -1647,7 +1647,7 @@ void main() {
 
       // Then
       expect(viewModel.withIfAbsentPart, isFalse);
-      expect(viewModel.dateLimiteAnnulation, "Date limite d'annulation : 17 avril 2026");
+      expect(viewModel.dateLimiteAnnulation, "Date limite d'annulation : 17 avril 2055");
     });
   });
 }

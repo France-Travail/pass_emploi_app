@@ -71,11 +71,11 @@ class CardTag extends StatelessWidget {
       contentColor = AppColors.accent3,
       semanticsLabel = null;
 
-  CardTag.entrepriseAccueillante()
-    : icon = Icons.volunteer_activism,
-      backgroundColor = AppColors.additional1Lighten,
-      text = Strings.entrepriseAccueillante,
-      contentColor = AppColors.accent2,
+  CardTag.disabledWorkersWelcome()
+    : icon = null,
+      backgroundColor = AppColors.additional4Lighten,
+      text = Strings.disabledWorkersWelcome,
+      contentColor = AppColors.contentColor,
       semanticsLabel = null;
 
   @override

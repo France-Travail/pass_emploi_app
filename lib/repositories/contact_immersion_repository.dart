@@ -17,7 +17,7 @@ class ContactImmersionRepository {
   ContactImmersionRepository(this._httpClient, [this._crashlytics]);
 
   Future<ContactImmersionResponse> post(String userId, ContactImmersionRequest request) async {
-    final url = '/jeunes/$userId/offres-immersion/contact';
+    final url = '/jeunes/$userId/offres-immersion/v3/contact';
     try {
       await _httpClient.post(
         url,

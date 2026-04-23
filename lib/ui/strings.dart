@@ -1,5 +1,4 @@
 import 'package:pass_emploi_app/models/brand.dart';
-import 'package:pass_emploi_app/ui/immersion_contacts_strings.dart';
 import 'package:pass_emploi_app/utils/date_extensions.dart';
 
 class _PassEmploiStrings {
@@ -1009,12 +1008,9 @@ class Strings {
   static String partagerSessionMiloAuConseiller = "Partager à mon conseiller";
 
   // Immersion
-  static String entrepriseAccueillante = 'Entreprise accueillante';
-  static String entreprisesAccueillantesHeader =
-      'Les entreprises accueillantes facilitent vos immersions professionnelles';
+  static String lentreprise = 'L\'entreprise';
+  static String disabledWorkersWelcome = 'Personnes en situation de handicap bienvenues';
   static String immersionExpansionTileTitle = "En savoir plus sur l’immersion";
-  static String immersionNonAccueillanteExplanation =
-      "Cette entreprise peut recruter sur ce métier et être intéressée pour vous recevoir en immersion. Contactez-la en expliquant votre projet professionnel et vos motivations.";
   static String immersionAccueillanteExplanation =
       "Cette entreprise recherche activement des candidats à l’immersion. Contactez-la en expliquant votre projet professionnel et vos motivations.";
   static String immersionDescriptionLabel =
@@ -1022,52 +1018,50 @@ class Strings {
       "· Prévenez votre conseiller\n"
       "· Remplissez une convention d’immersion avec lui";
   static String immersionContactBlocTitle = "Contact";
-  static String immersionPhoneButton = "Appeler";
   static String immersionLocationButton = "Localiser l'entreprise";
   static String immersionEmailButton = "Envoyer un e-mail";
   static String immersionEmailSubject = "Candidature pour une période d'immersion";
-  static String immersionContactSucceed = "Votre message a bien été transmis à l'entreprise.";
+  static String immersionContactSucceedMail =
+      "L’entreprise a bien reçu votre demande. Laissez-lui un peu de temps pour vous répondre. En cas de réponse positive, vous recevrez un e-mail avec la suite des démarches. Pensez à vérifier vos spams.";
+  static String immersionContactSucceedPhone =
+      "Merci pour votre intérêt. Cette entreprise souhaite être contactée par téléphone. Ses coordonnées vous ont été envoyées par email.";
+  static String immersionContactSucceedInPerson =
+      "Merci pour votre intérêt. Cette entreprise souhaite que vous vous rendiez sur place. Ses coordonnées vous ont été envoyées par email.";
   static String contactImmersionAlreadyDone =
       "Vous avez déjà postulé à cette offre d'immersion, il faut un minimum de 7 jours pour pouvoir postuler à nouveau";
-  static String immersionContact = "Contacter";
   static String immersitionContactFormTitle = "Contacter l’entreprise";
-  static String immersitionContactFormSubtitle = "Veuillez compléter ce formulaire qui sera transmis à l'entreprise.";
+  static String immersitionContactFormSubtitle =
+      "Cette entreprise a choisi d’être contactée par mail. Veuillez compléter ce formulaire qui sera transmis à l’entreprise.";
   static String immersitionContactFormHint = "Tous les champs avec * sont obligatoires";
   static String immersitionContactFormEmailHint = "Email";
   static String immersitionContactFormSurnameHint = "Prénom";
   static String immersitionContactFormNameHint = "Nom";
-  static String immersitionContactFormMessageHint = "Message";
-  static String immersitionContactFormMessageDefault =
-      "Bonjour, Je souhaiterais passer quelques jours dans votre entreprise en immersion professionnelle auprès de vos salariés pour découvrir ce métier.\nPourriez-vous me proposer un rendez-vous ? \nJe pourrais alors vous expliquer directement mon projet.";
+  static String immersitionContactFormPhoneHint = "Téléphone";
+  static String immersitionContactFormStartDateHint = "Date de début d’immersion souhaitée";
+  static String immersitionContactFormExperienceLabel = "Expérience";
+  static String immersitionContactFormExperiencePlaceholder =
+      "Détaillez en quelques lignes vos expériences et compétences";
+  static String immersitionContactFormLinkedinLabel = "Page LinkedIn ou CV en ligne";
+  static String immersitionContactFormOptionalSuffix = "(optionnel)";
   static String immersionContactFormButton = "Envoyer";
   static String immersionContactFormEmailEmpty = "Renseignez votre adresse email";
   static String immersionContactFormEmailInvalid =
       "Veuillez renseigner une adresse email valide au format exemple@email.com";
-  static String immersionContactFormFirstNameInvalid = "Renseignez votre prénom";
-  static String immersionContactFormLastNameInvalid = "Renseignez votre nom";
-  static String immersionContactFormMessageInvalid = "Renseignez votre message";
+  static String immersionContactFormPhoneEmpty = "Renseignez votre numéro de téléphone";
+  static String immersionContactFormPhoneInvalid = "Veuillez renseigner un numéro de téléphone valide";
+  static String immersionContactFormLinkedinInvalid = "Veuillez renseigner une URL valide (ex: https://linkedin.com/in/votre-profil)";
   static const immersionDataWarningMessage =
       "Veuillez utiliser les coordonnées de l'entreprise uniquement pour votre usage personnel";
-  static String immersionContactTitle = ImmersionContactStrings.title;
-  static String immersionContactSubtitle1 = ImmersionContactStrings.subtitle1;
-  static String immersionContactBody1_1 = ImmersionContactStrings.body1_1;
-  static String immersionContactBody1_2bold = ImmersionContactStrings.body1_2bold;
-  static String immersionContactBody1_3 = ImmersionContactStrings.body1_3;
-  static String immersionContactBody1_4bold = ImmersionContactStrings.body1_4bold;
-  static String immersionContactBody1_5 = ImmersionContactStrings.body1_5;
-  static String immersionContactBody1_6 = ImmersionContactStrings.body1_6;
-  static String immersionContactBody1_7bold = ImmersionContactStrings.body1_7bold;
-  static String immersionContactBody1_8 = ImmersionContactStrings.body1_8;
-  static String immersionContactBody1_9bold = ImmersionContactStrings.body1_9bold;
-  static String immersionContactBody1_10 = ImmersionContactStrings.body1_10;
-  static String immersionContactBody1_11 = ImmersionContactStrings.body1_11;
-  static String immersionContactBody1_12 = ImmersionContactStrings.body1_12;
-  static String immersionContactSubtitle2 = ImmersionContactStrings.subtitle2;
-  static String immersionContactBody2 = ImmersionContactStrings.body2;
-  static String immersionContactSubtitle3 = ImmersionContactStrings.subtitle3;
-  static String immersionContactBody3 = ImmersionContactStrings.body3;
-  static String immersionContactSubtitle4 = ImmersionContactStrings.subtitle4;
-  static String immersionContactBody4 = ImmersionContactStrings.body4;
+  static String contactByMail = "Mise en relation par mail";
+  static String contactByPhone = "Mise en relation par téléphone";
+  static String contactByPresen = "Rendez-vous sur place";
+  static String adresse = "Adresse";
+  static String informationComplementaire = "Informations complémentaires";
+  static String siteWeb = "Site web";
+  static String contactWarning =
+      "Veuillez utiliser les coordonnées de l'entreprise uniquement pour votre usage personnel";
+  static String immersionContactTitle = "Entreprise contactée";
+  static String desQuePossible = "Dès que possible";
 
   // Service Civique
   static String serviceCiviqueFiltresTitle = "Filtrer les missions";

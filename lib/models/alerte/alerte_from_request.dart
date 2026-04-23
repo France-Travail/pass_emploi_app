@@ -34,11 +34,12 @@ Alerte? createAlerteFromRequest(RechercheRequest<Equatable, Equatable> request) 
   }
 
   if (request is RechercheRequest<ImmersionCriteresRecherche, ImmersionFiltresRecherche>) {
+    final metier = request.criteres.metier;
     return ImmersionAlerte(
       id: id,
-      title: "${request.criteres.metier.libelle} - ${request.criteres.location.libelle}",
-      codeRome: request.criteres.metier.codeRome,
-      metier: request.criteres.metier.libelle,
+      title: "${metier?.libelle ?? ''} - ${request.criteres.location.libelle}",
+      codeRome: metier?.codeRome ?? '',
+      metier: metier?.libelle ?? '',
       location: request.criteres.location,
       ville: request.criteres.location.libelle,
       filtres: request.filtres,

@@ -4,66 +4,88 @@ import 'package:pass_emploi_app/models/immersion_contact.dart';
 
 class ImmersionDetails extends Equatable {
   final String id;
+  final String siret;
+  final String appellationCode;
+  final String locationId;
   final String metier;
   final String companyName;
   final String secteurActivite;
   final String ville;
   final String address;
+  final String? informationComplementaire;
+  final String? website;
   final String codeRome;
-  final String siret;
-  final bool fromEntrepriseAccueillante;
-  final ImmersionContact? contact;
+  final bool fitForDisabledWorkers;
+  final ImmersionContactMode contactMode;
 
   ImmersionDetails({
     required this.id,
+    required this.siret,
+    required this.appellationCode,
+    required this.locationId,
     required this.metier,
     required this.companyName,
     required this.secteurActivite,
     required this.ville,
     required this.address,
-    required this.codeRome,
-    required this.siret,
-    required this.fromEntrepriseAccueillante,
-    required this.contact,
+    this.informationComplementaire,
+    this.website,
+    this.codeRome = '',
+    required this.fitForDisabledWorkers,
+    required this.contactMode,
   });
 
   factory ImmersionDetails.fromJson(dynamic json) {
+    final siret = json['siret'] as String;
+    final appellationCode = json['appellationCode'] as String? ?? '';
+    final locationId = json['locationId'] as String? ?? '';
     return ImmersionDetails(
-      id: json['id'] as String,
+      id: Immersion.buildSyntheticId(siret: siret, appellationCode: appellationCode, locationId: locationId),
+      siret: siret,
+      appellationCode: appellationCode,
+      locationId: locationId,
       metier: json['metier'] as String,
       companyName: json['nomEtablissement'] as String,
       secteurActivite: json['secteurActivite'] as String,
       ville: json['ville'] as String,
       address: json['adresse'] as String,
-      codeRome: json['codeRome'] as String,
-      siret: json['siret'] as String,
-      fromEntrepriseAccueillante: json['estVolontaire'] as bool,
-      contact: json['contact'] != null ? ImmersionContact.fromJson(json['contact']) : null,
+      informationComplementaire: json['informationsComplementaires'] as String? ?? '',
+      website: json['siteWeb'] as String? ?? '',
+      codeRome: json['codeRome'] as String? ?? '',
+      fitForDisabledWorkers: json['fitForDisabledWorkers'] as bool? ?? false,
+      contactMode: parseImmersionContactMode(json['contact'] as String?),
     );
   }
 
   @override
   List<Object?> get props => [
-        id,
-        metier,
-        companyName,
-        secteurActivite,
-        ville,
-        address,
-        codeRome,
-        siret,
-        fromEntrepriseAccueillante,
-        contact,
-      ];
+    id,
+    siret,
+    appellationCode,
+    locationId,
+    metier,
+    companyName,
+    secteurActivite,
+    ville,
+    address,
+    informationComplementaire,
+    website,
+    codeRome,
+    fitForDisabledWorkers,
+    contactMode,
+  ];
 }
 
 extension ImmersionDetailsExt on ImmersionDetails {
   Immersion get toImmersion => Immersion(
-        id: id,
-        metier: metier,
-        nomEtablissement: companyName,
-        secteurActivite: secteurActivite,
-        ville: ville,
-        fromEntrepriseAccueillante: fromEntrepriseAccueillante,
-      );
+    id: id,
+    siret: siret,
+    appellationCode: appellationCode,
+    locationId: locationId,
+    metier: metier,
+    nomEtablissement: companyName,
+    secteurActivite: secteurActivite,
+    ville: ville,
+    fitForDisabledWorkers: fitForDisabledWorkers,
+  );
 }

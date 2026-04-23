@@ -24,8 +24,8 @@ void main() {
         test('request should be valid', () {
           sut.expectRequestBody(
             method: HttpMethod.get,
-            url: "/offres-immersion",
-            queryParameters: {'rome': 'J1301', 'lon': '7.7', 'lat': '48.7'},
+            url: "/offres-immersion/v3",
+            queryParameters: {'rome': 'J1301', 'lat': 48.7, 'lon': 7.7, 'page': 1, 'limit': 50},
           );
         });
 
@@ -36,12 +36,19 @@ void main() {
             expect(
               response.results.first,
               Immersion(
-                id: "036383f3-85ca-4dbd-b636-ae2657164439",
+                id: Immersion.buildSyntheticId(
+                  siret: "12345678900001",
+                  appellationCode: "11573",
+                  locationId: "loc-001",
+                ),
+                siret: "12345678900001",
+                appellationCode: "11573",
+                locationId: "loc-001",
                 metier: "xxxx",
                 nomEtablissement: "ACCUEIL DE JOUR POUR PERSONNES AGEES",
                 secteurActivite: "xxxx",
                 ville: "xxxx",
-                fromEntrepriseAccueillante: true,
+                fitForDisabledWorkers: true,
               ),
             );
           });
@@ -78,8 +85,8 @@ void main() {
         test('query parameters should be properly built', () {
           sut.expectRequestBody(
             method: HttpMethod.get,
-            url: "/offres-immersion",
-            queryParameters: {'rome': 'J1301', 'lon': '7.7', 'lat': '48.7', 'distance': '70'},
+            url: "/offres-immersion/v3",
+            queryParameters: {'rome': 'J1301', 'lon': 7.7, 'lat': 48.7, 'distance': 70, 'page': 1, 'limit': 50},
           );
         });
       });
@@ -94,8 +101,45 @@ void main() {
         test('query parameters should be properly built', () {
           sut.expectRequestBody(
             method: HttpMethod.get,
-            url: "/offres-immersion",
-            queryParameters: {'rome': 'J1301', 'lon': '7.7', 'lat': '48.7'},
+            url: "/offres-immersion/v3",
+            queryParameters: {'rome': 'J1301', 'lon': 7.7, 'lat': 48.7, 'page': 1, 'limit': 50},
+          );
+        });
+      });
+
+      group('when appellationCode is provided alongside metier', () {
+        sut.when(
+          (repository) => repository.rechercher(
+            userId: "ID",
+            request: RechercheRequest(
+              ImmersionCriteresRecherche(
+                metier: Metier(codeRome: "J1301", libelle: "xxxx"),
+                appellationCode: "11573",
+                location: Location(
+                  libelle: "Paris",
+                  code: "75",
+                  type: LocationType.COMMUNE,
+                  latitude: 48.7,
+                  longitude: 7.7,
+                ),
+              ),
+              ImmersionFiltresRecherche.noFiltre(),
+              1,
+            ),
+          ),
+        );
+        test('query parameters should include appellationCode and codeRome', () {
+          sut.expectRequestBody(
+            method: HttpMethod.get,
+            url: "/offres-immersion/v3",
+            queryParameters: {
+              'appellationCode': '11573',
+              'rome': 'J1301',
+              'lon': 7.7,
+              'lat': 48.7,
+              'page': 1,
+              'limit': 50,
+            },
           );
         });
       });
@@ -104,7 +148,8 @@ void main() {
 }
 
 RechercheRequest<ImmersionCriteresRecherche, ImmersionFiltresRecherche> _requestWithFiltres2(
-    ImmersionFiltresRecherche filtres) {
+  ImmersionFiltresRecherche filtres,
+) {
   return RechercheRequest(
     ImmersionCriteresRecherche(
       metier: Metier(codeRome: "J1301", libelle: "xxxx"),

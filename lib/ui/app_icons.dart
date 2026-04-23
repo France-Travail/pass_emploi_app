@@ -11,6 +11,8 @@ class AppIcons {
 
   // Action
   static const IconData outgoing_mail = Icons.outgoing_mail;
+  static const IconData mail = Icons.mail;
+  static const IconData phone = Icons.phone;
   static const IconData notifications_rounded = Icons.notifications_rounded;
   static const IconData refresh_rounded = Icons.refresh_rounded;
   static const IconData download_rounded = Icons.download_rounded;

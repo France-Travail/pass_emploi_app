@@ -158,6 +158,9 @@ void main() {
 Immersion _offreWithFullData() {
   return Immersion(
     id: "98286f66-2a8e-4a22-80a8-c6fda3a52980",
+    siret: "",
+    appellationCode: "",
+    locationId: "",
     ville: 'Brumath',
     nomEtablissement: 'EPSAN Brumath',
     metier: 'Boulanger',

@@ -18,7 +18,7 @@ class InfoCard extends StatelessWidget {
       backgroundColor: backgroundColor ?? AppColors.primaryLighten,
       withShadow: false,
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(AppIcons.info_rounded, color: textColor ?? AppColors.primary),
           SizedBox(width: Margins.spacing_s),
