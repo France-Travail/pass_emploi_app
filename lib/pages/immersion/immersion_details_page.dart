@@ -189,7 +189,11 @@ class ImmersionDetailsPage extends StatelessWidget {
   Widget _footer(BuildContext context, ImmersionDetailsViewModel viewModel) {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.only(left: Margins.spacing_m, right: Margins.spacing_m, bottom: Margins.spacing_m),
+      padding: EdgeInsets.only(
+        left: Margins.spacing_m,
+        right: Margins.spacing_m,
+        bottom: MediaQuery.of(context).padding.bottom,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,

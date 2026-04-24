@@ -57,93 +57,102 @@ class BaseCard extends StatelessWidget {
     return Semantics(
       button: !linkRole && onTap != null ? true : null,
       link: linkRole ? true : null,
-      child: Stack(
-        children: [
-          CardContainer(
-            padding: EdgeInsets.all(Margins.spacing_base),
-            onTap: onTap,
-            onLongPress: onLongPress,
-            child: SizedBox(
-              width: double.infinity,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (imagePath != null) ...[
-                    Semantics(
-                      excludeSemantics: imageAlt != null,
-                      image: true,
-                      label: imageAlt,
-                      child: _CardIllustration(imagePath: imagePath!, imageHeight: imageHeight),
-                    ),
-                    SizedBox(height: Margins.spacing_s),
+      child: CardContainer(
+        padding: EdgeInsets.all(Margins.spacing_base),
+        onTap: onTap,
+        onLongPress: onLongPress,
+        child: SizedBox(
+          width: double.infinity,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (imagePath != null) ...[
+                      Semantics(
+                        excludeSemantics: imageAlt != null,
+                        image: true,
+                        label: imageAlt,
+                        child: _CardIllustration(imagePath: imagePath!, imageHeight: imageHeight),
+                      ),
+                      SizedBox(height: Margins.spacing_s),
+                    ],
+                    if (!isSimpleCard && iconButton == null)
+                      Wrap(
+                        spacing: Margins.spacing_s,
+                        runSpacing: Margins.spacing_s,
+                        children: [
+                          if (tag != null) tag!,
+                          if (pillule != null) pillule!,
+                        ],
+                      ),
+                    if (!isSimpleCard && iconButton != null) ...[
+                      if (tag != null) tag!,
+                      SizedBox(height: Margins.spacing_s),
+                    ],
+                    if (leading != null) ...[
+                      leading!,
+                      SizedBox(height: Margins.spacing_base),
+                    ],
+                    if (title.isNotEmpty) ...[
+                      if ((!isSimpleCard && iconButton == null) || imagePath != null)
+                        SizedBox(height: Margins.spacing_s),
+                      CardTitle(title),
+                    ],
+                    if (subtitle != null && subtitle!.isNotEmpty) ...[
+                      SizedBox(height: Margins.spacing_s),
+                      CardSubtitle(subtitle!),
+                    ],
+                    if (body != null && body!.isNotEmpty) ...[
+                      SizedBox(height: Margins.spacing_s),
+                      CardBodyText(body!),
+                    ],
+                    if (complements != null && complements!.isNotEmpty) ...[
+                      SizedBox(height: Margins.spacing_base),
+                      Wrap(spacing: Margins.spacing_base, runSpacing: Margins.spacing_s, children: complements!),
+                    ],
+                    if (additionalChild != null) ...[
+                      SizedBox(height: Margins.spacing_base),
+                      additionalChild!,
+                    ],
+                    if (actions != null && actions!.isNotEmpty) ...[
+                      SizedBox(height: Margins.spacing_base),
+                      Wrap(
+                        children: actions!,
+                      ),
+                    ],
+                    if (secondaryTags != null && secondaryTags!.isNotEmpty) ...[
+                      SizedBox(height: Margins.spacing_base),
+                      Wrap(
+                        spacing: Margins.spacing_s,
+                        runSpacing: Margins.spacing_s,
+                        children: secondaryTags!,
+                      ),
+                    ],
+                    if (onTap != null && pressedTip != null) ...[
+                      SizedBox(height: Margins.spacing_base),
+                      pressedTip!,
+                    ],
                   ],
-                  if (!isSimpleCard && iconButton == null)
-                    Wrap(
-                      spacing: Margins.spacing_s,
-                      runSpacing: Margins.spacing_s,
-                      children: [
-                        if (tag != null) tag!,
-                        if (pillule != null) pillule!,
-                      ],
-                    ),
-                  if (!isSimpleCard && iconButton != null) ...[
-                    if (tag != null) tag!,
-                    SizedBox(height: Margins.spacing_s),
-                  ],
-                  if (leading != null) ...[
-                    leading!,
-                    SizedBox(height: Margins.spacing_base),
-                  ],
-                  if (title.isNotEmpty) ...[
-                    if ((!isSimpleCard && iconButton == null) || imagePath != null) SizedBox(height: Margins.spacing_s),
-                    CardTitle(title),
-                  ],
-                  if (subtitle != null && subtitle!.isNotEmpty) ...[
-                    SizedBox(height: Margins.spacing_s),
-                    CardSubtitle(subtitle!),
-                  ],
-                  if (body != null && body!.isNotEmpty) ...[
-                    SizedBox(height: Margins.spacing_s),
-                    CardBodyText(body!),
-                  ],
-                  if (complements != null && complements!.isNotEmpty) ...[
-                    SizedBox(height: Margins.spacing_base),
-                    Wrap(spacing: Margins.spacing_base, runSpacing: Margins.spacing_s, children: complements!),
-                  ],
-                  if (additionalChild != null) ...[
-                    SizedBox(height: Margins.spacing_base),
-                    additionalChild!,
-                  ],
-                  if (actions != null && actions!.isNotEmpty) ...[
-                    SizedBox(height: Margins.spacing_base),
-                    Wrap(
-                      children: actions!,
-                    ),
-                  ],
-                  if (secondaryTags != null && secondaryTags!.isNotEmpty) ...[
-                    SizedBox(height: Margins.spacing_base),
-                    Wrap(
-                      spacing: Margins.spacing_s,
-                      runSpacing: Margins.spacing_s,
-                      children: secondaryTags!,
-                    ),
-                  ],
-                  if (onTap != null && pressedTip != null) ...[
-                    SizedBox(height: Margins.spacing_base),
-                    pressedTip!,
-                  ],
-                ],
+                ),
               ),
-            ),
+              SizedBox(width: Margins.spacing_xs),
+              if (iconButton != null)
+                SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: OverflowBox(
+                    maxWidth: double.infinity,
+                    maxHeight: double.infinity,
+                    child: iconButton!,
+                  ),
+                ),
+            ],
           ),
-          if (iconButton != null)
-            Positioned(
-              top: 0,
-              right: 0,
-              child: iconButton!,
-            ),
-        ],
+        ),
       ),
     );
   }
