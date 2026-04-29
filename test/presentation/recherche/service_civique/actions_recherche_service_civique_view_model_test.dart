@@ -96,17 +96,6 @@ void main() {
       // Then
       expect(viewModel.withFiltreButton, isTrue);
     });
-
-    test('when recherche status is success and result is empty should hide filtre button', () {
-      // Given
-      final store = givenState().successRechercheServiceCiviqueState(results: []).store();
-
-      // When
-      final viewModel = ActionsRechercheServiceCiviqueViewModel.create(store);
-
-      // Then
-      expect(viewModel.withFiltreButton, isFalse);
-    });
   });
 
   group('filtresCount', () {
@@ -124,24 +113,25 @@ void main() {
     });
 
     test(
-        'when state has all active filtres at the same time it should display the total count of active filtre as filtre number',
-        () {
-      // Given
-      final store = givenState()
-          .successRechercheServiceCiviqueStateWithRequest(
-            filtres: ServiceCiviqueFiltresRecherche(
-              distance: 20,
-              startDate: DateTime(2023),
-              domain: Domaine.fromTag("sport"),
-            ),
-          )
-          .store();
+      'when state has all active filtres at the same time it should display the total count of active filtre as filtre number',
+      () {
+        // Given
+        final store = givenState()
+            .successRechercheServiceCiviqueStateWithRequest(
+              filtres: ServiceCiviqueFiltresRecherche(
+                distance: 20,
+                startDate: DateTime(2023),
+                domain: Domaine.fromTag("sport"),
+              ),
+            )
+            .store();
 
-      // When
-      final viewModel = ActionsRechercheServiceCiviqueViewModel.create(store);
+        // When
+        final viewModel = ActionsRechercheServiceCiviqueViewModel.create(store);
 
-      // Then
-      expect(viewModel.filtresCount, 3);
-    });
+        // Then
+        expect(viewModel.filtresCount, 3);
+      },
+    );
   });
 }

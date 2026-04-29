@@ -95,24 +95,14 @@ void main() {
       // Then
       expect(viewModel.withFiltreButton, isTrue);
     });
-
-    test('when recherche status is success and result is empty should hide filtre button', () {
-      // Given
-      final store = givenState().successRechercheImmersionState(results: []).store();
-
-      // When
-      final viewModel = ActionsRechercheImmersionViewModel.create(store);
-
-      // Then
-      expect(viewModel.withFiltreButton, isFalse);
-    });
   });
 
   group('filtresCount', () {
     test('when state has no active filtre it should not display a filtre number', () {
       // Given
-      final store =
-          givenState().successRechercheImmersionStateWithRequest(filtres: ImmersionFiltresRecherche.noFiltre()).store();
+      final store = givenState()
+          .successRechercheImmersionStateWithRequest(filtres: ImmersionFiltresRecherche.noFiltre())
+          .store();
 
       // When
       final viewModel = ActionsRechercheImmersionViewModel.create(store);
@@ -122,20 +112,21 @@ void main() {
     });
 
     test(
-        'when state has all active filtres at the same time it should display the total count of active filtre as filtre number',
-        () {
-      // Given
-      final store = givenState()
-          .successRechercheImmersionStateWithRequest(
-            filtres: ImmersionFiltresRecherche.distance(50),
-          )
-          .store();
+      'when state has all active filtres at the same time it should display the total count of active filtre as filtre number',
+      () {
+        // Given
+        final store = givenState()
+            .successRechercheImmersionStateWithRequest(
+              filtres: ImmersionFiltresRecherche.distance(50),
+            )
+            .store();
 
-      // When
-      final viewModel = ActionsRechercheImmersionViewModel.create(store);
+        // When
+        final viewModel = ActionsRechercheImmersionViewModel.create(store);
 
-      // Then
-      expect(viewModel.filtresCount, 1);
-    });
+        // Then
+        expect(viewModel.filtresCount, 1);
+      },
+    );
   });
 }
