@@ -32,9 +32,6 @@ class ActionsRechercheImmersionViewModel extends ActionsRechercheViewModel {
 }
 
 bool _withFiltreButton(RechercheState state) {
-  if (state.results?.isEmpty == true) {
-    return false;
-  }
   return [RechercheStatus.success, RechercheStatus.updateLoading].contains(state.status);
 }
 

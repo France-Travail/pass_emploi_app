@@ -2,6 +2,21 @@ import 'package:equatable/equatable.dart';
 import 'package:pass_emploi_app/models/immersion.dart';
 import 'package:pass_emploi_app/models/immersion_contact.dart';
 
+enum ImmersionModeDistanciel {
+  FULL_REMOTE,
+  HYBRID,
+  ON_SITE,
+}
+
+ImmersionModeDistanciel? parseImmersionModeDistanciel(String? value) {
+  return switch (value) {
+    'FULL_REMOTE' => ImmersionModeDistanciel.FULL_REMOTE,
+    'HYBRID' => ImmersionModeDistanciel.HYBRID,
+    'ON_SITE' => ImmersionModeDistanciel.ON_SITE,
+    _ => null,
+  };
+}
+
 class ImmersionDetails extends Equatable {
   final String id;
   final String siret;
@@ -17,6 +32,7 @@ class ImmersionDetails extends Equatable {
   final String codeRome;
   final bool fitForDisabledWorkers;
   final ImmersionContactMode contactMode;
+  final ImmersionModeDistanciel? modeDistanciel;
 
   ImmersionDetails({
     required this.id,
@@ -33,6 +49,7 @@ class ImmersionDetails extends Equatable {
     this.codeRome = '',
     required this.fitForDisabledWorkers,
     required this.contactMode,
+    this.modeDistanciel,
   });
 
   factory ImmersionDetails.fromJson(dynamic json) {
@@ -54,6 +71,7 @@ class ImmersionDetails extends Equatable {
       codeRome: json['codeRome'] as String? ?? '',
       fitForDisabledWorkers: json['fitForDisabledWorkers'] as bool? ?? false,
       contactMode: parseImmersionContactMode(json['contact'] as String?),
+      modeDistanciel: parseImmersionModeDistanciel(json['modeDistanciel'] as String?),
     );
   }
 
@@ -73,6 +91,7 @@ class ImmersionDetails extends Equatable {
     codeRome,
     fitForDisabledWorkers,
     contactMode,
+    modeDistanciel,
   ];
 }
 

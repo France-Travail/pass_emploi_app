@@ -1010,6 +1010,9 @@ class Strings {
   // Immersion
   static String lentreprise = 'L\'entreprise';
   static String disabledWorkersWelcome = 'Personnes en situation de handicap bienvenues';
+  static String modeDistancielFullRemote = 'Télétravail';
+  static String modeDistancielHybrid = 'Présentiel et à distance';
+  static String modeDistancielOnSite = 'Présentiel';
   static String immersionExpansionTileTitle = "En savoir plus sur l’immersion";
   static String immersionAccueillanteExplanation =
       "Cette entreprise recherche activement des candidats à l’immersion. Contactez-la en expliquant votre projet professionnel et vos motivations.";

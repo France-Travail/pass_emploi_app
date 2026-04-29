@@ -27,6 +27,7 @@ class ImmersionDetailsViewModel extends Equatable {
   final String? contactInformation;
   final bool? withSecondaryCallToActions;
   final ImmersionContactMode contactMode;
+  final ImmersionModeDistanciel? modeDistanciel;
   final List<CallToAction>? secondaryCallToActions;
   final Function(String immersionId) onRetry;
   final bool isNotFound;
@@ -46,6 +47,7 @@ class ImmersionDetailsViewModel extends Equatable {
     this.contactInformation,
     this.withSecondaryCallToActions,
     required this.contactMode,
+    this.modeDistanciel,
     this.secondaryCallToActions,
     required this.onRetry,
     this.isNotFound = false,
@@ -84,6 +86,7 @@ class ImmersionDetailsViewModel extends Equatable {
     website,
     contactInformation,
     contactMode,
+    modeDistanciel,
     secondaryCallToActions,
     isNotFound,
   ];
@@ -124,6 +127,7 @@ ImmersionDetailsViewModel _successViewModel(
     secondaryCallToActions: secondaryCallToActions,
     onRetry: (immersionId) => _retry(store, immersionId),
     contactMode: immersionDetails.contactMode,
+    modeDistanciel: immersionDetails.modeDistanciel,
   );
 }
 

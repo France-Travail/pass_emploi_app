@@ -118,7 +118,11 @@ class ImmersionDetailsPage extends StatelessWidget {
                 SizedBox(height: Margins.spacing_s),
                 Text(viewModel.companyName, style: TextStyles.textBaseRegular),
                 SizedBox(height: Margins.spacing_s),
-                ImmersionTags(secteurActivite: viewModel.secteurActivite, ville: viewModel.ville),
+                ImmersionTags(
+                  secteurActivite: viewModel.secteurActivite,
+                  ville: viewModel.ville,
+                  modeDistanciel: viewModel.modeDistanciel,
+                ),
                 if (viewModel.dateDerniereConsultation != null) ...[
                   SizedBox(height: Margins.spacing_m),
                   CardComplement.dateDerniereConsultation(viewModel.dateDerniereConsultation!),
