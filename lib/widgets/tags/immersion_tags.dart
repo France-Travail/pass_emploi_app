@@ -14,8 +14,8 @@ class ImmersionTags extends StatelessWidget {
       spacing: Margins.spacing_s,
       runSpacing: Margins.spacing_s,
       children: [
-        DataTag(label: secteurActivite),
         DataTag.location(ville),
+        DataTag(label: secteurActivite),
       ],
     );
   }
