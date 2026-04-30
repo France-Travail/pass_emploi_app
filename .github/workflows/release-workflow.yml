@@ -145,7 +145,7 @@ jobs:
           whatsNewDirectory: release-notes/brsa
 
   build-ios-prod:
-    runs-on: macos-14
+    runs-on: macos-26
     needs: pre-build
     steps:
       - uses: actions/checkout@v4
