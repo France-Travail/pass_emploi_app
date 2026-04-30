@@ -4,7 +4,7 @@ import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/create_demarche_success_page.dart';
 import 'package:pass_emploi_app/presentation/user_action/postuler_confirmation_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
+import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -13,7 +13,6 @@ import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/create_user_action_confirmation_offre_suivi_page.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
-import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
 
 class PostulerConfirmationPage extends StatelessWidget {
   const PostulerConfirmationPage({required this.offreId});
@@ -40,7 +39,7 @@ class PostulerConfirmationPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   SizedBox(height: Margins.spacing_xl),
-                  Center(child: SizedBox(height: 130, width: 130, child: Illustration.green(AppIcons.check_rounded))),
+                  Center(child: SizedBox(height: 130, width: 130, child: Image.asset(Drawables.success))),
                   SizedBox(height: Margins.spacing_xl),
                   Text(
                     Strings.offreSuivieConfirmationPageTitle,

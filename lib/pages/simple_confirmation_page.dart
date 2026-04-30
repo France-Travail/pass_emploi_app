@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
+import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
-import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
 
 class SimpleConfirmationPage extends StatelessWidget {
   const SimpleConfirmationPage._(this.title);
@@ -32,13 +31,7 @@ class SimpleConfirmationPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               SizedBox(height: Margins.spacing_xl),
-              Center(
-                child: SizedBox(
-                  height: 130,
-                  width: 130,
-                  child: Illustration.green(AppIcons.check_rounded),
-                ),
-              ),
+              Center(child: SizedBox(height: 130, width: 130, child: Image.asset(Drawables.success))),
               SizedBox(height: Margins.spacing_xl),
               Text(
                 Strings.offreSuivieConfirmationPageTitle,

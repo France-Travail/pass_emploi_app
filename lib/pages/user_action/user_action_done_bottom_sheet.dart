@@ -7,14 +7,13 @@ import 'package:pass_emploi_app/presentation/user_action/user_action_done_bottom
 import 'package:pass_emploi_app/presentation/user_action/user_action_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
+import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/date_pickers/date_picker_suggestions.dart';
-import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 
 class UserActionDoneBottomSheet extends StatelessWidget {
@@ -33,18 +32,19 @@ class UserActionDoneBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, UserActionDoneBottomSheetViewModel>(
-        converter: (store) => UserActionDoneBottomSheetViewModel.create(store, source, actionId),
-        onDispose: (store) => store.dispatch(UserActionUpdateResetAction()),
-        onInit: (store) => store.dispatch(UserActionUpdateResetAction()),
-        builder: (context, viewModel) {
-          return BottomSheetWrapper(
-            title: viewModel.displayState == DisplayState.EMPTY ? Strings.userActionDoneBottomSheetTitle : "",
-            maxHeightFactor: 0.6,
-            body: SingleChildScrollView(
-              child: _Body(viewModel),
-            ),
-          );
-        });
+      converter: (store) => UserActionDoneBottomSheetViewModel.create(store, source, actionId),
+      onDispose: (store) => store.dispatch(UserActionUpdateResetAction()),
+      onInit: (store) => store.dispatch(UserActionUpdateResetAction()),
+      builder: (context, viewModel) {
+        return BottomSheetWrapper(
+          title: viewModel.displayState == DisplayState.EMPTY ? Strings.userActionDoneBottomSheetTitle : "",
+          maxHeightFactor: 0.6,
+          body: SingleChildScrollView(
+            child: _Body(viewModel),
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -60,17 +60,17 @@ class _Body extends StatelessWidget {
         DisplayState.CONTENT => _Success(),
         DisplayState.FAILURE => _Error(),
         DisplayState.LOADING || DisplayState.EMPTY => Stack(
-            children: [
-              Opacity(
-                opacity: viewModel.displayState == DisplayState.LOADING ? 0.5 : 1,
-                child: IgnorePointer(
-                  ignoring: viewModel.displayState == DisplayState.LOADING,
-                  child: _Form(viewModel),
-                ),
+          children: [
+            Opacity(
+              opacity: viewModel.displayState == DisplayState.LOADING ? 0.5 : 1,
+              child: IgnorePointer(
+                ignoring: viewModel.displayState == DisplayState.LOADING,
+                child: _Form(viewModel),
               ),
-              if (viewModel.displayState == DisplayState.LOADING) const Center(child: CircularProgressIndicator()),
-            ],
-          ),
+            ),
+            if (viewModel.displayState == DisplayState.LOADING) const Center(child: CircularProgressIndicator()),
+          ],
+        ),
       },
     );
   }
@@ -122,13 +122,7 @@ class _Success extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SizedBox(height: Margins.spacing_xl),
-        Center(
-          child: SizedBox(
-            height: 130,
-            width: 130,
-            child: Illustration.green(AppIcons.check_rounded),
-          ),
-        ),
+        Center(child: SizedBox(height: 130, width: 130, child: Image.asset(Drawables.success))),
         SizedBox(height: Margins.spacing_xl),
         Text(
           Strings.felicitations,

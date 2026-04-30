@@ -6,7 +6,7 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/profil/suppression_compte_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
+import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/font_sizes.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -15,7 +15,6 @@ import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/dialogs/delete_user_dialog.dart';
-import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
 
 class SuppressionComptePage extends StatelessWidget {
@@ -144,7 +143,7 @@ class _DeleteAccountSuccessDialog extends StatelessWidget {
       backgroundColor: Colors.white,
       title: Column(
         children: [
-          SizedBox.square(dimension: 100, child: Illustration.green(AppIcons.check_rounded)),
+          Center(child: SizedBox(height: 100, width: 100, child: Image.asset(Drawables.success))),
           SizedBox(height: Margins.spacing_m),
           Text(Strings.accountDeletionSuccess, style: TextStyles.textBaseBold, textAlign: TextAlign.center),
           SizedBox(height: Margins.spacing_m),

@@ -34,14 +34,6 @@ class Illustration extends StatelessWidget {
     );
   }
 
-  factory Illustration.green(IconData icon) {
-    return Illustration(
-      primaryColor: AppColors.successDarken,
-      secondaryColor: AppColors.successLighten,
-      icon: icon,
-    );
-  }
-
   factory Illustration.orange(IconData icon) {
     return Illustration(
       primaryColor: AppColors.alert,
@@ -81,28 +73,30 @@ class _Assemblage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      return SizedBox.square(
-        dimension: constraints.maxWidth,
-        child: OverflowBox(
-          maxWidth: _illustrationFigmaSize,
-          maxHeight: _illustrationFigmaSize,
-          child: Transform.scale(
-            scale: constraints.maxWidth / _illustrationFigmaSize,
-            child: SizedBox.square(
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  _Fond(color: secondaryColor),
-                  _Rond(color: primaryColor),
-                  _Icone(icon: icon),
-                ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SizedBox.square(
+          dimension: constraints.maxWidth,
+          child: OverflowBox(
+            maxWidth: _illustrationFigmaSize,
+            maxHeight: _illustrationFigmaSize,
+            child: Transform.scale(
+              scale: constraints.maxWidth / _illustrationFigmaSize,
+              child: SizedBox.square(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    _Fond(color: secondaryColor),
+                    _Rond(color: primaryColor),
+                    _Icone(icon: icon),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }
 

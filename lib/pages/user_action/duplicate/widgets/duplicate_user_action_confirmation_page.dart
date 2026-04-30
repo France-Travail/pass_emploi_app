@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/pages/user_action/create/create_user_action_form_page.dart';
 import 'package:pass_emploi_app/presentation/user_action/user_action_state_source.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
+import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
-import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
 
 class DuplicateUserActionConfirmationPage extends StatelessWidget {
   final String userActionId;
@@ -55,13 +54,7 @@ class _Body extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(height: Margins.spacing_xl),
-            Center(
-              child: SizedBox(
-                height: 130,
-                width: 130,
-                child: Illustration.green(AppIcons.check_rounded),
-              ),
-            ),
+            Center(child: SizedBox(height: 130, width: 130, child: Image.asset(Drawables.success))),
             SizedBox(height: Margins.spacing_xl),
             Text(
               Strings.duplicateUserActionConfirmationTitle,
