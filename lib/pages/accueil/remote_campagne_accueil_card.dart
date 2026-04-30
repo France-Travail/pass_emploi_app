@@ -35,7 +35,7 @@ class RemoteCampagneAccueilCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           item.title,
-                          style: TextStyles.textMBold.copyWith(color: AppColors.contentColor),
+                          style: TextStyles.textBaseBold.copyWith(color: AppColors.contentColor),
                         ),
                       ),
                       SizedBox(width: Margins.spacing_m),
@@ -45,7 +45,7 @@ class RemoteCampagneAccueilCard extends StatelessWidget {
                   PressedTip.externalLink(
                     item.cta,
                     textColor: AppColors.contentColor,
-                  )
+                  ),
                 ],
               ),
             ),

@@ -57,14 +57,14 @@ class _Body extends StatelessWidget {
                       children: [
                         Text(
                           Strings.ratingAppLabel,
-                          style: TextStyles.textMBold.copyWith(color: AppColors.contentColor),
+                          style: TextStyles.textBaseBold.copyWith(color: AppColors.contentColor),
                         ),
                         SizedBox(height: Margins.spacing_base),
                         PressedTip(
                           Strings.ratingButton,
                           textColor: AppColors.contentColor,
                           icon: AppIcons.chevron_right_rounded,
-                        )
+                        ),
                       ],
                     ),
                   ),
