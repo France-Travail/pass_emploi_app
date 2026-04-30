@@ -9,7 +9,7 @@
   "adresse": "Service des ressources humaines, 90 AVENUE BARTHELEMY BUYER, 69009 LYON-09",
   "website": "",
   "estVolontaire": false,
-  "fitForDisabledWorkers": false,
+  "accessibleTravailleurHandicape": "no",
   "contactMode": "INCONNU",
   "localisation": {
     "latitude": 45.76179,

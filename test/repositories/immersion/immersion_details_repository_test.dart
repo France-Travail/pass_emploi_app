@@ -54,7 +54,7 @@ void main() {
               address: "Service des ressources humaines, 40 RUE DU DEPUTE HALLEZ, 67500 HAGUENAU",
               informationComplementaire: "Information complémentaire",
               website: "",
-              fitForDisabledWorkers: false,
+              accessibleTravailleurHandicape: AccessibleTravailleurHandicape.no,
               contactMode: ImmersionContactMode.INCONNU,
             ),
           );
@@ -91,7 +91,7 @@ void main() {
               address: "4 RUE DES FRERES LUMIERE 67170 BRUMATH",
               informationComplementaire: "Information complémentaire",
               website: "https://gsf-saturne.example.com",
-              fitForDisabledWorkers: true,
+              accessibleTravailleurHandicape: AccessibleTravailleurHandicape.yesFtCertified,
               contactMode: ImmersionContactMode.MAIL,
             ),
           );

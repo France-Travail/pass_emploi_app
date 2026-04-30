@@ -310,7 +310,7 @@ List<Location> mockLocations() {
   ];
 }
 
-Immersion mockImmersion({String id = "", bool fitForDisabledWorkers = false}) {
+Immersion mockImmersion({String id = "", AccessibleTravailleurHandicape? accessibleTravailleurHandicape}) {
   return Immersion(
     id: id,
     siret: "",
@@ -320,7 +320,7 @@ Immersion mockImmersion({String id = "", bool fitForDisabledWorkers = false}) {
     nomEtablissement: "",
     secteurActivite: "",
     ville: "",
-    fitForDisabledWorkers: fitForDisabledWorkers,
+    accessibleTravailleurHandicape: accessibleTravailleurHandicape,
   );
 }
 
@@ -340,7 +340,6 @@ ImmersionDetails mockImmersionDetails() {
     informationComplementaire: 'informationComplementaire',
     website: '',
     codeRome: 'codeRome',
-    fitForDisabledWorkers: false,
     contactMode: ImmersionContactMode.INCONNU,
   );
 }
