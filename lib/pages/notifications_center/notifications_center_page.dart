@@ -94,9 +94,11 @@ class _Body extends StatelessWidget {
 class _Empty extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return EmptyStatePlaceholder(
-      illustration: Illustration.grey(AppIcons.notifications_outlined),
-      title: Strings.notificationsCenterEmptyTitle,
+    return Center(
+      child: EmptyStatePlaceholder(
+        illustration: Illustration.grey(AppIcons.notifications_outlined),
+        title: Strings.notificationsCenterEmptyTitle,
+      ),
     );
   }
 }
