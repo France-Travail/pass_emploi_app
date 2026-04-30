@@ -9,7 +9,7 @@
   "adresse": "4 RUE DES FRERES LUMIERE 67170 BRUMATH",
   "siteWeb": "https://gsf-saturne.example.com",
   "estVolontaire": true,
-  "fitForDisabledWorkers": true,
+  "accessibleTravailleurHandicape": "yes-ft-certified",
   "informationsComplementaires": "Information complémentaire",
   "contact": "EMAIL"
 }

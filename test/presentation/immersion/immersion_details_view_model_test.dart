@@ -97,7 +97,7 @@ void main() {
   group('fit for disabled workers', () {
     test('when fit for disabled workers should return true', () {
       // Given
-      final store = _successStore(_mockImmersion(fitForDisabledWorkers: true));
+      final store = _successStore(_mockImmersion(accessibleTravailleurHandicape: AccessibleTravailleurHandicape.yesFtCertified));
 
       // When
       final viewModel = ImmersionDetailsViewModel.create(store, Platform.ANDROID);
@@ -108,7 +108,7 @@ void main() {
 
     test('when entreprise is not accueillante should return false', () {
       // Given
-      final store = _successStore(_mockImmersion(fitForDisabledWorkers: false));
+      final store = _successStore(_mockImmersion(accessibleTravailleurHandicape: AccessibleTravailleurHandicape.no));
 
       // When
       final viewModel = ImmersionDetailsViewModel.create(store, Platform.ANDROID);
@@ -167,7 +167,7 @@ Store<AppState> _store(ImmersionDetailsState immersionDetailsState) {
 Store<AppState> _successStore(ImmersionDetails immersion) => _store(ImmersionDetailsSuccessState(immersion));
 
 ImmersionDetails _mockImmersion({
-  bool fitForDisabledWorkers = false,
+  AccessibleTravailleurHandicape? accessibleTravailleurHandicape,
   ImmersionContactMode mode = ImmersionContactMode.INCONNU,
 }) {
   return ImmersionDetails(
@@ -182,7 +182,7 @@ ImmersionDetails _mockImmersion({
     address: 'Adresse',
     informationComplementaire: 'Information complémentaire',
     website: '',
-    fitForDisabledWorkers: fitForDisabledWorkers,
+    accessibleTravailleurHandicape: accessibleTravailleurHandicape,
     contactMode: mode,
   );
 }
@@ -200,7 +200,6 @@ ImmersionDetails _mockImmersionWithContact({String? address, ImmersionContactMod
     address: address ?? '',
     informationComplementaire: 'Information complémentaire',
     website: '',
-    fitForDisabledWorkers: false,
     contactMode: contactMode ?? ImmersionContactMode.INCONNU,
   );
 }

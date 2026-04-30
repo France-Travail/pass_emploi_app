@@ -2,6 +2,21 @@ import 'package:equatable/equatable.dart';
 
 const String _idSeparator = '~';
 
+enum AccessibleTravailleurHandicape {
+  yesFtCertified,
+  yesDeclaredOnly,
+  no,
+}
+
+AccessibleTravailleurHandicape? parseAccessibleTravailleurHandicape(String? value) {
+  return switch (value) {
+    'yes-ft-certified' => AccessibleTravailleurHandicape.yesFtCertified,
+    'yes-declared-only' => AccessibleTravailleurHandicape.yesDeclaredOnly,
+    'no' => AccessibleTravailleurHandicape.no,
+    _ => null,
+  };
+}
+
 class Immersion extends Equatable {
   final String id;
   final String siret;
@@ -11,7 +26,11 @@ class Immersion extends Equatable {
   final String nomEtablissement;
   final String secteurActivite;
   final String ville;
-  final bool fitForDisabledWorkers;
+  final AccessibleTravailleurHandicape? accessibleTravailleurHandicape;
+
+  bool get fitForDisabledWorkers =>
+      accessibleTravailleurHandicape == AccessibleTravailleurHandicape.yesFtCertified ||
+      accessibleTravailleurHandicape == AccessibleTravailleurHandicape.yesDeclaredOnly;
 
   Immersion({
     required this.id,
@@ -22,7 +41,7 @@ class Immersion extends Equatable {
     required this.nomEtablissement,
     required this.secteurActivite,
     required this.ville,
-    this.fitForDisabledWorkers = false,
+    this.accessibleTravailleurHandicape,
   });
 
   static String buildSyntheticId({
@@ -52,7 +71,7 @@ class Immersion extends Equatable {
       nomEtablissement: json['nomEtablissement'] as String,
       secteurActivite: json['secteurActivite'] as String,
       ville: json['ville'] as String,
-      fitForDisabledWorkers: json['fitForDisabledWorkers'] as bool? ?? false,
+      accessibleTravailleurHandicape: parseAccessibleTravailleurHandicape(json['accessibleTravailleurHandicape'] as String?),
     );
   }
 
@@ -66,7 +85,7 @@ class Immersion extends Equatable {
       "nomEtablissement": nomEtablissement,
       "secteurActivite": secteurActivite,
       "ville": ville,
-      "fitForDisabledWorkers": fitForDisabledWorkers,
+      "accessibleTravailleurHandicape": accessibleTravailleurHandicape?.name,
     };
   }
 
@@ -80,6 +99,6 @@ class Immersion extends Equatable {
     nomEtablissement,
     secteurActivite,
     ville,
-    fitForDisabledWorkers,
+    accessibleTravailleurHandicape,
   ];
 }

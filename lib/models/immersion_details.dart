@@ -30,7 +30,11 @@ class ImmersionDetails extends Equatable {
   final String? informationComplementaire;
   final String? website;
   final String codeRome;
-  final bool fitForDisabledWorkers;
+  final AccessibleTravailleurHandicape? accessibleTravailleurHandicape;
+
+  bool get fitForDisabledWorkers =>
+      accessibleTravailleurHandicape == AccessibleTravailleurHandicape.yesFtCertified ||
+      accessibleTravailleurHandicape == AccessibleTravailleurHandicape.yesDeclaredOnly;
   final ImmersionContactMode contactMode;
   final ImmersionModeDistanciel? modeDistanciel;
 
@@ -47,7 +51,7 @@ class ImmersionDetails extends Equatable {
     this.informationComplementaire,
     this.website,
     this.codeRome = '',
-    required this.fitForDisabledWorkers,
+    this.accessibleTravailleurHandicape,
     required this.contactMode,
     this.modeDistanciel,
   });
@@ -69,7 +73,7 @@ class ImmersionDetails extends Equatable {
       informationComplementaire: json['informationsComplementaires'] as String? ?? '',
       website: json['siteWeb'] as String? ?? '',
       codeRome: json['codeRome'] as String? ?? '',
-      fitForDisabledWorkers: json['fitForDisabledWorkers'] as bool? ?? false,
+      accessibleTravailleurHandicape: parseAccessibleTravailleurHandicape(json['accessibleTravailleurHandicape'] as String?),
       contactMode: parseImmersionContactMode(json['contact'] as String?),
       modeDistanciel: parseImmersionModeDistanciel(json['modeDistanciel'] as String?),
     );
@@ -89,7 +93,7 @@ class ImmersionDetails extends Equatable {
     informationComplementaire,
     website,
     codeRome,
-    fitForDisabledWorkers,
+    accessibleTravailleurHandicape,
     contactMode,
     modeDistanciel,
   ];
@@ -105,6 +109,6 @@ extension ImmersionDetailsExt on ImmersionDetails {
     nomEtablissement: companyName,
     secteurActivite: secteurActivite,
     ville: ville,
-    fitForDisabledWorkers: fitForDisabledWorkers,
+    accessibleTravailleurHandicape: accessibleTravailleurHandicape,
   );
 }

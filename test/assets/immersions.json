@@ -9,7 +9,7 @@
       "secteurActivite": "xxxx",
       "ville": "xxxx",
       "estVolontaire": true,
-      "fitForDisabledWorkers": true
+      "accessibleTravailleurHandicape": "yes-ft-certified"
     },
     {
       "siret": "12345678900002",
@@ -19,7 +19,7 @@
       "nomEtablissement": "EHPAD SAINT FRANCOIS",
       "secteurActivite": "xxxx",
       "ville": "xxxx",
-      "fitForDisabledWorkers": false
+      "accessibleTravailleurHandicape": "no"
     },
     {
       "siret": "12345678900003",

@@ -48,7 +48,7 @@ void main() {
                 nomEtablissement: "ACCUEIL DE JOUR POUR PERSONNES AGEES",
                 secteurActivite: "xxxx",
                 ville: "xxxx",
-                fitForDisabledWorkers: true,
+                accessibleTravailleurHandicape: AccessibleTravailleurHandicape.yesFtCertified,
               ),
             );
           });

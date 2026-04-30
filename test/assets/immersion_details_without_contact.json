@@ -10,6 +10,6 @@
   "website": "",
   "informationsComplementaires": "Information complémentaire",
   "estVolontaire": false,
-  "fitForDisabledWorkers": false,
+  "accessibleTravailleurHandicape": "no",
   "contactMode": "INCONNU"
 }
