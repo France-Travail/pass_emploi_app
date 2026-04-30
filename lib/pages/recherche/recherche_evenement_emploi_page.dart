@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/features/recherche/recherche_state.dart';
 import 'package:pass_emploi_app/models/evenement_emploi/evenement_emploi.dart';
 import 'package:pass_emploi_app/pages/evenement_emploi/evenement_emploi_filtres_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_page.dart';
+import 'package:pass_emploi_app/widgets/recherche/recherche_criteres_full_screen.dart';
 import 'package:pass_emploi_app/presentation/evenement_emploi/evenement_emploi_item_view_model.dart';
 import 'package:pass_emploi_app/presentation/recherche/actions_recherche_view_model.dart';
 import 'package:pass_emploi_app/presentation/recherche/bloc_resultat_recherche_view_model.dart';
@@ -41,6 +42,9 @@ class RechercheEvenementEmploiPage extends RechercheOffrePage<EvenementEmploi> {
 
   @override
   RechercheState rechercheState(AppState appState) => appState.rechercheEvenementEmploiState;
+
+  @override
+  RechercheType rechercheType() => RechercheType.evenementEmploi;
 
   @override
   FavoriIdsState<EvenementEmploi> favorisState(AppState appState) => FavoriIdsState<EvenementEmploi>.notInitialized();

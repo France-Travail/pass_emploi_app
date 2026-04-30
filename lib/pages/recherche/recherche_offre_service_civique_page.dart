@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/models/service_civique.dart';
 import 'package:pass_emploi_app/models/service_civique/domain.dart';
 import 'package:pass_emploi_app/pages/offre_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_page.dart';
+import 'package:pass_emploi_app/widgets/recherche/recherche_criteres_full_screen.dart';
 import 'package:pass_emploi_app/pages/service_civique/service_civique_detail_page.dart';
 import 'package:pass_emploi_app/pages/service_civique/service_civique_filtres_page.dart';
 import 'package:pass_emploi_app/presentation/recherche/actions_recherche_view_model.dart';
@@ -44,6 +45,9 @@ class RechercheOffreServiceCiviquePage extends RechercheOffrePage<ServiceCivique
 
   @override
   RechercheState rechercheState(AppState appState) => appState.rechercheServiceCiviqueState;
+
+  @override
+  RechercheType rechercheType() => RechercheType.serviceCivique;
 
   @override
   FavoriIdsState<ServiceCivique> favorisState(AppState appState) => appState.serviceCiviqueFavorisIdsState;

@@ -24,8 +24,7 @@ import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/recherche/actions_recherche.dart';
 import 'package:pass_emploi_app/widgets/recherche/bloc_resultat_recherche.dart';
 import 'package:pass_emploi_app/widgets/recherche/edit_criteres_button.dart';
-import 'package:pass_emploi_app/widgets/recherche/recherche_criteres_full_screen.dart';
-import 'package:pass_emploi_app/widgets/recherche/resultat_recherche_contenu.dart';
+import 'package:pass_emploi_app/widgets/recherche/recherche_criteres_full_screen.dart';import 'package:pass_emploi_app/widgets/recherche/resultat_recherche_contenu.dart';
 import 'package:redux/redux.dart';
 
 abstract class RechercheOffrePage<Result> extends StatefulWidget {
@@ -40,6 +39,8 @@ abstract class RechercheOffrePage<Result> extends StatefulWidget {
   String placeHolderSubtitle();
 
   RechercheState rechercheState(AppState appState);
+
+  RechercheType rechercheType();
 
   FavoriIdsState<Result> favorisState(AppState appState);
 
@@ -107,6 +108,7 @@ class _RechercheOffrePageState<Result> extends State<RechercheOffrePage<Result>>
                       key: const ValueKey("rechercheCriteresFullScreen"),
                       rechercheState: widget.rechercheState,
                       buildCriteresContentWidget: widget.buildCriteresContentWidget,
+                      rechercheType: widget.rechercheType(),
                     )
                   : Padding(
                       key: const ValueKey("rechercheResultats"),

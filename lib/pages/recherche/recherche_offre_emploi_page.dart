@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/pages/offre_emploi/offre_emploi_details_page.dar
 import 'package:pass_emploi_app/pages/offre_emploi/offre_emploi_filtres_page.dart';
 import 'package:pass_emploi_app/pages/offre_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_page.dart';
+import 'package:pass_emploi_app/widgets/recherche/recherche_criteres_full_screen.dart';
 import 'package:pass_emploi_app/presentation/offre_emploi/offre_emploi_item_view_model.dart';
 import 'package:pass_emploi_app/presentation/recherche/actions_recherche_view_model.dart';
 import 'package:pass_emploi_app/presentation/recherche/bloc_resultat_recherche_view_model.dart';
@@ -55,6 +56,9 @@ class RechercheOffreEmploiPage extends RechercheOffrePage<OffreEmploi> {
 
   @override
   RechercheState rechercheState(AppState appState) => appState.rechercheEmploiState;
+
+  @override
+  RechercheType rechercheType() => onlyAlternance ? RechercheType.alternance : RechercheType.emploi;
 
   @override
   FavoriIdsState<OffreEmploi> favorisState(AppState appState) => appState.offreEmploiFavorisIdsState;

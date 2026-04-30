@@ -4,16 +4,10 @@ import 'package:flutter/semantics.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:pass_emploi_app/features/alerte/get/alerte_get_action.dart';
-import 'package:pass_emploi_app/features/recherche/emploi/emploi_criteres_recherche.dart';
-import 'package:pass_emploi_app/features/recherche/emploi/emploi_filtres_recherche.dart';
 import 'package:pass_emploi_app/features/recherche/evenement_emploi/evenement_emploi_criteres_recherche.dart';
 import 'package:pass_emploi_app/features/recherche/evenement_emploi/evenement_emploi_filtres_recherche.dart';
-import 'package:pass_emploi_app/features/recherche/immersion/immersion_criteres_recherche.dart';
-import 'package:pass_emploi_app/features/recherche/immersion/immersion_filtres_recherche.dart';
 import 'package:pass_emploi_app/features/recherche/recherche_actions.dart';
 import 'package:pass_emploi_app/features/recherche/recherche_state.dart';
-import 'package:pass_emploi_app/features/recherche/service_civique/service_civique_criteres_recherche.dart';
-import 'package:pass_emploi_app/features/recherche/service_civique/service_civique_filtres_recherche.dart';
 import 'package:pass_emploi_app/models/alerte/alerte.dart';
 import 'package:pass_emploi_app/models/alerte/evenement_emploi_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/immersion_alerte.dart';
@@ -28,14 +22,18 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:redux/redux.dart';
 
+enum RechercheType { emploi, alternance, immersion, serviceCivique, evenementEmploi, unknown }
+
 class RechercheCriteresFullScreen<Result> extends StatefulWidget {
   final RechercheState Function(AppState) rechercheState;
   final Widget Function({required Function(int) onNumberOfCriteresChanged}) buildCriteresContentWidget;
+  final RechercheType rechercheType;
 
   const RechercheCriteresFullScreen({
     super.key,
     required this.rechercheState,
     required this.buildCriteresContentWidget,
+    required this.rechercheType,
   });
 
   @override
@@ -79,6 +77,7 @@ class _RechercheCriteresFullScreenState<Result> extends State<RechercheCriteresF
                     const SizedBox(height: Margins.spacing_base),
                     _RecentSearches<Result>(
                       rechercheState: widget.rechercheState,
+                      rechercheType: widget.rechercheType,
                     ),
                   ],
                 ),
@@ -114,14 +113,15 @@ class _RechercheCriteresFullScreenViewModel<Result> extends Equatable {
 
 class _RecentSearches<Result> extends StatelessWidget {
   final RechercheState Function(AppState) rechercheState;
+  final RechercheType rechercheType;
 
-  const _RecentSearches({required this.rechercheState});
+  const _RecentSearches({required this.rechercheState, required this.rechercheType});
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, _RecentSearchesViewModel>(
       distinct: true,
-      converter: (store) => _RecentSearchesViewModel.create(store, rechercheState),
+      converter: (store) => _RecentSearchesViewModel.create(store, rechercheState, rechercheType),
       builder: (context, viewModel) {
         if (viewModel.items.isEmpty) return const SizedBox.shrink();
         return Padding(
@@ -209,13 +209,11 @@ class _RecentSearchesViewModel extends Equatable {
   factory _RecentSearchesViewModel.create(
     Store<AppState> store,
     RechercheState Function(AppState) rechercheState,
+    RechercheType rechercheType,
   ) {
     final all = store.state.recherchesRecentesState.recentSearches;
-    final request = rechercheState(store.state).request;
-    if (request == null) return _RecentSearchesViewModel(items: const [], onTapRecentSearch: (_) {});
-    final type = _rechercheTypeFromRequest(request);
 
-    final filtered = all.where((a) => _matchesType(a, type)).take(5).toList();
+    final filtered = all.where((a) => _matchesType(a, rechercheType)).take(5).toList();
 
     return _RecentSearchesViewModel(
       items: [
@@ -247,37 +245,13 @@ class _RecentSearchesViewModel extends Equatable {
   List<Object?> get props => [items.map((e) => e.alerte).toList()];
 }
 
-enum _RechercheType { emploi, alternance, immersion, serviceCivique, evenementEmploi, unknown }
-
-_RechercheType _rechercheTypeFromRequest(RechercheRequest request) {
-  if (request is RechercheRequest<EmploiCriteresRecherche, EmploiFiltresRecherche>) {
-    return request.criteres.rechercheType.isOnlyAlternance() ? _RechercheType.alternance : _RechercheType.emploi;
-  }
-  if (request is RechercheRequest<ImmersionCriteresRecherche, ImmersionFiltresRecherche>) {
-    return _RechercheType.immersion;
-  }
-  if (request is RechercheRequest<ServiceCiviqueCriteresRecherche, ServiceCiviqueFiltresRecherche>) {
-    return _RechercheType.serviceCivique;
-  }
-  if (request is RechercheRequest<EvenementEmploiCriteresRecherche, EvenementEmploiFiltresRecherche>) {
-    return _RechercheType.evenementEmploi;
-  }
-  return _RechercheType.unknown;
-}
-
-bool _matchesType(Alerte alerte, _RechercheType type) {
-  switch (type) {
-    case _RechercheType.emploi:
-      return alerte is OffreEmploiAlerte && alerte.onlyAlternance == false;
-    case _RechercheType.alternance:
-      return alerte is OffreEmploiAlerte && alerte.onlyAlternance == true;
-    case _RechercheType.immersion:
-      return alerte is ImmersionAlerte;
-    case _RechercheType.serviceCivique:
-      return alerte is ServiceCiviqueAlerte;
-    case _RechercheType.evenementEmploi:
-      return alerte is EvenementEmploiAlerte;
-    case _RechercheType.unknown:
-      return false;
-  }
+bool _matchesType(Alerte alerte, RechercheType type) {
+  return switch (type) {
+    RechercheType.emploi => alerte is OffreEmploiAlerte && alerte.onlyAlternance == false,
+    RechercheType.alternance => alerte is OffreEmploiAlerte && alerte.onlyAlternance == true,
+    RechercheType.immersion => alerte is ImmersionAlerte,
+    RechercheType.serviceCivique => alerte is ServiceCiviqueAlerte,
+    RechercheType.evenementEmploi => alerte is EvenementEmploiAlerte,
+    RechercheType.unknown => false,
+  };
 }
