@@ -195,7 +195,7 @@ class _ExternalUrlAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       surfaceTintColor: Colors.white,
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.bg,
       title: Stack(
         children: [
           Column(

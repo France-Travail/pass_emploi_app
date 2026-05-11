@@ -43,7 +43,7 @@ class PassEmploiStepperTexts extends StatelessWidget {
         child: AutoFocusA11y(
           child: Text(
             Strings.stepCounter(currentStepIndex + 1, stepCount),
-            style: TextStyles.textSRegular(color: AppColors.contentColor),
+            style: TextStyles.textSRegular(color: AppColors.contentLight),
           ),
         ),
       ),

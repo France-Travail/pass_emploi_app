@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/features/events/list/event_list_actions.dart';
 import 'package:pass_emploi_app/presentation/auto_desinscription_view_model.dart';
 import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
@@ -41,7 +42,7 @@ class DesinscriptionPage extends StatelessWidget {
         store.dispatch(EventListRequestAction(DateTime.now(), forceRefresh: true));
       },
       builder: (context, viewModel) => Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.bg,
         appBar: SecondaryAppBar(
           title: switch (viewModel.displayState) {
             AutoDesinscriptionDisplayState.success => Strings.autoDesinscriptionSuccessAppBarTitle,

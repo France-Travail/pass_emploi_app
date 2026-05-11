@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/models/evenement_emploi/secteur_activite.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
@@ -34,7 +35,7 @@ class _SecteurActiviteSelectionPageState extends State<SecteurActiviteSelectionP
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.bg,
       // Required to delegate top padding to system
       appBar: AppBar(toolbarHeight: 0, scrolledUnderElevation: 0),
       body: Column(

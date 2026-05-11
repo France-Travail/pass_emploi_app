@@ -140,7 +140,7 @@ class _DeleteAccountSuccessDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       titlePadding: EdgeInsets.all(Margins.spacing_m),
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.bg,
       title: Column(
         children: [
           Center(child: SizedBox(height: 100, width: 100, child: Image.asset(Drawables.success))),

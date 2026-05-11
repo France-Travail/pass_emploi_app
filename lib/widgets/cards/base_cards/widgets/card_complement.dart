@@ -17,53 +17,53 @@ class CardComplement extends StatelessWidget {
   CardComplement({
     required this.text,
     required this.icon,
-    this.color = AppColors.contentColor,
+    this.color = AppColors.contentLight,
     TextStyle? style,
     this.semanticsReplacement,
   }) : style = style ?? TextStyles.textSMedium();
 
   factory CardComplement.place({required String text}) => CardComplement(
-        text: text,
-        icon: AppIcons.place_outlined,
-      );
+    text: text,
+    icon: AppIcons.place_outlined,
+  );
 
   factory CardComplement.person({required String text}) => CardComplement(
-        text: text,
-        icon: AppIcons.people_outline_rounded,
-      );
+    text: text,
+    icon: AppIcons.people_outline_rounded,
+  );
 
   factory CardComplement.date({required String text}) => CardComplement(
-        text: text,
-        icon: AppIcons.event,
-        color: AppColors.contentColor,
-        style: TextStyles.textSMedium(),
-      );
+    text: text,
+    icon: AppIcons.event,
+    color: AppColors.contentLight,
+    style: TextStyles.textSMedium(),
+  );
 
   factory CardComplement.hour({required String text}) => CardComplement(
-        text: text,
-        icon: AppIcons.schedule,
-        semanticsReplacement: text.toTimeAndDurationForScreenReaders(),
-      );
+    text: text,
+    icon: AppIcons.schedule,
+    semanticsReplacement: text.toTimeAndDurationForScreenReaders(),
+  );
 
   CardComplement.dateLate({required this.text})
-      : icon = AppIcons.event,
-        color = AppColors.warning,
-        style = TextStyles.textXsBold(),
-        semanticsReplacement = null;
+    : icon = AppIcons.event,
+      color = AppColors.warning,
+      style = TextStyles.textXsBold(),
+      semanticsReplacement = null;
 
   CardComplement.dateDerniereConsultation(DateTime date)
-      : text = Strings.offreLastSeen(date),
-        icon = AppIcons.visibility_outlined,
-        color = AppColors.contentColor,
-        style = TextStyles.textXsRegular(),
-        semanticsReplacement = null;
+    : text = Strings.offreLastSeen(date),
+      icon = AppIcons.visibility_outlined,
+      color = AppColors.contentLight,
+      style = TextStyles.textXsRegular(),
+      semanticsReplacement = null;
 
   CardComplement.datePostulation(DateTime date)
-      : text = Strings.offrePostulatedSeen(date),
-        icon = AppIcons.check_circle_outline_rounded,
-        color = AppColors.contentColor,
-        style = TextStyles.textXsRegular(),
-        semanticsReplacement = null;
+    : text = Strings.offrePostulatedSeen(date),
+      icon = AppIcons.check_circle_outline_rounded,
+      color = AppColors.contentLight,
+      style = TextStyles.textXsRegular(),
+      semanticsReplacement = null;
 
   @override
   Widget build(BuildContext context) {

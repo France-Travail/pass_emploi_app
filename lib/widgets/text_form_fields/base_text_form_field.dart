@@ -95,8 +95,8 @@ class _BaseTextFieldState extends State<BaseTextField> {
         error: widget.errorText != null
             ? _Error(widget.errorText!)
             : _errorText != null
-                ? _Error(_errorText!)
-                : null,
+            ? _Error(_errorText!)
+            : null,
         border: widget.isInvalid ? _errorBorder() : _idleBorder(),
         focusedBorder: widget.isInvalid ? _errorBorder() : _focusedBorder(),
         errorBorder: _errorBorder(),
@@ -147,7 +147,7 @@ class _BaseTextFieldState extends State<BaseTextField> {
   OutlineInputBorder _idleBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(Dimens.radius_base),
-      borderSide: BorderSide(color: AppColors.contentColor, width: 1.0),
+      borderSide: BorderSide(color: AppColors.contentLight, width: 1.0),
     );
   }
 

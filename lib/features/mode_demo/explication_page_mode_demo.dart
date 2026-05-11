@@ -151,7 +151,7 @@ class _BackButton extends StatelessWidget {
         child: IconButton(
           icon: Icon(
             AppIcons.chevron_left_rounded,
-            color: Colors.white,
+            color: AppColors.contentOnPrimary,
             size: Dimens.icon_size_m,
           ),
           onPressed: () {

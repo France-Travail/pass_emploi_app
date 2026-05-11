@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/pages/user_action/create/create_user_action_form_page.dart';
 import 'package:pass_emploi_app/presentation/user_action/user_action_state_source.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -32,8 +33,8 @@ class DuplicateUserActionConfirmationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: SecondaryAppBar(title: Strings.duplicateUserActionConfirmationTitle, backgroundColor: Colors.white),
+      backgroundColor: AppColors.bg,
+      appBar: SecondaryAppBar(title: Strings.duplicateUserActionConfirmationTitle, backgroundColor: AppColors.bg),
       floatingActionButton: _Buttons(
         onGoActionDetail: () => Navigator.pop(context, NavigateToUserActionDetails(userActionId, source)),
         onClose: () => Navigator.pop(context),

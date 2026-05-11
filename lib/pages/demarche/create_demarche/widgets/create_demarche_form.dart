@@ -11,6 +11,7 @@ import 'package:pass_emploi_app/pages/demarche/create_demarche/pages/create_dema
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_display_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
@@ -66,7 +67,7 @@ class _CreateDemarcheFormState extends State<CreateDemarcheForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.bg,
       resizeToAvoidBottomInset: false,
       appBar: SecondaryAppBar(title: Strings.createDemarcheAppBarTitle, leading: AppBarBackButton(_changeNotifier)),
       body: _Body(_changeNotifier),

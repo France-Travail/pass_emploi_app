@@ -14,12 +14,12 @@ class PressedTip extends StatelessWidget {
 
   const PressedTip(
     this.tip, {
-    this.textColor = AppColors.contentColor,
+    this.textColor = AppColors.contentLight,
     this.icon = AppIcons.chevron_right_rounded,
     this.iconLabel,
   }) : iconLeading = false;
 
-  PressedTip.externalLink(this.tip, {this.textColor = AppColors.contentColor})
+  PressedTip.externalLink(this.tip, {this.textColor = AppColors.contentLight})
     : icon = AppIcons.open_in_new_rounded,
       iconLabel = null,
       iconLeading = false;

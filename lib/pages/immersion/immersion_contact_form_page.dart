@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/pages/generic_success_page.dart';
 import 'package:pass_emploi_app/pages/immersion/immersion_contact_mode.dart';
 import 'package:pass_emploi_app/presentation/immersion/immersion_contact_form_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -76,8 +77,8 @@ class _Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: SecondaryAppBar(title: Strings.immersitionContactFormTitle, backgroundColor: Colors.white),
+      backgroundColor: AppColors.bg,
+      appBar: SecondaryAppBar(title: Strings.immersitionContactFormTitle, backgroundColor: AppColors.bg),
       body: Stack(
         children: [
           _Form(viewModel: viewModel),

@@ -71,14 +71,14 @@ class _Confirmation extends StatelessWidget {
           children: [
             Icon(
               AppIcons.check_circle_outline_rounded,
-              color: showPrimaryBackground ? Colors.white : AppColors.contentColor,
+              color: showPrimaryBackground ? Colors.white : AppColors.contentLight,
             ),
             SizedBox(height: Margins.spacing_s),
             Text(
               Strings.merciPourVotreReponse,
               textAlign: TextAlign.center,
               style: TextStyles.textBaseRegular.copyWith(
-                color: showPrimaryBackground ? Colors.white : AppColors.contentColor,
+                color: showPrimaryBackground ? Colors.white : AppColors.contentLight,
               ),
             ),
             if (viewModel.onCreateActionOrDemarche != null) ...[
@@ -88,7 +88,7 @@ class _Confirmation extends StatelessWidget {
                   viewModel.confirmationMessage!,
                   textAlign: TextAlign.center,
                   style: TextStyles.textSRegular().copyWith(
-                    color: showPrimaryBackground ? Colors.white : AppColors.contentColor,
+                    color: showPrimaryBackground ? Colors.white : AppColors.contentLight,
                   ),
                 ),
               ],
@@ -127,7 +127,7 @@ class _Confirmation extends StatelessWidget {
           right: -Margins.spacing_base,
           child: IconButton(
             onPressed: () => viewModel.onHideForever(),
-            icon: Icon(AppIcons.close_rounded, color: showPrimaryBackground ? Colors.white : AppColors.contentColor),
+            icon: Icon(AppIcons.close_rounded, color: showPrimaryBackground ? Colors.white : AppColors.contentLight),
           ),
         ),
       ],
@@ -150,7 +150,7 @@ class _Content extends StatelessWidget {
           Text(
             viewModel.dateConsultation!,
             style: TextStyles.textSRegular().copyWith(
-              color: showPrimaryBackground ? Colors.white : AppColors.contentColor,
+              color: showPrimaryBackground ? Colors.white : AppColors.contentLight,
             ),
           ),
           SizedBox(height: Margins.spacing_s),
@@ -161,7 +161,7 @@ class _Content extends StatelessWidget {
         ],
         Text(
           Strings.ouEnEtesVous,
-          style: TextStyles.textBaseBold.copyWith(color: showPrimaryBackground ? Colors.white : AppColors.contentColor),
+          style: TextStyles.textBaseBold.copyWith(color: showPrimaryBackground ? Colors.white : AppColors.contentLight),
         ),
         SizedBox(height: Margins.spacing_s),
         _Options(viewModel, trackingSource),
@@ -188,9 +188,9 @@ class _OffreLien extends StatelessWidget {
         child: Text(
           offreLien,
           style: TextStyles.textBaseMedium.copyWith(
-            color: AppColors.contentColor,
+            color: AppColors.contentLight,
             decoration: TextDecoration.underline,
-            decorationColor: AppColors.contentColor,
+            decorationColor: AppColors.contentLight,
           ),
         ),
       ),

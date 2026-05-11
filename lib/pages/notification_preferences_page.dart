@@ -135,7 +135,7 @@ class _Content extends StatelessWidget {
                   onTap: viewModel.onOpenAppSettings,
                   child: Row(
                     children: [
-                      Icon(AppIcons.open_in_new_rounded, color: AppColors.contentColor),
+                      Icon(AppIcons.open_in_new_rounded, color: AppColors.contentLight),
                       SizedBox(width: Margins.spacing_base),
                       Expanded(
                         child: Text(
@@ -216,7 +216,7 @@ class _NotificationSwitch extends StatelessWidget {
                   Text(Strings.no, style: TextStyles.textBaseRegularWithColor(Colors.transparent)),
                   Text(
                     enabled ? Strings.yes : Strings.no,
-                    style: TextStyles.textBaseRegularWithColor(AppColors.contentColor),
+                    style: TextStyles.textBaseRegularWithColor(AppColors.contentLight),
                   ),
                 ],
               ),

@@ -219,7 +219,7 @@ class _CguNeverAcceptedContent extends StatelessWidget {
                   TextSpan(
                     text: Strings.cguNeverAcceptedDescription[1],
                     style: TextStyles.textBaseRegular.copyWith(
-                      color: AppColors.contentColor,
+                      color: AppColors.contentLight,
                       decoration: TextDecoration.underline,
                     ),
                   ),
@@ -266,7 +266,8 @@ class _CguUpdateRequiredContent extends StatelessWidget {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: Strings.cguUpdateRequiredDescription[0] +
+                    text:
+                        Strings.cguUpdateRequiredDescription[0] +
                         displayState.lastUpdateLabel +
                         Strings.cguUpdateRequiredDescription[1],
                     style: TextStyles.textBaseRegular,
@@ -274,7 +275,7 @@ class _CguUpdateRequiredContent extends StatelessWidget {
                   TextSpan(
                     text: Strings.cguUpdateRequiredDescription[2],
                     style: TextStyles.textBaseRegular.copyWith(
-                      color: AppColors.contentColor,
+                      color: AppColors.contentLight,
                       decoration: TextDecoration.underline,
                     ),
                   ),

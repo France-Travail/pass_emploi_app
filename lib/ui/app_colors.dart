@@ -32,7 +32,9 @@ class AppColors {
   static const Color accent3Lighten = Color(0xFFDFFDFF);
 
   // Neutrals colors
-  static const Color contentColor = Color(0xFF161616);
+  static const Color contentLight = Color(0xFF161616);
+  static const Color contentDark = Color(0xFFF1F1F1);
+  static const Color contentOnPrimary = Color(0xFFFFFFFF);
   static const Color disabled = Color(0xFF73758D);
 
   static const Color grey100 = Color(0xFFF1F1F1);

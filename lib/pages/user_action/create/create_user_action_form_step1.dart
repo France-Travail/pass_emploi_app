@@ -39,8 +39,10 @@ class CreateUserActionFormStep1 extends StatelessWidget {
                   children: [
                     UserActionStepperTexts(index: 1),
                     const SizedBox(height: Margins.spacing_s),
-                    Text(Strings.userActionTitleStep1,
-                        style: TextStyles.textMBold.copyWith(color: AppColors.contentColor)),
+                    Text(
+                      Strings.userActionTitleStep1,
+                      style: TextStyles.textMBold.copyWith(color: AppColors.contentLight),
+                    ),
                   ],
                 ),
               ),

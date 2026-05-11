@@ -80,7 +80,7 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
           children: [
             SizedBox(height: Margins.spacing_base),
             Text(Strings.iaFtStep2Title, style: TextStyles.textMBold),
-            Text(Strings.iaFtStep2Mandatory, style: TextStyles.textSRegular(color: AppColors.contentColor)),
+            Text(Strings.iaFtStep2Mandatory, style: TextStyles.textSRegular(color: AppColors.contentLight)),
             const SizedBox(height: Margins.spacing_base),
             InformationBandeau(
               text: Strings.iaFtStep2Warning,

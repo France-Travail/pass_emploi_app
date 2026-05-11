@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -21,8 +22,8 @@ class GenericSuccessPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: SecondaryAppBar(title: title, backgroundColor: Colors.white),
+      backgroundColor: AppColors.bg,
+      appBar: SecondaryAppBar(title: title, backgroundColor: AppColors.bg),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
         child: Center(

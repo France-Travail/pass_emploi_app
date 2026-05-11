@@ -128,10 +128,10 @@ class _Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.bg,
       appBar: SecondaryAppBar(
         title: Strings.actionDetails,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.bg,
         actions: [_MoreButton(source: source, actionId: viewModel.id)],
       ),
       floatingActionButton: Padding(

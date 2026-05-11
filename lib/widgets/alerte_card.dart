@@ -110,7 +110,7 @@ class AlerteCardContent extends StatelessWidget {
               ),
             ),
           SizedBox(width: Margins.spacing_base),
-          Icon(AppIcons.chevron_right_rounded, color: AppColors.contentColor),
+          Icon(AppIcons.chevron_right_rounded, color: AppColors.contentLight),
         ],
       ),
     );

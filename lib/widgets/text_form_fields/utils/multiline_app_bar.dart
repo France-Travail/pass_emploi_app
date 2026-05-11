@@ -35,11 +35,11 @@ class MultilineAppBar extends StatelessWidget {
                   header: true,
                   child: Text(title, style: TextStyles.textBaseBold),
                 ),
-                if (hint != null) Text(hint!, style: TextStyles.textSRegularWithColor(AppColors.contentColor)),
+                if (hint != null) Text(hint!, style: TextStyles.textSRegularWithColor(AppColors.contentLight)),
               ],
             ),
           ),
-        )
+        ),
       ],
     );
   }

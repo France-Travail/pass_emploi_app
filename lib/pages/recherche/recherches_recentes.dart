@@ -58,7 +58,7 @@ class RecherchesRecentesBandeau extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_xs),
                               child: Icon(
                                 AppIcons.chevron_right_rounded,
-                                color: AppColors.contentColor,
+                                color: AppColors.contentLight,
                               ),
                             ),
                           ],

@@ -109,7 +109,7 @@ class _CriteresRechercheBandeauState extends State<_CriteresRechercheBandeau> {
                           other: Strings.rechercheCriteresActifsPlural(widget.criteresActifsCount),
                         ),
                         style: TextStyles.textBaseMediumBold(
-                          color: widget.isOpen ? AppColors.contentColor : Colors.white,
+                          color: widget.isOpen ? AppColors.contentLight : Colors.white,
                         ),
                       ),
                     ),

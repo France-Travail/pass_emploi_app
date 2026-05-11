@@ -388,7 +388,7 @@ class _ListTileCard extends StatelessWidget {
                               ? Icon(
                                   AppIcons.open_in_new_rounded,
                                   size: Dimens.icon_size_base,
-                                  color: AppColors.contentColor,
+                                  color: AppColors.contentLight,
                                 )
                               : null,
                           trailing: externalRedirect
@@ -396,7 +396,7 @@ class _ListTileCard extends StatelessWidget {
                               : Icon(
                                   AppIcons.chevron_right_rounded,
                                   size: Dimens.icon_size_m,
-                                  color: AppColors.contentColor,
+                                  color: AppColors.contentLight,
                                 ),
                         ),
                       ),

@@ -115,7 +115,7 @@ class _MoyensList extends StatelessWidget {
                   moyen.label,
                   textAlign: TextAlign.center,
                   style: TextStyles.textSMedium().copyWith(
-                    color: moyen == selectedComment ? Colors.white : AppColors.contentColor,
+                    color: moyen == selectedComment ? Colors.white : AppColors.contentLight,
                   ),
                 ),
               ),

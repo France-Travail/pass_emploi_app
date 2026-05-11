@@ -44,7 +44,7 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.bg,
       resizeToAvoidBottomInset: false,
       appBar: SecondaryAppBar(
         title: Strings.createActionAppBarTitle,
@@ -130,7 +130,7 @@ class _BackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SecondaryButton(
       label: Strings.back,
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.bg,
       onPressed: onPressed,
     );
   }
@@ -190,24 +190,24 @@ class _CreateUserActionForm extends StatelessWidget {
                     alignment: Alignment.topCenter,
                     child: switch (formState.displayState) {
                       CreateUserActionDisplayState.step1 => CreateUserActionFormStep1(
-                          onActionTypeSelected: (type) => formState.userActionTypeSelected(type),
-                        ),
+                        onActionTypeSelected: (type) => formState.userActionTypeSelected(type),
+                      ),
                       CreateUserActionDisplayState.step2 => CreateUserActionFormStep2(
-                          actionType: formState.step1.actionCategory!,
-                          viewModel: formState.step2,
-                          onTitleChanged: (titleSource) => formState.titleChanged(titleSource),
-                          onDescriptionChanged: (description) => formState.descriptionChanged(description),
-                        ),
+                        actionType: formState.step1.actionCategory!,
+                        viewModel: formState.step2,
+                        onTitleChanged: (titleSource) => formState.titleChanged(titleSource),
+                        onDescriptionChanged: (description) => formState.descriptionChanged(description),
+                      ),
                       CreateUserActionDisplayState.step3 => CreateUserActionFormStep3(
-                          actionType: formState.step1.actionCategory!,
-                          viewModel: formState.step3,
-                          onDateChanged: (id, dateSource) => formState.duplicateUserActionDateChanged(id, dateSource),
-                          onDescriptionChanged: (id, description) =>
-                              formState.duplicateUserActionDescriptionChanged(id, description),
-                          onDelete: (id) => formState.deleteDuplicatedUserAction(id),
-                          onAddDuplicatedUserAction: () => formState.addDuplicatedUserAction(),
-                          titleSource: formState.step2.titleSource,
-                        ),
+                        actionType: formState.step1.actionCategory!,
+                        viewModel: formState.step3,
+                        onDateChanged: (id, dateSource) => formState.duplicateUserActionDateChanged(id, dateSource),
+                        onDescriptionChanged: (id, description) =>
+                            formState.duplicateUserActionDescriptionChanged(id, description),
+                        onDelete: (id) => formState.deleteDuplicatedUserAction(id),
+                        onAddDuplicatedUserAction: () => formState.addDuplicatedUserAction(),
+                        titleSource: formState.step2.titleSource,
+                      ),
                       _ => const SizedBox.shrink(),
                     },
                   ),

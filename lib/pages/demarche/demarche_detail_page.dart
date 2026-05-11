@@ -40,41 +40,43 @@ class DemarcheDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Tracker(
       tracking: AnalyticsScreenNames.userActionDetails,
-      child: ConfettiWrapper(builder: (context, conffetiController) {
-        return StoreConnector<AppState, DemarcheDetailViewModel>(
-          onInit: (store) {
-            final monSuiviState = store.state.monSuiviState;
-            if (monSuiviState is! MonSuiviSuccessState) {
-              store.dispatch(MonSuiviRequestAction(MonSuiviPeriod.current));
-            }
-          },
-          converter: (store) => DemarcheDetailViewModel.create(store, id),
-          onDidChange: (oldViewModel, newViewModel) async {
-            if (newViewModel.updateDisplayState == DisplayState.FAILURE) {
-              showSnackBarWithSystemError(context, Strings.updateStatusError);
-              newViewModel.resetUpdateStatus();
-            }
-          },
-          onDispose: (store) => store.dispatch(UpdateDemarcheResetAction()),
-          builder: (context, viewModel) => Scaffold(
-            backgroundColor: Colors.white,
-            appBar: SecondaryAppBar(
-              title: Strings.demarcheDetails,
-              actions: [
-                _MoreButton(
-                  demarcheId: id,
-                )
-              ],
+      child: ConfettiWrapper(
+        builder: (context, conffetiController) {
+          return StoreConnector<AppState, DemarcheDetailViewModel>(
+            onInit: (store) {
+              final monSuiviState = store.state.monSuiviState;
+              if (monSuiviState is! MonSuiviSuccessState) {
+                store.dispatch(MonSuiviRequestAction(MonSuiviPeriod.current));
+              }
+            },
+            converter: (store) => DemarcheDetailViewModel.create(store, id),
+            onDidChange: (oldViewModel, newViewModel) async {
+              if (newViewModel.updateDisplayState == DisplayState.FAILURE) {
+                showSnackBarWithSystemError(context, Strings.updateStatusError);
+                newViewModel.resetUpdateStatus();
+              }
+            },
+            onDispose: (store) => store.dispatch(UpdateDemarcheResetAction()),
+            builder: (context, viewModel) => Scaffold(
+              backgroundColor: AppColors.bg,
+              appBar: SecondaryAppBar(
+                title: Strings.demarcheDetails,
+                actions: [
+                  _MoreButton(
+                    demarcheId: id,
+                  ),
+                ],
+              ),
+              floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+              floatingActionButton: _ActionButton(viewModel, id, conffetiController),
+              body: _Body(
+                viewModel,
+              ),
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-            floatingActionButton: _ActionButton(viewModel, id, conffetiController),
-            body: _Body(
-              viewModel,
-            ),
-          ),
-          distinct: true,
-        );
-      }),
+            distinct: true,
+          );
+        },
+      ),
     );
   }
 }
@@ -304,9 +306,10 @@ class _Historique extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(left: 10),
       decoration: BoxDecoration(
-          border: Border(
-        left: BorderSide(color: AppColors.grey500, width: 1),
-      )),
+        border: Border(
+          left: BorderSide(color: AppColors.grey500, width: 1),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,

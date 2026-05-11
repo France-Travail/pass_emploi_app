@@ -99,7 +99,7 @@ class _SecteurActiviteFieldState extends State<_SecteurActiviteField> {
                 alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(Dimens.radius_base),
-                  border: Border.all(color: AppColors.contentColor),
+                  border: Border.all(color: AppColors.contentLight),
                 ),
                 child: Row(
                   children: [

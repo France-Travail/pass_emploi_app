@@ -72,7 +72,7 @@ class _CampagneQuestionPageState extends State<CampagneQuestionPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(Strings.mandatory, style: TextStyles.textSRegular(color: AppColors.contentColor)),
+            Text(Strings.mandatory, style: TextStyles.textSRegular(color: AppColors.contentLight)),
             SizedBox(height: Margins.spacing_base),
             Text(viewModel.question, style: TextStyles.textBaseBold),
             SizedBox(height: Margins.spacing_base),

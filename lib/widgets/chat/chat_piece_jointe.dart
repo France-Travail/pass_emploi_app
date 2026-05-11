@@ -97,7 +97,7 @@ class _PieceJointeName extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       filename,
-      style: TextStyles.textSBoldWithColor(sender.isJeune ? Colors.white : AppColors.contentColor),
+      style: TextStyles.textSBoldWithColor(sender.isJeune ? Colors.white : AppColors.contentLight),
     );
   }
 }
@@ -149,10 +149,10 @@ class _Button extends StatelessWidget {
       onPressed: () => switch (params) {
         final PieceJointeTypeIdParams params => viewModel.onDownloadTypeId(params.fileId, params.filename),
         final PieceJointeTypeUrlParams params => viewModel.onDownloadTypeUrl(
-            params.url,
-            params.fileId,
-            params.filename,
-          ),
+          params.url,
+          params.fileId,
+          params.filename,
+        ),
       },
       heightPadding: 2,
     );

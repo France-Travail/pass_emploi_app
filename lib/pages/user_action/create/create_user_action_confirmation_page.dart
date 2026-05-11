@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/user_action/create_user_action_confirmation_view_model.dart';
 import 'package:pass_emploi_app/presentation/user_action/user_action_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -41,8 +42,8 @@ class CreateUserActionConfirmationPage extends StatelessWidget {
       converter: (store) => CreateActionSuccessViewModel.create(store),
       builder: (context, viewModel) {
         return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: SecondaryAppBar(title: Strings.createActionAppBarTitle, backgroundColor: Colors.white),
+          backgroundColor: AppColors.bg,
+          appBar: SecondaryAppBar(title: Strings.createActionAppBarTitle, backgroundColor: AppColors.bg),
           floatingActionButton: viewModel.displayState == DisplayState.CONTENT
               ? _Buttons(
                   onGoActionDetail: () =>

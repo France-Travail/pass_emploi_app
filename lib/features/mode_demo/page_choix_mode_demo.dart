@@ -69,7 +69,7 @@ class _Contenu extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.bg,
           borderRadius: BorderRadius.circular(Dimens.radius_base),
           boxShadow: [Shadows.radius_base],
         ),
@@ -147,7 +147,7 @@ class _BackButton extends StatelessWidget {
         child: IconButton(
           icon: Icon(
             AppIcons.chevron_left_rounded,
-            color: Colors.white,
+            color: AppColors.contentOnPrimary,
             size: Dimens.icon_size_m,
           ),
           onPressed: () {

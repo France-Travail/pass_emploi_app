@@ -39,7 +39,7 @@ class _PassEmploiTabBarState extends State<PassEmploiTabBar> {
               indicatorColor: Brand.isCej() ? AppColors.primary : AppColors.grey100,
               indicatorWeight: 4,
               labelStyle: TextStyles.textBaseBold,
-              labelColor: Brand.isCej() ? AppColors.contentColor : AppColors.grey100,
+              labelColor: Brand.isCej() ? AppColors.contentLight : AppColors.grey100,
               indicatorSize: TabBarIndicatorSize.tab,
               isScrollable: true,
               labelPadding: const EdgeInsets.only(right: 32),

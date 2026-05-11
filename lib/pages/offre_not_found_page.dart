@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -16,8 +17,8 @@ class OffreNotFoundPage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.offreNotFound,
       child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: SecondaryAppBar(title: Strings.offreNotFoundTitle, backgroundColor: Colors.white),
+        backgroundColor: AppColors.bg,
+        appBar: SecondaryAppBar(title: Strings.offreNotFoundTitle, backgroundColor: AppColors.bg),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
           child: Center(
