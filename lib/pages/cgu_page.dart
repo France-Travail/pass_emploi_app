@@ -178,7 +178,6 @@ class _BodyState extends State<_Body> {
         SizedBox(
           width: double.infinity,
           child: SecondaryButton(
-            backgroundColor: Colors.transparent,
             label: Strings.cguRefuse,
             onPressed: () => widget.viewModel.onRefuse(),
           ),

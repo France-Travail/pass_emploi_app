@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -134,7 +135,7 @@ class _LoginButton extends StatelessWidget {
 class _CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    const foregroundColor = Colors.white;
+    const foregroundColor = AppColors.contentOnPrimary;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
       child: Row(
@@ -156,7 +157,7 @@ class _CustomAppBar extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(child: SizedBox.shrink())
+          Expanded(child: SizedBox.shrink()),
         ],
       ),
     );

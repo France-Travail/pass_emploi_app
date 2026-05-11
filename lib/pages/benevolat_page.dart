@@ -177,7 +177,7 @@ class _VerbatimCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
                   child: Text(
                     BenevolatAssets.verbatimPart1,
-                    style: TextStyles.textMRegular.copyWith(color: Colors.white),
+                    style: TextStyles.textMRegular.copyWith(color: AppColors.contentOnPrimary),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -191,12 +191,12 @@ class _VerbatimCard extends StatelessWidget {
                         TextSpan(
                           text: BenevolatAssets.verbatimPart2,
                           semanticsLabel: BenevolatAssets.verbatimPart2.removeIconsForScreenReaders(),
-                          style: TextStyles.textBaseRegular.copyWith(color: Colors.white),
+                          style: TextStyles.textBaseRegular.copyWith(color: AppColors.contentOnPrimary),
                         ),
                         TextSpan(
                           text: BenevolatAssets.link,
                           style: TextStyles.textBaseRegular.copyWith(
-                            color: Colors.white,
+                            color: AppColors.contentOnPrimary,
                             decoration: TextDecoration.underline,
                           ),
                         ),
