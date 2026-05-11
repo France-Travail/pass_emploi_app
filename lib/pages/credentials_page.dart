@@ -32,9 +32,15 @@ class _CredentialsPageState extends State<CredentialsPage> with SingleTickerProv
         children: [
           Row(
             children: [
-              Expanded(child: Container(height: double.infinity, color: Color(0xFF3F6AD3))),
-              Expanded(child: Container(height: double.infinity, color: Colors.white)),
-              Expanded(child: Container(height: double.infinity, color: Color(0xFFF73620))),
+              Expanded(
+                child: Container(height: double.infinity, color: Color(0xFF3F6AD3)),
+              ),
+              Expanded(
+                child: Container(height: double.infinity, color: Color(0xFFFFFFFF)),
+              ),
+              Expanded(
+                child: Container(height: double.infinity, color: Color(0xFFF73620)),
+              ),
             ],
           ),
           Center(child: AnimatedCredentials(listenable: _animation)),

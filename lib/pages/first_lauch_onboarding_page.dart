@@ -280,7 +280,7 @@ class _CarouselStepperIndicatorState extends State<_CarouselStepperIndicator> {
           margin: const EdgeInsets.symmetric(horizontal: Margins.spacing_xs),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: i == currentPage ? Colors.white : Colors.white.withValues(alpha: 0.5),
+            color: i == currentPage ? AppColors.contentOnPrimary : AppColors.contentOnPrimary.withValues(alpha: 0.5),
           ),
         );
       }),

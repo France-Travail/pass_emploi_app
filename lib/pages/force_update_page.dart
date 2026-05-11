@@ -23,7 +23,6 @@ class ForceUpdatePage extends StatelessWidget {
     final viewModel = ForceUpdateViewModel.create(brand, _flavor, platform);
     return MaterialApp(
       title: Strings.appName,
-      theme: ThemeData(primarySwatch: Colors.indigo),
       home: Tracker(
         tracking: AnalyticsScreenNames.forceUpdate,
         child: Scaffold(
@@ -35,7 +34,7 @@ class ForceUpdatePage extends StatelessWidget {
                 Expanded(child: AppLogo()),
                 Text(viewModel.label, style: TextStyles.textBaseBold, textAlign: TextAlign.center),
                 if (viewModel.withCallToAction) ExternalLink(label: Strings.updateButton, url: viewModel.storeUrl),
-                Expanded(child: SizedBox())
+                Expanded(child: SizedBox()),
               ],
             ),
           ),

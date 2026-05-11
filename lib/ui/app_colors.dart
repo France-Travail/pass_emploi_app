@@ -13,6 +13,7 @@ class AppColors {
   static const Color primaryDarken = Color(0xFF274996);
   static const Color primaryDarkenStrong = Color(0xFF172B5A);
   static const Color primaryLighten = Color(0xFFEEF1F8);
+  static const Color transparent = Color(0x00000000);
 
   // Status colors
   static const Color warning = Color(0xFFD31140);

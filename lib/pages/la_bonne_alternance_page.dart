@@ -128,13 +128,13 @@ class _VerbatimCard extends StatelessWidget {
           SizedBox(height: Margins.spacing_base),
           Text(
             LaBonneAlternanceAssets.text_3,
-            style: TextStyles.textMRegular.copyWith(color: Colors.white),
+            style: TextStyles.textMRegular.copyWith(color: AppColors.contentOnPrimary),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: Margins.spacing_s),
           Text(
             LaBonneAlternanceAssets.text_4,
-            style: TextStyles.textSRegular().copyWith(color: Colors.white),
+            style: TextStyles.textSRegular().copyWith(color: AppColors.contentOnPrimary),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: Margins.spacing_s),

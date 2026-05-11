@@ -175,15 +175,15 @@ class _AskAccount extends StatelessWidget {
           header: true,
           child: Text(
             Strings.noAccount,
-            style: TextStyles.textSMedium(color: Colors.white),
+            style: TextStyles.textSMedium(color: AppColors.contentOnPrimary),
             textAlign: TextAlign.center,
           ),
         ),
         SizedBox(height: Margins.spacing_s),
         SecondaryButton(
           label: Strings.askAccount,
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.white,
+          backgroundColor: AppColors.transparent,
+          foregroundColor: AppColors.contentOnPrimary,
           onPressed: () => Navigator.push(context, CejInformationPage.materialPageRoute()),
         ),
       ],
@@ -241,7 +241,7 @@ class Link extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: AppColors.transparent,
       child: InkWell(
         onTap: () {
           PassEmploiMatomoTracker.instance.trackOutlink(link);
@@ -349,7 +349,7 @@ class _AccessibilityIndicator extends StatelessWidget {
     return Text(
       accessibilityLevelLabel,
       textAlign: TextAlign.center,
-      style: TextStyles.textXsRegular(color: Colors.white),
+      style: TextStyles.textXsRegular(color: AppColors.contentOnPrimary),
     );
   }
 }
