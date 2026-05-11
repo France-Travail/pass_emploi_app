@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/ignore_tracking_context_provider.dart';
+import 'package:pass_emploi_app/features/theme/theme_state.dart';
 import 'package:pass_emploi_app/pages/router_page.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -23,13 +24,21 @@ class PassEmploiApp extends StatelessWidget {
     return StoreProvider<AppState>(
       store: _store,
       child: IgnoreTrackingContextProvider(
-        child: PassEmploiMaterialApp(
-          scaffoldMessengerKey: snackBarKey,
-          title: Strings.appName,
-          navigatorObservers: [routeObserver, HapticNavigatorObserver()],
-          home: Scaffold(
-            body: OnboardingNotifierWrapper(
-              child: ShowcaseWrapper(child: FtIaShowcaseWrapper(child: RouterPage())),
+        child: StoreConnector<AppState, ThemeMode>(
+          converter: (store) {
+            final state = store.state.themeState;
+            return state is ThemeSuccessState ? state.themeMode : ThemeMode.light;
+          },
+          distinct: true,
+          builder: (_, themeMode) => PassEmploiMaterialApp(
+            scaffoldMessengerKey: snackBarKey,
+            title: Strings.appName,
+            themeMode: themeMode,
+            navigatorObservers: [routeObserver, HapticNavigatorObserver()],
+            home: Scaffold(
+              body: OnboardingNotifierWrapper(
+                child: ShowcaseWrapper(child: FtIaShowcaseWrapper(child: RouterPage())),
+              ),
             ),
           ),
         ),

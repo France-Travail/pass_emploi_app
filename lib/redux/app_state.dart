@@ -86,6 +86,7 @@ import 'package:pass_emploi_app/models/service_civique.dart';
 import 'package:pass_emploi_app/models/user.dart';
 import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_mission_locale_state.dart';
 import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription_state.dart';
+import 'package:pass_emploi_app/features/theme/theme_state.dart';
 /*AUTOGENERATE-REDUX-APP-STATE-IMPORT*/
 
 class AppState extends Equatable {
@@ -173,6 +174,7 @@ class AppState extends Equatable {
   final FtIaTutorialState ftIaTutorialState;
   final ActualiteMissionLocaleState actualiteMissionLocaleState;
   final AutoDesinscriptionState autoDesinscriptionState;
+  final ThemeState themeState;
   /*AUTOGENERATE-REDUX-APP-STATE-PROPERTY*/
 
   AppState({
@@ -260,6 +262,7 @@ class AppState extends Equatable {
     required this.ftIaTutorialState,
     required this.actualiteMissionLocaleState,
     required this.autoDesinscriptionState,
+    required this.themeState,
     /*AUTOGENERATE-REDUX-APP-STATE-CONSTRUCTOR*/
   });
 
@@ -348,6 +351,7 @@ class AppState extends Equatable {
     final FtIaTutorialState? ftIaTutorialState,
     final ActualiteMissionLocaleState? actualiteMissionLocaleState,
     final AutoDesinscriptionState? autoDesinscriptionState,
+    final ThemeState? themeState,
     /*AUTOGENERATE-REDUX-APP-STATE-COPYPARAM*/
   }) {
     return AppState(
@@ -436,6 +440,7 @@ class AppState extends Equatable {
       ftIaTutorialState: ftIaTutorialState ?? this.ftIaTutorialState,
       actualiteMissionLocaleState: actualiteMissionLocaleState ?? this.actualiteMissionLocaleState,
       autoDesinscriptionState: autoDesinscriptionState ?? this.autoDesinscriptionState,
+      themeState: themeState ?? this.themeState,
       /*AUTOGENERATE-REDUX-APP-STATE-COPYBODY*/
     );
   }
@@ -526,6 +531,7 @@ class AppState extends Equatable {
       ftIaTutorialState: FtIaTutorialState(false),
       actualiteMissionLocaleState: ActualiteMissionLocaleNotInitializedState(),
       autoDesinscriptionState: AutoDesinscriptionNotInitializedState(),
+      themeState: ThemeNotInitializedState(),
       /*AUTOGENERATE-REDUX-APP-STATE-FACTORY*/
     );
   }
@@ -609,6 +615,7 @@ class AppState extends Equatable {
     ftIaTutorialState,
     actualiteMissionLocaleState,
     autoDesinscriptionState,
+    themeState,
     /*AUTOGENERATE-REDUX-APP-STATE-EQUATABLE*/
   ];
 

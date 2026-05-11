@@ -34,6 +34,7 @@ import 'package:pass_emploi_app/widgets/cards/profil/mon_conseiller_card.dart';
 import 'package:pass_emploi_app/widgets/contact_page.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/pressed_tip.dart';
+import 'package:pass_emploi_app/widgets/radio_list_tile.dart';
 import 'package:pass_emploi_app/widgets/rating_page.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
 
@@ -96,6 +97,13 @@ class _Scaffold extends StatelessWidget {
                       onTap: () => Navigator.push(context, PartageActivitePage.materialPageRoute()),
                     ),
                   ],
+                ),
+                SizedBox(height: Margins.spacing_m),
+                _SectionTitle(Strings.themeLabel),
+                SizedBox(height: Margins.spacing_base),
+                _ThemeCard(
+                  themeMode: viewModel.themeMode,
+                  onThemeModeChanged: viewModel.onThemeModeChanged,
                 ),
                 SizedBox(height: Margins.spacing_m),
                 _SectionTitle(Strings.legalInformation),
@@ -414,4 +422,41 @@ class _ListTileData {
 void _launchAndTrackExternalLink(String link) {
   PassEmploiMatomoTracker.instance.trackOutlink(link);
   launchExternalUrl(link);
+}
+
+class _ThemeCard extends StatelessWidget {
+  final ThemeMode themeMode;
+  final Function(ThemeMode) onThemeModeChanged;
+
+  const _ThemeCard({required this.themeMode, required this.onThemeModeChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      container: true,
+      child: CardContainer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: ThemeMode.values.map((mode) {
+            return CustomRadioGroup<ThemeMode>(
+              title: _labelForThemeMode(mode),
+              value: mode,
+              groupValue: themeMode,
+              onChanged: (value) {
+                if (value != null) onThemeModeChanged(value);
+              },
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  String _labelForThemeMode(ThemeMode mode) {
+    return switch (mode) {
+      ThemeMode.light => Strings.themeModeLight,
+      ThemeMode.dark => Strings.themeModeDark,
+      ThemeMode.system => Strings.themeModeSystem,
+    };
+  }
 }

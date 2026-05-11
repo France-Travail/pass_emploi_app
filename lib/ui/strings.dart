@@ -1200,6 +1200,10 @@ class Strings {
 
   // Profil: Settings & account suppression
   static String settingsLabel = "Paramètres application";
+  static String themeLabel = "Apparence";
+  static String themeModeLight = "Clair";
+  static String themeModeDark = "Sombre";
+  static String themeModeSystem = "Système (par défaut)";
   static String suppressionPageTitle = "Suppression de compte";
   static String suppressionAccountLabel = Brand.isCej()
       ? _CejStrings.suppressionAccountLabel

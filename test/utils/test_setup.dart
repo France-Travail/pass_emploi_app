@@ -17,6 +17,7 @@ import 'package:pass_emploi_app/repositories/alerte/offre_emploi_alerte_reposito
 import 'package:pass_emploi_app/repositories/alerte/service_civique_alerte_repository.dart';
 import 'package:pass_emploi_app/repositories/animations_collectives_repository.dart';
 import 'package:pass_emploi_app/repositories/auth/chat_security_repository.dart';
+import 'package:pass_emploi_app/repositories/auto_desinscription_repository.dart';
 import 'package:pass_emploi_app/repositories/auto_inscription_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_recrutement_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_repository.dart';
@@ -75,6 +76,7 @@ import 'package:pass_emploi_app/repositories/session_milo_repository.dart';
 import 'package:pass_emploi_app/repositories/suggestions_recherche_repository.dart';
 import 'package:pass_emploi_app/repositories/suppression_compte_repository.dart';
 import 'package:pass_emploi_app/repositories/thematiques_demarche_repository.dart';
+import 'package:pass_emploi_app/repositories/theme_repository.dart';
 import 'package:pass_emploi_app/repositories/top_demarche_repository.dart';
 import 'package:pass_emploi_app/repositories/tutorial_repository.dart';
 import 'package:pass_emploi_app/repositories/user_action_pending_creation_repository.dart';
@@ -82,7 +84,6 @@ import 'package:pass_emploi_app/repositories/user_action_repository.dart';
 import 'package:pass_emploi_app/usecases/piece_jointe/piece_jointe_use_case.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/wrappers/connectivity_wrapper.dart';
-import 'package:pass_emploi_app/repositories/auto_desinscription_repository.dart';
 /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-IMPORT*/
 import 'package:redux/redux.dart';
 
@@ -176,6 +177,7 @@ class TestStoreFactory {
   ModuleFeedbackRepository moduleFeedbackRepository = MockModuleFeedbackRepository();
   ActualiteMissionLocaleRepository actualiteMissionLocaleRepository = MockActualiteMissionLocaleRepository();
   AutoDesinscriptionRepository autoDesinscriptionRepository = MockAutoDesinscriptionRepository();
+  ThemeRepository themeRepository = MockThemeRepository();
   /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-PROPERTY*/
 
   Store<AppState> initializeReduxStore({required AppState initialState}) {
@@ -263,6 +265,7 @@ class TestStoreFactory {
       moduleFeedbackRepository,
       actualiteMissionLocaleRepository,
       autoDesinscriptionRepository,
+      themeRepository,
       /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-CONSTRUCTOR*/
     ).initializeReduxStore(initialState: initialState);
   }
