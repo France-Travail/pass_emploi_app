@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/benevolat_assets.dart';
 import 'package:pass_emploi_app/ui/external_links.dart';
@@ -166,7 +167,7 @@ class _VerbatimCard extends StatelessWidget {
           onTap: () => _launchExternalRedirect(),
           child: CardContainer(
             padding: EdgeInsets.zero,
-            backgroundColor: Color(0xFF0A0E93),
+            backgroundColor: AppColors.primaryDarkenStrong,
             child: Column(
               children: [
                 SizedBox(height: Margins.spacing_m),

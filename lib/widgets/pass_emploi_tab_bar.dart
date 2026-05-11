@@ -99,7 +99,7 @@ class _TabCountBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: const Color(0xFFFF3F15),
+        color: AppColors.warning,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(

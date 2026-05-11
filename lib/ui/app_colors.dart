@@ -4,6 +4,9 @@ import 'package:pass_emploi_app/models/brand.dart';
 class AppColors {
   AppColors._();
 
+  // Background colors
+  static const Color bg = Color(0xFFFFFFFF);
+
   // Primary colors
   static final Color primary = Brand.isPassEmploi() ? primaryDarken : primaryCej;
   static const Color primaryCej = Color(0xFF3B69D1);
@@ -60,6 +63,25 @@ class AppColors {
           Color(0xFF3B69D1),
           Color(0xFF1E366B),
         ];
+
+  // Solution gradients
+  static List<Color> gradientOffre = [
+    Color(0xFF274996),
+    Color(0xFF3B69D1),
+  ];
+  static List<Color> gradientAlternance = [
+    Color(0xFF172B5A),
+    Color(0xFF2186C7),
+  ];
+  static List<Color> gradientImmersion = [
+    Color(0xFF5149A8),
+    Color(0xFF603CBC),
+    Color(0xFF950EFF),
+  ];
+  static List<Color> gradientServiceCivique = [
+    Color(0xFF15616D),
+    Color(0xFF0C7A81),
+  ];
 
   static List<Color> gradientSecondary = [
     primary,

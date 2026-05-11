@@ -4,12 +4,12 @@ import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/push/deep_link_factory.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/utils/log.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:redux/redux.dart';
@@ -81,18 +81,20 @@ class PushNotificationManager {
       if (notification != null) {
         final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
         await flutterLocalNotificationsPlugin.initialize(
-            InitializationSettings(
-              android: AndroidInitializationSettings('ic_notification'),
-            ),
-            onDidReceiveNotificationResponse: (response) => _onLocalNotificationOpened(response.payload, store));
+          InitializationSettings(
+            android: AndroidInitializationSettings('ic_notification'),
+          ),
+          onDidReceiveNotificationResponse: (response) => _onLocalNotificationOpened(response.payload, store),
+        );
         flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(_channelId, _channelName, color: const Color(0xFF3B69D1)),
-            ),
-            payload: jsonEncode(message.data));
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(_channelId, _channelName, color: AppColors.primary),
+          ),
+          payload: jsonEncode(message.data),
+        );
       }
     });
   }
