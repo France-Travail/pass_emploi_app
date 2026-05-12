@@ -213,7 +213,7 @@ class _NotificationSwitch extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  Text(Strings.no, style: TextStyles.textBaseRegularWithColor(Colors.transparent)),
+                  Text(Strings.no, style: TextStyles.textBaseRegularWithColor(AppColors.transparent)),
                   Text(
                     enabled ? Strings.yes : Strings.no,
                     style: TextStyles.textBaseRegularWithColor(AppColors.contentLight),

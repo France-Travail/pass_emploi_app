@@ -51,7 +51,7 @@ class CardContainer extends StatelessWidget {
           ? childWithPadding
           : Material(
               clipBehavior: Clip.hardEdge,
-              color: gradient != null ? Colors.transparent : backgroundColor,
+              color: gradient != null ? AppColors.transparent : backgroundColor,
               borderRadius: cardBorderRadius,
               child: InkWell(
                 borderRadius: cardBorderRadius,

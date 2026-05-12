@@ -40,10 +40,12 @@ class FavoriHeart<T> extends StatelessWidget {
       distinct: true,
       onDidChange: (_, viewModel) {
         if (viewModel.withError) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(Strings.miscellaneousErrorRetry),
-            duration: Duration(seconds: 2),
-          ));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(Strings.miscellaneousErrorRetry),
+              duration: Duration(seconds: 2),
+            ),
+          );
         }
         if (!viewModel.isFavori) {
           onFavoriRemoved?.call();
@@ -56,10 +58,11 @@ class FavoriHeart<T> extends StatelessWidget {
     return DebouncedButton(
       childBuilder: (onTapDebounced) => SecondaryIconButton(
         icon: viewModel.isFavori ? AppIcons.bookmark_remove : AppIcons.bookmark,
-        tooltip:
-            viewModel.isFavori ? Strings.offreEnregistreeRemove(a11yLabel) : Strings.offreEnregistreeAdd(a11yLabel),
+        tooltip: viewModel.isFavori
+            ? Strings.offreEnregistreeRemove(a11yLabel)
+            : Strings.offreEnregistreeAdd(a11yLabel),
         iconColor: AppColors.primary,
-        borderColor: withBorder ? AppColors.primary : Colors.transparent,
+        borderColor: withBorder ? AppColors.primary : AppColors.transparent,
         onTap: onTapDebounced,
       ),
       onTap: () {
@@ -87,7 +90,7 @@ class FavoriHeartAnalyticsHelper {
       OffrePage.immersionDetails => AnalyticsActionNames.immersionDetailUpdateFavori(isFavori),
       OffrePage.serviceCiviqueResults => AnalyticsActionNames.serviceCiviqueResultUpdateFavori(isFavori),
       OffrePage.serviceCiviqueDetails => AnalyticsActionNames.serviceCiviqueDetailUpdateFavori(isFavori),
-      OffrePage.offreFavoris => AnalyticsActionNames.offreFavoriUpdateFavori(isFavori)
+      OffrePage.offreFavoris => AnalyticsActionNames.offreFavoriUpdateFavori(isFavori),
     };
   }
 }

@@ -63,7 +63,7 @@ class AccueilCetteSemaine extends StatelessWidget {
             ),
             SizedBox(height: Margins.spacing_base),
             SecondaryButton(
-              backgroundColor: Colors.transparent,
+              backgroundColor: AppColors.transparent,
               foregroundColor: Colors.white,
               label: Strings.accueilVoirDetailsCetteSemaine,
               onPressed: () {

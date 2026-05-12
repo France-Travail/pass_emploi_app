@@ -21,52 +21,56 @@ class PrimarySliverAppbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverLayoutBuilder(builder: (context, constraints) {
-      return SliverAppBar(
-        surfaceTintColor: Colors.transparent,
-        expandedHeight: expandedHeight,
-        floating: false,
-        pinned: true,
-        automaticallyImplyLeading: false,
-        elevation: 0.2,
-        backgroundColor: Brand.isCej() ? AppColors.primary : AppColors.primaryDarkenStrong,
-        flexibleSpace: AutoFocusA11y(
-          child: ClipRRect(
-            child: FlexibleSpaceBar(
-              titlePadding: EdgeInsetsDirectional.only(
-                start: 0,
-                bottom: Margins.spacing_base,
-              ),
-              expandedTitleScale: FontSizes.xl / FontSizes.huge,
-              title: Padding(
-                padding: EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Tooltip(
-                        message: title,
-                        excludeFromSemantics: true,
-                        child: AutoFocusA11y(
-                          child: Text(
-                            title,
-                            style: TextStyles.primaryAppBar
-                                .copyWith(fontSize: A11yUtils.withTextScale(context) ? FontSizes.semi : FontSizes.huge)
-                                .copyWith(color: AppColors.grey100),
+    return SliverLayoutBuilder(
+      builder: (context, constraints) {
+        return SliverAppBar(
+          surfaceTintColor: AppColors.transparent,
+          expandedHeight: expandedHeight,
+          floating: false,
+          pinned: true,
+          automaticallyImplyLeading: false,
+          elevation: 0.2,
+          backgroundColor: Brand.isCej() ? AppColors.primary : AppColors.primaryDarkenStrong,
+          flexibleSpace: AutoFocusA11y(
+            child: ClipRRect(
+              child: FlexibleSpaceBar(
+                titlePadding: EdgeInsetsDirectional.only(
+                  start: 0,
+                  bottom: Margins.spacing_base,
+                ),
+                expandedTitleScale: FontSizes.xl / FontSizes.huge,
+                title: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Tooltip(
+                          message: title,
+                          excludeFromSemantics: true,
+                          child: AutoFocusA11y(
+                            child: Text(
+                              title,
+                              style: TextStyles.primaryAppBar
+                                  .copyWith(
+                                    fontSize: A11yUtils.withTextScale(context) ? FontSizes.semi : FontSizes.huge,
+                                  )
+                                  .copyWith(color: AppColors.grey100),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    _CentreNotif(withNewNotifications),
-                    SizedBox(width: Margins.spacing_s),
-                    ProfileButton(isDarkColor: Brand.isCej()),
-                  ],
+                      _CentreNotif(withNewNotifications),
+                      SizedBox(width: Margins.spacing_s),
+                      ProfileButton(isDarkColor: Brand.isCej()),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }
 
@@ -183,7 +187,7 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       centerTitle: false,
       scrolledUnderElevation: 0,
-      surfaceTintColor: Colors.transparent,
+      surfaceTintColor: AppColors.transparent,
       leading: leading,
       actions: actions,
       backgroundColor: backgroundColor ?? Colors.white,

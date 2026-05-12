@@ -35,7 +35,7 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
 
   Widget _build(BuildContext context, SuppressionCompteViewModel viewModel) {
     return Dialog(
-      surfaceTintColor: Colors.transparent,
+      surfaceTintColor: AppColors.transparent,
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(Margins.spacing_base),

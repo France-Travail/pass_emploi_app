@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/features/developer_option/activation/developer_options_action.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
@@ -47,7 +48,7 @@ class _AppVersion extends StatelessWidget {
           padding: const EdgeInsets.all(Margins.spacing_base),
           child: Text(
             _appVersion,
-            style: TextStyles.textBaseBoldWithColor(Colors.white),
+            style: TextStyles.textBaseBoldWithColor(AppColors.contentOnPrimary),
           ),
         ),
       ),

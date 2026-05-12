@@ -49,7 +49,7 @@ class _SecondaryButtonState extends State<SecondaryButton> {
           style: OutlinedButton.styleFrom(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimens.radius_base)),
             backgroundColor: Color.alphaBlend(
-              isHovered ? textColor.withValues(alpha: 0.2) : Colors.transparent,
+              isHovered ? textColor.withValues(alpha: 0.2) : AppColors.transparent,
               widget.backgroundColor,
             ),
             side: BorderSide(color: textColor, width: 2),

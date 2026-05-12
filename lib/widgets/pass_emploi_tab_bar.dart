@@ -28,7 +28,7 @@ class _PassEmploiTabBarState extends State<PassEmploiTabBar> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_m),
-      color: Brand.isCej() ? Colors.transparent : AppColors.primary,
+      color: Brand.isCej() ? AppColors.transparent : AppColors.primary,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

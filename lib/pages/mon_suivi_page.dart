@@ -196,7 +196,7 @@ class _Content extends StatelessWidget {
             child: InfoCard(
               message: viewModel.monSuiviDemarchesKoMessage!,
               backgroundColor: AppColors.disabled,
-              textColor: Colors.white,
+              textColor: AppColors.contentOnPrimary,
             ),
           ),
         ],
@@ -250,14 +250,18 @@ class _WarningCardState extends State<_WarningCard> {
                 children: [
                   SizedBox(width: Margins.spacing_base),
                   IconButton(
-                    icon: Icon(AppIcons.highlight_off, color: Colors.white, semanticLabel: Strings.closeDialog),
+                    icon: Icon(
+                      AppIcons.highlight_off,
+                      color: AppColors.contentOnPrimary,
+                      semanticLabel: Strings.closeDialog,
+                    ),
                     onPressed: () => setState(() => _visible = false),
                   ),
                   SizedBox(width: Margins.spacing_s),
                   Flexible(
                     child: Semantics(
                       focusable: true,
-                      child: Text(widget.label, style: TextStyles.textSMedium(color: Colors.white)),
+                      child: Text(widget.label, style: TextStyles.textSMedium(color: AppColors.contentOnPrimary)),
                     ),
                   ),
                   SizedBox(width: Margins.spacing_base),
@@ -267,7 +271,7 @@ class _WarningCardState extends State<_WarningCard> {
                 alignment: Alignment.centerRight,
                 child: OutlinedButton(
                   onPressed: widget.onPressed,
-                  child: Text(Strings.retry, style: TextStyles.textSBoldWithColor(Colors.white)),
+                  child: Text(Strings.retry, style: TextStyles.textSBoldWithColor(AppColors.contentOnPrimary)),
                 ),
               ),
             ],
@@ -294,10 +298,10 @@ class _UserActionsPendingCard extends StatelessWidget {
         backgroundColor: AppColors.disabled,
         child: Row(
           children: [
-            Icon(AppIcons.error_rounded, color: Colors.white),
+            Icon(AppIcons.error_rounded, color: AppColors.contentOnPrimary),
             SizedBox(width: Margins.spacing_s),
             Flexible(
-              child: Text(message, style: TextStyles.textXsRegular(color: Colors.white)),
+              child: Text(message, style: TextStyles.textXsRegular(color: AppColors.contentOnPrimary)),
             ),
           ],
         ),
@@ -678,7 +682,11 @@ class _Pagination extends StatelessWidget {
 class _PaginationLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Shimmer.fromColors(baseColor: AppColors.grey100, highlightColor: Colors.white, child: _MonSuiviItemLoader());
+    return Shimmer.fromColors(
+      baseColor: AppColors.grey100,
+      highlightColor: AppColors.contentOnPrimary,
+      child: _MonSuiviItemLoader(),
+    );
   }
 }
 

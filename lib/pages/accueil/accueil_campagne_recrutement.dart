@@ -23,7 +23,7 @@ class CampagneRecrutementCard extends StatelessWidget {
     return Semantics(
       button: true,
       child: CardContainer(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.transparent,
         splashColor: AppColors.primaryDarken.withValues(alpha: 0.5),
         padding: EdgeInsets.zero,
         onTap: () => launchExternalUrl(ExternalLinks.campagneRecrutement),

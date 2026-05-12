@@ -150,7 +150,7 @@ class _SkipButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
       child: Material(
-        color: Colors.transparent,
+        color: AppColors.transparent,
         child: Row(
           children: [
             Spacer(),
@@ -163,7 +163,9 @@ class _SkipButton extends StatelessWidget {
                   : null,
               child: Text(
                 Strings.skip,
-                style: TextStyles.textPrimaryButton.copyWith(color: active ? Colors.white : Colors.transparent),
+                style: TextStyles.textPrimaryButton.copyWith(
+                  color: active ? AppColors.contentOnPrimary : AppColors.transparent,
+                ),
               ),
             ),
           ],
@@ -190,7 +192,7 @@ class _TutorialContentCard extends StatelessWidget {
       elevation: 8,
       borderRadius: BorderRadius.circular(Dimens.radius_base),
       child: DecoratedBox(
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(Dimens.radius_base)),
+        decoration: BoxDecoration(color: AppColors.bg, borderRadius: BorderRadius.circular(Dimens.radius_base)),
         child: Scrollbar(
           child: SingleChildScrollView(
             child: Padding(
@@ -230,13 +232,16 @@ class _AnimationState extends State<_Animation> with SingleTickerProviderStateMi
     reverseDuration: AnimationDurations.medium,
     vsync: this,
   );
-  late final Animation<double> _offsetAnimation = Tween<double>(
-    begin: 0,
-    end: 30,
-  ).animate(CurvedAnimation(
-    parent: _animationController,
-    curve: Curves.bounceInOut,
-  ));
+  late final Animation<double> _offsetAnimation =
+      Tween<double>(
+        begin: 0,
+        end: 30,
+      ).animate(
+        CurvedAnimation(
+          parent: _animationController,
+          curve: Curves.bounceInOut,
+        ),
+      );
 
   Future<void> _playAnimation() async {
     await _animationController.forward(from: 0);
@@ -281,7 +286,7 @@ class _DelayedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Material(
-        color: Colors.transparent,
+        color: AppColors.transparent,
         child: InkWell(
           onTap: () {
             viewModel.onDelay();

@@ -33,7 +33,8 @@ class PartageActivitePage extends StatelessWidget {
 
   Widget _scaffold(BuildContext context, PartageActivitePageViewModel viewModel) {
     return Scaffold(
-      appBar: SecondaryAppBar(title: Strings.activityShareLabel),
+      backgroundColor: AppColors.grey100,
+      appBar: SecondaryAppBar(title: Strings.activityShareLabel, backgroundColor: AppColors.bg),
       body: _body(viewModel),
     );
   }
@@ -124,7 +125,7 @@ class _PartageFavorisState extends State<_PartageFavoris> {
       children: [
         DecoratedBox(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.bg,
             borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
           child: Padding(
