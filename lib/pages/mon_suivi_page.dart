@@ -436,7 +436,7 @@ class _SemaineSectionItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (boldTitle != null) ...[
-                Text(boldTitle!, style: TextStyles.textMBold),
+                Text(boldTitle!, style: TextStyles.textMBold.copyWith(color: context.content)),
                 const SizedBox(height: Margins.spacing_xs),
               ],
               Text(interval, style: TextStyles.textXsRegular(color: context.grey800)),
@@ -560,10 +560,10 @@ class _Day extends StatelessWidget {
         children: [
           Text(
             day.shortened,
-            style: TextStyles.textXsMedium(),
+            style: TextStyles.textXsMedium(color: context.content),
             semanticsLabel: day.shortened.toFullDayForScreenReaders(),
           ),
-          Text(day.number, style: TextStyles.textBaseBold),
+          Text(day.number, style: TextStyles.textBaseBold.copyWith(color: context.content)),
           Semantics(label: day.month),
         ],
       ),
