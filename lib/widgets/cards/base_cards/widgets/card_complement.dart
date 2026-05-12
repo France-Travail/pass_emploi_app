@@ -17,7 +17,7 @@ class CardComplement extends StatelessWidget {
   CardComplement({
     required this.text,
     required this.icon,
-    this.color = AppColors.contentLight,
+    this.color,
     TextStyle? style,
     this.semanticsReplacement,
   }) : style = style ?? TextStyles.textSMedium();
@@ -35,7 +35,6 @@ class CardComplement extends StatelessWidget {
   factory CardComplement.date({required String text}) => CardComplement(
     text: text,
     icon: AppIcons.event,
-    color: AppColors.contentLight,
     style: TextStyles.textSMedium(),
   );
 
@@ -54,25 +53,26 @@ class CardComplement extends StatelessWidget {
   CardComplement.dateDerniereConsultation(DateTime date)
     : text = Strings.offreLastSeen(date),
       icon = AppIcons.visibility_outlined,
-      color = AppColors.contentLight,
+      color = null,
       style = TextStyles.textXsRegular(),
       semanticsReplacement = null;
 
   CardComplement.datePostulation(DateTime date)
     : text = Strings.offrePostulatedSeen(date),
       icon = AppIcons.check_circle_outline_rounded,
-      color = AppColors.contentLight,
+      color = null,
       style = TextStyles.textXsRegular(),
       semanticsReplacement = null;
 
   @override
   Widget build(BuildContext context) {
+    final resolvedColor = color ?? context.content;
     return Semantics(
       label: semanticsReplacement,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: Dimens.icon_size_base, color: color),
+          Icon(icon, size: Dimens.icon_size_base, color: resolvedColor),
           SizedBox(width: Margins.spacing_xs),
           Flexible(
             fit: FlexFit.loose,
@@ -80,7 +80,7 @@ class CardComplement extends StatelessWidget {
               excluding: semanticsReplacement != null,
               child: Text(
                 text,
-                style: style,
+                style: style.copyWith(color: resolvedColor),
               ),
             ),
           ),

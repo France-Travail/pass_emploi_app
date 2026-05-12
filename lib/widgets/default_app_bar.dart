@@ -54,7 +54,7 @@ class PrimarySliverAppbar extends StatelessWidget {
                                   .copyWith(
                                     fontSize: A11yUtils.withTextScale(context) ? FontSizes.semi : FontSizes.huge,
                                   )
-                                  .copyWith(color: context.grey100),
+                                  .copyWith(color: AppColors.contentOnPrimary),
                             ),
                           ),
                         ),

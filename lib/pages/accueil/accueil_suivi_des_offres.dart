@@ -45,12 +45,12 @@ class _Illustration extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(Strings.suivezVosOffres, style: TextStyles.textSBold),
-                Text(Strings.suivezVosOffresDescription, style: TextStyles.textSRegular()),
+                Text(Strings.suivezVosOffres, style: TextStyles.textSBold.copyWith(color: context.content)),
+                Text(Strings.suivezVosOffresDescription, style: TextStyles.textSRegular(color: context.content)),
               ],
             ),
           ),
-          Icon(AppIcons.chevron_right_rounded, color: AppColors.primary),
+          Icon(AppIcons.chevron_right_rounded, color: context.content),
         ],
       ),
     );

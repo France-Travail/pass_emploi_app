@@ -91,8 +91,8 @@ class AlerteCardContent extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: TextStyles.textSBold),
-                Text(subtitle, style: TextStyles.textSRegular()),
+                Text(title, style: TextStyles.textSBold.copyWith(color: context.content)),
+                Text(subtitle, style: TextStyles.textSRegular(color: context.content)),
               ],
             ),
           ),
@@ -103,7 +103,7 @@ class AlerteCardContent extends StatelessWidget {
               icon: Container(
                 padding: EdgeInsets.all(Margins.spacing_s),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryLighten,
+                  color: context.content,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(AppIcons.delete, color: AppColors.primary),

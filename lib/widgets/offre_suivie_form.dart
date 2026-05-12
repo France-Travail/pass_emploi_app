@@ -127,10 +127,10 @@ class _Confirmation extends StatelessWidget {
           right: -Margins.spacing_base,
           child: IconButton(
             onPressed: () => viewModel.onHideForever(),
-              icon: Icon(
-                AppIcons.close_rounded,
-                color: showPrimaryBackground ? AppColors.contentOnPrimary : context.content,
-              ),
+            icon: Icon(
+              AppIcons.close_rounded,
+              color: showPrimaryBackground ? AppColors.contentOnPrimary : context.content,
+            ),
           ),
         ),
       ],
@@ -224,7 +224,7 @@ class _OptionsState extends State<_Options> {
     return Container(
       padding: EdgeInsets.all(Margins.spacing_s),
       decoration: BoxDecoration(
-        color: AppColors.primaryLighten,
+        color: context.grey100,
         borderRadius: BorderRadius.circular(Dimens.radius_base),
       ),
       child: Column(
