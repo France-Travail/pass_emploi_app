@@ -105,7 +105,7 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const bgColor = AppColors.bg;
+    const bgColor = AppColors.bgLight;
     return Stack(
       children: [
         Scaffold(
@@ -115,7 +115,7 @@ class _Body extends StatelessWidget {
         ),
         if (viewModel.showLoading)
           ColoredBox(
-            color: AppColors.bg.withValues(alpha: 0.5),
+            color: AppColors.bgLight.withValues(alpha: 0.5),
             child: Center(child: CircularProgressIndicator()),
           ),
       ],

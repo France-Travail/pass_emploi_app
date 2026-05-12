@@ -31,7 +31,7 @@ class ActualiteMissionLocalePage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.actualiteMissionLocale,
       child: Container(
-        color: AppColors.grey100,
+        color: AppColors.grey100Light,
         child: ConnectivityContainer(
           child: StoreConnector<AppState, ActualiteMissionLocaleViewModel>(
             onInit: (store) {
@@ -97,7 +97,7 @@ class _Empty extends StatelessWidget {
         illustration: Container(
           padding: EdgeInsets.all(Margins.spacing_m),
           decoration: BoxDecoration(
-            color: AppColors.bg,
+            color: AppColors.bgLight,
             shape: BoxShape.circle,
           ),
           child: SvgPicture.asset(Drawables.megaphone),
@@ -194,8 +194,8 @@ class _ExternalUrlAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      surfaceTintColor: AppColors.bg,
-      backgroundColor: AppColors.bg,
+      surfaceTintColor: AppColors.bgLight,
+      backgroundColor: AppColors.bgLight,
       title: Stack(
         children: [
           Column(
@@ -252,12 +252,12 @@ class _ActualiteItemSupprime extends StatelessWidget {
           margin: EdgeInsets.symmetric(vertical: Margins.spacing_base),
           padding: EdgeInsets.symmetric(vertical: Margins.spacing_base, horizontal: Margins.spacing_base),
           decoration: BoxDecoration(
-            border: Border.all(color: AppColors.grey500),
+            border: Border.all(color: AppColors.grey500Light),
             borderRadius: BorderRadius.circular(Dimens.radius_base),
           ),
           child: Text(
             Strings.actualiteMissionLocaleSupprime,
-            style: TextStyles.textSRegular(color: AppColors.grey800),
+            style: TextStyles.textSRegular(color: AppColors.grey800Light),
           ),
         ),
       ],

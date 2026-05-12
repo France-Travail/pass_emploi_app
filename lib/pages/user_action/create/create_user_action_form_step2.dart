@@ -323,7 +323,7 @@ class _UserActionDescriptionFieldState extends State<UserActionDescriptionField>
                               SizedBox(
                                 height: 28.0,
                                 child: VerticalDivider(
-                                  color: AppColors.grey500,
+                                  color: AppColors.grey500Light,
                                   thickness: 1,
                                   width: 1,
                                 ),

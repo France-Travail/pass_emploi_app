@@ -120,8 +120,10 @@ class _PartageCard extends StatelessWidget {
       case OffreType.alternance:
         Navigator.push(
           context,
-          OffreEmploiDetailsPage.materialPageRoute(offreItem.idPartage,
-              fromAlternance: offreItem.type == OffreType.alternance),
+          OffreEmploiDetailsPage.materialPageRoute(
+            offreItem.idPartage,
+            fromAlternance: offreItem.type == OffreType.alternance,
+          ),
         );
         break;
       case OffreType.immersion:
@@ -181,7 +183,7 @@ class _SeeSharedDetails extends StatelessWidget {
           padding: const EdgeInsets.only(right: 4.0),
           child: Text(_title(), style: TextStyles.textSRegular()),
         ),
-        Icon(AppIcons.chevron_right_rounded, color: AppColors.grey800)
+        Icon(AppIcons.chevron_right_rounded, color: AppColors.grey800Light),
       ],
     );
   }

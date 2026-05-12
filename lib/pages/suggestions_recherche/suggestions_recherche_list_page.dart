@@ -94,7 +94,7 @@ class _Scaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const backgroundColor = AppColors.grey100;
+    const backgroundColor = AppColors.grey100Light;
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: SecondaryAppBar(title: Strings.mesSuggestionsAlertes, backgroundColor: backgroundColor),

@@ -107,7 +107,7 @@ class _MoyensList extends StatelessWidget {
           button: true,
           child: CardContainer(
             onTap: () => onCommentSelected(moyen),
-            backgroundColor: moyen == selectedComment ? AppColors.primaryDarken : AppColors.bg,
+            backgroundColor: moyen == selectedComment ? AppColors.primaryDarken : AppColors.bgLight,
             child: ConstrainedBox(
               constraints: const BoxConstraints(minHeight: 40),
               child: Center(

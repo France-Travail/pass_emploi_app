@@ -148,7 +148,7 @@ class _Filtres extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: AppColors.bg,
+      color: AppColors.bgLight,
       child: SingleChildScrollView(
         clipBehavior: Clip.none,
         child: Column(
@@ -211,7 +211,7 @@ class _TypeFiltreState extends State<_TypeFiltre> {
         SizedBox(height: Margins.spacing_base),
         DecoratedBox(
           decoration: BoxDecoration(
-            color: AppColors.bg,
+            color: AppColors.bgLight,
             borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base)),
             boxShadow: [Shadows.radius_base],
           ),
@@ -263,7 +263,7 @@ class _DateFiltres extends StatelessWidget {
         SizedBox(height: Margins.spacing_base),
         DecoratedBox(
           decoration: BoxDecoration(
-            color: AppColors.bg,
+            color: AppColors.bgLight,
             borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base)),
             boxShadow: [Shadows.radius_base],
           ),

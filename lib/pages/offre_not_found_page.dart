@@ -17,8 +17,8 @@ class OffreNotFoundPage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.offreNotFound,
       child: Scaffold(
-        backgroundColor: AppColors.bg,
-        appBar: SecondaryAppBar(title: Strings.offreNotFoundTitle, backgroundColor: AppColors.bg),
+        backgroundColor: AppColors.bgLight,
+        appBar: SecondaryAppBar(title: Strings.offreNotFoundTitle, backgroundColor: AppColors.bgLight),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
           child: Center(

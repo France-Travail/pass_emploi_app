@@ -428,7 +428,7 @@ class _FeedbackCaption extends StatelessWidget {
             alignment: Alignment.topLeft,
             child: SizedBox(
               width: maxWidthForLargeTextScale,
-              child: Text(responses[0], style: TextStyles.textSMedium(color: AppColors.grey800)),
+              child: Text(responses[0], style: TextStyles.textSMedium(color: AppColors.grey800Light)),
             ),
           ),
           Align(
@@ -437,7 +437,7 @@ class _FeedbackCaption extends StatelessWidget {
               width: maxWidthForLargeTextScale,
               child: Align(
                 alignment: Alignment.topCenter,
-                child: Text(responses[1], style: TextStyles.textSMedium(color: AppColors.grey800)),
+                child: Text(responses[1], style: TextStyles.textSMedium(color: AppColors.grey800Light)),
               ),
             ),
           ),
@@ -447,7 +447,7 @@ class _FeedbackCaption extends StatelessWidget {
               width: maxWidthForLargeTextScale,
               child: Align(
                 alignment: Alignment.topRight,
-                child: Text(responses[2], style: TextStyles.textSMedium(color: AppColors.grey800)),
+                child: Text(responses[2], style: TextStyles.textSMedium(color: AppColors.grey800Light)),
               ),
             ),
           ),

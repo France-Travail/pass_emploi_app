@@ -44,7 +44,7 @@ class _CampagneQuestionPageState extends State<CampagneQuestionPage> {
   }
 
   Widget _scaffold(BuildContext context, QuestionPageViewModel viewModel) {
-    const backgroundColor = AppColors.bg;
+    const backgroundColor = AppColors.bgLight;
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: SecondaryAppBar(title: viewModel.titre, backgroundColor: backgroundColor),

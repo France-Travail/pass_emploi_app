@@ -30,7 +30,7 @@ class ChatScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final body = Container(
-      color: AppColors.grey100,
+      color: AppColors.grey100Light,
       child: ConnectivityContainer(
         child: Column(
           children: [
@@ -53,7 +53,7 @@ class ChatScaffold extends StatelessWidget {
     if (!withScaffold) return body;
 
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: AppColors.grey100Light,
       appBar: withAppBar ? PrimaryAppBar(title: title) : null,
       body: body,
     );

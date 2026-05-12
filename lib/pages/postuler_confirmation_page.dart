@@ -30,8 +30,8 @@ class PostulerConfirmationPage extends StatelessWidget {
       converter: (store) => PostulerConfirmationViewModel.create(store, offreId),
       builder: (context, viewModel) {
         return Scaffold(
-          backgroundColor: AppColors.bg,
-          appBar: SecondaryAppBar(title: Strings.offrePostuleeConfirmationAppBar, backgroundColor: AppColors.bg),
+          backgroundColor: AppColors.bgLight,
+          appBar: SecondaryAppBar(title: Strings.offrePostuleeConfirmationAppBar, backgroundColor: AppColors.bgLight),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
             child: SingleChildScrollView(

@@ -27,7 +27,7 @@ class CriteresRechercheExpansionTile extends StatelessWidget {
     const mainAnimationCurve = Curves.ease;
     return AnimatedContainer(
       decoration: BoxDecoration(
-        color: initiallyExpanded ? AppColors.bg : AppColors.primary,
+        color: initiallyExpanded ? AppColors.bgLight : AppColors.primary,
         borderRadius: BorderRadius.circular(Dimens.radius_base),
         boxShadow: [Shadows.radius_base],
       ),

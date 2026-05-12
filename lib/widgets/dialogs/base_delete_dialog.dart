@@ -34,8 +34,8 @@ class BaseDeleteDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      surfaceTintColor: AppColors.bg,
-      backgroundColor: AppColors.bg,
+      surfaceTintColor: AppColors.bgLight,
+      backgroundColor: AppColors.bgLight,
       title: Stack(
         children: [
           Column(

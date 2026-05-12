@@ -33,8 +33,8 @@ class PartageActivitePage extends StatelessWidget {
 
   Widget _scaffold(BuildContext context, PartageActivitePageViewModel viewModel) {
     return Scaffold(
-      backgroundColor: AppColors.grey100,
-      appBar: SecondaryAppBar(title: Strings.activityShareLabel, backgroundColor: AppColors.bg),
+      backgroundColor: AppColors.grey100Light,
+      appBar: SecondaryAppBar(title: Strings.activityShareLabel, backgroundColor: AppColors.bgLight),
       body: _body(viewModel),
     );
   }
@@ -125,7 +125,7 @@ class _PartageFavorisState extends State<_PartageFavoris> {
       children: [
         DecoratedBox(
           decoration: BoxDecoration(
-            color: AppColors.bg,
+            color: AppColors.bgLight,
             borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
           child: Padding(
@@ -137,7 +137,7 @@ class _PartageFavorisState extends State<_PartageFavoris> {
                     child: Text(
                       Strings.shareFavoriteLabel,
                       style: TextStyles.textBaseRegularWithColor(
-                        widget.updatedState == DisplayState.LOADING ? AppColors.grey500 : AppColors.contentLight,
+                        widget.updatedState == DisplayState.LOADING ? AppColors.grey500Light : AppColors.contentLight,
                       ),
                     ),
                   ),
@@ -154,7 +154,7 @@ class _PartageFavorisState extends State<_PartageFavoris> {
                   child: Text(
                     _partageFavorisEnabled ? Strings.yes : Strings.no,
                     style: TextStyles.textBaseRegularWithColor(
-                      widget.updatedState == DisplayState.LOADING ? AppColors.grey500 : AppColors.contentLight,
+                      widget.updatedState == DisplayState.LOADING ? AppColors.grey500Light : AppColors.contentLight,
                     ),
                   ),
                 ),

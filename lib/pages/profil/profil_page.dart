@@ -63,7 +63,7 @@ class _Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: AppColors.grey100Light,
       appBar: PrimaryAppBar(title: Strings.menuProfil, withProfileButton: false, canPop: true),
       body: Semantics(
         container: true,
@@ -400,7 +400,7 @@ class _ListTileCard extends StatelessWidget {
                                 ),
                         ),
                       ),
-                      Divider(color: AppColors.grey100, height: 0),
+                      Divider(color: AppColors.grey100Light, height: 0),
                     ];
                   })
                   .expand((e) => e)

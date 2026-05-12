@@ -44,7 +44,7 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: AppColors.bgLight,
       resizeToAvoidBottomInset: false,
       appBar: SecondaryAppBar(
         title: Strings.createActionAppBarTitle,
@@ -89,7 +89,7 @@ class _NavButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.bg,
+        color: AppColors.bgLight,
         border: Border(top: BorderSide(color: AppColors.primaryLighten, width: 1)),
       ),
       child: Padding(
@@ -130,7 +130,7 @@ class _BackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SecondaryButton(
       label: Strings.back,
-      backgroundColor: AppColors.bg,
+      backgroundColor: AppColors.bgLight,
       onPressed: onPressed,
     );
   }

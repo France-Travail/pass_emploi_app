@@ -139,7 +139,7 @@ class ActionCategoryCard extends StatelessWidget {
               child: Text(
                 description,
                 textAlign: TextAlign.center,
-                style: TextStyles.textSRegular(color: AppColors.grey800),
+                style: TextStyles.textSRegular(color: AppColors.grey800Light),
               ),
             ),
           ],

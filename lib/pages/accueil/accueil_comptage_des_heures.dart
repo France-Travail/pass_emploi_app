@@ -179,12 +179,12 @@ class _CompteurArcsPainter extends CustomPainter {
     const sweepAngle = 3.14;
 
     final bgPaintOuter = Paint()
-      ..color = AppColors.grey100
+      ..color = AppColors.grey100Light
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeWidth = arcThickness;
     final bgPaintInner = Paint()
-      ..color = AppColors.grey100
+      ..color = AppColors.grey100Light
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeWidth = arcThickness;

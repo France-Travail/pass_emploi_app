@@ -173,7 +173,7 @@ class _OrDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = AppColors.grey500;
+    final color = AppColors.grey500Light;
     return Row(
       children: [
         Expanded(child: Divider(color: color, height: 1)),

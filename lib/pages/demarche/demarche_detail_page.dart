@@ -58,7 +58,7 @@ class DemarcheDetailPage extends StatelessWidget {
             },
             onDispose: (store) => store.dispatch(UpdateDemarcheResetAction()),
             builder: (context, viewModel) => Scaffold(
-              backgroundColor: AppColors.bg,
+              backgroundColor: AppColors.bgLight,
               appBar: SecondaryAppBar(
                 title: Strings.demarcheDetails,
                 actions: [
@@ -253,7 +253,7 @@ class _AttributItem extends StatelessWidget {
         children: [
           Icon(
             AppIcons.place_outlined,
-            color: AppColors.grey700,
+            color: AppColors.grey700Light,
             size: Dimens.icon_size_m,
           ),
           SizedBox(width: 12),
@@ -307,7 +307,7 @@ class _Historique extends StatelessWidget {
       padding: const EdgeInsets.only(left: 10),
       decoration: BoxDecoration(
         border: Border(
-          left: BorderSide(color: AppColors.grey500, width: 1),
+          left: BorderSide(color: AppColors.grey500Light, width: 1),
         ),
       ),
       child: Column(

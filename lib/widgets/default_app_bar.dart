@@ -54,7 +54,7 @@ class PrimarySliverAppbar extends StatelessWidget {
                                   .copyWith(
                                     fontSize: A11yUtils.withTextScale(context) ? FontSizes.semi : FontSizes.huge,
                                   )
-                                  .copyWith(color: AppColors.grey100),
+                                  .copyWith(color: AppColors.grey100Light),
                             ),
                           ),
                         ),
@@ -127,12 +127,12 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconColor = Brand.isCej() ? AppColors.contentLight : AppColors.grey100;
+    final iconColor = Brand.isCej() ? AppColors.contentLight : AppColors.grey100Light;
     return AppBar(
       toolbarHeight: toolBarHeight,
       leading: canPop ? BackButton(color: iconColor) : null,
       scrolledUnderElevation: 0,
-      backgroundColor: Brand.isCej() ? AppColors.grey100 : AppColors.primary,
+      backgroundColor: Brand.isCej() ? AppColors.grey100Light : AppColors.primary,
       title: Semantics(
         header: true,
         focusable: withAutofocusA11y,
@@ -143,7 +143,9 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
             enabled: withAutofocusA11y,
             child: Text(
               title,
-              style: TextStyles.primaryAppBar.copyWith(color: Brand.isCej() ? AppColors.primary : AppColors.grey100),
+              style: TextStyles.primaryAppBar.copyWith(
+                color: Brand.isCej() ? AppColors.primary : AppColors.grey100Light,
+              ),
               overflow: TextOverflow.fade,
             ),
           ),
@@ -190,7 +192,7 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
       surfaceTintColor: AppColors.transparent,
       leading: leading,
       actions: actions,
-      backgroundColor: backgroundColor ?? AppColors.bg,
+      backgroundColor: backgroundColor ?? AppColors.bgLight,
       title: Semantics(
         header: true,
         child: Tooltip(

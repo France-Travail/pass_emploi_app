@@ -22,7 +22,7 @@ class CardContainer extends StatelessWidget {
     required this.child,
     this.onTap,
     this.onLongPress,
-    this.backgroundColor = AppColors.bg,
+    this.backgroundColor = AppColors.bgLight,
     Color? splashColor,
     this.padding = const EdgeInsets.all(Margins.spacing_base),
     this.withShadow = true,

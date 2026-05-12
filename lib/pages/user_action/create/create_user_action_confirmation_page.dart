@@ -42,8 +42,8 @@ class CreateUserActionConfirmationPage extends StatelessWidget {
       converter: (store) => CreateActionSuccessViewModel.create(store),
       builder: (context, viewModel) {
         return Scaffold(
-          backgroundColor: AppColors.bg,
-          appBar: SecondaryAppBar(title: Strings.createActionAppBarTitle, backgroundColor: AppColors.bg),
+          backgroundColor: AppColors.bgLight,
+          appBar: SecondaryAppBar(title: Strings.createActionAppBarTitle, backgroundColor: AppColors.bgLight),
           floatingActionButton: viewModel.displayState == DisplayState.CONTENT
               ? _Buttons(
                   onGoActionDetail: () =>

@@ -24,7 +24,8 @@ import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/recherche/actions_recherche.dart';
 import 'package:pass_emploi_app/widgets/recherche/bloc_resultat_recherche.dart';
 import 'package:pass_emploi_app/widgets/recherche/edit_criteres_button.dart';
-import 'package:pass_emploi_app/widgets/recherche/recherche_criteres_full_screen.dart';import 'package:pass_emploi_app/widgets/recherche/resultat_recherche_contenu.dart';
+import 'package:pass_emploi_app/widgets/recherche/recherche_criteres_full_screen.dart';
+import 'package:pass_emploi_app/widgets/recherche/resultat_recherche_contenu.dart';
 import 'package:redux/redux.dart';
 
 abstract class RechercheOffrePage<Result> extends StatefulWidget {
@@ -74,7 +75,7 @@ class _RechercheOffrePageState<Result> extends State<RechercheOffrePage<Result>>
   @override
   Widget build(BuildContext context) {
     _store = StoreProvider.of<AppState>(context);
-    const backgroundColor = AppColors.grey100;
+    const backgroundColor = AppColors.grey100Light;
     return Tracker(
       tracking: AnalyticsScreenNames.rechercheInitiale(widget.analyticsType()),
       child: Scaffold(

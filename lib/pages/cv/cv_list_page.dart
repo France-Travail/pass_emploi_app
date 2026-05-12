@@ -81,7 +81,7 @@ class _Body extends StatelessWidget {
       DisplayState.LOADING => Center(child: CircularProgressIndicator()),
       DisplayState.CONTENT => _Content(viewModel),
       DisplayState.EMPTY => _EmptyListPlaceholder(insideBottomSheet),
-      DisplayState.FAILURE => Retry(Strings.cvError, () => viewModel.retry())
+      DisplayState.FAILURE => Retry(Strings.cvError, () => viewModel.retry()),
     };
   }
 }
@@ -133,7 +133,7 @@ class _CvListView extends StatelessWidget {
                         label: Strings.cvDownload,
                         icon: AppIcons.download_rounded,
                         onPressed: () => _downloadCv(context, cv),
-                      )
+                      ),
               ],
             ),
           ),
@@ -171,7 +171,7 @@ class _ApiPeKo extends StatelessWidget {
                 SizedBox(height: Margins.spacing_m),
                 Text(
                   Strings.cvErrorApiPeKoMessage,
-                  style: TextStyles.textBaseMedium.copyWith(color: AppColors.grey800),
+                  style: TextStyles.textBaseMedium.copyWith(color: AppColors.grey800Light),
                   textAlign: TextAlign.center,
                 ),
               ],

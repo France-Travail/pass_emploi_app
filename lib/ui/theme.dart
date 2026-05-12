@@ -16,7 +16,7 @@ class PassEmploiTheme {
     switchTheme: SwitchThemeData(
       thumbColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) => AppColors.contentOnPrimary),
       trackColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-        if (states.contains(WidgetState.disabled)) return AppColors.grey700;
+        if (states.contains(WidgetState.disabled)) return AppColors.grey700Light;
         if (states.contains(WidgetState.selected)) return AppColors.success;
         return null;
       }),
@@ -34,10 +34,10 @@ class PassEmploiTheme {
     return SliderThemeData(
       trackHeight: 6.0,
       activeTrackColor: AppColors.primary,
-      inactiveTrackColor: AppColors.grey800,
+      inactiveTrackColor: AppColors.grey800Light,
       thumbColor: AppColors.primary,
       activeTickMarkColor: AppColors.primary,
-      inactiveTickMarkColor: AppColors.grey800,
+      inactiveTickMarkColor: AppColors.grey800Light,
     );
   }
 

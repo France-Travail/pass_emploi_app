@@ -43,7 +43,7 @@ class SuppressionComptePage extends StatelessWidget {
 
   Widget _scaffold(BuildContext context, SuppressionCompteViewModel viewModel) {
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: AppColors.bgLight,
       appBar: SecondaryAppBar(title: Strings.suppressionPageTitle),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: _DeleteAccountButton(),
@@ -77,7 +77,7 @@ class SuppressionComptePage extends StatelessWidget {
         ),
         if (viewModel.displayState == DisplayState.LOADING)
           Container(
-            color: AppColors.bg.withValues(alpha: 0.5),
+            color: AppColors.bgLight.withValues(alpha: 0.5),
             child: Center(child: CircularProgressIndicator()),
           ),
       ],
@@ -141,7 +141,7 @@ class _DeleteAccountSuccessDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       titlePadding: EdgeInsets.all(Margins.spacing_m),
-      backgroundColor: AppColors.bg,
+      backgroundColor: AppColors.bgLight,
       title: Column(
         children: [
           Center(child: SizedBox(height: 100, width: 100, child: Image.asset(Drawables.success))),

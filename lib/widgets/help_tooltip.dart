@@ -27,7 +27,7 @@ class HelpTooltip extends StatelessWidget {
           margin: EdgeInsets.symmetric(horizontal: 16),
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppColors.bg,
+            color: AppColors.bgLight,
             borderRadius: const BorderRadius.all(Radius.circular(4)),
             border: Border.all(
               color: AppColors.primary,

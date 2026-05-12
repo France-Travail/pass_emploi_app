@@ -98,7 +98,7 @@ class _BodyState extends State<_Body> {
                   SepLine(
                     Margins.spacing_m,
                     Margins.spacing_m,
-                    color: AppColors.grey100,
+                    color: AppColors.grey100Light,
                   ),
                   Row(
                     children: [

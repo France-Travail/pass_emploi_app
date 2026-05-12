@@ -18,7 +18,7 @@ class ProfileButton extends StatelessWidget {
           height: 44,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: isDarkColor ? AppColors.primary : AppColors.grey100,
+            color: isDarkColor ? AppColors.primary : AppColors.grey100Light,
           ),
           child: IconButton(
             tooltip: Strings.profilButtonSemanticsLabel,

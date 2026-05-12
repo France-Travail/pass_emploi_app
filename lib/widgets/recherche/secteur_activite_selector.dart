@@ -104,7 +104,7 @@ class _SecteurActiviteFieldState extends State<_SecteurActiviteField> {
                 child: Row(
                   children: [
                     Expanded(child: _SelectedSecteurActivite(widget.value?.label ?? Strings.secteurActiviteAll)),
-                    Icon(AppIcons.chevron_down_rounded, color: AppColors.grey800),
+                    Icon(AppIcons.chevron_down_rounded, color: AppColors.grey800Light),
                     SizedBox(width: Margins.spacing_s),
                   ],
                 ),

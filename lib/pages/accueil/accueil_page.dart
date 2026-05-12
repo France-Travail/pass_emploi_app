@@ -226,7 +226,7 @@ class _Blocs extends StatelessWidget {
               child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: _buildItemsWithGradient()),
             ),
             ColoredBox(
-              color: AppColors.grey100,
+              color: AppColors.grey100Light,
               child: Padding(
                 padding: const EdgeInsets.all(Margins.spacing_base),
                 child: Column(children: _buildItemsWithoutGradient()),

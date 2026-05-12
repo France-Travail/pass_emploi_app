@@ -77,8 +77,8 @@ class _Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bg,
-      appBar: SecondaryAppBar(title: Strings.immersitionContactFormTitle, backgroundColor: AppColors.bg),
+      backgroundColor: AppColors.bgLight,
+      appBar: SecondaryAppBar(title: Strings.immersitionContactFormTitle, backgroundColor: AppColors.bgLight),
       body: Stack(
         children: [
           _Form(viewModel: viewModel),

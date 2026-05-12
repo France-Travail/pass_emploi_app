@@ -48,7 +48,7 @@ class CheckBoxGroupState<T extends CheckboxValueViewModel> extends State<CheckBo
         SizedBox(height: Margins.spacing_base),
         DecoratedBox(
           decoration: BoxDecoration(
-            color: AppColors.bg,
+            color: AppColors.bgLight,
             borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base)),
             boxShadow: [Shadows.radius_base],
           ),
@@ -61,7 +61,7 @@ class CheckBoxGroupState<T extends CheckboxValueViewModel> extends State<CheckBo
                   .toList(),
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -95,7 +95,7 @@ class CheckBoxGroupState<T extends CheckboxValueViewModel> extends State<CheckBo
         HelpTooltip(
           message: helpText,
           icon: AppIcons.info_rounded,
-        )
+        ),
       ],
     );
   }

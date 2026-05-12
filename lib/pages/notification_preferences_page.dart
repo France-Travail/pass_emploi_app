@@ -54,7 +54,7 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: AppColors.grey100Light,
       appBar: PrimaryAppBar(
         title: Strings.notificationsSettingsAppbarTitle,
         withProfileButton: false,

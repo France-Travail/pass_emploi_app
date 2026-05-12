@@ -60,7 +60,7 @@ class _ChatTextFieldState extends State<ChatTextField> {
     return OnboardingShowcase(
       source: ShowcaseSource.message,
       child: Container(
-        color: AppColors.bg,
+        color: AppColors.bgLight,
         padding: const EdgeInsets.all(Margins.spacing_base),
         child: Row(
           children: [
@@ -83,8 +83,9 @@ class _ChatTextFieldState extends State<ChatTextField> {
                   SizedBox(width: Margins.spacing_s),
                 ],
               ),
-              crossFadeState:
-                  widget.jeunePjEnabled && !showSendButton ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+              crossFadeState: widget.jeunePjEnabled && !showSendButton
+                  ? CrossFadeState.showSecond
+                  : CrossFadeState.showFirst,
               duration: AnimationDurations.fast,
             ),
             Expanded(

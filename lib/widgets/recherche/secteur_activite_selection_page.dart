@@ -35,7 +35,7 @@ class _SecteurActiviteSelectionPageState extends State<SecteurActiviteSelectionP
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: AppColors.bgLight,
       // Required to delegate top padding to system
       appBar: AppBar(toolbarHeight: 0, scrolledUnderElevation: 0),
       body: Column(

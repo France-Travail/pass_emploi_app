@@ -31,7 +31,7 @@ class AccueilOnboardingTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(Margins.spacing_base),
         decoration: BoxDecoration(
-          color: AppColors.bg,
+          color: AppColors.bgLight,
         ),
         child: Row(
           children: [

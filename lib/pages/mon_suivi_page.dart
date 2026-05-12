@@ -98,7 +98,7 @@ class _Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: AppColors.grey100Light,
       appBar: _ScrollAwareAppBar(),
       body: ConnectivityContainer(child: body),
       floatingActionButton: Visibility(
@@ -439,7 +439,7 @@ class _SemaineSectionItem extends StatelessWidget {
                 Text(boldTitle!, style: TextStyles.textMBold),
                 const SizedBox(height: Margins.spacing_xs),
               ],
-              Text(interval, style: TextStyles.textXsRegular(color: AppColors.grey800)),
+              Text(interval, style: TextStyles.textXsRegular(color: AppColors.grey800Light)),
             ],
           ),
         ),
@@ -495,7 +495,7 @@ class _EmptyDayItem extends StatefulWidget {
 }
 
 class _EmptyDayItemState extends State<_EmptyDayItem> {
-  Color _color = AppColors.grey800;
+  Color _color = AppColors.grey800Light;
 
   @override
   Widget build(BuildContext context) {
@@ -548,7 +548,7 @@ class _Day extends StatelessWidget {
 
     return ColoredBox(
       key: addKey ? _StateProvider.maybeOf(context)?.randomDayKey : null,
-      color: AppColors.grey100,
+      color: AppColors.grey100Light,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -683,7 +683,7 @@ class _PaginationLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: AppColors.grey100,
+      baseColor: AppColors.grey100Light,
       highlightColor: AppColors.contentOnPrimary,
       child: _MonSuiviItemLoader(),
     );

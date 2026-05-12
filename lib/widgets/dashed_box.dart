@@ -12,7 +12,7 @@ class DashedBox extends StatelessWidget {
   DashedBox({
     required this.child,
     this.padding = const EdgeInsets.all(Margins.spacing_m),
-    this.color = AppColors.grey800,
+    this.color = AppColors.grey800Light,
   });
 
   @override

@@ -128,10 +128,10 @@ class _Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: AppColors.bgLight,
       appBar: SecondaryAppBar(
         title: Strings.actionDetails,
-        backgroundColor: AppColors.bg,
+        backgroundColor: AppColors.bgLight,
         actions: [_MoreButton(source: source, actionId: viewModel.id)],
       ),
       floatingActionButton: Padding(
@@ -207,7 +207,7 @@ class _Content extends StatelessWidget {
                       Text(
                         viewModel.creationDetails,
                         semanticsLabel: viewModel.creationDetails.toDateForScreenReaders(),
-                        style: TextStyles.textSRegular(color: AppColors.grey800),
+                        style: TextStyles.textSRegular(color: AppColors.grey800Light),
                       ),
                       SizedBox(height: Margins.spacing_m),
                       _Separator(),
@@ -425,14 +425,14 @@ class _DateAndCategory extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(top: Margins.spacing_xs / 2),
-          child: Icon(sectionIcon, color: AppColors.grey500, size: Dimens.icon_size_base),
+          child: Icon(sectionIcon, color: AppColors.grey500Light, size: Dimens.icon_size_base),
         ),
         SizedBox(width: Margins.spacing_xs),
         Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(sectionTitle, style: TextStyles.textSRegular(color: AppColors.grey700)),
+            Text(sectionTitle, style: TextStyles.textSRegular(color: AppColors.grey700Light)),
             SizedBox(height: Margins.spacing_xs),
             Text(value, style: TextStyles.textSBold),
           ],

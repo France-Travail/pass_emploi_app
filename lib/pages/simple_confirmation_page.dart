@@ -22,8 +22,8 @@ class SimpleConfirmationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bg,
-      appBar: SecondaryAppBar(title: title, backgroundColor: AppColors.bg),
+      backgroundColor: AppColors.bgLight,
+      appBar: SecondaryAppBar(title: title, backgroundColor: AppColors.bgLight),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
         child: SingleChildScrollView(

@@ -87,7 +87,7 @@ class _RendezvousDetailsPageState extends State<RendezvousDetailsPage> {
 
   Widget _scaffold(BuildContext context, RendezvousDetailsViewModel viewModel) {
     _trackPageOnRendezvousRetrievalFromState(viewModel);
-    const backgroundColor = AppColors.bg;
+    const backgroundColor = AppColors.bgLight;
     return Scaffold(
       floatingActionButton: switch (viewModel.rdvCta) {
         null => SizedBox.shrink(),
@@ -350,7 +350,7 @@ class _DateLimiteAnnulationPart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       dateLimiteAnnulation,
-      style: TextStyles.textBaseMedium.copyWith(color: AppColors.grey700),
+      style: TextStyles.textBaseMedium.copyWith(color: AppColors.grey700Light),
     );
   }
 }

@@ -101,17 +101,17 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
     return _ModeDemoWrapper(
       child: Scaffold(
         body: Container(
-          color: AppColors.grey100,
+          color: AppColors.grey100Light,
           child: _content(_selectedIndex, viewModel),
         ),
         bottomNavigationBar: BottomNavigationBar(
           // Required to avoid having a disproportionate NavBar height
           selectedFontSize: FontSizes.extraSmall,
           unselectedFontSize: FontSizes.extraSmall,
-          backgroundColor: AppColors.bg,
+          backgroundColor: AppColors.bgLight,
           type: BottomNavigationBarType.fixed,
           selectedItemColor: AppColors.primary,
-          unselectedItemColor: AppColors.grey800,
+          unselectedItemColor: AppColors.grey800Light,
           showSelectedLabels: false,
           showUnselectedLabels: false,
           items: viewModel.tabs.map((e) => e.asMenuItem(viewModel)).toList(),

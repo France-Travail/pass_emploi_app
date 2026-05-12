@@ -15,7 +15,7 @@ class ChatDaySection extends StatelessWidget {
         header: true,
         child: Text(
           dayLabel,
-          style: TextStyles.textXsRegular().copyWith(color: AppColors.grey800),
+          style: TextStyles.textXsRegular().copyWith(color: AppColors.grey800Light),
           semanticsLabel: dayLabel.toDateForScreenReaders(),
         ),
       ),
