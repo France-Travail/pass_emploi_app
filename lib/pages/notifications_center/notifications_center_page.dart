@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/notifications_center/notifications_center_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
+import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -33,7 +34,7 @@ class NotificationCenter extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.centreNotification,
       child: Scaffold(
-        backgroundColor: AppColors.grey100Light,
+        backgroundColor: context.grey100,
         appBar: SecondaryAppBar(title: Strings.notificationsCenterTitle),
         body: StoreConnector<AppState, NotificationsCenterViewModel>(
           converter: (store) => NotificationsCenterViewModel.create(store),
@@ -77,7 +78,7 @@ class _Body extends StatelessWidget {
             child: InAppFeedback(
               feature: "centre-notif",
               label: Strings.feedbackCentreNotification,
-              backgroundColor: AppColors.bgLight,
+              backgroundColor: context.bg,
             ),
           );
         }

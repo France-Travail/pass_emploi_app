@@ -33,7 +33,7 @@ class OnboardingPage extends StatelessWidget {
         converter: (store) => OnboardingViewModel.create(store),
         builder: (context, viewModel) {
           return Scaffold(
-            backgroundColor: AppColors.bgLight,
+            backgroundColor: context.bg,
             appBar: SecondaryAppBar(title: ""),
             body: SingleChildScrollView(
               child: Padding(
@@ -46,7 +46,7 @@ class OnboardingPage extends StatelessWidget {
                         OnboardingStepper(
                           completedSteps: viewModel.completedSteps,
                           totalSteps: viewModel.totalSteps,
-                          textColor: AppColors.contentLight,
+                          textColor: context.content,
                         ),
                         const SizedBox(width: Margins.spacing_base),
                         Expanded(child: Text(Strings.onboardingTitle, style: TextStyles.textMBold)),
@@ -184,7 +184,7 @@ class _StepTile extends StatelessWidget {
             Icon(Icons.check_circle, color: AppColors.success),
             const SizedBox(width: Margins.spacing_base),
             Expanded(
-              child: Text(title, style: TextStyles.textBaseBold.copyWith(color: AppColors.grey800Light)),
+              child: Text(title, style: TextStyles.textBaseBold.copyWith(color: context.grey800)),
             ),
           ],
         ),

@@ -183,7 +183,7 @@ class _SeeSharedDetails extends StatelessWidget {
           padding: const EdgeInsets.only(right: 4.0),
           child: Text(_title(), style: TextStyles.textSRegular()),
         ),
-        Icon(AppIcons.chevron_right_rounded, color: AppColors.grey800Light),
+        Icon(AppIcons.chevron_right_rounded, color: context.grey800),
       ],
     );
   }

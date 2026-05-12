@@ -6,7 +6,7 @@ class AppColors {
 
   // Background colors
   static const Color bgLight = Color(0xFFFFFFFF);
-  static const Color bgDark = Color(0xFF161616);
+  static const Color bgDark = Color(0xFF262626);
 
   // Primary colors
   static final Color primary = Brand.isPassEmploi() ? primaryDarken : primaryCej;

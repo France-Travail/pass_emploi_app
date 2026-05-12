@@ -192,7 +192,7 @@ class _TutorialContentCard extends StatelessWidget {
       elevation: 8,
       borderRadius: BorderRadius.circular(Dimens.radius_base),
       child: DecoratedBox(
-        decoration: BoxDecoration(color: AppColors.bgLight, borderRadius: BorderRadius.circular(Dimens.radius_base)),
+        decoration: BoxDecoration(color: context.bg, borderRadius: BorderRadius.circular(Dimens.radius_base)),
         child: Scrollbar(
           child: SingleChildScrollView(
             child: Padding(

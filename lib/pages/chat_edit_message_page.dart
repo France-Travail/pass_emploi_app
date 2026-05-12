@@ -32,7 +32,7 @@ class ChatEditMessagePage extends StatelessWidget {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      backgroundColor: AppColors.bgLight,
+      backgroundColor: context.bg,
       appBar: SecondaryAppBar(title: Strings.chatEditMessageAppBar),
       body: Padding(
         padding: const EdgeInsets.all(Margins.spacing_base),

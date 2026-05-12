@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/profil/partage_activite_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
+import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -33,8 +34,8 @@ class PartageActivitePage extends StatelessWidget {
 
   Widget _scaffold(BuildContext context, PartageActivitePageViewModel viewModel) {
     return Scaffold(
-      backgroundColor: AppColors.grey100Light,
-      appBar: SecondaryAppBar(title: Strings.activityShareLabel, backgroundColor: AppColors.bgLight),
+      backgroundColor: context.grey100,
+      appBar: SecondaryAppBar(title: Strings.activityShareLabel, backgroundColor: context.bg),
       body: _body(viewModel),
     );
   }
@@ -125,7 +126,7 @@ class _PartageFavorisState extends State<_PartageFavoris> {
       children: [
         DecoratedBox(
           decoration: BoxDecoration(
-            color: AppColors.bgLight,
+            color: context.bg,
             borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
           child: Padding(
@@ -137,7 +138,7 @@ class _PartageFavorisState extends State<_PartageFavoris> {
                     child: Text(
                       Strings.shareFavoriteLabel,
                       style: TextStyles.textBaseRegularWithColor(
-                        widget.updatedState == DisplayState.LOADING ? AppColors.grey500Light : AppColors.contentLight,
+                        widget.updatedState == DisplayState.LOADING ? context.grey500 : context.content,
                       ),
                     ),
                   ),
@@ -153,12 +154,12 @@ class _PartageFavorisState extends State<_PartageFavoris> {
                 ExcludeSemantics(
                   child: Text(
                     _partageFavorisEnabled ? Strings.yes : Strings.no,
-                    style: TextStyles.textBaseRegularWithColor(
-                      widget.updatedState == DisplayState.LOADING ? AppColors.grey500Light : AppColors.contentLight,
+                      style: TextStyles.textBaseRegularWithColor(
+                        widget.updatedState == DisplayState.LOADING ? context.grey500 : context.content,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
             ),
           ),
         ),

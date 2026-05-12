@@ -171,7 +171,7 @@ class _ApiPeKo extends StatelessWidget {
                 SizedBox(height: Margins.spacing_m),
                 Text(
                   Strings.cvErrorApiPeKoMessage,
-                  style: TextStyles.textBaseMedium.copyWith(color: AppColors.grey800Light),
+                  style: TextStyles.textBaseMedium.copyWith(color: context.grey800),
                   textAlign: TextAlign.center,
                 ),
               ],

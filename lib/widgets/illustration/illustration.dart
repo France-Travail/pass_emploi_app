@@ -7,14 +7,22 @@ const _illustrationFigmaSize = 300.0;
 
 class Illustration extends StatelessWidget {
   final Color primaryColor;
-  final Color secondaryColor;
+  final Color? secondaryColor;
   final IconData icon;
+  final bool? _greyWhiteBackground;
 
   const Illustration({
     required this.primaryColor,
     required this.secondaryColor,
     required this.icon,
-  });
+  }) : _greyWhiteBackground = null;
+
+  const Illustration._grey({
+    required this.icon,
+    required bool withWhiteBackground,
+  })  : primaryColor = AppColors.disabled,
+        secondaryColor = null,
+        _greyWhiteBackground = withWhiteBackground;
 
   factory Illustration.red(
     IconData icon,
@@ -43,18 +51,17 @@ class Illustration extends StatelessWidget {
   }
 
   factory Illustration.grey(IconData icon, {bool withWhiteBackground = false}) {
-    return Illustration(
-      primaryColor: AppColors.disabled,
-      secondaryColor: withWhiteBackground ? AppColors.bgLight : AppColors.grey100Light,
-      icon: icon,
-    );
+    return Illustration._grey(icon: icon, withWhiteBackground: withWhiteBackground);
   }
 
   @override
   Widget build(BuildContext context) {
+    final resolvedSecondary = _greyWhiteBackground == null
+        ? secondaryColor!
+        : (_greyWhiteBackground ? context.bg : context.grey100);
     return _Assemblage(
       primaryColor: primaryColor,
-      secondaryColor: secondaryColor,
+      secondaryColor: resolvedSecondary,
       icon: icon,
     );
   }
@@ -189,7 +196,7 @@ class _Icone extends StatelessWidget {
   Widget build(BuildContext context) {
     return Icon(
       icon,
-      color: AppColors.bgLight,
+      color: context.bg,
       size: 80,
     );
   }

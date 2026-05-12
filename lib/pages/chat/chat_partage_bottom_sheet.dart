@@ -137,7 +137,7 @@ class _Offre extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.grey100Light, width: 1),
+        border: Border.all(color: context.grey100, width: 1),
         borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base)),
       ),
       child: Padding(

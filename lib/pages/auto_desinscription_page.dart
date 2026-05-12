@@ -42,7 +42,7 @@ class DesinscriptionPage extends StatelessWidget {
         store.dispatch(EventListRequestAction(DateTime.now(), forceRefresh: true));
       },
       builder: (context, viewModel) => Scaffold(
-        backgroundColor: AppColors.bgLight,
+        backgroundColor: context.bg,
         appBar: SecondaryAppBar(
           title: switch (viewModel.displayState) {
             AutoDesinscriptionDisplayState.success => Strings.autoDesinscriptionSuccessAppBarTitle,

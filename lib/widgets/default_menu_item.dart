@@ -21,7 +21,7 @@ class DefaultMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color color = _itemColor(isActive);
+    final Color color = _itemColor(context, isActive);
 
     return Column(
       children: [
@@ -49,6 +49,6 @@ class DefaultMenuItem extends StatelessWidget {
   }
 }
 
-Color _itemColor(bool isActive) {
-  return isActive ? AppColors.primary : AppColors.grey800Light;
+Color _itemColor(BuildContext context, bool isActive) {
+  return isActive ? AppColors.primary : context.grey800;
 }

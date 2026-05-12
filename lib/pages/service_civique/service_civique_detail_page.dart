@@ -70,7 +70,7 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
   }
 
   Scaffold _scaffold(Widget body, BuildContext context, String? url, String? title) {
-    const backgroundColor = AppColors.bgLight;
+    final backgroundColor = context.bg;
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: SecondaryAppBar(
@@ -225,7 +225,7 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
 
   Widget _footer(BuildContext context, String url, bool shouldShowCvBottomSheet) {
     return Container(
-      color: AppColors.bgLight,
+      color: context.bg,
       padding: const EdgeInsets.all(Margins.spacing_base),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

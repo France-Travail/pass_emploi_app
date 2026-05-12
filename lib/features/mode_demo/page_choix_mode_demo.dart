@@ -69,7 +69,7 @@ class _Contenu extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: AppColors.bgLight,
+          color: context.bg,
           borderRadius: BorderRadius.circular(Dimens.radius_base),
           boxShadow: [Shadows.radius_base],
         ),

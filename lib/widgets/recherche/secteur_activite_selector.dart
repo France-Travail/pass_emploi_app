@@ -99,12 +99,12 @@ class _SecteurActiviteFieldState extends State<_SecteurActiviteField> {
                 alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(Dimens.radius_base),
-                  border: Border.all(color: AppColors.contentLight),
+                  border: Border.all(color: context.content),
                 ),
                 child: Row(
                   children: [
                     Expanded(child: _SelectedSecteurActivite(widget.value?.label ?? Strings.secteurActiviteAll)),
-                    Icon(AppIcons.chevron_down_rounded, color: AppColors.grey800Light),
+                    Icon(AppIcons.chevron_down_rounded, color: context.grey800),
                     SizedBox(width: Margins.spacing_s),
                   ],
                 ),

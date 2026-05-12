@@ -63,7 +63,7 @@ class _Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.grey100Light,
+      backgroundColor: context.grey100,
       appBar: PrimaryAppBar(title: Strings.menuProfil, withProfileButton: false, canPop: true),
       body: Semantics(
         container: true,
@@ -388,7 +388,7 @@ class _ListTileCard extends StatelessWidget {
                               ? Icon(
                                   AppIcons.open_in_new_rounded,
                                   size: Dimens.icon_size_base,
-                                  color: AppColors.contentLight,
+                                  color: context.content,
                                 )
                               : null,
                           trailing: externalRedirect
@@ -396,11 +396,11 @@ class _ListTileCard extends StatelessWidget {
                               : Icon(
                                   AppIcons.chevron_right_rounded,
                                   size: Dimens.icon_size_m,
-                                  color: AppColors.contentLight,
+                                  color: context.content,
                                 ),
                         ),
                       ),
-                      Divider(color: AppColors.grey100Light, height: 0),
+                      Divider(color: context.grey100, height: 0),
                     ];
                   })
                   .expand((e) => e)

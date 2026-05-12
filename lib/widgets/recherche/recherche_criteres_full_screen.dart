@@ -51,7 +51,7 @@ class _RechercheCriteresFullScreenState<Result> extends State<RechercheCriteresF
       builder: (context, viewModel) {
         return SizedBox.expand(
           child: ColoredBox(
-            color: AppColors.bgLight,
+            color: context.bg,
             child: SingleChildScrollView(
               clipBehavior: Clip.none,
               child: Padding(
@@ -141,7 +141,7 @@ class _RecentSearches<Result> extends StatelessWidget {
                   onTap: () => viewModel.onTapRecentSearch(item.alerte),
                 ),
                 Divider(
-                  color: AppColors.grey500Light,
+                  color: context.grey500,
                   height: 1,
                 ),
               ],
@@ -172,7 +172,7 @@ class _RechercheRecenteTile extends StatelessWidget {
             children: [
               Icon(
                 Icons.schedule_outlined,
-                color: AppColors.grey800Light,
+                color: context.grey800,
                 size: Dimens.icon_size_m,
               ),
               SizedBox(width: Margins.spacing_base),

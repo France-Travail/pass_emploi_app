@@ -94,7 +94,7 @@ class _LoadingPlaceholder extends StatelessWidget {
               child: FadeInAnimation(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: AppColors.grey100Light,
+                    color: context.grey100,
                     borderRadius: BorderRadius.circular(Dimens.radius_base),
                   ),
                 ),

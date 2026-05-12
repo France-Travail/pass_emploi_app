@@ -43,7 +43,7 @@ class PassEmploiStepperTexts extends StatelessWidget {
         child: AutoFocusA11y(
           child: Text(
             Strings.stepCounter(currentStepIndex + 1, stepCount),
-            style: TextStyles.textSRegular(color: AppColors.contentLight),
+            style: TextStyles.textSRegular(color: context.content),
           ),
         ),
       ),
@@ -87,7 +87,7 @@ class _AnimatedStepProgressIndicator extends StatelessWidget {
             children: [
               Container(
                 height: 8,
-                decoration: BoxDecoration(color: AppColors.grey100Light, borderRadius: BorderRadius.circular(2)),
+                decoration: BoxDecoration(color: context.grey100, borderRadius: BorderRadius.circular(2)),
               ),
               Align(
                 alignment: Alignment.centerLeft,

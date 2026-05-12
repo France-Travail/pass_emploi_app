@@ -41,7 +41,7 @@ class EvenementEmploiDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const backgroundColor = AppColors.bgLight;
+    final backgroundColor = context.bg;
     return Tracker(
       tracking: AnalyticsScreenNames.evenementEmploiDetails,
       child: StoreConnector<AppState, EvenementEmploiDetailsPageViewModel>(
@@ -175,7 +175,7 @@ class _Details extends StatelessWidget {
           children: [
             Text("•", style: TextStyles.textMBoldWithColor(color: AppColors.primary)),
             SizedBox(width: Margins.spacing_s),
-            Text(Strings.evenementEmploiDetails, style: TextStyles.textMBoldWithColor(color: AppColors.grey800Light)),
+            Text(Strings.evenementEmploiDetails, style: TextStyles.textMBoldWithColor(color: context.grey800)),
           ],
         ),
         SizedBox(height: Margins.spacing_m),

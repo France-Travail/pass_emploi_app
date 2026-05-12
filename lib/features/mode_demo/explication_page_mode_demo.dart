@@ -52,7 +52,7 @@ class _Contenu extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: AppColors.bgLight,
+          color: context.bg,
           borderRadius: BorderRadius.circular(Dimens.radius_base),
           boxShadow: [Shadows.radius_base],
         ),

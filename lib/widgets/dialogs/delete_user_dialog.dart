@@ -145,7 +145,7 @@ class _DeleteAlertCrossButton extends StatelessWidget {
           padding: const EdgeInsets.all(Margins.spacing_s),
           child: Icon(
             AppIcons.close_rounded,
-            color: AppColors.contentLight,
+            color: context.content,
           ),
         ),
       ),

@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/preferences/notification_preferences_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
+import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -54,7 +55,7 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.grey100Light,
+      backgroundColor: context.grey100,
       appBar: PrimaryAppBar(
         title: Strings.notificationsSettingsAppbarTitle,
         withProfileButton: false,
@@ -135,7 +136,7 @@ class _Content extends StatelessWidget {
                   onTap: viewModel.onOpenAppSettings,
                   child: Row(
                     children: [
-                      Icon(AppIcons.open_in_new_rounded, color: AppColors.contentLight),
+                      Icon(AppIcons.open_in_new_rounded, color: context.content),
                       SizedBox(width: Margins.spacing_base),
                       Expanded(
                         child: Text(
@@ -216,7 +217,7 @@ class _NotificationSwitch extends StatelessWidget {
                   Text(Strings.no, style: TextStyles.textBaseRegularWithColor(AppColors.transparent)),
                   Text(
                     enabled ? Strings.yes : Strings.no,
-                    style: TextStyles.textBaseRegularWithColor(AppColors.contentLight),
+                    style: TextStyles.textBaseRegularWithColor(context.content),
                   ),
                 ],
               ),

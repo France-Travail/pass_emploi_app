@@ -54,7 +54,7 @@ class PrimarySliverAppbar extends StatelessWidget {
                                   .copyWith(
                                     fontSize: A11yUtils.withTextScale(context) ? FontSizes.semi : FontSizes.huge,
                                   )
-                                  .copyWith(color: AppColors.grey100Light),
+                                  .copyWith(color: context.grey100),
                             ),
                           ),
                         ),
@@ -127,12 +127,12 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconColor = Brand.isCej() ? AppColors.contentLight : AppColors.grey100Light;
+    final iconColor = Brand.isCej() ? context.content : context.grey100;
     return AppBar(
       toolbarHeight: toolBarHeight,
       leading: canPop ? BackButton(color: iconColor) : null,
       scrolledUnderElevation: 0,
-      backgroundColor: Brand.isCej() ? AppColors.grey100Light : AppColors.primary,
+      backgroundColor: Brand.isCej() ? context.grey100 : AppColors.primary,
       title: Semantics(
         header: true,
         focusable: withAutofocusA11y,
@@ -144,7 +144,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Text(
               title,
               style: TextStyles.primaryAppBar.copyWith(
-                color: Brand.isCej() ? AppColors.primary : AppColors.grey100Light,
+                color: Brand.isCej() ? AppColors.primary : context.grey100,
               ),
               overflow: TextOverflow.fade,
             ),
@@ -185,14 +185,14 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       toolbarHeight: toolBarHeight,
       titleSpacing: 0,
-      iconTheme: IconThemeData(color: AppColors.contentLight),
+      iconTheme: IconThemeData(color: context.content),
       elevation: 0,
       centerTitle: false,
       scrolledUnderElevation: 0,
       surfaceTintColor: AppColors.transparent,
       leading: leading,
       actions: actions,
-      backgroundColor: backgroundColor ?? AppColors.bgLight,
+      backgroundColor: backgroundColor ?? context.bg,
       title: Semantics(
         header: true,
         child: Tooltip(

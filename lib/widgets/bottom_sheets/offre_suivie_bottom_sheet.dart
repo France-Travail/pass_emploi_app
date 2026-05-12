@@ -93,7 +93,7 @@ class _Option extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const color = AppColors.contentLight;
+    final color = context.content;
     return Semantics(
       button: true,
       child: ListTile(

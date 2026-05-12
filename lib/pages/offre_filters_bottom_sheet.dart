@@ -4,6 +4,7 @@ import 'package:pass_emploi_app/models/offre_type.dart';
 import 'package:pass_emploi_app/presentation/offre_filters_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
+import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -57,7 +58,7 @@ class _OffreFiltersBottomSheetState extends State<OffreFiltersBottomSheet> {
     return BottomSheetWrapper(
       title: Strings.filterList,
       body: Scaffold(
-        backgroundColor: AppColors.bgLight,
+        backgroundColor: context.bg,
         body: _Body(
           onFilterSelected: _onFilterSelected,
           offreFilter: _selectedFilter,

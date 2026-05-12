@@ -17,11 +17,11 @@ class ElevatedButtonTile extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimens.radius_base),
-        color: AppColors.bgLight,
+        color: context.bg,
         boxShadow: [Shadows.radius_base],
       ),
       child: Material(
-        color: AppColors.bgLight,
+        color: context.bg,
         child: InkWell(
           borderRadius: BorderRadius.circular(Dimens.radius_base),
           onTap: onPressed,

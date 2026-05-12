@@ -60,7 +60,7 @@ class _ChatTextFieldState extends State<ChatTextField> {
     return OnboardingShowcase(
       source: ShowcaseSource.message,
       child: Container(
-        color: AppColors.bgLight,
+        color: context.bg,
         padding: const EdgeInsets.all(Margins.spacing_base),
         child: Row(
           children: [

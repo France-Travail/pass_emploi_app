@@ -10,6 +10,7 @@ import 'package:pass_emploi_app/pages/recherche/recherche_evenement_emploi_page.
 import 'package:pass_emploi_app/presentation/events/event_tab_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
+import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
@@ -76,7 +77,7 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.grey100Light,
+      backgroundColor: context.grey100,
       appBar: PrimaryAppBar(title: Strings.eventAppBarTitle, withAutofocusA11y: true),
       body: ConnectivityContainer(
         child: DefaultTabController(

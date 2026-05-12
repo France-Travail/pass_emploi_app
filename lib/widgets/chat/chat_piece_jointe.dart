@@ -97,7 +97,7 @@ class _PieceJointeName extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       filename,
-      style: TextStyles.textSBoldWithColor(sender.isJeune ? AppColors.contentOnPrimary : AppColors.contentLight),
+      style: TextStyles.textSBoldWithColor(sender.isJeune ? AppColors.contentOnPrimary : context.content),
     );
   }
 }

@@ -254,7 +254,7 @@ class _NombreCaracteresCompteur extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = _isCommentaireValid ? AppColors.contentLight : AppColors.warning;
+    final textColor = _isCommentaireValid ? context.content : AppColors.warning;
     return Align(
       alignment: Alignment.centerRight,
       child: Padding(

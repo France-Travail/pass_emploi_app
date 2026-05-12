@@ -15,8 +15,8 @@ class AnimatedListLoader extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimationLimiter(
       child: Shimmer.fromColors(
-        baseColor: AppColors.grey100Light,
-        highlightColor: AppColors.bgLight,
+        baseColor: context.grey100,
+        highlightColor: context.bg,
         child: ListView.builder(
           shrinkWrap: nested,
           physics: nested ? const NeverScrollableScrollPhysics() : null,
@@ -41,13 +41,26 @@ class AnimatedListLoader extends StatelessWidget {
     required double height,
     AlignmentGeometry alignment = Alignment.centerLeft,
   }) {
+    return _Placeholder(width: width, height: height, alignment: alignment);
+  }
+}
+
+class _Placeholder extends StatelessWidget {
+  const _Placeholder({required this.width, required this.height, required this.alignment});
+
+  final double width;
+  final double height;
+  final AlignmentGeometry alignment;
+
+  @override
+  Widget build(BuildContext context) {
     return Align(
       alignment: alignment,
       child: Container(
         width: width,
         height: height,
         decoration: ShapeDecoration(
-          color: AppColors.grey100Light,
+          color: context.grey100,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(Dimens.radius_base),
           ),

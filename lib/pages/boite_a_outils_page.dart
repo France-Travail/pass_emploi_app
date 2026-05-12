@@ -32,9 +32,9 @@ class BoiteAOutilsPage extends StatelessWidget {
     return Scaffold(
       appBar: SecondaryAppBar(
         title: Strings.mesOutils,
-        backgroundColor: AppColors.grey100Light,
+        backgroundColor: context.grey100,
       ),
-      backgroundColor: AppColors.grey100Light,
+      backgroundColor: context.grey100,
       body: ListView.separated(
         padding: EdgeInsets.symmetric(horizontal: 16),
         separatorBuilder: (_, index) => SizedBox(height: Margins.spacing_base),

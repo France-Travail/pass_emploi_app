@@ -60,7 +60,7 @@ class _CreateUserActionFormStep2State extends State<CreateUserActionFormStep2> {
                     const SizedBox(height: Margins.spacing_s),
                     Text(
                       widget.actionType.label,
-                      style: TextStyles.textMBold.copyWith(color: AppColors.contentLight),
+                      style: TextStyles.textMBold.copyWith(color: context.content),
                     ),
                   ],
                 ),
@@ -323,7 +323,7 @@ class _UserActionDescriptionFieldState extends State<UserActionDescriptionField>
                               SizedBox(
                                 height: 28.0,
                                 child: VerticalDivider(
-                                  color: AppColors.grey500Light,
+                                  color: context.grey500,
                                   thickness: 1,
                                   width: 1,
                                 ),

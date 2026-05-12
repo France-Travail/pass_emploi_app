@@ -202,10 +202,10 @@ class _Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgLight,
+      backgroundColor: context.bg,
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
-      appBar: SecondaryAppBar(title: Strings.createDemarcheAppBarTitle, backgroundColor: AppColors.bgLight),
+      appBar: SecondaryAppBar(title: Strings.createDemarcheAppBarTitle, backgroundColor: context.bg),
       body: body,
     );
   }

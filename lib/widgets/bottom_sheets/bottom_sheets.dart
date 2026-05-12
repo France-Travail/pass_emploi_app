@@ -9,7 +9,7 @@ import 'package:pass_emploi_app/ui/text_styles.dart';
 Future<T?> showPassEmploiBottomSheet<T>({required BuildContext context, required WidgetBuilder builder}) {
   return showModalBottomSheet(
     context: context,
-    backgroundColor: AppColors.bgLight,
+    backgroundColor: context.bg,
     barrierLabel: Strings.bottomSheetBarrierLabel,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
@@ -76,7 +76,7 @@ class _CloseButton extends StatelessWidget {
           tooltip: Strings.closeDialog,
           icon: Icon(
             AppIcons.close_rounded,
-            color: AppColors.contentLight,
+            color: context.content,
             size: Dimens.icon_size_m,
           ),
         ),
@@ -113,7 +113,7 @@ class BottomSheetWrapper extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(Dimens.radius_l),
         child: Material(
-          color: backgroundColor ?? AppColors.bgLight,
+          color: backgroundColor ?? context.bg,
           child: Padding(
             padding: padding,
             child: Column(

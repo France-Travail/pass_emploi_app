@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
+import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -22,8 +23,8 @@ class SimpleConfirmationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgLight,
-      appBar: SecondaryAppBar(title: title, backgroundColor: AppColors.bgLight),
+      backgroundColor: context.bg,
+      appBar: SecondaryAppBar(title: title, backgroundColor: context.bg),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
         child: SingleChildScrollView(

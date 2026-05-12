@@ -16,19 +16,19 @@ class ContactModeTag extends StatelessWidget {
         icon: AppIcons.mail,
         backgroundColor: AppColors.additional5Lighten,
         text: Strings.contactByMail,
-        contentColor: AppColors.contentLight,
+        contentColor: context.content,
       ),
       ImmersionContactMode.PHONE => CardTag(
         icon: AppIcons.phone,
         backgroundColor: AppColors.additional5Lighten,
         text: Strings.contactByPhone,
-        contentColor: AppColors.contentLight,
+        contentColor: context.content,
       ),
       ImmersionContactMode.PRESENTIEL => CardTag(
         icon: AppIcons.place_outlined,
         backgroundColor: AppColors.additional5Lighten,
         text: Strings.contactByPresen,
-        contentColor: AppColors.contentLight,
+        contentColor: context.content,
       ),
       ImmersionContactMode.INCONNU => SizedBox.shrink(),
     };

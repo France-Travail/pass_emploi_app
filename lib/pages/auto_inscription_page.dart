@@ -59,7 +59,7 @@ class _Builder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgLight,
+      backgroundColor: context.bg,
       appBar: SecondaryAppBar(title: Strings.demandeInscriptionConfirmationTitle),
       floatingActionButton: SizedBox(
         width: double.infinity,

@@ -87,7 +87,7 @@ class _BaseTextFieldState extends State<BaseTextField> {
       readOnly: widget.readOnly,
       decoration: InputDecoration(
         hintText: widget.hintWidget != null ? null : widget.hintText,
-        hintStyle: widget.hintWidget != null ? null : TextStyles.textSRegular(color: AppColors.grey800Light),
+        hintStyle: widget.hintWidget != null ? null : TextStyles.textSRegular(color: context.grey800),
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.suffixIcon,
         semanticCounterText: "",

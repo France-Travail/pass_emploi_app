@@ -128,10 +128,10 @@ class _Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgLight,
+      backgroundColor: context.bg,
       appBar: SecondaryAppBar(
         title: Strings.actionDetails,
-        backgroundColor: AppColors.bgLight,
+        backgroundColor: context.bg,
         actions: [_MoreButton(source: source, actionId: viewModel.id)],
       ),
       floatingActionButton: Padding(
@@ -207,7 +207,7 @@ class _Content extends StatelessWidget {
                       Text(
                         viewModel.creationDetails,
                         semanticsLabel: viewModel.creationDetails.toDateForScreenReaders(),
-                        style: TextStyles.textSRegular(color: AppColors.grey800Light),
+                        style: TextStyles.textSRegular(color: context.grey800),
                       ),
                       SizedBox(height: Margins.spacing_m),
                       _Separator(),
@@ -407,8 +407,9 @@ class _DateAndCategory extends StatelessWidget {
         spacing: Margins.spacing_m,
         runSpacing: Margins.spacing_s,
         children: [
-          _section(sectionIcon: AppIcons.event, sectionTitle: Strings.userActionDate, value: viewModel.date),
+          _section(context, sectionIcon: AppIcons.event, sectionTitle: Strings.userActionDate, value: viewModel.date),
           _section(
+            context,
             sectionIcon: Icons.account_tree_rounded,
             sectionTitle: Strings.userActionCategory,
             value: viewModel.category,
@@ -418,21 +419,21 @@ class _DateAndCategory extends StatelessWidget {
     );
   }
 
-  Widget _section({required IconData sectionIcon, required String sectionTitle, required String value}) {
+  Widget _section(BuildContext context, {required IconData sectionIcon, required String sectionTitle, required String value}) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(top: Margins.spacing_xs / 2),
-          child: Icon(sectionIcon, color: AppColors.grey500Light, size: Dimens.icon_size_base),
+          child: Icon(sectionIcon, color: context.grey500, size: Dimens.icon_size_base),
         ),
         SizedBox(width: Margins.spacing_xs),
         Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(sectionTitle, style: TextStyles.textSRegular(color: AppColors.grey700Light)),
+            Text(sectionTitle, style: TextStyles.textSRegular(color: context.grey700)),
             SizedBox(height: Margins.spacing_xs),
             Text(value, style: TextStyles.textSBold),
           ],

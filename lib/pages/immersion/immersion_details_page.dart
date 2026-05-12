@@ -83,7 +83,7 @@ class ImmersionDetailsPage extends StatelessWidget {
   }
 
   Scaffold _scaffold(Widget body, BuildContext context, String offreId) {
-    const backgroundColor = AppColors.bgLight;
+    final backgroundColor = context.bg;
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: SecondaryAppBar(
@@ -193,7 +193,7 @@ class ImmersionDetailsPage extends StatelessWidget {
 
   Widget _footer(BuildContext context, ImmersionDetailsViewModel viewModel) {
     return Container(
-      color: AppColors.bgLight,
+      color: context.bg,
       padding: EdgeInsets.only(
         left: Margins.spacing_m,
         right: Margins.spacing_m,

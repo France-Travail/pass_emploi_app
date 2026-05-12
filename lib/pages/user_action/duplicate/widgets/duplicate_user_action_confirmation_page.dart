@@ -33,8 +33,8 @@ class DuplicateUserActionConfirmationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgLight,
-      appBar: SecondaryAppBar(title: Strings.duplicateUserActionConfirmationTitle, backgroundColor: AppColors.bgLight),
+      backgroundColor: context.bg,
+      appBar: SecondaryAppBar(title: Strings.duplicateUserActionConfirmationTitle, backgroundColor: context.bg),
       floatingActionButton: _Buttons(
         onGoActionDetail: () => Navigator.pop(context, NavigateToUserActionDetails(userActionId, source)),
         onClose: () => Navigator.pop(context),

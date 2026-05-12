@@ -41,7 +41,7 @@ class CreateUserActionFormStep1 extends StatelessWidget {
                     const SizedBox(height: Margins.spacing_s),
                     Text(
                       Strings.userActionTitleStep1,
-                      style: TextStyles.textMBold.copyWith(color: AppColors.contentLight),
+                      style: TextStyles.textMBold.copyWith(color: context.content),
                     ),
                   ],
                 ),
@@ -139,7 +139,7 @@ class ActionCategoryCard extends StatelessWidget {
               child: Text(
                 description,
                 textAlign: TextAlign.center,
-                style: TextStyles.textSRegular(color: AppColors.grey800Light),
+                style: TextStyles.textSRegular(color: context.grey800),
               ),
             ),
           ],

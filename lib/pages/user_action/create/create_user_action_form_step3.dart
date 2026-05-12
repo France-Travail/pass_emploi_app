@@ -78,11 +78,11 @@ class _CreateUserActionFormStep3State extends State<CreateUserActionFormStep3> {
                     const SizedBox(height: Margins.spacing_s),
                     Text(
                       widget.actionType.label,
-                      style: TextStyles.textMBold.copyWith(color: AppColors.contentLight),
+                      style: TextStyles.textMBold.copyWith(color: context.content),
                     ),
                     Text(
                       widget.titleSource.title,
-                      style: TextStyles.textBaseMedium.copyWith(color: AppColors.contentLight),
+                      style: TextStyles.textBaseMedium.copyWith(color: context.content),
                     ),
                   ],
                 ),
@@ -92,7 +92,7 @@ class _CreateUserActionFormStep3State extends State<CreateUserActionFormStep3> {
               const SizedBox(height: Margins.spacing_m),
               Text(
                 widget.titleSource.allowBatchCreate ? Strings.selectMultipleActions : Strings.selectOneAction,
-                style: TextStyles.textBaseBold.copyWith(color: AppColors.contentLight),
+                style: TextStyles.textBaseBold.copyWith(color: context.content),
               ),
               if (widget.viewModel.errorsVisible && !widget.viewModel.isValid) ...[
                 const SizedBox(height: Margins.spacing_base),

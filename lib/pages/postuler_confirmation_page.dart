@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/pages/demarche/create_demarche/create_demarche_s
 import 'package:pass_emploi_app/presentation/user_action/postuler_confirmation_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
+import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -29,9 +30,9 @@ class PostulerConfirmationPage extends StatelessWidget {
     return StoreConnector<AppState, PostulerConfirmationViewModel>(
       converter: (store) => PostulerConfirmationViewModel.create(store, offreId),
       builder: (context, viewModel) {
-        return Scaffold(
-          backgroundColor: AppColors.bgLight,
-          appBar: SecondaryAppBar(title: Strings.offrePostuleeConfirmationAppBar, backgroundColor: AppColors.bgLight),
+          return Scaffold(
+            backgroundColor: context.bg,
+            appBar: SecondaryAppBar(title: Strings.offrePostuleeConfirmationAppBar, backgroundColor: context.bg),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
             child: SingleChildScrollView(

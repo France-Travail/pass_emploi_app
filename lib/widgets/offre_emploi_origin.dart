@@ -51,7 +51,7 @@ class _AssetsImage extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimens.radius_base),
-        border: Border.all(color: AppColors.grey500Light),
+        border: Border.all(color: context.grey500),
       ),
       child: Padding(
         padding: EdgeInsets.all(size == OffreEmploiOriginSize.small ? 2 : 3),
@@ -78,7 +78,7 @@ class _NetworkImage extends StatelessWidget {
       height: size == OffreEmploiOriginSize.small ? 24 : 31,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimens.radius_base),
-        border: Border.all(color: AppColors.grey500Light),
+        border: Border.all(color: context.grey500),
         image: DecorationImage(
           image: NetworkImage(url),
           fit: BoxFit.cover,

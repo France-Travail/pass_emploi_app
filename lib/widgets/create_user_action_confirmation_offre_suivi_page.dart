@@ -31,9 +31,9 @@ class CreateUserActionConfirmationOffreSuiviPage extends StatelessWidget {
     return StoreConnector<AppState, CreateActionSuccessViewModel>(
       converter: (store) => CreateActionSuccessViewModel.create(store),
       builder: (context, viewModel) {
-        return Scaffold(
-          backgroundColor: AppColors.bgLight,
-          appBar: SecondaryAppBar(title: Strings.createActionAppBarTitle, backgroundColor: AppColors.bgLight),
+          return Scaffold(
+            backgroundColor: context.bg,
+            appBar: SecondaryAppBar(title: Strings.createActionAppBarTitle, backgroundColor: context.bg),
           floatingActionButton: viewModel.displayState == DisplayState.CONTENT
               ? _Buttons(
                   onGoActionDetail: () {

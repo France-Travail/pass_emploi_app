@@ -98,7 +98,7 @@ class _BodyState extends State<_Body> {
                   SepLine(
                     Margins.spacing_m,
                     Margins.spacing_m,
-                    color: AppColors.grey100Light,
+                    color: context.grey100,
                   ),
                   Row(
                     children: [
@@ -218,7 +218,7 @@ class _CguNeverAcceptedContent extends StatelessWidget {
                   TextSpan(
                     text: Strings.cguNeverAcceptedDescription[1],
                     style: TextStyles.textBaseRegular.copyWith(
-                      color: AppColors.contentLight,
+                      color: context.content,
                       decoration: TextDecoration.underline,
                     ),
                   ),
@@ -274,7 +274,7 @@ class _CguUpdateRequiredContent extends StatelessWidget {
                   TextSpan(
                     text: Strings.cguUpdateRequiredDescription[2],
                     style: TextStyles.textBaseRegular.copyWith(
-                      color: AppColors.contentLight,
+                      color: context.content,
                       decoration: TextDecoration.underline,
                     ),
                   ),
