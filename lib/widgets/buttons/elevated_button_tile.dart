@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/shadows.dart';
@@ -16,11 +17,11 @@ class ElevatedButtonTile extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimens.radius_base),
-        color: Colors.white,
+        color: AppColors.bg,
         boxShadow: [Shadows.radius_base],
       ),
       child: Material(
-        color: Colors.white,
+        color: AppColors.bg,
         child: InkWell(
           borderRadius: BorderRadius.circular(Dimens.radius_base),
           onTap: onPressed,

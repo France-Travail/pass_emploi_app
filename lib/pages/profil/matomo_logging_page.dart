@@ -76,7 +76,7 @@ class _LogTag extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
-        child: Text(_tag(), style: TextStyles.textBaseRegularWithColor(Colors.white).copyWith(fontSize: 12)),
+        child: Text(_tag(), style: TextStyles.textBaseRegularWithColor(AppColors.contentOnPrimary).copyWith(fontSize: 12)),
       ),
     );
   }

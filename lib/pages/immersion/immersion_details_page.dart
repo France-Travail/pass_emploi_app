@@ -12,6 +12,7 @@ import 'package:pass_emploi_app/pages/offre_not_found_page.dart';
 import 'package:pass_emploi_app/pages/offre_page.dart';
 import 'package:pass_emploi_app/presentation/immersion/immersion_details_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -82,7 +83,7 @@ class ImmersionDetailsPage extends StatelessWidget {
   }
 
   Scaffold _scaffold(Widget body, BuildContext context, String offreId) {
-    const backgroundColor = Colors.white;
+    const backgroundColor = AppColors.bg;
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: SecondaryAppBar(
@@ -192,7 +193,7 @@ class ImmersionDetailsPage extends StatelessWidget {
 
   Widget _footer(BuildContext context, ImmersionDetailsViewModel viewModel) {
     return Container(
-      color: Colors.white,
+      color: AppColors.bg,
       padding: EdgeInsets.only(
         left: Margins.spacing_m,
         right: Margins.spacing_m,

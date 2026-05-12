@@ -174,9 +174,9 @@ class _BlocSolution extends StatelessWidget {
           children: [
             SvgPicture.asset(svgPath, width: Dimens.icon_size_m, height: Dimens.icon_size_m),
             SizedBox(height: Margins.spacing_s),
-            Text(title, style: TextStyles.textMBold.copyWith(color: Colors.white)),
+            Text(title, style: TextStyles.textMBold.copyWith(color: AppColors.contentOnPrimary)),
             SizedBox(height: Margins.spacing_s),
-            Text(subtitle, style: TextStyles.textBaseRegular.copyWith(color: Colors.white)),
+            Text(subtitle, style: TextStyles.textBaseRegular.copyWith(color: AppColors.contentOnPrimary)),
           ],
         ),
       ),

@@ -113,7 +113,7 @@ class BottomSheetWrapper extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(Dimens.radius_l),
         child: Material(
-          color: backgroundColor ?? Colors.white,
+          color: backgroundColor ?? AppColors.bg,
           child: Padding(
             padding: padding,
             child: Column(

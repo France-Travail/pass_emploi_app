@@ -51,14 +51,14 @@ class CampagneRecrutementCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           Strings.accueilCampagneRecrutementLabel,
-                          style: TextStyles.textMBold.copyWith(color: Colors.white),
+                        style: TextStyles.textMBold.copyWith(color: AppColors.contentOnPrimary),
                         ),
                       ),
                       SizedBox(width: Margins.spacing_m),
                     ],
                   ),
                   SizedBox(height: Margins.spacing_s),
-                  PressedTip.externalLink(Strings.accueilCampagneRecrutementPressedTip, textColor: Colors.white),
+                  PressedTip.externalLink(Strings.accueilCampagneRecrutementPressedTip, textColor: AppColors.contentOnPrimary),
                 ],
               ),
             ),
@@ -68,7 +68,7 @@ class CampagneRecrutementCard extends StatelessWidget {
               child: IconButton(
                 tooltip: "${Strings.closeDialog} ${Strings.accueilCampagneRecrutementLabel}",
                 onPressed: campagneRecrutementCej.onDismiss,
-                icon: Icon(AppIcons.close_rounded, color: Colors.white),
+                icon: Icon(AppIcons.close_rounded, color: AppColors.contentOnPrimary),
               ),
             ),
           ],

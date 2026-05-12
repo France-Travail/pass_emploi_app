@@ -27,7 +27,7 @@ class AccueilCetteSemaine extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        LargeSectionTitle(Strings.accueilCetteSemaineSection, color: Colors.white),
+        LargeSectionTitle(Strings.accueilCetteSemaineSection, color: AppColors.contentOnPrimary),
         SizedBox(height: Margins.spacing_base),
         if (item.withComptageDesHeures) ...[
           AccueilComptageDesHeures(),
@@ -44,7 +44,7 @@ class AccueilCetteSemaine extends StatelessWidget {
                       icon: AppIcons.event,
                       label: Strings.accueilRendezvous,
                       count: rendezvousCount,
-                      backgroundColor: Colors.white,
+                      backgroundColor: AppColors.bg,
                       contentColor: AppColors.contentLight,
                     ),
                   ),
@@ -55,7 +55,7 @@ class AccueilCetteSemaine extends StatelessWidget {
                     icon: AppIcons.bolt_outlined,
                     label: item.actionsOuDemarchesLabel,
                     count: item.actionsOuDemarchesCount,
-                    backgroundColor: Colors.white,
+                    backgroundColor: AppColors.bg,
                     contentColor: AppColors.contentLight,
                   ),
                 ),
@@ -64,7 +64,7 @@ class AccueilCetteSemaine extends StatelessWidget {
             SizedBox(height: Margins.spacing_base),
             SecondaryButton(
               backgroundColor: AppColors.transparent,
-              foregroundColor: Colors.white,
+              foregroundColor: AppColors.contentOnPrimary,
               label: Strings.accueilVoirDetailsCetteSemaine,
               onPressed: () {
                 PassEmploiMatomoTracker.instance.trackEvent(

@@ -89,7 +89,7 @@ class _NavButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.bg,
         border: Border(top: BorderSide(color: AppColors.primaryLighten, width: 1)),
       ),
       child: Padding(

@@ -87,7 +87,7 @@ class _RendezvousDetailsPageState extends State<RendezvousDetailsPage> {
 
   Widget _scaffold(BuildContext context, RendezvousDetailsViewModel viewModel) {
     _trackPageOnRendezvousRetrievalFromState(viewModel);
-    const backgroundColor = Colors.white;
+    const backgroundColor = AppColors.bg;
     return Scaffold(
       floatingActionButton: switch (viewModel.rdvCta) {
         null => SizedBox.shrink(),

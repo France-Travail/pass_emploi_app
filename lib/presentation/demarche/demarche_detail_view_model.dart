@@ -96,7 +96,7 @@ class DemarcheDetailViewModel extends Equatable {
       modifiedByAdvisor: false,
       withOfflineBehavior: false,
       dateFormattedTexts: [],
-      dateTextColor: Colors.black,
+      dateTextColor: AppColors.contentLight,
       dateBackgroundColor: AppColors.transparent,
       dateIcons: [],
       label: null,

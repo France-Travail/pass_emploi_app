@@ -337,7 +337,7 @@ void _displaySuccessSnackbar(
                   padding: const EdgeInsets.all(3.0),
                   child: Icon(
                     AppIcons.check_rounded,
-                    color: Colors.white,
+                    color: AppColors.contentOnPrimary,
                   ),
                 ),
               ),

@@ -45,7 +45,7 @@ class Illustration extends StatelessWidget {
   factory Illustration.grey(IconData icon, {bool withWhiteBackground = false}) {
     return Illustration(
       primaryColor: AppColors.disabled,
-      secondaryColor: withWhiteBackground ? Colors.white : AppColors.grey100,
+      secondaryColor: withWhiteBackground ? AppColors.bg : AppColors.grey100,
       icon: icon,
     );
   }
@@ -189,7 +189,7 @@ class _Icone extends StatelessWidget {
   Widget build(BuildContext context) {
     return Icon(
       icon,
-      color: Colors.white,
+      color: AppColors.bg,
       size: 80,
     );
   }

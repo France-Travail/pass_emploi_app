@@ -57,7 +57,7 @@ class _FtIaShowcaseState extends State<FtIaShowcase> {
           tooltipPosition: TooltipPosition.top,
           title: Strings.iaFtShowcaseTitle,
           description: null,
-          tooltipBackgroundColor: Colors.white,
+          tooltipBackgroundColor: AppColors.bg,
           titleTextStyle: TextStyles.textMBold.copyWith(color: AppColors.primary),
           descTextStyle: TextStyles.textBaseRegular.copyWith(color: AppColors.primary),
           key: key,

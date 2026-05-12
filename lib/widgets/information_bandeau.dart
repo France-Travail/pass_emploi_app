@@ -43,10 +43,10 @@ class InformationBandeau extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: textColor ?? Colors.white, size: Dimens.icon_size_m),
+            Icon(icon, color: textColor ?? AppColors.contentOnPrimary, size: Dimens.icon_size_m),
             SizedBox(width: Margins.spacing_s),
             Expanded(
-              child: Text(text, style: TextStyles.textSRegular(color: textColor ?? Colors.white)),
+              child: Text(text, style: TextStyles.textSRegular(color: textColor ?? AppColors.contentOnPrimary)),
             ),
           ],
         ),

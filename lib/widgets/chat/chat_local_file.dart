@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/presentation/chat/chat_item.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/chat/chat_message_container.dart';
@@ -24,7 +25,7 @@ class ChatLocalFile extends StatelessWidget {
             child: CircularProgressIndicator(),
           ),
           SizedBox(width: Margins.spacing_s),
-          Expanded(child: Text(message.fileName, style: TextStyles.textBaseBold.copyWith(color: Colors.white)))
+          Expanded(child: Text(message.fileName, style: TextStyles.textBaseBold.copyWith(color: AppColors.contentOnPrimary)))
         ],
       ),
     );

@@ -41,7 +41,7 @@ class EvenementEmploiDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const backgroundColor = Colors.white;
+    const backgroundColor = AppColors.bg;
     return Tracker(
       tracking: AnalyticsScreenNames.evenementEmploiDetails,
       child: StoreConnector<AppState, EvenementEmploiDetailsPageViewModel>(

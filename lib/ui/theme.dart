@@ -14,7 +14,7 @@ class PassEmploiTheme {
       }),
     ),
     switchTheme: SwitchThemeData(
-      thumbColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) => Colors.white),
+      thumbColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) => AppColors.contentOnPrimary),
       trackColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
         if (states.contains(WidgetState.disabled)) return AppColors.grey700;
         if (states.contains(WidgetState.selected)) return AppColors.success;

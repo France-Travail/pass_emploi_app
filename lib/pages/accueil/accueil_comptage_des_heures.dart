@@ -28,10 +28,10 @@ class AccueilComptageDesHeures extends StatelessWidget {
             DisplayState.CONTENT => _Content(viewModel: viewModel),
             DisplayState.LOADING => const Center(child: CircularProgressIndicator()),
             DisplayState.FAILURE => Retry(
-                Strings.comptageDesHeuresError,
-                () => viewModel.retry(),
-                small: true,
-              ),
+              Strings.comptageDesHeuresError,
+              () => viewModel.retry(),
+              small: true,
+            ),
             DisplayState.EMPTY => const Center(child: Text("Aucune donnée")),
           },
         );
@@ -140,7 +140,6 @@ class _CompteurIllustration extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Arcs
           CustomPaint(
             size: const Size(140, 90),
             painter: _CompteurArcsPainter(
@@ -148,7 +147,6 @@ class _CompteurIllustration extends StatelessWidget {
               greenCurve: pourcentageHeuresValidees,
             ),
           ),
-          // Emoji
           Positioned(
             bottom: -5,
             child: Text(
@@ -177,17 +175,16 @@ class _CompteurArcsPainter extends CustomPainter {
     final outerRadius = size.width * 0.48;
     final innerRadius = size.width * 0.34;
     const arcThickness = 9.0;
-    const startAngle = 3.14; // 180°
-    const sweepAngle = 3.14; // 180°
+    const startAngle = 3.14;
+    const sweepAngle = 3.14;
 
-    // Background arcs
     final bgPaintOuter = Paint()
-      ..color = Colors.grey.shade300
+      ..color = AppColors.grey100
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeWidth = arcThickness;
     final bgPaintInner = Paint()
-      ..color = Colors.grey.shade300
+      ..color = AppColors.grey100
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeWidth = arcThickness;
@@ -206,14 +203,13 @@ class _CompteurArcsPainter extends CustomPainter {
       bgPaintInner,
     );
 
-    // Colored arcs
     final arcPaintOuter = Paint()
-      ..color = AppColors.additional6 // purple
+      ..color = AppColors.additional6
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeWidth = arcThickness;
     final arcPaintInner = Paint()
-      ..color = AppColors.additional5 // teal
+      ..color = AppColors.additional5
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeWidth = arcThickness;

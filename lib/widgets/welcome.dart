@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/media_sizes.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -19,14 +20,14 @@ class Welcome extends StatelessWidget {
         children: [
           Text(
             Strings.welcome,
-            style: TextStyles.textLBold(color: Colors.white),
+            style: TextStyles.textLBold(color: AppColors.contentOnPrimary),
             textAlign: TextAlign.center,
           ),
           if (!small) ...[
             SizedBox(height: Margins.spacing_base),
             Text(
               Strings.welcomeMessage,
-              style: TextStyles.textBaseRegular.copyWith(color: Colors.white),
+              style: TextStyles.textBaseRegular.copyWith(color: AppColors.contentOnPrimary),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: Margins.spacing_m),

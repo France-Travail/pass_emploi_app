@@ -51,7 +51,7 @@ class _ContentMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = sender == Sender.jeune
-        ? TextStyles.textSRegular(color: Colors.white) //
+        ? TextStyles.textSRegular(color: AppColors.contentOnPrimary) //
         : TextStyles.textSRegular();
     return SelectableTextWithClickableLinks(content, linkStyle: style, style: style);
   }

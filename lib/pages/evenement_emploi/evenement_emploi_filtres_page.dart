@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/presentation/checkbox_value_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/evenement_emploi/evenement_emploi_filtres_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/shadows.dart';
@@ -147,7 +148,7 @@ class _Filtres extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: Colors.white,
+      color: AppColors.bg,
       child: SingleChildScrollView(
         clipBehavior: Clip.none,
         child: Column(
@@ -210,7 +211,7 @@ class _TypeFiltreState extends State<_TypeFiltre> {
         SizedBox(height: Margins.spacing_base),
         DecoratedBox(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.bg,
             borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base)),
             boxShadow: [Shadows.radius_base],
           ),
@@ -262,7 +263,7 @@ class _DateFiltres extends StatelessWidget {
         SizedBox(height: Margins.spacing_base),
         DecoratedBox(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.bg,
             borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base)),
             boxShadow: [Shadows.radius_base],
           ),

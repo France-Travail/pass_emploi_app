@@ -21,7 +21,7 @@ class SecondaryButton extends StatefulWidget {
     required this.label,
     required this.onPressed,
     this.icon,
-    this.backgroundColor = Colors.white,
+    this.backgroundColor = AppColors.bg,
     this.foregroundColor,
     this.fontSize,
     this.iconLabel,

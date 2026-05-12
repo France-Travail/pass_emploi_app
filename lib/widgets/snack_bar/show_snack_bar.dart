@@ -38,7 +38,7 @@ void showSnackBarWithSystemError(BuildContext context, [String? label]) {
     icon: AppIcons.highlight_off,
     label: label ?? Strings.miscellaneousErrorRetry,
     backgroundColor: AppColors.disabled,
-    textColor: Colors.white,
+        textColor: AppColors.contentOnPrimary,
     onActionTap: null,
   );
 }

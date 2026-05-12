@@ -16,7 +16,7 @@ class AnimatedListLoader extends StatelessWidget {
     return AnimationLimiter(
       child: Shimmer.fromColors(
         baseColor: AppColors.grey100,
-        highlightColor: Colors.white,
+        highlightColor: AppColors.bg,
         child: ListView.builder(
           shrinkWrap: nested,
           physics: nested ? const NeverScrollableScrollPhysics() : null,

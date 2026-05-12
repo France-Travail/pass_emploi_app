@@ -44,7 +44,7 @@ class _PassEmploiTabBarState extends State<PassEmploiTabBar> {
               isScrollable: true,
               labelPadding: const EdgeInsets.only(right: 32),
               indicatorPadding: const EdgeInsets.only(right: 32),
-              unselectedLabelColor: Brand.isCej() ? AppColors.grey800 : Colors.grey[350],
+              unselectedLabelColor: Brand.isCej() ? AppColors.grey800 : AppColors.grey100,
               tabAlignment: TabAlignment.start,
               tabs: _tabs(),
             ),
@@ -104,7 +104,7 @@ class _TabCountBadge extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: TextStyles.textXsBold(color: Colors.white),
+        style: TextStyles.textXsBold(color: AppColors.contentOnPrimary),
         textAlign: TextAlign.center,
       ),
     );

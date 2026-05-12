@@ -97,7 +97,7 @@ class _Empty extends StatelessWidget {
         illustration: Container(
           padding: EdgeInsets.all(Margins.spacing_m),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.bg,
             shape: BoxShape.circle,
           ),
           child: SvgPicture.asset(Drawables.megaphone),
@@ -194,7 +194,7 @@ class _ExternalUrlAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      surfaceTintColor: Colors.white,
+      surfaceTintColor: AppColors.bg,
       backgroundColor: AppColors.bg,
       title: Stack(
         children: [

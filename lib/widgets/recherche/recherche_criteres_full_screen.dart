@@ -51,7 +51,7 @@ class _RechercheCriteresFullScreenState<Result> extends State<RechercheCriteresF
       builder: (context, viewModel) {
         return SizedBox.expand(
           child: ColoredBox(
-            color: Colors.white,
+            color: AppColors.bg,
             child: SingleChildScrollView(
               clipBehavior: Clip.none,
               child: Padding(

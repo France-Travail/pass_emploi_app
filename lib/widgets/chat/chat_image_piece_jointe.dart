@@ -71,7 +71,7 @@ class _Loading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: AppColors.bg,
       width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.all(Margins.spacing_base),
@@ -92,7 +92,7 @@ class _Failure extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(Margins.spacing_s),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(Dimens.radius_base)),
+        decoration: BoxDecoration(color: AppColors.bg, borderRadius: BorderRadius.circular(Dimens.radius_base)),
       child: FileWasDeleted(),
     );
   }

@@ -247,7 +247,7 @@ class _FinishActionButton extends StatelessWidget {
       width: double.infinity,
       child: PrimaryActionButton(
         label: Strings.completeAction,
-        suffix: Icon(AppIcons.arrow_forward_rounded, color: Colors.white),
+        suffix: Icon(AppIcons.arrow_forward_rounded, color: AppColors.contentOnPrimary),
         onPressed: () async {
           if (!context.mounted) return;
           final result = await UserActionDoneBottomSheet.show(context, source, viewModel.id);

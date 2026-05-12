@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/models/chat/sender.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/chat/chat_message_container.dart';
 import 'package:pass_emploi_app/widgets/text_with_clickable_links.dart';
@@ -27,7 +28,7 @@ class ChatTextMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isMyMessage = params.sender == Sender.jeune;
     final TextStyle textStyle = isMyMessage
-        ? TextStyles.textSRegular(color: Colors.white) //
+        ? TextStyles.textSRegular(color: AppColors.contentOnPrimary) //
         : TextStyles.textSRegular();
     return ChatMessageContainer(
       content: SelectableTextWithClickableLinks(

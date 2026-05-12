@@ -48,7 +48,7 @@ class CheckBoxGroupState<T extends CheckboxValueViewModel> extends State<CheckBo
         SizedBox(height: Margins.spacing_base),
         DecoratedBox(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.bg,
             borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base)),
             boxShadow: [Shadows.radius_base],
           ),

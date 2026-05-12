@@ -29,7 +29,7 @@ class ProfileButton extends StatelessWidget {
               child: Icon(
                 Icons.person_outline_rounded,
                 size: 24,
-                color: isDarkColor ? Colors.white : AppColors.primary,
+                color: isDarkColor ? AppColors.contentOnPrimary : AppColors.primary,
               ),
             ),
           ),

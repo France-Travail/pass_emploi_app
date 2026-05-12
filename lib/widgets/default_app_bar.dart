@@ -88,7 +88,7 @@ class _CentreNotif extends StatelessWidget {
         TertiaryIconButton(
           icon: AppIcons.notifications_outlined,
           tooltip: Strings.notificationsCenterTooltip,
-          iconColor: Colors.white,
+          iconColor: AppColors.contentOnPrimary,
           onTap: () => Navigator.of(context).push(NotificationCenter.route()),
         ),
         if (withNewNotifications)
@@ -99,7 +99,7 @@ class _CentreNotif extends StatelessWidget {
               width: 8,
               height: 8,
               decoration: BoxDecoration(
-                color: Colors.red,
+                color: AppColors.warning,
                 shape: BoxShape.circle,
               ),
             ),
@@ -127,7 +127,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconColor = Brand.isCej() ? Colors.black : AppColors.grey100;
+    final iconColor = Brand.isCej() ? AppColors.contentLight : AppColors.grey100;
     return AppBar(
       toolbarHeight: toolBarHeight,
       leading: canPop ? BackButton(color: iconColor) : null,
@@ -183,14 +183,14 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       toolbarHeight: toolBarHeight,
       titleSpacing: 0,
-      iconTheme: IconThemeData(color: Colors.black),
+      iconTheme: IconThemeData(color: AppColors.contentLight),
       elevation: 0,
       centerTitle: false,
       scrolledUnderElevation: 0,
       surfaceTintColor: AppColors.transparent,
       leading: leading,
       actions: actions,
-      backgroundColor: backgroundColor ?? Colors.white,
+      backgroundColor: backgroundColor ?? AppColors.bg,
       title: Semantics(
         header: true,
         child: Tooltip(
