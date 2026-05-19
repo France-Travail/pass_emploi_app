@@ -7,12 +7,14 @@ import 'package:pass_emploi_app/widgets/pass_emploi_material_app.dart';
 /// methods.
 class IgnoreTrackingContextProvider extends StatelessWidget {
   final Widget child;
+  final ThemeMode themeMode;
 
-  const IgnoreTrackingContextProvider({required this.child});
+  const IgnoreTrackingContextProvider({required this.child, required this.themeMode});
 
   @override
   Widget build(BuildContext context) {
     return PassEmploiMaterialApp(
+      themeMode: themeMode,
       home: Builder(builder: (materialAppContext) {
         return IgnoreTrackingContext(
           nonTrackingContext: materialAppContext,

@@ -24,14 +24,15 @@ class PassEmploiApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreProvider<AppState>(
       store: _store,
-      child: IgnoreTrackingContextProvider(
-        child: StoreConnector<AppState, ThemeMode>(
-          converter: (store) {
-            final state = store.state.themeState;
-            return state is ThemeSuccessState ? state.themeMode : ThemeMode.light;
-          },
-          distinct: true,
-          builder: (_, themeMode) => PassEmploiMaterialApp(
+      child: StoreConnector<AppState, ThemeMode>(
+        converter: (store) {
+          final state = store.state.themeState;
+          return state is ThemeSuccessState ? state.themeMode : ThemeMode.light;
+        },
+        distinct: true,
+        builder: (_, themeMode) => IgnoreTrackingContextProvider(
+          themeMode: themeMode,
+          child: PassEmploiMaterialApp(
             scaffoldMessengerKey: snackBarKey,
             title: Strings.appName,
             themeMode: themeMode,

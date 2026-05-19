@@ -19,12 +19,13 @@ class BottomSheetButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textColor = color ?? context.content;
     return Semantics(
       button: true,
       child: ListTile(
         contentPadding: EdgeInsets.zero,
-        leading: Icon(icon, color: color),
-        title: Text(text, style: TextStyles.textBaseBold.copyWith(color: color)),
+        leading: Icon(icon, color: textColor),
+        title: Text(text, style: TextStyles.textBaseBold.copyWith(color: textColor)),
         trailing: withNavigationSuffix ? Icon(AppIcons.chevron_right_rounded, color: context.content) : null,
         onTap: onPressed,
       ),
