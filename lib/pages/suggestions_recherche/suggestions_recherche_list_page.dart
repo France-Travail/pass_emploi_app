@@ -15,7 +15,6 @@ import 'package:pass_emploi_app/presentation/suggestions/suggestions_recherche_l
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/redux/store_connector_aware.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -164,13 +163,17 @@ class _Empty extends StatelessWidget {
               child: Illustration.grey(AppIcons.checklist_rounded),
             ),
           ),
-          Text(Strings.emptySuggestionAlerteListTitre, style: TextStyles.textBaseBold, textAlign: TextAlign.center),
+          Text(
+            Strings.emptySuggestionAlerteListTitre,
+            style: TextStyles.textBaseBold.copyWith(color: context.content),
+            textAlign: TextAlign.center,
+          ),
           SizedBox(height: Margins.spacing_base),
           Text(
             viewModel.loginMode?.isMiLo() == true
                 ? Strings.emptySuggestionAlerteListDescriptionMilo
                 : Strings.emptySuggestionAlerteListDescriptionPoleEmploi,
-            style: TextStyles.textBaseRegular,
+            style: TextStyles.textBaseRegular.copyWith(color: context.content),
             textAlign: TextAlign.center,
           ),
           Spacer(flex: 2),
@@ -189,7 +192,7 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(Strings.suggestionsDeRechercheHeader, style: TextStyles.textBaseRegular),
+        Text(Strings.suggestionsDeRechercheHeader, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_base),
         _Card(suggestionId: suggestionId),
       ],

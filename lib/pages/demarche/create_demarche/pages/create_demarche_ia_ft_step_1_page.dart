@@ -79,7 +79,7 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: Margins.spacing_base),
-            Text(Strings.iaFtStep2Title, style: TextStyles.textMBold),
+            Text(Strings.iaFtStep2Title, style: TextStyles.textMBold.copyWith(color: context.content)),
             Text(Strings.iaFtStep2Mandatory, style: TextStyles.textSRegular(color: context.content)),
             const SizedBox(height: Margins.spacing_base),
             InformationBandeau(

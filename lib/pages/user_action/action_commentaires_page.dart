@@ -3,6 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/models/commentaire.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/user_action/commentaires/action_commentaire_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -35,6 +36,7 @@ class _ActionCommentairesPageState extends State<ActionCommentairesPage> {
     return Tracker(
       tracking: AnalyticsScreenNames.actionCommentsPage,
       child: Scaffold(
+        backgroundColor: context.bg,
         appBar: SecondaryAppBar(title: Strings.actionCommentsTitle),
         body: StoreConnector<AppState, ActionCommentairePageViewModel>(
           converter: (store) => ActionCommentairePageViewModel.create(store, widget.actionId),
@@ -69,7 +71,7 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(title, style: TextStyles.textLBold());
+    return Text(title, style: TextStyles.textLBold(color: context.content));
   }
 }
 
@@ -83,7 +85,7 @@ class _CommentsWidget extends StatelessWidget {
     return switch (viewModel.listDisplayState) {
       DisplayState.FAILURE => Retry(Strings.chatError, () => viewModel.onRetry()),
       DisplayState.CONTENT => viewModel.comments.isEmpty
-          ? Text(Strings.noComments, style: TextStyles.textBaseRegular)
+          ? Text(Strings.noComments, style: TextStyles.textBaseRegular.copyWith(color: context.content))
           : _CommentsList(comments: viewModel.comments),
       _ => SizedBox.shrink(),
     };

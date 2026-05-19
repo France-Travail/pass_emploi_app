@@ -68,9 +68,9 @@ class _CreateUserActionFormStep2State extends State<CreateUserActionFormStep2> {
               const SizedBox(height: Margins.spacing_m),
               Semantics(
                 label: Strings.mandatoryField,
-                child: Text(
+                child:                   Text(
                   Strings.userActionSubtitleStep2,
-                  style: TextStyles.textBaseBold,
+                  style: TextStyles.textBaseBold.copyWith(color: context.content),
                 ),
               ),
               const SizedBox(height: Margins.spacing_base),
@@ -88,7 +88,7 @@ class _CreateUserActionFormStep2State extends State<CreateUserActionFormStep2> {
                     children: [
                       Text(
                         Strings.userActionTitleTextfieldStep2,
-                        style: TextStyles.textBaseBold,
+                        style: TextStyles.textBaseBold.copyWith(color: context.content),
                       ),
                       const SizedBox(height: Margins.spacing_s),
                       BaseTextField(
@@ -283,12 +283,12 @@ class _UserActionDescriptionFieldState extends State<UserActionDescriptionField>
           Text(
             Strings.userActionDescriptionTextfieldStep2,
             key: widget.descriptionKey,
-            style: TextStyles.textBaseBold,
+            style: TextStyles.textBaseBold.copyWith(color: context.content),
           ),
           const SizedBox(height: Margins.spacing_s),
           Text(
             Strings.userActionDescriptionDescriptionfieldStep2,
-            style: TextStyles.textSRegular(),
+            style: TextStyles.textSRegular(color: context.content),
           ),
           const SizedBox(height: Margins.spacing_base),
           Stack(
@@ -317,7 +317,7 @@ class _UserActionDescriptionFieldState extends State<UserActionDescriptionField>
                             children: [
                               IconButton(
                                 tooltip: Strings.clear,
-                                icon: Icon(Icons.clear),
+                                icon: Icon(Icons.clear, color: context.content),
                                 onPressed: widget.onClear,
                               ),
                               SizedBox(

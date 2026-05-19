@@ -22,6 +22,7 @@ class BenevolatPage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.benevolat,
       child: Scaffold(
+        backgroundColor: context.bg,
         appBar: SecondaryAppBar(title: BenevolatAssets.title),
         floatingActionButton: _Button(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -37,18 +38,19 @@ class BenevolatPage extends StatelessWidget {
                     TextSpan(
                       text: BenevolatAssets.card1Part1,
                       semanticsLabel: BenevolatAssets.card1Part1.removeIconsForScreenReaders(),
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                     TextSpan(
                       text: BenevolatAssets.link,
                       style: TextStyles.textBaseRegular.copyWith(
+                        color: context.content,
                         decoration: TextDecoration.underline,
                       ),
                     ),
                     TextSpan(
                       text: BenevolatAssets.card1Part2,
                       semanticsLabel: BenevolatAssets.card1Part2.removeIconsForScreenReaders(),
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                   ],
                 ),
@@ -62,18 +64,19 @@ class BenevolatPage extends StatelessWidget {
                     TextSpan(
                       text: BenevolatAssets.card2Part1,
                       semanticsLabel: BenevolatAssets.card2Part1.removeIconsForScreenReaders(),
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                     TextSpan(
                       text: BenevolatAssets.link,
                       style: TextStyles.textBaseRegular.copyWith(
+                        color: context.content,
                         decoration: TextDecoration.underline,
                       ),
                     ),
                     TextSpan(
                       text: BenevolatAssets.card2Part2,
                       semanticsLabel: BenevolatAssets.card2Part2.removeIconsForScreenReaders(),
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                   ],
                 ),
@@ -85,12 +88,13 @@ class BenevolatPage extends StatelessWidget {
                     TextSpan(
                       text: BenevolatAssets.card3Part1,
                       semanticsLabel: BenevolatAssets.card3Part1.removeIconsForScreenReaders(),
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                     TextSpan(
                       text: BenevolatAssets.card3Part2,
                       semanticsLabel: BenevolatAssets.card3Part2.removeIconsForScreenReaders(),
                       style: TextStyles.textBaseMediumBold().copyWith(
+                        color: context.content,
                         decoration: TextDecoration.underline,
                       ),
                     ),
@@ -138,9 +142,9 @@ class _InformationCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: Margins.spacing_m),
-                Padding(
+                  Padding(
                   padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-                  child: Text(title, style: TextStyles.textBaseBold),
+                  child: Text(title, style: TextStyles.textBaseBold.copyWith(color: context.content)),
                 ),
                 SizedBox(height: Margins.spacing_s),
                 Padding(

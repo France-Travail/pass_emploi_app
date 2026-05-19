@@ -32,7 +32,9 @@ class AccueilComptageDesHeures extends StatelessWidget {
               () => viewModel.retry(),
               small: true,
             ),
-            DisplayState.EMPTY => const Center(child: Text("Aucune donnée")),
+            DisplayState.EMPTY => Center(
+              child: Text(Strings.noData, style: TextStyle(color: context.content)),
+            ),
           },
         );
       },
@@ -60,7 +62,7 @@ class _Content extends StatelessWidget {
           ],
           Text(
             viewModel.title,
-            style: TextStyles.textSBold,
+            style: TextStyles.textSBold.copyWith(color: context.content),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: Margins.spacing_s),
@@ -79,10 +81,20 @@ class _Content extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildCompteurText(viewModel.heuresDeclarees, Strings.declaredHours, AppColors.additional6),
-                      _buildCompteurText(viewModel.heuresValidees, Strings.realizedHours, AppColors.additional5),
+                      _buildCompteurText(
+                        context,
+                        viewModel.heuresDeclarees,
+                        Strings.declaredHours,
+                        AppColors.additional6,
+                      ),
+                      _buildCompteurText(
+                        context,
+                        viewModel.heuresValidees,
+                        Strings.realizedHours,
+                        AppColors.additional5,
+                      ),
                       SizedBox(height: Margins.spacing_s),
-                      Text(viewModel.dateDerniereMiseAJour, style: TextStyles.textXsRegular()),
+                      Text(viewModel.dateDerniereMiseAJour, style: TextStyles.textXsRegular(color: context.content)),
                     ],
                   ),
                 ),
@@ -95,7 +107,7 @@ class _Content extends StatelessWidget {
     );
   }
 
-  Widget _buildCompteurText(String compteur, String label, Color color) {
+  Widget _buildCompteurText(BuildContext context, String compteur, String label, Color color) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -111,8 +123,14 @@ class _Content extends StatelessWidget {
         RichText(
           text: TextSpan(
             children: [
-              TextSpan(text: "${compteur}h ", style: TextStyles.textSBold),
-              TextSpan(text: label, style: TextStyles.textSRegular()),
+              TextSpan(
+                text: "${compteur}h ",
+                style: TextStyles.textSBold.copyWith(color: context.content),
+              ),
+              TextSpan(
+                text: label,
+                style: TextStyles.textSRegular(color: context.content),
+              ),
             ],
           ),
         ),
@@ -151,7 +169,7 @@ class _CompteurIllustration extends StatelessWidget {
             bottom: -5,
             child: Text(
               emoji,
-              style: const TextStyle(fontSize: 32),
+              style: TextStyle(fontSize: 32, color: context.content),
             ),
           ),
         ],

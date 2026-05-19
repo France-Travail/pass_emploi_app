@@ -165,7 +165,7 @@ class _MotCleListTile extends StatelessWidget {
               color: context.grey800,
             ),
             SizedBox(width: Margins.spacing_s),
-            Expanded(child: Text(motCle, style: TextStyles.textBaseRegular)),
+            Expanded(child: Text(motCle, style: TextStyles.textBaseRegular.copyWith(color: context.content))),
           ],
         ),
         onTap: () => onTap(motCle),

@@ -40,6 +40,7 @@ class _Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: context.bg,
       body: Stack(
         children: [
           PrimaryRoundedBottomBackground(),
@@ -113,13 +114,13 @@ class _BodyState extends State<_Body> {
                                     text: neverAccepted
                                         ? Strings.cguNeverAcceptedSwitch[0]
                                         : Strings.cguUpdateRequiredSwitch[0],
-                                    style: _cguSwitchTestStyle(),
+                                    style: _cguSwitchTestStyle(context),
                                   ),
                                   TextSpan(
                                     text: neverAccepted
                                         ? Strings.cguNeverAcceptedSwitch[1]
                                         : Strings.cguUpdateRequiredSwitch[1],
-                                    style: _cguSwitchTestStyle(underlined: true),
+                                    style: _cguSwitchTestStyle(context, underlined: true),
                                   ),
                                 ],
                               ),
@@ -186,8 +187,8 @@ class _BodyState extends State<_Body> {
     );
   }
 
-  TextStyle _cguSwitchTestStyle({bool underlined = false}) {
-    var style = shouldHighlightError() ? TextStyles.textSBoldWithColor(AppColors.warning) : TextStyles.textSRegular();
+  TextStyle _cguSwitchTestStyle(BuildContext context, {bool underlined = false}) {
+    var style = shouldHighlightError() ? TextStyles.textSBoldWithColor(AppColors.warning) : TextStyles.textSRegular(color: context.content);
     if (underlined) style = style.copyWith(decoration: TextDecoration.underline);
     return style;
   }
@@ -205,7 +206,7 @@ class _CguNeverAcceptedContent extends StatelessWidget {
           style: TextStyles.textLBold(color: AppColors.primary),
         ),
         SizedBox(height: Margins.spacing_m),
-        Focus(
+          Focus(
           child: GestureDetector(
             onTap: _launchExternalRedirect,
             child: Text.rich(
@@ -213,7 +214,7 @@ class _CguNeverAcceptedContent extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: Strings.cguNeverAcceptedDescription[0],
-                    style: TextStyles.textBaseRegular,
+                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
                   ),
                   TextSpan(
                     text: Strings.cguNeverAcceptedDescription[1],
@@ -224,15 +225,15 @@ class _CguNeverAcceptedContent extends StatelessWidget {
                   ),
                   TextSpan(
                     text: Strings.cguNeverAcceptedDescription[2],
-                    style: TextStyles.textBaseRegular,
+                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
                   ),
                   TextSpan(
                     text: Strings.cguNeverAcceptedDescription[3],
-                    style: TextStyles.textBaseBold,
+                    style: TextStyles.textBaseBold.copyWith(color: context.content),
                   ),
                   TextSpan(
                     text: Strings.cguNeverAcceptedDescription[4],
-                    style: TextStyles.textBaseRegular,
+                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
                   ),
                 ],
               ),
@@ -258,7 +259,7 @@ class _CguUpdateRequiredContent extends StatelessWidget {
           style: TextStyles.textLBold(color: AppColors.primary),
         ),
         SizedBox(height: Margins.spacing_m),
-        Focus(
+          Focus(
           child: GestureDetector(
             onTap: _launchExternalRedirect,
             child: Text.rich(
@@ -269,7 +270,7 @@ class _CguUpdateRequiredContent extends StatelessWidget {
                         Strings.cguUpdateRequiredDescription[0] +
                         displayState.lastUpdateLabel +
                         Strings.cguUpdateRequiredDescription[1],
-                    style: TextStyles.textBaseRegular,
+                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
                   ),
                   TextSpan(
                     text: Strings.cguUpdateRequiredDescription[2],
@@ -280,12 +281,12 @@ class _CguUpdateRequiredContent extends StatelessWidget {
                   ),
                   TextSpan(
                     text: Strings.cguUpdateRequiredDescription[3],
-                    style: TextStyles.textBaseRegular,
+                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
                   ),
                   for (var change in displayState.changes)
                     TextSpan(
                       text: " • $change\n",
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                 ],
               ),

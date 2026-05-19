@@ -396,13 +396,13 @@ class _SuggestionsEmpty extends StatelessWidget {
             ),
           ),
           SizedBox(height: Margins.spacing_base),
-          Text(Strings.emptySuggestionAlerteListTitre, style: TextStyles.textBaseBold, textAlign: TextAlign.center),
+          Text(Strings.emptySuggestionAlerteListTitre, style: TextStyles.textBaseBold.copyWith(color: context.content), textAlign: TextAlign.center),
           SizedBox(height: Margins.spacing_base),
           Text(
             viewModel.loginMode?.isMiLo() == true
                 ? Strings.emptySuggestionAlerteListDescriptionMilo
                 : Strings.emptySuggestionAlerteListDescriptionPoleEmploi,
-            style: TextStyles.textBaseRegular,
+            style: TextStyles.textBaseRegular.copyWith(color: context.content),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: Margins.spacing_xl),
@@ -421,7 +421,7 @@ class _SuggestionsHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(Strings.suggestionsDeRechercheHeader, style: TextStyles.textBaseRegular),
+        Text(Strings.suggestionsDeRechercheHeader, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_base),
         _SuggestionCard(suggestionId: suggestionId),
       ],
@@ -459,8 +459,8 @@ class _SuggestionCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("${Strings.alerte} ${viewModel.type.toAlerteTagLabel()}", style: TextStyles.textSBold),
-                    Text(viewModel.titre, style: TextStyles.textSRegular()),
+                    Text("${Strings.alerte} ${viewModel.type.toAlerteTagLabel()}", style: TextStyles.textSBold.copyWith(color: context.content)),
+                    Text(viewModel.titre, style: TextStyles.textSRegular(color: context.content)),
                   ],
                 ),
               ),

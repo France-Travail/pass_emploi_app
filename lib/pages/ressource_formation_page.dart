@@ -25,6 +25,7 @@ class RessourceFormationPage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.ressourceFormation,
       child: Scaffold(
+        backgroundColor: context.bg,
         appBar: SecondaryAppBar(title: RessourceFormationAssets.text_0),
         floatingActionButton: Padding(
           padding: const EdgeInsets.all(Margins.spacing_base),
@@ -52,7 +53,7 @@ class RessourceFormationPage extends StatelessWidget {
                   spans: [
                     TextSpan(
                       text: RessourceFormationAssets.text_2,
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                   ],
                 ),
@@ -65,7 +66,7 @@ class RessourceFormationPage extends StatelessWidget {
                   spans: [
                     TextSpan(
                       text: RessourceFormationAssets.text_6,
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                   ],
                 ),
@@ -136,7 +137,7 @@ class _InformationCard extends StatelessWidget {
           SizedBox(height: Margins.spacing_m),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-            child: Text(title, style: TextStyles.textBaseBold),
+            child: Text(title, style: TextStyles.textBaseBold.copyWith(color: context.content)),
           ),
           SizedBox(height: Margins.spacing_s),
           Padding(

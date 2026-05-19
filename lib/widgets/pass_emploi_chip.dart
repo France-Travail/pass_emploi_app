@@ -35,7 +35,7 @@ class PassEmploiChip<T> extends StatelessWidget {
       onSelected: () => isSelected ? onTagDeleted?.call() : onTagSelected(value),
       textstyle: isSelected
           ? TextStyles.textSBold.copyWith(color: AppColors.contentOnPrimary)
-          : TextStyles.textSMedium(),
+          : TextStyles.textSMedium(color: context.content),
       borderColor: isSelected ? AppColors.primaryDarken : context.grey700,
     );
   }

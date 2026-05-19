@@ -57,6 +57,7 @@ class _TutorialPageState extends State<TutorialPage> {
 
   Widget _content(TutorialPageViewModel viewModel) {
     return Scaffold(
+      backgroundColor: context.bg,
       body: Stack(
         children: [
           PrimaryRoundedBottomBackground(),
@@ -204,7 +205,7 @@ class _TutorialContentCard extends StatelessWidget {
                   SizedBox(height: Margins.spacing_base),
                   Text(title, style: TextStyles.textMBold.copyWith(color: AppColors.primary)),
                   SizedBox(height: Margins.spacing_base),
-                  Text(description, style: TextStyles.textBaseRegular),
+                  Text(description, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                 ],
               ),
             ),

@@ -44,7 +44,7 @@ class BottomSheetHeader extends StatelessWidget {
               Expanded(
                 child: Text(
                   title!,
-                  style: TextStyles.textBaseBold,
+                  style: TextStyles.textBaseBold.copyWith(color: context.content),
                   textAlign: TextAlign.center,
                 ),
               ),

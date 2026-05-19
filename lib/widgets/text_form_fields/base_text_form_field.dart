@@ -107,7 +107,7 @@ class _BaseTextFieldState extends State<BaseTextField> {
       textCapitalization: widget.textCapitalization,
       textInputAction: widget.textInputAction,
       onTapOutside: (event) => FocusScope.of(context).unfocus(),
-      style: TextStyles.textBaseRegular,
+      style: TextStyles.textBaseRegular.copyWith(color: context.content),
       onChanged: widget.onChanged,
       enabled: widget.enabled,
       minLines: widget.minLines,

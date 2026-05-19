@@ -259,7 +259,10 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(header: true, child: Text(title, style: TextStyles.textLBold()));
+    return Semantics(
+      header: true,
+      child: Text(title, style: TextStyles.textLBold(color: context.content)),
+    );
   }
 }
 
@@ -285,14 +288,14 @@ class _OutilCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: TextStyles.textBaseBold),
+                  Text(title, style: TextStyles.textBaseBold.copyWith(color: context.content)),
                   SizedBox(height: Margins.spacing_xs),
-                  Text(subtitle, style: TextStyles.textSRegular()),
+                  Text(subtitle, style: TextStyles.textSRegular(color: context.content)),
                 ],
               ),
             ),
             SizedBox(width: Margins.spacing_s),
-            Icon(AppIcons.chevron_right_rounded),
+            Icon(AppIcons.chevron_right_rounded, color: context.content),
           ],
         ),
       ),
@@ -308,9 +311,9 @@ class _CurriculumVitaeCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(Strings.cvCardTitle, style: TextStyles.textMBold),
+          Text(Strings.cvCardTitle, style: TextStyles.textMBold.copyWith(color: context.content)),
           SizedBox(height: Margins.spacing_m),
-          Text(Strings.cvCardSubtitle, style: TextStyles.textBaseRegular),
+          Text(Strings.cvCardSubtitle, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
           PressedTip(Strings.cvCadCaption),
         ],
       ),
@@ -341,12 +344,15 @@ class _MailCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Semantics(header: true, child: Text(Strings.personalInformation, style: TextStyles.textMBold)),
+          Semantics(
+            header: true,
+            child: Text(Strings.personalInformation, style: TextStyles.textMBold.copyWith(color: context.content)),
+          ),
           SizedBox(height: Margins.spacing_m),
           Wrap(
             alignment: WrapAlignment.spaceBetween,
             children: [
-              Text(Strings.emailAddressLabel, style: TextStyles.textBaseRegular),
+              Text(Strings.emailAddressLabel, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
               Text(
                 userEmail,
                 textAlign: TextAlign.right,
@@ -383,7 +389,7 @@ class _ListTileCard extends StatelessWidget {
                         button: !externalRedirect,
                         child: ListTile(
                           onTap: data.onTap,
-                          title: Text(data.title, style: TextStyles.textBaseRegular),
+                          title: Text(data.title, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                           leading: externalRedirect
                               ? Icon(
                                   AppIcons.open_in_new_rounded,

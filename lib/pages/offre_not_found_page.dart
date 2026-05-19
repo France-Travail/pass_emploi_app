@@ -29,12 +29,12 @@ class OffreNotFoundPage extends StatelessWidget {
                 children: [
                   Center(child: SizedBox(height: 200, width: 200, child: Image.asset(Drawables.notFound))),
                   SizedBox(height: Margins.spacing_xl),
-                  Text(Strings.offreNotFoundBodyTitle, textAlign: TextAlign.center, style: TextStyles.textMBold),
+                  Text(Strings.offreNotFoundBodyTitle, textAlign: TextAlign.center, style: TextStyles.textMBold.copyWith(color: context.content)),
                   SizedBox(height: Margins.spacing_m),
                   Text(
                     Strings.offreNotFoundBodySubtitle,
                     textAlign: TextAlign.center,
-                    style: TextStyles.textSRegular(),
+                    style: TextStyles.textSRegular(color: context.content),
                   ),
                   SizedBox(height: Margins.spacing_m),
                   PrimaryActionButton(label: Strings.close, onPressed: () => Navigator.pop(context)),

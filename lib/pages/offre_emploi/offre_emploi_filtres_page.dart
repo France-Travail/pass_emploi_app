@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/presentation/checkbox_value_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/offre_emploi/offre_emploi_filtres_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -235,30 +236,30 @@ class _FiltreDebutantState extends State<_FiltreDebutant> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Semantics(
-          header: true,
-          child: Text(Strings.experienceSectionTitle, style: TextStyles.textBaseBold),
-        ),
-        SizedBox(height: Margins.spacing_base),
-        CardContainer(
-          child: Row(
-            children: [
-              Expanded(
-                child: ExcludeSemantics(
-                  child: Text(Strings.experienceSectionDescription, style: TextStyles.textBaseRegular),
+          Semantics(
+            header: true,
+            child: Text(Strings.experienceSectionTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+          ),
+          SizedBox(height: Margins.spacing_base),
+          CardContainer(
+            child: Row(
+              children: [
+                Expanded(
+                  child: ExcludeSemantics(
+                    child: Text(Strings.experienceSectionDescription, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
+                  ),
                 ),
-              ),
-              Semantics(
-                label: Strings.experienceSectionEnabled(_debutantOnlyEnabled),
-                child: Switch(
-                  value: _debutantOnlyEnabled,
-                  onChanged: _onDebutantOnlyValueChange,
+                Semantics(
+                  label: Strings.experienceSectionEnabled(_debutantOnlyEnabled),
+                  child: Switch(
+                    value: _debutantOnlyEnabled,
+                    onChanged: _onDebutantOnlyValueChange,
+                  ),
                 ),
-              ),
-              SizedBox(width: Margins.spacing_xs),
-              ExcludeSemantics(
-                child: Text(_debutantOnlyEnabled ? Strings.yes : Strings.no, style: TextStyles.textBaseRegular),
-              ),
+                SizedBox(width: Margins.spacing_xs),
+                ExcludeSemantics(
+                  child: Text(_debutantOnlyEnabled ? Strings.yes : Strings.no, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
+                ),
             ],
           ),
         ),

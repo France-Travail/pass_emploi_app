@@ -314,7 +314,7 @@ class _DuplicateUserActionItemState extends State<_DuplicateUserActionItem> {
             alignment: Alignment.topRight,
             child: IconButton(
               tooltip: Strings.clear,
-              icon: Icon(Icons.clear),
+              icon: Icon(Icons.clear, color: context.content),
               onPressed: widget.onDelete,
             ),
           ),

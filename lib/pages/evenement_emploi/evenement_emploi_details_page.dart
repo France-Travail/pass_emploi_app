@@ -144,7 +144,7 @@ class _Header extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (viewModel.tag != null) ...[CardTag.evenement(text: viewModel.tag!), SizedBox(height: Margins.spacing_s)],
-        Text(viewModel.titre, style: TextStyles.textLBold()),
+        Text(viewModel.titre, style: TextStyles.textLBold(color: context.content)),
         SizedBox(height: Margins.spacing_base),
         Wrap(
           spacing: Margins.spacing_base,
@@ -179,7 +179,7 @@ class _Details extends StatelessWidget {
           ],
         ),
         SizedBox(height: Margins.spacing_m),
-        Text(description, style: TextStyles.textBaseRegular),
+        Text(description, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
       ],
     );
   }

@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/creat
 import 'package:pass_emploi_app/presentation/demarche/demarche_du_referentiel_card_view_model.dart';
 import 'package:pass_emploi_app/presentation/demarche/demarche_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -28,9 +29,9 @@ class CreateDemarcheFromThematiqueStep2Page extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(height: Margins.spacing_base),
-          Text(selectedThematique.title, style: TextStyles.textMBold),
+          Text(selectedThematique.title, style: TextStyles.textMBold.copyWith(color: context.content)),
           const SizedBox(height: Margins.spacing_base),
-          Text(Strings.selectDemarche, style: TextStyles.textBaseMedium),
+          Text(Strings.selectDemarche, style: TextStyles.textBaseMedium.copyWith(color: context.content)),
           const SizedBox(height: Margins.spacing_base),
           _ThematiqueDemarcheList(
             thematiqueCode: selectedThematique.id,
@@ -100,7 +101,7 @@ class _DemarcheDuReferentielCard extends StatelessWidget {
             child: Text(
               viewModel.quoi,
               textAlign: TextAlign.center,
-              style: TextStyles.textSMedium(),
+              style: TextStyles.textSMedium(color: context.content),
             ),
           ),
         ),

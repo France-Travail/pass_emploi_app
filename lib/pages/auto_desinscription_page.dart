@@ -120,7 +120,7 @@ class _Success extends StatelessWidget {
         SizedBox(height: Margins.spacing_xl),
         Text(
           Strings.autoDesinscriptionSuccessTitle(viewModel.title ?? ""),
-          style: TextStyles.textMBold,
+          style: TextStyles.textMBold.copyWith(color: context.content),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: Margins.spacing_xl),
@@ -142,7 +142,7 @@ class _Form extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (viewModel.title != null) Text(viewModel.title!, style: TextStyles.textLBold()),
+          if (viewModel.title != null) Text(viewModel.title!, style: TextStyles.textLBold(color: context.content)),
           SizedBox(height: Margins.spacing_m),
           Wrap(
             spacing: Margins.spacing_base,
@@ -152,9 +152,9 @@ class _Form extends StatelessWidget {
             ],
           ),
           SizedBox(height: Margins.spacing_m),
-          Text(Strings.autoDesinscriptionFormConfirmation, style: TextStyles.textMBold),
+          Text(Strings.autoDesinscriptionFormConfirmation, style: TextStyles.textMBold.copyWith(color: context.content)),
           SizedBox(height: Margins.spacing_m),
-          Text(Strings.autoDesinscriptionFormFieldTitle, style: TextStyles.textBaseBold),
+          Text(Strings.autoDesinscriptionFormFieldTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
           SizedBox(height: Margins.spacing_s),
           BaseTextField(
             key: _textFieldKey,

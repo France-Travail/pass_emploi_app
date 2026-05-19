@@ -139,7 +139,7 @@ class _ActualiteItem extends StatelessWidget {
         SizedBox(height: Margins.spacing_s),
         Align(
           alignment: Alignment.centerLeft,
-          child: Text(actualite.heureEtNomConseiller, style: TextStyles.textXsMedium()),
+          child: Text(actualite.heureEtNomConseiller, style: TextStyles.textXsMedium(color: context.content)),
         ),
       ],
     );
@@ -203,7 +203,7 @@ class _ExternalUrlAlertDialog extends StatelessWidget {
               SizedBox(height: Margins.spacing_m),
               SizedBox.square(dimension: 120, child: Illustration.blue(AppIcons.open_in_new_rounded)),
               SizedBox(height: Margins.spacing_m),
-              Text(Strings.externalUrlAlertTitle, style: TextStyles.textBaseBold, textAlign: TextAlign.center),
+              Text(Strings.externalUrlAlertTitle, style: TextStyles.textBaseBold.copyWith(color: context.content), textAlign: TextAlign.center),
               SizedBox(height: Margins.spacing_m),
             ],
           ),

@@ -193,10 +193,10 @@ class _LocationListTile extends StatelessWidget {
             Text.rich(
               TextSpan(
                 text: location.libelle,
-                style: TextStyles.textBaseBold,
+                style: TextStyles.textBaseBold.copyWith(color: context.content),
                 children: [
                   TextSpan(text: ' '),
-                  TextSpan(text: location.displayableCode(), style: TextStyles.textBaseRegular),
+                  TextSpan(text: location.displayableCode(), style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                 ],
               ),
             ),

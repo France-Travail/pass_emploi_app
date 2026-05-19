@@ -32,11 +32,11 @@ class CejInformationFirstContentCard extends StatelessWidget {
           Text.rich(
             TextSpan(
               children: [
-                TextSpan(text: Strings.whoIsConcernedFirstRichText[0], style: TextStyles.textBaseRegular),
-                TextSpan(text: Strings.whoIsConcernedFirstRichText[1], style: TextStyles.textBaseBold),
-                TextSpan(text: Strings.whoIsConcernedFirstRichText[2], style: TextStyles.textBaseRegular),
-                TextSpan(text: Strings.whoIsConcernedFirstRichText[3], style: TextStyles.textBaseBold),
-                TextSpan(text: Strings.whoIsConcernedFirstRichText[4], style: TextStyles.textBaseRegular),
+                TextSpan(text: Strings.whoIsConcernedFirstRichText[0], style: TextStyles.textBaseRegular.copyWith(color: context.content)),
+                TextSpan(text: Strings.whoIsConcernedFirstRichText[1], style: TextStyles.textBaseBold.copyWith(color: context.content)),
+                TextSpan(text: Strings.whoIsConcernedFirstRichText[2], style: TextStyles.textBaseRegular.copyWith(color: context.content)),
+                TextSpan(text: Strings.whoIsConcernedFirstRichText[3], style: TextStyles.textBaseBold.copyWith(color: context.content)),
+                TextSpan(text: Strings.whoIsConcernedFirstRichText[4], style: TextStyles.textBaseRegular.copyWith(color: context.content)),
               ],
             ),
           ),
@@ -44,9 +44,9 @@ class CejInformationFirstContentCard extends StatelessWidget {
           Text.rich(
             TextSpan(
               children: [
-                TextSpan(text: Strings.whoIsConcernedSecondRichText[0], style: TextStyles.textBaseRegular),
-                TextSpan(text: Strings.whoIsConcernedSecondRichText[1], style: TextStyles.textBaseBold),
-                TextSpan(text: Strings.whoIsConcernedSecondRichText[2], style: TextStyles.textBaseRegular),
+                TextSpan(text: Strings.whoIsConcernedSecondRichText[0], style: TextStyles.textBaseRegular.copyWith(color: context.content)),
+                TextSpan(text: Strings.whoIsConcernedSecondRichText[1], style: TextStyles.textBaseBold.copyWith(color: context.content)),
+                TextSpan(text: Strings.whoIsConcernedSecondRichText[2], style: TextStyles.textBaseRegular.copyWith(color: context.content)),
               ],
             ),
           ),
@@ -76,7 +76,7 @@ class CejInformationSecondContentCard extends StatelessWidget {
           SizedBox(height: Margins.spacing_m),
           Text(
             Strings.takeRdvWithConseiller,
-            style: TextStyles.textMRegular,
+            style: TextStyles.textMRegular.copyWith(color: context.content),
             textAlign: TextAlign.center,
           ),
         ],

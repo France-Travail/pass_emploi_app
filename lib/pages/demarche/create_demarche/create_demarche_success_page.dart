@@ -131,7 +131,7 @@ class _Body extends StatelessWidget {
                     _ => Strings.demarcheSuccessTitle,
                   },
                   textAlign: TextAlign.center,
-                  style: TextStyles.textMBold,
+                  style: TextStyles.textMBold.copyWith(color: context.content),
                 ),
                 SizedBox(height: Margins.spacing_m),
                 Text(
@@ -140,7 +140,7 @@ class _Body extends StatelessWidget {
                     _ => Strings.demarcheSuccessSubtitle,
                   },
                   textAlign: TextAlign.center,
-                  style: TextStyles.textSRegular(),
+                  style: TextStyles.textSRegular(color: context.content),
                 ),
                 SizedBox(height: Margins.spacing_xx_huge),
               ],

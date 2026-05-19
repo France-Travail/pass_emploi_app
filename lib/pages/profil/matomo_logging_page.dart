@@ -24,6 +24,7 @@ class MatomoLoggingPage extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, List<String> logs) {
     return Scaffold(
+      backgroundColor: context.bg,
       appBar: SecondaryAppBar(title: Strings.developerOptionMatomoPage),
       body: ListView.separated(
         padding: EdgeInsets.all(Margins.spacing_base),
@@ -48,7 +49,7 @@ class _LogItem extends StatelessWidget {
         _LogTag(
           log: log,
         ),
-        Text(_getMessage(), style: TextStyles.textBaseRegular)
+        Text(_getMessage(), style: TextStyles.textBaseRegular.copyWith(color: context.content))
       ],
     );
   }

@@ -117,7 +117,7 @@ class ImmersionDetailsPage extends StatelessWidget {
                 ],
                 _Title(viewModel.title),
                 SizedBox(height: Margins.spacing_s),
-                Text(viewModel.companyName, style: TextStyles.textBaseRegular),
+                Text(viewModel.companyName, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                 SizedBox(height: Margins.spacing_s),
                 ImmersionTags(
                   secteurActivite: viewModel.secteurActivite,
@@ -129,7 +129,7 @@ class ImmersionDetailsPage extends StatelessWidget {
                   CardComplement.dateDerniereConsultation(viewModel.dateDerniereConsultation!),
                 ],
                 SizedBox(height: Margins.spacing_m),
-                Text(Strings.lentreprise, style: TextStyles.textMBold),
+                Text(Strings.lentreprise, style: TextStyles.textMBold.copyWith(color: context.content)),
                 SizedBox(height: Margins.spacing_m),
                 SepLine(0, 0),
                 SizedBox(height: Margins.spacing_base),
@@ -138,22 +138,22 @@ class ImmersionDetailsPage extends StatelessWidget {
                 if (viewModel.displayState == ImmersionDetailsPageDisplayState.SHOW_INCOMPLETE_DETAILS)
                   FavoriNotFoundError()
                 else ...[
-                  Text(Strings.immersionDescriptionLabel, style: TextStyles.textBaseRegular),
+                  Text(Strings.immersionDescriptionLabel, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                   SizedBox(height: Margins.spacing_m),
                   if (viewModel.address != null && viewModel.address!.isNotEmpty) ...[
                     _Title(Strings.adresse),
-                    Text(viewModel.address ?? '', style: TextStyles.textBaseRegular),
+                    Text(viewModel.address ?? '', style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                     SizedBox(height: Margins.spacing_m),
                   ],
                   if (viewModel.informationComplementaire != null &&
                       viewModel.informationComplementaire!.isNotEmpty) ...[
                     _Title(Strings.informationComplementaire),
-                    Text(viewModel.informationComplementaire ?? '', style: TextStyles.textBaseRegular),
+                    Text(viewModel.informationComplementaire ?? '', style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                     SizedBox(height: Margins.spacing_m),
                   ],
                   if (viewModel.website != null && viewModel.website!.isNotEmpty) ...[
                     _Title(Strings.siteWeb),
-                    Text(viewModel.website ?? '', style: TextStyles.textBaseRegular),
+                    Text(viewModel.website ?? '', style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                     SizedBox(height: Margins.spacing_m),
                   ],
                   SizedBox(height: Margins.spacing_m),
@@ -241,6 +241,6 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(title, style: TextStyles.textBaseBold);
+    return Text(title, style: TextStyles.textBaseBold.copyWith(color: context.content));
   }
 }

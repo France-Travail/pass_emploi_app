@@ -4,6 +4,7 @@ import 'package:pass_emploi_app/analytics/ignore_tracking_context_provider.dart'
 import 'package:pass_emploi_app/features/theme/theme_state.dart';
 import 'package:pass_emploi_app/pages/router_page.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/haptic_navigator_observer.dart';
 import 'package:pass_emploi_app/widgets/onboarding/ft_ia_showcase.dart';
@@ -36,6 +37,7 @@ class PassEmploiApp extends StatelessWidget {
             themeMode: themeMode,
             navigatorObservers: [routeObserver, HapticNavigatorObserver()],
             home: Scaffold(
+              backgroundColor: context.bg,
               body: OnboardingNotifierWrapper(
                 child: ShowcaseWrapper(child: FtIaShowcaseWrapper(child: RouterPage())),
               ),

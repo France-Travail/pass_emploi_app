@@ -74,11 +74,11 @@ class _CampagneQuestionPageState extends State<CampagneQuestionPage> {
           children: [
             Text(Strings.mandatory, style: TextStyles.textSRegular(color: context.content)),
             SizedBox(height: Margins.spacing_base),
-            Text(viewModel.question, style: TextStyles.textBaseBold),
+            Text(viewModel.question, style: TextStyles.textBaseBold.copyWith(color: context.content)),
             SizedBox(height: Margins.spacing_base),
             _answerOptions(viewModel.options),
             SizedBox(height: Margins.spacing_xl),
-            Text(Strings.pourquoiTitle, style: TextStyles.textBaseRegular),
+            Text(Strings.pourquoiTitle, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
             SizedBox(height: Margins.spacing_base),
             BaseTextField(
               key: _textFieldKey,

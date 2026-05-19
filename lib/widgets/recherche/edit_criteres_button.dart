@@ -58,11 +58,11 @@ class EditCriteresButton<Result> extends StatelessWidget {
                         children: [
                           Text(
                             title,
-                            style: TextStyles.textBaseBold,
+                            style: TextStyles.textBaseBold.copyWith(color: context.content),
                           ),
                           Text(
                             subtitle,
-                            style: TextStyles.textSRegular(),
+                            style: TextStyles.textSRegular(color: context.content),
                           ),
                         ],
                       ),

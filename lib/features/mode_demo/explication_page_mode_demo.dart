@@ -24,6 +24,7 @@ class ExplicationModeDemoPage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.explicationModeDemo,
       child: Scaffold(
+        backgroundColor: context.bg,
         body: Stack(
           children: [
             _Background(),
@@ -68,7 +69,7 @@ class _Contenu extends StatelessWidget {
                     header: true,
                     child: Text(
                       Strings.modeDemoExplicationTitre,
-                      style: TextStyles.secondaryAppBar,
+                      style: TextStyles.secondaryAppBar.copyWith(color: context.content),
                     ),
                   ),
                 ),

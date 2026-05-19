@@ -102,7 +102,7 @@ class _Body extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(_viewModel.willShareTitle, style: TextStyles.textBaseBold),
+          Text(_viewModel.willShareTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
           SizedBox(height: Margins.spacing_base),
           _Offre(_viewModel),
           SizedBox(height: Margins.spacing_l),
@@ -112,7 +112,7 @@ class _Body extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(Strings.messagePourConseiller, style: TextStyles.textBaseMedium, semanticsLabel: ' '),
+                Text(Strings.messagePourConseiller, style: TextStyles.textBaseMedium.copyWith(color: context.content), semanticsLabel: ' '),
                 SizedBox(height: Margins.spacing_base),
                 _TextField(_controller),
               ],
@@ -142,7 +142,7 @@ class _Offre extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(Margins.spacing_base),
-        child: Text(_viewModel.shareableTitle, style: TextStyles.textBaseBold),
+        child: Text(_viewModel.shareableTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
       ),
     );
   }

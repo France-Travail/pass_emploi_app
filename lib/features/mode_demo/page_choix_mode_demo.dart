@@ -33,6 +33,7 @@ class ChoixModeDemoPage extends StatelessWidget {
         converter: (store) => ChoixModeDemoViewModel.create(store),
         builder: (context, viewModel) {
           return Scaffold(
+            backgroundColor: context.bg,
             body: Stack(
               children: [
                 _Background(),
@@ -85,7 +86,7 @@ class _Contenu extends StatelessWidget {
                     header: true,
                     child: Text(
                       Strings.modeDemoExplicationTitre,
-                      style: TextStyles.secondaryAppBar,
+                      style: TextStyles.secondaryAppBar.copyWith(color: context.content),
                     ),
                   ),
                 ),
@@ -104,7 +105,7 @@ class _Contenu extends StatelessWidget {
                 child: Text(
                   Strings.modeDemoExplicationChoix,
                   textAlign: TextAlign.center,
-                  style: TextStyles.textBaseBold,
+                  style: TextStyles.textBaseBold.copyWith(color: context.content),
                 ),
               ),
               _BoutonPE(),

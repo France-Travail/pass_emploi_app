@@ -40,6 +40,7 @@ class CvListPage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.cvListPage,
       child: Scaffold(
+        backgroundColor: context.bg,
         appBar: SecondaryAppBar(title: Strings.cvListPageTitle),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: Margins.spacing_m),
@@ -96,7 +97,7 @@ class _Content extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(Strings.cvListPageSubtitle, style: TextStyles.textBaseRegular),
+        Text(Strings.cvListPageSubtitle, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_m),
         _CvListView(viewModel),
         PreviewFileInvisibleHandler(),
@@ -125,7 +126,7 @@ class _CvListView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(cv.titre, style: TextStyles.textMBold),
+                Text(cv.titre, style: TextStyles.textMBold.copyWith(color: context.content)),
                 SizedBox(height: Margins.spacing_base),
                 viewModel.downloadStatus(cv.url).isLoading()
                     ? Center(child: CircularProgressIndicator())
@@ -198,7 +199,7 @@ class _EmptyListPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (insideBottomSheet) return _minimalistEmpty();
+    if (insideBottomSheet) return _minimalistEmpty(context);
 
     return Center(
       child: Column(
@@ -221,7 +222,7 @@ class _EmptyListPlaceholder extends StatelessWidget {
     );
   }
 
-  Widget _minimalistEmpty() {
+  Widget _minimalistEmpty(BuildContext context) {
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -229,7 +230,7 @@ class _EmptyListPlaceholder extends StatelessWidget {
         children: [
           Text(
             Strings.cvListEmptyTitle,
-            style: TextStyles.textBaseMedium,
+            style: TextStyles.textBaseMedium.copyWith(color: context.content),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: Margins.spacing_l),

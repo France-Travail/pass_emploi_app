@@ -39,11 +39,11 @@ class CreateDemarcheFromThematiqueStep3Page extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SizedBox(height: Margins.spacing_base),
-                Text(selectedThematique.title, style: TextStyles.textMBold),
+                Text(selectedThematique.title, style: TextStyles.textMBold.copyWith(color: context.content)),
                 const SizedBox(height: Margins.spacing_s),
-                Text(selectedDemarche.quoi, style: TextStyles.textBaseBold),
+                Text(selectedDemarche.quoi, style: TextStyles.textBaseBold.copyWith(color: context.content)),
                 const SizedBox(height: Margins.spacing_s),
-                Text(Strings.allMandatoryFields, style: TextStyles.textBaseRegular),
+                Text(Strings.allMandatoryFields, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                 const SizedBox(height: Margins.spacing_m),
                 DatePickerSuggestions(
                   title: Strings.thematiquesDemarcheDateShort,
@@ -59,7 +59,7 @@ class CreateDemarcheFromThematiqueStep3Page extends StatelessWidget {
                 ),
                 if (storeVm.isCommentMandatory) ...[
                   const SizedBox(height: Margins.spacing_m),
-                  Text(Strings.selectMoyen, style: TextStyles.textBaseBold),
+                  Text(Strings.selectMoyen, style: TextStyles.textBaseBold.copyWith(color: context.content)),
                   const SizedBox(height: Margins.spacing_base),
                   _MoyensList(
                     storeVm: storeVm,

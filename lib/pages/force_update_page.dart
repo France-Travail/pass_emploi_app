@@ -4,6 +4,7 @@ import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/configuration/configuration.dart';
 import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/presentation/force_update_view_model.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -26,13 +27,14 @@ class ForceUpdatePage extends StatelessWidget {
       home: Tracker(
         tracking: AnalyticsScreenNames.forceUpdate,
         child: Scaffold(
+          backgroundColor: context.bg,
           appBar: AppBar(title: Text(Strings.updateTitle)),
           body: Padding(
             padding: const EdgeInsets.all(Margins.spacing_base),
             child: Column(
               children: [
                 Expanded(child: AppLogo()),
-                Text(viewModel.label, style: TextStyles.textBaseBold, textAlign: TextAlign.center),
+                Text(viewModel.label, style: TextStyles.textBaseBold.copyWith(color: context.content), textAlign: TextAlign.center),
                 if (viewModel.withCallToAction) ExternalLink(label: Strings.updateButton, url: viewModel.storeUrl),
                 Expanded(child: SizedBox()),
               ],

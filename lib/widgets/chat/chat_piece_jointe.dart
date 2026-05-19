@@ -69,7 +69,7 @@ class ChatPieceJointe extends StatelessWidget {
             crossAxisAlignment: params.sender.isJeune ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               if (params.content != null) ...[
-                SelectableText(params.content!, style: TextStyles.textSRegular()),
+                SelectableText(params.content!, style: TextStyles.textSRegular(color: context.content)),
                 SizedBox(height: Margins.spacing_s),
               ],
               _PieceJointeName(params.filename, params.sender),

@@ -7,7 +7,6 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/preferences/notification_preferences_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -87,7 +86,10 @@ class _Content extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(Strings.notificationsSettingsSubtitle, style: TextStyles.textBaseRegular),
+            Text(
+              Strings.notificationsSettingsSubtitle,
+              style: TextStyles.textBaseRegular.copyWith(color: context.content),
+            ),
             SizedBox(height: Margins.spacing_base),
             _NotificationSwitch(
               title: Strings.notificationsSettingsAlertesTitle,
@@ -126,7 +128,7 @@ class _Content extends StatelessWidget {
               ),
             ],
             SizedBox(height: Margins.spacing_l),
-            Text(Strings.notificationsSettingsTitle, style: TextStyles.textBaseBold),
+            Text(Strings.notificationsSettingsTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
             SizedBox(height: Margins.spacing_s),
             SizedBox(
               width: double.infinity,
@@ -141,7 +143,7 @@ class _Content extends StatelessWidget {
                       Expanded(
                         child: Text(
                           Strings.openNotificationsSettings,
-                          style: TextStyles.textSRegular(),
+                          style: TextStyles.textSRegular(color: context.content),
                         ),
                       ),
                     ],
@@ -183,12 +185,12 @@ class _NotificationSwitch extends StatelessWidget {
                 SizedBox(height: Margins.spacing_s),
                 Text(
                   title,
-                  style: TextStyles.textBaseBold,
+                  style: TextStyles.textBaseBold.copyWith(color: context.content),
                 ),
                 SizedBox(height: Margins.spacing_s),
                 Text(
                   description,
-                  style: TextStyles.textSRegular(),
+                  style: TextStyles.textSRegular(color: context.content),
                 ),
               ],
             ),

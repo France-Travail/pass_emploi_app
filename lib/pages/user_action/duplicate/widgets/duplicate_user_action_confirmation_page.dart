@@ -59,7 +59,7 @@ class _Body extends StatelessWidget {
             SizedBox(height: Margins.spacing_xl),
             Text(
               Strings.duplicateUserActionConfirmationTitle,
-              style: TextStyles.textMBold,
+              style: TextStyles.textMBold.copyWith(color: context.content),
             ),
             SizedBox(height: Margins.spacing_xx_huge),
           ],

@@ -60,16 +60,16 @@ class SuppressionComptePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(child: Text(Strings.warning, style: TextStyles.textMBold)),
+                Center(child: Text(Strings.warning, style: TextStyles.textMBold.copyWith(color: context.content))),
                 SizedBox(height: Margins.spacing_base),
-                Text(Strings.warningInformationParagraph1, style: TextStyles.textSRegular()),
+                Text(Strings.warningInformationParagraph1, style: TextStyles.textSRegular(color: context.content)),
                 SizedBox(height: Margins.spacing_base),
                 _ListedItems(list: viewModel.warningSuppressionFeatures),
                 SizedBox(height: Margins.spacing_base),
-                Text(Strings.warningInformationParagraph2, style: TextStyles.textSRegular()),
+                Text(Strings.warningInformationParagraph2, style: TextStyles.textSRegular(color: context.content)),
                 SizedBox(height: Margins.spacing_base),
                 if (viewModel.isPoleEmploiLogin)
-                  Text(Strings.warningInformationPoleEmploi, style: TextStyles.textSRegular()),
+                  Text(Strings.warningInformationPoleEmploi, style: TextStyles.textSRegular(color: context.content)),
                 SizedBox(height: Margins.spacing_xx_huge),
               ],
             ),
@@ -98,7 +98,7 @@ class _ListedItems extends StatelessWidget {
         for (final item in list)
           Padding(
             padding: const EdgeInsets.only(bottom: Margins.spacing_xs),
-            child: Text("· $item", style: TextStyles.textSRegular()),
+            child: Text("· $item", style: TextStyles.textSRegular(color: context.content)),
           ),
       ],
     );
@@ -146,7 +146,7 @@ class _DeleteAccountSuccessDialog extends StatelessWidget {
         children: [
           Center(child: SizedBox(height: 100, width: 100, child: Image.asset(Drawables.success))),
           SizedBox(height: Margins.spacing_m),
-          Text(Strings.accountDeletionSuccess, style: TextStyles.textBaseBold, textAlign: TextAlign.center),
+          Text(Strings.accountDeletionSuccess, style: TextStyles.textBaseBold.copyWith(color: context.content), textAlign: TextAlign.center),
           SizedBox(height: Margins.spacing_m),
         ],
       ),

@@ -7,19 +7,19 @@ import 'package:pass_emploi_app/ui/text_styles.dart';
 
 class PressedTip extends StatelessWidget {
   final String tip;
-  final Color textColor;
+  final Color? textColor;
   final IconData icon;
   final bool iconLeading;
   final String? iconLabel;
 
   const PressedTip(
     this.tip, {
-    this.textColor = AppColors.contentLight,
+    this.textColor,
     this.icon = AppIcons.chevron_right_rounded,
     this.iconLabel,
   }) : iconLeading = false;
 
-  PressedTip.externalLink(this.tip, {this.textColor = AppColors.contentLight})
+  PressedTip.externalLink(this.tip, {this.textColor})
     : icon = AppIcons.open_in_new_rounded,
       iconLabel = null,
       iconLeading = false;
@@ -29,20 +29,20 @@ class PressedTip extends StatelessWidget {
     return Row(
       children: [
         if (iconLeading) ...[
-          Icon(icon, color: textColor, size: Dimens.icon_size_base),
+          Icon(icon, color: textColor ?? context.content, size: Dimens.icon_size_base),
           SizedBox(width: Margins.spacing_s),
         ],
         Flexible(
           child: Text(
             tip,
-            style: TextStyles.textSBold.copyWith(color: textColor),
+            style: TextStyles.textSBold.copyWith(color: textColor ?? context.content),
             textAlign: TextAlign.start,
           ),
         ),
         Semantics(label: iconLabel),
         if (!iconLeading) ...[
           SizedBox(width: Margins.spacing_s),
-          Icon(icon, color: textColor, size: Dimens.icon_size_base),
+          Icon(icon, color: textColor ?? context.content, size: Dimens.icon_size_base),
         ],
       ],
     );

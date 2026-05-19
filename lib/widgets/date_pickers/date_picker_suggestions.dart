@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/presentation/model/date_input_source.dart';
 import 'package:pass_emploi_app/presentation/model/date_suggestions_view_model.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/date_pickers/date_picker.dart';
@@ -30,7 +31,7 @@ class DatePickerSuggestions extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Semantics(header: true, child: Text(title, style: TextStyles.textBaseBold)),
+        Semantics(header: true, child: Text(title, style: TextStyles.textBaseBold.copyWith(color: context.content))),
         const SizedBox(height: Margins.spacing_s),
         DatePicker(
           onDateSelected: (date) => onDateChanged(DateFromPicker(date)),

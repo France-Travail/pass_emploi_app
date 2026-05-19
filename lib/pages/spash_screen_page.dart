@@ -17,6 +17,7 @@ class SplashScreenPage extends StatelessWidget {
       builder: (context, snapshot) {
         final appVersion = snapshot.data;
         return Scaffold(
+          backgroundColor: context.bg,
           body: Stack(
             children: [
               BiseauBackground(),

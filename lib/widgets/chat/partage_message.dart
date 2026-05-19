@@ -52,7 +52,7 @@ class _ContentMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     final style = sender == Sender.jeune
         ? TextStyles.textSRegular(color: AppColors.contentOnPrimary) //
-        : TextStyles.textSRegular();
+        : TextStyles.textSRegular(color: context.content);
     return SelectableTextWithClickableLinks(content, linkStyle: style, style: style);
   }
 }
@@ -69,6 +69,7 @@ class _PartageCard extends StatelessWidget {
       button: true,
       child: Material(
         shape: border,
+        color: context.grey100,
         child: InkWell(
           onTap: () => _onTap(context),
           splashColor: AppColors.primaryLighten,
@@ -78,7 +79,7 @@ class _PartageCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(item.titrePartage, style: TextStyles.textBaseBold),
+                Text(item.titrePartage, style: TextStyles.textBaseBold.copyWith(color: context.content)),
                 SizedBox(height: Margins.spacing_s),
                 _SeeSharedDetails(item),
               ],
@@ -181,7 +182,7 @@ class _SeeSharedDetails extends StatelessWidget {
         Expanded(child: Container()),
         Padding(
           padding: const EdgeInsets.only(right: 4.0),
-          child: Text(_title(), style: TextStyles.textSRegular()),
+          child: Text(_title(), style: TextStyles.textSRegular(color: context.content)),
         ),
         Icon(AppIcons.chevron_right_rounded, color: context.grey800),
       ],

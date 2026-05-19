@@ -107,13 +107,13 @@ class _Content extends StatelessWidget {
                 children: [
                   Text(
                     vm.eventTitle,
-                    style: TextStyles.textMBold,
+                    style: TextStyles.textMBold.copyWith(color: context.content),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: Margins.spacing_base),
                   Text(
                     Strings.autoInscriptionContent,
-                    style: TextStyles.textBaseRegular,
+                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: Margins.spacing_l),

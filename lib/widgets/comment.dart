@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:pass_emploi_app/models/commentaire.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -18,13 +19,13 @@ class Comment extends StatelessWidget {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Flexible(child: Text(creatorName, style: TextStyles.textBaseMediumBold())),
-            Text("  ·  ", style: TextStyles.textBaseMediumBold()),
-            Text(comment.getDayDate() ?? "", style: TextStyles.textBaseRegular),
+            Flexible(child: Text(creatorName, style: TextStyles.textBaseMediumBold(color: context.content))),
+            Text("  ·  ", style: TextStyles.textBaseMediumBold(color: context.content)),
+            Text(comment.getDayDate() ?? "", style: TextStyles.textBaseRegular.copyWith(color: context.content)),
           ],
         ),
         SizedBox(height: Margins.spacing_base),
-        Text(comment.content, style: TextStyles.textBaseRegular),
+        Text(comment.content, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
       ],
     );
   }

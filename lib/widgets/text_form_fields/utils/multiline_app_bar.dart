@@ -21,7 +21,7 @@ class MultilineAppBar extends StatelessWidget {
           child: IconButton(
             onPressed: onCloseButtonPressed,
             tooltip: Strings.close,
-            icon: const Icon(Icons.close),
+            icon: Icon(Icons.close, color: context.content),
           ),
         ),
         SizedBox(width: Margins.spacing_base),
@@ -31,10 +31,10 @@ class MultilineAppBar extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Semantics(
-                  header: true,
-                  child: Text(title, style: TextStyles.textBaseBold),
-                ),
+                  Semantics(
+                    header: true,
+                    child: Text(title, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+                  ),
                 if (hint != null) Text(hint!, style: TextStyles.textSRegularWithColor(context.content)),
               ],
             ),

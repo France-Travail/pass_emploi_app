@@ -311,7 +311,7 @@ class _Description extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (icon != null) ...[Icon(icon, color: AppColors.primary), SizedBox(width: Margins.spacing_s)],
-        Flexible(child: Text(label, style: TextStyles.textSBold)),
+        Flexible(child: Text(label, style: TextStyles.textSBold.copyWith(color: context.content))),
         // Extra margin is added to avoid the close button to be too close to the text
         SizedBox(width: 30),
       ],
@@ -468,9 +468,9 @@ class _CloseButton extends StatelessWidget {
       alignment: Alignment.topRight,
       child: Padding(
         padding: const EdgeInsets.all(Margins.spacing_xs),
-        child: IconButton(
-          icon: Icon(AppIcons.close_rounded),
-          tooltip: Strings.close,
+          child: IconButton(
+            icon: Icon(AppIcons.close_rounded, color: context.content),
+            tooltip: Strings.close,
           onPressed: onPressed,
         ),
       ),

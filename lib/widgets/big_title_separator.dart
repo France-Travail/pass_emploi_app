@@ -23,7 +23,7 @@ class BigTitleSeparator extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             label,
-            style: TextStyles.textMBold,
+            style: TextStyles.textMBold.copyWith(color: context.content),
           ),
         ),
         Expanded(

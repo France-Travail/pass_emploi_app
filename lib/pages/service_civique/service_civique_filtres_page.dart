@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/models/service_civique/domain.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/service_civique/service_civique_filtres_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -214,7 +215,7 @@ class _StartDateFilters extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(Strings.startDateFiltreTitle, style: TextStyles.textBaseBold),
+        Text(Strings.startDateFiltreTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         DateToggle(
           onIsActiveChange: onIsActiveChange,
           isActiveDate: isActiveDate,
@@ -246,7 +247,7 @@ class _DomainFiltersState extends State<_DomainFilters> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(Strings.domainFiltreTitle, style: TextStyles.textBaseBold),
+        Text(Strings.domainFiltreTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_s),
         _DomainList(
           onValueChange: (value) => widget.onValueChange(value),

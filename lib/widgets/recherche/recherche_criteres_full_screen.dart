@@ -131,7 +131,7 @@ class _RecentSearches<Result> extends StatelessWidget {
             children: [
               Text(
                 Strings.rechercheRecentesTitle,
-                style: const TextStyle(fontWeight: FontWeight.w600),
+                style: TextStyle(fontWeight: FontWeight.w600, color: context.content),
               ),
               const SizedBox(height: Margins.spacing_s),
               for (final item in viewModel.items) ...[
@@ -179,7 +179,7 @@ class _RechercheRecenteTile extends StatelessWidget {
               Expanded(
                 child: Text(
                   text,
-                  style: TextStyles.textBaseRegular,
+                  style: TextStyles.textBaseRegular.copyWith(color: context.content),
                 ),
               ),
             ],

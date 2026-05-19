@@ -45,11 +45,11 @@ class RecherchesRecentesBandeau extends StatelessWidget {
                                 children: [
                                   Text(
                                     viewModel.title,
-                                    style: TextStyles.textBaseBold,
+                                    style: TextStyles.textBaseBold.copyWith(color: context.content),
                                   ),
                                   Text(
                                     recherche.getTitle(),
-                                    style: TextStyles.textSRegular(),
+                                    style: TextStyles.textSRegular(color: context.content),
                                   ),
                                 ],
                               ),

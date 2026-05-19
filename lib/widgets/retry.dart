@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/media_sizes.dart';
@@ -38,9 +39,17 @@ class Retry extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(Strings.error, style: TextStyles.textBaseBold, textAlign: TextAlign.center),
+                Text(
+                  Strings.error,
+                  style: TextStyles.textBaseBold.copyWith(color: context.content),
+                  textAlign: TextAlign.center,
+                ),
                 SizedBox(height: Margins.spacing_base),
-                Text(text, style: TextStyles.textBaseRegular, textAlign: TextAlign.center),
+                Text(
+                  text,
+                  style: TextStyles.textBaseRegular.copyWith(color: context.content),
+                  textAlign: TextAlign.center,
+                ),
                 SizedBox(height: Margins.spacing_l),
                 PrimaryActionButton(
                   label: buttonLabel ?? Strings.retry,

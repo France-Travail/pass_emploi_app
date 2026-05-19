@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
@@ -14,7 +15,7 @@ class TextWithClickableLinks extends StatelessWidget {
   Widget build(BuildContext context) {
     return Linkify(
       text: content,
-      style: style,
+      style: style.copyWith(color: context.content),
       linkStyle: TextStyles.externalLink,
       onOpen: (link) {
         final String baseUrl = Uri.parse(link.url).origin;
@@ -41,13 +42,14 @@ class SelectableTextWithClickableLinks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const openInNew = "↗";
-    final textWithOpenInNew =
-        content.replaceAll(RegExp(r'https?://'), '$openInNew https://').replaceAll('www.', '$openInNew www.');
+    final textWithOpenInNew = content
+        .replaceAll(RegExp(r'https?://'), '$openInNew https://')
+        .replaceAll('www.', '$openInNew www.');
 
     return Linkify(
       textScaleFactor: MediaQuery.of(context).textScaler.scale(1.0),
       text: textWithOpenInNew,
-      style: style,
+      style: style.copyWith(color: context.content),
       linkStyle: linkStyle ?? TextStyles.externalLink,
       onOpen: (link) {
         final String baseUrl = Uri.parse(link.url).origin;

@@ -84,7 +84,7 @@ class _ImmersionBottomSheetFormState extends State<ImmersionBottomSheetForm> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(Strings.alerteTitle, style: TextStyles.textBaseBold),
+        Text(Strings.alerteTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_base),
         BaseTextField(
           initialValue: searchViewModel.title,
@@ -110,7 +110,7 @@ class _ImmersionBottomSheetFormState extends State<ImmersionBottomSheetForm> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(Strings.alerteFilters, style: TextStyles.textBaseBold),
+        Text(Strings.alerteFilters, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_base),
         _buildDataTags([
           TagInfo(Strings.immersionTag, false),

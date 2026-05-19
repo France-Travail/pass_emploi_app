@@ -33,7 +33,7 @@ class OffreEmploiOrigin extends StatelessWidget {
         SizedBox(width: Margins.spacing_s),
         Text(
           Strings.origin(label),
-          style: TextStyles.textSMedium(),
+          style: TextStyles.textSMedium(color: context.content),
         ),
       ],
     );

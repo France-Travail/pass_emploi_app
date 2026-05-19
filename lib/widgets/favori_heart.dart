@@ -42,7 +42,7 @@ class FavoriHeart<T> extends StatelessWidget {
         if (viewModel.withError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(Strings.miscellaneousErrorRetry),
+              content: Text(Strings.miscellaneousErrorRetry, style: TextStyle(color: context.content)),
               duration: Duration(seconds: 2),
             ),
           );

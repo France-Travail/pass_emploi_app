@@ -104,11 +104,11 @@ class _DiagorienteMetiersFavorisCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(Strings.diagorienteMetiersFavorisCardTitle, style: TextStyles.textMBold),
+          Text(Strings.diagorienteMetiersFavorisCardTitle, style: TextStyles.textMBold.copyWith(color: context.content)),
           SizedBox(height: Margins.spacing_m),
           Row(
             children: [
-              Text(Strings.diagorienteMetiersFavorisCardSubtitle, style: TextStyles.textBaseRegular),
+              Text(Strings.diagorienteMetiersFavorisCardSubtitle, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
               SizedBox(height: Margins.spacing_m),
               Expanded(child: PressedTip(Strings.diagorienteMetiersFavorisCardPressedTip)),
             ],
@@ -131,9 +131,9 @@ class _DecouvrirLesMetiersCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(Strings.diagorienteMetiersCardTitle, style: TextStyles.textMBold),
+          Text(Strings.diagorienteMetiersCardTitle, style: TextStyles.textMBold.copyWith(color: context.content)),
           SizedBox(height: Margins.spacing_m),
-          Text(Strings.diagorienteMetiersCardSubtitle, style: TextStyles.textBaseRegular),
+          Text(Strings.diagorienteMetiersCardSubtitle, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
           SizedBox(height: Margins.spacing_m),
           PrimaryActionButton(
             label: Strings.diagorienteMetiersCardButton,

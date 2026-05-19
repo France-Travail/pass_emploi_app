@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -31,9 +32,9 @@ class _CreateDemarchePersonnaliseeStep2PageState extends State<CreateDemarchePer
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(height: Margins.spacing_base),
-          Text(Strings.createDemarchePersonnaliseeTitle, style: TextStyles.textMBold),
+          Text(Strings.createDemarchePersonnaliseeTitle, style: TextStyles.textMBold.copyWith(color: context.content)),
           const SizedBox(height: Margins.spacing_base),
-          Text(Strings.descriptionDemarchePersonnaliseeLabel, style: TextStyles.textBaseMedium),
+          Text(Strings.descriptionDemarchePersonnaliseeLabel, style: TextStyles.textBaseMedium.copyWith(color: context.content)),
           const SizedBox(height: Margins.spacing_s),
           BaseTextField(
             controller: _controller,

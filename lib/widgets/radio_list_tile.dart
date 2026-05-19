@@ -24,7 +24,7 @@ class CustomRadioGroup<T> extends StatelessWidget {
         visualDensity: VisualDensity.compact,
         contentPadding: EdgeInsets.zero,
         activeColor: AppColors.primary,
-        title: Text(title, style: TextStyles.textBaseMedium),
+        title: Text(title, style: TextStyles.textBaseMedium.copyWith(color: context.content)),
         controlAffinity: ListTileControlAffinity.leading,
         value: value,
       ),

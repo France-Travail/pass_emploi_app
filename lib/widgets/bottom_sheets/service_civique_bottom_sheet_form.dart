@@ -84,7 +84,7 @@ class _ServiceCiviqueBottomSheetFormState extends State<ServiceCiviqueBottomShee
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(Strings.alerteTitle, style: TextStyles.textBaseBold),
+        Text(Strings.alerteTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_base),
         BaseTextField(
           initialValue: searchViewModel.titre,
@@ -112,7 +112,7 @@ class _ServiceCiviqueBottomSheetFormState extends State<ServiceCiviqueBottomShee
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(Strings.alerteFilters, style: TextStyles.textBaseBold),
+        Text(Strings.alerteFilters, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_base),
         _buildDataTags([
           TagInfo(Strings.serviceCiviqueTag, false),

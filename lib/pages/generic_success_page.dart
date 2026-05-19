@@ -34,10 +34,10 @@ class GenericSuccessPage extends StatelessWidget {
               children: [
                 Center(child: SizedBox(height: 130, width: 130, child: Image.asset(Drawables.success))),
                 SizedBox(height: Margins.spacing_xl),
-                Text(title, textAlign: TextAlign.center, style: TextStyles.textMBold),
+                Text(title, textAlign: TextAlign.center, style: TextStyles.textMBold.copyWith(color: context.content)),
                 if (content != null) ...[
                   SizedBox(height: Margins.spacing_m),
-                  Text(content!, textAlign: TextAlign.center, style: TextStyles.textSRegular()),
+                  Text(content!, textAlign: TextAlign.center, style: TextStyles.textSRegular(color: context.content)),
                 ],
                 SizedBox(height: Margins.spacing_m),
                 PrimaryActionButton(label: Strings.close, onPressed: () => Navigator.pop(context)),

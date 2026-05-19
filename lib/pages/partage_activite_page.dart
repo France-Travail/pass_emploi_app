@@ -7,7 +7,6 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/profil/partage_activite_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -79,7 +78,7 @@ class _PartageDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(Margins.spacing_base),
-      child: Text(Strings.activityShareDescription, style: TextStyles.textBaseRegular),
+      child: Text(Strings.activityShareDescription, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
     );
   }
 }
@@ -154,12 +153,12 @@ class _PartageFavorisState extends State<_PartageFavoris> {
                 ExcludeSemantics(
                   child: Text(
                     _partageFavorisEnabled ? Strings.yes : Strings.no,
-                      style: TextStyles.textBaseRegularWithColor(
-                        widget.updatedState == DisplayState.LOADING ? context.grey500 : context.content,
-                      ),
+                    style: TextStyles.textBaseRegularWithColor(
+                      widget.updatedState == DisplayState.LOADING ? context.grey500 : context.content,
                     ),
                   ),
-                ],
+                ),
+              ],
             ),
           ),
         ),

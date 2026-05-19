@@ -50,7 +50,7 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> {
         title: Strings.createActionAppBarTitle,
         leading: IconButton(
           tooltip: Strings.close,
-          icon: Icon(Icons.close_rounded),
+          icon: Icon(Icons.close_rounded, color: context.content),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -152,7 +152,7 @@ class _NextButton extends StatelessWidget {
           maxHeight: double.infinity,
           child: Padding(
             padding: const EdgeInsets.only(left: Margins.spacing_base),
-            child: Icon(Icons.arrow_forward_rounded),
+            child: Icon(Icons.arrow_forward_rounded, color: context.content),
           ),
         ),
       ),

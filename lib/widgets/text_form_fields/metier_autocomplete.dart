@@ -192,7 +192,7 @@ class _MetierListTile extends StatelessWidget {
               color: context.grey800,
             ),
             SizedBox(width: Margins.spacing_s),
-            Expanded(child: Text(metier.libelle, style: TextStyles.textBaseRegular)),
+            Expanded(child: Text(metier.libelle, style: TextStyles.textBaseRegular.copyWith(color: context.content))),
           ],
         ),
         onTap: () {

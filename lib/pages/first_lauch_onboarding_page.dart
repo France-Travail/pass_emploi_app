@@ -44,6 +44,7 @@ class _FirstScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: context.bg,
       body: Stack(
         children: [
           BiseauBackground(),
@@ -78,6 +79,7 @@ class _PageViewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: context.bg,
       body: Stack(
         children: [
           BiseauBackground(),
@@ -225,7 +227,7 @@ class _PageContent extends StatelessWidget {
                 SizedBox(height: Margins.spacing_m),
                 Builder(
                   builder: (context) {
-                    final text = Text(key: globalKey, title, style: TextStyles.textMBold);
+                    final text = Text(key: globalKey, title, style: TextStyles.textMBold.copyWith(color: context.content));
                     if (autoFocus) {
                       return AutoFocusA11y(child: text);
                     }

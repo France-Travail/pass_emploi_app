@@ -80,12 +80,12 @@ class _Body extends StatelessWidget {
             SizedBox(height: Margins.spacing_xl),
             Text(
               Strings.userActionConfirmationTitleSingular,
-              style: TextStyles.textMBold,
+              style: TextStyles.textMBold.copyWith(color: context.content),
             ),
             SizedBox(height: Margins.spacing_s),
             Text(
               Strings.userActionConfirmationSubtitle,
-              style: TextStyles.textSRegular(),
+              style: TextStyles.textSRegular(color: context.content),
             ),
             SizedBox(height: Margins.spacing_xx_huge),
           ],

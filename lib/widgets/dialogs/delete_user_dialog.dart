@@ -55,7 +55,7 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
                 excludeSemantics: true,
                 child: Text(
                   Strings.lastWarningBeforeSuppression,
-                  style: TextStyles.textBaseBold,
+                  style: TextStyles.textBaseBold.copyWith(color: context.content),
                   textAlign: TextAlign.center,
                 ),
               ),

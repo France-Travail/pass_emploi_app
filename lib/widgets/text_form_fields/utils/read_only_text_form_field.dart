@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -57,7 +58,7 @@ class _ReadOnlyTextFormFieldState extends State<ReadOnlyTextFormField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Semantics(header: true, child: Text(widget.title, style: TextStyles.textBaseBold)),
+        Semantics(header: true, child: Text(widget.title, style: TextStyles.textBaseBold.copyWith(color: context.content))),
         SizedBox(height: Margins.spacing_base),
         Stack(
           alignment: Alignment.centerRight,
@@ -85,7 +86,7 @@ class _ReadOnlyTextFormFieldState extends State<ReadOnlyTextFormField> {
               IconButton(
                 onPressed: widget.onDeleteTap,
                 tooltip: widget.a11ySuppressionLabel,
-                icon: const Icon(Icons.close),
+                icon: Icon(Icons.close, color: context.content),
               ),
           ],
         ),

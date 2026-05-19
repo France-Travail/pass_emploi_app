@@ -86,7 +86,7 @@ class _SecteurActiviteFieldState extends State<_SecteurActiviteField> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(Strings.secteurActiviteLabel, style: TextStyles.textBaseBold),
+          Text(Strings.secteurActiviteLabel, style: TextStyles.textBaseBold.copyWith(color: context.content)),
           SizedBox(height: Margins.spacing_base),
           // A11y - GestureDetector is not focusable by itself
           Focus(

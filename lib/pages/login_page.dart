@@ -70,6 +70,7 @@ class _Scaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     final shrink = Brand.isCej() && MediaQuery.of(context).size.height < MediaSizes.height_xs;
     return Scaffold(
+      backgroundColor: context.bg,
       body: Stack(
         children: [
           BiseauBackground(),
@@ -208,7 +209,7 @@ class _InformationsLegales extends StatelessWidget {
           });
         },
         tilePadding: EdgeInsets.zero,
-        title: Text(Strings.legalInformation, style: TextStyles.textBaseRegular),
+        title: Text(Strings.legalInformation, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
         expandedCrossAxisAlignment: CrossAxisAlignment.start,
         expandedAlignment: Alignment.topLeft,
         children: [
@@ -334,7 +335,7 @@ class _PreferredLoginMode extends StatelessWidget {
         excludeSemantics: true,
         child: SizedBox(width: 40, height: 40, child: Image.asset(loginMode.logo, fit: BoxFit.cover)),
       ),
-      suffix: Icon(AppIcons.chevron_right_rounded),
+      suffix: Icon(AppIcons.chevron_right_rounded, color: context.content),
     );
   }
 }

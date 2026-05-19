@@ -181,7 +181,7 @@ class _Header extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (viewModel.title != null) Text(viewModel.title!, style: TextStyles.textLBold()),
+        if (viewModel.title != null) Text(viewModel.title!, style: TextStyles.textLBold(color: context.content)),
         SizedBox(height: Margins.spacing_m),
         Wrap(
           spacing: Margins.spacing_base,
@@ -258,7 +258,7 @@ class _Modality extends StatelessWidget {
           if (viewModel.organism != null)
             Padding(
               padding: const EdgeInsets.only(top: Margins.spacing_base),
-              child: Text(viewModel.organism!, style: TextStyles.textMBold),
+              child: Text(viewModel.organism!, style: TextStyles.textMBold.copyWith(color: context.content)),
             ),
           if (viewModel.addressRedirectUri != null)
             Padding(
@@ -271,7 +271,7 @@ class _Modality extends StatelessWidget {
           if (viewModel.phone != null)
             Padding(
               padding: const EdgeInsets.only(top: Margins.spacing_m),
-              child: Text(viewModel.phone!, style: TextStyles.textBaseRegular),
+              child: Text(viewModel.phone!, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
             ),
         ],
       ),
@@ -310,7 +310,7 @@ class _DescriptionPart extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SepLine(Margins.spacing_m, Margins.spacing_m),
-        if (viewModel.theme != null) Text(viewModel.theme!, style: TextStyles.textBaseBold),
+        if (viewModel.theme != null) Text(viewModel.theme!, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         if (viewModel.description != null)
           Padding(
             padding: const EdgeInsets.only(top: Margins.spacing_s),
@@ -331,7 +331,7 @@ class _AnimateurPart extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Semantics(header: true, child: Text(Strings.withAnimateurTitle, style: TextStyles.textBaseBold)),
+        Semantics(header: true, child: Text(Strings.withAnimateurTitle, style: TextStyles.textBaseBold.copyWith(color: context.content))),
         Padding(
           padding: const EdgeInsets.only(top: Margins.spacing_s),
           child: TextWithClickableLinks(withAnimateur, style: TextStyles.textBaseRegular),
@@ -376,7 +376,7 @@ class _ConseillerPart extends StatelessWidget {
         ],
         if (_withSepLine()) SepLine(Margins.spacing_m, Margins.spacing_m),
         if (viewModel.commentTitle != null)
-          Semantics(header: true, child: Text(viewModel.commentTitle!, style: TextStyles.textBaseBold)),
+          Semantics(header: true, child: Text(viewModel.commentTitle!, style: TextStyles.textBaseBold.copyWith(color: context.content))),
         if (viewModel.comment != null)
           Padding(
             padding: const EdgeInsets.only(top: Margins.spacing_s),
@@ -403,9 +403,9 @@ class _InformIfAbsent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Semantics(header: true, child: Text(Strings.cannotGoToRendezvous, style: TextStyles.textBaseBold)),
+        Semantics(header: true, child: Text(Strings.cannotGoToRendezvous, style: TextStyles.textBaseBold.copyWith(color: context.content))),
         SizedBox(height: Margins.spacing_s),
-        Text(Strings.shouldInformConseiller, style: TextStyles.textBaseRegular),
+        Text(Strings.shouldInformConseiller, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
       ],
     );
   }

@@ -205,7 +205,7 @@ class _Titre extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       label,
-      style: TextStyles.textMBold,
+      style: TextStyles.textMBold.copyWith(color: context.content),
     );
   }
 }
@@ -219,7 +219,7 @@ class _SousTitre extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       label,
-      style: TextStyles.textBaseRegular,
+      style: TextStyles.textBaseRegular.copyWith(color: context.content),
     );
   }
 }
@@ -257,7 +257,7 @@ class _AttributItem extends StatelessWidget {
             size: Dimens.icon_size_m,
           ),
           SizedBox(width: 12),
-          Expanded(child: Text(label, style: TextStyles.textBaseBold)),
+          Expanded(child: Text(label, style: TextStyles.textBaseBold.copyWith(color: context.content))),
         ],
       ),
     );
@@ -273,7 +273,7 @@ class _DetailDemarcheTitle extends StatelessWidget {
       children: [
         Container(color: AppColors.primaryLighten, height: 1),
         SizedBox(height: 20),
-        Text(Strings.demarcheDetails, style: TextStyles.textBaseBold),
+        Text(Strings.demarcheDetails, style: TextStyles.textBaseBold.copyWith(color: context.content)),
       ],
     );
   }
@@ -290,7 +290,7 @@ class _HistoriqueTitle extends StatelessWidget {
         SizedBox(
           height: 20,
         ),
-        Text(Strings.historiqueDemarche, style: TextStyles.textBaseBold),
+        Text(Strings.historiqueDemarche, style: TextStyles.textBaseBold.copyWith(color: context.content)),
       ],
     );
   }
@@ -318,11 +318,11 @@ class _Historique extends StatelessWidget {
             Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(text: Strings.modifiedBy, style: TextStyles.textBaseRegular),
-                  TextSpan(text: viewModel.modificationDate, style: TextStyles.textBaseBold),
-                  if (viewModel.modifiedByAdvisor) TextSpan(text: Strings.par, style: TextStyles.textBaseRegular),
+                  TextSpan(text: Strings.modifiedBy, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
+                  TextSpan(text: viewModel.modificationDate, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+                  if (viewModel.modifiedByAdvisor) TextSpan(text: Strings.par, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                   if (viewModel.modifiedByAdvisor)
-                    TextSpan(text: Strings.votreConseiller, style: TextStyles.textBaseBold),
+                    TextSpan(text: Strings.votreConseiller, style: TextStyles.textBaseBold.copyWith(color: context.content)),
                 ],
               ),
             ),
@@ -330,11 +330,11 @@ class _Historique extends StatelessWidget {
             Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(text: Strings.createdBy, style: TextStyles.textBaseRegular),
-                  TextSpan(text: viewModel.creationDate, style: TextStyles.textBaseBold),
-                  if (viewModel.createdByAdvisor) TextSpan(text: Strings.par, style: TextStyles.textBaseRegular),
+                  TextSpan(text: Strings.createdBy, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
+                  TextSpan(text: viewModel.creationDate, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+                  if (viewModel.createdByAdvisor) TextSpan(text: Strings.par, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                   if (viewModel.createdByAdvisor)
-                    TextSpan(text: Strings.votreConseiller, style: TextStyles.textBaseBold),
+                    TextSpan(text: Strings.votreConseiller, style: TextStyles.textBaseBold.copyWith(color: context.content)),
                 ],
               ),
             ),
@@ -352,7 +352,7 @@ class _MoreButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: Icon(AppIcons.more_vert_rounded),
+      icon: Icon(AppIcons.more_vert_rounded, color: context.content),
       onPressed: () => DemarcheDetailsBottomSheet.show(
         context,
         demarcheId,

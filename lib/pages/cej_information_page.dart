@@ -38,6 +38,7 @@ class _CejInformationPageState extends State<CejInformationPage> {
     ];
 
     return Scaffold(
+      backgroundColor: context.bg,
       body: Stack(
         children: [
           PrimaryRoundedBottomBackground(),
@@ -120,7 +121,7 @@ class _LoginButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(Strings.alreadyHaveAccount, style: TextStyles.textBaseRegular, textAlign: TextAlign.center),
+          Text(Strings.alreadyHaveAccount, style: TextStyles.textBaseRegular.copyWith(color: context.content), textAlign: TextAlign.center),
           SizedBox(height: Margins.spacing_base),
           SecondaryButton(
             label: Strings.loginAction,

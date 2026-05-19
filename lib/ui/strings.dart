@@ -67,6 +67,7 @@ class Strings {
   static String duplicate = "Dupliquer";
   static String clear = "Effacer le texte";
   static const String back = 'Retour';
+  static const String noData = "Aucune donnée";
 
   static String stepCounter(int current, int total) => "Étape $current sur $total";
   static String selectDateTooltip = "Sélectionner une date";
@@ -1052,7 +1053,8 @@ class Strings {
       "Veuillez renseigner une adresse email valide au format exemple@email.com";
   static String immersionContactFormPhoneEmpty = "Renseignez votre numéro de téléphone";
   static String immersionContactFormPhoneInvalid = "Veuillez renseigner un numéro de téléphone valide";
-  static String immersionContactFormLinkedinInvalid = "Veuillez renseigner une URL valide (ex: https://linkedin.com/in/votre-profil)";
+  static String immersionContactFormLinkedinInvalid =
+      "Veuillez renseigner une URL valide (ex: https://linkedin.com/in/votre-profil)";
   static const immersionDataWarningMessage =
       "Veuillez utiliser les coordonnées de l'entreprise uniquement pour votre usage personnel";
   static String contactByMail = "Mise en relation par mail";
