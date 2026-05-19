@@ -49,7 +49,7 @@ class SelectableTextWithClickableLinks extends StatelessWidget {
     return Linkify(
       textScaleFactor: MediaQuery.of(context).textScaler.scale(1.0),
       text: textWithOpenInNew,
-      style: style.copyWith(color: context.content),
+      style: style,
       linkStyle: linkStyle ?? TextStyles.externalLink,
       onOpen: (link) {
         final String baseUrl = Uri.parse(link.url).origin;

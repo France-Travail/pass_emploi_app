@@ -147,7 +147,7 @@ class _BaseTextFieldState extends State<BaseTextField> {
   OutlineInputBorder _idleBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(Dimens.radius_base),
-      borderSide: BorderSide(color: AppColors.contentLight, width: 1.0),
+      borderSide: BorderSide(color: context.content, width: 1.0),
     );
   }
 

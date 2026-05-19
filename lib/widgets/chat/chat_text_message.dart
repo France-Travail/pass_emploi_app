@@ -29,7 +29,7 @@ class ChatTextMessage extends StatelessWidget {
     final bool isMyMessage = params.sender == Sender.jeune;
     final TextStyle textStyle = isMyMessage
         ? TextStyles.textSRegular(color: AppColors.contentOnPrimary) //
-        : TextStyles.textSRegular();
+        : TextStyles.textSRegular(color: context.content);
     return ChatMessageContainer(
       content: SelectableTextWithClickableLinks(
         params.content,

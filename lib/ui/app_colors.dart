@@ -111,5 +111,5 @@ extension AppColorsContext on BuildContext {
   Color get grey700 => _isDark ? AppColors.grey700Dark : AppColors.grey700Light;
   Color get grey800 => _isDark ? AppColors.grey800Dark : AppColors.grey800Light;
 
-  bool get _isDark => MediaQuery.platformBrightnessOf(this) == Brightness.dark;
+  bool get _isDark => Theme.of(this).brightness == Brightness.dark;
 }

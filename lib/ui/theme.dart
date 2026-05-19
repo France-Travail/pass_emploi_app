@@ -23,6 +23,27 @@ class PassEmploiTheme {
     ),
   );
 
+  static final darkData = ThemeData(
+    brightness: Brightness.dark,
+    colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary, brightness: Brightness.dark),
+    checkboxTheme: _checkboxes(),
+    sliderTheme: _sliders(),
+    progressIndicatorTheme: _progress(),
+    radioTheme: RadioThemeData(
+      fillColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+        return states.contains(WidgetState.selected) ? AppColors.primary : null;
+      }),
+    ),
+    switchTheme: SwitchThemeData(
+      thumbColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) => AppColors.contentOnPrimary),
+      trackColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+        if (states.contains(WidgetState.disabled)) return AppColors.grey700Dark;
+        if (states.contains(WidgetState.selected)) return AppColors.success;
+        return null;
+      }),
+    ),
+  );
+
   static CheckboxThemeData _checkboxes() {
     return CheckboxThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
