@@ -1,4 +1,5 @@
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pass_emploi_app/auth/auth_wrapper.dart';
@@ -359,6 +360,10 @@ class MockDateConsultationActualiteMissionLocaleRepository extends Mock
 
 class MockAutoDesinscriptionRepository extends Mock implements AutoDesinscriptionRepository {}
 
-class MockThemeRepository extends Mock implements ThemeRepository {}
+class MockThemeRepository extends Mock implements ThemeRepository {
+  MockThemeRepository() {
+    when(() => getThemeMode()).thenAnswer((_) async => ThemeMode.system);
+  }
+}
 
 /*AUTOGENERATE-REDUX-TEST-MOCKS-REPOSITORY-DECLARATION*/
