@@ -66,7 +66,7 @@ class _Loading extends StatelessWidget {
         children: [
           Image.asset(Drawables.iaFtSuggestionsLoading, width: 200, height: 200),
           const SizedBox(height: Margins.spacing_base),
-          Text(Strings.iaFtSuggestionsLoading, style: TextStyles.textMBold, textAlign: TextAlign.center),
+          Text(Strings.iaFtSuggestionsLoading, style: TextStyles.textMBold.copyWith(color: context.content), textAlign: TextAlign.center),
           const SizedBox(height: Margins.spacing_l),
           CircularProgressIndicator(),
         ],
@@ -88,7 +88,7 @@ class _Failure extends StatelessWidget {
         children: [
           Image.asset(Drawables.iaFtSuggestionsFailure, width: 200, height: 200),
           const SizedBox(height: Margins.spacing_m),
-          Text(Strings.iaFtSuggestionsFailure, style: TextStyles.textMBold, textAlign: TextAlign.center),
+          Text(Strings.iaFtSuggestionsFailure, style: TextStyles.textMBold.copyWith(color: context.content), textAlign: TextAlign.center),
           const SizedBox(height: Margins.spacing_m),
           PrimaryActionButton(onPressed: () => viewModel.onNavigateBackward(), label: Strings.back),
         ],
@@ -111,7 +111,7 @@ class _Empty extends StatelessWidget {
           children: [
             Image.asset(Drawables.iaFtSuggestionsEmpty, width: 200, height: 200),
             const SizedBox(height: Margins.spacing_m),
-            Text(Strings.iaFtSuggestionsEmpty, style: TextStyles.textMBold, textAlign: TextAlign.center),
+            Text(Strings.iaFtSuggestionsEmpty, style: TextStyles.textMBold.copyWith(color: context.content), textAlign: TextAlign.center),
             const SizedBox(height: Margins.spacing_m),
             PrimaryActionButton(onPressed: () => viewModel.onNavigateBackward(), label: Strings.back),
           ],
@@ -174,7 +174,7 @@ class _ContentState extends State<_Content> {
                 ),
                 const SizedBox(height: Margins.spacing_base),
               ],
-              Text(Strings.iaFtSuggestionsContent(suggestions.length), style: TextStyles.textMBold),
+              Text(Strings.iaFtSuggestionsContent(suggestions.length), style: TextStyles.textMBold.copyWith(color: context.content)),
               const SizedBox(height: Margins.spacing_base),
               ListView.builder(
                 shrinkWrap: true,
@@ -252,7 +252,7 @@ class _DemarcheIaCard extends StatelessWidget {
             additionalChild: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(Strings.dateShortMandatory, style: TextStyles.textBaseMedium),
+                Text(Strings.dateShortMandatory, style: TextStyles.textBaseMedium.copyWith(color: context.content)),
                 const SizedBox(height: Margins.spacing_s),
                 DatePicker(
                   errorText: showError ? Strings.dateShortMandatory : null,

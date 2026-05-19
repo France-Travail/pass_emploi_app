@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/pages/boite_a_outils_page.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -35,18 +36,18 @@ class MesOutilsCard extends StatelessWidget {
               children: [
                 Text(
                   Strings.mesOutils,
-                  style: TextStyles.textBaseBold,
+                  style: TextStyles.textBaseBold.copyWith(color: context.content),
                 ),
                 SizedBox(height: Margins.spacing_xs),
                 Text(
                   Strings.mesOutilsDescription,
-                  style: TextStyles.textSMedium(),
+                  style: TextStyles.textSMedium(color: context.content),
                 ),
               ],
             ),
           ),
           SizedBox(width: Margins.spacing_s),
-          Icon(AppIcons.chevron_right_rounded),
+          Icon(AppIcons.chevron_right_rounded, color: context.content),
         ],
       ),
     );

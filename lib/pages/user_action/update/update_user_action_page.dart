@@ -10,6 +10,7 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/user_action/update_form/update_user_action_view_model.dart';
 import 'package:pass_emploi_app/presentation/user_action/user_action_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
@@ -104,7 +105,7 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const bgColor = Colors.white;
+    final bgColor = context.bg;
     return Stack(
       children: [
         Scaffold(
@@ -114,7 +115,7 @@ class _Body extends StatelessWidget {
         ),
         if (viewModel.showLoading)
           ColoredBox(
-            color: Colors.white.withValues(alpha: 0.5),
+            color: context.bg.withValues(alpha: 0.5),
             child: Center(child: CircularProgressIndicator()),
           ),
       ],

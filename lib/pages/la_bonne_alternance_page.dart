@@ -25,6 +25,7 @@ class LaBonneAlternancePage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.laBonneAlternance,
       child: Scaffold(
+        backgroundColor: context.bg,
         appBar: SecondaryAppBar(title: LaBonneAlternanceAssets.text_0),
         floatingActionButton: Padding(
           padding: const EdgeInsets.all(Margins.spacing_base),
@@ -52,7 +53,7 @@ class LaBonneAlternancePage extends StatelessWidget {
                   spans: [
                     TextSpan(
                       text: LaBonneAlternanceAssets.text_2,
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                   ],
                 ),
@@ -65,33 +66,33 @@ class LaBonneAlternancePage extends StatelessWidget {
                   spans: [
                     TextSpan(
                       text: LaBonneAlternanceAssets.text_6,
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                     TextSpan(
                       children: [
                         TextSpan(
                           text: LaBonneAlternanceAssets.text_7,
-                          style: TextStyles.textBaseBold,
+                          style: TextStyles.textBaseBold.copyWith(color: context.content),
                         ),
                         TextSpan(
                           text: LaBonneAlternanceAssets.text_8,
-                          style: TextStyles.textBaseRegular,
+                          style: TextStyles.textBaseRegular.copyWith(color: context.content),
                         ),
                       ],
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                     TextSpan(
                       children: [
                         TextSpan(
                           text: LaBonneAlternanceAssets.text_9,
-                          style: TextStyles.textBaseBold,
+                          style: TextStyles.textBaseBold.copyWith(color: context.content),
                         ),
                         TextSpan(
                           text: LaBonneAlternanceAssets.text_10,
-                          style: TextStyles.textBaseRegular,
+                          style: TextStyles.textBaseRegular.copyWith(color: context.content),
                         ),
                       ],
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                   ],
                 ),
@@ -102,7 +103,7 @@ class LaBonneAlternancePage extends StatelessWidget {
                   spans: [
                     TextSpan(
                       text: LaBonneAlternanceAssets.text_12,
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                   ],
                 ),
@@ -128,13 +129,13 @@ class _VerbatimCard extends StatelessWidget {
           SizedBox(height: Margins.spacing_base),
           Text(
             LaBonneAlternanceAssets.text_3,
-            style: TextStyles.textMRegular.copyWith(color: Colors.white),
+            style: TextStyles.textMRegular.copyWith(color: AppColors.contentOnPrimary),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: Margins.spacing_s),
           Text(
             LaBonneAlternanceAssets.text_4,
-            style: TextStyles.textSRegular().copyWith(color: Colors.white),
+            style: TextStyles.textSRegular().copyWith(color: AppColors.contentOnPrimary),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: Margins.spacing_s),
@@ -173,7 +174,7 @@ class _InformationCard extends StatelessWidget {
           SizedBox(height: Margins.spacing_m),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-            child: Text(title, style: TextStyles.textBaseBold),
+            child: Text(title, style: TextStyles.textBaseBold.copyWith(color: context.content)),
           ),
           SizedBox(height: Margins.spacing_s),
           Padding(

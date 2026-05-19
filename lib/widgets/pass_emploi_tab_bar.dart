@@ -28,7 +28,7 @@ class _PassEmploiTabBarState extends State<PassEmploiTabBar> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_m),
-      color: Brand.isCej() ? Colors.transparent : AppColors.primary,
+      color: Brand.isCej() ? AppColors.transparent : AppColors.primary,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -36,20 +36,20 @@ class _PassEmploiTabBarState extends State<PassEmploiTabBar> {
             alignment: Alignment.centerLeft,
             child: TabBar(
               controller: widget.controller,
-              indicatorColor: Brand.isCej() ? AppColors.primary : AppColors.grey100,
+              indicatorColor: Brand.isCej() ? AppColors.primary : context.grey100,
               indicatorWeight: 4,
               labelStyle: TextStyles.textBaseBold,
-              labelColor: Brand.isCej() ? AppColors.contentColor : AppColors.grey100,
+              labelColor: Brand.isCej() ? context.content : context.grey100,
               indicatorSize: TabBarIndicatorSize.tab,
               isScrollable: true,
               labelPadding: const EdgeInsets.only(right: 32),
               indicatorPadding: const EdgeInsets.only(right: 32),
-              unselectedLabelColor: Brand.isCej() ? AppColors.grey800 : Colors.grey[350],
+              unselectedLabelColor: Brand.isCej() ? context.grey800 : context.grey100,
               tabAlignment: TabAlignment.start,
               tabs: _tabs(),
             ),
           ),
-          if (Brand.isCej()) SepLine(0, 0, color: AppColors.grey500),
+          if (Brand.isCej()) SepLine(0, 0, color: context.grey500),
         ],
       ),
     );
@@ -99,12 +99,12 @@ class _TabCountBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: const Color(0xFFFF3F15),
+        color: AppColors.warning,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
         text,
-        style: TextStyles.textXsBold(color: Colors.white),
+        style: TextStyles.textXsBold(color: AppColors.contentOnPrimary),
         textAlign: TextAlign.center,
       ),
     );

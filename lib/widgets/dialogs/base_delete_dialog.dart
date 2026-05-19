@@ -34,8 +34,8 @@ class BaseDeleteDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      surfaceTintColor: Colors.white,
-      backgroundColor: Colors.white,
+      surfaceTintColor: context.bg,
+      backgroundColor: context.bg,
       title: Stack(
         children: [
           Column(
@@ -43,9 +43,9 @@ class BaseDeleteDialog extends StatelessWidget {
               SizedBox(height: Margins.spacing_m),
               SizedBox.square(dimension: 120, child: Illustration.red(AppIcons.delete)),
               SizedBox(height: Margins.spacing_m),
-              Text(title, style: TextStyles.textBaseBold, textAlign: TextAlign.center),
+              Text(title, style: TextStyles.textBaseBold.copyWith(color: context.content), textAlign: TextAlign.center),
               SizedBox(height: Margins.spacing_m),
-              Text(subtitle, style: TextStyles.textBaseRegular, textAlign: TextAlign.center),
+              Text(subtitle, style: TextStyles.textBaseRegular.copyWith(color: context.content), textAlign: TextAlign.center),
               if (withLoading) _Loader(),
               if (withError) _Error(),
             ],

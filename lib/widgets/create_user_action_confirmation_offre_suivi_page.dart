@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/user_action/create_user_action_confirmation_view_model.dart';
 import 'package:pass_emploi_app/presentation/user_action/user_action_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -30,9 +31,9 @@ class CreateUserActionConfirmationOffreSuiviPage extends StatelessWidget {
     return StoreConnector<AppState, CreateActionSuccessViewModel>(
       converter: (store) => CreateActionSuccessViewModel.create(store),
       builder: (context, viewModel) {
-        return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: SecondaryAppBar(title: Strings.createActionAppBarTitle, backgroundColor: Colors.white),
+          return Scaffold(
+            backgroundColor: context.bg,
+            appBar: SecondaryAppBar(title: Strings.createActionAppBarTitle, backgroundColor: context.bg),
           floatingActionButton: viewModel.displayState == DisplayState.CONTENT
               ? _Buttons(
                   onGoActionDetail: () {
@@ -79,12 +80,12 @@ class _Body extends StatelessWidget {
             SizedBox(height: Margins.spacing_xl),
             Text(
               Strings.userActionConfirmationTitleSingular,
-              style: TextStyles.textMBold,
+              style: TextStyles.textMBold.copyWith(color: context.content),
             ),
             SizedBox(height: Margins.spacing_s),
             Text(
               Strings.userActionConfirmationSubtitle,
-              style: TextStyles.textSRegular(),
+              style: TextStyles.textSRegular(color: context.content),
             ),
             SizedBox(height: Margins.spacing_xx_huge),
           ],

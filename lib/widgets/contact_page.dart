@@ -4,6 +4,7 @@ import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/presentation/email_subject_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -26,6 +27,7 @@ class ContactPage extends StatelessWidget {
           return Tracker(
             tracking: AnalyticsScreenNames.contactProfil,
             child: Scaffold(
+              backgroundColor: context.bg,
               appBar: SecondaryAppBar(title: Strings.contactPageTitle),
               body: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_m),
@@ -39,14 +41,14 @@ class ContactPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(height: Margins.spacing_m),
-                              Text(Strings.contactPageBody1, style: TextStyles.textBaseMedium),
+                              Text(Strings.contactPageBody1, style: TextStyles.textBaseMedium.copyWith(color: context.content)),
                               SizedBox(height: Margins.spacing_m),
-                              Text(Strings.contactPageBody2, style: TextStyles.textBaseMedium),
-                              _bulletedText(Strings.contactPageBodyBullet1),
-                              _bulletedText(Strings.contactPageBodyBullet2),
-                              _bulletedText(Strings.contactPageBodyBullet3),
+                              Text(Strings.contactPageBody2, style: TextStyles.textBaseMedium.copyWith(color: context.content)),
+                              _bulletedText(context, Strings.contactPageBodyBullet1),
+                              _bulletedText(context, Strings.contactPageBodyBullet2),
+                              _bulletedText(context, Strings.contactPageBodyBullet3),
                               SizedBox(height: Margins.spacing_m),
-                              Text(Strings.contactPageBody3, style: TextStyles.textBaseMedium),
+                              Text(Strings.contactPageBody3, style: TextStyles.textBaseMedium.copyWith(color: context.content)),
                             ],
                           ),
                         ),
@@ -65,15 +67,15 @@ class ContactPage extends StatelessWidget {
         });
   }
 
-  Widget _bulletedText(String text) {
+  Widget _bulletedText(BuildContext context, String text) {
     return Semantics(
       container: true,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Semantics(excludeSemantics: true, child: Text('•', style: TextStyles.textBaseMedium)),
+          Semantics(excludeSemantics: true, child: Text('•', style: TextStyles.textBaseMedium.copyWith(color: context.content))),
           SizedBox(width: Margins.spacing_s),
-          Expanded(child: Text(text, style: TextStyles.textBaseMedium)),
+          Expanded(child: Text(text, style: TextStyles.textBaseMedium.copyWith(color: context.content))),
         ],
       ),
     );

@@ -28,11 +28,13 @@ class AccueilComptageDesHeures extends StatelessWidget {
             DisplayState.CONTENT => _Content(viewModel: viewModel),
             DisplayState.LOADING => const Center(child: CircularProgressIndicator()),
             DisplayState.FAILURE => Retry(
-                Strings.comptageDesHeuresError,
-                () => viewModel.retry(),
-                small: true,
-              ),
-            DisplayState.EMPTY => const Center(child: Text("Aucune donnée")),
+              Strings.comptageDesHeuresError,
+              () => viewModel.retry(),
+              small: true,
+            ),
+            DisplayState.EMPTY => Center(
+              child: Text(Strings.noData, style: TextStyle(color: context.content)),
+            ),
           },
         );
       },
@@ -60,7 +62,7 @@ class _Content extends StatelessWidget {
           ],
           Text(
             viewModel.title,
-            style: TextStyles.textSBold,
+            style: TextStyles.textSBold.copyWith(color: context.content),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: Margins.spacing_s),
@@ -79,10 +81,20 @@ class _Content extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildCompteurText(viewModel.heuresDeclarees, Strings.declaredHours, AppColors.additional6),
-                      _buildCompteurText(viewModel.heuresValidees, Strings.realizedHours, AppColors.additional5),
+                      _buildCompteurText(
+                        context,
+                        viewModel.heuresDeclarees,
+                        Strings.declaredHours,
+                        AppColors.additional6,
+                      ),
+                      _buildCompteurText(
+                        context,
+                        viewModel.heuresValidees,
+                        Strings.realizedHours,
+                        AppColors.additional5,
+                      ),
                       SizedBox(height: Margins.spacing_s),
-                      Text(viewModel.dateDerniereMiseAJour, style: TextStyles.textXsRegular()),
+                      Text(viewModel.dateDerniereMiseAJour, style: TextStyles.textXsRegular(color: context.content)),
                     ],
                   ),
                 ),
@@ -95,7 +107,7 @@ class _Content extends StatelessWidget {
     );
   }
 
-  Widget _buildCompteurText(String compteur, String label, Color color) {
+  Widget _buildCompteurText(BuildContext context, String compteur, String label, Color color) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -111,8 +123,14 @@ class _Content extends StatelessWidget {
         RichText(
           text: TextSpan(
             children: [
-              TextSpan(text: "${compteur}h ", style: TextStyles.textSBold),
-              TextSpan(text: label, style: TextStyles.textSRegular()),
+              TextSpan(
+                text: "${compteur}h ",
+                style: TextStyles.textSBold.copyWith(color: context.content),
+              ),
+              TextSpan(
+                text: label,
+                style: TextStyles.textSRegular(color: context.content),
+              ),
             ],
           ),
         ),
@@ -140,7 +158,6 @@ class _CompteurIllustration extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Arcs
           CustomPaint(
             size: const Size(140, 90),
             painter: _CompteurArcsPainter(
@@ -148,12 +165,11 @@ class _CompteurIllustration extends StatelessWidget {
               greenCurve: pourcentageHeuresValidees,
             ),
           ),
-          // Emoji
           Positioned(
             bottom: -5,
             child: Text(
               emoji,
-              style: const TextStyle(fontSize: 32),
+              style: TextStyle(fontSize: 32, color: context.content),
             ),
           ),
         ],
@@ -177,17 +193,16 @@ class _CompteurArcsPainter extends CustomPainter {
     final outerRadius = size.width * 0.48;
     final innerRadius = size.width * 0.34;
     const arcThickness = 9.0;
-    const startAngle = 3.14; // 180°
-    const sweepAngle = 3.14; // 180°
+    const startAngle = 3.14;
+    const sweepAngle = 3.14;
 
-    // Background arcs
     final bgPaintOuter = Paint()
-      ..color = Colors.grey.shade300
+      ..color = AppColors.grey100Light
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeWidth = arcThickness;
     final bgPaintInner = Paint()
-      ..color = Colors.grey.shade300
+      ..color = AppColors.grey100Light
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeWidth = arcThickness;
@@ -206,14 +221,13 @@ class _CompteurArcsPainter extends CustomPainter {
       bgPaintInner,
     );
 
-    // Colored arcs
     final arcPaintOuter = Paint()
-      ..color = AppColors.additional6 // purple
+      ..color = AppColors.additional6
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeWidth = arcThickness;
     final arcPaintInner = Paint()
-      ..color = AppColors.additional5 // teal
+      ..color = AppColors.additional5
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeWidth = arcThickness;

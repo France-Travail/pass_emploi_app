@@ -96,8 +96,8 @@ class DemarcheDetailViewModel extends Equatable {
       modifiedByAdvisor: false,
       withOfflineBehavior: false,
       dateFormattedTexts: [],
-      dateTextColor: Colors.black,
-      dateBackgroundColor: Colors.transparent,
+      dateTextColor: AppColors.contentLight,
+      dateBackgroundColor: AppColors.transparent,
       dateIcons: [],
       label: null,
       titreDetail: null,
@@ -115,24 +115,24 @@ class DemarcheDetailViewModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        createdByAdvisor,
-        modifiedByAdvisor,
-        withOfflineBehavior,
-        dateFormattedTexts,
-        dateFormattedTexts,
-        dateBackgroundColor,
-        dateTextColor,
-        label,
-        titreDetail,
-        modificationDate,
-        creationDate,
-        withDateDerniereMiseAJour,
-        attributs,
-        withDemarcheDoneButton,
-        updateDisplayState,
-        pillule,
-        promptIa,
-      ];
+    createdByAdvisor,
+    modifiedByAdvisor,
+    withOfflineBehavior,
+    dateFormattedTexts,
+    dateFormattedTexts,
+    dateBackgroundColor,
+    dateTextColor,
+    label,
+    titreDetail,
+    modificationDate,
+    creationDate,
+    withDateDerniereMiseAJour,
+    attributs,
+    withDemarcheDoneButton,
+    updateDisplayState,
+    pillule,
+    promptIa,
+  ];
 }
 
 DateTime? _getDateDerniereMiseAJour(Store<AppState> store) {

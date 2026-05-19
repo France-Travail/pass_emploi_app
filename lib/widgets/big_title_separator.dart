@@ -16,20 +16,20 @@ class BigTitleSeparator extends StatelessWidget {
         Expanded(
           child: Divider(
             thickness: 1,
-            color: AppColors.contentColor,
+            color: context.content,
           ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             label,
-            style: TextStyles.textMBold,
+            style: TextStyles.textMBold.copyWith(color: context.content),
           ),
         ),
         Expanded(
           child: Divider(
             thickness: 1,
-            color: AppColors.contentColor,
+            color: context.content,
           ),
         ),
       ],

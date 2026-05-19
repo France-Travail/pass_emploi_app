@@ -21,7 +21,7 @@ class LienButton extends StatelessWidget {
       onPressed: onPressed,
       child: Text(
         label,
-        style: TextStyles.textBaseUnderline.copyWith(color: AppColors.contentColor),
+        style: TextStyles.textBaseUnderline.copyWith(color: context.content),
       ),
     );
   }

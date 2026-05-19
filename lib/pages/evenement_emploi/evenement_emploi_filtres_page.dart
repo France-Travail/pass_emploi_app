@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/presentation/checkbox_value_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/evenement_emploi/evenement_emploi_filtres_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/shadows.dart';
@@ -76,6 +77,7 @@ class _ScaffoldState extends State<_Scaffold> {
       title: Strings.evenementEmploiFiltres,
       padding: EdgeInsets.symmetric(horizontal: Margins.spacing_m),
       body: Scaffold(
+        backgroundColor: context.bg,
         body: _Filtres(
           viewModel: widget.viewModel,
           currentDateDebut: _currentDateDebut,
@@ -147,7 +149,7 @@ class _Filtres extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: Colors.white,
+      color: context.bg,
       child: SingleChildScrollView(
         clipBehavior: Clip.none,
         child: Column(
@@ -206,11 +208,11 @@ class _TypeFiltreState extends State<_TypeFiltre> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(Strings.evenementEmploiFiltresType, style: TextStyles.textBaseBold),
+        Text(Strings.evenementEmploiFiltresType, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_base),
         DecoratedBox(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.bg,
             borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base)),
             boxShadow: [Shadows.radius_base],
           ),
@@ -258,11 +260,11 @@ class _DateFiltres extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(Strings.evenementEmploiFiltresDate, style: TextStyles.textBaseBold),
+        Text(Strings.evenementEmploiFiltresDate, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_base),
         DecoratedBox(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.bg,
             borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base)),
             boxShadow: [Shadows.radius_base],
           ),
@@ -271,7 +273,10 @@ class _DateFiltres extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(Strings.evenementEmploiFiltresDateDebut, style: TextStyles.textBaseMedium),
+                Text(
+                  Strings.evenementEmploiFiltresDateDebut,
+                  style: TextStyles.textBaseMedium.copyWith(color: context.content),
+                ),
                 SizedBox(height: Margins.spacing_s),
                 DatePicker(
                   onDateSelected: onDateDebutValueChange,
@@ -280,7 +285,10 @@ class _DateFiltres extends StatelessWidget {
                   firstDate: DateTime.now(),
                 ),
                 SizedBox(height: Margins.spacing_base),
-                Text(Strings.evenementEmploiFiltresDateFin, style: TextStyles.textBaseMedium),
+                Text(
+                  Strings.evenementEmploiFiltresDateFin,
+                  style: TextStyles.textBaseMedium.copyWith(color: context.content),
+                ),
                 SizedBox(height: Margins.spacing_s),
                 DatePicker(
                   onDateSelected: onDateFinValueChange,

@@ -112,7 +112,7 @@ class _MessageImportantItemState extends State<_MessageImportantItem> {
 
   @override
   Widget build(BuildContext context) {
-    const foregroundColor = AppColors.grey100;
+    final foregroundColor = context.grey100;
     if (isKeyboardVisible) {
       return SizedBox.shrink();
     }

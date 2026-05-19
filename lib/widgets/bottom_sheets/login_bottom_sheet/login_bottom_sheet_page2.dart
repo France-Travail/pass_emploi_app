@@ -69,7 +69,7 @@ class _AppBarTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       header: true,
-      child: Text(Strings.loginBottomSeetTitlePage2, style: TextStyles.textMBold),
+      child: Text(Strings.loginBottomSeetTitlePage2, style: TextStyles.textMBold.copyWith(color: context.content)),
     );
   }
 }
@@ -93,9 +93,9 @@ class _HighlightInformations extends StatelessWidget {
         Expanded(
           child: Text.rich(
             TextSpan(
-              style: TextStyles.textBaseRegular,
+              style: TextStyles.textBaseRegular.copyWith(color: context.content),
               children: [
-                TextSpan(text: boldText, style: TextStyles.textBaseBold),
+                TextSpan(text: boldText, style: TextStyles.textBaseBold.copyWith(color: context.content)),
                 TextSpan(text: text),
               ],
             ),
@@ -113,7 +113,7 @@ class _RecuperationInfos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(Strings.loginBottomSheetRecuperationInfos(isPoleEmploi), style: TextStyles.textBaseRegular);
+    return Text(Strings.loginBottomSheetRecuperationInfos(isPoleEmploi), style: TextStyles.textBaseRegular.copyWith(color: context.content));
   }
 }
 
@@ -127,7 +127,7 @@ class _OpenInNewDescription extends StatelessWidget {
     return Text(
       Strings.loginOpenInNewDescription(isPoleEmploi),
       textAlign: TextAlign.center,
-      style: TextStyles.textSMedium(),
+      style: TextStyles.textSMedium(color: context.content),
     );
   }
 }
@@ -137,7 +137,7 @@ class _NoAccount extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       header: true,
-      child: Text(Strings.loginNoAccount, style: TextStyles.textBaseRegular),
+      child: Text(Strings.loginNoAccount, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
     );
   }
 }

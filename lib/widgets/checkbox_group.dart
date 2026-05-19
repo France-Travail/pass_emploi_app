@@ -43,12 +43,12 @@ class CheckBoxGroupState<T extends CheckboxValueViewModel> extends State<CheckBo
       children: [
         Semantics(
           header: true,
-          child: Text(widget.title, style: TextStyles.textBaseBold),
+          child: Text(widget.title, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         ),
         SizedBox(height: Margins.spacing_base),
         DecoratedBox(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.bg,
             borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base)),
             boxShadow: [Shadows.radius_base],
           ),
@@ -57,21 +57,21 @@ class CheckBoxGroupState<T extends CheckboxValueViewModel> extends State<CheckBo
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: _optionsSelectionStatus.entries
-                  .map<Widget>((entry) => _createCheckBox(entry.key, entry.value))
+                  .map<Widget>((entry) => _createCheckBox(context, entry.key, entry.value))
                   .toList(),
             ),
           ),
-        )
+        ),
       ],
     );
   }
 
-  Widget _createCheckBox(T viewModel, bool isSelected) {
+  Widget _createCheckBox(BuildContext context, T viewModel, bool isSelected) {
     final label = viewModel.label;
     final helpText = viewModel.helpText;
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
-      title: helpText != null ? _textWithToolTip(label, helpText) : _title(label),
+      title: helpText != null ? _textWithToolTip(context, label, helpText) : _title(context, label),
       value: isSelected,
       contentPadding: EdgeInsets.zero,
       activeColor: AppColors.primary,
@@ -87,20 +87,20 @@ class CheckBoxGroupState<T extends CheckboxValueViewModel> extends State<CheckBo
     );
   }
 
-  Widget _textWithToolTip(String label, String helpText) {
+  Widget _textWithToolTip(BuildContext context, String label, String helpText) {
     return Row(
       children: [
-        _title(label),
+        _title(context, label),
         SizedBox(width: Margins.spacing_s),
         HelpTooltip(
           message: helpText,
           icon: AppIcons.info_rounded,
-        )
+        ),
       ],
     );
   }
 
-  Widget _title(String label) => Text(label, style: TextStyles.textBaseRegular);
+  Widget _title(BuildContext context, String label) => Text(label, style: TextStyles.textBaseRegular.copyWith(color: context.content));
 
   List<T> _listOfSelectedOptions() =>
       _optionsSelectionStatus.entries.where((element) => element.value).map((e) => e.key).toList();

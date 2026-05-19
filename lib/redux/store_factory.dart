@@ -95,6 +95,7 @@ import 'package:pass_emploi_app/features/user_action/details/user_action_details
 import 'package:pass_emploi_app/features/user_action/update/user_action_update_middleware.dart';
 import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_mission_locale_middleware.dart';
 import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription_middleware.dart';
+import 'package:pass_emploi_app/features/theme/theme_middleware.dart';
 /*AUTOGENERATE-REDUX-STOREFACTORY-IMPORT-MIDDLEWARE*/
 import 'package:pass_emploi_app/models/immersion.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
@@ -179,6 +180,7 @@ import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/wrappers/connectivity_wrapper.dart';
 import 'package:pass_emploi_app/repositories/actualite_mission_locale_repository.dart';
 import 'package:pass_emploi_app/repositories/auto_desinscription_repository.dart';
+import 'package:pass_emploi_app/repositories/theme_repository.dart';
 /*AUTOGENERATE-REDUX-STOREFACTORY-IMPORT-REPOSITORY*/
 import 'package:redux/redux.dart' as redux;
 
@@ -266,6 +268,7 @@ class StoreFactory {
   final ModuleFeedbackRepository moduleFeedbackRepository;
   final ActualiteMissionLocaleRepository actualiteMissionLocaleRepository;
   final AutoDesinscriptionRepository autoDesinscriptionRepository;
+  final ThemeRepository themeRepository;
   /*AUTOGENERATE-REDUX-STOREFACTORY-PROPERTY-REPOSITORY*/
 
   StoreFactory(
@@ -352,6 +355,7 @@ class StoreFactory {
     this.moduleFeedbackRepository,
     this.actualiteMissionLocaleRepository,
     this.autoDesinscriptionRepository,
+    this.themeRepository,
     /*AUTOGENERATE-REDUX-STOREFACTORY-CONSTRUCTOR-REPOSITORY*/
   );
 
@@ -460,6 +464,7 @@ class StoreFactory {
         FtIaTutorialMiddleware(tutorialRepository).call,
         ActualiteMissionLocaleMiddleware(actualiteMissionLocaleRepository).call,
         AutoDesinscriptionMiddleware(autoDesinscriptionRepository).call,
+        ThemeMiddleware(themeRepository).call,
         /*AUTOGENERATE-REDUX-STOREFACTORY-ADD-MIDDLEWARE*/
         ..._debugMiddlewares(),
         ..._stagingMiddlewares(initialState.configurationState.getFlavor()),

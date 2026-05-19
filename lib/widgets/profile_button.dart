@@ -18,7 +18,7 @@ class ProfileButton extends StatelessWidget {
           height: 44,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: isDarkColor ? AppColors.primary : AppColors.grey100,
+            color: isDarkColor ? AppColors.primary : context.grey100,
           ),
           child: IconButton(
             tooltip: Strings.profilButtonSemanticsLabel,
@@ -29,7 +29,7 @@ class ProfileButton extends StatelessWidget {
               child: Icon(
                 Icons.person_outline_rounded,
                 size: 24,
-                color: isDarkColor ? Colors.white : AppColors.primary,
+                color: isDarkColor ? AppColors.contentOnPrimary : AppColors.primary,
               ),
             ),
           ),

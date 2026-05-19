@@ -70,6 +70,7 @@ class _Scaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     final shrink = Brand.isCej() && MediaQuery.of(context).size.height < MediaSizes.height_xs;
     return Scaffold(
+      backgroundColor: context.bg,
       body: Stack(
         children: [
           BiseauBackground(),
@@ -175,15 +176,15 @@ class _AskAccount extends StatelessWidget {
           header: true,
           child: Text(
             Strings.noAccount,
-            style: TextStyles.textSMedium(color: Colors.white),
+            style: TextStyles.textSMedium(color: AppColors.contentOnPrimary),
             textAlign: TextAlign.center,
           ),
         ),
         SizedBox(height: Margins.spacing_s),
         SecondaryButton(
           label: Strings.askAccount,
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.white,
+          backgroundColor: AppColors.transparent,
+          foregroundColor: AppColors.contentOnPrimary,
           onPressed: () => Navigator.push(context, CejInformationPage.materialPageRoute()),
         ),
       ],
@@ -208,7 +209,7 @@ class _InformationsLegales extends StatelessWidget {
           });
         },
         tilePadding: EdgeInsets.zero,
-        title: Text(Strings.legalInformation, style: TextStyles.textBaseRegular),
+        title: Text(Strings.legalInformation, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
         expandedCrossAxisAlignment: CrossAxisAlignment.start,
         expandedAlignment: Alignment.topLeft,
         children: [
@@ -241,7 +242,7 @@ class Link extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: AppColors.transparent,
       child: InkWell(
         onTap: () {
           PassEmploiMatomoTracker.instance.trackOutlink(link);
@@ -334,7 +335,7 @@ class _PreferredLoginMode extends StatelessWidget {
         excludeSemantics: true,
         child: SizedBox(width: 40, height: 40, child: Image.asset(loginMode.logo, fit: BoxFit.cover)),
       ),
-      suffix: Icon(AppIcons.chevron_right_rounded),
+      suffix: Icon(AppIcons.chevron_right_rounded, color: context.content),
     );
   }
 }
@@ -349,7 +350,7 @@ class _AccessibilityIndicator extends StatelessWidget {
     return Text(
       accessibilityLevelLabel,
       textAlign: TextAlign.center,
-      style: TextStyles.textXsRegular(color: Colors.white),
+      style: TextStyles.textXsRegular(color: AppColors.contentOnPrimary),
     );
   }
 }

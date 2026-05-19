@@ -71,14 +71,14 @@ class _Loading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: context.bg,
       width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.all(Margins.spacing_base),
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Icon(AppIcons.image_outlined, color: AppColors.grey100, size: Dimens.icon_size_l),
+            Icon(AppIcons.image_outlined, color: context.grey100, size: Dimens.icon_size_l),
             CircularProgressIndicator(),
           ],
         ),
@@ -92,7 +92,7 @@ class _Failure extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(Margins.spacing_s),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(Dimens.radius_base)),
+      decoration: BoxDecoration(color: context.bg, borderRadius: BorderRadius.circular(Dimens.radius_base)),
       child: FileWasDeleted(),
     );
   }

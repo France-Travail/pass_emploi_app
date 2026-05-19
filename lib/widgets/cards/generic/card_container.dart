@@ -9,7 +9,7 @@ class CardContainer extends StatelessWidget {
   final Widget child;
   final void Function()? onTap;
   final void Function()? onLongPress;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final Color? splashColor;
   final EdgeInsets padding;
   final bool withShadow;
@@ -22,7 +22,7 @@ class CardContainer extends StatelessWidget {
     required this.child,
     this.onTap,
     this.onLongPress,
-    this.backgroundColor = Colors.white,
+    this.backgroundColor,
     Color? splashColor,
     this.padding = const EdgeInsets.all(Margins.spacing_base),
     this.withShadow = true,
@@ -34,13 +34,14 @@ class CardContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BorderRadius cardBorderRadius = BorderRadius.circular(Dimens.radius_base);
+    final bg = backgroundColor ?? context.bg;
 
     // a11y 10.2 : to avoid useless tap trigger we should remove inkwell
     final childWithPadding = Padding(padding: padding, child: child);
     return Container(
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-        color: gradient != null ? null : backgroundColor,
+        color: gradient != null ? null : bg,
         borderRadius: cardBorderRadius,
         boxShadow: withShadow ? [Shadows.radius_base] : [],
         border: border,
@@ -51,7 +52,7 @@ class CardContainer extends StatelessWidget {
           ? childWithPadding
           : Material(
               clipBehavior: Clip.hardEdge,
-              color: gradient != null ? Colors.transparent : backgroundColor,
+              color: gradient != null ? AppColors.transparent : bg,
               borderRadius: cardBorderRadius,
               child: InkWell(
                 borderRadius: cardBorderRadius,

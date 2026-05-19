@@ -4,12 +4,17 @@ import 'package:pass_emploi_app/models/brand.dart';
 class AppColors {
   AppColors._();
 
+  // Background colors
+  static const Color bgLight = Color(0xFFFFFFFF);
+  static const Color bgDark = Color(0xFF262626);
+
   // Primary colors
   static final Color primary = Brand.isPassEmploi() ? primaryDarken : primaryCej;
   static const Color primaryCej = Color(0xFF3B69D1);
   static const Color primaryDarken = Color(0xFF274996);
   static const Color primaryDarkenStrong = Color(0xFF172B5A);
   static const Color primaryLighten = Color(0xFFEEF1F8);
+  static const Color transparent = Color(0x00000000);
 
   // Status colors
   static const Color warning = Color(0xFFD31140);
@@ -29,13 +34,20 @@ class AppColors {
   static const Color accent3Lighten = Color(0xFFDFFDFF);
 
   // Neutrals colors
-  static const Color contentColor = Color(0xFF161616);
+  static const Color contentLight = Color(0xFF161616);
+  static const Color contentDark = Color(0xFFF1F1F1);
+  static const Color contentOnPrimary = Color(0xFFFFFFFF);
   static const Color disabled = Color(0xFF73758D);
 
-  static const Color grey100 = Color(0xFFF1F1F1);
-  static const Color grey500 = Color(0xFFB3B3B3);
-  static const Color grey700 = Color(0xFF878787);
-  static const Color grey800 = Color(0xFF646464);
+  static const Color grey100Light = Color(0xFFF1F1F1);
+  static const Color grey500Light = Color(0xFFB3B3B3);
+  static const Color grey700Light = Color(0xFF878787);
+  static const Color grey800Light = Color(0xFF646464);
+
+  static const Color grey100Dark = Color(0xFF161616);
+  static const Color grey500Dark = Color(0xFF4D4D4D);
+  static const Color grey700Dark = Color(0xFF737373);
+  static const Color grey800Dark = Color(0xFF999999);
 
   // Additional colors
   static const Color additional1Lighten = Color(0xFFFFD88D);
@@ -61,6 +73,25 @@ class AppColors {
           Color(0xFF1E366B),
         ];
 
+  // Solution gradients
+  static List<Color> gradientOffre = [
+    Color(0xFF274996),
+    Color(0xFF3B69D1),
+  ];
+  static List<Color> gradientAlternance = [
+    Color(0xFF172B5A),
+    Color(0xFF2186C7),
+  ];
+  static List<Color> gradientImmersion = [
+    Color(0xFF5149A8),
+    Color(0xFF603CBC),
+    Color(0xFF950EFF),
+  ];
+  static List<Color> gradientServiceCivique = [
+    Color(0xFF15616D),
+    Color(0xFF0C7A81),
+  ];
+
   static List<Color> gradientSecondary = [
     primary,
     accent1,
@@ -70,4 +101,15 @@ class AppColors {
     accent1,
     Color(0xFF0C1730),
   ];
+}
+
+extension AppColorsContext on BuildContext {
+  Color get bg => _isDark ? AppColors.bgDark : AppColors.bgLight;
+  Color get content => _isDark ? AppColors.contentDark : AppColors.contentLight;
+  Color get grey100 => _isDark ? AppColors.grey100Dark : AppColors.grey100Light;
+  Color get grey500 => _isDark ? AppColors.grey500Dark : AppColors.grey500Light;
+  Color get grey700 => _isDark ? AppColors.grey700Dark : AppColors.grey700Light;
+  Color get grey800 => _isDark ? AppColors.grey800Dark : AppColors.grey800Light;
+
+  bool get _isDark => Theme.of(this).brightness == Brightness.dark;
 }

@@ -75,7 +75,7 @@ class CardTag extends StatelessWidget {
     : icon = null,
       backgroundColor = AppColors.additional4Lighten,
       text = Strings.disabledWorkersWelcome,
-      contentColor = AppColors.contentColor,
+      contentColor = AppColors.contentLight,
       semanticsLabel = null;
 
   @override

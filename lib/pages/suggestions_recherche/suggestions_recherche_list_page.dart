@@ -94,7 +94,7 @@ class _Scaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const backgroundColor = AppColors.grey100;
+    final backgroundColor = context.grey100;
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: SecondaryAppBar(title: Strings.mesSuggestionsAlertes, backgroundColor: backgroundColor),
@@ -163,13 +163,17 @@ class _Empty extends StatelessWidget {
               child: Illustration.grey(AppIcons.checklist_rounded),
             ),
           ),
-          Text(Strings.emptySuggestionAlerteListTitre, style: TextStyles.textBaseBold, textAlign: TextAlign.center),
+          Text(
+            Strings.emptySuggestionAlerteListTitre,
+            style: TextStyles.textBaseBold.copyWith(color: context.content),
+            textAlign: TextAlign.center,
+          ),
           SizedBox(height: Margins.spacing_base),
           Text(
             viewModel.loginMode?.isMiLo() == true
                 ? Strings.emptySuggestionAlerteListDescriptionMilo
                 : Strings.emptySuggestionAlerteListDescriptionPoleEmploi,
-            style: TextStyles.textBaseRegular,
+            style: TextStyles.textBaseRegular.copyWith(color: context.content),
             textAlign: TextAlign.center,
           ),
           Spacer(flex: 2),
@@ -188,7 +192,7 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(Strings.suggestionsDeRechercheHeader, style: TextStyles.textBaseRegular),
+        Text(Strings.suggestionsDeRechercheHeader, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_base),
         _Card(suggestionId: suggestionId),
       ],
@@ -337,7 +341,7 @@ void _displaySuccessSnackbar(
                   padding: const EdgeInsets.all(3.0),
                   child: Icon(
                     AppIcons.check_rounded,
-                    color: Colors.white,
+                    color: AppColors.contentOnPrimary,
                   ),
                 ),
               ),

@@ -41,7 +41,7 @@ class EvenementEmploiDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const backgroundColor = Colors.white;
+    final backgroundColor = context.bg;
     return Tracker(
       tracking: AnalyticsScreenNames.evenementEmploiDetails,
       child: StoreConnector<AppState, EvenementEmploiDetailsPageViewModel>(
@@ -144,7 +144,7 @@ class _Header extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (viewModel.tag != null) ...[CardTag.evenement(text: viewModel.tag!), SizedBox(height: Margins.spacing_s)],
-        Text(viewModel.titre, style: TextStyles.textLBold()),
+        Text(viewModel.titre, style: TextStyles.textLBold(color: context.content)),
         SizedBox(height: Margins.spacing_base),
         Wrap(
           spacing: Margins.spacing_base,
@@ -175,11 +175,11 @@ class _Details extends StatelessWidget {
           children: [
             Text("•", style: TextStyles.textMBoldWithColor(color: AppColors.primary)),
             SizedBox(width: Margins.spacing_s),
-            Text(Strings.evenementEmploiDetails, style: TextStyles.textMBoldWithColor(color: AppColors.grey800)),
+            Text(Strings.evenementEmploiDetails, style: TextStyles.textMBoldWithColor(color: context.grey800)),
           ],
         ),
         SizedBox(height: Margins.spacing_m),
-        Text(description, style: TextStyles.textBaseRegular),
+        Text(description, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
       ],
     );
   }

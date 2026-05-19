@@ -81,9 +81,9 @@ class _RouterPageState extends State<RouterPage> with WidgetsBindingObserver {
       RouterPageDisplayState.cgu => CguPage(),
       RouterPageDisplayState.tutorial => TutorialPage(),
       RouterPageDisplayState.main => MainPage(
-          displayState: viewModel.mainPageDisplayState,
-          deepLinkKey: viewModel.deepLinkKey,
-        )
+        displayState: viewModel.mainPageDisplayState,
+        deepLinkKey: viewModel.deepLinkKey,
+      ),
     };
   }
 

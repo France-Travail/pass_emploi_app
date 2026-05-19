@@ -311,7 +311,7 @@ class _Description extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (icon != null) ...[Icon(icon, color: AppColors.primary), SizedBox(width: Margins.spacing_s)],
-        Flexible(child: Text(label, style: TextStyles.textSBold)),
+        Flexible(child: Text(label, style: TextStyles.textSBold.copyWith(color: context.content))),
         // Extra margin is added to avoid the close button to be too close to the text
         SizedBox(width: 30),
       ],
@@ -428,7 +428,7 @@ class _FeedbackCaption extends StatelessWidget {
             alignment: Alignment.topLeft,
             child: SizedBox(
               width: maxWidthForLargeTextScale,
-              child: Text(responses[0], style: TextStyles.textSMedium(color: AppColors.grey800)),
+              child: Text(responses[0], style: TextStyles.textSMedium(color: context.grey800)),
             ),
           ),
           Align(
@@ -437,7 +437,7 @@ class _FeedbackCaption extends StatelessWidget {
               width: maxWidthForLargeTextScale,
               child: Align(
                 alignment: Alignment.topCenter,
-                child: Text(responses[1], style: TextStyles.textSMedium(color: AppColors.grey800)),
+                child: Text(responses[1], style: TextStyles.textSMedium(color: context.grey800)),
               ),
             ),
           ),
@@ -447,7 +447,7 @@ class _FeedbackCaption extends StatelessWidget {
               width: maxWidthForLargeTextScale,
               child: Align(
                 alignment: Alignment.topRight,
-                child: Text(responses[2], style: TextStyles.textSMedium(color: AppColors.grey800)),
+                child: Text(responses[2], style: TextStyles.textSMedium(color: context.grey800)),
               ),
             ),
           ),
@@ -468,9 +468,9 @@ class _CloseButton extends StatelessWidget {
       alignment: Alignment.topRight,
       child: Padding(
         padding: const EdgeInsets.all(Margins.spacing_xs),
-        child: IconButton(
-          icon: Icon(AppIcons.close_rounded),
-          tooltip: Strings.close,
+          child: IconButton(
+            icon: Icon(AppIcons.close_rounded, color: context.content),
+            tooltip: Strings.close,
           onPressed: onPressed,
         ),
       ),

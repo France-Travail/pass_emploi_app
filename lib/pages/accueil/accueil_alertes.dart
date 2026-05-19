@@ -83,7 +83,7 @@ class _SansAlerte extends StatelessWidget {
           Center(
             child: Text(
               Strings.accueilPasDalerteDescription,
-              style: TextStyles.textBaseMedium,
+              style: TextStyles.textBaseMedium.copyWith(color: context.content),
               textAlign: TextAlign.center,
             ),
           ),

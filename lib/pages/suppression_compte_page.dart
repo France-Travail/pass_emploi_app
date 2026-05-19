@@ -43,14 +43,15 @@ class SuppressionComptePage extends StatelessWidget {
 
   Widget _scaffold(BuildContext context, SuppressionCompteViewModel viewModel) {
     return Scaffold(
+      backgroundColor: context.bg,
       appBar: SecondaryAppBar(title: Strings.suppressionPageTitle),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: _DeleteAccountButton(),
-      body: _body(viewModel),
+      body: _body(context, viewModel),
     );
   }
 
-  Widget _body(SuppressionCompteViewModel viewModel) {
+  Widget _body(BuildContext context, SuppressionCompteViewModel viewModel) {
     return Stack(
       children: [
         SingleChildScrollView(
@@ -59,16 +60,16 @@ class SuppressionComptePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(child: Text(Strings.warning, style: TextStyles.textMBold)),
+                Center(child: Text(Strings.warning, style: TextStyles.textMBold.copyWith(color: context.content))),
                 SizedBox(height: Margins.spacing_base),
-                Text(Strings.warningInformationParagraph1, style: TextStyles.textSRegular()),
+                Text(Strings.warningInformationParagraph1, style: TextStyles.textSRegular(color: context.content)),
                 SizedBox(height: Margins.spacing_base),
                 _ListedItems(list: viewModel.warningSuppressionFeatures),
                 SizedBox(height: Margins.spacing_base),
-                Text(Strings.warningInformationParagraph2, style: TextStyles.textSRegular()),
+                Text(Strings.warningInformationParagraph2, style: TextStyles.textSRegular(color: context.content)),
                 SizedBox(height: Margins.spacing_base),
                 if (viewModel.isPoleEmploiLogin)
-                  Text(Strings.warningInformationPoleEmploi, style: TextStyles.textSRegular()),
+                  Text(Strings.warningInformationPoleEmploi, style: TextStyles.textSRegular(color: context.content)),
                 SizedBox(height: Margins.spacing_xx_huge),
               ],
             ),
@@ -76,7 +77,7 @@ class SuppressionComptePage extends StatelessWidget {
         ),
         if (viewModel.displayState == DisplayState.LOADING)
           Container(
-            color: Colors.white.withValues(alpha: 0.5),
+            color: context.bg.withValues(alpha: 0.5),
             child: Center(child: CircularProgressIndicator()),
           ),
       ],
@@ -97,7 +98,7 @@ class _ListedItems extends StatelessWidget {
         for (final item in list)
           Padding(
             padding: const EdgeInsets.only(bottom: Margins.spacing_xs),
-            child: Text("· $item", style: TextStyles.textSRegular()),
+            child: Text("· $item", style: TextStyles.textSRegular(color: context.content)),
           ),
       ],
     );
@@ -140,12 +141,12 @@ class _DeleteAccountSuccessDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       titlePadding: EdgeInsets.all(Margins.spacing_m),
-      backgroundColor: Colors.white,
+      backgroundColor: context.bg,
       title: Column(
         children: [
           Center(child: SizedBox(height: 100, width: 100, child: Image.asset(Drawables.success))),
           SizedBox(height: Margins.spacing_m),
-          Text(Strings.accountDeletionSuccess, style: TextStyles.textBaseBold, textAlign: TextAlign.center),
+          Text(Strings.accountDeletionSuccess, style: TextStyles.textBaseBold.copyWith(color: context.content), textAlign: TextAlign.center),
           SizedBox(height: Margins.spacing_m),
         ],
       ),

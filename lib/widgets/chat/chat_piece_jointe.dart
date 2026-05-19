@@ -69,7 +69,7 @@ class ChatPieceJointe extends StatelessWidget {
             crossAxisAlignment: params.sender.isJeune ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               if (params.content != null) ...[
-                SelectableText(params.content!, style: TextStyles.textSRegular()),
+                SelectableText(params.content!, style: TextStyles.textSRegular(color: context.content)),
                 SizedBox(height: Margins.spacing_s),
               ],
               _PieceJointeName(params.filename, params.sender),
@@ -97,7 +97,7 @@ class _PieceJointeName extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       filename,
-      style: TextStyles.textSBoldWithColor(sender.isJeune ? Colors.white : AppColors.contentColor),
+      style: TextStyles.textSBoldWithColor(sender.isJeune ? AppColors.contentOnPrimary : context.content),
     );
   }
 }
@@ -149,10 +149,10 @@ class _Button extends StatelessWidget {
       onPressed: () => switch (params) {
         final PieceJointeTypeIdParams params => viewModel.onDownloadTypeId(params.fileId, params.filename),
         final PieceJointeTypeUrlParams params => viewModel.onDownloadTypeUrl(
-            params.url,
-            params.fileId,
-            params.filename,
-          ),
+          params.url,
+          params.fileId,
+          params.filename,
+        ),
       },
       heightPadding: 2,
     );

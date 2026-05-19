@@ -4,6 +4,7 @@ import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/create_demarche_success_page.dart';
 import 'package:pass_emploi_app/presentation/user_action/postuler_confirmation_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -29,8 +30,8 @@ class PostulerConfirmationPage extends StatelessWidget {
       converter: (store) => PostulerConfirmationViewModel.create(store, offreId),
       builder: (context, viewModel) {
         return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: SecondaryAppBar(title: Strings.offrePostuleeConfirmationAppBar, backgroundColor: Colors.white),
+          backgroundColor: context.bg,
+          appBar: SecondaryAppBar(title: Strings.offrePostuleeConfirmationAppBar, backgroundColor: context.bg),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
             child: SingleChildScrollView(
@@ -44,20 +45,20 @@ class PostulerConfirmationPage extends StatelessWidget {
                   Text(
                     Strings.offreSuivieConfirmationPageTitle,
                     textAlign: TextAlign.center,
-                    style: TextStyles.textMBold,
+                    style: TextStyles.textMBold.copyWith(color: context.content),
                   ),
                   SizedBox(height: Margins.spacing_base),
                   Text(
                     Strings.offreSuivieConfirmationPageDescription,
                     textAlign: TextAlign.center,
-                    style: TextStyles.textBaseRegular,
+                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
                   ),
                   SizedBox(height: Margins.spacing_l),
                   if (viewModel.onCreateActionOrDemarche != null) ...[
                     Text(
                       viewModel.wishToCreateActionOrDemarche,
                       textAlign: TextAlign.center,
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                     SizedBox(height: Margins.spacing_base),
                     PrimaryActionButton(

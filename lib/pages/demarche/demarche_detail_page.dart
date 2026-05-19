@@ -40,41 +40,43 @@ class DemarcheDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Tracker(
       tracking: AnalyticsScreenNames.userActionDetails,
-      child: ConfettiWrapper(builder: (context, conffetiController) {
-        return StoreConnector<AppState, DemarcheDetailViewModel>(
-          onInit: (store) {
-            final monSuiviState = store.state.monSuiviState;
-            if (monSuiviState is! MonSuiviSuccessState) {
-              store.dispatch(MonSuiviRequestAction(MonSuiviPeriod.current));
-            }
-          },
-          converter: (store) => DemarcheDetailViewModel.create(store, id),
-          onDidChange: (oldViewModel, newViewModel) async {
-            if (newViewModel.updateDisplayState == DisplayState.FAILURE) {
-              showSnackBarWithSystemError(context, Strings.updateStatusError);
-              newViewModel.resetUpdateStatus();
-            }
-          },
-          onDispose: (store) => store.dispatch(UpdateDemarcheResetAction()),
-          builder: (context, viewModel) => Scaffold(
-            backgroundColor: Colors.white,
-            appBar: SecondaryAppBar(
-              title: Strings.demarcheDetails,
-              actions: [
-                _MoreButton(
-                  demarcheId: id,
-                )
-              ],
+      child: ConfettiWrapper(
+        builder: (context, conffetiController) {
+          return StoreConnector<AppState, DemarcheDetailViewModel>(
+            onInit: (store) {
+              final monSuiviState = store.state.monSuiviState;
+              if (monSuiviState is! MonSuiviSuccessState) {
+                store.dispatch(MonSuiviRequestAction(MonSuiviPeriod.current));
+              }
+            },
+            converter: (store) => DemarcheDetailViewModel.create(store, id),
+            onDidChange: (oldViewModel, newViewModel) async {
+              if (newViewModel.updateDisplayState == DisplayState.FAILURE) {
+                showSnackBarWithSystemError(context, Strings.updateStatusError);
+                newViewModel.resetUpdateStatus();
+              }
+            },
+            onDispose: (store) => store.dispatch(UpdateDemarcheResetAction()),
+            builder: (context, viewModel) => Scaffold(
+              backgroundColor: context.bg,
+              appBar: SecondaryAppBar(
+                title: Strings.demarcheDetails,
+                actions: [
+                  _MoreButton(
+                    demarcheId: id,
+                  ),
+                ],
+              ),
+              floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+              floatingActionButton: _ActionButton(viewModel, id, conffetiController),
+              body: _Body(
+                viewModel,
+              ),
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-            floatingActionButton: _ActionButton(viewModel, id, conffetiController),
-            body: _Body(
-              viewModel,
-            ),
-          ),
-          distinct: true,
-        );
-      }),
+            distinct: true,
+          );
+        },
+      ),
     );
   }
 }
@@ -203,7 +205,7 @@ class _Titre extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       label,
-      style: TextStyles.textMBold,
+      style: TextStyles.textMBold.copyWith(color: context.content),
     );
   }
 }
@@ -217,7 +219,7 @@ class _SousTitre extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       label,
-      style: TextStyles.textBaseRegular,
+      style: TextStyles.textBaseRegular.copyWith(color: context.content),
     );
   }
 }
@@ -251,11 +253,11 @@ class _AttributItem extends StatelessWidget {
         children: [
           Icon(
             AppIcons.place_outlined,
-            color: AppColors.grey700,
+            color: context.grey700,
             size: Dimens.icon_size_m,
           ),
           SizedBox(width: 12),
-          Expanded(child: Text(label, style: TextStyles.textBaseBold)),
+          Expanded(child: Text(label, style: TextStyles.textBaseBold.copyWith(color: context.content))),
         ],
       ),
     );
@@ -271,7 +273,7 @@ class _DetailDemarcheTitle extends StatelessWidget {
       children: [
         Container(color: AppColors.primaryLighten, height: 1),
         SizedBox(height: 20),
-        Text(Strings.demarcheDetails, style: TextStyles.textBaseBold),
+        Text(Strings.demarcheDetails, style: TextStyles.textBaseBold.copyWith(color: context.content)),
       ],
     );
   }
@@ -288,7 +290,7 @@ class _HistoriqueTitle extends StatelessWidget {
         SizedBox(
           height: 20,
         ),
-        Text(Strings.historiqueDemarche, style: TextStyles.textBaseBold),
+        Text(Strings.historiqueDemarche, style: TextStyles.textBaseBold.copyWith(color: context.content)),
       ],
     );
   }
@@ -304,9 +306,10 @@ class _Historique extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(left: 10),
       decoration: BoxDecoration(
-          border: Border(
-        left: BorderSide(color: AppColors.grey500, width: 1),
-      )),
+        border: Border(
+          left: BorderSide(color: context.grey500, width: 1),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
@@ -315,11 +318,11 @@ class _Historique extends StatelessWidget {
             Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(text: Strings.modifiedBy, style: TextStyles.textBaseRegular),
-                  TextSpan(text: viewModel.modificationDate, style: TextStyles.textBaseBold),
-                  if (viewModel.modifiedByAdvisor) TextSpan(text: Strings.par, style: TextStyles.textBaseRegular),
+                  TextSpan(text: Strings.modifiedBy, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
+                  TextSpan(text: viewModel.modificationDate, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+                  if (viewModel.modifiedByAdvisor) TextSpan(text: Strings.par, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                   if (viewModel.modifiedByAdvisor)
-                    TextSpan(text: Strings.votreConseiller, style: TextStyles.textBaseBold),
+                    TextSpan(text: Strings.votreConseiller, style: TextStyles.textBaseBold.copyWith(color: context.content)),
                 ],
               ),
             ),
@@ -327,11 +330,11 @@ class _Historique extends StatelessWidget {
             Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(text: Strings.createdBy, style: TextStyles.textBaseRegular),
-                  TextSpan(text: viewModel.creationDate, style: TextStyles.textBaseBold),
-                  if (viewModel.createdByAdvisor) TextSpan(text: Strings.par, style: TextStyles.textBaseRegular),
+                  TextSpan(text: Strings.createdBy, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
+                  TextSpan(text: viewModel.creationDate, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+                  if (viewModel.createdByAdvisor) TextSpan(text: Strings.par, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                   if (viewModel.createdByAdvisor)
-                    TextSpan(text: Strings.votreConseiller, style: TextStyles.textBaseBold),
+                    TextSpan(text: Strings.votreConseiller, style: TextStyles.textBaseBold.copyWith(color: context.content)),
                 ],
               ),
             ),
@@ -349,7 +352,7 @@ class _MoreButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: Icon(AppIcons.more_vert_rounded),
+      icon: Icon(AppIcons.more_vert_rounded, color: context.content),
       onPressed: () => DemarcheDetailsBottomSheet.show(
         context,
         demarcheId,

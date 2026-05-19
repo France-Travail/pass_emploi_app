@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 
@@ -37,7 +38,12 @@ class PassEmploiRadio<T> extends StatelessWidget {
                   child: IgnorePointer(child: Radio<T>(value: value)),
                 ),
                 Flexible(
-                  child: Semantics(child: Text(title, style: TextStyles.textBaseRegular)),
+                  child: Semantics(
+                    child: Text(
+                      title,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
+                    ),
+                  ),
                 ),
               ],
             ),

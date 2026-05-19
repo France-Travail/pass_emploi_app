@@ -108,7 +108,7 @@ class _DistanceButton extends StatelessWidget {
           color: AppColors.primary,
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, color: Colors.white),
+        child: Icon(icon, color: AppColors.contentOnPrimary),
       ),
     );
   }

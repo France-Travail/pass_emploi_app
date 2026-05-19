@@ -46,7 +46,7 @@ class ChatMessageContainer extends StatelessWidget {
                   padding: const EdgeInsets.only(top: Margins.spacing_xs),
                   child: Icon(captionSuffixIcon, color: captionColor),
                 ),
-              ]
+              ],
             ],
           ),
         ],
@@ -73,7 +73,7 @@ class _ChatBubble extends StatelessWidget {
         ),
         padding: EdgeInsets.all(isPj ? Margins.spacing_s : Margins.spacing_base),
         decoration: BoxDecoration(
-          color: isMyMessage ? AppColors.primary : Colors.white,
+          color: isMyMessage ? AppColors.primary : context.bg,
           borderRadius: BorderRadius.all(Radius.circular(16)),
         ),
         child: child,

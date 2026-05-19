@@ -100,18 +100,19 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
     _setInitIndexPage(viewModel);
     return _ModeDemoWrapper(
       child: Scaffold(
+        backgroundColor: context.bg,
         body: Container(
-          color: AppColors.grey100,
+          color: context.grey100,
           child: _content(_selectedIndex, viewModel),
         ),
         bottomNavigationBar: BottomNavigationBar(
           // Required to avoid having a disproportionate NavBar height
           selectedFontSize: FontSizes.extraSmall,
           unselectedFontSize: FontSizes.extraSmall,
-          backgroundColor: Colors.white,
+          backgroundColor: context.bg,
           type: BottomNavigationBarType.fixed,
           selectedItemColor: AppColors.primary,
-          unselectedItemColor: AppColors.grey800,
+          unselectedItemColor: context.grey800,
           showSelectedLabels: false,
           showUnselectedLabels: false,
           items: viewModel.tabs.map((e) => e.asMenuItem(viewModel)).toList(),
@@ -208,6 +209,7 @@ class _ModeDemoWrapper extends StatelessWidget {
     final isDemo = store.state.demoState;
     if (!isDemo) return child;
     return Scaffold(
+      backgroundColor: context.bg,
       appBar: ModeDemoAppBar(),
       body: PassEmploiMaterialApp(
         scaffoldMessengerKey: modeDemoSnackBarKey,
@@ -241,9 +243,9 @@ class _PopUpActualisationPe extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(Strings.actualisationPePopUpTitle, style: TextStyles.textMBold, textAlign: TextAlign.center),
+          Text(Strings.actualisationPePopUpTitle, style: TextStyles.textMBold.copyWith(color: context.content), textAlign: TextAlign.center),
           SizedBox(height: Margins.spacing_base),
-          Text(Strings.actualisationPePopUpSubtitle, style: TextStyles.textBaseRegular, textAlign: TextAlign.center),
+          Text(Strings.actualisationPePopUpSubtitle, style: TextStyles.textBaseRegular.copyWith(color: context.content), textAlign: TextAlign.center),
           SizedBox(height: Margins.spacing_l),
           PrimaryActionButton(
             label: Strings.actualisationPePopUpPrimaryButton,

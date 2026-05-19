@@ -175,7 +175,7 @@ class RendezvousDetailsViewModel extends Equatable {
       date: '',
       hourAndDuration: '',
       conseillerPresenceLabel: '',
-      conseillerPresenceColor: Colors.transparent,
+      conseillerPresenceColor: AppColors.transparent,
       isInscrit: false,
       isComplet: false,
       isAnnule: false,

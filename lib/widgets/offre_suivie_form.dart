@@ -44,7 +44,7 @@ class OffreSuivieForm extends StatelessWidget {
       distinct: true,
       builder: (context, viewModel) {
         return CardContainer(
-          backgroundColor: showPrimaryBackground ? AppColors.primary : Colors.white,
+          backgroundColor: showPrimaryBackground ? AppColors.primary : context.bg,
           child: AnimatedSwitcher(
             duration: AnimationDurations.fast,
             child: viewModel.showConfirmation
@@ -71,14 +71,14 @@ class _Confirmation extends StatelessWidget {
           children: [
             Icon(
               AppIcons.check_circle_outline_rounded,
-              color: showPrimaryBackground ? Colors.white : AppColors.contentColor,
+              color: showPrimaryBackground ? AppColors.contentOnPrimary : context.content,
             ),
             SizedBox(height: Margins.spacing_s),
             Text(
               Strings.merciPourVotreReponse,
               textAlign: TextAlign.center,
               style: TextStyles.textBaseRegular.copyWith(
-                color: showPrimaryBackground ? Colors.white : AppColors.contentColor,
+                color: showPrimaryBackground ? AppColors.contentOnPrimary : context.content,
               ),
             ),
             if (viewModel.onCreateActionOrDemarche != null) ...[
@@ -88,15 +88,15 @@ class _Confirmation extends StatelessWidget {
                   viewModel.confirmationMessage!,
                   textAlign: TextAlign.center,
                   style: TextStyles.textSRegular().copyWith(
-                    color: showPrimaryBackground ? Colors.white : AppColors.contentColor,
+                    color: showPrimaryBackground ? AppColors.contentOnPrimary : context.content,
                   ),
                 ),
               ],
               SizedBox(height: Margins.spacing_base),
               PrimaryActionButton(
                 label: viewModel.onCreateActionOrDemarcheLabel,
-                textColor: showPrimaryBackground ? AppColors.primary : Colors.white,
-                backgroundColor: showPrimaryBackground ? Colors.white : AppColors.primary,
+                textColor: showPrimaryBackground ? AppColors.primary : AppColors.contentOnPrimary,
+                backgroundColor: showPrimaryBackground ? context.bg : AppColors.primary,
                 onPressed: () {
                   viewModel.onCreateActionOrDemarche?.call();
                   viewModel.onHideForever();
@@ -127,7 +127,10 @@ class _Confirmation extends StatelessWidget {
           right: -Margins.spacing_base,
           child: IconButton(
             onPressed: () => viewModel.onHideForever(),
-            icon: Icon(AppIcons.close_rounded, color: showPrimaryBackground ? Colors.white : AppColors.contentColor),
+            icon: Icon(
+              AppIcons.close_rounded,
+              color: showPrimaryBackground ? AppColors.contentOnPrimary : context.content,
+            ),
           ),
         ),
       ],
@@ -150,7 +153,7 @@ class _Content extends StatelessWidget {
           Text(
             viewModel.dateConsultation!,
             style: TextStyles.textSRegular().copyWith(
-              color: showPrimaryBackground ? Colors.white : AppColors.contentColor,
+              color: showPrimaryBackground ? AppColors.contentOnPrimary : context.content,
             ),
           ),
           SizedBox(height: Margins.spacing_s),
@@ -161,7 +164,9 @@ class _Content extends StatelessWidget {
         ],
         Text(
           Strings.ouEnEtesVous,
-          style: TextStyles.textBaseBold.copyWith(color: showPrimaryBackground ? Colors.white : AppColors.contentColor),
+          style: TextStyles.textBaseBold.copyWith(
+            color: showPrimaryBackground ? AppColors.contentOnPrimary : context.content,
+          ),
         ),
         SizedBox(height: Margins.spacing_s),
         _Options(viewModel, trackingSource),
@@ -188,9 +193,9 @@ class _OffreLien extends StatelessWidget {
         child: Text(
           offreLien,
           style: TextStyles.textBaseMedium.copyWith(
-            color: AppColors.contentColor,
+            color: context.content,
             decoration: TextDecoration.underline,
-            decorationColor: AppColors.contentColor,
+            decorationColor: context.content,
           ),
         ),
       ),
@@ -219,7 +224,7 @@ class _OptionsState extends State<_Options> {
     return Container(
       padding: EdgeInsets.all(Margins.spacing_s),
       decoration: BoxDecoration(
-        color: AppColors.primaryLighten,
+        color: context.grey100,
         borderRadius: BorderRadius.circular(Dimens.radius_base),
       ),
       child: Column(

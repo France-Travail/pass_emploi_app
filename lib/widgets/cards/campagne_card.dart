@@ -33,13 +33,13 @@ class CampagneCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(titre, style: TextStyles.textBaseBold),
+                  Text(titre, style: TextStyles.textBaseBold.copyWith(color: context.content)),
                   SizedBox(height: Margins.spacing_s),
                   Row(
                     children: [
-                      Flexible(child: Text(description, style: TextStyles.textSRegular())),
+                      Flexible(child: Text(description, style: TextStyles.textSRegular(color: context.content))),
                       SizedBox(width: Margins.spacing_s),
-                      Icon(AppIcons.chevron_right_rounded),
+                      Icon(AppIcons.chevron_right_rounded, color: context.content),
                     ],
                   ),
                 ],

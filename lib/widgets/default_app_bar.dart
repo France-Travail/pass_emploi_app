@@ -21,52 +21,56 @@ class PrimarySliverAppbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverLayoutBuilder(builder: (context, constraints) {
-      return SliverAppBar(
-        surfaceTintColor: Colors.transparent,
-        expandedHeight: expandedHeight,
-        floating: false,
-        pinned: true,
-        automaticallyImplyLeading: false,
-        elevation: 0.2,
-        backgroundColor: Brand.isCej() ? AppColors.primary : AppColors.primaryDarkenStrong,
-        flexibleSpace: AutoFocusA11y(
-          child: ClipRRect(
-            child: FlexibleSpaceBar(
-              titlePadding: EdgeInsetsDirectional.only(
-                start: 0,
-                bottom: Margins.spacing_base,
-              ),
-              expandedTitleScale: FontSizes.xl / FontSizes.huge,
-              title: Padding(
-                padding: EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Tooltip(
-                        message: title,
-                        excludeFromSemantics: true,
-                        child: AutoFocusA11y(
-                          child: Text(
-                            title,
-                            style: TextStyles.primaryAppBar
-                                .copyWith(fontSize: A11yUtils.withTextScale(context) ? FontSizes.semi : FontSizes.huge)
-                                .copyWith(color: AppColors.grey100),
+    return SliverLayoutBuilder(
+      builder: (context, constraints) {
+        return SliverAppBar(
+          surfaceTintColor: AppColors.transparent,
+          expandedHeight: expandedHeight,
+          floating: false,
+          pinned: true,
+          automaticallyImplyLeading: false,
+          elevation: 0.2,
+          backgroundColor: Brand.isCej() ? AppColors.primary : AppColors.primaryDarkenStrong,
+          flexibleSpace: AutoFocusA11y(
+            child: ClipRRect(
+              child: FlexibleSpaceBar(
+                titlePadding: EdgeInsetsDirectional.only(
+                  start: 0,
+                  bottom: Margins.spacing_base,
+                ),
+                expandedTitleScale: FontSizes.xl / FontSizes.huge,
+                title: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Tooltip(
+                          message: title,
+                          excludeFromSemantics: true,
+                          child: AutoFocusA11y(
+                            child: Text(
+                              title,
+                              style: TextStyles.primaryAppBar
+                                  .copyWith(
+                                    fontSize: A11yUtils.withTextScale(context) ? FontSizes.semi : FontSizes.huge,
+                                  )
+                                  .copyWith(color: AppColors.contentOnPrimary),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    _CentreNotif(withNewNotifications),
-                    SizedBox(width: Margins.spacing_s),
-                    ProfileButton(isDarkColor: Brand.isCej()),
-                  ],
+                      _CentreNotif(withNewNotifications),
+                      SizedBox(width: Margins.spacing_s),
+                      ProfileButton(isDarkColor: Brand.isCej()),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }
 
@@ -84,7 +88,7 @@ class _CentreNotif extends StatelessWidget {
         TertiaryIconButton(
           icon: AppIcons.notifications_outlined,
           tooltip: Strings.notificationsCenterTooltip,
-          iconColor: Colors.white,
+          iconColor: AppColors.contentOnPrimary,
           onTap: () => Navigator.of(context).push(NotificationCenter.route()),
         ),
         if (withNewNotifications)
@@ -95,7 +99,7 @@ class _CentreNotif extends StatelessWidget {
               width: 8,
               height: 8,
               decoration: BoxDecoration(
-                color: Colors.red,
+                color: AppColors.warning,
                 shape: BoxShape.circle,
               ),
             ),
@@ -123,12 +127,12 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconColor = Brand.isCej() ? Colors.black : AppColors.grey100;
+    final iconColor = Brand.isCej() ? context.content : context.grey100;
     return AppBar(
       toolbarHeight: toolBarHeight,
       leading: canPop ? BackButton(color: iconColor) : null,
       scrolledUnderElevation: 0,
-      backgroundColor: Brand.isCej() ? AppColors.grey100 : AppColors.primary,
+      backgroundColor: Brand.isCej() ? context.grey100 : AppColors.primary,
       title: Semantics(
         header: true,
         focusable: withAutofocusA11y,
@@ -139,7 +143,9 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
             enabled: withAutofocusA11y,
             child: Text(
               title,
-              style: TextStyles.primaryAppBar.copyWith(color: Brand.isCej() ? AppColors.primary : AppColors.grey100),
+              style: TextStyles.primaryAppBar.copyWith(
+                color: Brand.isCej() ? AppColors.primary : context.grey100,
+              ),
               overflow: TextOverflow.fade,
             ),
           ),
@@ -179,14 +185,14 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       toolbarHeight: toolBarHeight,
       titleSpacing: 0,
-      iconTheme: IconThemeData(color: Colors.black),
+      iconTheme: IconThemeData(color: context.content),
       elevation: 0,
       centerTitle: false,
       scrolledUnderElevation: 0,
-      surfaceTintColor: Colors.transparent,
+      surfaceTintColor: AppColors.transparent,
       leading: leading,
       actions: actions,
-      backgroundColor: backgroundColor ?? Colors.white,
+      backgroundColor: backgroundColor ?? context.bg,
       title: Semantics(
         header: true,
         child: Tooltip(

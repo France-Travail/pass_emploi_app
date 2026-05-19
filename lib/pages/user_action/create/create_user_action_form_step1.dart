@@ -39,15 +39,17 @@ class CreateUserActionFormStep1 extends StatelessWidget {
                   children: [
                     UserActionStepperTexts(index: 1),
                     const SizedBox(height: Margins.spacing_s),
-                    Text(Strings.userActionTitleStep1,
-                        style: TextStyles.textMBold.copyWith(color: AppColors.contentColor)),
+                    Text(
+                      Strings.userActionTitleStep1,
+                      style: TextStyles.textMBold.copyWith(color: context.content),
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: Margins.spacing_m),
               Semantics(
                 sortKey: const OrdinalSortKey(1),
-                child: Text(Strings.userActionSubtitleStep1, style: TextStyles.textBaseBold),
+                child: Text(Strings.userActionSubtitleStep1, style: TextStyles.textBaseBold.copyWith(color: context.content)),
               ),
               const SizedBox(height: Margins.spacing_m),
               Semantics(
@@ -137,7 +139,7 @@ class ActionCategoryCard extends StatelessWidget {
               child: Text(
                 description,
                 textAlign: TextAlign.center,
-                style: TextStyles.textSRegular(color: AppColors.grey800),
+                style: TextStyles.textSRegular(color: context.grey800),
               ),
             ),
           ],

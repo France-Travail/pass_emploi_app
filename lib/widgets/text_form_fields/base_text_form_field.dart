@@ -87,7 +87,7 @@ class _BaseTextFieldState extends State<BaseTextField> {
       readOnly: widget.readOnly,
       decoration: InputDecoration(
         hintText: widget.hintWidget != null ? null : widget.hintText,
-        hintStyle: widget.hintWidget != null ? null : TextStyles.textSRegular(color: AppColors.grey800),
+        hintStyle: widget.hintWidget != null ? null : TextStyles.textSRegular(color: context.grey800),
         prefixIcon: widget.prefixIcon,
         suffixIcon: widget.suffixIcon,
         semanticCounterText: "",
@@ -95,8 +95,8 @@ class _BaseTextFieldState extends State<BaseTextField> {
         error: widget.errorText != null
             ? _Error(widget.errorText!)
             : _errorText != null
-                ? _Error(_errorText!)
-                : null,
+            ? _Error(_errorText!)
+            : null,
         border: widget.isInvalid ? _errorBorder() : _idleBorder(),
         focusedBorder: widget.isInvalid ? _errorBorder() : _focusedBorder(),
         errorBorder: _errorBorder(),
@@ -107,7 +107,7 @@ class _BaseTextFieldState extends State<BaseTextField> {
       textCapitalization: widget.textCapitalization,
       textInputAction: widget.textInputAction,
       onTapOutside: (event) => FocusScope.of(context).unfocus(),
-      style: TextStyles.textBaseRegular,
+      style: TextStyles.textBaseRegular.copyWith(color: context.content),
       onChanged: widget.onChanged,
       enabled: widget.enabled,
       minLines: widget.minLines,
@@ -147,7 +147,7 @@ class _BaseTextFieldState extends State<BaseTextField> {
   OutlineInputBorder _idleBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(Dimens.radius_base),
-      borderSide: BorderSide(color: AppColors.contentColor, width: 1.0),
+      borderSide: BorderSide(color: context.content, width: 1.0),
     );
   }
 

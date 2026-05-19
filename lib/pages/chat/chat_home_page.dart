@@ -25,7 +25,7 @@ class ChatHomePage extends StatelessWidget {
         initialIndex: _tabIndex(initialTab),
         length: 2,
         child: Scaffold(
-          backgroundColor: AppColors.grey100,
+          backgroundColor: context.grey100,
           appBar: PrimaryAppBar(title: Strings.menuChat, withAutofocusA11y: true),
           body: Builder(
             builder: (context) {

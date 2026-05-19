@@ -79,8 +79,8 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             SizedBox(height: Margins.spacing_base),
-            Text(Strings.iaFtStep2Title, style: TextStyles.textMBold),
-            Text(Strings.iaFtStep2Mandatory, style: TextStyles.textSRegular(color: AppColors.contentColor)),
+            Text(Strings.iaFtStep2Title, style: TextStyles.textMBold.copyWith(color: context.content)),
+            Text(Strings.iaFtStep2Mandatory, style: TextStyles.textSRegular(color: context.content)),
             const SizedBox(height: Margins.spacing_base),
             InformationBandeau(
               text: Strings.iaFtStep2Warning,
@@ -173,7 +173,7 @@ class _OrDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = AppColors.grey500;
+    final color = context.grey500;
     return Row(
       children: [
         Expanded(child: Divider(color: color, height: 1)),

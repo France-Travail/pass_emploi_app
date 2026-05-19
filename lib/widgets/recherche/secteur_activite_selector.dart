@@ -86,7 +86,7 @@ class _SecteurActiviteFieldState extends State<_SecteurActiviteField> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(Strings.secteurActiviteLabel, style: TextStyles.textBaseBold),
+          Text(Strings.secteurActiviteLabel, style: TextStyles.textBaseBold.copyWith(color: context.content)),
           SizedBox(height: Margins.spacing_base),
           // A11y - GestureDetector is not focusable by itself
           Focus(
@@ -99,12 +99,12 @@ class _SecteurActiviteFieldState extends State<_SecteurActiviteField> {
                 alignment: Alignment.centerLeft,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(Dimens.radius_base),
-                  border: Border.all(color: AppColors.contentColor),
+                  border: Border.all(color: context.content),
                 ),
                 child: Row(
                   children: [
                     Expanded(child: _SelectedSecteurActivite(widget.value?.label ?? Strings.secteurActiviteAll)),
-                    Icon(AppIcons.chevron_down_rounded, color: AppColors.grey800),
+                    Icon(AppIcons.chevron_down_rounded, color: context.grey800),
                     SizedBox(width: Margins.spacing_s),
                   ],
                 ),

@@ -1,5 +1,6 @@
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -132,7 +133,7 @@ class _Loading extends StatelessWidget {
 class _PieceJointeWarning extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Text(Strings.chatPieceJointeBottomSheetSubtitle, style: TextStyles.textSRegular());
+    return Text(Strings.chatPieceJointeBottomSheetSubtitle, style: TextStyles.textSRegular(color: context.content));
   }
 }
 
@@ -296,10 +297,10 @@ class _PieceJointeListTile extends StatelessWidget {
     return Semantics(
       button: true,
       child: ListTile(
-        leading: Icon(icon),
+        leading: Icon(icon, color: context.content),
         contentPadding: EdgeInsets.zero,
         visualDensity: VisualDensity(vertical: -2),
-        title: Text(text, style: TextStyles.textBaseBold),
+        title: Text(text, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         onTap: onPressed,
       ),
     );

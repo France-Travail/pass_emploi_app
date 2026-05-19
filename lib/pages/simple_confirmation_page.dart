@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -21,8 +22,8 @@ class SimpleConfirmationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: SecondaryAppBar(title: title, backgroundColor: Colors.white),
+      backgroundColor: context.bg,
+      appBar: SecondaryAppBar(title: title, backgroundColor: context.bg),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
         child: SingleChildScrollView(
@@ -36,13 +37,13 @@ class SimpleConfirmationPage extends StatelessWidget {
               Text(
                 Strings.offreSuivieConfirmationPageTitle,
                 textAlign: TextAlign.center,
-                style: TextStyles.textMBold,
+                style: TextStyles.textMBold.copyWith(color: context.content),
               ),
               SizedBox(height: Margins.spacing_base),
               Text(
                 Strings.offreSuivieConfirmationPageDescription,
                 textAlign: TextAlign.center,
-                style: TextStyles.textBaseRegular,
+                style: TextStyles.textBaseRegular.copyWith(color: context.content),
               ),
               SizedBox(height: Margins.spacing_l),
               PrimaryActionButton(label: Strings.understood, onPressed: () => Navigator.pop(context)),

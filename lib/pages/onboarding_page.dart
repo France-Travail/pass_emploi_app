@@ -33,7 +33,7 @@ class OnboardingPage extends StatelessWidget {
         converter: (store) => OnboardingViewModel.create(store),
         builder: (context, viewModel) {
           return Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: context.bg,
             appBar: SecondaryAppBar(title: ""),
             body: SingleChildScrollView(
               child: Padding(
@@ -46,10 +46,10 @@ class OnboardingPage extends StatelessWidget {
                         OnboardingStepper(
                           completedSteps: viewModel.completedSteps,
                           totalSteps: viewModel.totalSteps,
-                          textColor: AppColors.contentColor,
+                          textColor: context.content,
                         ),
                         const SizedBox(width: Margins.spacing_base),
-                        Expanded(child: Text(Strings.onboardingTitle, style: TextStyles.textMBold)),
+                        Expanded(child: Text(Strings.onboardingTitle, style: TextStyles.textMBold.copyWith(color: context.content))),
                       ],
                     ),
                     SizedBox(height: Margins.spacing_m),
@@ -184,7 +184,7 @@ class _StepTile extends StatelessWidget {
             Icon(Icons.check_circle, color: AppColors.success),
             const SizedBox(width: Margins.spacing_base),
             Expanded(
-              child: Text(title, style: TextStyles.textBaseBold.copyWith(color: AppColors.grey800)),
+              child: Text(title, style: TextStyles.textBaseBold.copyWith(color: context.grey800)),
             ),
           ],
         ),
@@ -194,7 +194,7 @@ class _StepTile extends StatelessWidget {
       onTap: onTap,
       child: Row(
         children: [
-          Expanded(child: Text(title, style: TextStyles.textBaseBold)),
+          Expanded(child: Text(title, style: TextStyles.textBaseBold.copyWith(color: context.content))),
           const SizedBox(width: Margins.spacing_base),
           Icon(Icons.chevron_right_rounded, color: AppColors.primary),
         ],
@@ -221,8 +221,8 @@ class _SkipOnboardingDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(Strings.skipOnboarding, style: TextStyles.textMBold),
-      content: Text(Strings.skipOnboardingContent, style: TextStyles.textBaseRegular),
+      title: Text(Strings.skipOnboarding, style: TextStyles.textMBold.copyWith(color: context.content)),
+      content: Text(Strings.skipOnboardingContent, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
       actions: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

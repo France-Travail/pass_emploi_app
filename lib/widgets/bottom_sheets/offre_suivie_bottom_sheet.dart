@@ -26,9 +26,9 @@ class OffreSuivieBottomSheet extends StatelessWidget {
   }
 
   void trackEvent(OffreSuiviTrackingOption event) => PassEmploiMatomoTracker.instance.trackCandidature(
-        source: OffreSuiviTrackingSource.bottomSheet,
-        event: event,
-      );
+    source: OffreSuiviTrackingSource.bottomSheet,
+    event: event,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +93,7 @@ class _Option extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const color = AppColors.contentColor;
+    final color = context.content;
     return Semantics(
       button: true,
       child: ListTile(

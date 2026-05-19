@@ -17,12 +17,12 @@ class DeletedMessage extends StatelessWidget {
         margin: EdgeInsets.symmetric(vertical: Margins.spacing_s),
         padding: EdgeInsets.symmetric(vertical: Margins.spacing_s, horizontal: Margins.spacing_base),
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.grey500),
+          border: Border.all(color: context.grey500),
           borderRadius: BorderRadius.circular(Dimens.radius_base),
         ),
         child: Text(
           item.content,
-          style: TextStyles.textSRegular(color: AppColors.grey800),
+          style: TextStyles.textSRegular(color: context.grey800),
         ),
       ),
     );

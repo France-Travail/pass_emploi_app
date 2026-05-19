@@ -33,7 +33,8 @@ class PartageActivitePage extends StatelessWidget {
 
   Widget _scaffold(BuildContext context, PartageActivitePageViewModel viewModel) {
     return Scaffold(
-      appBar: SecondaryAppBar(title: Strings.activityShareLabel),
+      backgroundColor: context.grey100,
+      appBar: SecondaryAppBar(title: Strings.activityShareLabel, backgroundColor: context.bg),
       body: _body(viewModel),
     );
   }
@@ -42,31 +43,33 @@ class PartageActivitePage extends StatelessWidget {
     return switch (viewModel.displayState) {
       DisplayState.LOADING => Center(child: CircularProgressIndicator()),
       DisplayState.CONTENT => _content(viewModel),
-      _ => Retry(Strings.miscellaneousErrorRetry, () => viewModel.onRetry())
+      _ => Retry(Strings.miscellaneousErrorRetry, () => viewModel.onRetry()),
     };
   }
 
   Widget _content(PartageActivitePageViewModel viewModel) {
-    return Stack(children: [
-      SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(Margins.spacing_m),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: Margins.spacing_base),
-              _PartageDescription(),
-              SizedBox(height: Margins.spacing_base),
-              _PartageFavoris(
-                partageFavorisEnabled: viewModel.shareFavoris,
-                onPartageFavorisValueChange: viewModel.onPartageFavorisTap,
-                updatedState: viewModel.updateState,
-              ),
-            ],
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(Margins.spacing_m),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: Margins.spacing_base),
+                _PartageDescription(),
+                SizedBox(height: Margins.spacing_base),
+                _PartageFavoris(
+                  partageFavorisEnabled: viewModel.shareFavoris,
+                  onPartageFavorisValueChange: viewModel.onPartageFavorisTap,
+                  updatedState: viewModel.updateState,
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    ]);
+      ],
+    );
   }
 }
 
@@ -75,7 +78,7 @@ class _PartageDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(Margins.spacing_base),
-      child: Text(Strings.activityShareDescription, style: TextStyles.textBaseRegular),
+      child: Text(Strings.activityShareDescription, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
     );
   }
 }
@@ -122,7 +125,7 @@ class _PartageFavorisState extends State<_PartageFavoris> {
       children: [
         DecoratedBox(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.bg,
             borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
           child: Padding(
@@ -134,7 +137,7 @@ class _PartageFavorisState extends State<_PartageFavoris> {
                     child: Text(
                       Strings.shareFavoriteLabel,
                       style: TextStyles.textBaseRegularWithColor(
-                        widget.updatedState == DisplayState.LOADING ? AppColors.grey500 : AppColors.contentColor,
+                        widget.updatedState == DisplayState.LOADING ? context.grey500 : context.content,
                       ),
                     ),
                   ),
@@ -151,13 +154,14 @@ class _PartageFavorisState extends State<_PartageFavoris> {
                   child: Text(
                     _partageFavorisEnabled ? Strings.yes : Strings.no,
                     style: TextStyles.textBaseRegularWithColor(
-                        widget.updatedState == DisplayState.LOADING ? AppColors.grey500 : AppColors.contentColor),
+                      widget.updatedState == DisplayState.LOADING ? context.grey500 : context.content,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-        )
+        ),
       ],
     );
   }

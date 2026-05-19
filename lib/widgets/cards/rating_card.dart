@@ -26,14 +26,14 @@ class RatingCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(emoji, style: TextStyle(fontSize: 32)),
+                Text(emoji, style: TextStyle(fontSize: 32, color: context.content)),
                 SizedBox(width: Margins.spacing_base),
                 Expanded(
-                  child: Text(description, style: TextStyles.textSRegular()),
+                  child: Text(description, style: TextStyles.textSRegular(color: context.content)),
                 ),
                 Icon(
                   AppIcons.chevron_right_rounded,
-                  color: AppColors.contentColor,
+                  color: context.content,
                 ),
               ],
             ),

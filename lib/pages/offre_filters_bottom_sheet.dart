@@ -3,6 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/models/offre_type.dart';
 import 'package:pass_emploi_app/presentation/offre_filters_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -56,7 +57,7 @@ class _OffreFiltersBottomSheetState extends State<OffreFiltersBottomSheet> {
     return BottomSheetWrapper(
       title: Strings.filterList,
       body: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: context.bg,
         body: _Body(
           onFilterSelected: _onFilterSelected,
           offreFilter: _selectedFilter,
@@ -112,7 +113,7 @@ class _Body extends StatelessWidget {
 class _OffreFilterSubtitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Text(Strings.filterByType, style: TextStyles.textBaseBold);
+    return Text(Strings.filterByType, style: TextStyles.textBaseBold.copyWith(color: context.content));
   }
 }
 

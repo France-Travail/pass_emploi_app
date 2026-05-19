@@ -51,7 +51,7 @@ class _RechercheCriteresFullScreenState<Result> extends State<RechercheCriteresF
       builder: (context, viewModel) {
         return SizedBox.expand(
           child: ColoredBox(
-            color: Colors.white,
+            color: context.bg,
             child: SingleChildScrollView(
               clipBehavior: Clip.none,
               child: Padding(
@@ -131,7 +131,7 @@ class _RecentSearches<Result> extends StatelessWidget {
             children: [
               Text(
                 Strings.rechercheRecentesTitle,
-                style: const TextStyle(fontWeight: FontWeight.w600),
+                style: TextStyle(fontWeight: FontWeight.w600, color: context.content),
               ),
               const SizedBox(height: Margins.spacing_s),
               for (final item in viewModel.items) ...[
@@ -141,7 +141,7 @@ class _RecentSearches<Result> extends StatelessWidget {
                   onTap: () => viewModel.onTapRecentSearch(item.alerte),
                 ),
                 Divider(
-                  color: AppColors.grey500,
+                  color: context.grey500,
                   height: 1,
                 ),
               ],
@@ -163,7 +163,7 @@ class _RechercheRecenteTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: AppColors.transparent,
       child: InkWell(
         onTap: onTap,
         child: Padding(
@@ -172,14 +172,14 @@ class _RechercheRecenteTile extends StatelessWidget {
             children: [
               Icon(
                 Icons.schedule_outlined,
-                color: AppColors.grey800,
+                color: context.grey800,
                 size: Dimens.icon_size_m,
               ),
               SizedBox(width: Margins.spacing_base),
               Expanded(
                 child: Text(
                   text,
-                  style: TextStyles.textBaseRegular,
+                  style: TextStyles.textBaseRegular.copyWith(color: context.content),
                 ),
               ),
             ],

@@ -27,7 +27,7 @@ class CriteresRechercheExpansionTile extends StatelessWidget {
     const mainAnimationCurve = Curves.ease;
     return AnimatedContainer(
       decoration: BoxDecoration(
-        color: initiallyExpanded ? Colors.white : AppColors.primary,
+        color: initiallyExpanded ? context.bg : AppColors.primary,
         borderRadius: BorderRadius.circular(Dimens.radius_base),
         boxShadow: [Shadows.radius_base],
       ),
@@ -98,7 +98,7 @@ class _CriteresRechercheBandeauState extends State<_CriteresRechercheBandeau> {
                 padding: EdgeInsets.all(Margins.spacing_base),
                 child: Row(
                   children: [
-                    Icon(Icons.search, color: widget.isOpen ? AppColors.primary : Colors.white),
+                    Icon(Icons.search, color: widget.isOpen ? AppColors.primary : AppColors.contentOnPrimary),
                     SizedBox(width: Margins.spacing_base),
                     Expanded(
                       child: Text(
@@ -109,7 +109,7 @@ class _CriteresRechercheBandeauState extends State<_CriteresRechercheBandeau> {
                           other: Strings.rechercheCriteresActifsPlural(widget.criteresActifsCount),
                         ),
                         style: TextStyles.textBaseMediumBold(
-                          color: widget.isOpen ? AppColors.contentColor : Colors.white,
+                          color: widget.isOpen ? context.content : AppColors.contentOnPrimary,
                         ),
                       ),
                     ),

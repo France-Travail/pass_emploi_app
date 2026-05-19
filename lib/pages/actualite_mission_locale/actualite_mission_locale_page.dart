@@ -31,7 +31,7 @@ class ActualiteMissionLocalePage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.actualiteMissionLocale,
       child: Container(
-        color: AppColors.grey100,
+        color: context.grey100,
         child: ConnectivityContainer(
           child: StoreConnector<AppState, ActualiteMissionLocaleViewModel>(
             onInit: (store) {
@@ -97,7 +97,7 @@ class _Empty extends StatelessWidget {
         illustration: Container(
           padding: EdgeInsets.all(Margins.spacing_m),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.bg,
             shape: BoxShape.circle,
           ),
           child: SvgPicture.asset(Drawables.megaphone),
@@ -139,7 +139,7 @@ class _ActualiteItem extends StatelessWidget {
         SizedBox(height: Margins.spacing_s),
         Align(
           alignment: Alignment.centerLeft,
-          child: Text(actualite.heureEtNomConseiller, style: TextStyles.textXsMedium()),
+          child: Text(actualite.heureEtNomConseiller, style: TextStyles.textXsMedium(color: context.content)),
         ),
       ],
     );
@@ -194,8 +194,8 @@ class _ExternalUrlAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      surfaceTintColor: Colors.white,
-      backgroundColor: Colors.white,
+      surfaceTintColor: context.bg,
+      backgroundColor: context.bg,
       title: Stack(
         children: [
           Column(
@@ -203,7 +203,7 @@ class _ExternalUrlAlertDialog extends StatelessWidget {
               SizedBox(height: Margins.spacing_m),
               SizedBox.square(dimension: 120, child: Illustration.blue(AppIcons.open_in_new_rounded)),
               SizedBox(height: Margins.spacing_m),
-              Text(Strings.externalUrlAlertTitle, style: TextStyles.textBaseBold, textAlign: TextAlign.center),
+              Text(Strings.externalUrlAlertTitle, style: TextStyles.textBaseBold.copyWith(color: context.content), textAlign: TextAlign.center),
               SizedBox(height: Margins.spacing_m),
             ],
           ),
@@ -252,12 +252,12 @@ class _ActualiteItemSupprime extends StatelessWidget {
           margin: EdgeInsets.symmetric(vertical: Margins.spacing_base),
           padding: EdgeInsets.symmetric(vertical: Margins.spacing_base, horizontal: Margins.spacing_base),
           decoration: BoxDecoration(
-            border: Border.all(color: AppColors.grey500),
+            border: Border.all(color: context.grey500),
             borderRadius: BorderRadius.circular(Dimens.radius_base),
           ),
           child: Text(
             Strings.actualiteMissionLocaleSupprime,
-            style: TextStyles.textSRegular(color: AppColors.grey800),
+            style: TextStyles.textSRegular(color: context.grey800),
           ),
         ),
       ],

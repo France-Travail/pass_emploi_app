@@ -172,7 +172,7 @@ class _Comments extends StatelessWidget {
     return Column(
       children: comments.map((comment) {
         if (comment is CommentTextItem) {
-          return Text(comment.label, style: TextStyles.textBaseBold);
+          return Text(comment.label, style: TextStyles.textBaseBold.copyWith(color: context.content));
         }
         return CustomRadioGroup<String>(
           title: comment.label,
@@ -204,7 +204,7 @@ class _SelectLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: Margins.spacing_l),
-      child: Text(_label, style: TextStyles.textSRegular()),
+      child: Text(_label, style: TextStyles.textSRegular(color: context.content)),
     );
   }
 }
@@ -229,7 +229,7 @@ class _Section extends StatelessWidget {
                   style: TextStyle(color: AppColors.primary, fontSize: FontSizes.huge, fontWeight: FontWeight.w900),
                 ),
                 WidgetSpan(child: SizedBox(width: Margins.spacing_base)),
-                TextSpan(text: _section, style: TextStyles.textMBold),
+                TextSpan(text: _section, style: TextStyles.textMBold.copyWith(color: context.content)),
               ],
             ),
           ),

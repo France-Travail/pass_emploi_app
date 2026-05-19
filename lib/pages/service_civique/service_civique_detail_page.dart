@@ -70,7 +70,7 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
   }
 
   Scaffold _scaffold(Widget body, BuildContext context, String? url, String? title) {
-    const backgroundColor = Colors.white;
+    final backgroundColor = context.bg;
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: SecondaryAppBar(
@@ -127,23 +127,23 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
               children: [
                 if (viewModel.displayState == DisplayState.EMPTY)
                   Padding(padding: const EdgeInsets.only(bottom: 20), child: FavoriNotFoundError()),
-                Text(domaine, style: TextStyles.textBaseRegular),
+                Text(domaine, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                 _spacer(Margins.spacing_s),
                 Padding(
                   padding: const EdgeInsets.only(bottom: Margins.spacing_s),
-                  child: Text(titre, style: TextStyles.textMBold),
+                  child: Text(titre, style: TextStyles.textMBold.copyWith(color: context.content)),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: Margins.spacing_m),
-                  child: Text(organisation, style: TextStyles.textBaseRegular),
+                  child: Text(organisation, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                 ),
                 if (detail != null) _tags(detail),
                 if (viewModel.dateDerniereConsultation != null) ...[
                   CardComplement.dateDerniereConsultation(viewModel.dateDerniereConsultation!),
                   SizedBox(height: Margins.spacing_base),
                 ],
-                if (detail != null) _description(detail),
-                if (detail != null) _organisation(detail),
+                if (detail != null) _description(context, detail),
+                if (detail != null) _organisation(context, detail),
                 if (detail != null) _spacer(60),
                 if (viewModel.displayState == DisplayState.EMPTY)
                   Align(alignment: Alignment.bottomCenter, child: _incompleteDataFooter()),
@@ -186,7 +186,7 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _description(ServiceCiviqueDetail detail) {
+  Widget _description(BuildContext context, ServiceCiviqueDetail detail) {
     final String missionFullAdresse = detail.adresseMission != null && detail.codePostal != null
         ? "${detail.adresseMission!}, ${detail.codePostal!} ${detail.ville}"
         : detail.ville;
@@ -196,36 +196,36 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
       children: [
         TitleSection(label: Strings.serviceCiviqueMissionTitle),
         _spacer(Margins.spacing_m),
-        Text(missionFullAdresse, style: TextStyles.textBaseRegular),
+        Text(missionFullAdresse, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
         if (detail.description != null) _spacer(Margins.spacing_s),
-        if (detail.description != null) Text(detail.description!, style: TextStyles.textBaseRegular),
+        if (detail.description != null) Text(detail.description!, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
         _spacer(Margins.spacing_m),
       ],
     );
   }
 
-  Widget _organisation(ServiceCiviqueDetail detail) {
+  Widget _organisation(BuildContext context, ServiceCiviqueDetail detail) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         TitleSection(label: Strings.serviceCiviqueOrganisationTitle),
         _spacer(Margins.spacing_m),
-        Text(detail.organisation, style: TextStyles.textBaseBold),
+        Text(detail.organisation, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         if (detail.urlOrganisation != null) _spacer(Margins.spacing_s),
         if (detail.urlOrganisation != null) ExternalLink(label: detail.urlOrganisation!, url: detail.urlOrganisation!),
         if (detail.adresseOrganisation != null) _spacer(Margins.spacing_s),
-        if (detail.adresseOrganisation != null) Text(detail.adresseOrganisation!, style: TextStyles.textBaseRegular),
+        if (detail.adresseOrganisation != null) Text(detail.adresseOrganisation!, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
         if (detail.descriptionOrganisation != null) _spacer(Margins.spacing_s),
         if (detail.descriptionOrganisation != null)
-          Text(detail.descriptionOrganisation!, style: TextStyles.textBaseRegular),
+          Text(detail.descriptionOrganisation!, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
       ],
     );
   }
 
   Widget _footer(BuildContext context, String url, bool shouldShowCvBottomSheet) {
     return Container(
-      color: Colors.white,
+      color: context.bg,
       padding: const EdgeInsets.all(Margins.spacing_base),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

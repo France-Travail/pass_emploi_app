@@ -98,7 +98,7 @@ class _Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: context.grey100,
       appBar: _ScrollAwareAppBar(),
       body: ConnectivityContainer(child: body),
       floatingActionButton: Visibility(
@@ -196,7 +196,7 @@ class _Content extends StatelessWidget {
             child: InfoCard(
               message: viewModel.monSuiviDemarchesKoMessage!,
               backgroundColor: AppColors.disabled,
-              textColor: Colors.white,
+              textColor: AppColors.contentOnPrimary,
             ),
           ),
         ],
@@ -250,14 +250,18 @@ class _WarningCardState extends State<_WarningCard> {
                 children: [
                   SizedBox(width: Margins.spacing_base),
                   IconButton(
-                    icon: Icon(AppIcons.highlight_off, color: Colors.white, semanticLabel: Strings.closeDialog),
+                    icon: Icon(
+                      AppIcons.highlight_off,
+                      color: AppColors.contentOnPrimary,
+                      semanticLabel: Strings.closeDialog,
+                    ),
                     onPressed: () => setState(() => _visible = false),
                   ),
                   SizedBox(width: Margins.spacing_s),
                   Flexible(
                     child: Semantics(
                       focusable: true,
-                      child: Text(widget.label, style: TextStyles.textSMedium(color: Colors.white)),
+                      child: Text(widget.label, style: TextStyles.textSMedium(color: AppColors.contentOnPrimary)),
                     ),
                   ),
                   SizedBox(width: Margins.spacing_base),
@@ -267,7 +271,7 @@ class _WarningCardState extends State<_WarningCard> {
                 alignment: Alignment.centerRight,
                 child: OutlinedButton(
                   onPressed: widget.onPressed,
-                  child: Text(Strings.retry, style: TextStyles.textSBoldWithColor(Colors.white)),
+                  child: Text(Strings.retry, style: TextStyles.textSBoldWithColor(AppColors.contentOnPrimary)),
                 ),
               ),
             ],
@@ -294,10 +298,10 @@ class _UserActionsPendingCard extends StatelessWidget {
         backgroundColor: AppColors.disabled,
         child: Row(
           children: [
-            Icon(AppIcons.error_rounded, color: Colors.white),
+            Icon(AppIcons.error_rounded, color: AppColors.contentOnPrimary),
             SizedBox(width: Margins.spacing_s),
             Flexible(
-              child: Text(message, style: TextStyles.textXsRegular(color: Colors.white)),
+              child: Text(message, style: TextStyles.textXsRegular(color: AppColors.contentOnPrimary)),
             ),
           ],
         ),
@@ -432,10 +436,10 @@ class _SemaineSectionItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (boldTitle != null) ...[
-                Text(boldTitle!, style: TextStyles.textMBold),
+                Text(boldTitle!, style: TextStyles.textMBold.copyWith(color: context.content)),
                 const SizedBox(height: Margins.spacing_xs),
               ],
-              Text(interval, style: TextStyles.textXsRegular(color: AppColors.grey800)),
+              Text(interval, style: TextStyles.textXsRegular(color: context.grey800)),
             ],
           ),
         ),
@@ -491,7 +495,13 @@ class _EmptyDayItem extends StatefulWidget {
 }
 
 class _EmptyDayItemState extends State<_EmptyDayItem> {
-  Color _color = AppColors.grey800;
+  late Color _color;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _color = context.grey800;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -544,16 +554,16 @@ class _Day extends StatelessWidget {
 
     return ColoredBox(
       key: addKey ? _StateProvider.maybeOf(context)?.randomDayKey : null,
-      color: AppColors.grey100,
+      color: context.grey100,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             day.shortened,
-            style: TextStyles.textXsMedium(),
+            style: TextStyles.textXsMedium(color: context.content),
             semanticsLabel: day.shortened.toFullDayForScreenReaders(),
           ),
-          Text(day.number, style: TextStyles.textBaseBold),
+          Text(day.number, style: TextStyles.textBaseBold.copyWith(color: context.content)),
           Semantics(label: day.month),
         ],
       ),
@@ -678,7 +688,11 @@ class _Pagination extends StatelessWidget {
 class _PaginationLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Shimmer.fromColors(baseColor: AppColors.grey100, highlightColor: Colors.white, child: _MonSuiviItemLoader());
+    return Shimmer.fromColors(
+      baseColor: context.grey100,
+      highlightColor: AppColors.contentOnPrimary,
+      child: _MonSuiviItemLoader(),
+    );
   }
 }
 

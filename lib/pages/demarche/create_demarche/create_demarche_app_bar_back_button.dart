@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_display_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 
 class AppBarBackButton extends StatelessWidget {
   const AppBarBackButton(this.viewModel);
@@ -14,8 +15,8 @@ class AppBarBackButton extends StatelessWidget {
         _ => () => viewModel.onNavigateBackward(),
       },
       icon: switch (viewModel.displayState) {
-        CreateDemarcheStep1() => Icon(Icons.close_rounded),
-        _ => Icon(Icons.arrow_back_rounded),
+        CreateDemarcheStep1() => Icon(Icons.close_rounded, color: context.content),
+        _ => Icon(Icons.arrow_back_rounded, color: context.content),
       },
     );
   }

@@ -35,7 +35,7 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
 
   Widget _build(BuildContext context, SuppressionCompteViewModel viewModel) {
     return Dialog(
-      surfaceTintColor: Colors.transparent,
+      surfaceTintColor: AppColors.transparent,
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(Margins.spacing_base),
@@ -55,7 +55,7 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
                 excludeSemantics: true,
                 child: Text(
                   Strings.lastWarningBeforeSuppression,
-                  style: TextStyles.textBaseBold,
+                  style: TextStyles.textBaseBold.copyWith(color: context.content),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -145,7 +145,7 @@ class _DeleteAlertCrossButton extends StatelessWidget {
           padding: const EdgeInsets.all(Margins.spacing_s),
           child: Icon(
             AppIcons.close_rounded,
-            color: AppColors.contentColor,
+            color: context.content,
           ),
         ),
       ),

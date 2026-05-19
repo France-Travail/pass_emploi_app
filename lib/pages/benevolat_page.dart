@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/benevolat_assets.dart';
 import 'package:pass_emploi_app/ui/external_links.dart';
@@ -21,6 +22,7 @@ class BenevolatPage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.benevolat,
       child: Scaffold(
+        backgroundColor: context.bg,
         appBar: SecondaryAppBar(title: BenevolatAssets.title),
         floatingActionButton: _Button(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -36,18 +38,19 @@ class BenevolatPage extends StatelessWidget {
                     TextSpan(
                       text: BenevolatAssets.card1Part1,
                       semanticsLabel: BenevolatAssets.card1Part1.removeIconsForScreenReaders(),
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                     TextSpan(
                       text: BenevolatAssets.link,
                       style: TextStyles.textBaseRegular.copyWith(
+                        color: context.content,
                         decoration: TextDecoration.underline,
                       ),
                     ),
                     TextSpan(
                       text: BenevolatAssets.card1Part2,
                       semanticsLabel: BenevolatAssets.card1Part2.removeIconsForScreenReaders(),
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                   ],
                 ),
@@ -61,18 +64,19 @@ class BenevolatPage extends StatelessWidget {
                     TextSpan(
                       text: BenevolatAssets.card2Part1,
                       semanticsLabel: BenevolatAssets.card2Part1.removeIconsForScreenReaders(),
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                     TextSpan(
                       text: BenevolatAssets.link,
                       style: TextStyles.textBaseRegular.copyWith(
+                        color: context.content,
                         decoration: TextDecoration.underline,
                       ),
                     ),
                     TextSpan(
                       text: BenevolatAssets.card2Part2,
                       semanticsLabel: BenevolatAssets.card2Part2.removeIconsForScreenReaders(),
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                   ],
                 ),
@@ -84,12 +88,13 @@ class BenevolatPage extends StatelessWidget {
                     TextSpan(
                       text: BenevolatAssets.card3Part1,
                       semanticsLabel: BenevolatAssets.card3Part1.removeIconsForScreenReaders(),
-                      style: TextStyles.textBaseRegular,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
                     ),
                     TextSpan(
                       text: BenevolatAssets.card3Part2,
                       semanticsLabel: BenevolatAssets.card3Part2.removeIconsForScreenReaders(),
                       style: TextStyles.textBaseMediumBold().copyWith(
+                        color: context.content,
                         decoration: TextDecoration.underline,
                       ),
                     ),
@@ -137,9 +142,9 @@ class _InformationCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: Margins.spacing_m),
-                Padding(
+                  Padding(
                   padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-                  child: Text(title, style: TextStyles.textBaseBold),
+                  child: Text(title, style: TextStyles.textBaseBold.copyWith(color: context.content)),
                 ),
                 SizedBox(height: Margins.spacing_s),
                 Padding(
@@ -166,7 +171,7 @@ class _VerbatimCard extends StatelessWidget {
           onTap: () => _launchExternalRedirect(),
           child: CardContainer(
             padding: EdgeInsets.zero,
-            backgroundColor: Color(0xFF0A0E93),
+            backgroundColor: AppColors.primaryDarkenStrong,
             child: Column(
               children: [
                 SizedBox(height: Margins.spacing_m),
@@ -176,7 +181,7 @@ class _VerbatimCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
                   child: Text(
                     BenevolatAssets.verbatimPart1,
-                    style: TextStyles.textMRegular.copyWith(color: Colors.white),
+                    style: TextStyles.textMRegular.copyWith(color: AppColors.contentOnPrimary),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -190,12 +195,12 @@ class _VerbatimCard extends StatelessWidget {
                         TextSpan(
                           text: BenevolatAssets.verbatimPart2,
                           semanticsLabel: BenevolatAssets.verbatimPart2.removeIconsForScreenReaders(),
-                          style: TextStyles.textBaseRegular.copyWith(color: Colors.white),
+                          style: TextStyles.textBaseRegular.copyWith(color: AppColors.contentOnPrimary),
                         ),
                         TextSpan(
                           text: BenevolatAssets.link,
                           style: TextStyles.textBaseRegular.copyWith(
-                            color: Colors.white,
+                            color: AppColors.contentOnPrimary,
                             decoration: TextDecoration.underline,
                           ),
                         ),

@@ -34,6 +34,7 @@ import 'package:pass_emploi_app/widgets/cards/profil/mon_conseiller_card.dart';
 import 'package:pass_emploi_app/widgets/contact_page.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/pressed_tip.dart';
+import 'package:pass_emploi_app/widgets/radio_list_tile.dart';
 import 'package:pass_emploi_app/widgets/rating_page.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
 
@@ -62,7 +63,7 @@ class _Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: context.grey100,
       appBar: PrimaryAppBar(title: Strings.menuProfil, withProfileButton: false, canPop: true),
       body: Semantics(
         container: true,
@@ -96,6 +97,13 @@ class _Scaffold extends StatelessWidget {
                       onTap: () => Navigator.push(context, PartageActivitePage.materialPageRoute()),
                     ),
                   ],
+                ),
+                SizedBox(height: Margins.spacing_m),
+                _SectionTitle(Strings.themeLabel),
+                SizedBox(height: Margins.spacing_base),
+                _ThemeCard(
+                  themeMode: viewModel.themeMode,
+                  onThemeModeChanged: viewModel.onThemeModeChanged,
                 ),
                 SizedBox(height: Margins.spacing_m),
                 _SectionTitle(Strings.legalInformation),
@@ -251,7 +259,10 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(header: true, child: Text(title, style: TextStyles.textLBold()));
+    return Semantics(
+      header: true,
+      child: Text(title, style: TextStyles.textLBold(color: context.content)),
+    );
   }
 }
 
@@ -277,14 +288,14 @@ class _OutilCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: TextStyles.textBaseBold),
+                  Text(title, style: TextStyles.textBaseBold.copyWith(color: context.content)),
                   SizedBox(height: Margins.spacing_xs),
-                  Text(subtitle, style: TextStyles.textSRegular()),
+                  Text(subtitle, style: TextStyles.textSRegular(color: context.content)),
                 ],
               ),
             ),
             SizedBox(width: Margins.spacing_s),
-            Icon(AppIcons.chevron_right_rounded),
+            Icon(AppIcons.chevron_right_rounded, color: context.content),
           ],
         ),
       ),
@@ -300,9 +311,9 @@ class _CurriculumVitaeCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(Strings.cvCardTitle, style: TextStyles.textMBold),
+          Text(Strings.cvCardTitle, style: TextStyles.textMBold.copyWith(color: context.content)),
           SizedBox(height: Margins.spacing_m),
-          Text(Strings.cvCardSubtitle, style: TextStyles.textBaseRegular),
+          Text(Strings.cvCardSubtitle, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
           PressedTip(Strings.cvCadCaption),
         ],
       ),
@@ -333,12 +344,15 @@ class _MailCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Semantics(header: true, child: Text(Strings.personalInformation, style: TextStyles.textMBold)),
+          Semantics(
+            header: true,
+            child: Text(Strings.personalInformation, style: TextStyles.textMBold.copyWith(color: context.content)),
+          ),
           SizedBox(height: Margins.spacing_m),
           Wrap(
             alignment: WrapAlignment.spaceBetween,
             children: [
-              Text(Strings.emailAddressLabel, style: TextStyles.textBaseRegular),
+              Text(Strings.emailAddressLabel, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
               Text(
                 userEmail,
                 textAlign: TextAlign.right,
@@ -375,12 +389,12 @@ class _ListTileCard extends StatelessWidget {
                         button: !externalRedirect,
                         child: ListTile(
                           onTap: data.onTap,
-                          title: Text(data.title, style: TextStyles.textBaseRegular),
+                          title: Text(data.title, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                           leading: externalRedirect
                               ? Icon(
                                   AppIcons.open_in_new_rounded,
                                   size: Dimens.icon_size_base,
-                                  color: AppColors.contentColor,
+                                  color: context.content,
                                 )
                               : null,
                           trailing: externalRedirect
@@ -388,11 +402,11 @@ class _ListTileCard extends StatelessWidget {
                               : Icon(
                                   AppIcons.chevron_right_rounded,
                                   size: Dimens.icon_size_m,
-                                  color: AppColors.contentColor,
+                                  color: context.content,
                                 ),
                         ),
                       ),
-                      Divider(color: AppColors.grey100, height: 0),
+                      Divider(color: context.grey100, height: 0),
                     ];
                   })
                   .expand((e) => e)
@@ -414,4 +428,41 @@ class _ListTileData {
 void _launchAndTrackExternalLink(String link) {
   PassEmploiMatomoTracker.instance.trackOutlink(link);
   launchExternalUrl(link);
+}
+
+class _ThemeCard extends StatelessWidget {
+  final ThemeMode themeMode;
+  final Function(ThemeMode) onThemeModeChanged;
+
+  const _ThemeCard({required this.themeMode, required this.onThemeModeChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      container: true,
+      child: CardContainer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: ThemeMode.values.map((mode) {
+            return CustomRadioGroup<ThemeMode>(
+              title: _labelForThemeMode(mode),
+              value: mode,
+              groupValue: themeMode,
+              onChanged: (value) {
+                if (value != null) onThemeModeChanged(value);
+              },
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  String _labelForThemeMode(ThemeMode mode) {
+    return switch (mode) {
+      ThemeMode.light => Strings.themeModeLight,
+      ThemeMode.dark => Strings.themeModeDark,
+      ThemeMode.system => Strings.themeModeSystem,
+    };
+  }
 }

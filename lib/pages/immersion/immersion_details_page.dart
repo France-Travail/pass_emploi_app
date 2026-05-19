@@ -12,6 +12,7 @@ import 'package:pass_emploi_app/pages/offre_not_found_page.dart';
 import 'package:pass_emploi_app/pages/offre_page.dart';
 import 'package:pass_emploi_app/presentation/immersion/immersion_details_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -82,7 +83,7 @@ class ImmersionDetailsPage extends StatelessWidget {
   }
 
   Scaffold _scaffold(Widget body, BuildContext context, String offreId) {
-    const backgroundColor = Colors.white;
+    final backgroundColor = context.bg;
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: SecondaryAppBar(
@@ -116,7 +117,7 @@ class ImmersionDetailsPage extends StatelessWidget {
                 ],
                 _Title(viewModel.title),
                 SizedBox(height: Margins.spacing_s),
-                Text(viewModel.companyName, style: TextStyles.textBaseRegular),
+                Text(viewModel.companyName, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                 SizedBox(height: Margins.spacing_s),
                 ImmersionTags(
                   secteurActivite: viewModel.secteurActivite,
@@ -128,7 +129,7 @@ class ImmersionDetailsPage extends StatelessWidget {
                   CardComplement.dateDerniereConsultation(viewModel.dateDerniereConsultation!),
                 ],
                 SizedBox(height: Margins.spacing_m),
-                Text(Strings.lentreprise, style: TextStyles.textMBold),
+                Text(Strings.lentreprise, style: TextStyles.textMBold.copyWith(color: context.content)),
                 SizedBox(height: Margins.spacing_m),
                 SepLine(0, 0),
                 SizedBox(height: Margins.spacing_base),
@@ -137,22 +138,22 @@ class ImmersionDetailsPage extends StatelessWidget {
                 if (viewModel.displayState == ImmersionDetailsPageDisplayState.SHOW_INCOMPLETE_DETAILS)
                   FavoriNotFoundError()
                 else ...[
-                  Text(Strings.immersionDescriptionLabel, style: TextStyles.textBaseRegular),
+                  Text(Strings.immersionDescriptionLabel, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                   SizedBox(height: Margins.spacing_m),
                   if (viewModel.address != null && viewModel.address!.isNotEmpty) ...[
                     _Title(Strings.adresse),
-                    Text(viewModel.address ?? '', style: TextStyles.textBaseRegular),
+                    Text(viewModel.address ?? '', style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                     SizedBox(height: Margins.spacing_m),
                   ],
                   if (viewModel.informationComplementaire != null &&
                       viewModel.informationComplementaire!.isNotEmpty) ...[
                     _Title(Strings.informationComplementaire),
-                    Text(viewModel.informationComplementaire ?? '', style: TextStyles.textBaseRegular),
+                    Text(viewModel.informationComplementaire ?? '', style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                     SizedBox(height: Margins.spacing_m),
                   ],
                   if (viewModel.website != null && viewModel.website!.isNotEmpty) ...[
                     _Title(Strings.siteWeb),
-                    Text(viewModel.website ?? '', style: TextStyles.textBaseRegular),
+                    Text(viewModel.website ?? '', style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                     SizedBox(height: Margins.spacing_m),
                   ],
                   SizedBox(height: Margins.spacing_m),
@@ -192,7 +193,7 @@ class ImmersionDetailsPage extends StatelessWidget {
 
   Widget _footer(BuildContext context, ImmersionDetailsViewModel viewModel) {
     return Container(
-      color: Colors.white,
+      color: context.bg,
       padding: EdgeInsets.only(
         left: Margins.spacing_m,
         right: Margins.spacing_m,
@@ -240,6 +241,6 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(title, style: TextStyles.textBaseBold);
+    return Text(title, style: TextStyles.textBaseBold.copyWith(color: context.content));
   }
 }

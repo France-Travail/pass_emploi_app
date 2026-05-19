@@ -31,10 +31,12 @@ class PassEmploiChip<T> extends StatelessWidget {
       isSelected: isSelected,
       label: label,
       a11yLabel: a11yLabel,
-      bgColor: isSelected ? AppColors.primaryDarken : Colors.white,
+      bgColor: isSelected ? AppColors.primaryDarken : context.bg,
       onSelected: () => isSelected ? onTagDeleted?.call() : onTagSelected(value),
-      textstyle: isSelected ? TextStyles.textSBold.copyWith(color: Colors.white) : TextStyles.textSMedium(),
-      borderColor: isSelected ? AppColors.primaryDarken : AppColors.grey700,
+      textstyle: isSelected
+          ? TextStyles.textSBold.copyWith(color: AppColors.contentOnPrimary)
+          : TextStyles.textSMedium(color: context.content),
+      borderColor: isSelected ? AppColors.primaryDarken : context.grey700,
     );
   }
 }
@@ -92,9 +94,9 @@ class _CustomChip extends StatelessWidget {
                     Icons.close_rounded,
                     semanticLabel: Strings.deleteSelection,
                     size: Dimens.icon_size_base,
-                    color: Colors.white,
+                    color: AppColors.contentOnPrimary,
                   ),
-                ]
+                ],
               ],
             ),
           ),

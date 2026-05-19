@@ -48,11 +48,14 @@ class MonConseillerCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Semantics(header: true, child: Text(Strings.yourConseiller, style: TextStyles.textMBold)),
+              Semantics(
+                header: true,
+                child: Text(Strings.yourConseiller, style: TextStyles.textMBold.copyWith(color: context.content)),
+              ),
               SizedBox(height: Margins.spacing_m),
               Text(
                 A11yUtils.withScreenReader(context) ? vm.sinceDateA11y : vm.sinceDate,
-                style: TextStyles.textBaseRegular,
+                style: TextStyles.textBaseRegular.copyWith(color: context.content),
               ),
               SizedBox(height: Margins.spacing_s),
               Text(

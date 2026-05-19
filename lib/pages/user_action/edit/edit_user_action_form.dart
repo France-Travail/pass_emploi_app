@@ -91,15 +91,15 @@ class _EditUserActionFormState extends State<EditUserActionForm> {
             dateSource: _changeNotifier.dateInputSource,
           ),
           const SizedBox(height: Margins.spacing_m),
-          Text(Strings.updateUserActionTitle, style: TextStyles.textBaseBold),
+          Text(Strings.updateUserActionTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
           const SizedBox(height: Margins.spacing_s),
           BaseTextField(
             initialValue: _changeNotifier.title,
             onChanged: _changeNotifier.updateTitle,
           ),
           const SizedBox(height: Margins.spacing_m),
-          Text(Strings.updateUserActionDescriptionTitle, style: TextStyles.textBaseBold),
-          Text(Strings.updateUserActionDescriptionSubtitle, style: TextStyles.textXsRegular()),
+          Text(Strings.updateUserActionDescriptionTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+          Text(Strings.updateUserActionDescriptionSubtitle, style: TextStyles.textXsRegular(color: context.content)),
           const SizedBox(height: Margins.spacing_s),
           BaseTextField(
             initialValue: _changeNotifier.description,
@@ -107,7 +107,7 @@ class _EditUserActionFormState extends State<EditUserActionForm> {
             maxLines: 5,
           ),
           const SizedBox(height: Margins.spacing_m),
-          Text(Strings.updateUserActionCategory, style: TextStyles.textBaseBold),
+          Text(Strings.updateUserActionCategory, style: TextStyles.textBaseBold.copyWith(color: context.content)),
           const SizedBox(height: Margins.spacing_s),
           _CategorySelector(_changeNotifier),
           const SizedBox(height: Margins.spacing_m),
@@ -138,7 +138,7 @@ class _CategorySelector extends StatelessWidget {
     return CardContainer(
       child: Row(
         children: [
-          Text(changeNotifier.type?.label ?? Strings.userActionNoCategory, style: TextStyles.textBaseRegular),
+          Text(changeNotifier.type?.label ?? Strings.userActionNoCategory, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
           Expanded(child: PressedTip(Strings.updateUserActionCategoryPressedTip)),
         ],
       ),
@@ -155,6 +155,7 @@ class _CategorySelectionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: context.bg,
       appBar: SecondaryAppBar(title: Strings.updateUserActionCategory),
       body: SingleChildScrollView(
         child: Padding(

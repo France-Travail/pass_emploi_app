@@ -44,7 +44,7 @@ class _CampagneQuestionPageState extends State<CampagneQuestionPage> {
   }
 
   Widget _scaffold(BuildContext context, QuestionPageViewModel viewModel) {
-    const backgroundColor = Colors.white;
+    final backgroundColor = context.bg;
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: SecondaryAppBar(title: viewModel.titre, backgroundColor: backgroundColor),
@@ -72,13 +72,13 @@ class _CampagneQuestionPageState extends State<CampagneQuestionPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(Strings.mandatory, style: TextStyles.textSRegular(color: AppColors.contentColor)),
+            Text(Strings.mandatory, style: TextStyles.textSRegular(color: context.content)),
             SizedBox(height: Margins.spacing_base),
-            Text(viewModel.question, style: TextStyles.textBaseBold),
+            Text(viewModel.question, style: TextStyles.textBaseBold.copyWith(color: context.content)),
             SizedBox(height: Margins.spacing_base),
             _answerOptions(viewModel.options),
             SizedBox(height: Margins.spacing_xl),
-            Text(Strings.pourquoiTitle, style: TextStyles.textBaseRegular),
+            Text(Strings.pourquoiTitle, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
             SizedBox(height: Margins.spacing_base),
             BaseTextField(
               key: _textFieldKey,

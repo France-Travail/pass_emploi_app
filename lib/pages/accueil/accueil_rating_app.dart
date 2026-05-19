@@ -46,7 +46,7 @@ class _Body extends StatelessWidget {
                 children: [
                   Icon(
                     AppIcons.hotel_class,
-                    color: AppColors.contentColor,
+                    color: context.content,
                     size: Dimens.icon_size_l,
                   ),
                   SizedBox(width: Margins.spacing_m),
@@ -57,12 +57,12 @@ class _Body extends StatelessWidget {
                       children: [
                         Text(
                           Strings.ratingAppLabel,
-                          style: TextStyles.textBaseBold.copyWith(color: AppColors.contentColor),
+                          style: TextStyles.textBaseBold.copyWith(color: context.content),
                         ),
                         SizedBox(height: Margins.spacing_base),
                         PressedTip(
                           Strings.ratingButton,
-                          textColor: AppColors.contentColor,
+                          textColor: context.content,
                           icon: AppIcons.chevron_right_rounded,
                         ),
                       ],
@@ -80,7 +80,7 @@ class _Body extends StatelessWidget {
                   viewModel.onDone();
                   PassEmploiMatomoTracker.instance.trackScreen(AnalyticsActionNames.skipRating);
                 },
-                icon: Icon(AppIcons.close_rounded, color: AppColors.contentColor),
+                icon: Icon(AppIcons.close_rounded, color: context.content),
               ),
             ),
           ],

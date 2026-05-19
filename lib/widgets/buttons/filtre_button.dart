@@ -27,7 +27,7 @@ class FiltreButton extends StatelessWidget {
                 maxHeight: double.infinity,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.contentOnPrimary,
                     shape: BoxShape.circle,
                   ),
                   padding: EdgeInsets.all(Margins.spacing_xs),

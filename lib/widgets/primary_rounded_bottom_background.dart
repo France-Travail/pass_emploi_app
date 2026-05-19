@@ -10,7 +10,7 @@ class PrimaryRoundedBottomBackground extends StatelessWidget {
     final totalWidth = MediaQuery.of(context).size.width;
     return Stack(
       children: [
-        Container(color: Color(0xFFE5E5E5)),
+        Container(color: context.grey100),
         SizedBox(
           width: totalWidth,
           height: totalHeight / 2 + 48,

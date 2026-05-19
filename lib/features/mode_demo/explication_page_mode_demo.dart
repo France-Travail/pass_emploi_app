@@ -24,6 +24,7 @@ class ExplicationModeDemoPage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.explicationModeDemo,
       child: Scaffold(
+        backgroundColor: context.bg,
         body: Stack(
           children: [
             _Background(),
@@ -52,7 +53,7 @@ class _Contenu extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.bg,
           borderRadius: BorderRadius.circular(Dimens.radius_base),
           boxShadow: [Shadows.radius_base],
         ),
@@ -62,16 +63,17 @@ class _Contenu extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Center(
-                  child: Padding(
-                padding: const EdgeInsets.only(top: 24),
-                child: Semantics(
-                  header: true,
-                  child: Text(
-                    Strings.modeDemoExplicationTitre,
-                    style: TextStyles.secondaryAppBar,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 24),
+                  child: Semantics(
+                    header: true,
+                    child: Text(
+                      Strings.modeDemoExplicationTitre,
+                      style: TextStyles.secondaryAppBar.copyWith(color: context.content),
+                    ),
                   ),
                 ),
-              )),
+              ),
               SizedBox(height: Margins.spacing_m),
               Center(
                 child: SizedBox(
@@ -131,8 +133,8 @@ class _Background extends StatelessWidget {
         Expanded(
           flex: 1,
           child: Container(
-              decoration:
-                  BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(double.infinity))),
+            decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(double.infinity)),
+          ),
         ),
         Expanded(flex: 1, child: Container()),
       ],
@@ -150,7 +152,7 @@ class _BackButton extends StatelessWidget {
         child: IconButton(
           icon: Icon(
             AppIcons.chevron_left_rounded,
-            color: Colors.white,
+            color: AppColors.contentOnPrimary,
             size: Dimens.icon_size_m,
           ),
           onPressed: () {

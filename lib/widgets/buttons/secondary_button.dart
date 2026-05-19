@@ -9,7 +9,7 @@ class SecondaryButton extends StatefulWidget {
   final String label;
   final IconData? icon;
   final VoidCallback? onPressed;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final Color? foregroundColor;
   final double? fontSize;
   final String? iconLabel;
@@ -21,7 +21,7 @@ class SecondaryButton extends StatefulWidget {
     required this.label,
     required this.onPressed,
     this.icon,
-    this.backgroundColor = Colors.white,
+    this.backgroundColor,
     this.foregroundColor,
     this.fontSize,
     this.iconLabel,
@@ -40,6 +40,7 @@ class _SecondaryButtonState extends State<SecondaryButton> {
     final baseTextStyle = TextStyles.textSecondaryButton;
     final textColor = (widget.foregroundColor ?? AppColors.primary).withValues(alpha: widget.isEnabled ? 1 : 0.5);
     final usedTextStyle = widget.fontSize != null ? baseTextStyle.copyWith(fontSize: widget.fontSize) : baseTextStyle;
+    final bg = widget.backgroundColor ?? context.bg;
     return FocusedBorderBuilder(
       builder: (focusNode) {
         return OutlinedButton(
@@ -49,8 +50,8 @@ class _SecondaryButtonState extends State<SecondaryButton> {
           style: OutlinedButton.styleFrom(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimens.radius_base)),
             backgroundColor: Color.alphaBlend(
-              isHovered ? textColor.withValues(alpha: 0.2) : Colors.transparent,
-              widget.backgroundColor,
+              isHovered ? textColor.withValues(alpha: 0.2) : AppColors.transparent,
+              bg,
             ),
             side: BorderSide(color: textColor, width: 2),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
@@ -31,7 +32,7 @@ class ChatEditMessagePage extends StatelessWidget {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      backgroundColor: Colors.white,
+      backgroundColor: context.bg,
       appBar: SecondaryAppBar(title: Strings.chatEditMessageAppBar),
       body: Padding(
         padding: const EdgeInsets.all(Margins.spacing_base),

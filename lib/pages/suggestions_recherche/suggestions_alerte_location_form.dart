@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/models/location.dart';
 import 'package:pass_emploi_app/models/offre_type.dart';
 import 'package:pass_emploi_app/presentation/suggestions/suggestion_alerte_location_form_view_model.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/apparition_animation.dart';
@@ -36,6 +37,7 @@ class _SuggestionsAlerteLocationFormState extends State<SuggestionsAlerteLocatio
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: context.bg,
         appBar: SecondaryAppBar(title: Strings.suggestionLocalisationAppBarTitle),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: _SubmitButton(

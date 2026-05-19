@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/features/onboarding/onboarding_actions.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -39,12 +40,12 @@ class NotificationsBottomSheet extends StatelessWidget {
             SizedBox(height: Margins.spacing_m),
             Text(
               Strings.notificationsBottomSheetTitle,
-              style: TextStyles.textMBold,
+              style: TextStyles.textMBold.copyWith(color: context.content),
             ),
             SizedBox(height: Margins.spacing_m),
             Text(
               Strings.notificationsBottomSheetcontent,
-              style: TextStyles.textBaseRegular,
+              style: TextStyles.textBaseRegular.copyWith(color: context.content),
             ),
             SizedBox(height: Margins.spacing_l),
             PrimaryActionButton(

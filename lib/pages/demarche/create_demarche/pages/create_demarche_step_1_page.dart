@@ -94,7 +94,7 @@ class _LoadingPlaceholder extends StatelessWidget {
               child: FadeInAnimation(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[200],
+                    color: context.grey100,
                     borderRadius: BorderRadius.circular(Dimens.radius_base),
                   ),
                 ),
@@ -148,7 +148,7 @@ class _Success extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: Margins.spacing_base),
-        Text(Strings.thematiquesDemarcheDescriptionShort, style: TextStyles.textMBold),
+        Text(Strings.thematiquesDemarcheDescriptionShort, style: TextStyles.textMBold.copyWith(color: context.content)),
         const SizedBox(height: Margins.spacing_base),
         GridView.builder(
           shrinkWrap: true,
@@ -198,7 +198,7 @@ class _ThematiqueTile extends StatelessWidget {
           children: [
             Icon(thematique.icon, size: Dimens.icon_size_l, color: AppColors.primary),
             const SizedBox(height: Margins.spacing_base),
-            Text(thematique.title, textAlign: TextAlign.center, style: TextStyles.textSBold),
+            Text(thematique.title, textAlign: TextAlign.center, style: TextStyles.textSBold.copyWith(color: context.content)),
           ],
         ),
         onTap: () => onThematiqueSelected(thematique),
@@ -225,9 +225,9 @@ class _CreateCustomDemarche extends StatelessWidget {
             Expanded(
               child: Column(
                 children: [
-                  Text(Strings.customDemarcheTitle, style: TextStyles.textBaseBold),
+                  Text(Strings.customDemarcheTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
                   SizedBox(height: Margins.spacing_base),
-                  Text(Strings.customDemarcheSubtitle, style: TextStyles.textBaseRegular),
+                  Text(Strings.customDemarcheSubtitle, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                 ],
               ),
             ),

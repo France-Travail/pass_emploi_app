@@ -4,6 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/presentation/chat/chat_partage_event_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/media_sizes.dart';
@@ -55,6 +56,7 @@ class _Builder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: context.bg,
       appBar: SecondaryAppBar(title: Strings.demandeInscriptionConfirmationTitle),
       floatingActionButton: SizedBox(
         width: double.infinity,
@@ -101,7 +103,7 @@ class _Content extends StatelessWidget {
                 children: [
                   Text(
                     Strings.demandeInscriptionDescription,
-                    style: TextStyles.textMBold,
+                    style: TextStyles.textMBold.copyWith(color: context.content),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: Margins.spacing_l),

@@ -35,7 +35,7 @@ class RemoteCampagneAccueilCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           item.title,
-                          style: TextStyles.textBaseBold.copyWith(color: AppColors.contentColor),
+                          style: TextStyles.textBaseBold.copyWith(color: context.content),
                         ),
                       ),
                       SizedBox(width: Margins.spacing_m),
@@ -44,7 +44,7 @@ class RemoteCampagneAccueilCard extends StatelessWidget {
                   SizedBox(height: Margins.spacing_s),
                   PressedTip.externalLink(
                     item.cta,
-                    textColor: AppColors.contentColor,
+                    textColor: context.content,
                   ),
                 ],
               ),
@@ -55,7 +55,7 @@ class RemoteCampagneAccueilCard extends StatelessWidget {
               child: IconButton(
                 tooltip: "${Strings.closeDialog} ${item.title}",
                 onPressed: item.onDismissed,
-                icon: Icon(AppIcons.close_rounded, color: AppColors.contentColor),
+                icon: Icon(AppIcons.close_rounded, color: context.content),
               ),
             ),
           ],

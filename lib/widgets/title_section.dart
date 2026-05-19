@@ -26,7 +26,7 @@ class TitleSection extends StatelessWidget {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 16.0),
-                  child: Text(label, style: TextStyles.textMBold),
+                  child: Text(label, style: TextStyles.textMBold.copyWith(color: context.content)),
                 ),
               )
             ],

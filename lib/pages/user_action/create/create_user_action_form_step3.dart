@@ -78,11 +78,11 @@ class _CreateUserActionFormStep3State extends State<CreateUserActionFormStep3> {
                     const SizedBox(height: Margins.spacing_s),
                     Text(
                       widget.actionType.label,
-                      style: TextStyles.textMBold.copyWith(color: AppColors.contentColor),
+                      style: TextStyles.textMBold.copyWith(color: context.content),
                     ),
                     Text(
                       widget.titleSource.title,
-                      style: TextStyles.textBaseMedium.copyWith(color: AppColors.contentColor),
+                      style: TextStyles.textBaseMedium.copyWith(color: context.content),
                     ),
                   ],
                 ),
@@ -92,7 +92,7 @@ class _CreateUserActionFormStep3State extends State<CreateUserActionFormStep3> {
               const SizedBox(height: Margins.spacing_m),
               Text(
                 widget.titleSource.allowBatchCreate ? Strings.selectMultipleActions : Strings.selectOneAction,
-                style: TextStyles.textBaseBold.copyWith(color: AppColors.contentColor),
+                style: TextStyles.textBaseBold.copyWith(color: context.content),
               ),
               if (widget.viewModel.errorsVisible && !widget.viewModel.isValid) ...[
                 const SizedBox(height: Margins.spacing_base),
@@ -314,10 +314,10 @@ class _DuplicateUserActionItemState extends State<_DuplicateUserActionItem> {
             alignment: Alignment.topRight,
             child: IconButton(
               tooltip: Strings.clear,
-              icon: Icon(Icons.clear),
+              icon: Icon(Icons.clear, color: context.content),
               onPressed: widget.onDelete,
             ),
-          )
+          ),
       ],
     );
   }
@@ -338,7 +338,9 @@ class _ErrorItem extends StatelessWidget {
       children: [
         Icon(icon, color: AppColors.warning),
         const SizedBox(width: Margins.spacing_s),
-        Flexible(child: Text(text, style: TextStyles.textBaseRegular.copyWith(color: AppColors.warning))),
+        Flexible(
+          child: Text(text, style: TextStyles.textBaseRegular.copyWith(color: AppColors.warning)),
+        ),
       ],
     );
   }

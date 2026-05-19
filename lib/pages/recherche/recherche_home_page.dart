@@ -10,6 +10,7 @@ import 'package:pass_emploi_app/pages/recherche/recherche_offre_service_civique_
 import 'package:pass_emploi_app/pages/recherche/recherches_recentes.dart';
 import 'package:pass_emploi_app/presentation/recherche/recherche_home_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
@@ -63,10 +64,7 @@ class _NosOffres extends StatelessWidget {
               OnboardingShowcase(
                 source: ShowcaseSource.offre,
                 child: _BlocSolution(
-                  gradientColors: [
-                    Color(0xFF274996),
-                    Color(0xFF3B69D1),
-                  ],
+                  gradientColors: AppColors.gradientOffre,
                   title: Strings.rechercheHomeOffresEmploiTitle,
                   subtitle: Strings.rechercheHomeOffresEmploiSubtitle,
                   svgPath: Drawables.rechercheHomeOffresEmploi,
@@ -76,10 +74,7 @@ class _NosOffres extends StatelessWidget {
               ),
             if (offreTypes.contains(OffreType.alternance))
               _BlocSolution(
-                gradientColors: [
-                  Color(0xFF172B5A),
-                  Color(0xFF2186C7),
-                ],
+                gradientColors: AppColors.gradientAlternance,
                 title: Strings.rechercheHomeOffresAlternanceTitle,
                 subtitle: Strings.rechercheHomeOffresAlternanceSubtitle,
                 svgPath: Drawables.rechercheHomeOffresAlternance,
@@ -87,11 +82,7 @@ class _NosOffres extends StatelessWidget {
               ),
             if (offreTypes.contains(OffreType.immersion))
               _BlocSolution(
-                gradientColors: [
-                  Color(0xFF5149A8),
-                  Color(0xFF603CBC),
-                  Color(0xFF950EFF),
-                ],
+                gradientColors: AppColors.gradientImmersion,
                 title: Strings.rechercheHomeOffresImmersionTitle,
                 subtitle: Strings.rechercheHomeOffresImmersionSubtitle,
                 svgPath: Drawables.rechercheHomeOffresImmersion,
@@ -99,10 +90,7 @@ class _NosOffres extends StatelessWidget {
               ),
             if (offreTypes.contains(OffreType.serviceCivique))
               _BlocSolution(
-                gradientColors: [
-                  Color(0xFF15616D),
-                  Color(0xFF0C7A81),
-                ],
+                gradientColors: AppColors.gradientServiceCivique,
                 title: Strings.rechercheHomeOffresServiceCiviqueTitle,
                 subtitle: Strings.rechercheHomeOffresServiceCiviqueSubtitle,
                 svgPath: Drawables.rechercheHomeOffresServiceCivique,
@@ -186,9 +174,9 @@ class _BlocSolution extends StatelessWidget {
           children: [
             SvgPicture.asset(svgPath, width: Dimens.icon_size_m, height: Dimens.icon_size_m),
             SizedBox(height: Margins.spacing_s),
-            Text(title, style: TextStyles.textMBold.copyWith(color: Colors.white)),
+            Text(title, style: TextStyles.textMBold.copyWith(color: AppColors.contentOnPrimary)),
             SizedBox(height: Margins.spacing_s),
-            Text(subtitle, style: TextStyles.textBaseRegular.copyWith(color: Colors.white)),
+            Text(subtitle, style: TextStyles.textBaseRegular.copyWith(color: AppColors.contentOnPrimary)),
           ],
         ),
       ),

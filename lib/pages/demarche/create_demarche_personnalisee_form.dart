@@ -201,7 +201,7 @@ class _CommentaireTitre extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
-      child: Text(Strings.commentaire, style: TextStyles.textBaseBold),
+      child: Text(Strings.commentaire, style: TextStyles.textBaseBold.copyWith(color: context.content)),
     );
   }
 }
@@ -211,7 +211,7 @@ class _DescriptionTitre extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
-      child: Text(Strings.descriptionDemarche, style: TextStyles.textBaseMedium),
+      child: Text(Strings.descriptionDemarche, style: TextStyles.textBaseMedium.copyWith(color: context.content)),
     );
   }
 }
@@ -231,7 +231,7 @@ class _QuandTitre extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
-      child: Text(Strings.quand, style: TextStyles.textBaseBold),
+      child: Text(Strings.quand, style: TextStyles.textBaseBold.copyWith(color: context.content)),
     );
   }
 }
@@ -241,7 +241,7 @@ class _EcheanceTitre extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
-      child: Text(Strings.selectEcheance, style: TextStyles.textBaseMedium),
+      child: Text(Strings.selectEcheance, style: TextStyles.textBaseMedium.copyWith(color: context.content)),
     );
   }
 }
@@ -254,7 +254,7 @@ class _NombreCaracteresCompteur extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = _isCommentaireValid ? AppColors.contentColor : AppColors.warning;
+    final textColor = _isCommentaireValid ? context.content : AppColors.warning;
     return Align(
       alignment: Alignment.centerRight,
       child: Padding(

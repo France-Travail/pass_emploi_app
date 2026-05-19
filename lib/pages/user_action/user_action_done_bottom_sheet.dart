@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/presentation/user_action/user_action_done_bottom
 import 'package:pass_emploi_app/presentation/user_action/user_action_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -127,13 +128,13 @@ class _Success extends StatelessWidget {
         Text(
           Strings.felicitations,
           textAlign: TextAlign.center,
-          style: TextStyles.textMBold,
+          style: TextStyles.textMBold.copyWith(color: context.content),
         ),
         SizedBox(height: Margins.spacing_base),
         Text(
           Strings.updateActionConfirmation,
           textAlign: TextAlign.center,
-          style: TextStyles.textBaseRegular,
+          style: TextStyles.textBaseRegular.copyWith(color: context.content),
         ),
         SizedBox(height: Margins.spacing_l),
         PrimaryActionButton(label: Strings.understood, onPressed: () => Navigator.pop(context, true)),

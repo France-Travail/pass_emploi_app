@@ -10,6 +10,7 @@ import 'package:pass_emploi_app/pages/demarche/demarche_detail_page.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_success_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -130,7 +131,7 @@ class _Body extends StatelessWidget {
                     _ => Strings.demarcheSuccessTitle,
                   },
                   textAlign: TextAlign.center,
-                  style: TextStyles.textMBold,
+                  style: TextStyles.textMBold.copyWith(color: context.content),
                 ),
                 SizedBox(height: Margins.spacing_m),
                 Text(
@@ -139,7 +140,7 @@ class _Body extends StatelessWidget {
                     _ => Strings.demarcheSuccessSubtitle,
                   },
                   textAlign: TextAlign.center,
-                  style: TextStyles.textSRegular(),
+                  style: TextStyles.textSRegular(color: context.content),
                 ),
                 SizedBox(height: Margins.spacing_xx_huge),
               ],
@@ -201,10 +202,10 @@ class _Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: context.bg,
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
-      appBar: SecondaryAppBar(title: Strings.createDemarcheAppBarTitle, backgroundColor: Colors.white),
+      appBar: SecondaryAppBar(title: Strings.createDemarcheAppBarTitle, backgroundColor: context.bg),
       body: body,
     );
   }

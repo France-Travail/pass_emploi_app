@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/shadows.dart';
@@ -16,11 +17,11 @@ class ElevatedButtonTile extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimens.radius_base),
-        color: Colors.white,
+        color: context.bg,
         boxShadow: [Shadows.radius_base],
       ),
       child: Material(
-        color: Colors.white,
+        color: context.bg,
         child: InkWell(
           borderRadius: BorderRadius.circular(Dimens.radius_base),
           onTap: onPressed,
@@ -32,7 +33,7 @@ class ElevatedButtonTile extends StatelessWidget {
                 children: [
                   if (leading != null) leading!,
                   if (leading != null) SizedBox(width: Margins.spacing_base),
-                  Expanded(child: Text(label, style: TextStyles.textBaseBold)),
+                  Expanded(child: Text(label, style: TextStyles.textBaseBold.copyWith(color: context.content))),
                   if (suffix != null) suffix!,
                 ],
               ),

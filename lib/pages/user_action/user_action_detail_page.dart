@@ -128,10 +128,10 @@ class _Scaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: context.bg,
       appBar: SecondaryAppBar(
         title: Strings.actionDetails,
-        backgroundColor: Colors.white,
+        backgroundColor: context.bg,
         actions: [_MoreButton(source: source, actionId: viewModel.id)],
       ),
       floatingActionButton: Padding(
@@ -193,10 +193,10 @@ class _Content extends StatelessWidget {
                       SizedBox(height: Margins.spacing_m),
                       _Separator(),
                       SizedBox(height: Margins.spacing_m),
-                      Semantics(
-                        header: true,
-                        child: Text(Strings.userActionDetailsSection, style: TextStyles.textBaseBold),
-                      ),
+                        Semantics(
+                          header: true,
+                          child: Text(Strings.userActionDetailsSection, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+                        ),
                       if (viewModel.withSubtitle) ...[
                         SizedBox(height: Margins.spacing_base),
                         _Description(withSubtitle: viewModel.withSubtitle, subtitle: viewModel.subtitle),
@@ -207,7 +207,7 @@ class _Content extends StatelessWidget {
                       Text(
                         viewModel.creationDetails,
                         semanticsLabel: viewModel.creationDetails.toDateForScreenReaders(),
-                        style: TextStyles.textSRegular(color: AppColors.grey800),
+                        style: TextStyles.textSRegular(color: context.grey800),
                       ),
                       SizedBox(height: Margins.spacing_m),
                       _Separator(),
@@ -247,7 +247,7 @@ class _FinishActionButton extends StatelessWidget {
       width: double.infinity,
       child: PrimaryActionButton(
         label: Strings.completeAction,
-        suffix: Icon(AppIcons.arrow_forward_rounded, color: Colors.white),
+        suffix: Icon(AppIcons.arrow_forward_rounded, color: AppColors.contentOnPrimary),
         onPressed: () async {
           if (!context.mounted) return;
           final result = await UserActionDoneBottomSheet.show(context, source, viewModel.id);
@@ -292,7 +292,7 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(title, style: TextStyles.textMBold);
+    return Text(title, style: TextStyles.textMBold.copyWith(color: context.content));
   }
 }
 
@@ -305,7 +305,7 @@ class _Description extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (withSubtitle) {
-      return TextWithClickableLinks(subtitle, style: TextStyles.textSRegular());
+      return TextWithClickableLinks(subtitle, style: TextStyles.textSRegular(color: context.content));
     } else {
       return SizedBox(height: Margins.spacing_s);
     }
@@ -356,10 +356,10 @@ class _CommentCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(Strings.lastComment, style: TextStyles.textBaseBold),
+        Text(Strings.lastComment, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_base),
         if (viewModel.lastComment != null) Comment(comment: viewModel.lastComment!),
-        if (viewModel.lastComment == null) Text(Strings.noComments, style: TextStyles.textBaseRegular),
+        if (viewModel.lastComment == null) Text(Strings.noComments, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_xl),
         SecondaryButton(
           onPressed: () => _onCommentClick(context, actionId, actionTitle),
@@ -386,9 +386,9 @@ class _UnavailableCommentsOffline extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(Strings.lastComment, style: TextStyles.textBaseBold),
+        Text(Strings.lastComment, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_base),
-        Text(Strings.commentsUnavailableOffline, style: TextStyles.textBaseRegular),
+        Text(Strings.commentsUnavailableOffline, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
       ],
     );
   }
@@ -407,8 +407,9 @@ class _DateAndCategory extends StatelessWidget {
         spacing: Margins.spacing_m,
         runSpacing: Margins.spacing_s,
         children: [
-          _section(sectionIcon: AppIcons.event, sectionTitle: Strings.userActionDate, value: viewModel.date),
+          _section(context, sectionIcon: AppIcons.event, sectionTitle: Strings.userActionDate, value: viewModel.date),
           _section(
+            context,
             sectionIcon: Icons.account_tree_rounded,
             sectionTitle: Strings.userActionCategory,
             value: viewModel.category,
@@ -418,23 +419,23 @@ class _DateAndCategory extends StatelessWidget {
     );
   }
 
-  Widget _section({required IconData sectionIcon, required String sectionTitle, required String value}) {
+  Widget _section(BuildContext context, {required IconData sectionIcon, required String sectionTitle, required String value}) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(top: Margins.spacing_xs / 2),
-          child: Icon(sectionIcon, color: AppColors.grey500, size: Dimens.icon_size_base),
+          child: Icon(sectionIcon, color: context.grey500, size: Dimens.icon_size_base),
         ),
         SizedBox(width: Margins.spacing_xs),
         Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(sectionTitle, style: TextStyles.textSRegular(color: AppColors.grey700)),
+            Text(sectionTitle, style: TextStyles.textSRegular(color: context.grey700)),
             SizedBox(height: Margins.spacing_xs),
-            Text(value, style: TextStyles.textSBold),
+            Text(value, style: TextStyles.textSBold.copyWith(color: context.content)),
           ],
         ),
       ],
@@ -451,7 +452,7 @@ class _MoreButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: Icon(AppIcons.more_vert_rounded),
+      icon: Icon(AppIcons.more_vert_rounded, color: context.content),
       onPressed: () => UserActionDetailsBottomSheet.show(context, source, actionId),
     );
   }

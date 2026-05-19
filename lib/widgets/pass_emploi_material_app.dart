@@ -18,7 +18,6 @@ class PassEmploiMaterialApp extends MaterialApp{
     super.title,
     super.onGenerateTitle,
     super.color,
-    super.darkTheme,
     super.highContrastTheme,
     super.highContrastDarkTheme,
     super.themeMode,
@@ -38,6 +37,7 @@ class PassEmploiMaterialApp extends MaterialApp{
     super.useInheritedMediaQuery,
   }) : super(
     theme: PassEmploiTheme.data,
+    darkTheme: PassEmploiTheme.darkData,
     localizationsDelegates: [
       GlobalMaterialLocalizations.delegate,
       GlobalWidgetsLocalizations.delegate,

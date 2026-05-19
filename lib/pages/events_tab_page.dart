@@ -76,7 +76,7 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: context.grey100,
       appBar: PrimaryAppBar(title: Strings.eventAppBarTitle, withAutofocusA11y: true),
       body: ConnectivityContainer(
         child: DefaultTabController(

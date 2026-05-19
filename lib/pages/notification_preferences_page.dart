@@ -54,7 +54,7 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: context.grey100,
       appBar: PrimaryAppBar(
         title: Strings.notificationsSettingsAppbarTitle,
         withProfileButton: false,
@@ -86,7 +86,10 @@ class _Content extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(Strings.notificationsSettingsSubtitle, style: TextStyles.textBaseRegular),
+            Text(
+              Strings.notificationsSettingsSubtitle,
+              style: TextStyles.textBaseRegular.copyWith(color: context.content),
+            ),
             SizedBox(height: Margins.spacing_base),
             _NotificationSwitch(
               title: Strings.notificationsSettingsAlertesTitle,
@@ -125,7 +128,7 @@ class _Content extends StatelessWidget {
               ),
             ],
             SizedBox(height: Margins.spacing_l),
-            Text(Strings.notificationsSettingsTitle, style: TextStyles.textBaseBold),
+            Text(Strings.notificationsSettingsTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
             SizedBox(height: Margins.spacing_s),
             SizedBox(
               width: double.infinity,
@@ -135,12 +138,12 @@ class _Content extends StatelessWidget {
                   onTap: viewModel.onOpenAppSettings,
                   child: Row(
                     children: [
-                      Icon(AppIcons.open_in_new_rounded, color: AppColors.contentColor),
+                      Icon(AppIcons.open_in_new_rounded, color: context.content),
                       SizedBox(width: Margins.spacing_base),
                       Expanded(
                         child: Text(
                           Strings.openNotificationsSettings,
-                          style: TextStyles.textSRegular(),
+                          style: TextStyles.textSRegular(color: context.content),
                         ),
                       ),
                     ],
@@ -182,12 +185,12 @@ class _NotificationSwitch extends StatelessWidget {
                 SizedBox(height: Margins.spacing_s),
                 Text(
                   title,
-                  style: TextStyles.textBaseBold,
+                  style: TextStyles.textBaseBold.copyWith(color: context.content),
                 ),
                 SizedBox(height: Margins.spacing_s),
                 Text(
                   description,
-                  style: TextStyles.textSRegular(),
+                  style: TextStyles.textSRegular(color: context.content),
                 ),
               ],
             ),
@@ -213,10 +216,10 @@ class _NotificationSwitch extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  Text(Strings.no, style: TextStyles.textBaseRegularWithColor(Colors.transparent)),
+                  Text(Strings.no, style: TextStyles.textBaseRegularWithColor(AppColors.transparent)),
                   Text(
                     enabled ? Strings.yes : Strings.no,
-                    style: TextStyles.textBaseRegularWithColor(AppColors.contentColor),
+                    style: TextStyles.textBaseRegularWithColor(context.content),
                   ),
                 ],
               ),

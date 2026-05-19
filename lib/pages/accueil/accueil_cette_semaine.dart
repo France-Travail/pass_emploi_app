@@ -27,7 +27,7 @@ class AccueilCetteSemaine extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        LargeSectionTitle(Strings.accueilCetteSemaineSection, color: Colors.white),
+        LargeSectionTitle(Strings.accueilCetteSemaineSection, color: AppColors.contentOnPrimary),
         SizedBox(height: Margins.spacing_base),
         if (item.withComptageDesHeures) ...[
           AccueilComptageDesHeures(),
@@ -44,27 +44,27 @@ class AccueilCetteSemaine extends StatelessWidget {
                       icon: AppIcons.event,
                       label: Strings.accueilRendezvous,
                       count: rendezvousCount,
-                      backgroundColor: Colors.white,
-                      contentColor: AppColors.contentColor,
+                      backgroundColor: context.bg,
+                      contentColor: context.content,
                     ),
                   ),
                   SizedBox(width: Margins.spacing_base),
                 ],
                 Expanded(
-                  child: _BlocInfo(
-                    icon: AppIcons.bolt_outlined,
-                    label: item.actionsOuDemarchesLabel,
-                    count: item.actionsOuDemarchesCount,
-                    backgroundColor: Colors.white,
-                    contentColor: AppColors.contentColor,
-                  ),
+                child: _BlocInfo(
+                  icon: AppIcons.bolt_outlined,
+                  label: item.actionsOuDemarchesLabel,
+                  count: item.actionsOuDemarchesCount,
+                  backgroundColor: context.bg,
+                  contentColor: context.content,
+                ),
                 ),
               ],
             ),
             SizedBox(height: Margins.spacing_base),
             SecondaryButton(
-              backgroundColor: Colors.transparent,
-              foregroundColor: Colors.white,
+              backgroundColor: AppColors.transparent,
+              foregroundColor: AppColors.contentOnPrimary,
               label: Strings.accueilVoirDetailsCetteSemaine,
               onPressed: () {
                 PassEmploiMatomoTracker.instance.trackEvent(

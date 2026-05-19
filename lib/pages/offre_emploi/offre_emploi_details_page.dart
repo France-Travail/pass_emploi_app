@@ -103,7 +103,7 @@ class OffreEmploiDetailsPage extends StatelessWidget {
   }
 
   Widget _scaffold(Widget body, BuildContext context, String? url, String? offreId, String? title) {
-    const backgroundColor = Colors.white;
+    final backgroundColor = context.bg;
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -163,22 +163,22 @@ class OffreEmploiDetailsPage extends StatelessWidget {
                 if (title != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: Margins.spacing_m),
-                    child: Semantics(header: true, child: Text(title, style: TextStyles.textLBold())),
+                    child: Semantics(header: true, child: Text(title, style: TextStyles.textLBold(color: context.content))),
                   ),
                 if (companyName != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: Margins.spacing_m),
-                    child: Text(companyName, style: TextStyles.textBaseRegular),
+                    child: Text(companyName, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
                   ),
                 _tags(viewModel),
                 if (id != null && lastUpdate != null)
-                  Text(Strings.offreNumberAndLastUpdate(id, lastUpdate), style: TextStyles.textXsRegular())
+                  Text(Strings.offreNumberAndLastUpdate(id, lastUpdate), style: TextStyles.textXsRegular(color: context.content))
                 else ...[
-                  if (id != null) Text(Strings.offreDetailNumber(id), style: TextStyles.textXsRegular()),
+                  if (id != null) Text(Strings.offreDetailNumber(id), style: TextStyles.textXsRegular(color: context.content)),
                   if (lastUpdate != null)
                     Padding(
                       padding: const EdgeInsets.only(top: Margins.spacing_xs),
-                      child: Text(Strings.offreDetailLastUpdate(lastUpdate), style: TextStyles.textSRegular()),
+                      child: Text(Strings.offreDetailLastUpdate(lastUpdate), style: TextStyles.textSRegular(color: context.content)),
                     ),
                 ],
                 SizedBox(height: Margins.spacing_base),
@@ -191,11 +191,11 @@ class OffreEmploiDetailsPage extends StatelessWidget {
                   ),
                   SizedBox(height: Margins.spacing_l),
                 ],
-                if (viewModel.displayState == OffreEmploiDetailsPageDisplayState.SHOW_DETAILS) _description(viewModel),
+                  if (viewModel.displayState == OffreEmploiDetailsPageDisplayState.SHOW_DETAILS) _description(context, viewModel),
                 if (viewModel.displayState == OffreEmploiDetailsPageDisplayState.SHOW_DETAILS)
-                  _profileDescription(viewModel),
+                  _profileDescription(context, viewModel),
                 if (viewModel.displayState == OffreEmploiDetailsPageDisplayState.SHOW_DETAILS)
-                  if (viewModel.companyName != null) _companyDescription(viewModel),
+                  if (viewModel.companyName != null) _companyDescription(context, viewModel),
                 if (viewModel.displayState == OffreEmploiDetailsPageDisplayState.SHOW_INCOMPLETE_DETAILS)
                   FavoriNotFoundError(),
                 if (viewModel.displayState == OffreEmploiDetailsPageDisplayState.SHOW_DETAILS) ...[
@@ -239,7 +239,7 @@ class OffreEmploiDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _description(OffreEmploiDetailsPageViewModel viewModel) {
+  Widget _description(BuildContext context, OffreEmploiDetailsPageViewModel viewModel) {
     final description = viewModel.description;
     if (description == null) {
       return SizedBox.shrink();
@@ -252,10 +252,10 @@ class OffreEmploiDetailsPage extends StatelessWidget {
       children: [
         _descriptionTitle(title: Strings.offreDetailsTitle),
         SizedBox(height: Margins.spacing_m),
-        ...paragraphs.map((paragraph) {
+            ...paragraphs.map((paragraph) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [Text(paragraph, style: TextStyles.textSRegular())],
+            children: [Text(paragraph, style: TextStyles.textSRegular(color: context.content))],
           );
         }),
         SizedBox(height: Margins.spacing_l),
@@ -263,21 +263,21 @@ class OffreEmploiDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _profileDescription(OffreEmploiDetailsPageViewModel viewModel) {
+  Widget _profileDescription(BuildContext context, OffreEmploiDetailsPageViewModel viewModel) {
     final experience = viewModel.experience;
-    final Widget? skills = _skillsBlock(skills: viewModel.skills);
-    final Widget? softSkills = _softSkillsBlock(softSkills: viewModel.softSkills);
-    final Widget? educations = _educationsBlock(educations: viewModel.educations);
-    final Widget? languages = _languagesBlock(languages: viewModel.languages);
-    final Widget? driverLicences = _driverLicencesBlock(driverLicences: viewModel.driverLicences);
+    final Widget? skills = _skillsBlock(context: context, skills: viewModel.skills);
+    final Widget? softSkills = _softSkillsBlock(context: context, softSkills: viewModel.softSkills);
+    final Widget? educations = _educationsBlock(context: context, educations: viewModel.educations);
+    final Widget? languages = _languagesBlock(context: context, languages: viewModel.languages);
+    final Widget? driverLicences = _driverLicencesBlock(context: context, driverLicences: viewModel.driverLicences);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _descriptionTitle(title: Strings.profileTitle),
         SizedBox(height: Margins.spacing_m),
-        Semantics(header: true, child: Text(Strings.experienceTitle, style: TextStyles.textBaseBold)),
+        Semantics(header: true, child: Text(Strings.experienceTitle, style: TextStyles.textBaseBold.copyWith(color: context.content))),
         SizedBox(height: Margins.spacing_base),
-        if (experience != null) _setRequiredElement(element: experience, criteria: viewModel.requiredExperience),
+        if (experience != null) _setRequiredElement(context: context, element: experience, criteria: viewModel.requiredExperience),
         SepLine(Margins.spacing_m, Margins.spacing_m),
         if (skills != null) skills,
         if (softSkills != null) softSkills,
@@ -288,7 +288,7 @@ class OffreEmploiDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _companyDescription(OffreEmploiDetailsPageViewModel viewModel) {
+  Widget _companyDescription(BuildContext context, OffreEmploiDetailsPageViewModel viewModel) {
     final companyName = viewModel.companyName;
     final companyDescription = viewModel.companyDescription;
     final companyAdapted = viewModel.companyAdapted != null ? viewModel.companyAdapted! : false;
@@ -298,11 +298,11 @@ class OffreEmploiDetailsPage extends StatelessWidget {
       children: [
         _descriptionTitle(title: Strings.companyTitle),
         SizedBox(height: Margins.spacing_m),
-        if (companyName != null) _companyName(companyName: companyName, companyUrl: viewModel.companyUrl),
+        if (companyName != null) _companyName(context: context, companyName: companyName, companyUrl: viewModel.companyUrl),
         if (companyAdapted) _blueTag(tagTitle: Strings.companyAdaptedTitle),
         if (companyAccessibility) _blueTag(tagTitle: Strings.companyAccessibilityTitle),
         SizedBox(height: Margins.spacing_m),
-        if (companyDescription != null) _companyDescriptionBlock(content: companyDescription),
+        if (companyDescription != null) _companyDescriptionBlock(context: context, content: companyDescription),
       ],
     );
   }
@@ -311,83 +311,83 @@ class OffreEmploiDetailsPage extends StatelessWidget {
     return TitleSection(label: title);
   }
 
-  Widget _companyDescriptionBlock({required String content}) {
+  Widget _companyDescriptionBlock({required BuildContext context, required String content}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(Strings.companyDescriptionTitle, style: TextStyles.textBaseBold),
+        Text(Strings.companyDescriptionTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_base),
-        Text(content, style: TextStyles.textSRegular()),
+        Text(content, style: TextStyles.textSRegular(color: context.content)),
         SepLine(Margins.spacing_base, Margins.spacing_m),
       ],
     );
   }
 
-  Widget? _skillsBlock({required List<Skill>? skills}) {
+  Widget? _skillsBlock({required BuildContext context, required List<Skill>? skills}) {
     if (skills == null || skills.isEmpty) return null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Semantics(header: true, child: Text(Strings.skillsTitle, style: TextStyles.textBaseBold)),
+        Semantics(header: true, child: Text(Strings.skillsTitle, style: TextStyles.textBaseBold.copyWith(color: context.content))),
         SizedBox(height: Margins.spacing_base),
-        for (final skill in skills) _setRequiredElement(element: skill.description, criteria: skill.requirement),
+        for (final skill in skills) _setRequiredElement(context: context, element: skill.description, criteria: skill.requirement),
       ],
     );
   }
 
-  Widget? _softSkillsBlock({required List<String>? softSkills}) {
+  Widget? _softSkillsBlock({required BuildContext context, required List<String>? softSkills}) {
     if (softSkills == null || softSkills.isEmpty) return null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(Strings.softSkillsTitle, style: TextStyles.textBaseBold),
+        Text(Strings.softSkillsTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_base),
         for (final soft in softSkills)
           Padding(
             padding: const EdgeInsets.only(bottom: Margins.spacing_m),
-            child: Text("· $soft", style: TextStyles.textSRegular()),
+            child: Text("· $soft", style: TextStyles.textSRegular(color: context.content)),
           ),
         SepLine(Margins.spacing_m, Margins.spacing_m),
       ],
     );
   }
 
-  Widget? _educationsBlock({required List<EducationViewModel>? educations}) {
+  Widget? _educationsBlock({required BuildContext context, required List<EducationViewModel>? educations}) {
     if (educations == null || educations.isEmpty) return null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(Strings.educationTitle, style: TextStyles.textBaseBold),
+        Text(Strings.educationTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_base),
         for (final education in educations)
-          _setRequiredElement(element: education.label, criteria: education.requirement),
+          _setRequiredElement(context: context, element: education.label, criteria: education.requirement),
         SepLine(Margins.spacing_m, Margins.spacing_m),
       ],
     );
   }
 
-  Widget? _languagesBlock({required List<Language>? languages}) {
+  Widget? _languagesBlock({required BuildContext context, required List<Language>? languages}) {
     if (languages == null || languages.isEmpty) return null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(Strings.languageTitle, style: TextStyles.textBaseBold),
+        Text(Strings.languageTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_base),
-        for (final language in languages) _setRequiredElement(element: language.type, criteria: language.requirement),
+        for (final language in languages) _setRequiredElement(context: context, element: language.type, criteria: language.requirement),
         SepLine(Margins.spacing_m, Margins.spacing_m),
       ],
     );
   }
 
-  Widget? _driverLicencesBlock({required List<DriverLicence>? driverLicences}) {
+  Widget? _driverLicencesBlock({required BuildContext context, required List<DriverLicence>? driverLicences}) {
     if (driverLicences == null || driverLicences.isEmpty) return null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(Strings.driverLicenceTitle, style: TextStyles.textBaseBold),
+        Text(Strings.driverLicenceTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_base),
         for (final licence in driverLicences)
-          _setRequiredElement(element: licence.category, criteria: licence.requirement),
+          _setRequiredElement(context: context, element: licence.category, criteria: licence.requirement),
         SepLine(Margins.spacing_m, Margins.spacing_m),
       ],
     );
@@ -403,26 +403,26 @@ class OffreEmploiDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _setRequiredElement({required String element, required String? criteria}) {
-    return _require(criteria) ? _requiredElement(element) : _listItem(element);
+  Widget _setRequiredElement({required BuildContext context, required String element, required String? criteria}) {
+    return _require(criteria) ? _requiredElement(context: context, requiredText: element) : _listItem(context: context, text: element);
   }
 
   bool _require(String? criteria) => (criteria != null && criteria == "E");
 
-  Widget _listItem(String text) {
+  Widget _listItem({required BuildContext context, required String text}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: Margins.spacing_base),
-      child: Text("· $text", style: TextStyles.textSRegular()),
+      child: Text("· $text", style: TextStyles.textSRegular(color: context.content)),
     );
   }
 
-  Widget _requiredElement(String requiredText) {
+  Widget _requiredElement({required BuildContext context, required String requiredText}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: Margins.spacing_xs),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Flexible(child: _listItem(requiredText)),
+          Flexible(child: _listItem(context: context, text: requiredText)),
           Padding(
             padding: const EdgeInsets.only(left: Margins.spacing_s, bottom: Margins.spacing_base),
             child: HelpTooltip(message: Strings.requiredIcon, icon: AppIcons.error_rounded),
@@ -432,9 +432,9 @@ class OffreEmploiDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _companyName({required String companyName, required String? companyUrl}) {
+  Widget _companyName({required BuildContext context, required String companyName, required String? companyUrl}) {
     return (companyUrl == null || companyUrl.isEmpty)
-        ? Text(companyName, style: TextStyles.textBaseBold)
+        ? Text(companyName, style: TextStyles.textBaseBold.copyWith(color: context.content))
         : _companyNameWithUrl(companyName: companyName, url: companyUrl);
   }
 
@@ -450,7 +450,7 @@ class OffreEmploiDetailsPage extends StatelessWidget {
     final onPostuler = viewModel.onPostuler;
 
     return Container(
-      color: Colors.white,
+      color: context.bg,
       padding: const EdgeInsets.all(Margins.spacing_base),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

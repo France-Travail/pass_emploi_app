@@ -15,7 +15,7 @@ class CardTitle extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
       // A11y : ensure title is not cut when user has text scale
       maxLines: A11yUtils.withTextScale(context) ? 6 : 3,
-      style: TextStyles.textBaseBold.copyWith(fontSize: 16, color: AppColors.contentColor),
+      style: TextStyles.textBaseBold.copyWith(fontSize: 16, color: context.content),
     );
   }
 }

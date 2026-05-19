@@ -51,7 +51,7 @@ class _DatePickerState extends State<DatePicker> {
           key: dateGlobalKey,
           onPressed: () => openDatePicker(context),
           tooltip: Strings.selectDateTooltip,
-          icon: Icon(AppIcons.today_rounded, color: AppColors.grey800),
+          icon: Icon(AppIcons.today_rounded, color: context.grey800),
         ),
         suffixIcon: widget.onDateDeleted != null && widget.initialDateValue != null
             ? IconButton(
@@ -60,7 +60,7 @@ class _DatePickerState extends State<DatePicker> {
                   widget.onDateDeleted?.call();
                 },
                 tooltip: Strings.removeDateTooltip,
-                icon: Icon(AppIcons.cancel_rounded, color: AppColors.grey800),
+                icon: Icon(AppIcons.cancel_rounded, color: context.grey800),
               )
             : null,
         hintText: _hintText(context),

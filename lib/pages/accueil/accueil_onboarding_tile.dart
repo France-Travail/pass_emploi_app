@@ -31,7 +31,7 @@ class AccueilOnboardingTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(Margins.spacing_base),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.bg,
         ),
         child: Row(
           children: [
@@ -44,27 +44,27 @@ class AccueilOnboardingTile extends StatelessWidget {
               Expanded(
                 child: Text(
                   Strings.onboardingAccueilTitleCompleted,
-                  style: TextStyles.textBaseBold.copyWith(color: AppColors.contentColor),
+                  style: TextStyles.textBaseBold.copyWith(color: context.content),
                 ),
               ),
               const SizedBox(width: Margins.spacing_base),
               Icon(
                 Icons.close_rounded,
-                color: AppColors.contentColor,
-              )
+                color: context.content,
+              ),
             ] else ...[
               Expanded(
                 child: Text(
                   Strings.onboardingAccueilTitle,
-                  style: TextStyles.textBaseBold.copyWith(color: AppColors.contentColor),
+                  style: TextStyles.textBaseBold.copyWith(color: context.content),
                 ),
               ),
               const SizedBox(width: Margins.spacing_base),
               Icon(
                 Icons.chevron_right_rounded,
-                color: AppColors.contentColor,
-              )
-            ]
+                color: context.content,
+              ),
+            ],
           ],
         ),
       ),
@@ -99,7 +99,7 @@ class OnboardingStepper extends StatelessWidget {
           ),
           Text(
             '$completedSteps/$totalSteps',
-            style: TextStyles.textSBold.copyWith(color: textColor ?? AppColors.contentColor),
+            style: TextStyles.textSBold.copyWith(color: textColor ?? context.content),
           ),
         ],
       ),

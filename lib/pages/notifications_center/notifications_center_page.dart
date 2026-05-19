@@ -33,7 +33,7 @@ class NotificationCenter extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.centreNotification,
       child: Scaffold(
-        backgroundColor: AppColors.grey100,
+        backgroundColor: context.grey100,
         appBar: SecondaryAppBar(title: Strings.notificationsCenterTitle),
         body: StoreConnector<AppState, NotificationsCenterViewModel>(
           converter: (store) => NotificationsCenterViewModel.create(store),
@@ -77,7 +77,7 @@ class _Body extends StatelessWidget {
             child: InAppFeedback(
               feature: "centre-notif",
               label: Strings.feedbackCentreNotification,
-              backgroundColor: Colors.white,
+              backgroundColor: context.bg,
             ),
           );
         }

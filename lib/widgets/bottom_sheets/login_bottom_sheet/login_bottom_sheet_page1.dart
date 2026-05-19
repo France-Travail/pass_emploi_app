@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/pages/login_page.dart';
 import 'package:pass_emploi_app/presentation/login_bottom_sheet_view_model.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/external_links.dart';
@@ -77,7 +78,7 @@ class _MissionLocaleLoginButton extends StatelessWidget {
       ),
       onPressed: onSelected,
       label: Strings.loginBottomSeetMissionLocaleButton,
-      suffix: Icon(AppIcons.chevron_right_rounded),
+      suffix: Icon(AppIcons.chevron_right_rounded, color: context.content),
     );
   }
 }
@@ -100,7 +101,7 @@ class _FranceTravailLoginButton extends StatelessWidget {
       ),
       onPressed: onSelected,
       label: Strings.loginBottomSeetFranceTravailButton,
-      suffix: Icon(AppIcons.chevron_right_rounded),
+      suffix: Icon(AppIcons.chevron_right_rounded, color: context.content),
     );
   }
 }
@@ -110,7 +111,7 @@ class _AppBarTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       header: true,
-      child: Text(Strings.loginBottomSeetTitlePage1, style: TextStyles.textMBold),
+      child: Text(Strings.loginBottomSeetTitlePage1, style: TextStyles.textMBold.copyWith(color: context.content)),
     );
   }
 }

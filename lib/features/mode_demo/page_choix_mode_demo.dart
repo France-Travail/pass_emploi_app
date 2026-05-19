@@ -30,29 +30,31 @@ class ChoixModeDemoPage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.explicationModeDemo,
       child: StoreConnector<AppState, ChoixModeDemoViewModel>(
-          converter: (store) => ChoixModeDemoViewModel.create(store),
-          builder: (context, viewModel) {
-            return Scaffold(
-              body: Stack(
-                children: [
-                  _Background(),
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _BackButton(),
-                      Expanded(
-                        child: _Contenu(viewModel),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          }),
+        converter: (store) => ChoixModeDemoViewModel.create(store),
+        builder: (context, viewModel) {
+          return Scaffold(
+            backgroundColor: context.bg,
+            body: Stack(
+              children: [
+                _Background(),
+                Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _BackButton(),
+                    Expanded(
+                      child: _Contenu(viewModel),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -68,7 +70,7 @@ class _Contenu extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.bg,
           borderRadius: BorderRadius.circular(Dimens.radius_base),
           boxShadow: [Shadows.radius_base],
         ),
@@ -78,16 +80,17 @@ class _Contenu extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Center(
-                  child: Padding(
-                padding: const EdgeInsets.only(top: 24),
-                child: Semantics(
-                  header: true,
-                  child: Text(
-                    Strings.modeDemoExplicationTitre,
-                    style: TextStyles.secondaryAppBar,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 24),
+                  child: Semantics(
+                    header: true,
+                    child: Text(
+                      Strings.modeDemoExplicationTitre,
+                      style: TextStyles.secondaryAppBar.copyWith(color: context.content),
+                    ),
                   ),
                 ),
-              )),
+              ),
               SizedBox(height: Margins.spacing_m),
               Center(
                 child: SizedBox(
@@ -102,7 +105,7 @@ class _Contenu extends StatelessWidget {
                 child: Text(
                   Strings.modeDemoExplicationChoix,
                   textAlign: TextAlign.center,
-                  style: TextStyles.textBaseBold,
+                  style: TextStyles.textBaseBold.copyWith(color: context.content),
                 ),
               ),
               _BoutonPE(),
@@ -124,7 +127,9 @@ class _Background extends StatelessWidget {
           flex: 1,
           child: Container(
             decoration: BoxDecoration(
-                color: AppColors.primary, borderRadius: BorderRadius.vertical(bottom: Radius.circular(123456789))),
+              color: AppColors.primary,
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(123456789)),
+            ),
           ),
         ),
         Expanded(flex: 1, child: Container()),
@@ -143,7 +148,7 @@ class _BackButton extends StatelessWidget {
         child: IconButton(
           icon: Icon(
             AppIcons.chevron_left_rounded,
-            color: Colors.white,
+            color: AppColors.contentOnPrimary,
             size: Dimens.icon_size_m,
           ),
           onPressed: () {
@@ -162,7 +167,7 @@ class _BoutonPE extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       child: PrimaryActionButton(
         label: Strings.loginPoleEmploi,
-        backgroundColor: Color(0xFF073A82),
+        backgroundColor: AppColors.primaryDarken,
         onPressed: () {
           StoreProvider.of<AppState>(context).dispatch(RequestLoginAction(LoginMode.DEMO_PE));
         },
@@ -178,7 +183,7 @@ class _BoutonMILO extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 30, left: 20, right: 20),
       child: PrimaryActionButton(
         label: Strings.loginMissionLocale,
-        backgroundColor: Color(0xFF942258),
+        backgroundColor: AppColors.accent1,
         onPressed: () {
           StoreProvider.of<AppState>(context).dispatch(RequestLoginAction(LoginMode.DEMO_MILO));
         },
