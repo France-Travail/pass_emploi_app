@@ -5,6 +5,8 @@ import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_mission_locale_actions.dart';
 import 'package:pass_emploi_app/features/date_consultation_actualite_mission_locale/date_consultation_actualite_mission_locale_actions.dart';
+import 'package:pass_emploi_app/features/tracking/tracking_evenement_engagement_action.dart';
+import 'package:pass_emploi_app/network/post_evenement_engagement.dart';
 import 'package:pass_emploi_app/presentation/actualite_mission_locale/actualite_mission_locale_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -37,6 +39,7 @@ class ActualiteMissionLocalePage extends StatelessWidget {
             onInit: (store) {
               store.dispatch(ActualiteMissionLocaleRequestAction());
               store.dispatch(DateConsultationActualiteMissionLocaleWriteAction(DateTime.now()));
+              store.dispatch(TrackingEvenementEngagementAction(EvenementEngagement.ACTUALITE_MILO_CONSULTATION));
             },
             converter: (store) => ActualiteMissionLocaleViewModel.create(store),
             builder: (context, viewModel) => _DisplayState(viewModel: viewModel),
