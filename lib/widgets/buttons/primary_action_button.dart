@@ -70,14 +70,14 @@ class PrimaryActionButton extends StatelessWidget {
           onPressed: onPressed,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: widthPadding, vertical: heightPadding),
-            child: _buildContent(textStyle),
+            child: _buildContent(textStyle, foregroundColor),
           ),
         );
       },
     );
   }
 
-  Widget _buildContent(TextStyle textStyle) {
+  Widget _buildContent(TextStyle textStyle, Color foregroundColor) {
     return Semantics(
       link: semanticsRoleLink,
       child: Wrap(
@@ -86,7 +86,7 @@ class PrimaryActionButton extends StatelessWidget {
           if (icon != null)
             Padding(
               padding: EdgeInsets.only(right: iconRightPadding),
-              child: Icon(icon, size: iconSize, color: AppColors.contentOnPrimary),
+              child: Icon(icon, size: iconSize, color: foregroundColor),
             ),
           Text(
             label,

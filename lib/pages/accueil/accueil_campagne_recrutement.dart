@@ -51,14 +51,17 @@ class CampagneRecrutementCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           Strings.accueilCampagneRecrutementLabel,
-                        style: TextStyles.textMBold.copyWith(color: AppColors.contentOnPrimary),
+                          style: TextStyles.textMBold.copyWith(color: AppColors.contentOnPrimary),
                         ),
                       ),
                       SizedBox(width: Margins.spacing_m),
                     ],
                   ),
                   SizedBox(height: Margins.spacing_s),
-                  PressedTip.externalLink(Strings.accueilCampagneRecrutementPressedTip, textColor: AppColors.contentOnPrimary),
+                  PressedTip.externalLink(
+                    Strings.accueilCampagneRecrutementPressedTip,
+                    textColor: AppColors.contentOnPrimary,
+                  ),
                 ],
               ),
             ),

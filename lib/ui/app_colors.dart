@@ -136,4 +136,18 @@ class AppColorsSpecifics {
   static Color primaryButtonBackgroundColor(BuildContext context) {
     return context.isDarkTheme ? AppColors.primaryLighten : AppColors.primary;
   }
+
+  static Color profileButtonForegroundColor(BuildContext context) {
+    if (context.isDarkTheme) {
+      return AppColors.primaryDarken;
+    }
+    return Brand.isCej() ? AppColors.contentOnPrimary : AppColors.primary;
+  }
+
+  static Color profileButtonBackgroundColor(BuildContext context) {
+    if (context.isDarkTheme) {
+      return AppColors.primaryLighten;
+    }
+    return Brand.isCej() ? AppColors.primary : context.grey100;
+  }
 }

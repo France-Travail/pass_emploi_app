@@ -11,6 +11,8 @@ class ProfileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final foregroundColor = AppColorsSpecifics.profileButtonForegroundColor(context);
+    final backgroundColor = AppColorsSpecifics.profileButtonBackgroundColor(context);
     return FocusedBorderBuilder(
       builder: (focusNode) {
         return Container(
@@ -18,7 +20,7 @@ class ProfileButton extends StatelessWidget {
           height: 44,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: isDarkColor ? AppColors.primary : context.grey100,
+            color: backgroundColor,
           ),
           child: IconButton(
             tooltip: Strings.profilButtonSemanticsLabel,
@@ -29,7 +31,7 @@ class ProfileButton extends StatelessWidget {
               child: Icon(
                 Icons.person_outline_rounded,
                 size: 24,
-                color: isDarkColor ? AppColors.contentOnPrimary : AppColors.primary,
+                color: foregroundColor,
               ),
             ),
           ),

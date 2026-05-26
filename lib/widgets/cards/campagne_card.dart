@@ -15,6 +15,7 @@ class CampagneCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final foregroundColor = AppColors.contentLight;
     return Semantics(
       button: true,
       child: CardContainer(
@@ -33,13 +34,15 @@ class CampagneCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(titre, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+                  Text(titre, style: TextStyles.textBaseBold.copyWith(color: foregroundColor)),
                   SizedBox(height: Margins.spacing_s),
                   Row(
                     children: [
-                      Flexible(child: Text(description, style: TextStyles.textSRegular(color: context.content))),
+                      Flexible(
+                        child: Text(description, style: TextStyles.textSRegular(color: foregroundColor)),
+                      ),
                       SizedBox(width: Margins.spacing_s),
-                      Icon(AppIcons.chevron_right_rounded, color: context.content),
+                      Icon(AppIcons.chevron_right_rounded, color: foregroundColor),
                     ],
                   ),
                 ],
