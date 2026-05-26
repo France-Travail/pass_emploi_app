@@ -111,7 +111,6 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
           unselectedFontSize: FontSizes.extraSmall,
           backgroundColor: context.bg,
           type: BottomNavigationBarType.fixed,
-          selectedItemColor: AppColors.primary,
           unselectedItemColor: context.grey800,
           showSelectedLabels: false,
           showUnselectedLabels: false,
@@ -243,9 +242,17 @@ class _PopUpActualisationPe extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(Strings.actualisationPePopUpTitle, style: TextStyles.textMBold.copyWith(color: context.content), textAlign: TextAlign.center),
+          Text(
+            Strings.actualisationPePopUpTitle,
+            style: TextStyles.textMBold.copyWith(color: context.content),
+            textAlign: TextAlign.center,
+          ),
           SizedBox(height: Margins.spacing_base),
-          Text(Strings.actualisationPePopUpSubtitle, style: TextStyles.textBaseRegular.copyWith(color: context.content), textAlign: TextAlign.center),
+          Text(
+            Strings.actualisationPePopUpSubtitle,
+            style: TextStyles.textBaseRegular.copyWith(color: context.content),
+            textAlign: TextAlign.center,
+          ),
           SizedBox(height: Margins.spacing_l),
           PrimaryActionButton(
             label: Strings.actualisationPePopUpPrimaryButton,
