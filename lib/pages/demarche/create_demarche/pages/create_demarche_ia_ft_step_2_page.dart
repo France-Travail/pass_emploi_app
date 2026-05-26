@@ -66,7 +66,11 @@ class _Loading extends StatelessWidget {
         children: [
           Image.asset(Drawables.iaFtSuggestionsLoading, width: 200, height: 200),
           const SizedBox(height: Margins.spacing_base),
-          Text(Strings.iaFtSuggestionsLoading, style: TextStyles.textMBold.copyWith(color: context.content), textAlign: TextAlign.center),
+          Text(
+            Strings.iaFtSuggestionsLoading,
+            style: TextStyles.textMBold.copyWith(color: context.content),
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(height: Margins.spacing_l),
           CircularProgressIndicator(),
         ],
@@ -88,7 +92,11 @@ class _Failure extends StatelessWidget {
         children: [
           Image.asset(Drawables.iaFtSuggestionsFailure, width: 200, height: 200),
           const SizedBox(height: Margins.spacing_m),
-          Text(Strings.iaFtSuggestionsFailure, style: TextStyles.textMBold.copyWith(color: context.content), textAlign: TextAlign.center),
+          Text(
+            Strings.iaFtSuggestionsFailure,
+            style: TextStyles.textMBold.copyWith(color: context.content),
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(height: Margins.spacing_m),
           PrimaryActionButton(onPressed: () => viewModel.onNavigateBackward(), label: Strings.back),
         ],
@@ -111,7 +119,11 @@ class _Empty extends StatelessWidget {
           children: [
             Image.asset(Drawables.iaFtSuggestionsEmpty, width: 200, height: 200),
             const SizedBox(height: Margins.spacing_m),
-            Text(Strings.iaFtSuggestionsEmpty, style: TextStyles.textMBold.copyWith(color: context.content), textAlign: TextAlign.center),
+            Text(
+              Strings.iaFtSuggestionsEmpty,
+              style: TextStyles.textMBold.copyWith(color: context.content),
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: Margins.spacing_m),
             PrimaryActionButton(onPressed: () => viewModel.onNavigateBackward(), label: Strings.back),
           ],
@@ -153,8 +165,10 @@ class _ContentState extends State<_Content> {
     return Stack(
       clipBehavior: Clip.none,
       children: [
+        SizedBox.expand(
+          child: ColoredBox(color: context.grey100),
+        ),
         SingleChildScrollView(
-          // clipBehavior: Clip.none,
           padding: const EdgeInsets.all(Margins.spacing_base),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -174,7 +188,10 @@ class _ContentState extends State<_Content> {
                 ),
                 const SizedBox(height: Margins.spacing_base),
               ],
-              Text(Strings.iaFtSuggestionsContent(suggestions.length), style: TextStyles.textMBold.copyWith(color: context.content)),
+              Text(
+                Strings.iaFtSuggestionsContent(suggestions.length),
+                style: TextStyles.textMBold.copyWith(color: context.content),
+              ),
               const SizedBox(height: Margins.spacing_base),
               ListView.builder(
                 shrinkWrap: true,

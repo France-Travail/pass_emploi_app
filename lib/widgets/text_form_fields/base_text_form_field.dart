@@ -154,7 +154,7 @@ class _BaseTextFieldState extends State<BaseTextField> {
   OutlineInputBorder _focusedBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(Dimens.radius_base),
-      borderSide: BorderSide(color: AppColors.primary, width: 2.0),
+      borderSide: BorderSide(color: AppColorsSpecifics.primaryToLighten(context), width: 2.0),
     );
   }
 

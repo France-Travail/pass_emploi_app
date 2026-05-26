@@ -140,7 +140,7 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
                     child: IconButton(
                       onPressed: () => _textEditingController.clear(),
                       icon: Icon(Icons.close),
-                      color: AppColors.primary,
+                      color: AppColorsSpecifics.primaryToLighten(context),
                     ),
                   ),
               ],
