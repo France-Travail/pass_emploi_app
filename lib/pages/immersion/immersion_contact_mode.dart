@@ -14,21 +14,27 @@ class ContactModeTag extends StatelessWidget {
     return switch (contactMode) {
       ImmersionContactMode.MAIL => CardTag(
         icon: AppIcons.mail,
-        backgroundColor: AppColors.additional5Lighten,
         text: Strings.contactByMail,
+        backgroundColor: AppColors.additional5Lighten,
         contentColor: context.content,
+        backgroundDarkColor: AppColors.additional5Darken,
+        contentDarkColor: AppColors.contentDark,
       ),
       ImmersionContactMode.PHONE => CardTag(
         icon: AppIcons.phone,
         backgroundColor: AppColors.additional5Lighten,
         text: Strings.contactByPhone,
         contentColor: context.content,
+        backgroundDarkColor: AppColors.additional5Darken,
+        contentDarkColor: AppColors.contentDark,
       ),
       ImmersionContactMode.PRESENTIEL => CardTag(
         icon: AppIcons.place_outlined,
         backgroundColor: AppColors.additional5Lighten,
         text: Strings.contactByPresen,
         contentColor: context.content,
+        backgroundDarkColor: AppColors.additional5Darken,
+        contentDarkColor: AppColors.contentDark,
       ),
       ImmersionContactMode.INCONNU => SizedBox.shrink(),
     };

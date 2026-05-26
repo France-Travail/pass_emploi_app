@@ -43,6 +43,8 @@ class DemarcheCard extends StatelessWidget {
                     text: viewModel.categoryText!,
                     contentColor: AppColors.primary,
                     backgroundColor: AppColors.primaryLighten,
+                    backgroundDarkColor: AppColors.primaryDarkenStrong,
+                    contentDarkColor: AppColors.primaryLighten,
                   )
                 : null,
             pillule: viewModel.pillule.toDemarcheCardPillule(excludeSemantics: true),

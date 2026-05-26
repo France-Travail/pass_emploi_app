@@ -44,85 +44,152 @@ enum CardPilluleType {
   }
 }
 
+class _CardPilluleColors {
+  final Color backgroundLight;
+  final Color backgroundDark;
+  final Color contentLight;
+  final Color contentDark;
+
+  const _CardPilluleColors({
+    required this.backgroundLight,
+    required this.backgroundDark,
+    required this.contentLight,
+    required this.contentDark,
+  });
+
+  /// Shorthand for pillules that don't need dark-mode adaptation.
+  const _CardPilluleColors.fixed({required Color background, required Color content})
+    : backgroundLight = background,
+      backgroundDark = background,
+      contentLight = content,
+      contentDark = content;
+
+  Color background(BuildContext context) => context.isDarkTheme ? backgroundDark : backgroundLight;
+  Color content(BuildContext context) => context.isDarkTheme ? contentDark : contentLight;
+}
+
 class CardPillule extends StatelessWidget {
   final String text;
-  final Color contentColor;
-  final Color backgroundColor;
   final bool excludeSemantics;
   final IconData? icon;
+  final _CardPilluleColors _colors;
 
-  const CardPillule({
+  /// Generic constructor — callers supply explicit colors; no dark-mode adaptation.
+  CardPillule({
     required this.text,
-    required this.contentColor,
-    required this.backgroundColor,
+    required Color contentColor,
+    required Color backgroundColor,
     required this.excludeSemantics,
     this.icon,
-  });
+  }) : _colors = _CardPilluleColors.fixed(background: backgroundColor, content: contentColor);
 
   CardPillule.newNotification([this.excludeSemantics = false])
     : text = Strings.newPillule,
-      contentColor = AppColors.warning,
-      backgroundColor = AppColors.warningLighten,
+      _colors = const _CardPilluleColors(
+        backgroundLight: AppColors.warningLighten,
+        backgroundDark: AppColors.warningDarken,
+        contentLight: AppColors.warning,
+        contentDark: AppColors.warningLighten,
+      ),
       icon = null;
 
   CardPillule.actionTodo([this.excludeSemantics = false])
     : text = Strings.doingPillule,
-      contentColor = AppColors.accent1,
-      backgroundColor = AppColors.accent1Lighten,
+      _colors = const _CardPilluleColors(
+        backgroundLight: AppColors.accent1Lighten,
+        backgroundDark: AppColors.accent1Darken,
+        contentLight: AppColors.accent1,
+        contentDark: AppColors.accent1Lighten,
+      ),
       icon = null;
 
   CardPillule.actionDone([this.excludeSemantics = false])
     : text = Strings.donePillule,
-      contentColor = AppColors.success,
-      backgroundColor = AppColors.successLighten,
+      _colors = const _CardPilluleColors(
+        backgroundLight: AppColors.successLighten,
+        backgroundDark: AppColors.successDarken,
+        contentLight: AppColors.success,
+        contentDark: AppColors.successLighten,
+      ),
       icon = null;
 
   CardPillule.actionLate([this.excludeSemantics = false])
     : text = Strings.latePillule,
-      contentColor = AppColors.warning,
-      backgroundColor = AppColors.warningLighten,
+      _colors = const _CardPilluleColors(
+        backgroundLight: AppColors.warningLighten,
+        backgroundDark: AppColors.warningDarken,
+        contentLight: AppColors.warning,
+        contentDark: AppColors.warningLighten,
+      ),
       icon = null;
 
   CardPillule.demarcheTodo([this.excludeSemantics = false])
     : text = Strings.todoPillule,
-      contentColor = AppColors.primaryDarken,
-      backgroundColor = AppColors.accent3Lighten,
+      _colors = const _CardPilluleColors(
+        backgroundLight: AppColors.accent3Lighten,
+        backgroundDark: AppColors.accent3Darken,
+        contentLight: AppColors.primaryDarken,
+        contentDark: AppColors.primaryLighten,
+      ),
       icon = null;
 
   CardPillule.demarcheDoing([this.excludeSemantics = false])
     : text = Strings.doingPillule,
-      contentColor = AppColors.accent1,
-      backgroundColor = AppColors.accent1Lighten,
+      _colors = const _CardPilluleColors(
+        backgroundLight: AppColors.accent1Lighten,
+        backgroundDark: AppColors.accent1Darken,
+        contentLight: AppColors.accent1,
+        contentDark: AppColors.accent1Lighten,
+      ),
       icon = null;
 
   CardPillule.demarcheDone([this.excludeSemantics = false])
     : text = Strings.donePillule,
-      contentColor = AppColors.success,
-      backgroundColor = AppColors.successLighten,
+      _colors = const _CardPilluleColors(
+        backgroundLight: AppColors.successLighten,
+        backgroundDark: AppColors.successDarken,
+        contentLight: AppColors.success,
+        contentDark: AppColors.successLighten,
+      ),
       icon = null;
 
   CardPillule.demarcheLate([this.excludeSemantics = false])
     : text = Strings.latePillule,
-      contentColor = AppColors.warning,
-      backgroundColor = AppColors.warningLighten,
+      _colors = const _CardPilluleColors(
+        backgroundLight: AppColors.warningLighten,
+        backgroundDark: AppColors.warningDarken,
+        contentLight: AppColors.warning,
+        contentDark: AppColors.warningLighten,
+      ),
       icon = null;
 
   CardPillule.demarcheCanceled([this.excludeSemantics = false])
     : text = Strings.canceledPillule,
-      contentColor = AppColors.primaryDarken,
-      backgroundColor = AppColors.accent3Lighten,
+      _colors = const _CardPilluleColors(
+        backgroundLight: AppColors.accent3Lighten,
+        backgroundDark: AppColors.accent3Darken,
+        contentLight: AppColors.primaryDarken,
+        contentDark: AppColors.primaryLighten,
+      ),
       icon = AppIcons.block;
 
   CardPillule.evenementCanceled([this.excludeSemantics = false])
     : text = Strings.rendezvousCardAnnule,
-      contentColor = AppColors.primary,
-      backgroundColor = AppColors.primaryLighten,
+      _colors = const _CardPilluleColors(
+        backgroundLight: AppColors.primaryLighten,
+        backgroundDark: AppColors.primaryDarken,
+        contentLight: AppColors.primaryCej,
+        contentDark: AppColors.primaryLighten,
+      ),
       icon = AppIcons.block;
 
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimens.radius_l), color: backgroundColor),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(Dimens.radius_l),
+        color: _colors.background(context),
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_s, vertical: Margins.spacing_xs),
         child: Semantics(
@@ -131,10 +198,10 @@ class CardPillule extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (icon != null) ...[
-                Icon(icon, color: contentColor, size: Dimens.icon_size_base),
+                Icon(icon, color: _colors.content(context), size: Dimens.icon_size_base),
                 SizedBox(width: Margins.spacing_xs),
               ],
-              Text(text, style: TextStyles.textXsBold().copyWith(color: contentColor)),
+              Text(text, style: TextStyles.textXsBold().copyWith(color: _colors.content(context))),
             ],
           ),
         ),

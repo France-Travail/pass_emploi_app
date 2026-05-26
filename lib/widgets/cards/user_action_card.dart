@@ -45,6 +45,8 @@ class UserActionCard extends StatelessWidget {
               text: viewModel.categoryText,
               contentColor: viewModel.isLate ? AppColors.warning : AppColors.primary,
               backgroundColor: viewModel.isLate ? AppColors.warningLighten : AppColors.primaryLighten,
+              backgroundDarkColor: viewModel.isLate ? AppColors.warningDarken : AppColors.primaryDarken,
+              contentDarkColor: viewModel.isLate ? AppColors.warningLighten : AppColors.primaryLighten,
             ),
             pillule: viewModel.pillule.toActionCardPillule(excludeSemantics: true),
           ),

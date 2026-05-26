@@ -255,6 +255,8 @@ class _DemarcheIaCard extends StatelessWidget {
               text: suggestion.label ?? Strings.otherDemarche,
               contentColor: AppColors.primary,
               backgroundColor: AppColors.primaryLighten,
+              backgroundDarkColor: AppColors.primaryDarkenStrong,
+              contentDarkColor: AppColors.primaryLighten,
             ),
             iconButton: IconButton(
               onPressed: () => onDelete(suggestion.id),

@@ -192,6 +192,8 @@ class _Categorie extends StatelessWidget {
       text: label,
       contentColor: AppColors.primary,
       backgroundColor: AppColors.primaryLighten,
+      backgroundDarkColor: AppColors.primaryDarkenStrong,
+      contentDarkColor: AppColors.primaryLighten,
     );
   }
 }
@@ -257,7 +259,9 @@ class _AttributItem extends StatelessWidget {
             size: Dimens.icon_size_m,
           ),
           SizedBox(width: 12),
-          Expanded(child: Text(label, style: TextStyles.textBaseBold.copyWith(color: context.content))),
+          Expanded(
+            child: Text(label, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+          ),
         ],
       ),
     );
@@ -318,11 +322,24 @@ class _Historique extends StatelessWidget {
             Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(text: Strings.modifiedBy, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-                  TextSpan(text: viewModel.modificationDate, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-                  if (viewModel.modifiedByAdvisor) TextSpan(text: Strings.par, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
+                  TextSpan(
+                    text: Strings.modifiedBy,
+                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
+                  ),
+                  TextSpan(
+                    text: viewModel.modificationDate,
+                    style: TextStyles.textBaseBold.copyWith(color: context.content),
+                  ),
                   if (viewModel.modifiedByAdvisor)
-                    TextSpan(text: Strings.votreConseiller, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+                    TextSpan(
+                      text: Strings.par,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
+                    ),
+                  if (viewModel.modifiedByAdvisor)
+                    TextSpan(
+                      text: Strings.votreConseiller,
+                      style: TextStyles.textBaseBold.copyWith(color: context.content),
+                    ),
                 ],
               ),
             ),
@@ -330,11 +347,24 @@ class _Historique extends StatelessWidget {
             Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(text: Strings.createdBy, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-                  TextSpan(text: viewModel.creationDate, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-                  if (viewModel.createdByAdvisor) TextSpan(text: Strings.par, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
+                  TextSpan(
+                    text: Strings.createdBy,
+                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
+                  ),
+                  TextSpan(
+                    text: viewModel.creationDate,
+                    style: TextStyles.textBaseBold.copyWith(color: context.content),
+                  ),
                   if (viewModel.createdByAdvisor)
-                    TextSpan(text: Strings.votreConseiller, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+                    TextSpan(
+                      text: Strings.par,
+                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
+                    ),
+                  if (viewModel.createdByAdvisor)
+                    TextSpan(
+                      text: Strings.votreConseiller,
+                      style: TextStyles.textBaseBold.copyWith(color: context.content),
+                    ),
                 ],
               ),
             ),
