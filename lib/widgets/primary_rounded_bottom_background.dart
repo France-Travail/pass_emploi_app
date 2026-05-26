@@ -17,7 +17,7 @@ class PrimaryRoundedBottomBackground extends StatelessWidget {
           child: DecoratedBox(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(bottomLeft: Radius.circular(200), bottomRight: Radius.circular(200)),
-              color: AppColorsSpecifics.primaryBgToGrey(context),
+              color: AppColorsSpecifics.primaryToGrey100(context),
             ),
           ),
         ),

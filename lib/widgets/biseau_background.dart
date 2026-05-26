@@ -4,7 +4,7 @@ import 'package:pass_emploi_app/ui/app_colors.dart';
 class BiseauBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final bgColor = AppColorsSpecifics.primaryBgToGrey(context);
+    final bgColor = AppColorsSpecifics.primaryToGrey100(context);
     return Stack(
       children: [
         Container(color: bgColor),

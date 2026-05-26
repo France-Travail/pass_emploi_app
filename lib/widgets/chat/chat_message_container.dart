@@ -73,7 +73,7 @@ class _ChatBubble extends StatelessWidget {
         ),
         padding: EdgeInsets.all(isPj ? Margins.spacing_s : Margins.spacing_base),
         decoration: BoxDecoration(
-          color: isMyMessage ? AppColors.primary : context.bg,
+          color: isMyMessage ? AppColorsSpecifics.primaryToGrey500(context) : context.bg,
           borderRadius: BorderRadius.all(Radius.circular(16)),
         ),
         child: child,
