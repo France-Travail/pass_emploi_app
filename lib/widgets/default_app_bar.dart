@@ -50,7 +50,7 @@ class PrimarySliverAppbar extends StatelessWidget {
                           child: AutoFocusA11y(
                             child: Text(
                               title,
-                              style: TextStyles.primaryAppBar
+                              style: TextStyles.primaryAppBar(context)
                                   .copyWith(
                                     fontSize: A11yUtils.withTextScale(context) ? FontSizes.semi : FontSizes.huge,
                                   )
@@ -143,9 +143,10 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
             enabled: withAutofocusA11y,
             child: Text(
               title,
-              style: TextStyles.primaryAppBar.copyWith(
-                color: Brand.isCej() ? AppColors.primary : context.grey100,
-              ),
+              style: TextStyles.primaryAppBar(context)
+                ..copyWith(
+                  color: Brand.isCej() ? AppColors.primary : context.grey100,
+                ),
               overflow: TextOverflow.fade,
             ),
           ),
@@ -200,7 +201,7 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
           excludeFromSemantics: true,
           child: Text(
             title,
-            style: TextStyles.secondaryAppBar,
+            style: TextStyles.secondaryAppBar(context),
             overflow: TextOverflow.ellipsis,
           ),
         ),

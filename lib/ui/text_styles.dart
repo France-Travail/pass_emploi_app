@@ -179,14 +179,16 @@ class TextStyles {
     );
   }
 
-  static TextStyle primaryAppBar = TextStyle(
-    color: AppColors.primary,
+  static TextStyle primaryAppBar(BuildContext context) => TextStyle(
+    color: context.isDarkTheme ? context.content : AppColors.primary,
     fontFamily: 'Marianne',
     fontSize: FontSizes.huge,
     fontWeight: FontWeight.bold,
   );
 
-  static final secondaryAppBar = TextStyles.textMBoldWithColor(color: AppColors.primary);
+  static TextStyle secondaryAppBar(BuildContext context) => TextStyles.textMBoldWithColor(
+    color: context.isDarkTheme ? context.content : AppColors.primary,
+  );
 
   static final accueilSection = TextStyles.textLBold(color: AppColors.primary);
 
