@@ -190,15 +190,21 @@ class _ThematiqueTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = AppColorsSpecifics.primaryToLighten(context);
     return Semantics(
       button: true,
       child: CardContainer(
+        backgroundColor: AppColorsSpecifics.bgToGrey100(context),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(thematique.icon, size: Dimens.icon_size_l, color: AppColors.primary),
+            Icon(thematique.icon, size: Dimens.icon_size_l, color: primaryColor),
             const SizedBox(height: Margins.spacing_base),
-            Text(thematique.title, textAlign: TextAlign.center, style: TextStyles.textSBold.copyWith(color: context.content)),
+            Text(
+              thematique.title,
+              textAlign: TextAlign.center,
+              style: TextStyles.textSBold.copyWith(color: context.content),
+            ),
           ],
         ),
         onTap: () => onThematiqueSelected(thematique),
@@ -217,6 +223,7 @@ class _CreateCustomDemarche extends StatelessWidget {
     return Semantics(
       button: true,
       child: CardContainer(
+        backgroundColor: AppColorsSpecifics.bgToGrey100(context),
         onTap: onCreateCustomDemarche,
         child: Row(
           children: [
@@ -227,7 +234,10 @@ class _CreateCustomDemarche extends StatelessWidget {
                 children: [
                   Text(Strings.customDemarcheTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
                   SizedBox(height: Margins.spacing_base),
-                  Text(Strings.customDemarcheSubtitle, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
+                  Text(
+                    Strings.customDemarcheSubtitle,
+                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
+                  ),
                 ],
               ),
             ),

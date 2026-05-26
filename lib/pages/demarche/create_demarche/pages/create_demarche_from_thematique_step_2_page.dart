@@ -94,6 +94,7 @@ class _DemarcheDuReferentielCard extends StatelessWidget {
     return Semantics(
       button: true,
       child: CardContainer(
+        backgroundColor: AppColorsSpecifics.bgToGrey100(context),
         onTap: () => onSelected(viewModel),
         child: ConstrainedBox(
           constraints: const BoxConstraints(minHeight: 40),
