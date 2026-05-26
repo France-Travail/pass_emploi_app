@@ -87,7 +87,7 @@ class _HighlightInformations extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: Margins.spacing_xs),
-          child: Icon(icon, color: AppColors.primary),
+          child: Icon(icon, color: AppColorsSpecifics.primaryToWhite(context)),
         ),
         const SizedBox(width: Margins.spacing_s),
         Expanded(
@@ -95,7 +95,10 @@ class _HighlightInformations extends StatelessWidget {
             TextSpan(
               style: TextStyles.textBaseRegular.copyWith(color: context.content),
               children: [
-                TextSpan(text: boldText, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+                TextSpan(
+                  text: boldText,
+                  style: TextStyles.textBaseBold.copyWith(color: context.content),
+                ),
                 TextSpan(text: text),
               ],
             ),
@@ -113,7 +116,10 @@ class _RecuperationInfos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(Strings.loginBottomSheetRecuperationInfos(isPoleEmploi), style: TextStyles.textBaseRegular.copyWith(color: context.content));
+    return Text(
+      Strings.loginBottomSheetRecuperationInfos(isPoleEmploi),
+      style: TextStyles.textBaseRegular.copyWith(color: context.content),
+    );
   }
 }
 

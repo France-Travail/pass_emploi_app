@@ -33,7 +33,9 @@ class ElevatedButtonTile extends StatelessWidget {
                 children: [
                   if (leading != null) leading!,
                   if (leading != null) SizedBox(width: Margins.spacing_base),
-                  Expanded(child: Text(label, style: TextStyles.textBaseBold.copyWith(color: context.content))),
+                  Expanded(
+                    child: Text(label, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+                  ),
                   if (suffix != null) suffix!,
                 ],
               ),
