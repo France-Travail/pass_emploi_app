@@ -85,7 +85,7 @@ class AlerteCardContent extends StatelessWidget {
       padding: EdgeInsets.all(Margins.spacing_base),
       child: Row(
         children: [
-          Icon(AppIcons.notifications_outlined, color: AppColors.primary),
+          Icon(AppIcons.notifications_outlined, color: AppColorsSpecifics.primaryToWhite(context)),
           SizedBox(width: Margins.spacing_base),
           Expanded(
             child: Column(

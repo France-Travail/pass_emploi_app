@@ -47,6 +47,7 @@ import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
 import 'package:pass_emploi_app/widgets/loading_overlay.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
+import 'package:pass_emploi_app/widgets/textes.dart';
 
 class AlertePage extends StatefulWidget {
   @override
@@ -396,7 +397,11 @@ class _SuggestionsEmpty extends StatelessWidget {
             ),
           ),
           SizedBox(height: Margins.spacing_base),
-          Text(Strings.emptySuggestionAlerteListTitre, style: TextStyles.textBaseBold.copyWith(color: context.content), textAlign: TextAlign.center),
+          Text(
+            Strings.emptySuggestionAlerteListTitre,
+            style: TextStyles.textBaseBold.copyWith(color: context.content),
+            textAlign: TextAlign.center,
+          ),
           SizedBox(height: Margins.spacing_base),
           Text(
             viewModel.loginMode?.isMiLo() == true
@@ -453,13 +458,16 @@ class _SuggestionCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(AppIcons.notification_add_outlined, color: AppColors.primary),
+              Icon(AppIcons.notification_add_outlined, color: AppColorsSpecifics.primaryToWhite(context)),
               SizedBox(width: Margins.spacing_base),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("${Strings.alerte} ${viewModel.type.toAlerteTagLabel()}", style: TextStyles.textSBold.copyWith(color: context.content)),
+                    Text(
+                      "${Strings.alerte} ${viewModel.type.toAlerteTagLabel()}",
+                      style: TextStyles.textSBold.copyWith(color: context.content),
+                    ),
                     Text(viewModel.titre, style: TextStyles.textSRegular(color: context.content)),
                   ],
                 ),
@@ -640,6 +648,6 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(title, style: TextStyles.textMBold.copyWith(color: AppColors.primary));
+    return MediumSectionTitle(title);
   }
 }

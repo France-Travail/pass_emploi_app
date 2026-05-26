@@ -37,10 +37,12 @@ class _SecondaryButtonState extends State<SecondaryButton> {
   bool isHovered = false;
   @override
   Widget build(BuildContext context) {
+    final fgColor = (widget.foregroundColor ?? AppColorsSpecifics.primaryToWhite(context)).withValues(
+      alpha: widget.isEnabled ? 1 : 0.5,
+    );
+    final bgColor = widget.backgroundColor ?? context.bg;
     final baseTextStyle = TextStyles.textSecondaryButton;
-    final textColor = (widget.foregroundColor ?? AppColors.primary).withValues(alpha: widget.isEnabled ? 1 : 0.5);
     final usedTextStyle = widget.fontSize != null ? baseTextStyle.copyWith(fontSize: widget.fontSize) : baseTextStyle;
-    final bg = widget.backgroundColor ?? context.bg;
     return FocusedBorderBuilder(
       builder: (focusNode) {
         return OutlinedButton(
@@ -50,10 +52,10 @@ class _SecondaryButtonState extends State<SecondaryButton> {
           style: OutlinedButton.styleFrom(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimens.radius_base)),
             backgroundColor: Color.alphaBlend(
-              isHovered ? textColor.withValues(alpha: 0.2) : AppColors.transparent,
-              bg,
+              isHovered ? fgColor.withValues(alpha: 0.2) : AppColors.transparent,
+              bgColor,
             ),
-            side: BorderSide(color: textColor, width: 2),
+            side: BorderSide(color: fgColor, width: 2),
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: Margins.spacing_base),
@@ -63,13 +65,13 @@ class _SecondaryButtonState extends State<SecondaryButton> {
                 if (widget.icon != null)
                   Padding(
                     padding: const EdgeInsets.only(right: Margins.spacing_s),
-                    child: Icon(widget.icon, color: textColor, size: Dimens.icon_size_m),
+                    child: Icon(widget.icon, color: fgColor, size: Dimens.icon_size_m),
                   ),
                 Flexible(
                   child: Text(
                     widget.label,
                     textAlign: TextAlign.center,
-                    style: usedTextStyle.copyWith(color: textColor),
+                    style: usedTextStyle.copyWith(color: fgColor),
                   ),
                 ),
                 Semantics(label: widget.iconLabel),
