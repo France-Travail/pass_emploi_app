@@ -164,4 +164,11 @@ class AppColorsSpecifics {
     }
     return AppColors.primaryDarken;
   }
+
+  static Color primaryBgToGrey(BuildContext context) {
+    if (context.isDarkTheme) {
+      return context.grey100;
+    }
+    return AppColors.primary;
+  }
 }

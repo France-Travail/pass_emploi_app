@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
 
 class BiseauBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final bgColor = AppColorsSpecifics.primaryBgToGrey(context);
     return Stack(
       children: [
-        Container(color: Brand.isCej() ? AppColors.primary : AppColors.primaryDarkenStrong),
+        Container(color: bgColor),
         ClipPath(
           clipper: DiagonalClipper(),
-          child: Container(color: AppColors.primaryDarken.withValues(alpha: 0.25)),
+          child: Container(
+            color: context.isDarkTheme ? Colors.white.withValues(alpha: 0.12) : Colors.black.withValues(alpha: 0.12),
+          ),
         ),
       ],
     );
