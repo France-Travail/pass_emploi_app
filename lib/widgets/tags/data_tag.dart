@@ -16,16 +16,13 @@ class IconWithSemantics {
 class DataTag extends StatelessWidget {
   final String label;
   final IconWithSemantics? iconSemantics;
-  final Color contentColor;
-  final Color backgroundColor;
 
   DataTag({
     super.key,
     required this.label,
     this.iconSemantics,
     Color? contentColor,
-    this.backgroundColor = AppColors.primaryLighten,
-  }) : contentColor = contentColor ?? AppColors.primary;
+  });
 
   factory DataTag.location(String location) {
     return DataTag(
@@ -50,6 +47,8 @@ class DataTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final backgroundColor = context.isDarkTheme ? AppColors.primaryDarkenStrong : AppColors.primaryLighten;
+    final contentColor = context.isDarkTheme ? AppColors.primaryLighten : AppColors.primary;
     return DecoratedBox(
       decoration: BoxDecoration(
         color: backgroundColor,
@@ -70,7 +69,9 @@ class DataTag extends StatelessWidget {
                   size: Dimens.icon_size_base,
                 ),
               ),
-            Flexible(child: Text(label, style: TextStyles.textXsBold().copyWith(color: contentColor))),
+            Flexible(
+              child: Text(label, style: TextStyles.textXsBold().copyWith(color: contentColor)),
+            ),
           ],
         ),
       ),
