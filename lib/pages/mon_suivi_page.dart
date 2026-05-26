@@ -892,7 +892,6 @@ class _CreateDemarcheButtonState extends State<CreateDemarcheButton> with Single
         final button = PrimaryActionButton(
           label: widget.ctaType == MonSuiviCtaType.createAction ? Strings.addAnAction : Strings.addADemarche,
           icon: AppIcons.add_rounded,
-          rippleColor: AppColors.primaryDarken,
           onPressed: () {
             switch (widget.ctaType) {
               case MonSuiviCtaType.createDemarche:

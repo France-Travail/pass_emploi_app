@@ -104,12 +104,28 @@ class AppColors {
 }
 
 extension AppColorsContext on BuildContext {
-  Color get bg => _isDark ? AppColors.bgDark : AppColors.bgLight;
-  Color get content => _isDark ? AppColors.contentDark : AppColors.contentLight;
-  Color get grey100 => _isDark ? AppColors.grey100Dark : AppColors.grey100Light;
-  Color get grey500 => _isDark ? AppColors.grey500Dark : AppColors.grey500Light;
-  Color get grey700 => _isDark ? AppColors.grey700Dark : AppColors.grey700Light;
-  Color get grey800 => _isDark ? AppColors.grey800Dark : AppColors.grey800Light;
+  Color get bg => isDarkTheme ? AppColors.bgDark : AppColors.bgLight;
+  Color get content => isDarkTheme ? AppColors.contentDark : AppColors.contentLight;
+  Color get grey100 => isDarkTheme ? AppColors.grey100Dark : AppColors.grey100Light;
+  Color get grey500 => isDarkTheme ? AppColors.grey500Dark : AppColors.grey500Light;
+  Color get grey700 => isDarkTheme ? AppColors.grey700Dark : AppColors.grey700Light;
+  Color get grey800 => isDarkTheme ? AppColors.grey800Dark : AppColors.grey800Light;
 
-  bool get _isDark => Theme.of(this).brightness == Brightness.dark;
+  bool get isDarkTheme => Theme.of(this).brightness == Brightness.dark;
+}
+
+class AppColorsSpecifics {
+  static Color acceuilBgColor(BuildContext context) {
+    if (context.isDarkTheme) {
+      return context.grey100;
+    }
+    return Brand.isCej() ? AppColors.primary : AppColors.primaryDarkenStrong;
+  }
+
+  static List<Color> acceuilBgGradient(BuildContext context) {
+    if (context.isDarkTheme) {
+      return [context.grey100, context.grey100];
+    }
+    return AppColors.gradientPrimary;
+  }
 }

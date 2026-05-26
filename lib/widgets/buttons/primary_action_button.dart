@@ -10,7 +10,7 @@ class PrimaryActionButton extends StatelessWidget {
   final Color disabledBackgroundColor;
   final Color textColor;
   final Color? rippleColor;
-  final Color? iconColor;
+
   final IconData? icon;
   final String label;
   final bool withShadow;
@@ -29,9 +29,9 @@ class PrimaryActionButton extends StatelessWidget {
     super.key,
     Color? backgroundColor,
     this.disabledBackgroundColor = AppColors.disabled,
-        this.textColor = AppColors.contentOnPrimary,
+    this.textColor = AppColors.contentOnPrimary,
     this.rippleColor = AppColors.primaryDarken,
-    this.iconColor = AppColors.contentOnPrimary,
+
     this.withShadow = true,
     this.icon,
     this.onPressed,
@@ -53,33 +53,35 @@ class PrimaryActionButton extends StatelessWidget {
       decoration: underlined ? TextDecoration.underline : null,
     );
     final usedTextStyle = fontSize != null ? baseTextStyle.copyWith(fontSize: fontSize) : baseTextStyle;
-    return FocusedBorderBuilder(builder: (focusNode) {
-      return TextButton(
-        isSemanticButton: semanticsRoleLink == null,
-        focusNode: focusNode,
-        style: ButtonStyle(
-          padding: WidgetStateProperty.all(EdgeInsets.zero),
-          foregroundColor: WidgetStateProperty.all(textColor),
-          textStyle: WidgetStateProperty.all(usedTextStyle),
-          backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-            return states.contains(WidgetState.disabled) ? disabledBackgroundColor : backgroundColor;
-          }),
-          elevation: WidgetStateProperty.resolveWith((states) {
-            return (states.contains(WidgetState.disabled) || !withShadow) ? 0 : 10;
-          }),
-          alignment: Alignment.center,
-          shape: WidgetStateProperty.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base))),
+    return FocusedBorderBuilder(
+      builder: (focusNode) {
+        return TextButton(
+          isSemanticButton: semanticsRoleLink == null,
+          focusNode: focusNode,
+          style: ButtonStyle(
+            padding: WidgetStateProperty.all(EdgeInsets.zero),
+            foregroundColor: WidgetStateProperty.all(textColor),
+            textStyle: WidgetStateProperty.all(usedTextStyle),
+            backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+              return states.contains(WidgetState.disabled) ? disabledBackgroundColor : backgroundColor;
+            }),
+            elevation: WidgetStateProperty.resolveWith((states) {
+              return (states.contains(WidgetState.disabled) || !withShadow) ? 0 : 10;
+            }),
+            alignment: Alignment.center,
+            shape: WidgetStateProperty.all(
+              RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base))),
+            ),
+            overlayColor: WidgetStateProperty.all(rippleColor),
           ),
-          overlayColor: WidgetStateProperty.all(rippleColor),
-        ),
-        onPressed: onPressed,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: widthPadding, vertical: heightPadding),
-          child: _getWrap(),
-        ),
-      );
-    });
+          onPressed: onPressed,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: widthPadding, vertical: heightPadding),
+            child: _getWrap(),
+          ),
+        );
+      },
+    );
   }
 
   Widget _getWrap() {
@@ -94,7 +96,7 @@ class PrimaryActionButton extends StatelessWidget {
               child: Icon(
                 icon,
                 size: iconSize,
-                color: iconColor,
+                color: textColor,
               ),
             ),
           Text(

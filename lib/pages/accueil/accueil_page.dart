@@ -6,7 +6,6 @@ import 'package:pass_emploi_app/features/accueil/accueil_actions.dart';
 import 'package:pass_emploi_app/features/date_consultation_notification/date_consultation_notification_actions.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_actions.dart';
-import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_alertes.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_campagne_recrutement.dart';
@@ -80,7 +79,7 @@ class _AccueilPageState extends State<AccueilPage> {
 
   Widget _builder(BuildContext context, AccueilViewModel viewModel) {
     return Scaffold(
-      backgroundColor: Brand.isCej() ? AppColors.primary : AppColors.primaryDarkenStrong,
+      backgroundColor: AppColorsSpecifics.acceuilBgColor(context),
       body: ConnectivityContainer(child: _Body(viewModel)),
     );
   }
@@ -220,7 +219,7 @@ class _Blocs extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: AppColors.gradientPrimary,
+                  colors: AppColorsSpecifics.acceuilBgGradient(context),
                 ),
               ),
               child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: _buildItemsWithGradient()),

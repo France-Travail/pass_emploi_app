@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/presentation/recherche/actions_recherche_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
@@ -39,7 +38,6 @@ class ActionsRecherche extends StatelessWidget {
               child: PrimaryActionButton(
                 label: Strings.createAlert,
                 icon: AppIcons.notifications_rounded,
-                rippleColor: AppColors.primaryDarken,
                 iconSize: Dimens.icon_size_base,
                 onPressed: () => _onAlertButtonPressed(context),
               ),
