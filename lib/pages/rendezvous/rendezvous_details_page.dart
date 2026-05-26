@@ -217,10 +217,19 @@ class _Modality extends StatelessWidget {
               child: Text.rich(
                 TextSpan(
                   children: [
-                    TextSpan(text: viewModel.modality!, style: TextStyles.textBaseBold),
+                    TextSpan(
+                      text: viewModel.modality!,
+                      style: TextStyles.textBaseBold.copyWith(color: context.content),
+                    ),
                     if (viewModel.conseiller != null) ...[
-                      TextSpan(text: Strings.withConseiller, style: TextStyles.textBaseRegular),
-                      TextSpan(text: viewModel.conseiller!, style: TextStyles.textBaseBold),
+                      TextSpan(
+                        text: Strings.withConseiller,
+                        style: TextStyles.textBaseRegular.copyWith(color: context.content),
+                      ),
+                      TextSpan(
+                        text: viewModel.conseiller!,
+                        style: TextStyles.textBaseBold.copyWith(color: context.content),
+                      ),
                     ],
                   ],
                 ),
