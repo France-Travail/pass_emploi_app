@@ -4,6 +4,7 @@ import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
+import 'package:pass_emploi_app/widgets/textes.dart';
 
 class CejInformationFirstContentCard extends StatelessWidget {
   @override
@@ -17,10 +18,7 @@ class CejInformationFirstContentCard extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Semantics(
               header: true,
-              child: Text(
-                Strings.whoIsConcerned,
-                style: TextStyles.textMBold.copyWith(color: AppColors.primary),
-              ),
+              child: MediumSectionTitle(Strings.whoIsConcerned),
             ),
           ),
           Center(
@@ -32,11 +30,26 @@ class CejInformationFirstContentCard extends StatelessWidget {
           Text.rich(
             TextSpan(
               children: [
-                TextSpan(text: Strings.whoIsConcernedFirstRichText[0], style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-                TextSpan(text: Strings.whoIsConcernedFirstRichText[1], style: TextStyles.textBaseBold.copyWith(color: context.content)),
-                TextSpan(text: Strings.whoIsConcernedFirstRichText[2], style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-                TextSpan(text: Strings.whoIsConcernedFirstRichText[3], style: TextStyles.textBaseBold.copyWith(color: context.content)),
-                TextSpan(text: Strings.whoIsConcernedFirstRichText[4], style: TextStyles.textBaseRegular.copyWith(color: context.content)),
+                TextSpan(
+                  text: Strings.whoIsConcernedFirstRichText[0],
+                  style: TextStyles.textBaseRegular.copyWith(color: context.content),
+                ),
+                TextSpan(
+                  text: Strings.whoIsConcernedFirstRichText[1],
+                  style: TextStyles.textBaseBold.copyWith(color: context.content),
+                ),
+                TextSpan(
+                  text: Strings.whoIsConcernedFirstRichText[2],
+                  style: TextStyles.textBaseRegular.copyWith(color: context.content),
+                ),
+                TextSpan(
+                  text: Strings.whoIsConcernedFirstRichText[3],
+                  style: TextStyles.textBaseBold.copyWith(color: context.content),
+                ),
+                TextSpan(
+                  text: Strings.whoIsConcernedFirstRichText[4],
+                  style: TextStyles.textBaseRegular.copyWith(color: context.content),
+                ),
               ],
             ),
           ),
@@ -44,9 +57,18 @@ class CejInformationFirstContentCard extends StatelessWidget {
           Text.rich(
             TextSpan(
               children: [
-                TextSpan(text: Strings.whoIsConcernedSecondRichText[0], style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-                TextSpan(text: Strings.whoIsConcernedSecondRichText[1], style: TextStyles.textBaseBold.copyWith(color: context.content)),
-                TextSpan(text: Strings.whoIsConcernedSecondRichText[2], style: TextStyles.textBaseRegular.copyWith(color: context.content)),
+                TextSpan(
+                  text: Strings.whoIsConcernedSecondRichText[0],
+                  style: TextStyles.textBaseRegular.copyWith(color: context.content),
+                ),
+                TextSpan(
+                  text: Strings.whoIsConcernedSecondRichText[1],
+                  style: TextStyles.textBaseBold.copyWith(color: context.content),
+                ),
+                TextSpan(
+                  text: Strings.whoIsConcernedSecondRichText[2],
+                  style: TextStyles.textBaseRegular.copyWith(color: context.content),
+                ),
               ],
             ),
           ),

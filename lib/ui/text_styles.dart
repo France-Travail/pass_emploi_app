@@ -83,13 +83,13 @@ class TextStyles {
     decoration: TextDecoration.underline,
   );
 
-  static final internalLink = TextStyle(
-    color: AppColors.primary,
+  static TextStyle internalLink(BuildContext context) => TextStyle(
+    color: AppColorsSpecifics.primaryToWhite(context),
     fontSize: FontSizes.medium,
     fontWeight: FontWeight.w400,
     fontFamily: 'Marianne',
     decoration: TextDecoration.underline,
-    decorationColor: AppColors.primary,
+    decorationColor: AppColorsSpecifics.primaryToWhite(context),
   );
 
   static final textSecondaryButton = TextStyle(

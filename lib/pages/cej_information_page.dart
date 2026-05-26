@@ -9,6 +9,7 @@ import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/cej_information_content_card.dart';
+import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/primary_rounded_bottom_background.dart';
 
 class CejInformationPage extends StatefulWidget {
@@ -38,6 +39,7 @@ class _CejInformationPageState extends State<CejInformationPage> {
     ];
 
     return Scaffold(
+      appBar: SecondaryAppBar(title: Strings.askAccount),
       backgroundColor: context.bg,
       body: Stack(
         children: [
@@ -46,7 +48,6 @@ class _CejInformationPageState extends State<CejInformationPage> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  _CustomAppBar(),
                   Padding(
                     padding: const EdgeInsets.all(Margins.spacing_m),
                     child: AnimatedSwitcher(
@@ -121,44 +122,16 @@ class _LoginButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(Strings.alreadyHaveAccount, style: TextStyles.textBaseRegular.copyWith(color: context.content), textAlign: TextAlign.center),
+          Text(
+            Strings.alreadyHaveAccount,
+            style: TextStyles.textBaseRegular.copyWith(color: context.content),
+            textAlign: TextAlign.center,
+          ),
           SizedBox(height: Margins.spacing_base),
           SecondaryButton(
             label: Strings.loginAction,
             onPressed: onPressed,
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class _CustomAppBar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    const foregroundColor = AppColors.contentOnPrimary;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-      child: Row(
-        children: [
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: BackButton(color: foregroundColor),
-            ),
-          ),
-          Expanded(
-            flex: 3,
-            child: Semantics(
-              header: true,
-              child: Text(
-                Strings.askAccount,
-                textAlign: TextAlign.center,
-                style: TextStyles.textBaseRegular.copyWith(color: foregroundColor),
-              ),
-            ),
-          ),
-          Expanded(child: SizedBox.shrink()),
         ],
       ),
     );

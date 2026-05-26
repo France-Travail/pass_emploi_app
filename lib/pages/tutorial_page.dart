@@ -296,7 +296,7 @@ class _DelayedButton extends StatelessWidget {
           child: Wrap(
             crossAxisAlignment: WrapCrossAlignment.end,
             children: [
-              Text(Strings.seeLater, style: TextStyles.internalLink),
+              Text(Strings.seeLater, style: TextStyles.internalLink(context)),
             ],
           ),
         ),
