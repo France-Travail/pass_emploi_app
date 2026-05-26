@@ -13,7 +13,7 @@ class LargeSectionTitle extends StatelessWidget {
       header: true,
       child: Text(
         title,
-        style: TextStyles.accueilSection.copyWith(color: color ?? AppColorsSpecifics.primaryToWhite(context)),
+        style: TextStyles.accueilSection.copyWith(color: color ?? AppColorsSpecifics.primaryToLighten(context)),
       ),
     );
   }
@@ -30,7 +30,7 @@ class MediumSectionTitle extends StatelessWidget {
       header: true,
       child: Text(
         title,
-        style: TextStyles.textMBold.copyWith(color: color ?? AppColorsSpecifics.primaryToWhite(context)),
+        style: TextStyles.textMBold.copyWith(color: color ?? AppColorsSpecifics.primaryToLighten(context)),
       ),
     );
   }

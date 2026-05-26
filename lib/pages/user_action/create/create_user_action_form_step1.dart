@@ -1,9 +1,7 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
-import 'package:flutter/widgets.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/models/user_action_type.dart';
@@ -49,7 +47,10 @@ class CreateUserActionFormStep1 extends StatelessWidget {
               const SizedBox(height: Margins.spacing_m),
               Semantics(
                 sortKey: const OrdinalSortKey(1),
-                child: Text(Strings.userActionSubtitleStep1, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+                child: Text(
+                  Strings.userActionSubtitleStep1,
+                  style: TextStyles.textBaseBold.copyWith(color: context.content),
+                ),
               ),
               const SizedBox(height: Margins.spacing_m),
               Semantics(
@@ -120,19 +121,21 @@ class ActionCategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = AppColorsSpecifics.primaryToLighten(context);
     return Semantics(
       button: true,
       child: CardContainer(
         onTap: onTap,
+        backgroundColor: AppColorsSpecifics.bgToGrey100(context),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 32, color: AppColors.primary),
+            Icon(icon, size: 32, color: primaryColor),
             const SizedBox(height: Margins.spacing_s),
             Text(
               label,
               textAlign: TextAlign.center,
-              style: TextStyles.textBaseBold.copyWith(color: AppColors.primary),
+              style: TextStyles.textBaseBold.copyWith(color: primaryColor),
             ),
             const SizedBox(height: Margins.spacing_s),
             Flexible(

@@ -27,16 +27,19 @@ class PassEmploiChip<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final selectedBgColor = AppColorsSpecifics.primaryButtonBackgroundColor(context);
+    final selectedFgColor = AppColorsSpecifics.primaryButtonForegroundColor(context);
     return _CustomChip(
       isSelected: isSelected,
       label: label,
       a11yLabel: a11yLabel,
-      bgColor: isSelected ? AppColors.primaryDarken : context.bg,
+      bgColor: isSelected ? selectedBgColor : context.bg,
       onSelected: () => isSelected ? onTagDeleted?.call() : onTagSelected(value),
       textstyle: isSelected
-          ? TextStyles.textSBold.copyWith(color: AppColors.contentOnPrimary)
+          ? TextStyles.textSBold.copyWith(color: selectedFgColor)
           : TextStyles.textSMedium(color: context.content),
-      borderColor: isSelected ? AppColors.primaryDarken : context.grey700,
+      borderColor: isSelected ? selectedBgColor : context.grey700,
+      fgColor: isSelected ? selectedFgColor : context.content,
     );
   }
 }
@@ -50,6 +53,7 @@ class _CustomChip extends StatelessWidget {
     required this.onSelected,
     required this.textstyle,
     required this.isSelected,
+    required this.fgColor,
   });
 
   final String label;
@@ -59,6 +63,7 @@ class _CustomChip extends StatelessWidget {
   final TextStyle textstyle;
   final void Function()? onSelected;
   final bool isSelected;
+  final Color fgColor;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +99,7 @@ class _CustomChip extends StatelessWidget {
                     Icons.close_rounded,
                     semanticLabel: Strings.deleteSelection,
                     size: Dimens.icon_size_base,
-                    color: AppColors.contentOnPrimary,
+                    color: fgColor,
                   ),
                 ],
               ],

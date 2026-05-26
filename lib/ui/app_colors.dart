@@ -151,7 +151,7 @@ class AppColorsSpecifics {
     return Brand.isCej() ? AppColors.primary : context.grey100;
   }
 
-  static Color primaryToWhite(BuildContext context) {
+  static Color primaryToLighten(BuildContext context) {
     if (context.isDarkTheme) {
       return AppColors.primaryLighten;
     }
@@ -177,5 +177,12 @@ class AppColorsSpecifics {
       return context.grey500;
     }
     return AppColors.primary;
+  }
+
+  static Color bgToGrey100(BuildContext context) {
+    if (context.isDarkTheme) {
+      return context.grey100;
+    }
+    return context.bg;
   }
 }

@@ -87,7 +87,7 @@ class _HighlightInformations extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: Margins.spacing_xs),
-          child: Icon(icon, color: AppColorsSpecifics.primaryToWhite(context)),
+          child: Icon(icon, color: AppColorsSpecifics.primaryToLighten(context)),
         ),
         const SizedBox(width: Margins.spacing_s),
         Expanded(

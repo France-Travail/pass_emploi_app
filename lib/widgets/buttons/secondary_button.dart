@@ -37,7 +37,7 @@ class _SecondaryButtonState extends State<SecondaryButton> {
   bool isHovered = false;
   @override
   Widget build(BuildContext context) {
-    final fgColor = (widget.foregroundColor ?? AppColorsSpecifics.primaryToWhite(context)).withValues(
+    final fgColor = (widget.foregroundColor ?? AppColorsSpecifics.primaryToLighten(context)).withValues(
       alpha: widget.isEnabled ? 1 : 0.5,
     );
     final bgColor = widget.backgroundColor ?? context.bg;

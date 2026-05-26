@@ -56,7 +56,6 @@ class PrimaryActionButton extends StatelessWidget {
             backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
               return states.contains(WidgetState.disabled) ? AppColors.disabled : backgroundColor;
             }),
-            overlayColor: WidgetStateProperty.all(AppColors.primaryDarken),
             padding: WidgetStateProperty.all(EdgeInsets.zero),
             textStyle: WidgetStateProperty.all(textStyle),
             elevation: WidgetStateProperty.resolveWith((states) {

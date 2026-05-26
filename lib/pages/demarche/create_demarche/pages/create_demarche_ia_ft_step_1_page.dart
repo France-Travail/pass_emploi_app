@@ -125,7 +125,10 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
                         },
                         icon: Container(
                           padding: EdgeInsets.all(2),
-                          child: Icon(_isListening ? Icons.stop_circle_rounded : Icons.mic, color: AppColors.primary),
+                          child: Icon(
+                            _isListening ? Icons.stop_circle_rounded : Icons.mic,
+                            color: AppColorsSpecifics.primaryToLighten(context),
+                          ),
                         ),
                       ),
                     ),

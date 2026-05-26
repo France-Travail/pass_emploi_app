@@ -458,7 +458,7 @@ class _SuggestionCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(AppIcons.notification_add_outlined, color: AppColorsSpecifics.primaryToWhite(context)),
+              Icon(AppIcons.notification_add_outlined, color: AppColorsSpecifics.primaryToLighten(context)),
               SizedBox(width: Margins.spacing_base),
               Expanded(
                 child: Column(

@@ -95,7 +95,10 @@ class _AnimatedStepProgressIndicator extends StatelessWidget {
                   widthFactor: value,
                   child: Container(
                     height: 8,
-                    decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(2)),
+                    decoration: BoxDecoration(
+                      color: AppColorsSpecifics.primaryToLighten(context),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                   ),
                 ),
               ),

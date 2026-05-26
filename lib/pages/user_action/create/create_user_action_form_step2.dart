@@ -68,7 +68,7 @@ class _CreateUserActionFormStep2State extends State<CreateUserActionFormStep2> {
               const SizedBox(height: Margins.spacing_m),
               Semantics(
                 label: Strings.mandatoryField,
-                child:                   Text(
+                child: Text(
                   Strings.userActionSubtitleStep2,
                   style: TextStyles.textBaseBold.copyWith(color: context.content),
                 ),
@@ -345,7 +345,7 @@ class _UserActionDescriptionFieldState extends State<UserActionDescriptionField>
                             padding: EdgeInsets.all(2),
                             child: Icon(
                               _isListening ? Icons.stop_circle_rounded : Icons.mic,
-                              color: AppColors.primary,
+                              color: AppColorsSpecifics.primaryToLighten(context),
                             ),
                           ),
                         ),

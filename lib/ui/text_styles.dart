@@ -84,12 +84,12 @@ class TextStyles {
   );
 
   static TextStyle internalLink(BuildContext context) => TextStyle(
-    color: AppColorsSpecifics.primaryToWhite(context),
+    color: AppColorsSpecifics.primaryToLighten(context),
     fontSize: FontSizes.medium,
     fontWeight: FontWeight.w400,
     fontFamily: 'Marianne',
     decoration: TextDecoration.underline,
-    decorationColor: AppColorsSpecifics.primaryToWhite(context),
+    decorationColor: AppColorsSpecifics.primaryToLighten(context),
   );
 
   static final textSecondaryButton = TextStyle(
