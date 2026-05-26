@@ -35,7 +35,7 @@ class RecherchesRecentesBandeau extends StatelessWidget {
                           children: [
                             Icon(
                               AppIcons.search_rounded,
-                              color: AppColors.primary,
+                              color: AppColorsSpecifics.primaryToLighten(context),
                               size: Dimens.icon_size_m,
                             ),
                             SizedBox(width: Margins.spacing_base),

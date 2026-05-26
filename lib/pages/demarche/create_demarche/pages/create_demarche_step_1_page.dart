@@ -227,7 +227,11 @@ class _CreateCustomDemarche extends StatelessWidget {
         onTap: onCreateCustomDemarche,
         child: Row(
           children: [
-            Icon(AppIcons.search_rounded, size: Dimens.icon_size_l, color: AppColors.primary),
+            Icon(
+              AppIcons.search_rounded,
+              size: Dimens.icon_size_l,
+              color: AppColorsSpecifics.primaryToLighten(context),
+            ),
             SizedBox(width: Margins.spacing_base),
             Expanded(
               child: Column(

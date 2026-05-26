@@ -98,7 +98,10 @@ class _CriteresRechercheBandeauState extends State<_CriteresRechercheBandeau> {
                 padding: EdgeInsets.all(Margins.spacing_base),
                 child: Row(
                   children: [
-                    Icon(Icons.search, color: widget.isOpen ? AppColors.primary : AppColors.contentOnPrimary),
+                    Icon(
+                      Icons.search,
+                      color: widget.isOpen ? AppColorsSpecifics.primaryToLighten(context) : AppColors.contentOnPrimary,
+                    ),
                     SizedBox(width: Margins.spacing_base),
                     Expanded(
                       child: Text(

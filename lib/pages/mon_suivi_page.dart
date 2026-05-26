@@ -141,7 +141,7 @@ class _ScrollAwareAppBarState extends State<_ScrollAwareAppBar> {
               ),
               icon: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Icon(AppIcons.event, color: AppColors.primary, size: 24),
+                child: Icon(AppIcons.event, color: AppColorsSpecifics.primaryToLighten(context), size: 24),
               ),
               tooltip: Strings.monSuiviTooltip,
             )
