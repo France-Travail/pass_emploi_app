@@ -6,7 +6,7 @@ class AppColors {
 
   // Background colors
   static const Color bgLight = Color(0xFFFFFFFF);
-  static const Color bgDark = Color(0xFF262626);
+  static const Color bgDark = Color(0xFF0C1829);
 
   // Primary colors
   static final Color primary = Brand.isPassEmploi() ? primaryDarken : primaryCej;
@@ -48,8 +48,8 @@ class AppColors {
   static const Color grey700Light = Color(0xFF878787);
   static const Color grey800Light = Color(0xFF646464);
 
-  static const Color grey100Dark = Color(0xFF161616);
-  static const Color grey500Dark = Color(0xFF4D4D4D);
+  static const Color grey100Dark = Color(0xFF232A3D);
+  static const Color grey500Dark = Color(0xFF42485A);
   static const Color grey700Dark = Color(0xFF737373);
   static const Color grey800Dark = Color(0xFF999999);
 
