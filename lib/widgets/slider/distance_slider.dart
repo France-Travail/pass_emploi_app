@@ -51,6 +51,8 @@ class _Selector extends StatelessWidget {
 
   _Selector({required this.onValueChange, required this.currentValue});
 
+  static const double maxValue = 100;
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -66,9 +68,10 @@ class _Selector extends StatelessWidget {
             child: Column(
               children: [
                 Slider(
+                  activeColor: AppColorsSpecifics.primaryToLighten(context),
                   value: currentValue,
                   min: 0,
-                  max: 100,
+                  max: maxValue,
                   divisions: 10,
                   onChanged: onValueChange,
                 ),
@@ -83,7 +86,11 @@ class _Selector extends StatelessWidget {
         _DistanceButton(
           label: Strings.addDistance(10),
           icon: AppIcons.add,
-          onPressed: () => onValueChange(currentValue + 10),
+          onPressed: () {
+            if (currentValue + 10 <= maxValue) {
+              return onValueChange(currentValue + 10);
+            }
+          },
         ),
       ],
     );
@@ -99,16 +106,18 @@ class _DistanceButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final backgroundColor = AppColorsSpecifics.primaryButtonBackgroundColor(context);
+    final contentColor = AppColorsSpecifics.primaryButtonForegroundColor(context);
     return IconButton(
       tooltip: label,
       onPressed: onPressed,
       icon: Container(
-        padding: EdgeInsets.all(8),
+        padding: EdgeInsets.all(Margins.spacing_s),
         decoration: BoxDecoration(
-          color: AppColors.primary,
+          color: backgroundColor,
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, color: AppColors.contentOnPrimary),
+        child: Icon(icon, color: contentColor),
       ),
     );
   }

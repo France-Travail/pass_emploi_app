@@ -60,7 +60,7 @@ class MonConseillerCard extends StatelessWidget {
               SizedBox(height: Margins.spacing_s),
               Text(
                 vm.name,
-                style: TextStyles.textBaseBold.copyWith(color: AppColors.primary),
+                style: TextStyles.textBaseBold.copyWith(color: AppColorsSpecifics.primaryToLighten(context)),
               ),
             ],
           ),

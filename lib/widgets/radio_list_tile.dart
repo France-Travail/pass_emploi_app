@@ -23,7 +23,7 @@ class CustomRadioGroup<T> extends StatelessWidget {
       child: RadioListTile<T>(
         visualDensity: VisualDensity.compact,
         contentPadding: EdgeInsets.zero,
-        activeColor: AppColors.primary,
+        activeColor: AppColorsSpecifics.primaryToLighten(context),
         title: Text(title, style: TextStyles.textBaseMedium.copyWith(color: context.content)),
         controlAffinity: ListTileControlAffinity.leading,
         value: value,

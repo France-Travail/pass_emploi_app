@@ -1197,11 +1197,12 @@ class Strings {
   static String accessibilityUrl = Brand.isCej() ? _CejStrings.accessibilityUrl : _PassEmploiStrings.accessibilityUrl;
 
   // Profil: Settings & account suppression
+  static String betaTag = "Bêta";
   static String settingsLabel = "Paramètres application";
   static String themeLabel = "Apparence";
-  static String themeModeLight = "Clair";
-  static String themeModeDark = "Sombre";
-  static String themeModeSystem = "Système (par défaut)";
+  static String themeModeLight = "Jour";
+  static String themeModeDark = "Nuit";
+  static String themeModeSystem = "Système";
   static String suppressionPageTitle = "Suppression de compte";
   static String suppressionAccountLabel = Brand.isCej()
       ? _CejStrings.suppressionAccountLabel

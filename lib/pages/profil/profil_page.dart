@@ -29,6 +29,7 @@ import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
+import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_pillule.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/cards/profil/mon_conseiller_card.dart';
 import 'package:pass_emploi_app/widgets/contact_page.dart';
@@ -99,7 +100,19 @@ class _Scaffold extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: Margins.spacing_m),
-                _SectionTitle(Strings.themeLabel),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _SectionTitle(Strings.themeLabel),
+                    SizedBox(width: Margins.spacing_base),
+                    CardPillule(
+                      text: Strings.betaTag,
+                      backgroundColor: AppColors.additional1Lighten,
+                      contentColor: AppColors.contentLight,
+                      excludeSemantics: false,
+                    ),
+                  ],
+                ),
                 SizedBox(height: Margins.spacing_base),
                 _ThemeCard(
                   themeMode: viewModel.themeMode,
@@ -356,7 +369,7 @@ class _MailCard extends StatelessWidget {
               Text(
                 userEmail,
                 textAlign: TextAlign.right,
-                style: TextStyles.textBaseBold.copyWith(color: AppColors.primary),
+                style: TextStyles.textBaseBold.copyWith(color: AppColorsSpecifics.primaryToLighten(context)),
               ),
             ],
           ),
