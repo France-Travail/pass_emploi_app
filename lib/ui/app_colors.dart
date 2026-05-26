@@ -157,4 +157,11 @@ class AppColorsSpecifics {
     }
     return AppColors.primary;
   }
+
+  static Color primaryDarkenToWhite(BuildContext context) {
+    if (context.isDarkTheme) {
+      return AppColors.primaryLighten;
+    }
+    return AppColors.primaryDarken;
+  }
 }

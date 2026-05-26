@@ -116,6 +116,7 @@ class _ActualiteItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final fgColor = AppColorsSpecifics.primaryDarkenToWhite(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -126,12 +127,12 @@ class _ActualiteItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(actualite.titre, style: TextStyles.textBaseBold.copyWith(color: AppColors.primaryDarken)),
+              Text(actualite.titre, style: TextStyles.textBaseBold.copyWith(color: fgColor)),
               SizedBox(height: Margins.spacing_s),
-              Text(actualite.corps, style: TextStyles.textSRegular().copyWith(color: AppColors.primaryDarken)),
+              Text(actualite.corps, style: TextStyles.textSRegular().copyWith(color: fgColor)),
               if (actualite.titreLien != null && actualite.lien != null) ...[
                 SizedBox(height: Margins.spacing_s),
-                _CustomPressedTip(tip: actualite.titreLien!),
+                _CustomPressedTip(tip: actualite.titreLien!, color: fgColor),
               ],
             ],
           ),
@@ -152,24 +153,24 @@ class _ActualiteItem extends StatelessWidget {
 }
 
 class _CustomPressedTip extends StatelessWidget {
-  const _CustomPressedTip({required this.tip});
+  const _CustomPressedTip({required this.tip, required this.color});
   final String tip;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
-    final textColor = AppColors.primaryDarken;
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Icon(AppIcons.open_in_new_rounded, color: textColor, size: Dimens.icon_size_base),
+        Icon(AppIcons.open_in_new_rounded, color: color, size: Dimens.icon_size_base),
         SizedBox(width: Margins.spacing_s),
         Flexible(
           child: Text(
             tip,
             style: TextStyles.textBaseRegular.copyWith(
-              color: textColor,
+              color: color,
               decoration: TextDecoration.underline,
-              decorationColor: textColor,
+              decorationColor: color,
             ),
             textAlign: TextAlign.start,
           ),
@@ -203,7 +204,11 @@ class _ExternalUrlAlertDialog extends StatelessWidget {
               SizedBox(height: Margins.spacing_m),
               SizedBox.square(dimension: 120, child: Illustration.blue(AppIcons.open_in_new_rounded)),
               SizedBox(height: Margins.spacing_m),
-              Text(Strings.externalUrlAlertTitle, style: TextStyles.textBaseBold.copyWith(color: context.content), textAlign: TextAlign.center),
+              Text(
+                Strings.externalUrlAlertTitle,
+                style: TextStyles.textBaseBold.copyWith(color: context.content),
+                textAlign: TextAlign.center,
+              ),
               SizedBox(height: Margins.spacing_m),
             ],
           ),
