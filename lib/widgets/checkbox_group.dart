@@ -75,6 +75,8 @@ class CheckBoxGroupState<T extends CheckboxValueViewModel> extends State<CheckBo
       value: isSelected,
       contentPadding: EdgeInsets.zero,
       activeColor: AppColors.primary,
+      checkColor: AppColors.contentOnPrimary,
+      side: BorderSide(color: context.content, width: 2),
       onChanged: (value) {
         setState(() {
           if (value != null) {
@@ -100,7 +102,8 @@ class CheckBoxGroupState<T extends CheckboxValueViewModel> extends State<CheckBo
     );
   }
 
-  Widget _title(BuildContext context, String label) => Text(label, style: TextStyles.textBaseRegular.copyWith(color: context.content));
+  Widget _title(BuildContext context, String label) =>
+      Text(label, style: TextStyles.textBaseRegular.copyWith(color: context.content));
 
   List<T> _listOfSelectedOptions() =>
       _optionsSelectionStatus.entries.where((element) => element.value).map((e) => e.key).toList();

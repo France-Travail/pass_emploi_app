@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/immersion/immersion_filtres_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
@@ -44,6 +45,7 @@ class _ImmersionFiltresPageState extends State<ImmersionFiltresPage> {
 
   Widget _scaffold(ImmersionFiltresViewModel viewModel) {
     return BottomSheetWrapper(
+      backgroundColor: context.grey100,
       title: Strings.offresEmploiFiltresTitle,
       body: _Content(viewModel: viewModel),
     );

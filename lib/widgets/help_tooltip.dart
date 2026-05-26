@@ -20,10 +20,11 @@ class HelpTooltip extends StatelessWidget {
         excludeSemantics: true,
         child: Tooltip(
           message: message,
+
           triggerMode: TooltipTriggerMode.tap,
           showDuration: Duration(seconds: 3),
           exitDuration: Duration(seconds: 3),
-          textStyle: TextStyles.textSRegular(),
+          textStyle: TextStyles.textSRegular(color: context.content),
           margin: EdgeInsets.symmetric(horizontal: 16),
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
@@ -35,7 +36,7 @@ class HelpTooltip extends StatelessWidget {
           ),
           child: Icon(
             icon,
-            color: AppColors.primary,
+            color: AppColorsSpecifics.primaryToLighten(context),
           ),
         ),
       ),

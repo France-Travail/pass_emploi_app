@@ -44,6 +44,7 @@ class _ServiceCiviqueFiltresPageState extends State<ServiceCiviqueFiltresPage> {
 
   Widget _scaffold(BuildContext context, ServiceCiviqueFiltresViewModel viewModel) {
     return BottomSheetWrapper(
+      backgroundColor: context.grey100,
       title: Strings.serviceCiviqueFiltresTitle,
       body: _Content(viewModel: viewModel),
     );

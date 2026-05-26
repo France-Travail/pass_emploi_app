@@ -54,6 +54,7 @@ class _OffreEmploiFiltresPageState extends State<OffreEmploiFiltresPage> {
 
   Widget _scaffold(OffreEmploiFiltresViewModel viewModel) {
     return BottomSheetWrapper(
+      backgroundColor: context.grey100,
       title: Strings.offresEmploiFiltresTitle,
       body: _Content(viewModel: viewModel),
     );
@@ -236,30 +237,36 @@ class _FiltreDebutantState extends State<_FiltreDebutant> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-          Semantics(
-            header: true,
-            child: Text(Strings.experienceSectionTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-          ),
-          SizedBox(height: Margins.spacing_base),
-          CardContainer(
-            child: Row(
-              children: [
-                Expanded(
-                  child: ExcludeSemantics(
-                    child: Text(Strings.experienceSectionDescription, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
+        Semantics(
+          header: true,
+          child: Text(Strings.experienceSectionTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+        ),
+        SizedBox(height: Margins.spacing_base),
+        CardContainer(
+          child: Row(
+            children: [
+              Expanded(
+                child: ExcludeSemantics(
+                  child: Text(
+                    Strings.experienceSectionDescription,
+                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
                   ),
                 ),
-                Semantics(
-                  label: Strings.experienceSectionEnabled(_debutantOnlyEnabled),
-                  child: Switch(
-                    value: _debutantOnlyEnabled,
-                    onChanged: _onDebutantOnlyValueChange,
-                  ),
+              ),
+              Semantics(
+                label: Strings.experienceSectionEnabled(_debutantOnlyEnabled),
+                child: Switch(
+                  value: _debutantOnlyEnabled,
+                  onChanged: _onDebutantOnlyValueChange,
                 ),
-                SizedBox(width: Margins.spacing_xs),
-                ExcludeSemantics(
-                  child: Text(_debutantOnlyEnabled ? Strings.yes : Strings.no, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
+              ),
+              SizedBox(width: Margins.spacing_xs),
+              ExcludeSemantics(
+                child: Text(
+                  _debutantOnlyEnabled ? Strings.yes : Strings.no,
+                  style: TextStyles.textBaseRegular.copyWith(color: context.content),
                 ),
+              ),
             ],
           ),
         ),
