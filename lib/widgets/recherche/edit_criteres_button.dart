@@ -40,7 +40,7 @@ class EditCriteresButton<Result> extends StatelessWidget {
           children: [
             Expanded(
               child: CardContainer(
-                border: Border.all(color: AppColors.primary, width: 1),
+                border: Border.all(color: AppColorsSpecifics.primaryToLighten(context), width: 1),
                 padding: EdgeInsets.all(Margins.spacing_base),
                 onTap: () => context.dispatch(RechercheOpenCriteresAction<Result>()),
                 child: Row(
@@ -48,7 +48,7 @@ class EditCriteresButton<Result> extends StatelessWidget {
                   children: [
                     Icon(
                       AppIcons.search_rounded,
-                      color: AppColors.primary,
+                      color: AppColorsSpecifics.primaryToLighten(context),
                       size: Dimens.icon_size_m,
                     ),
                     SizedBox(width: Margins.spacing_base),
@@ -79,9 +79,9 @@ class EditCriteresButton<Result> extends StatelessWidget {
                   padding: EdgeInsets.all(2),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.primary, width: 2),
+                    border: Border.all(color: AppColorsSpecifics.primaryToLighten(context), width: 2),
                   ),
-                  child: Icon(AppIcons.tune_rounded, color: AppColors.primary),
+                  child: Icon(AppIcons.tune_rounded, color: AppColorsSpecifics.primaryToLighten(context)),
                 ),
               ),
             ],

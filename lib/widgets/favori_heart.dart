@@ -61,7 +61,7 @@ class FavoriHeart<T> extends StatelessWidget {
         tooltip: viewModel.isFavori
             ? Strings.offreEnregistreeRemove(a11yLabel)
             : Strings.offreEnregistreeAdd(a11yLabel),
-        iconColor: AppColors.primary,
+        iconColor: AppColorsSpecifics.primaryToLighten(context),
         borderColor: withBorder ? AppColors.primary : AppColors.transparent,
         onTap: onTapDebounced,
       ),

@@ -75,7 +75,7 @@ class _RechercheOffrePageState<Result> extends State<RechercheOffrePage<Result>>
   @override
   Widget build(BuildContext context) {
     _store = StoreProvider.of<AppState>(context);
-    final backgroundColor = context.bg;
+    final backgroundColor = context.grey100;
     return Tracker(
       tracking: AnalyticsScreenNames.rechercheInitiale(widget.analyticsType()),
       child: Scaffold(

@@ -58,6 +58,7 @@ class BaseCard extends StatelessWidget {
       button: !linkRole && onTap != null ? true : null,
       link: linkRole ? true : null,
       child: CardContainer(
+        // backgroundColor: AppColorsSpecifics.bgToGrey100(context),
         padding: EdgeInsets.all(Margins.spacing_base),
         onTap: onTap,
         onLongPress: onLongPress,

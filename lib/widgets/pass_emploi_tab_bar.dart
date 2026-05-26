@@ -36,7 +36,7 @@ class _PassEmploiTabBarState extends State<PassEmploiTabBar> {
             alignment: Alignment.centerLeft,
             child: TabBar(
               controller: widget.controller,
-              indicatorColor: Brand.isCej() ? AppColors.primary : context.grey100,
+              indicatorColor: Brand.isCej() ? AppColorsSpecifics.primaryToLighten(context) : context.grey100,
               indicatorWeight: 4,
               labelStyle: TextStyles.textBaseBold,
               labelColor: Brand.isCej() ? context.content : context.grey100,
