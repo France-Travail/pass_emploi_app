@@ -145,7 +145,6 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
             const SizedBox(height: Margins.spacing_base),
             PrimaryActionButton(
               label: Strings.iaFtStep2Button,
-              disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.5),
               onPressed: () {
                 if (_textEditingController.text.isNotEmpty) {
                   widget.viewModel.navigateToCreateDemarcheIaFtStep2();

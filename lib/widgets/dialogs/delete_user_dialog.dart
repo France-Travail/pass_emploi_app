@@ -10,7 +10,7 @@ import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
+import 'package:pass_emploi_app/widgets/buttons/colored_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
@@ -88,7 +88,7 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
                   Expanded(
                     child: ValueListenableBuilder<TextEditingValue>(
                       valueListenable: _inputController,
-                      builder: (context, value, child) => PrimaryActionButton(
+                      builder: (context, value, child) => ColoredActionButton(
                         label: Strings.suppressionLabel,
                         textColor: AppColors.warning,
                         backgroundColor: AppColors.warningLighten,

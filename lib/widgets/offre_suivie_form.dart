@@ -13,7 +13,7 @@ import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
+import 'package:pass_emploi_app/widgets/buttons/colored_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/create_user_action_confirmation_offre_suivi_page.dart';
@@ -93,7 +93,7 @@ class _Confirmation extends StatelessWidget {
                 ),
               ],
               SizedBox(height: Margins.spacing_base),
-              PrimaryActionButton(
+              ColoredActionButton(
                 label: viewModel.onCreateActionOrDemarcheLabel,
                 textColor: showPrimaryBackground ? AppColors.primary : AppColors.contentOnPrimary,
                 backgroundColor: showPrimaryBackground ? context.bg : AppColors.primary,

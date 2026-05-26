@@ -21,7 +21,7 @@ import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/biseau_background.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/login_bottom_sheet/login_bottom_sheet_home.dart';
 import 'package:pass_emploi_app/widgets/buttons/elevated_button_tile.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
+import 'package:pass_emploi_app/widgets/buttons/colored_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/drawables/app_logo.dart';
@@ -156,9 +156,10 @@ class _LoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (viewModel.withLoading) return Center(child: CircularProgressIndicator());
-    return PrimaryActionButton(
+    return ColoredActionButton(
       label: Strings.loginAction,
       backgroundColor: Brand.isCej() ? AppColors.primary : AppColors.primaryDarkenStrong,
+      textColor: AppColors.contentOnPrimary,
       onPressed: () {
         viewModel.onLogin != null ? viewModel.onLogin!.call() : LoginBottomSheet.show(context);
       },

@@ -13,7 +13,7 @@ import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/biseau_background.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
+import 'package:pass_emploi_app/widgets/buttons/colored_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/drawables/app_logo.dart';
@@ -235,9 +235,10 @@ class _PageContent extends StatelessWidget {
                   },
                 ),
                 SizedBox(height: Margins.spacing_m),
-                PrimaryActionButton(
+                ColoredActionButton(
                   label: continueLabel ?? Strings.continueLabel,
                   backgroundColor: color,
+                  textColor: AppColors.contentOnPrimary,
                   onPressed: onContinue,
                 ),
                 SizedBox(height: Margins.spacing_s),

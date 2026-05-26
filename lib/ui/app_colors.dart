@@ -128,4 +128,12 @@ class AppColorsSpecifics {
     }
     return AppColors.gradientPrimary;
   }
+
+  static Color primaryButtonForegroundColor(BuildContext context) {
+    return context.isDarkTheme ? AppColors.primaryDarken : AppColors.contentOnPrimary;
+  }
+
+  static Color primaryButtonBackgroundColor(BuildContext context) {
+    return context.isDarkTheme ? AppColors.primaryLighten : AppColors.primary;
+  }
 }

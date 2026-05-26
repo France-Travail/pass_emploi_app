@@ -5,6 +5,8 @@ import 'package:pass_emploi_app/ui/app_colors.dart';
 
 const _illustrationFigmaSize = 300.0;
 
+// THEME: light/dark
+
 class Illustration extends StatelessWidget {
   final Color primaryColor;
   final Color? secondaryColor;
@@ -20,9 +22,9 @@ class Illustration extends StatelessWidget {
   const Illustration._grey({
     required this.icon,
     required bool withWhiteBackground,
-  })  : primaryColor = AppColors.disabled,
-        secondaryColor = null,
-        _greyWhiteBackground = withWhiteBackground;
+  }) : primaryColor = AppColors.disabled,
+       secondaryColor = null,
+       _greyWhiteBackground = withWhiteBackground;
 
   factory Illustration.red(
     IconData icon,

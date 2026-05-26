@@ -163,7 +163,10 @@ class OffreEmploiDetailsPage extends StatelessWidget {
                 if (title != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: Margins.spacing_m),
-                    child: Semantics(header: true, child: Text(title, style: TextStyles.textLBold(color: context.content))),
+                    child: Semantics(
+                      header: true,
+                      child: Text(title, style: TextStyles.textLBold(color: context.content)),
+                    ),
                   ),
                 if (companyName != null)
                   Padding(
@@ -172,13 +175,20 @@ class OffreEmploiDetailsPage extends StatelessWidget {
                   ),
                 _tags(viewModel),
                 if (id != null && lastUpdate != null)
-                  Text(Strings.offreNumberAndLastUpdate(id, lastUpdate), style: TextStyles.textXsRegular(color: context.content))
+                  Text(
+                    Strings.offreNumberAndLastUpdate(id, lastUpdate),
+                    style: TextStyles.textXsRegular(color: context.content),
+                  )
                 else ...[
-                  if (id != null) Text(Strings.offreDetailNumber(id), style: TextStyles.textXsRegular(color: context.content)),
+                  if (id != null)
+                    Text(Strings.offreDetailNumber(id), style: TextStyles.textXsRegular(color: context.content)),
                   if (lastUpdate != null)
                     Padding(
                       padding: const EdgeInsets.only(top: Margins.spacing_xs),
-                      child: Text(Strings.offreDetailLastUpdate(lastUpdate), style: TextStyles.textSRegular(color: context.content)),
+                      child: Text(
+                        Strings.offreDetailLastUpdate(lastUpdate),
+                        style: TextStyles.textSRegular(color: context.content),
+                      ),
                     ),
                 ],
                 SizedBox(height: Margins.spacing_base),
@@ -191,7 +201,8 @@ class OffreEmploiDetailsPage extends StatelessWidget {
                   ),
                   SizedBox(height: Margins.spacing_l),
                 ],
-                  if (viewModel.displayState == OffreEmploiDetailsPageDisplayState.SHOW_DETAILS) _description(context, viewModel),
+                if (viewModel.displayState == OffreEmploiDetailsPageDisplayState.SHOW_DETAILS)
+                  _description(context, viewModel),
                 if (viewModel.displayState == OffreEmploiDetailsPageDisplayState.SHOW_DETAILS)
                   _profileDescription(context, viewModel),
                 if (viewModel.displayState == OffreEmploiDetailsPageDisplayState.SHOW_DETAILS)
@@ -252,7 +263,7 @@ class OffreEmploiDetailsPage extends StatelessWidget {
       children: [
         _descriptionTitle(title: Strings.offreDetailsTitle),
         SizedBox(height: Margins.spacing_m),
-            ...paragraphs.map((paragraph) {
+        ...paragraphs.map((paragraph) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [Text(paragraph, style: TextStyles.textSRegular(color: context.content))],
@@ -275,9 +286,13 @@ class OffreEmploiDetailsPage extends StatelessWidget {
       children: [
         _descriptionTitle(title: Strings.profileTitle),
         SizedBox(height: Margins.spacing_m),
-        Semantics(header: true, child: Text(Strings.experienceTitle, style: TextStyles.textBaseBold.copyWith(color: context.content))),
+        Semantics(
+          header: true,
+          child: Text(Strings.experienceTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+        ),
         SizedBox(height: Margins.spacing_base),
-        if (experience != null) _setRequiredElement(context: context, element: experience, criteria: viewModel.requiredExperience),
+        if (experience != null)
+          _setRequiredElement(context: context, element: experience, criteria: viewModel.requiredExperience),
         SepLine(Margins.spacing_m, Margins.spacing_m),
         if (skills != null) skills,
         if (softSkills != null) softSkills,
@@ -298,7 +313,8 @@ class OffreEmploiDetailsPage extends StatelessWidget {
       children: [
         _descriptionTitle(title: Strings.companyTitle),
         SizedBox(height: Margins.spacing_m),
-        if (companyName != null) _companyName(context: context, companyName: companyName, companyUrl: viewModel.companyUrl),
+        if (companyName != null)
+          _companyName(context: context, companyName: companyName, companyUrl: viewModel.companyUrl),
         if (companyAdapted) _blueTag(tagTitle: Strings.companyAdaptedTitle),
         if (companyAccessibility) _blueTag(tagTitle: Strings.companyAccessibilityTitle),
         SizedBox(height: Margins.spacing_m),
@@ -328,9 +344,13 @@ class OffreEmploiDetailsPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Semantics(header: true, child: Text(Strings.skillsTitle, style: TextStyles.textBaseBold.copyWith(color: context.content))),
+        Semantics(
+          header: true,
+          child: Text(Strings.skillsTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+        ),
         SizedBox(height: Margins.spacing_base),
-        for (final skill in skills) _setRequiredElement(context: context, element: skill.description, criteria: skill.requirement),
+        for (final skill in skills)
+          _setRequiredElement(context: context, element: skill.description, criteria: skill.requirement),
       ],
     );
   }
@@ -373,7 +393,8 @@ class OffreEmploiDetailsPage extends StatelessWidget {
       children: [
         Text(Strings.languageTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
         SizedBox(height: Margins.spacing_base),
-        for (final language in languages) _setRequiredElement(context: context, element: language.type, criteria: language.requirement),
+        for (final language in languages)
+          _setRequiredElement(context: context, element: language.type, criteria: language.requirement),
         SepLine(Margins.spacing_m, Margins.spacing_m),
       ],
     );
@@ -404,7 +425,9 @@ class OffreEmploiDetailsPage extends StatelessWidget {
   }
 
   Widget _setRequiredElement({required BuildContext context, required String element, required String? criteria}) {
-    return _require(criteria) ? _requiredElement(context: context, requiredText: element) : _listItem(context: context, text: element);
+    return _require(criteria)
+        ? _requiredElement(context: context, requiredText: element)
+        : _listItem(context: context, text: element);
   }
 
   bool _require(String? criteria) => (criteria != null && criteria == "E");
@@ -422,7 +445,9 @@ class OffreEmploiDetailsPage extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Flexible(child: _listItem(context: context, text: requiredText)),
+          Flexible(
+            child: _listItem(context: context, text: requiredText),
+          ),
           Padding(
             padding: const EdgeInsets.only(left: Margins.spacing_s, bottom: Margins.spacing_base),
             child: HelpTooltip(message: Strings.requiredIcon, icon: AppIcons.error_rounded),

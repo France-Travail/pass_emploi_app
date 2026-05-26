@@ -12,6 +12,7 @@ import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
+import 'package:pass_emploi_app/widgets/buttons/colored_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/dialogs/delete_user_dialog.dart';
@@ -112,7 +113,7 @@ class _DeleteAccountButton extends StatelessWidget {
       width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_m),
-        child: PrimaryActionButton(
+        child: ColoredActionButton(
           onPressed: () => _showDeleteDialog(context),
           label: Strings.suppressionButtonLabel,
           textColor: AppColors.warning,

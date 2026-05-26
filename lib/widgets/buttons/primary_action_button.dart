@@ -6,11 +6,6 @@ import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/buttons/focused_border_builder.dart';
 
 class PrimaryActionButton extends StatelessWidget {
-  final Color backgroundColor;
-  final Color disabledBackgroundColor;
-  final Color textColor;
-  final Color? rippleColor;
-
   final IconData? icon;
   final String label;
   final bool withShadow;
@@ -25,17 +20,12 @@ class PrimaryActionButton extends StatelessWidget {
   final bool? semanticsRoleLink;
   final String? semanticsLabel;
 
-  PrimaryActionButton({
+  const PrimaryActionButton({
     super.key,
-    Color? backgroundColor,
-    this.disabledBackgroundColor = AppColors.disabled,
-    this.textColor = AppColors.contentOnPrimary,
-    this.rippleColor = AppColors.primaryDarken,
-
-    this.withShadow = true,
     this.icon,
     this.onPressed,
     required this.label,
+    this.withShadow = true,
     this.fontSize,
     this.iconSize = Dimens.icon_size_m,
     this.iconRightPadding = Margins.spacing_s,
@@ -45,26 +35,30 @@ class PrimaryActionButton extends StatelessWidget {
     this.suffix,
     this.semanticsRoleLink,
     this.semanticsLabel,
-  }) : backgroundColor = backgroundColor ?? AppColors.primary;
+  });
 
   @override
   Widget build(BuildContext context) {
-    final baseTextStyle = TextStyles.textPrimaryButton.copyWith(
+    final foregroundColor = AppColorsSpecifics.primaryButtonForegroundColor(context);
+    final backgroundColor = AppColorsSpecifics.primaryButtonBackgroundColor(context);
+    final textStyle = TextStyles.textPrimaryButton.copyWith(
+      color: foregroundColor,
       decoration: underlined ? TextDecoration.underline : null,
+      fontSize: fontSize,
     );
-    final usedTextStyle = fontSize != null ? baseTextStyle.copyWith(fontSize: fontSize) : baseTextStyle;
     return FocusedBorderBuilder(
       builder: (focusNode) {
         return TextButton(
           isSemanticButton: semanticsRoleLink == null,
           focusNode: focusNode,
           style: ButtonStyle(
-            padding: WidgetStateProperty.all(EdgeInsets.zero),
-            foregroundColor: WidgetStateProperty.all(textColor),
-            textStyle: WidgetStateProperty.all(usedTextStyle),
-            backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-              return states.contains(WidgetState.disabled) ? disabledBackgroundColor : backgroundColor;
+            foregroundColor: WidgetStateProperty.all(foregroundColor),
+            backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+              return states.contains(WidgetState.disabled) ? AppColors.disabled : backgroundColor;
             }),
+            overlayColor: WidgetStateProperty.all(AppColors.primaryDarken),
+            padding: WidgetStateProperty.all(EdgeInsets.zero),
+            textStyle: WidgetStateProperty.all(textStyle),
             elevation: WidgetStateProperty.resolveWith((states) {
               return (states.contains(WidgetState.disabled) || !withShadow) ? 0 : 10;
             }),
@@ -72,19 +66,18 @@ class PrimaryActionButton extends StatelessWidget {
             shape: WidgetStateProperty.all(
               RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base))),
             ),
-            overlayColor: WidgetStateProperty.all(rippleColor),
           ),
           onPressed: onPressed,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: widthPadding, vertical: heightPadding),
-            child: _getWrap(),
+            child: _buildContent(textStyle),
           ),
         );
       },
     );
   }
 
-  Widget _getWrap() {
+  Widget _buildContent(TextStyle textStyle) {
     return Semantics(
       link: semanticsRoleLink,
       child: Wrap(
@@ -93,17 +86,13 @@ class PrimaryActionButton extends StatelessWidget {
           if (icon != null)
             Padding(
               padding: EdgeInsets.only(right: iconRightPadding),
-              child: Icon(
-                icon,
-                size: iconSize,
-                color: textColor,
-              ),
+              child: Icon(icon, size: iconSize, color: AppColors.contentOnPrimary),
             ),
           Text(
             label,
             semanticsLabel: semanticsLabel,
             textAlign: TextAlign.center,
-            style: TextStyles.textPrimaryButton.copyWith(color: textColor),
+            style: textStyle,
           ),
           if (suffix != null)
             Padding(
