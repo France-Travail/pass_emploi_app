@@ -154,7 +154,9 @@ extension on PlatformException {
     if (details is FlutterAppAuthPlatformErrorDetails) {
       return details.error == "invalid_grant";
     }
-
+    if (details is Map) {
+      return details['error'] == 'invalid_grant';
+    }
     return false;
   }
 }
