@@ -21,6 +21,9 @@ abstract class RechercheMiddleware<Criteres extends Equatable, Filtres extends E
 
     if (action is RechercheRequestAction<Criteres, Filtres>) {
       _rechercher(store: store, userId: userId, request: action.request);
+    } else if (action is RechercheRetryAction<Result>) {
+      final request = getRechercheState(store.state).request;
+      if (request != null) _rechercher(store: store, userId: userId, request: request);
     } else if (action is RechercheUpdateFiltresAction<Filtres>) {
       final newRequest = _copyRequestWith(state: store.state, filtres: action.filtres);
       _rechercher(store: store, userId: userId, request: newRequest);

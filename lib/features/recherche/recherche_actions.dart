@@ -29,4 +29,6 @@ class RechercheOpenCriteresAction<Result> {}
 
 class RechercheCloseCriteresAction<Result> {}
 
+class RechercheRetryAction<Result> {}
+
 class RechercheResetAction<Result> {}
