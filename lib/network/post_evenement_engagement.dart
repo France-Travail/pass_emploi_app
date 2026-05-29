@@ -38,6 +38,7 @@ enum EvenementEngagement {
   MESSAGE_SUPPRIME,
   MESSAGE_MODIFIE,
   MESSAGE_ENVOYE_PJ,
+  ACTUALITE_MILO_CONSULTATION,
 }
 
 class PostEvenementEngagement extends JsonSerializable {
@@ -48,9 +49,9 @@ class PostEvenementEngagement extends JsonSerializable {
 
   @override
   Map<String, dynamic> toJson() => {
-        "type": event.serialized(),
-        "emetteur": EvenementEngagementEmetteur(user).toJson(),
-      };
+    "type": event.serialized(),
+    "emetteur": EvenementEngagementEmetteur(user).toJson(),
+  };
 }
 
 class EvenementEngagementEmetteur extends JsonSerializable {
@@ -60,25 +61,25 @@ class EvenementEngagementEmetteur extends JsonSerializable {
 
   @override
   Map<String, dynamic> toJson() => {
-        "type": 'JEUNE',
-        "structure": user.structure(),
-        "id": user.id,
-      };
+    "type": 'JEUNE',
+    "structure": user.structure(),
+    "id": user.id,
+  };
 }
 
 extension on User {
   String structure() {
     return switch (loginMode) {
       LoginMode.POLE_EMPLOI => switch (accompagnement) {
-          Accompagnement.cej => 'POLE_EMPLOI',
-          Accompagnement.rsaFranceTravail => 'POLE_EMPLOI_BRSA',
-          Accompagnement.rsaConseilsDepartementaux => 'CONSEIL_DEPT',
-          Accompagnement.aij => 'POLE_EMPLOI_AIJ',
-          Accompagnement.avenirPro => 'AVENIR_PRO',
-          Accompagnement.accompagnementIntensif => 'FT_ACCOMPAGNEMENT_INTENSIF',
-          Accompagnement.accompagnementGlobal => 'FT_ACCOMPAGNEMENT_GLOBAL',
-          Accompagnement.equipEmploiRecrut => 'FT_EQUIP_EMPLOI_RECRUT',
-        },
+        Accompagnement.cej => 'POLE_EMPLOI',
+        Accompagnement.rsaFranceTravail => 'POLE_EMPLOI_BRSA',
+        Accompagnement.rsaConseilsDepartementaux => 'CONSEIL_DEPT',
+        Accompagnement.aij => 'POLE_EMPLOI_AIJ',
+        Accompagnement.avenirPro => 'AVENIR_PRO',
+        Accompagnement.accompagnementIntensif => 'FT_ACCOMPAGNEMENT_INTENSIF',
+        Accompagnement.accompagnementGlobal => 'FT_ACCOMPAGNEMENT_GLOBAL',
+        Accompagnement.equipEmploiRecrut => 'FT_EQUIP_EMPLOI_RECRUT',
+      },
       LoginMode.MILO => 'MILO',
       LoginMode.DEMO_PE => 'DEMO',
       LoginMode.DEMO_MILO => 'DEMO',
@@ -123,6 +124,7 @@ extension on EvenementEngagement {
       EvenementEngagement.MESSAGE_SUPPRIME => 'MESSAGE_SUPPRIME',
       EvenementEngagement.MESSAGE_MODIFIE => 'MESSAGE_MODIFIE',
       EvenementEngagement.MESSAGE_ENVOYE_PJ => 'MESSAGE_ENVOYE_PJ',
+      EvenementEngagement.ACTUALITE_MILO_CONSULTATION => 'ACTUALITE_MILO_CONSULTATION',
     };
   }
 }
