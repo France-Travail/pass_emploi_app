@@ -91,14 +91,7 @@ class _RechercheOffrePageState<Result> extends State<RechercheOffrePage<Result>>
         resizeToAvoidBottomInset: false,
         body: StoreConnector<AppState, bool>(
           distinct: true,
-          converter: (store) {
-            final state = widget.rechercheState(store.state);
-            return const [
-              RechercheStatus.nouvelleRecherche,
-              RechercheStatus.initialLoading,
-              RechercheStatus.failure,
-            ].contains(state.status);
-          },
+          converter: (store) => widget.rechercheState(store.state).status == RechercheStatus.nouvelleRecherche,
           builder: (context, showCriteresFullScreen) {
             return AnimatedSwitcher(
               duration: AnimationDurations.fast,

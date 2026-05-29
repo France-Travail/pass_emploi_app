@@ -32,7 +32,10 @@ class RecherchesRecentesMiddleware extends MiddlewareClass<AppState> {
     final search = createAlerteFromRequest(action.request);
     if (search == null) return;
 
-    var newList = List<Alerte>.from(store.state.recherchesRecentesState.recentSearches);
+    var newList = List<Alerte>.from(
+      store.state.recherchesRecentesState.recentSearches,
+    );
+    newList.removeWhere((element) => element == search);
     newList.insert(0, search);
     newList = newList.take(50).toList();
 

@@ -44,6 +44,15 @@ void main() {
 
         sut.thenExpectChangingStatesThroughOrder([_shouldAddRecentSearch()]);
       });
+
+      test('should not duplicate it but move it to top when already present', () {
+        sut.givenStore = givenState() //
+            .loggedIn()
+            .withRecentsSearches([offreEmploiAlerte(), rechercheEmploiSauvegardeeChevalierValenceCDI()])
+            .store();
+
+        sut.thenExpectChangingStatesThroughOrder([_shouldNotDuplicateRecentSearch()]);
+      });
     });
   });
 }
@@ -68,6 +77,20 @@ Matcher _shouldAddRecentSearch() {
     (state) => state.recherchesRecentesState.recentSearches.isNotEmpty,
     (state) {
       expect(state.recherchesRecentesState.recentSearches, [rechercheEmploiSauvegardeeChevalierValenceCDI()]);
+    },
+  );
+}
+
+Matcher _shouldNotDuplicateRecentSearch() {
+  return StateMatch(
+    (state) =>
+        state.recherchesRecentesState.recentSearches.length == 2 &&
+        state.recherchesRecentesState.recentSearches.first == rechercheEmploiSauvegardeeChevalierValenceCDI(),
+    (state) {
+      expect(
+        state.recherchesRecentesState.recentSearches,
+        [rechercheEmploiSauvegardeeChevalierValenceCDI(), offreEmploiAlerte()],
+      );
     },
   );
 }

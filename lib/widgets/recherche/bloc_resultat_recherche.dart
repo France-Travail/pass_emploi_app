@@ -6,18 +6,26 @@ import 'package:pass_emploi_app/features/recherche/recherche_actions.dart';
 import 'package:pass_emploi_app/features/recherche/recherche_state.dart';
 import 'package:pass_emploi_app/presentation/recherche/bloc_resultat_recherche_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/recherche/recherche_message_placeholder.dart';
 import 'package:pass_emploi_app/widgets/recherche/resultat_recherche_contenu.dart';
+import 'package:pass_emploi_app/widgets/retry.dart';
 
 class BlocResultatRecherche<Result> extends StatefulWidget {
   final Key listResultatKey;
   final RechercheState Function(AppState) rechercheState;
   final FavoriIdsState<Result> Function(AppState) favorisState;
-  final Widget Function(BuildContext, Result, int, BlocResultatRechercheViewModel<Result>) buildResultItem;
+  final Widget Function(
+    BuildContext,
+    Result,
+    int,
+    BlocResultatRechercheViewModel<Result>,
+  )
+  buildResultItem;
   final String analyticsType;
   final String placeHolderTitle;
   final String placeHolderSubtitle;
@@ -33,10 +41,12 @@ class BlocResultatRecherche<Result> extends StatefulWidget {
   });
 
   @override
-  State<BlocResultatRecherche<Result>> createState() => _BlocResultatRechercheState<Result>();
+  State<BlocResultatRecherche<Result>> createState() =>
+      _BlocResultatRechercheState<Result>();
 }
 
-class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Result>> {
+class _BlocResultatRechercheState<Result>
+    extends State<BlocResultatRecherche<Result>> {
   int _numberOfSearchSent = 0;
   int? _lastNumberSearchAnalyticSent;
 
@@ -44,7 +54,8 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
   Widget build(BuildContext context) {
     return StoreConnector<AppState, BlocResultatRechercheViewModel<Result>>(
       builder: _builder,
-      converter: (store) => BlocResultatRechercheViewModel.create(store, widget.rechercheState),
+      converter: (store) =>
+          BlocResultatRechercheViewModel.create(store, widget.rechercheState),
       onDidChange: (previousViewModel, viewModel) {
         _trackSearchResults(viewModel, previousViewModel, context);
       },
@@ -52,16 +63,35 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
     );
   }
 
-  Widget _builder(BuildContext context, BlocResultatRechercheViewModel<Result> viewModel) {
+  Widget _builder(
+    BuildContext context,
+    BlocResultatRechercheViewModel<Result> viewModel,
+  ) {
     switch (viewModel.displayState) {
       case BlocResultatRechercheDisplayState.recherche:
-        return RechercheMessagePlaceholder(widget.placeHolderTitle, subtitle: widget.placeHolderSubtitle);
+        return RechercheMessagePlaceholder(
+          widget.placeHolderTitle,
+          subtitle: widget.placeHolderSubtitle,
+        );
+      case BlocResultatRechercheDisplayState.loading:
+        return const Padding(
+          padding: EdgeInsets.only(top: Margins.spacing_xl),
+          child: Center(child: CircularProgressIndicator()),
+        );
+      case BlocResultatRechercheDisplayState.failure:
+        return Retry(Strings.genericError, viewModel.onRetry);
       case BlocResultatRechercheDisplayState.empty:
-        return RechercheMessagePlaceholder(Strings.noContentErrorTitle, subtitle: Strings.noContentErrorSubtitle);
+        return RechercheMessagePlaceholder(
+          Strings.noContentErrorTitle,
+          subtitle: Strings.noContentErrorSubtitle,
+        );
       case BlocResultatRechercheDisplayState.results:
       case BlocResultatRechercheDisplayState.editRecherche:
-        final bool withOpacity = viewModel.displayState == BlocResultatRechercheDisplayState.editRecherche;
-        final bool disabled = withOpacity && !A11yUtils.withScreenReader(context);
+        final bool withOpacity =
+            viewModel.displayState ==
+            BlocResultatRechercheDisplayState.editRecherche;
+        final bool disabled =
+            withOpacity && !A11yUtils.withScreenReader(context);
         return Semantics(
           label: Strings.listOffres,
           child: GestureDetector(
@@ -98,15 +128,21 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
     BlocResultatRechercheViewModel<Result>? previousViewModel,
     BuildContext context,
   ) {
-    if (viewModel.displayState == BlocResultatRechercheDisplayState.recherche) _numberOfSearchSent += 1;
+    if (viewModel.displayState == BlocResultatRechercheDisplayState.recherche) {
+      _numberOfSearchSent += 1;
+    }
     if (viewModel.displayState == BlocResultatRechercheDisplayState.results) {
       if (_lastNumberSearchAnalyticSent == _numberOfSearchSent) return;
       _lastNumberSearchAnalyticSent = _numberOfSearchSent;
 
       PassEmploiMatomoTracker.instance.trackScreen(
         _numberOfSearchSent == 0
-            ? AnalyticsScreenNames.rechercheInitialeResultats(widget.analyticsType)
-            : AnalyticsScreenNames.rechercheModifieeResultats(widget.analyticsType),
+            ? AnalyticsScreenNames.rechercheInitialeResultats(
+                widget.analyticsType,
+              )
+            : AnalyticsScreenNames.rechercheModifieeResultats(
+                widget.analyticsType,
+              ),
       );
     }
   }

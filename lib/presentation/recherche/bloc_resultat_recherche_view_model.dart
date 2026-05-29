@@ -4,7 +4,7 @@ import 'package:pass_emploi_app/features/recherche/recherche_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:redux/redux.dart';
 
-enum BlocResultatRechercheDisplayState { recherche, empty, results, editRecherche }
+enum BlocResultatRechercheDisplayState { recherche, loading, failure, empty, results, editRecherche }
 
 class BlocResultatRechercheViewModel<Result> extends Equatable {
   final BlocResultatRechercheDisplayState displayState;
@@ -12,6 +12,7 @@ class BlocResultatRechercheViewModel<Result> extends Equatable {
   final bool withLoadMore;
   final Function() onListWithOpacityTouch;
   final Function() onLoadMore;
+  final Function() onRetry;
 
   BlocResultatRechercheViewModel({
     required this.displayState,
@@ -19,6 +20,7 @@ class BlocResultatRechercheViewModel<Result> extends Equatable {
     required this.withLoadMore,
     required this.onListWithOpacityTouch,
     required this.onLoadMore,
+    required this.onRetry,
   });
 
   factory BlocResultatRechercheViewModel.create(
@@ -32,6 +34,7 @@ class BlocResultatRechercheViewModel<Result> extends Equatable {
       withLoadMore: state.canLoadMore,
       onListWithOpacityTouch: () => store.dispatch(RechercheCloseCriteresAction<Result>()),
       onLoadMore: () => store.dispatch(RechercheLoadMoreAction<Result>()),
+      onRetry: () => store.dispatch(RechercheRetryAction<Result>()),
     );
   }
 
@@ -40,21 +43,21 @@ class BlocResultatRechercheViewModel<Result> extends Equatable {
 }
 
 BlocResultatRechercheDisplayState _displayState(RechercheState state) {
-  if (state.status == RechercheStatus.success) {
-    return state.results?.isEmpty == true
-        ? BlocResultatRechercheDisplayState.empty
-        : BlocResultatRechercheDisplayState.results;
-  } else if (state.status == RechercheStatus.updateLoading) {
-    return BlocResultatRechercheDisplayState.results;
-  } else if (state.status == RechercheStatus.nouvelleRecherche) {
-    if (state.results == null) {
-      return BlocResultatRechercheDisplayState.recherche;
-    } else {
+  switch (state.status) {
+    case RechercheStatus.initialLoading:
+      return BlocResultatRechercheDisplayState.loading;
+    case RechercheStatus.failure:
+      return BlocResultatRechercheDisplayState.failure;
+    case RechercheStatus.success:
+      return state.results?.isEmpty == true
+          ? BlocResultatRechercheDisplayState.empty
+          : BlocResultatRechercheDisplayState.results;
+    case RechercheStatus.updateLoading:
+      return BlocResultatRechercheDisplayState.results;
+    case RechercheStatus.nouvelleRecherche:
+      if (state.results == null) return BlocResultatRechercheDisplayState.recherche;
       return state.results?.isEmpty == true
           ? BlocResultatRechercheDisplayState.empty
           : BlocResultatRechercheDisplayState.editRecherche;
-    }
-  } else {
-    return BlocResultatRechercheDisplayState.recherche;
   }
 }
