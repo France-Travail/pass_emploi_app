@@ -12,6 +12,7 @@ import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/recherche/recherche_message_placeholder.dart';
 import 'package:pass_emploi_app/widgets/recherche/resultat_recherche_contenu.dart';
+import 'package:pass_emploi_app/widgets/retry.dart';
 
 class BlocResultatRecherche<Result> extends StatefulWidget {
   final Key listResultatKey;
@@ -56,6 +57,10 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
     switch (viewModel.displayState) {
       case BlocResultatRechercheDisplayState.recherche:
         return RechercheMessagePlaceholder(widget.placeHolderTitle, subtitle: widget.placeHolderSubtitle);
+      case BlocResultatRechercheDisplayState.loading:
+        return const Center(child: CircularProgressIndicator());
+      case BlocResultatRechercheDisplayState.failure:
+        return Retry(Strings.genericError, viewModel.onRetry);
       case BlocResultatRechercheDisplayState.empty:
         return RechercheMessagePlaceholder(Strings.noContentErrorTitle, subtitle: Strings.noContentErrorSubtitle);
       case BlocResultatRechercheDisplayState.results:
