@@ -362,7 +362,7 @@ class StoreFactory {
       middleware: [
         CrashlyticsMiddleware(crashlytics).call,
         BootstrapMiddleware().call,
-        LoginMiddleware(authenticator, firebaseAuthWrapper, modeDemoRepository, matomoTracker).call,
+        LoginMiddleware(authenticator, firebaseAuthWrapper, modeDemoRepository, matomoTracker, crashlytics).call,
         FeatureFlipMiddleware(remoteConfigRepository).call,
         CacheInvalidatorMiddleware(cacheManager).call,
         UserActionDetailsMiddleware(userActionRepository).call,

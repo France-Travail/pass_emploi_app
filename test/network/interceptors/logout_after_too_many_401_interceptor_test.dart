@@ -13,6 +13,8 @@ class MockStore extends Mock implements Store<AppState> {}
 
 class MockInterceptorHandler extends Mock implements ErrorInterceptorHandler {}
 
+class MockResponseInterceptorHandler extends Mock implements ResponseInterceptorHandler {}
+
 class MockRemoteConfigRepository extends Mock implements RemoteConfigRepository {
   void withUnhautorizedLimitAt(int? limit) {
     when(() => maxUnauthorizedErrorsBeforeLogout()).thenReturn(limit);
@@ -22,6 +24,7 @@ class MockRemoteConfigRepository extends Mock implements RemoteConfigRepository 
 void main() {
   late LogoutAfterTooMany401Interceptor interceptor;
   late MockInterceptorHandler interceptorHandler;
+  late MockResponseInterceptorHandler responseInterceptorHandler;
   late MockRemoteConfigRepository remoteConfigRepository;
   late MockStore mockStore;
 
@@ -29,6 +32,7 @@ void main() {
     remoteConfigRepository = MockRemoteConfigRepository();
     interceptor = LogoutAfterTooMany401Interceptor(remoteConfigRepository);
     interceptorHandler = MockInterceptorHandler();
+    responseInterceptorHandler = MockResponseInterceptorHandler();
     mockStore = MockStore();
   });
 
@@ -100,5 +104,47 @@ void main() {
     // Then
     expect(interceptor.unauthorizedCount, 0);
     verifyNever(() => mockStore.dispatch(any));
+  });
+
+  test('reset unauthorizedCount on successful response (2xx)', () {
+    // Given
+    interceptor.unauthorizedCount = 5;
+    final response = Response<dynamic>(
+      statusCode: 200,
+      requestOptions: RequestOptions(path: '/test'),
+    );
+    interceptor.setStore(mockStore);
+
+    // When
+    interceptor.onPassEmploiResponse(response, responseInterceptorHandler);
+
+    // Then
+    expect(interceptor.unauthorizedCount, 0);
+    verifyNever(() => mockStore.dispatch(any));
+  });
+
+  test('does not log out when 401 errors are interleaved with successful responses', () {
+    // Given
+    remoteConfigRepository.withUnhautorizedLimitAt(3);
+    final store = StoreSpy();
+    final dioError = DioException(
+      requestOptions: RequestOptions(path: '/test'),
+      response: Response(statusCode: 401, requestOptions: RequestOptions(path: '/test')),
+    );
+    final response = Response<dynamic>(
+      statusCode: 200,
+      requestOptions: RequestOptions(path: '/test'),
+    );
+    interceptor.setStore(store);
+
+    // When: alternate 401 and 200 several times beyond the configured limit
+    for (var i = 0; i < 10; i++) {
+      interceptor.onPassEmploiError(dioError, interceptorHandler);
+      interceptor.onPassEmploiResponse(response, responseInterceptorHandler);
+    }
+
+    // Then: never logged out, counter is reset between bursts
+    expect(interceptor.unauthorizedCount, 0);
+    expect(store.dispatchedAction, isNot(isA<RequestLogoutAction>()));
   });
 }

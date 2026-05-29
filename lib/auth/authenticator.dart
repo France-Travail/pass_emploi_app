@@ -118,9 +118,9 @@ class Authenticator {
   }
 
   Future<void> _saveToken(AuthTokenResponse response) async {
-    await _preferences.write(key: _idTokenKey, value: response.idToken);
-    await _preferences.write(key: _accessTokenKey, value: response.accessToken);
     await _preferences.write(key: _refreshTokenKey, value: response.refreshToken);
+    await _preferences.write(key: _accessTokenKey, value: response.accessToken);
+    await _preferences.write(key: _idTokenKey, value: response.idToken);
   }
 
   Future<void> _deleteToken() async {

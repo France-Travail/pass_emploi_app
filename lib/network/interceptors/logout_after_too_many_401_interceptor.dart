@@ -15,6 +15,12 @@ class LogoutAfterTooMany401Interceptor extends PassEmploiBaseInterceptor {
   int unauthorizedCount = 0;
 
   @override
+  void onPassEmploiResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
+    unauthorizedCount = 0;
+    handler.next(response);
+  }
+
+  @override
   void onPassEmploiError(DioException err, ErrorInterceptorHandler handler) {
     final maxUnauthorizedErrorsBeforeLogout = _remoteConfigRepository.maxUnauthorizedErrorsBeforeLogout();
 

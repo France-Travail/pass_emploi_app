@@ -1,6 +1,7 @@
 import 'package:pass_emploi_app/auth/auth_id_token.dart';
 import 'package:pass_emploi_app/auth/authenticator.dart';
 import 'package:pass_emploi_app/auth/firebase_auth_wrapper.dart';
+import 'package:pass_emploi_app/crashlytics/crashlytics.dart';
 import 'package:pass_emploi_app/features/bootstrap/bootstrap_action.dart';
 import 'package:pass_emploi_app/features/chat/status/chat_status_actions.dart';
 import 'package:pass_emploi_app/features/connectivity/connectivity_actions.dart';
@@ -20,8 +21,15 @@ class LoginMiddleware extends MiddlewareClass<AppState> {
   final FirebaseAuthWrapper _firebaseAuthWrapper;
   final ModeDemoRepository _modeDemoRepository;
   final PassEmploiMatomoTracker _matomoTracker;
+  final Crashlytics? _crashlytics;
 
-  LoginMiddleware(this._authenticator, this._firebaseAuthWrapper, this._modeDemoRepository, this._matomoTracker);
+  LoginMiddleware(
+    this._authenticator,
+    this._firebaseAuthWrapper,
+    this._modeDemoRepository,
+    this._matomoTracker, [
+    this._crashlytics,
+  ]);
 
   @override
   void call(Store<AppState> store, action, NextDispatcher next) async {
@@ -93,6 +101,7 @@ class LoginMiddleware extends MiddlewareClass<AppState> {
   }
 
   void _logout(Store<AppState> store, String? userId, LogoutReason reason) async {
+    _crashlytics?.log("Logout requested with reason: ${reason.name}");
     _matomoTracker.setOptOut(optOut: false);
     await _authenticator.logout(userId ?? 'NOT_LOGIN_USER', reason);
     store.dispatch(UnsubscribeFromChatStatusAction());

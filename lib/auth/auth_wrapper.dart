@@ -21,14 +21,16 @@ class AuthWrapper {
 
   Future<AuthTokenResponse> _login(AuthTokenRequest request) async {
     try {
-      final response = await _appAuth.authorizeAndExchangeCode(AuthorizationTokenRequest(
-        request.clientId,
-        request.loginRedirectUrl,
-        issuer: request.issuer,
-        scopes: request.scopes,
-        clientSecret: request.clientSecret,
-        additionalParameters: request.additionalParameters,
-      ));
+      final response = await _appAuth.authorizeAndExchangeCode(
+        AuthorizationTokenRequest(
+          request.clientId,
+          request.loginRedirectUrl,
+          issuer: request.issuer,
+          scopes: request.scopes,
+          clientSecret: request.clientSecret,
+          additionalParameters: request.additionalParameters,
+        ),
+      );
       if (response.idToken != null && response.accessToken != null && response.refreshToken != null) {
         return AuthTokenResponse(
           idToken: response.idToken!,
@@ -59,13 +61,15 @@ class AuthWrapper {
 
   Future<AuthTokenResponse> _refreshToken(AuthRefreshTokenRequest request) async {
     try {
-      final response = await _appAuth.token(TokenRequest(
-        request.clientId,
-        request.loginRedirectUrl,
-        issuer: request.issuer,
-        clientSecret: request.clientSecret,
-        refreshToken: request.refreshToken,
-      ));
+      final response = await _appAuth.token(
+        TokenRequest(
+          request.clientId,
+          request.loginRedirectUrl,
+          issuer: request.issuer,
+          clientSecret: request.clientSecret,
+          refreshToken: request.refreshToken,
+        ),
+      );
       if (response.idToken != null && response.accessToken != null && response.refreshToken != null) {
         return AuthTokenResponse(
           idToken: response.idToken!,
@@ -135,10 +139,24 @@ extension on PlatformException {
 
   bool isUserCancellation() {
     return message?.contains('User cancelled flow') == true ||
-        message?.contains('org.openid' '.appauth.general erreur -3') == true;
+        message?.contains(
+              'org.openid'
+              '.appauth.general erreur -3',
+            ) ==
+            true;
   }
 
   bool isDeviceClockWrong() => details.toString().contains('minutes');
 
-  bool isRefreshTokenExpired() => code == "token_failed";
+  bool isRefreshTokenExpired() {
+    if (code != "token_failed") return false;
+    final details = this.details;
+    if (details is FlutterAppAuthPlatformErrorDetails) {
+      return details.error == "invalid_grant";
+    }
+    if (details is Map) {
+      return details['error'] == 'invalid_grant';
+    }
+    return false;
+  }
 }
