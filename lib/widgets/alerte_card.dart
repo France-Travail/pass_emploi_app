@@ -103,10 +103,10 @@ class AlerteCardContent extends StatelessWidget {
               icon: Container(
                 padding: EdgeInsets.all(Margins.spacing_s),
                 decoration: BoxDecoration(
-                  color: context.content,
+                  color: AppColorsSpecifics.primaryButtonBackgroundColor(context),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(AppIcons.delete, color: AppColors.primary),
+                child: Icon(AppIcons.delete, color: AppColorsSpecifics.primaryButtonForegroundColor(context)),
               ),
             ),
           SizedBox(width: Margins.spacing_base),

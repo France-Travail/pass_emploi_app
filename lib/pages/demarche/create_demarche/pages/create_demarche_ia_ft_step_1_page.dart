@@ -3,15 +3,13 @@ import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
-import 'package:pass_emploi_app/widgets/information_bandeau.dart';
+import 'package:pass_emploi_app/widgets/info_card.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
@@ -82,14 +80,7 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
             Text(Strings.iaFtStep2Title, style: TextStyles.textMBold.copyWith(color: context.content)),
             Text(Strings.iaFtStep2Mandatory, style: TextStyles.textSRegular(color: context.content)),
             const SizedBox(height: Margins.spacing_base),
-            InformationBandeau(
-              text: Strings.iaFtStep2Warning,
-              icon: AppIcons.info,
-              backgroundColor: AppColors.primaryLighten,
-              textColor: AppColors.primary,
-              borderRadius: Dimens.radius_base,
-              padding: EdgeInsets.symmetric(vertical: Margins.spacing_base, horizontal: Margins.spacing_base),
-            ),
+            InfoCard(message: Strings.iaFtStep2Warning),
             const SizedBox(height: Margins.spacing_base),
             Stack(
               children: [

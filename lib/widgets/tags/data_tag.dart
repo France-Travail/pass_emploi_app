@@ -47,8 +47,8 @@ class DataTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = context.isDarkTheme ? AppColors.primaryDarkenStrong : AppColors.primaryLighten;
-    final contentColor = context.isDarkTheme ? AppColors.primaryLighten : AppColors.primary;
+    final backgroundColor = AppColors.primaryLighten;
+    final contentColor = AppColors.primary;
     return DecoratedBox(
       decoration: BoxDecoration(
         color: backgroundColor,

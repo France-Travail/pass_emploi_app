@@ -109,7 +109,7 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
           // Required to avoid having a disproportionate NavBar height
           selectedFontSize: FontSizes.extraSmall,
           unselectedFontSize: FontSizes.extraSmall,
-          backgroundColor: context.bg,
+          backgroundColor: AppColorsSpecifics.bgToGrey100(context),
           type: BottomNavigationBarType.fixed,
           unselectedItemColor: context.grey800,
           showSelectedLabels: false,

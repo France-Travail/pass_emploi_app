@@ -45,27 +45,20 @@ enum CardPilluleType {
 }
 
 class _CardPilluleColors {
-  final Color backgroundLight;
-  final Color backgroundDark;
-  final Color contentLight;
-  final Color contentDark;
+  final Color background;
+  final Color content;
 
   const _CardPilluleColors({
-    required this.backgroundLight,
-    required this.backgroundDark,
-    required this.contentLight,
-    required this.contentDark,
+    required this.background,
+
+    required this.content,
   });
 
   /// Shorthand for pillules that don't need dark-mode adaptation.
   const _CardPilluleColors.fixed({required Color background, required Color content})
-    : backgroundLight = background,
-      backgroundDark = background,
-      contentLight = content,
-      contentDark = content;
+    : background = background,
 
-  Color background(BuildContext context) => context.isDarkTheme ? backgroundDark : backgroundLight;
-  Color content(BuildContext context) => context.isDarkTheme ? contentDark : contentLight;
+      content = content;
 }
 
 class CardPillule extends StatelessWidget {
@@ -86,100 +79,90 @@ class CardPillule extends StatelessWidget {
   CardPillule.newNotification([this.excludeSemantics = false])
     : text = Strings.newPillule,
       _colors = const _CardPilluleColors(
-        backgroundLight: AppColors.warningLighten,
-        backgroundDark: AppColors.warningDarken,
-        contentLight: AppColors.warning,
-        contentDark: AppColors.warningLighten,
+        background: AppColors.warningLighten,
+
+        content: AppColors.warning,
       ),
       icon = null;
 
   CardPillule.actionTodo([this.excludeSemantics = false])
     : text = Strings.doingPillule,
       _colors = const _CardPilluleColors(
-        backgroundLight: AppColors.accent1Lighten,
-        backgroundDark: AppColors.accent1Darken,
-        contentLight: AppColors.accent1,
-        contentDark: AppColors.accent1Lighten,
+        background: AppColors.accent1Lighten,
+
+        content: AppColors.accent1,
       ),
       icon = null;
 
   CardPillule.actionDone([this.excludeSemantics = false])
     : text = Strings.donePillule,
       _colors = const _CardPilluleColors(
-        backgroundLight: AppColors.successLighten,
-        backgroundDark: AppColors.successDarken,
-        contentLight: AppColors.success,
-        contentDark: AppColors.successLighten,
+        background: AppColors.successLighten,
+
+        content: AppColors.success,
       ),
       icon = null;
 
   CardPillule.actionLate([this.excludeSemantics = false])
     : text = Strings.latePillule,
       _colors = const _CardPilluleColors(
-        backgroundLight: AppColors.warningLighten,
-        backgroundDark: AppColors.warningDarken,
-        contentLight: AppColors.warning,
-        contentDark: AppColors.warningLighten,
+        background: AppColors.warningLighten,
+
+        content: AppColors.warning,
       ),
       icon = null;
 
   CardPillule.demarcheTodo([this.excludeSemantics = false])
     : text = Strings.todoPillule,
       _colors = const _CardPilluleColors(
-        backgroundLight: AppColors.accent3Lighten,
-        backgroundDark: AppColors.accent3Darken,
-        contentLight: AppColors.primaryDarken,
-        contentDark: AppColors.primaryLighten,
+        background: AppColors.accent3Lighten,
+
+        content: AppColors.primaryDarken,
       ),
       icon = null;
 
   CardPillule.demarcheDoing([this.excludeSemantics = false])
     : text = Strings.doingPillule,
       _colors = const _CardPilluleColors(
-        backgroundLight: AppColors.accent1Lighten,
-        backgroundDark: AppColors.accent1Darken,
-        contentLight: AppColors.accent1,
-        contentDark: AppColors.accent1Lighten,
+        background: AppColors.accent1Lighten,
+
+        content: AppColors.accent1,
       ),
       icon = null;
 
   CardPillule.demarcheDone([this.excludeSemantics = false])
     : text = Strings.donePillule,
       _colors = const _CardPilluleColors(
-        backgroundLight: AppColors.successLighten,
-        backgroundDark: AppColors.successDarken,
-        contentLight: AppColors.success,
-        contentDark: AppColors.successLighten,
+        background: AppColors.successLighten,
+
+        content: AppColors.success,
       ),
       icon = null;
 
   CardPillule.demarcheLate([this.excludeSemantics = false])
     : text = Strings.latePillule,
       _colors = const _CardPilluleColors(
-        backgroundLight: AppColors.warningLighten,
-        backgroundDark: AppColors.warningDarken,
-        contentLight: AppColors.warning,
-        contentDark: AppColors.warningLighten,
+        background: AppColors.warningLighten,
+
+        content: AppColors.warning,
       ),
       icon = null;
 
   CardPillule.demarcheCanceled([this.excludeSemantics = false])
     : text = Strings.canceledPillule,
       _colors = const _CardPilluleColors(
-        backgroundLight: AppColors.accent3Lighten,
-        backgroundDark: AppColors.accent3Darken,
-        contentLight: AppColors.primaryDarken,
-        contentDark: AppColors.primaryLighten,
+        background: AppColors.accent3Lighten,
+
+        content: AppColors.primaryDarken,
       ),
       icon = AppIcons.block;
 
   CardPillule.evenementCanceled([this.excludeSemantics = false])
     : text = Strings.rendezvousCardAnnule,
       _colors = const _CardPilluleColors(
-        backgroundLight: AppColors.primaryLighten,
-        backgroundDark: AppColors.primaryDarken,
-        contentLight: AppColors.primaryCej,
-        contentDark: AppColors.primaryLighten,
+        background: AppColors.primaryLighten,
+
+        content: AppColors.primaryCej,
       ),
       icon = AppIcons.block;
 
@@ -188,7 +171,7 @@ class CardPillule extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimens.radius_l),
-        color: _colors.background(context),
+        color: _colors.background,
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_s, vertical: Margins.spacing_xs),
@@ -198,10 +181,10 @@ class CardPillule extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (icon != null) ...[
-                Icon(icon, color: _colors.content(context), size: Dimens.icon_size_base),
+                Icon(icon, color: _colors.content, size: Dimens.icon_size_base),
                 SizedBox(width: Margins.spacing_xs),
               ],
-              Text(text, style: TextStyles.textXsBold().copyWith(color: _colors.content(context))),
+              Text(text, style: TextStyles.textXsBold().copyWith(color: _colors.content)),
             ],
           ),
         ),

@@ -192,8 +192,6 @@ class _Categorie extends StatelessWidget {
       text: label,
       contentColor: AppColors.primary,
       backgroundColor: AppColors.primaryLighten,
-      backgroundDarkColor: AppColors.primaryDarkenStrong,
-      contentDarkColor: AppColors.primaryLighten,
     );
   }
 }

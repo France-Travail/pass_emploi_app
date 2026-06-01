@@ -1051,8 +1051,6 @@ class Strings {
   static String immersionContactFormPhoneInvalid = "Veuillez renseigner un numéro de téléphone valide";
   static String immersionContactFormLinkedinInvalid =
       "Veuillez renseigner une URL valide (ex: https://linkedin.com/in/votre-profil)";
-  static const immersionDataWarningMessage =
-      "Veuillez utiliser les coordonnées de l'entreprise uniquement pour votre usage personnel";
   static String contactByMail = "Mise en relation par mail";
   static String contactByPhone = "Mise en relation par téléphone";
   static String contactByPresen = "Rendez-vous sur place";

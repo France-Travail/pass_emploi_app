@@ -20,10 +20,13 @@ class InfoCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(AppIcons.info_rounded, color: textColor ?? AppColors.primary),
+          Icon(AppIcons.info_rounded, color: textColor ?? AppColorsSpecifics.primaryToGrey100(context)),
           SizedBox(width: Margins.spacing_s),
           Flexible(
-            child: Text(message, style: TextStyles.textSMedium(color: textColor ?? AppColors.primary)),
+            child: Text(
+              message,
+              style: TextStyles.textSMedium(color: textColor ?? AppColorsSpecifics.primaryToGrey100(context)),
+            ),
           ),
         ],
       ),

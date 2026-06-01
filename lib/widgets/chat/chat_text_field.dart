@@ -72,12 +72,12 @@ class _ChatTextFieldState extends State<ChatTextField> {
                     // to avoid hero animation bug
                     heroTag: "chat",
                     elevation: 0,
-                    backgroundColor: AppColors.primaryLighten,
+                    backgroundColor: context.isDarkTheme ? AppColors.grey100Dark : AppColors.primaryLighten,
                     tooltip: Strings.sendAttachmentTooltip,
                     onPressed: onSelectPieceJointe,
                     child: Icon(
                       AppIcons.attach_file,
-                      color: AppColors.primary,
+                      color: context.isDarkTheme ? AppColors.contentOnPrimary : AppColors.primary,
                     ),
                   ),
                   SizedBox(width: Margins.spacing_s),
