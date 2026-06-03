@@ -40,8 +40,16 @@ class Authenticator {
   final Configuration _configuration;
   final FlutterSecureStorage _preferences;
   final Crashlytics? _crashlytics;
+  final Duration _refreshRetryDelay;
 
-  Authenticator(this._authWrapper, this._logoutRepository, this._configuration, this._preferences, [this._crashlytics]);
+  Authenticator(
+    this._authWrapper,
+    this._logoutRepository,
+    this._configuration,
+    this._preferences, [
+    this._crashlytics,
+    this._refreshRetryDelay = const Duration(seconds: 1),
+  ]);
 
   Future<AuthenticatorResponse> login(AuthenticationMode mode) async {
     try {
@@ -87,6 +95,22 @@ class Authenticator {
       return RefreshTokenStatus.USER_NOT_LOGGED_IN;
     }
 
+    // Un invalid_grant peut être transitoire (course entre requêtes, latence côté
+    // serveur). On retente une fois avant de supprimer les tokens et de déconnecter,
+    // pour éviter un logout sec sur un échec passager.
+    var status = await _tryRefreshToken(refreshToken);
+    if (status == RefreshTokenStatus.EXPIRED_REFRESH_TOKEN) {
+      await Future<void>.delayed(_refreshRetryDelay);
+      status = await _tryRefreshToken(refreshToken);
+    }
+
+    if (status == RefreshTokenStatus.EXPIRED_REFRESH_TOKEN) {
+      await _deleteToken();
+    }
+    return status;
+  }
+
+  Future<RefreshTokenStatus> _tryRefreshToken(String refreshToken) async {
     try {
       final AuthTokenResponse response = await _authWrapper.refreshToken(
         AuthRefreshTokenRequest(
@@ -102,7 +126,6 @@ class Authenticator {
     } on AuthWrapperNetworkException {
       return RefreshTokenStatus.NETWORK_UNREACHABLE;
     } on AuthWrapperRefreshTokenExpiredException {
-      await _deleteToken();
       return RefreshTokenStatus.EXPIRED_REFRESH_TOKEN;
     } on AuthWrapperRefreshTokenException {
       return RefreshTokenStatus.GENERIC_ERROR;
