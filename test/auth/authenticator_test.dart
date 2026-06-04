@@ -26,7 +26,7 @@ void main() {
     secureStorage = FlutterSecureStorageSpy();
     logoutRepository = DummyLogoutRepository();
     logoutRepository.setCacheManager(DummyPassEmploiCacheManager());
-    authenticator = Authenticator(wrapper, logoutRepository, configuration(), secureStorage, null, Duration.zero);
+    authenticator = Authenticator(wrapper, logoutRepository, configuration(), secureStorage);
   });
 
   group('Login tests', () {
@@ -181,45 +181,6 @@ void main() {
       final result = await authenticator.performRefreshToken();
 
       // Then
-      expect(result, RefreshTokenStatus.EXPIRED_REFRESH_TOKEN);
-      expect(await authenticator.isLoggedIn(), false);
-    });
-
-    test('refresh token retries once and succeeds when first attempt fails on invalid_grant (transient)', () async {
-      // Given
-      when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async => authTokenResponse());
-      var attempts = 0;
-      when(() => wrapper.refreshToken(_refreshTokenRequest())).thenAnswer((_) async {
-        attempts++;
-        if (attempts == 1) throw AuthWrapperRefreshTokenExpiredException('');
-        return AuthTokenResponse(accessToken: 'accessToken2', idToken: 'idToken2', refreshToken: 'refreshToken2');
-      });
-
-      await authenticator.login(AuthenticationMode.GENERIC);
-
-      // When
-      final result = await authenticator.performRefreshToken();
-
-      // Then
-      expect(attempts, 2);
-      expect(result, RefreshTokenStatus.SUCCESSFUL);
-      expect(await secureStorage.read(key: "idToken"), "idToken2");
-      expect(await secureStorage.read(key: "accessToken"), "accessToken2");
-      expect(await secureStorage.read(key: "refreshToken"), "refreshToken2");
-    });
-
-    test('refresh token deletes tokens and returns EXPIRED only after the retry also fails on invalid_grant', () async {
-      // Given
-      when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async => authTokenResponse());
-      when(() => wrapper.refreshToken(_refreshTokenRequest())).thenThrow(AuthWrapperRefreshTokenExpiredException(''));
-
-      await authenticator.login(AuthenticationMode.GENERIC);
-
-      // When
-      final result = await authenticator.performRefreshToken();
-
-      // Then
-      verify(() => wrapper.refreshToken(_refreshTokenRequest())).called(2);
       expect(result, RefreshTokenStatus.EXPIRED_REFRESH_TOKEN);
       expect(await authenticator.isLoggedIn(), false);
     });
