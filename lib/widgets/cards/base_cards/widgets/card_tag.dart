@@ -17,7 +17,7 @@ class _CardTagColors {
   });
 
   Color background(BuildContext context) => backgroundLight;
-  Color content(BuildContext context) => contentLight;
+  Color content(BuildContext context) => context.isDarkTheme ? AppColors.contentLight : contentLight;
 }
 
 class CardTag extends StatelessWidget {

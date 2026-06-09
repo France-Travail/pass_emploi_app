@@ -55,10 +55,7 @@ class _CardPilluleColors {
   });
 
   /// Shorthand for pillules that don't need dark-mode adaptation.
-  const _CardPilluleColors.fixed({required Color background, required Color content})
-    : background = background,
-
-      content = content;
+  const _CardPilluleColors.fixed({required this.background, required this.content});
 }
 
 class CardPillule extends StatelessWidget {
@@ -161,13 +158,13 @@ class CardPillule extends StatelessWidget {
     : text = Strings.rendezvousCardAnnule,
       _colors = const _CardPilluleColors(
         background: AppColors.primaryLighten,
-
         content: AppColors.primaryCej,
       ),
       icon = AppIcons.block;
 
   @override
   Widget build(BuildContext context) {
+    final fgcolor = context.isDarkTheme ? AppColors.contentLight : _colors.content;
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimens.radius_l),
@@ -181,10 +178,10 @@ class CardPillule extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (icon != null) ...[
-                Icon(icon, color: _colors.content, size: Dimens.icon_size_base),
+                Icon(icon, color: fgcolor, size: Dimens.icon_size_base),
                 SizedBox(width: Margins.spacing_xs),
               ],
-              Text(text, style: TextStyles.textXsBold().copyWith(color: _colors.content)),
+              Text(text, style: TextStyles.textXsBold().copyWith(color: fgcolor)),
             ],
           ),
         ),
