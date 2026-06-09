@@ -194,7 +194,7 @@ class _ThematiqueTile extends StatelessWidget {
     return Semantics(
       button: true,
       child: CardContainer(
-        backgroundColor: AppColorsSpecifics.bgToGrey100(context),
+        backgroundColor: context.bg,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -223,7 +223,7 @@ class _CreateCustomDemarche extends StatelessWidget {
     return Semantics(
       button: true,
       child: CardContainer(
-        backgroundColor: AppColorsSpecifics.bgToGrey100(context),
+        backgroundColor: context.bg,
         onTap: onCreateCustomDemarche,
         child: Row(
           children: [

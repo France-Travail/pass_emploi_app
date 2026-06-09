@@ -28,7 +28,7 @@ class _PassEmploiTabBarState extends State<PassEmploiTabBar> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_m),
-      color: Brand.isCej() ? AppColors.transparent : AppColors.primary,
+      color: AppColorsSpecifics.tabBarBackgroundColor(context),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -39,12 +39,12 @@ class _PassEmploiTabBarState extends State<PassEmploiTabBar> {
               indicatorColor: Brand.isCej() ? AppColorsSpecifics.primaryToLighten(context) : context.grey100,
               indicatorWeight: 4,
               labelStyle: TextStyles.textBaseBold,
-              labelColor: Brand.isCej() ? context.content : context.grey100,
+              labelColor: AppColorsSpecifics.tabBarFgColor(context),
               indicatorSize: TabBarIndicatorSize.tab,
               isScrollable: true,
               labelPadding: const EdgeInsets.only(right: 32),
               indicatorPadding: const EdgeInsets.only(right: 32),
-              unselectedLabelColor: Brand.isCej() ? context.grey800 : context.grey100,
+              unselectedLabelColor: AppColorsSpecifics.tabBarUnselectedLabelColor(context),
               tabAlignment: TabAlignment.start,
               tabs: _tabs(),
             ),

@@ -67,7 +67,7 @@ class _CreateDemarcheFormState extends State<CreateDemarcheForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.bg,
+      backgroundColor: AppColorsSpecifics.bgToGrey100(context),
       resizeToAvoidBottomInset: false,
       appBar: SecondaryAppBar(title: Strings.createDemarcheAppBarTitle, leading: AppBarBackButton(_changeNotifier)),
       body: _Body(_changeNotifier),

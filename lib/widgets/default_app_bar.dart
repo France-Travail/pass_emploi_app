@@ -61,7 +61,7 @@ class PrimarySliverAppbar extends StatelessWidget {
                       ),
                       _CentreNotif(withNewNotifications),
                       SizedBox(width: Margins.spacing_s),
-                      ProfileButton(isDarkColor: Brand.isCej()),
+                      ProfileButton(),
                     ],
                   ),
                 ),
@@ -132,7 +132,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
       toolbarHeight: toolBarHeight,
       leading: canPop ? BackButton(color: iconColor) : null,
       scrolledUnderElevation: 0,
-      backgroundColor: Brand.isCej() ? context.grey100 : AppColors.primary,
+      backgroundColor: AppColorsSpecifics.primaryAppBarBackgroundColor(context),
       title: Semantics(
         header: true,
         focusable: withAutofocusA11y,
@@ -160,7 +160,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
           SizedBox(width: Margins.spacing_base),
         ],
         if (withProfileButton) ...[
-          ProfileButton(isDarkColor: Brand.isCej()),
+          ProfileButton(),
           SizedBox(width: Margins.spacing_base),
         ],
       ],
