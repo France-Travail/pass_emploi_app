@@ -56,7 +56,7 @@ class _CreateUserActionFormStep2State extends State<CreateUserActionFormStep2> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    UserActionStepperTexts(index: 2),
+                    UserActionStepperTexts(index: 1),
                     const SizedBox(height: Margins.spacing_s),
                     Text(
                       widget.actionType.label,

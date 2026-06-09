@@ -35,7 +35,7 @@ class CreateUserActionFormStep1 extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    UserActionStepperTexts(index: 1),
+                    UserActionStepperTexts(index: 0),
                     const SizedBox(height: Margins.spacing_s),
                     Text(
                       Strings.userActionTitleStep1,
@@ -126,7 +126,7 @@ class ActionCategoryCard extends StatelessWidget {
       button: true,
       child: CardContainer(
         onTap: onTap,
-        backgroundColor: AppColorsSpecifics.bgToGrey100(context),
+        backgroundColor: context.bg,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
