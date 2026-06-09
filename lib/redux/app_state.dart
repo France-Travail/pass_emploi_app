@@ -87,6 +87,7 @@ import 'package:pass_emploi_app/models/user.dart';
 import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_mission_locale_state.dart';
 import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription_state.dart';
 import 'package:pass_emploi_app/features/theme/theme_state.dart';
+import 'package:pass_emploi_app/features/soft_update/soft_update_state.dart';
 /*AUTOGENERATE-REDUX-APP-STATE-IMPORT*/
 
 class AppState extends Equatable {
@@ -175,6 +176,7 @@ class AppState extends Equatable {
   final ActualiteMissionLocaleState actualiteMissionLocaleState;
   final AutoDesinscriptionState autoDesinscriptionState;
   final ThemeState themeState;
+  final SoftUpdateState softUpdateState;
   /*AUTOGENERATE-REDUX-APP-STATE-PROPERTY*/
 
   AppState({
@@ -263,6 +265,7 @@ class AppState extends Equatable {
     required this.actualiteMissionLocaleState,
     required this.autoDesinscriptionState,
     required this.themeState,
+    required this.softUpdateState,
     /*AUTOGENERATE-REDUX-APP-STATE-CONSTRUCTOR*/
   });
 
@@ -352,6 +355,7 @@ class AppState extends Equatable {
     final ActualiteMissionLocaleState? actualiteMissionLocaleState,
     final AutoDesinscriptionState? autoDesinscriptionState,
     final ThemeState? themeState,
+    final SoftUpdateState? softUpdateState,
     /*AUTOGENERATE-REDUX-APP-STATE-COPYPARAM*/
   }) {
     return AppState(
@@ -441,6 +445,7 @@ class AppState extends Equatable {
       actualiteMissionLocaleState: actualiteMissionLocaleState ?? this.actualiteMissionLocaleState,
       autoDesinscriptionState: autoDesinscriptionState ?? this.autoDesinscriptionState,
       themeState: themeState ?? this.themeState,
+      softUpdateState: softUpdateState ?? this.softUpdateState,
       /*AUTOGENERATE-REDUX-APP-STATE-COPYBODY*/
     );
   }
@@ -532,6 +537,7 @@ class AppState extends Equatable {
       actualiteMissionLocaleState: ActualiteMissionLocaleNotInitializedState(),
       autoDesinscriptionState: AutoDesinscriptionNotInitializedState(),
       themeState: ThemeNotInitializedState(),
+      softUpdateState: SoftUpdateNotShownState(),
       /*AUTOGENERATE-REDUX-APP-STATE-FACTORY*/
     );
   }
@@ -616,6 +622,7 @@ class AppState extends Equatable {
     actualiteMissionLocaleState,
     autoDesinscriptionState,
     themeState,
+    softUpdateState,
     /*AUTOGENERATE-REDUX-APP-STATE-EQUATABLE*/
   ];
 

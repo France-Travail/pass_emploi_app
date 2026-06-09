@@ -92,6 +92,7 @@ import 'package:pass_emploi_app/models/service_civique.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription_reducer.dart';
 import 'package:pass_emploi_app/features/theme/theme_reducer.dart';
+import 'package:pass_emploi_app/features/soft_update/soft_update_reducer.dart';
 /*AUTOGENERATE-REDUX-APP-REDUCER-IMPORT*/
 
 AppState reducer(AppState current, dynamic action) {
@@ -225,6 +226,7 @@ AppState reducer(AppState current, dynamic action) {
     actualiteMissionLocaleState: actualiteMissionLocaleReducer(current.actualiteMissionLocaleState, action),
     autoDesinscriptionState: autoDesinscriptionReducer(current.autoDesinscriptionState, action),
     themeState: themeReducer(current.themeState, action),
+    softUpdateState: softUpdateReducer(current.softUpdateState, action),
     /*AUTOGENERATE-REDUX-APP-REDUCER-STATE*/
   );
 }

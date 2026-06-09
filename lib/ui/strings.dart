@@ -166,6 +166,13 @@ class Strings {
   static String forceUpdateOnFirebaseLabel =
       "Votre application nécessite d'être mise à jour sur Firebase pour son bon fonctionnement";
 
+  // Soft Update
+  static String softUpdateBottomSheetTitle = "Votre application n'est pas à jour";
+  static String softUpdateBottomSheetSubtitle =
+      "Une version plus récente est disponible. La mise à jour ne prend que quelques secondes.";
+  static String softUpdateBottomSheetDownload = "Télécharger";
+  static String softUpdateBottomSheetClose = "Fermer";
+
   // First Launch Onboarding
   static String start = "Démarrer";
 

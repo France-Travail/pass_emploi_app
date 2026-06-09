@@ -54,6 +54,7 @@ import 'package:pass_emploi_app/utils/compress_image.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/wrappers/connectivity_wrapper.dart';
 
+import 'package:pass_emploi_app/repositories/soft_update_repository.dart';
 /*AUTOGENERATE-REDUX-TEST-MOCKS-REPOSITORY-IMPORT*/
 
 import 'dio_mock.dart';
@@ -257,6 +258,7 @@ class MockRemoteConfigRepository extends Mock implements RemoteConfigRepository 
     when(() => lastCampagneRecrutementId()).thenReturn(null);
     when(() => monSuiviPoleEmploiStartDateInMonths()).thenReturn(1);
     when(() => campagnesAccueil()).thenReturn([]);
+    when(() => softUpdateVersion(isAndroid: any(named: 'isAndroid'))).thenReturn(null);
   }
 }
 
@@ -365,5 +367,7 @@ class MockThemeRepository extends Mock implements ThemeRepository {
     when(() => getThemeMode()).thenAnswer((_) async => ThemeMode.system);
   }
 }
+
+class MockSoftUpdateRepository extends Mock implements SoftUpdateRepository {}
 
 /*AUTOGENERATE-REDUX-TEST-MOCKS-REPOSITORY-DECLARATION*/

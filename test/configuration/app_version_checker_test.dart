@@ -55,4 +55,11 @@ void main() {
     expect(checker.shouldForceUpdate(currentVersion: '3.1.1-staging', minimumVersion: '1.1.2'), false);
     expect(checker.shouldForceUpdate(currentVersion: '1.4.1-staging', minimumVersion: '1.1.3'), false);
   });
+
+  test('shouldSoftUpdate', () {
+    expect(checker.shouldSoftUpdate(currentVersion: '1.0.0', softUpdateVersion: '2.0.0'), true);
+    expect(checker.shouldSoftUpdate(currentVersion: '2.0.0', softUpdateVersion: '1.0.0'), false);
+    expect(checker.shouldSoftUpdate(currentVersion: null, softUpdateVersion: '1.0.0'), false);
+    expect(checker.shouldSoftUpdate(currentVersion: '1.0.0', softUpdateVersion: null), false);
+  });
 }

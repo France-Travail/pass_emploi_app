@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/features/accueil/accueil_actions.dart';
 import 'package:pass_emploi_app/features/date_consultation_notification/date_consultation_notification_actions.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_actions.dart';
+import 'package:pass_emploi_app/features/soft_update/soft_update_actions.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_alertes.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_campagne_recrutement.dart';
@@ -39,6 +40,7 @@ import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/notifications_bottom_sheet.dart';
+import 'package:pass_emploi_app/widgets/bottom_sheets/soft_update_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/cards/campagne_card.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
@@ -55,6 +57,7 @@ class AccueilPage extends StatefulWidget {
 
 class _AccueilPageState extends State<AccueilPage> {
   bool _onboardingShown = false;
+  bool _softUpdateShown = false;
 
   @override
   Widget build(BuildContext context) {
@@ -65,10 +68,12 @@ class _AccueilPageState extends State<AccueilPage> {
           store.dispatch(AccueilRequestAction());
           store.dispatch(InAppNotificationsRequestAction());
           store.dispatch(DateConsultationNotificationRequestAction());
+          store.dispatch(SoftUpdateCheckAction());
         },
         converter: (store) => AccueilViewModel.create(store),
         builder: _builder,
         onDidChange: (previousViewModel, viewModel) {
+          _handleSoftUpdateBottomSheet(viewModel);
           _handleNotificationsBottomSheet(viewModel);
           _handleDeeplink(previousViewModel, viewModel);
         },
@@ -164,6 +169,13 @@ class _AccueilPageState extends State<AccueilPage> {
     StoreProvider.of<AppState>(
       context,
     ).dispatch(HandleDeepLinkAction(MonSuiviDeepLink(), DeepLinkOrigin.inAppNavigation));
+  }
+
+  void _handleSoftUpdateBottomSheet(AccueilViewModel viewModel) {
+    if (viewModel.shouldShowSoftUpdate && !_softUpdateShown) {
+      _softUpdateShown = true;
+      SoftUpdateBottomSheet.show(context);
+    }
   }
 
   void _handleNotificationsBottomSheet(AccueilViewModel viewModel) {

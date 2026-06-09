@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_state.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_state.dart';
 import 'package:pass_emploi_app/features/rating/rating_state.dart';
+import 'package:pass_emploi_app/features/soft_update/soft_update_state.dart';
 import 'package:pass_emploi_app/features/remote_campagne_accueil/remote_campagne_accueil_actions.dart';
 import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
@@ -26,6 +27,7 @@ class AccueilViewModel extends Equatable {
   final bool shouldResetDeeplink;
   final bool withNewNotifications;
   final bool shouldShowAllowNotifications;
+  final bool shouldShowSoftUpdate;
   final Function() resetDeeplink;
   final Function() retry;
 
@@ -36,6 +38,7 @@ class AccueilViewModel extends Equatable {
     required this.shouldResetDeeplink,
     required this.withNewNotifications,
     required this.shouldShowAllowNotifications,
+    required this.shouldShowSoftUpdate,
     required this.resetDeeplink,
     required this.retry,
   });
@@ -48,13 +51,14 @@ class AccueilViewModel extends Equatable {
       shouldResetDeeplink: _shouldResetDeeplink(store),
       withNewNotifications: _withNewNotifications(store),
       shouldShowAllowNotifications: _shouldShowAllowNotifications(store),
+      shouldShowSoftUpdate: store.state.softUpdateState is ShowSoftUpdateState,
       resetDeeplink: () => store.dispatch(ResetDeeplinkAction()),
       retry: () => store.dispatch(AccueilRequestAction(forceRefresh: true)),
     );
   }
 
   @override
-  List<Object?> get props => [displayState, items, deepLink, withNewNotifications];
+  List<Object?> get props => [displayState, items, deepLink, withNewNotifications, shouldShowSoftUpdate];
 }
 
 DisplayState _displayState(Store<AppState> store) {

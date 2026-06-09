@@ -94,6 +94,14 @@ class RemoteConfigRepository {
     return Cgu.fromJson(json.decode(cguAsString));
   }
 
+  String? softUpdateVersion({required bool isAndroid}) {
+    if (_firebaseRemoteConfig == null) return null;
+    final key = isAndroid ? 'app_android_soft_update_version' : 'app_ios_soft_update_version';
+    final value = _firebaseRemoteConfig.getString(key);
+    if (value.isEmpty || value == "null") return null;
+    return value;
+  }
+
   FeedbackForFeature? inAppFeedbackForFeature(String feature) {
     if (_firebaseRemoteConfig == null) return null;
     final String inAppFeedbackAsString = _firebaseRemoteConfig.getString('in_app_feedback_for_feature');
