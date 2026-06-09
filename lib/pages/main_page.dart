@@ -3,6 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:gaimon/gaimon.dart';
 import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_mission_locale_actions.dart';
 import 'package:pass_emploi_app/features/chat/status/chat_status_actions.dart';
+import 'package:pass_emploi_app/features/theme/theme_state.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_page.dart';
 import 'package:pass_emploi_app/pages/chat/chat_home_page.dart';
 import 'package:pass_emploi_app/pages/events_tab_page.dart';
@@ -207,10 +208,13 @@ class _ModeDemoWrapper extends StatelessWidget {
     final store = StoreProvider.of<AppState>(context);
     final isDemo = store.state.demoState;
     if (!isDemo) return child;
+    final themeState = store.state.themeState;
+    final themeMode = themeState is ThemeSuccessState ? themeState.themeMode : ThemeMode.light;
     return Scaffold(
       backgroundColor: context.bg,
       appBar: ModeDemoAppBar(),
       body: PassEmploiMaterialApp(
+        themeMode: themeMode,
         scaffoldMessengerKey: modeDemoSnackBarKey,
         debugShowCheckedModeBanner: false,
         builder: (context, materialAppChild) => MediaQuery.removePadding(
