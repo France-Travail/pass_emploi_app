@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/pages/notifications_center/notifications_center_page.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
@@ -127,10 +126,9 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconColor = Brand.isCej() ? context.content : context.grey100;
     return AppBar(
       toolbarHeight: toolBarHeight,
-      leading: canPop ? BackButton(color: iconColor) : null,
+      leading: canPop ? BackButton(color: AppColorsSpecifics.primaryAppBarFgColor(context)) : null,
       scrolledUnderElevation: 0,
       backgroundColor: AppColorsSpecifics.primaryAppBarBackgroundColor(context),
       title: Semantics(
@@ -143,10 +141,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
             enabled: withAutofocusA11y,
             child: Text(
               title,
-              style: TextStyles.primaryAppBar(context)
-                ..copyWith(
-                  color: Brand.isCej() ? AppColors.primary : context.grey100,
-                ),
+              style: TextStyles.primaryAppBar(context),
               overflow: TextOverflow.fade,
             ),
           ),

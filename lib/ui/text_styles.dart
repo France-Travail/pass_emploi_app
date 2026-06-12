@@ -180,7 +180,7 @@ class TextStyles {
   }
 
   static TextStyle primaryAppBar(BuildContext context) => TextStyle(
-    color: context.isDarkTheme ? context.content : AppColors.primary,
+    color: AppColorsSpecifics.primaryAppBarFgColor(context),
     fontFamily: 'Marianne',
     fontSize: FontSizes.huge,
     fontWeight: FontWeight.bold,

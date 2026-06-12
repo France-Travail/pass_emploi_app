@@ -101,6 +101,7 @@ class _Scaffold extends StatelessWidget {
                               right: Margins.spacing_m,
                               top: Margins.spacing_m,
                             ),
+                            backgroundColor: AppColorsSpecifics.bgToGrey100(context),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [

@@ -138,7 +138,10 @@ class AppColorsSpecifics {
   }
 
   static Color profileButtonForegroundColor(BuildContext context) {
-    return AppColors.contentOnPrimary;
+    if (context.isDarkTheme) {
+      return AppColors.contentOnPrimary;
+    }
+    return Brand.isCej() ? AppColors.contentOnPrimary : AppColors.primary;
   }
 
   static Color profileButtonBackgroundColor(BuildContext context) {
@@ -188,6 +191,13 @@ class AppColorsSpecifics {
       return context.grey100;
     }
     return Brand.isCej() ? context.grey100 : AppColors.primary;
+  }
+
+  static Color primaryAppBarFgColor(BuildContext context) {
+    if (context.isDarkTheme) {
+      return context.content;
+    }
+    return Brand.isCej() ? AppColors.primary : context.grey100;
   }
 
   static Color tabBarBackgroundColor(BuildContext context) {
