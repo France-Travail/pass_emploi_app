@@ -299,6 +299,15 @@ class AnalyticsEventNames {
 
   static const alerteCategory = "Alertes";
   static const alerteCardPressed = "Clic sur une alerte";
+
+  static const themeCategory = "Thème";
+  static const themeChangedLight = "Appli lancée en thème clair";
+  static const themeChangedDark = "Appli lancée en thème sombre";
+  static const themeChangedSystem = "Appli lancée en thème système";
+
+  static const softUpdateCategory = "Mise à jour disponible";
+  static const softUpdateDownload = "Télécharger";
+  static const softUpdateDismiss = "Plus tard";
 }
 
 class AnalyticsCustomDimensions {

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/presentation/soft_update_bottom_sheet_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
+import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/utils/platform.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
@@ -48,12 +50,24 @@ class SoftUpdateBottomSheet extends StatelessWidget {
                 SizedBox(height: Margins.spacing_l),
                 PrimaryActionButton(
                   label: viewModel.downloadLabel,
-                  onPressed: () => Navigator.of(context).pop(true),
+                  onPressed: () {
+                    PassEmploiMatomoTracker.instance.trackEvent(
+                      eventCategory: AnalyticsEventNames.softUpdateCategory,
+                      action: AnalyticsEventNames.softUpdateDownload,
+                    );
+                    Navigator.of(context).pop(true);
+                  },
                 ),
                 SizedBox(height: Margins.spacing_base),
                 SecondaryButton(
                   label: viewModel.closeLabel,
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () {
+                    PassEmploiMatomoTracker.instance.trackEvent(
+                      eventCategory: AnalyticsEventNames.softUpdateCategory,
+                      action: AnalyticsEventNames.softUpdateDismiss,
+                    );
+                    Navigator.of(context).pop();
+                  },
                 ),
                 SizedBox(height: MediaQuery.of(context).padding.bottom),
               ],
