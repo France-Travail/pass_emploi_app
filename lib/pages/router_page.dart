@@ -6,7 +6,6 @@ import 'package:pass_emploi_app/features/bootstrap/bootstrap_action.dart';
 import 'package:pass_emploi_app/features/connectivity/connectivity_actions.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_state.dart';
-import 'package:pass_emploi_app/features/theme/theme_state.dart';
 import 'package:pass_emploi_app/pages/cgu_page.dart';
 import 'package:pass_emploi_app/pages/first_lauch_onboarding_page.dart';
 import 'package:pass_emploi_app/pages/login_page.dart';
@@ -22,7 +21,6 @@ import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/utils/platform.dart';
-import 'package:redux/redux.dart';
 
 class RouterPage extends StatefulWidget {
   @override
@@ -65,7 +63,6 @@ class _RouterPageState extends State<RouterPage> with WidgetsBindingObserver {
         store.dispatch(BootstrapAction());
         store.dispatch(SubscribeToConnectivityUpdatesAction());
         _trackA11y();
-        _trackTheme(store);
       },
       converter: (store) => RouterPageViewModel.create(store, PlatformUtils.getPlatform),
       builder: (context, viewModel) => _content(viewModel),
@@ -160,19 +157,5 @@ class _RouterPageState extends State<RouterPage> with WidgetsBindingObserver {
           ? AnalyticsEventNames.a11yWithTextScale
           : AnalyticsEventNames.a11yWithoutTextScale,
     );
-  }
-
-  void _trackTheme(Store<AppState> store) {
-    final themeState = store.state.themeState;
-    if (themeState is ThemeSuccessState) {
-      PassEmploiMatomoTracker.instance.trackEvent(
-        eventCategory: AnalyticsEventNames.themeCategory,
-        action: switch (themeState.themeMode) {
-          ThemeMode.system => AnalyticsEventNames.themeChangedSystem,
-          ThemeMode.light => AnalyticsEventNames.themeChangedLight,
-          ThemeMode.dark => AnalyticsEventNames.themeChangedDark,
-        },
-      );
-    }
   }
 }
