@@ -171,7 +171,7 @@ class Strings {
   static String softUpdateBottomSheetSubtitle =
       "Une version plus récente est disponible. La mise à jour ne prend que quelques secondes.";
   static String softUpdateBottomSheetDownload = "Télécharger";
-  static String softUpdateBottomSheetClose = "Fermer";
+  static String softUpdateBottomSheetClose = "Plus tard";
 
   // First Launch Onboarding
   static String start = "Démarrer";
