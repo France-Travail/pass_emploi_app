@@ -226,14 +226,18 @@ void main() {
       expect(await authenticator.isLoggedIn(), false);
     });
 
-    test('FALSE is returned if user was not logged in', () async {
-      // Given user not logged in
+    test('local idToken is cleared even when refresh token is missing (secure storage desync)', () async {
+      // Given : idToken valide résiduel mais pas de refresh token (désync)
+      await secureStorage.write(key: 'idToken', value: realPassEmploiIdToken);
+      expect(await authenticator.isLoggedIn(), isTrue);
 
       // When
       final result = await authenticator.logout('NOT_LOGIN_USER', LogoutReason.expiredRefreshToken);
 
-      // Then
-      expect(result, isFalse);
+      // Then : sans le fix, logout sortait en false sans effacer l'idToken
+      // -> isLoggedIn restait true -> utilisateur bloqué, incapable de se déco
+      expect(result, isTrue);
+      expect(await authenticator.isLoggedIn(), isFalse);
     });
   });
 

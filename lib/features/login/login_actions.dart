@@ -1,10 +1,28 @@
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/user.dart';
 
-enum LogoutReason { userLogout, apiResponse401, expiredRefreshToken, accountSuppression, cguRefused, tooMany401 }
+enum LogoutReason {
+  userLogout,
+  apiResponse401,
+  expiredRefreshToken,
+  accountSuppression,
+  cguRefused,
+  tooMany401,
+  tooManyRefreshGenericErrors,
+}
 
 extension LoginModeModeExtension on LoginMode {
   bool isDemo() => this == LoginMode.DEMO_PE || this == LoginMode.DEMO_MILO;
+}
+
+class TokenRefreshGenericErrorAction {
+  final int consecutiveFailures;
+
+  TokenRefreshGenericErrorAction(this.consecutiveFailures);
+
+  @override
+  String toString() =>
+      'TokenRefreshFailedAction(consecutive: $consecutiveFailures)';
 }
 
 class LoginRequestAction {}

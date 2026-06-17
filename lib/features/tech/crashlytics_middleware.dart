@@ -16,13 +16,60 @@ class CrashlyticsMiddleware extends MiddlewareClass<AppState> {
 
   @override
   void call(Store<AppState> store, dynamic action, NextDispatcher next) async {
-    if (action is LoginSuccessAction) crashlytics.setUserIdentifier(action.user.id);
+    if (action is LoginSuccessAction)
+      crashlytics.setUserIdentifier(action.user.id);
+    if (action is RequestLogoutAction) _trackLogout(action.reason);
+    if (action is TokenRefreshGenericErrorAction)
+      _trackTokenRefreshFailure(action);
 
     _lastActions.add(_actionToString(action));
     crashlytics.setCustomKey("last_actions", _formatQueueForCrashlytics());
     crashlytics.setCustomKey("app_state", _formatStoreForCrashlytics(store));
 
     next(action);
+  }
+
+  void _trackLogout(LogoutReason reason) {
+    crashlytics.setCustomKey("last_logout_reason", reason.name);
+    crashlytics.log("Logout: ${reason.name}");
+
+    if (_isUnexpectedLogout(reason)) {
+      crashlytics.recordNonNetworkException(
+        "Logout subi: ${reason.name}",
+        StackTrace.current,
+      );
+    }
+  }
+
+  bool _isUnexpectedLogout(LogoutReason reason) {
+    switch (reason) {
+      case LogoutReason.userLogout:
+      case LogoutReason.accountSuppression:
+      case LogoutReason.cguRefused:
+        return false;
+      case LogoutReason.apiResponse401:
+      case LogoutReason.expiredRefreshToken:
+      case LogoutReason.tooMany401:
+      case LogoutReason.tooManyRefreshGenericErrors:
+        return true;
+    }
+  }
+
+  void _trackTokenRefreshFailure(TokenRefreshGenericErrorAction action) {
+    crashlytics.setCustomKey(
+      "consecutive_refresh_failures",
+      action.consecutiveFailures.toString(),
+    );
+    crashlytics.log(
+      "Token refresh failed (GENERIC), consecutive: ${action.consecutiveFailures}",
+    );
+
+    if (action.consecutiveFailures == 1) {
+      crashlytics.recordNonNetworkException(
+        "ZombieState: app en ligne mais refresh impossible (pas de logout)",
+        StackTrace.current,
+      );
+    }
   }
 
   String _actionToString(dynamic action) {
@@ -33,5 +80,6 @@ class CrashlyticsMiddleware extends MiddlewareClass<AppState> {
     return _lastActions.toList().toString();
   }
 
-  String _formatStoreForCrashlytics(Store<AppState> store) => store.state.toString().replaceAll('Instance of ', '');
+  String _formatStoreForCrashlytics(Store<AppState> store) =>
+      store.state.toString().replaceAll('Instance of ', '');
 }

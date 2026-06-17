@@ -41,7 +41,7 @@ class Authenticator {
   final FlutterSecureStorage _preferences;
   final Crashlytics? _crashlytics;
 
-  Authenticator(this._authWrapper, this._logoutRepository, this._configuration, this._preferences, [this._crashlytics]);
+Authenticator(this._authWrapper, this._logoutRepository, this._configuration, this._preferences, [this._crashlytics]);
 
   Future<AuthenticatorResponse> login(AuthenticationMode mode) async {
     try {
@@ -111,8 +111,9 @@ class Authenticator {
 
   Future<bool> logout(String userId, LogoutReason reason) async {
     final String? refreshToken = await _preferences.read(key: _refreshTokenKey);
-    if (refreshToken == null) return false;
-    await _logoutRepository.logout(refreshToken, userId, reason);
+    if (refreshToken != null) {
+      await _logoutRepository.logout(refreshToken, userId, reason);
+    }
     await _deleteToken();
     return true;
   }

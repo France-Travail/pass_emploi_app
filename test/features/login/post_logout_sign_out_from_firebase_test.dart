@@ -25,6 +25,7 @@ void main() {
     await store.dispatch(RequestLogoutAction(LogoutReason.userLogout));
 
     // Then
+    await untilCalled(() => firebaseAuthWrapper.signOut());
     verify(() => firebaseAuthWrapper.signOut()).called(1);
   });
 }
