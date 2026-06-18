@@ -15,9 +15,7 @@ class RemoteConfigRepository {
   int? maxLivingTimeInSecondsForMilo() {
     if (_firebaseRemoteConfig == null) return null;
 
-    final value = _firebaseRemoteConfig.getInt(
-      "app_milo_max_living_time_in_seconds",
-    );
+    final value = _firebaseRemoteConfig.getInt("app_milo_max_living_time_in_seconds");
     return value > 0 ? value : null;
   }
 
@@ -32,9 +30,7 @@ class RemoteConfigRepository {
     const defaultMax = 20;
     if (_firebaseRemoteConfig == null) return defaultMax;
 
-    final value = _firebaseRemoteConfig.getInt(
-      "app_max_refresh_failures_before_logout",
-    );
+    final value = _firebaseRemoteConfig.getInt("app_max_refresh_failures_before_logout");
     return value > 0 ? value : defaultMax;
   }
 
@@ -48,9 +44,7 @@ class RemoteConfigRepository {
 
     // millisecond since epoch
     final value = _firebaseRemoteConfig.getInt("campagne_recrutement_date_fin");
-    return value > DateTime.now().millisecondsSinceEpoch
-        ? value.toString()
-        : null;
+    return value > DateTime.now().millisecondsSinceEpoch ? value.toString() : null;
   }
 
   List<RemoteCampagneAccueil> campagnesAccueil() {
@@ -58,15 +52,11 @@ class RemoteConfigRepository {
     try {
       if (_firebaseRemoteConfig == null) return [];
 
-      final campagneAsString = _firebaseRemoteConfig.getString(
-        "campagnes_accueil",
-      );
+      final campagneAsString = _firebaseRemoteConfig.getString("campagnes_accueil");
       // Despite Remote config documentation, Firebase returns "null" string value when key is not found
       if (campagneAsString.isEmpty || campagneAsString == "null") return [];
       final json = jsonDecode(campagneAsString) as List;
-      return json
-          .map((e) => RemoteCampagneAccueil.fromJson(e as Map<String, dynamic>))
-          .toList();
+      return json.map((e) => RemoteCampagneAccueil.fromJson(e as Map<String, dynamic>)).toList();
     } catch (e) {
       return [];
     }
@@ -74,9 +64,7 @@ class RemoteConfigRepository {
 
   String? monSuiviDemarchesKoMessage() {
     if (_firebaseRemoteConfig == null) return null;
-    final key = _firebaseRemoteConfig.getString(
-      "mon_suivi_demarches_ko_message",
-    );
+    final key = _firebaseRemoteConfig.getString("mon_suivi_demarches_ko_message");
     if (key.isEmpty || key == "null") return null;
     return key;
   }
@@ -85,18 +73,14 @@ class RemoteConfigRepository {
     if (_firebaseRemoteConfig == null) return null;
     final key = _firebaseRemoteConfig.getString("login_page_message");
     if (key.isEmpty || key == "null") return null;
-    return LoginPageRemoteMessage.fromJson(
-      json.decode(key) as Map<String, dynamic>,
-    );
+    return LoginPageRemoteMessage.fromJson(json.decode(key) as Map<String, dynamic>);
   }
 
   AccueilZenithMessage? accueilZenithMessage() {
     if (_firebaseRemoteConfig == null) return null;
     final key = _firebaseRemoteConfig.getString("zenith_accueil_message_milo");
     if (key.isEmpty || key == "null") return null;
-    return AccueilZenithMessage.fromJson(
-      json.decode(key) as Map<String, dynamic>,
-    );
+    return AccueilZenithMessage.fromJson(json.decode(key) as Map<String, dynamic>);
   }
 
   bool? isDiagorienteEnabled() {
@@ -120,9 +104,7 @@ class RemoteConfigRepository {
 
   String? softUpdateVersion({required bool isAndroid}) {
     if (_firebaseRemoteConfig == null) return null;
-    final key = isAndroid
-        ? 'app_android_soft_update_version'
-        : 'app_ios_soft_update_version';
+    final key = isAndroid ? 'app_android_soft_update_version' : 'app_ios_soft_update_version';
     final value = _firebaseRemoteConfig.getString(key);
     if (value.isEmpty || value == "null") return null;
     return value;
@@ -130,16 +112,11 @@ class RemoteConfigRepository {
 
   FeedbackForFeature? inAppFeedbackForFeature(String feature) {
     if (_firebaseRemoteConfig == null) return null;
-    final String inAppFeedbackAsString = _firebaseRemoteConfig.getString(
-      'in_app_feedback_for_feature',
-    );
+    final String inAppFeedbackAsString = _firebaseRemoteConfig.getString('in_app_feedback_for_feature');
     // Despite Remote config documentation, Firebase returns "null" string value when key is not found
-    if (inAppFeedbackAsString.isEmpty || inAppFeedbackAsString == "null")
-      return null;
+    if (inAppFeedbackAsString.isEmpty || inAppFeedbackAsString == "null") return null;
     final inAppFeedbackAsJson = json.decode(inAppFeedbackAsString);
     final feedbackForFeatureAsJson = inAppFeedbackAsJson[feature];
-    return feedbackForFeatureAsJson != null
-        ? FeedbackForFeature.fromJson(feedbackForFeatureAsJson)
-        : null;
+    return feedbackForFeatureAsJson != null ? FeedbackForFeature.fromJson(feedbackForFeatureAsJson) : null;
   }
 }

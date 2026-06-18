@@ -41,7 +41,7 @@ class Authenticator {
   final FlutterSecureStorage _preferences;
   final Crashlytics? _crashlytics;
 
-Authenticator(this._authWrapper, this._logoutRepository, this._configuration, this._preferences, [this._crashlytics]);
+  Authenticator(this._authWrapper, this._logoutRepository, this._configuration, this._preferences, [this._crashlytics]);
 
   Future<AuthenticatorResponse> login(AuthenticationMode mode) async {
     try {

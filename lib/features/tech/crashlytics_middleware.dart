@@ -16,11 +16,15 @@ class CrashlyticsMiddleware extends MiddlewareClass<AppState> {
 
   @override
   void call(Store<AppState> store, dynamic action, NextDispatcher next) async {
-    if (action is LoginSuccessAction)
+    if (action is LoginSuccessAction) {
       crashlytics.setUserIdentifier(action.user.id);
-    if (action is RequestLogoutAction) _trackLogout(action.reason);
-    if (action is TokenRefreshGenericErrorAction)
+    }
+    if (action is RequestLogoutAction) {
+      _trackLogout(action.reason);
+    }
+    if (action is TokenRefreshGenericErrorAction) {
       _trackTokenRefreshFailure(action);
+    }
 
     _lastActions.add(_actionToString(action));
     crashlytics.setCustomKey("last_actions", _formatQueueForCrashlytics());
@@ -80,6 +84,5 @@ class CrashlyticsMiddleware extends MiddlewareClass<AppState> {
     return _lastActions.toList().toString();
   }
 
-  String _formatStoreForCrashlytics(Store<AppState> store) =>
-      store.state.toString().replaceAll('Instance of ', '');
+  String _formatStoreForCrashlytics(Store<AppState> store) => store.state.toString().replaceAll('Instance of ', '');
 }

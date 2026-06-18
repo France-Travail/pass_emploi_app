@@ -14,7 +14,6 @@ class AuthAccessTokenRetriever {
   final FlutterSecureStorage _preferences;
   final Lock _lock;
   late Store<AppState> _store;
-  
   int? _cachedFailureCount;
 
   AuthAccessTokenRetriever(
@@ -47,7 +46,7 @@ class AuthAccessTokenRetriever {
           "Token refresh failed (network error): $refreshTokenStatus",
         );
       case RefreshTokenStatus.GENERIC_ERROR:
-       final count = await _incrementFailureCount();
+        final count = await _incrementFailureCount();
         _store.dispatch(TokenRefreshGenericErrorAction(count));
         if (count >= _remoteConfigRepository.maxRefreshFailuresBeforeLogout()) {
           await _resetFailureCount();
