@@ -87,39 +87,42 @@ class _Content extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
       child: RefreshIndicator.adaptive(
         onRefresh: () async => viewModel.onRetry(),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: Margins.spacing_base),
-                child: Text(
-                  Strings.eventListHeaderText,
-                  style: TextStyles.textBaseRegular.copyWith(color: context.content),
-                  textAlign: TextAlign.center,
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: Margins.spacing_base),
+                  child: Text(
+                    Strings.eventListHeaderText,
+                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
-              ListView.separated(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: viewModel.eventIds.length,
-                separatorBuilder: (context, index) => SizedBox(height: Margins.spacing_base),
-                itemBuilder: (context, index) {
-                  final eventId = viewModel.eventIds[index];
-                  return switch (eventId) {
-                    final AnimationCollectiveId a => a.id.rendezvousCard(
+                ListView.separated(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: viewModel.eventIds.length,
+                  separatorBuilder: (context, index) => SizedBox(height: Margins.spacing_base),
+                  itemBuilder: (context, index) {
+                    final eventId = viewModel.eventIds[index];
+                    return switch (eventId) {
+                      final AnimationCollectiveId a => a.id.rendezvousCard(
                         context: context,
                         stateSource: RendezvousStateSource.eventListAnimationsCollectives,
                         evenementEngagement: EvenementEngagement.ANIMATION_COLLECTIVE_AFFICHEE,
                       ),
-                    final SessionMiloId s => s.id.rendezvousCard(
+                      final SessionMiloId s => s.id.rendezvousCard(
                         context: context,
                         stateSource: RendezvousStateSource.eventListSessionsMilo,
                         evenementEngagement: EvenementEngagement.SESSION_AFFICHEE,
                       ),
-                  };
-                },
-              ),
-            ],
+                    };
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -140,29 +143,29 @@ class _EventListLoading extends StatelessWidget {
   }
 
   List<Widget> _placeholders(double screenWidth) => [
-        AnimatedListLoader.placeholderBuilder(
-          width: screenWidth,
-          height: 30,
-        ),
-        SizedBox(height: Margins.spacing_s),
-        AnimatedListLoader.placeholderBuilder(
-          width: screenWidth,
-          height: 30,
-        ),
-        SizedBox(height: Margins.spacing_base),
-        AnimatedListLoader.placeholderBuilder(
-          width: screenWidth,
-          height: 170,
-        ),
-        SizedBox(height: Margins.spacing_base),
-        AnimatedListLoader.placeholderBuilder(
-          width: screenWidth,
-          height: 170,
-        ),
-        SizedBox(height: Margins.spacing_base),
-        AnimatedListLoader.placeholderBuilder(
-          width: screenWidth,
-          height: 170,
-        ),
-      ];
+    AnimatedListLoader.placeholderBuilder(
+      width: screenWidth,
+      height: 30,
+    ),
+    SizedBox(height: Margins.spacing_s),
+    AnimatedListLoader.placeholderBuilder(
+      width: screenWidth,
+      height: 30,
+    ),
+    SizedBox(height: Margins.spacing_base),
+    AnimatedListLoader.placeholderBuilder(
+      width: screenWidth,
+      height: 170,
+    ),
+    SizedBox(height: Margins.spacing_base),
+    AnimatedListLoader.placeholderBuilder(
+      width: screenWidth,
+      height: 170,
+    ),
+    SizedBox(height: Margins.spacing_base),
+    AnimatedListLoader.placeholderBuilder(
+      width: screenWidth,
+      height: 170,
+    ),
+  ];
 }
