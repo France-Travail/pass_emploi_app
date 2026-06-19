@@ -111,8 +111,9 @@ class Authenticator {
 
   Future<bool> logout(String userId, LogoutReason reason) async {
     final String? refreshToken = await _preferences.read(key: _refreshTokenKey);
-    if (refreshToken == null) return false;
-    await _logoutRepository.logout(refreshToken, userId, reason);
+    if (refreshToken != null) {
+      await _logoutRepository.logout(refreshToken, userId, reason);
+    }
     await _deleteToken();
     return true;
   }

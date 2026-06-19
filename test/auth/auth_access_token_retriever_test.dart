@@ -11,11 +11,15 @@ import '../doubles/spies.dart';
 
 void main() {
   late MockAuthenticator authenticator;
+  late MockRemoteConfigRepository remoteConfig;
+  late FlutterSecureStorageSpy storage;
   late AuthAccessTokenRetriever tokenRetriever;
 
   setUp(() {
     authenticator = MockAuthenticator();
-    tokenRetriever = AuthAccessTokenRetriever(authenticator, MockRemoteConfigRepository(), Lock());
+    remoteConfig = MockRemoteConfigRepository();
+    storage = FlutterSecureStorageSpy(delay: Duration.zero);
+    tokenRetriever = AuthAccessTokenRetriever(authenticator, remoteConfig, storage, Lock());
   });
 
   test("Throws an exception when id token is null", () async {
@@ -43,31 +47,118 @@ void main() {
     expect(await tokenRetriever.accessToken(), "Access token");
   });
 
-  test("Throws an exception when id token is invalid and refresh token returns GENERIC_ERROR", () async {
-    // Given
+  test("Throws WITHOUT logout on a SINGLE GENERIC_ERROR (hoquet transitoire toléré)", () async {
+    // Given : un seul échec ambigu (5xx, réponse incomplète) -> pas de déco
+    final store = StoreSpy();
     when(() => authenticator.idToken()).thenAnswer((_) async => invalidIdToken());
     when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.GENERIC_ERROR);
+    when(() => remoteConfig.maxRefreshFailuresBeforeLogout()).thenReturn(3);
+    tokenRetriever.setStore(store);
 
     // When-Then
     expect(() async => await tokenRetriever.accessToken(), throwsException);
+    expect(store.dispatchedAction, isNot(isA<RequestLogoutAction>()));
   });
 
-  test("Throws an exception when id token is invalid and refresh token returns USER_NOT_LOGGED_IN", () async {
+  test("Logout après N GENERIC_ERROR consécutifs", () async {
     // Given
+    final store = StoreSpy();
+    when(() => authenticator.idToken()).thenAnswer((_) async => invalidIdToken());
+    when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.GENERIC_ERROR);
+    when(() => remoteConfig.maxRefreshFailuresBeforeLogout()).thenReturn(2);
+    tokenRetriever.setStore(store);
+
+    // When : 1er échec -> compteur=1, pas de logout
+    try {
+      await tokenRetriever.accessToken();
+    } catch (_) {}
+    expect(store.dispatchedAction, isNot(isA<RequestLogoutAction>()));
+
+    // 2e échec -> compteur=2 -> logout
+    try {
+      await tokenRetriever.accessToken();
+    } catch (_) {}
+    expect(store.dispatchedAction, isA<RequestLogoutAction>());
+  });
+
+  test("Le compteur SURVIT au kill de l'app (persistance via storage)", () async {
+    // Given
+    final store = StoreSpy();
+    when(() => authenticator.idToken()).thenAnswer((_) async => invalidIdToken());
+    when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.GENERIC_ERROR);
+    when(() => remoteConfig.maxRefreshFailuresBeforeLogout()).thenReturn(2);
+
+    // Session 1 : 1 échec -> compteur=1 (persisté), pas de logout
+    final retriever1 = AuthAccessTokenRetriever(authenticator, remoteConfig, storage, Lock())..setStore(store);
+    try {
+      await retriever1.accessToken();
+    } catch (_) {}
+    expect(store.dispatchedAction, isNot(isA<RequestLogoutAction>()));
+
+    // Kill + relance : NOUVELLE instance, MÊME storage -> le compteur reprend à 1
+    final retriever2 = AuthAccessTokenRetriever(authenticator, remoteConfig, storage, Lock())..setStore(store);
+    try {
+      await retriever2.accessToken();
+    } catch (_) {}
+
+    // Then : 2e échec global -> compteur=2 -> logout (le kill n'a PAS remis à zéro)
+    expect(store.dispatchedAction, isA<RequestLogoutAction>());
+  });
+
+  test("Un refresh réussi remet le compteur à zéro", () async {
+    // Given
+    final store = StoreSpy();
+    when(() => authenticator.idToken()).thenAnswer((_) async => invalidIdToken());
+    when(() => authenticator.accessToken()).thenAnswer((_) async => "Access token");
+    when(() => remoteConfig.maxRefreshFailuresBeforeLogout()).thenReturn(2);
+    tokenRetriever.setStore(store);
+
+    // When : GENERIC (1), puis SUCCESS (reset), puis GENERIC (1) -> jamais 2 d'affilée
+    when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.GENERIC_ERROR);
+    try {
+      await tokenRetriever.accessToken();
+    } catch (_) {}
+    when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.SUCCESSFUL);
+    await tokenRetriever.accessToken();
+    when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.GENERIC_ERROR);
+    try {
+      await tokenRetriever.accessToken();
+    } catch (_) {}
+
+    // Then : le succès a remis le compteur à zéro -> pas de logout
+    expect(store.dispatchedAction, isNot(isA<RequestLogoutAction>()));
+  });
+
+  test("Logout user and throw when id token is invalid and refresh token returns USER_NOT_LOGGED_IN", () async {
+    // Given
+    final store = StoreSpy();
     when(() => authenticator.idToken()).thenAnswer((_) async => invalidIdToken());
     when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.USER_NOT_LOGGED_IN);
+    tokenRetriever.setStore(store);
 
-    // When-Then
-    expect(() async => await tokenRetriever.accessToken(), throwsException);
+    // When
+    Object? thrown;
+    try {
+      await tokenRetriever.accessToken();
+    } catch (e) {
+      thrown = e;
+    }
+
+    // Then
+    expect(thrown, isException);
+    expect(store.dispatchedAction, isA<RequestLogoutAction>());
   });
 
-  test("Throws an exception when id token is invalid and refresh token returns NETWORK_UNREACHABLE", () async {
-    // Given
+  test("Throws WITHOUT logout when id token is invalid and refresh token returns NETWORK_UNREACHABLE", () async {
+    // Given : hors-ligne transitoire, on garde la session
+    final store = StoreSpy();
     when(() => authenticator.idToken()).thenAnswer((_) async => invalidIdToken());
     when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.NETWORK_UNREACHABLE);
+    tokenRetriever.setStore(store);
 
     // When-Then
     expect(() async => await tokenRetriever.accessToken(), throwsException);
+    expect(store.dispatchedAction, isNot(isA<RequestLogoutAction>()));
   });
 
   test("Throws an exception when id token is invalid and refresh token returns EXPIRED_REFRESH_TOKEN", () async {

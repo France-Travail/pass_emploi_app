@@ -49,16 +49,7 @@ class AuthIdToken extends Equatable {
     );
   }
 
-  bool isValid({required DateTime now, int? maxLivingTimeInSeconds}) {
-    return isValidBasedOnExpirationDate(now) && isValidBasedOnMaxLivingTime(now, maxLivingTimeInSeconds);
-  }
-
-  bool isValidBasedOnMaxLivingTime(DateTime now, int? maxLivingTimeInSeconds) {
-    if (maxLivingTimeInSeconds == null) return true;
-    return now.isStillValidWith(expirationDateInSeconds: issuedAt + maxLivingTimeInSeconds);
-  }
-
-  bool isValidBasedOnExpirationDate(DateTime now) => now.isStillValidWith(expirationDateInSeconds: expiresAt);
+  bool isValid({required DateTime now}) => now.isStillValidWith(expirationDateInSeconds: expiresAt);
 
   @override
   List<Object?> get props => [userId, firstName, lastName, issuedAt, expiresAt];

@@ -191,7 +191,7 @@ class AppInitializer {
       securedPreferences,
       crashlytics,
     );
-    final accessTokenRetriever = AuthAccessTokenRetriever(authenticator, remoteConfigRepository, Lock());
+    final accessTokenRetriever = AuthAccessTokenRetriever(authenticator, remoteConfigRepository, securedPreferences, Lock());
     final authAccessChecker = AuthAccessChecker();
     final cacheStore = FileCacheStore((await getTemporaryDirectory()).path);
     final requestCacheManager = PassEmploiCacheManager(cacheStore, configuration.serverBaseUrl);

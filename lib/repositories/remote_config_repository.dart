@@ -12,18 +12,19 @@ class RemoteConfigRepository {
 
   RemoteConfigRepository(this._firebaseRemoteConfig);
 
-  int? maxLivingTimeInSecondsForMilo() {
-    if (_firebaseRemoteConfig == null) return null;
-
-    final value = _firebaseRemoteConfig.getInt("app_milo_max_living_time_in_seconds");
-    return value > 0 ? value : null;
-  }
-
   int? maxUnauthorizedErrorsBeforeLogout() {
     if (_firebaseRemoteConfig == null) return null;
 
     final value = _firebaseRemoteConfig.getInt("app_max_401_before_logout");
     return value > 0 ? value : null;
+  }
+
+  int maxRefreshFailuresBeforeLogout() {
+    const defaultMax = 20;
+    if (_firebaseRemoteConfig == null) return defaultMax;
+
+    final value = _firebaseRemoteConfig.getInt("app_max_refresh_failures_before_logout");
+    return value > 0 ? value : defaultMax;
   }
 
   int monSuiviPoleEmploiStartDateInMonths() {
