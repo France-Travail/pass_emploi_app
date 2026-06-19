@@ -68,6 +68,7 @@ class CrashlyticsMiddleware extends MiddlewareClass<AppState> {
       "Token refresh failed (GENERIC), consecutive: ${action.consecutiveFailures}",
     );
 
+    // On ne loggue que sur le premier échec
     if (action.consecutiveFailures == 1) {
       crashlytics.recordNonNetworkException(
         "ZombieState: app en ligne mais refresh impossible (pas de logout)",

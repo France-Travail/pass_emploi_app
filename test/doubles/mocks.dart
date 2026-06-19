@@ -254,7 +254,6 @@ class MockOnboardingRepository extends Mock implements OnboardingRepository {
 
 class MockRemoteConfigRepository extends Mock implements RemoteConfigRepository {
   MockRemoteConfigRepository() {
-    when(() => maxLivingTimeInSecondsForMilo()).thenReturn(null);
     when(() => maxRefreshFailuresBeforeLogout()).thenReturn(20);
     when(() => lastCampagneRecrutementId()).thenReturn(null);
     when(() => monSuiviPoleEmploiStartDateInMonths()).thenReturn(1);
