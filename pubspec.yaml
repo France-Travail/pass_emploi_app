@@ -2,7 +2,7 @@ name: pass_emploi_app
 description: Pass Emploi iOS and Android app.
 
 publish_to: "none"
-version: 4.12.0
+version: 4.12.1
 
 environment:
   sdk: 3.9.2 # Dart version
@@ -49,7 +49,7 @@ dependencies:
   webview_flutter: "4.10.0"
   flutter_local_notifications: ^19.4.0
   flutter_appauth: ^9.0.1
-  flutter_secure_storage: ^10.0.0-beta.4
+  flutter_secure_storage: ^10.3.1
   url_launcher: ^6.3.1
   share_plus: ^11.1.0
   open_filex: ^4.7.0
