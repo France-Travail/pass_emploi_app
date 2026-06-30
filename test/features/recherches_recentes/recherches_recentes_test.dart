@@ -45,6 +45,25 @@ void main() {
         sut.thenExpectChangingStatesThroughOrder([_shouldAddRecentSearch()]);
       });
     });
+
+    group("when the same search succeed twice in a row", () {
+      sut.whenDispatchingAction(
+          () => RechercheSuccessAction(rechercheEmploiChevalierValenceCDI(), <OffreEmploi>[], true));
+
+      test('should not duplicate it in recent searches', () {
+        sut.givenStore = givenState() //
+            .loggedIn()
+            .withRecentsSearches([rechercheEmploiSauvegardeeChevalierValenceCDI()])
+            .store();
+
+        sut.then(() {
+          expect(
+            sut.givenStore.state.recherchesRecentesState.recentSearches,
+            [rechercheEmploiSauvegardeeChevalierValenceCDI()],
+          );
+        });
+      });
+    });
   });
 }
 
