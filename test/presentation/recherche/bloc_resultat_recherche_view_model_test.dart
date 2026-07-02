@@ -12,6 +12,28 @@ import '../../dsl/app_state_dsl.dart';
 
 void main() {
   group('displayState', () {
+    test('when recherche status is initial loading should display loading', () {
+      // Given
+      final store = givenState().initialLoadingRechercheEmploiState().store();
+
+      // When
+      final viewModel = _makeViewModel(store);
+
+      // Then
+      expect(viewModel.displayState, BlocResultatRechercheDisplayState.loading);
+    });
+
+    test('when recherche status is failure should display failure', () {
+      // Given
+      final store = givenState().failureRechercheEmploiState().store();
+
+      // When
+      final viewModel = _makeViewModel(store);
+
+      // Then
+      expect(viewModel.displayState, BlocResultatRechercheDisplayState.failure);
+    });
+
     test('when recherche status is update loading should display results', () {
       // Given
       final store = givenState().updateLoadingRechercheEmploiState().store();

@@ -76,7 +76,6 @@ import 'package:pass_emploi_app/repositories/immersion/immersion_repository.dart
 import 'package:pass_emploi_app/repositories/in_app_feedback_repository.dart';
 import 'package:pass_emploi_app/repositories/in_app_notifications_repository.dart';
 import 'package:pass_emploi_app/repositories/installation_id_repository.dart';
-import 'package:pass_emploi_app/repositories/localisation_persist_repository.dart';
 import 'package:pass_emploi_app/repositories/matching_demarche_repository.dart';
 import 'package:pass_emploi_app/repositories/metier_repository.dart';
 import 'package:pass_emploi_app/repositories/module_feedback_repository.dart';
@@ -109,6 +108,7 @@ import 'package:pass_emploi_app/usecases/piece_jointe/piece_jointe_use_case.dart
 import 'package:pass_emploi_app/utils/compress_image.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/repositories/soft_update_repository.dart';
+import 'package:pass_emploi_app/repositories/criteres_recherche_persist_repository.dart';
 /*AUTOGENERATE-REDUX-APP-INITIALIZER-REPOSITORY-IMPORT*/
 import 'package:pass_emploi_app/utils/secure_storage_exception_handler_decorator.dart';
 import 'package:pass_emploi_app/utils/secure_storage_in_memory_decorator.dart';
@@ -295,7 +295,6 @@ class AppInitializer {
       InAppNotificationsRepository(dioClient, crashlytics),
       DateConsultationNotificationRepository(securedPreferences),
       DateConsultationActualiteMissionLocaleRepository(securedPreferences),
-      LocalisationPersistRepository(securedPreferences),
       RemoteCampagneAccueilRepository(remoteConfigRepository, securedPreferences),
       AutoInscriptionRepository(dioClient, crashlytics),
       OffresSuiviesRepository(securedPreferences),
@@ -306,6 +305,7 @@ class AppInitializer {
       AutoDesinscriptionRepository(dioClient, crashlytics),
       ThemeRepository(securedPreferences),
       SoftUpdateRepository(securedPreferences),
+      CriteresRecherchePersistRepository(securedPreferences),
       /*AUTOGENERATE-REDUX-APP-INITIALIZER-REPOSITORY-CONSTRUCTOR*/
     ).initializeReduxStore(initialState: AppState.initialState(configuration: configuration));
     accessTokenRetriever.setStore(reduxStore);

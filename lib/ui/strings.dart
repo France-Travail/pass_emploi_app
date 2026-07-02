@@ -921,6 +921,11 @@ class Strings {
   static String rechercheHomeOffresImmersionSubtitle = "Découvrez un métier au sein d’une entreprise.";
   static String rechercheHomeOffresServiceCiviqueTitle = "Service civique";
   static String rechercheHomeOffresServiceCiviqueSubtitle = "Engagez-vous dans une mission d’intérêt général.";
+  static String rechercheHomeCriteresTitle = "Ma recherche";
+  static String rechercheHomeCriteresMetierVide =
+      "Aucun métier renseigné"; // TODO: Si rien de renseigné alors ne rien afficher
+  static String rechercheHomeCriteresLieuVide =
+      "Aucun lieu renseigné"; // TODO: Si rien de renseigné alors ne rien afficher
   static String rechercheOffresEmploiTitle = "Offres d’emploi";
   static String rechercheOffresAlternanceTitle = "Offres d’alternance";
   static String rechercheOffresImmersionTitle = "Offres d’immersion";

@@ -52,7 +52,6 @@ import 'package:pass_emploi_app/repositories/immersion/immersion_details_reposit
 import 'package:pass_emploi_app/repositories/immersion/immersion_repository.dart';
 import 'package:pass_emploi_app/repositories/in_app_feedback_repository.dart';
 import 'package:pass_emploi_app/repositories/in_app_notifications_repository.dart';
-import 'package:pass_emploi_app/repositories/localisation_persist_repository.dart';
 import 'package:pass_emploi_app/repositories/matching_demarche_repository.dart';
 import 'package:pass_emploi_app/repositories/metier_repository.dart';
 import 'package:pass_emploi_app/repositories/module_feedback_repository.dart';
@@ -85,6 +84,7 @@ import 'package:pass_emploi_app/usecases/piece_jointe/piece_jointe_use_case.dart
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/wrappers/connectivity_wrapper.dart';
 import 'package:pass_emploi_app/repositories/soft_update_repository.dart';
+import 'package:pass_emploi_app/repositories/criteres_recherche_persist_repository.dart';
 /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-IMPORT*/
 import 'package:redux/redux.dart';
 
@@ -169,7 +169,6 @@ class TestStoreFactory {
       MockDateConsultationNotificationRepository();
   DateConsultationActualiteMissionLocaleRepository dateConsultationActualiteMissionLocaleRepository =
       MockDateConsultationActualiteMissionLocaleRepository();
-  LocalisationPersistRepository localisationPersistRepository = MockLocalisationPersistRepository();
   RemoteCampagneAccueilRepository remoteCampagneAccueilRepository = MockRemoteCampagneAccueilRepository();
   AutoInscriptionRepository autoInscriptionRepository = MockAutoInscriptionRepository();
   OffresSuiviesRepository offresSuiviesRepository = MockOffresSuiviesRepository();
@@ -180,6 +179,7 @@ class TestStoreFactory {
   AutoDesinscriptionRepository autoDesinscriptionRepository = MockAutoDesinscriptionRepository();
   ThemeRepository themeRepository = MockThemeRepository();
   SoftUpdateRepository softUpdateRepository = MockSoftUpdateRepository();
+  CriteresRecherchePersistRepository criteresRecherchePersistRepository = MockCriteresRecherchePersistRepository();
   /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-PROPERTY*/
 
   Store<AppState> initializeReduxStore({required AppState initialState}) {
@@ -258,7 +258,6 @@ class TestStoreFactory {
       inAppNotificationsRepository,
       dateConsultationNotificationRepository,
       dateConsultationActualiteMissionLocaleRepository,
-      localisationPersistRepository,
       remoteCampagneAccueilRepository,
       autoInscriptionRepository,
       offresSuiviesRepository,
@@ -269,6 +268,7 @@ class TestStoreFactory {
       autoDesinscriptionRepository,
       themeRepository,
       softUpdateRepository,
+      criteresRecherchePersistRepository,
       /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-CONSTRUCTOR*/
     ).initializeReduxStore(initialState: initialState);
   }

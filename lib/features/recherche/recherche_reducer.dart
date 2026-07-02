@@ -27,6 +27,7 @@ RechercheState<Criteres, Filtres, Result>
     return current.copyWith(
       status: current.results != null ? RechercheStatus.success : RechercheStatus.nouvelleRecherche);
   }
+  if (action is RechercheRetryAction<Result>) return current.copyWith(status: RechercheStatus.initialLoading);
   if (action is RechercheUpdateFiltresAction<Filtres>) return current.copyWith(status: RechercheStatus.updateLoading);
   if (action is RechercheLoadMoreAction<Result>) return current.copyWith(status: RechercheStatus.updateLoading);
   if (action is RechercheFailureAction<Result>) return current.copyWith(status: RechercheStatus.failure);

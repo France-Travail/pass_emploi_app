@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:pass_emploi_app/features/localisation_persist/localisation_persist_state.dart';
+import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_state.dart';
 import 'package:pass_emploi_app/features/recherche/recherche_actions.dart';
 import 'package:pass_emploi_app/features/recherche/service_civique/service_civique_criteres_recherche.dart';
 import 'package:pass_emploi_app/features/recherche/service_civique/service_civique_filtres_recherche.dart';

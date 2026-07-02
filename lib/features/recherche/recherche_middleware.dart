@@ -27,6 +27,10 @@ abstract class RechercheMiddleware<Criteres extends Equatable, Filtres extends E
     } else if (action is RechercheLoadMoreAction<Result>) {
       final newRequest = _copyRequestWith(state: store.state, newPage: (page) => page + 1);
       _rechercher(store: store, userId: userId, request: newRequest, previousResults: _previousResults(store.state));
+    } else if (action is RechercheRetryAction<Result>) {
+      final request = getRechercheState(store.state).request;
+      if (request == null) return;
+      _rechercher(store: store, userId: userId, request: request);
     }
   }
 

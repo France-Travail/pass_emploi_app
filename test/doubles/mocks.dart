@@ -30,7 +30,6 @@ import 'package:pass_emploi_app/repositories/ia_ft_suggestions_repository.dart';
 import 'package:pass_emploi_app/repositories/immersion/immersion_details_repository.dart';
 import 'package:pass_emploi_app/repositories/in_app_feedback_repository.dart';
 import 'package:pass_emploi_app/repositories/in_app_notifications_repository.dart';
-import 'package:pass_emploi_app/repositories/localisation_persist_repository.dart';
 import 'package:pass_emploi_app/repositories/matching_demarche_repository.dart';
 import 'package:pass_emploi_app/repositories/module_feedback_repository.dart';
 import 'package:pass_emploi_app/repositories/mon_suivi_repository.dart';
@@ -55,6 +54,8 @@ import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/wrappers/connectivity_wrapper.dart';
 
 import 'package:pass_emploi_app/repositories/soft_update_repository.dart';
+import 'package:pass_emploi_app/models/criteres_recherche_utilisateur.dart';
+import 'package:pass_emploi_app/repositories/criteres_recherche_persist_repository.dart';
 /*AUTOGENERATE-REDUX-TEST-MOCKS-REPOSITORY-IMPORT*/
 
 import 'dio_mock.dart';
@@ -309,12 +310,6 @@ class MockInAppNotificationsRepository extends Mock implements InAppNotification
 
 class MockDateConsultationNotificationRepository extends Mock implements DateConsultationNotificationRepository {}
 
-class MockLocalisationPersistRepository extends Mock implements LocalisationPersistRepository {
-  MockLocalisationPersistRepository() {
-    when(() => get()).thenAnswer((_) async => null);
-  }
-}
-
 class MockRemoteCampagneAccueilRepository extends Mock implements RemoteCampagneAccueilRepository {
   MockRemoteCampagneAccueilRepository() {
     when(() => getCampagnes()).thenAnswer((_) async => []);
@@ -369,5 +364,13 @@ class MockThemeRepository extends Mock implements ThemeRepository {
 }
 
 class MockSoftUpdateRepository extends Mock implements SoftUpdateRepository {}
+
+class MockCriteresRecherchePersistRepository extends Mock implements CriteresRecherchePersistRepository {
+  MockCriteresRecherchePersistRepository() {
+    registerFallbackValue(CriteresRechercheUtilisateur());
+    when(() => get()).thenAnswer((_) async => null);
+    when(() => save(any())).thenAnswer((_) async {});
+  }
+}
 
 /*AUTOGENERATE-REDUX-TEST-MOCKS-REPOSITORY-DECLARATION*/

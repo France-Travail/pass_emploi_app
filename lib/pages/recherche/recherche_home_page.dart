@@ -7,10 +7,10 @@ import 'package:pass_emploi_app/models/offre_type.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_emploi_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_immersion_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_service_civique_page.dart';
-import 'package:pass_emploi_app/pages/recherche/recherches_recentes.dart';
 import 'package:pass_emploi_app/presentation/recherche/recherche_home_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
+import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
@@ -19,6 +19,7 @@ import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/mes_outils_card.dart';
 import 'package:pass_emploi_app/widgets/onboarding/onboarding_showcase.dart';
+import 'package:pass_emploi_app/widgets/tags/data_tag.dart';
 
 class RechercheHomePage extends StatefulWidget {
   @override
@@ -41,23 +42,35 @@ class _RechercheHomePageState extends State<RechercheHomePage> {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(Margins.spacing_base),
-        child: Column(children: [_NosOffres(offreTypes: viewModel.offreTypes)]),
+        child: Column(children: [_NosOffres(viewModel: viewModel)]),
       ),
     );
   }
 }
 
 class _NosOffres extends StatelessWidget {
-  final List<OffreType> offreTypes;
+  final RechercheHomePageViewModel viewModel;
 
-  const _NosOffres({required this.offreTypes});
+  const _NosOffres({required this.viewModel});
+
+  void _onOffreTypeTap(BuildContext context, OffreType offreType) {
+    viewModel.onOffreTypeTap(offreType);
+    Navigator.push(context, switch (offreType) {
+      OffreType.emploi => RechercheOffreEmploiPage.materialPageRoute(onlyAlternance: false),
+      OffreType.alternance => RechercheOffreEmploiPage.materialPageRoute(onlyAlternance: true),
+      OffreType.immersion => RechercheOffreImmersionPage.materialPageRoute(),
+      OffreType.serviceCivique => RechercheOffreServiceCiviquePage.materialPageRoute(),
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final offreTypes = viewModel.offreTypes;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        RecherchesRecentesBandeau(paddingIfExists: EdgeInsets.only(bottom: Margins.spacing_base)),
+        _CriteresUtilisateur(metierLabel: viewModel.metierLabel, lieuLabel: viewModel.lieuLabel),
+        SizedBox(height: Margins.spacing_base),
         _SolutionGrid(
           tiles: [
             if (offreTypes.contains(OffreType.emploi))
@@ -68,8 +81,7 @@ class _NosOffres extends StatelessWidget {
                   title: Strings.rechercheHomeOffresEmploiTitle,
                   subtitle: Strings.rechercheHomeOffresEmploiSubtitle,
                   svgPath: Drawables.rechercheHomeOffresEmploi,
-                  onTap: () =>
-                      Navigator.push(context, RechercheOffreEmploiPage.materialPageRoute(onlyAlternance: false)),
+                  onTap: () => _onOffreTypeTap(context, OffreType.emploi),
                 ),
               ),
             if (offreTypes.contains(OffreType.alternance))
@@ -78,7 +90,7 @@ class _NosOffres extends StatelessWidget {
                 title: Strings.rechercheHomeOffresAlternanceTitle,
                 subtitle: Strings.rechercheHomeOffresAlternanceSubtitle,
                 svgPath: Drawables.rechercheHomeOffresAlternance,
-                onTap: () => Navigator.push(context, RechercheOffreEmploiPage.materialPageRoute(onlyAlternance: true)),
+                onTap: () => _onOffreTypeTap(context, OffreType.alternance),
               ),
             if (offreTypes.contains(OffreType.immersion))
               _BlocSolution(
@@ -86,7 +98,7 @@ class _NosOffres extends StatelessWidget {
                 title: Strings.rechercheHomeOffresImmersionTitle,
                 subtitle: Strings.rechercheHomeOffresImmersionSubtitle,
                 svgPath: Drawables.rechercheHomeOffresImmersion,
-                onTap: () => Navigator.push(context, RechercheOffreImmersionPage.materialPageRoute()),
+                onTap: () => _onOffreTypeTap(context, OffreType.immersion),
               ),
             if (offreTypes.contains(OffreType.serviceCivique))
               _BlocSolution(
@@ -94,7 +106,7 @@ class _NosOffres extends StatelessWidget {
                 title: Strings.rechercheHomeOffresServiceCiviqueTitle,
                 subtitle: Strings.rechercheHomeOffresServiceCiviqueSubtitle,
                 svgPath: Drawables.rechercheHomeOffresServiceCivique,
-                onTap: () => Navigator.push(context, RechercheOffreServiceCiviquePage.materialPageRoute()),
+                onTap: () => _onOffreTypeTap(context, OffreType.serviceCivique),
               ),
           ],
           gap: Margins.spacing_base,
@@ -103,6 +115,53 @@ class _NosOffres extends StatelessWidget {
         MesOutilsCard(),
       ],
     );
+  }
+}
+
+class _CriteresUtilisateur extends StatelessWidget {
+  final String? metierLabel;
+  final String? lieuLabel;
+
+  const _CriteresUtilisateur({required this.metierLabel, required this.lieuLabel});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(Strings.rechercheHomeCriteresTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+        SizedBox(height: Margins.spacing_s),
+        Wrap(
+          spacing: Margins.spacing_xs,
+          runSpacing: Margins.spacing_xs,
+          children: [
+            _CritereRow(
+              icon: AppIcons.work_outline_rounded,
+              label: metierLabel,
+              emptyLabel: Strings.rechercheHomeCriteresMetierVide,
+            ),
+            _CritereRow(
+              icon: AppIcons.place_outlined,
+              label: lieuLabel,
+              emptyLabel: Strings.rechercheHomeCriteresLieuVide,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _CritereRow extends StatelessWidget {
+  final IconData icon;
+  final String? label;
+  final String emptyLabel;
+
+  const _CritereRow({required this.icon, required this.label, required this.emptyLabel});
+
+  @override
+  Widget build(BuildContext context) {
+    return DataTag(label: label ?? emptyLabel, iconSemantics: IconWithSemantics(icon, emptyLabel));
   }
 }
 

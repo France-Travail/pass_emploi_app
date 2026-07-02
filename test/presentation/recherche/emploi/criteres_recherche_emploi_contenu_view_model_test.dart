@@ -1,8 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pass_emploi_app/features/localisation_persist/localisation_persist_state.dart';
+import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_state.dart';
 import 'package:pass_emploi_app/features/recherche/emploi/emploi_criteres_recherche.dart';
 import 'package:pass_emploi_app/features/recherche/emploi/emploi_filtres_recherche.dart';
 import 'package:pass_emploi_app/features/recherche/recherche_actions.dart';
+import 'package:pass_emploi_app/models/criteres_recherche_utilisateur.dart';
+import 'package:pass_emploi_app/models/metier.dart';
 import 'package:pass_emploi_app/models/recherche/recherche_request.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/recherche/emploi/criteres_recherche_emploi_contenu_view_model.dart';
@@ -16,8 +18,13 @@ void main() {
   group('on create', () {
     test('should display last searched location when initialised', () {
       // Given
-      final store =
-          givenState().copyWith(localisationPersistState: LocalisationPersistSuccessState(mockLocation())).store();
+      final store = givenState()
+          .copyWith(
+            criteresRecherchePersistState: CriteresRecherchePersistSuccessState(
+              CriteresRechercheUtilisateur(location: mockLocation()),
+            ),
+          )
+          .store();
 
       // When
       final viewModel = CriteresRechercheEmploiContenuViewModel.create(store);
@@ -28,7 +35,9 @@ void main() {
 
     test('should display last searched location when null', () {
       // Given
-      final store = givenState().copyWith(localisationPersistState: LocalisationPersistSuccessState(null)).store();
+      final store = givenState()
+          .copyWith(criteresRecherchePersistState: CriteresRecherchePersistSuccessState(CriteresRechercheUtilisateur()))
+          .store();
 
       // When
       final viewModel = CriteresRechercheEmploiContenuViewModel.create(store);
@@ -39,13 +48,50 @@ void main() {
 
     test('should not display last searched location when not initialised', () {
       // Given
-      final store = givenState().copyWith(localisationPersistState: LocalisationPersistNotInitializedState()).store();
+      final store =
+          givenState().copyWith(criteresRecherchePersistState: CriteresRecherchePersistNotInitializedState()).store();
 
       // When
       final viewModel = CriteresRechercheEmploiContenuViewModel.create(store);
 
       // Then
       expect(viewModel.initialLocation, null);
+    });
+
+    test('should prefill keyword with persisted metier texte libre', () {
+      // Given
+      final store = givenState()
+          .copyWith(
+            criteresRecherchePersistState: CriteresRecherchePersistSuccessState(
+              CriteresRechercheUtilisateur(metier: MetierTexteLibreCritere('Boulanger')),
+            ),
+          )
+          .store();
+
+      // When
+      final viewModel = CriteresRechercheEmploiContenuViewModel.create(store);
+
+      // Then
+      expect(viewModel.initialKeyword, 'Boulanger');
+    });
+
+    test('should prefill keyword with persisted metier rome libelle', () {
+      // Given
+      final store = givenState()
+          .copyWith(
+            criteresRecherchePersistState: CriteresRecherchePersistSuccessState(
+              CriteresRechercheUtilisateur(
+                metier: MetierRomeCritere(Metier(codeRome: 'A1101', libelle: 'Conduite d’engins agricoles')),
+              ),
+            ),
+          )
+          .store();
+
+      // When
+      final viewModel = CriteresRechercheEmploiContenuViewModel.create(store);
+
+      // Then
+      expect(viewModel.initialKeyword, 'Conduite d’engins agricoles');
     });
   });
   group('displayState', () {

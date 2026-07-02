@@ -9,8 +9,11 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
+import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
+import 'package:pass_emploi_app/widgets/animated_list_loader.dart';
 import 'package:pass_emploi_app/widgets/recherche/recherche_message_placeholder.dart';
+import 'package:pass_emploi_app/widgets/retry.dart';
 import 'package:pass_emploi_app/widgets/recherche/resultat_recherche_contenu.dart';
 
 class BlocResultatRecherche<Result> extends StatefulWidget {
@@ -56,6 +59,10 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
     switch (viewModel.displayState) {
       case BlocResultatRechercheDisplayState.recherche:
         return RechercheMessagePlaceholder(widget.placeHolderTitle, subtitle: widget.placeHolderSubtitle);
+      case BlocResultatRechercheDisplayState.loading:
+        return _buildLoadingPlaceholder(context);
+      case BlocResultatRechercheDisplayState.failure:
+        return Retry(Strings.genericError, () => viewModel.onRetry());
       case BlocResultatRechercheDisplayState.empty:
         return RechercheMessagePlaceholder(Strings.noContentErrorTitle, subtitle: Strings.noContentErrorSubtitle);
       case BlocResultatRechercheDisplayState.results:
@@ -91,6 +98,19 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
           ),
         );
     }
+  }
+
+  Widget _buildLoadingPlaceholder(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    return AnimatedListLoader(
+      nested: true,
+      placeholders: [
+        for (var i = 0; i < 3; i++) ...[
+          AnimatedListLoader.placeholderBuilder(width: screenWidth, height: 170),
+          SizedBox(height: Margins.spacing_base),
+        ],
+      ],
+    );
   }
 
   void _trackSearchResults(

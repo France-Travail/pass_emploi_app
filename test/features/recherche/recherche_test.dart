@@ -119,6 +119,32 @@ void main() {
       });
     });
 
+    group("when retrying after a failure", () {
+      sut.whenDispatchingAction(() => RechercheRetryAction<OffreEmploi>());
+
+      test('should load then succeed with same request when request succeed', () {
+        sut.givenStore = givenState()
+            .loggedIn() //
+            .withRechercheEmploiState(status: RechercheStatus.failure, results: []) //
+            .store((f) => {f.offreEmploiRepository = repo});
+
+        repo.givenRepositorySuccess();
+
+        sut.thenExpectChangingStatesThroughOrder([_shouldInitialLoad(), _shouldSucceedWithFirstResults()]);
+      });
+
+      test('should load then fail when request fail again', () {
+        sut.givenStore = givenState()
+            .loggedIn() //
+            .withRechercheEmploiState(status: RechercheStatus.failure, results: []) //
+            .store((f) => {f.offreEmploiRepository = repo});
+
+        repo.givenRepositoryFailure();
+
+        sut.thenExpectChangingStatesThroughOrder([_shouldInitialLoad(), _shouldFail()]);
+      });
+    });
+
     group("when updating filtres", () {
       sut.whenDispatchingAction(() => RechercheUpdateFiltresAction(mockEmploiFiltreZeroDistance()));
 

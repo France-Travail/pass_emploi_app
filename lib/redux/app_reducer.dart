@@ -40,7 +40,6 @@ import 'package:pass_emploi_app/features/ia_ft_suggestions/ia_ft_suggestions_red
 import 'package:pass_emploi_app/features/immersion/details/immersion_details_reducer.dart';
 import 'package:pass_emploi_app/features/in_app_feedback/in_app_feedback_reducer.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_reducer.dart';
-import 'package:pass_emploi_app/features/localisation_persist/localisation_persist_reducer.dart';
 import 'package:pass_emploi_app/features/location/search_location_reducer.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/features/login/login_reducer.dart';
@@ -93,6 +92,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription_reducer.dart';
 import 'package:pass_emploi_app/features/theme/theme_reducer.dart';
 import 'package:pass_emploi_app/features/soft_update/soft_update_reducer.dart';
+import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_reducer.dart';
 /*AUTOGENERATE-REDUX-APP-REDUCER-IMPORT*/
 
 AppState reducer(AppState current, dynamic action) {
@@ -215,7 +215,6 @@ AppState reducer(AppState current, dynamic action) {
       current.dateConsultationActualiteMissionLocaleState,
       action,
     ),
-    localisationPersistState: localisationPersistReducer(current.localisationPersistState, action),
     remoteCampagneAccueilState: remoteCampagneAccueilReducer(current.remoteCampagneAccueilState, action),
     autoInscriptionState: autoInscriptionReducer(current.autoInscriptionState, action),
     offresSuiviesState: offresSuiviesReducer(current.offresSuiviesState, action),
@@ -227,6 +226,7 @@ AppState reducer(AppState current, dynamic action) {
     autoDesinscriptionState: autoDesinscriptionReducer(current.autoDesinscriptionState, action),
     themeState: themeReducer(current.themeState, action),
     softUpdateState: softUpdateReducer(current.softUpdateState, action),
+    criteresRecherchePersistState: criteresRecherchePersistReducer(current.criteresRecherchePersistState, action),
     /*AUTOGENERATE-REDUX-APP-REDUCER-STATE*/
   );
 }

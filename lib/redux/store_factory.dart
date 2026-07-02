@@ -50,7 +50,6 @@ import 'package:pass_emploi_app/features/ia_ft_suggestions/ia_ft_suggestions_mid
 import 'package:pass_emploi_app/features/immersion/details/immersion_details_middleware.dart';
 import 'package:pass_emploi_app/features/in_app_feedback/in_app_feedback_middleware.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_middleware.dart';
-import 'package:pass_emploi_app/features/localisation_persist/localisation_persist_middleware.dart';
 import 'package:pass_emploi_app/features/location/search_location_middleware.dart';
 import 'package:pass_emploi_app/features/login/login_middleware.dart';
 import 'package:pass_emploi_app/features/matching_demarche/matching_demarche_middleware.dart';
@@ -97,6 +96,7 @@ import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_miss
 import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription_middleware.dart';
 import 'package:pass_emploi_app/features/theme/theme_middleware.dart';
 import 'package:pass_emploi_app/features/soft_update/soft_update_middleware.dart';
+import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_middleware.dart';
 /*AUTOGENERATE-REDUX-STOREFACTORY-IMPORT-MIDDLEWARE*/
 import 'package:pass_emploi_app/models/immersion.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
@@ -148,7 +148,6 @@ import 'package:pass_emploi_app/repositories/immersion/immersion_details_reposit
 import 'package:pass_emploi_app/repositories/immersion/immersion_repository.dart';
 import 'package:pass_emploi_app/repositories/in_app_feedback_repository.dart';
 import 'package:pass_emploi_app/repositories/in_app_notifications_repository.dart';
-import 'package:pass_emploi_app/repositories/localisation_persist_repository.dart';
 import 'package:pass_emploi_app/repositories/matching_demarche_repository.dart';
 import 'package:pass_emploi_app/repositories/metier_repository.dart';
 import 'package:pass_emploi_app/repositories/module_feedback_repository.dart';
@@ -183,6 +182,7 @@ import 'package:pass_emploi_app/repositories/actualite_mission_locale_repository
 import 'package:pass_emploi_app/repositories/auto_desinscription_repository.dart';
 import 'package:pass_emploi_app/repositories/theme_repository.dart';
 import 'package:pass_emploi_app/repositories/soft_update_repository.dart';
+import 'package:pass_emploi_app/repositories/criteres_recherche_persist_repository.dart';
 /*AUTOGENERATE-REDUX-STOREFACTORY-IMPORT-REPOSITORY*/
 import 'package:redux/redux.dart' as redux;
 
@@ -261,7 +261,6 @@ class StoreFactory {
   final InAppNotificationsRepository inAppNotificationsRepository;
   final DateConsultationNotificationRepository dateConsultationNotificationRepository;
   final DateConsultationActualiteMissionLocaleRepository dateConsultationActualiteMissionLocaleRepository;
-  final LocalisationPersistRepository localisationPersistRepository;
   final RemoteCampagneAccueilRepository remoteCampagneAccueilRepository;
   final AutoInscriptionRepository autoInscriptionRepository;
   final OffresSuiviesRepository offresSuiviesRepository;
@@ -272,6 +271,7 @@ class StoreFactory {
   final AutoDesinscriptionRepository autoDesinscriptionRepository;
   final ThemeRepository themeRepository;
   final SoftUpdateRepository softUpdateRepository;
+  final CriteresRecherchePersistRepository criteresRecherchePersistRepository;
   /*AUTOGENERATE-REDUX-STOREFACTORY-PROPERTY-REPOSITORY*/
 
   StoreFactory(
@@ -349,7 +349,6 @@ class StoreFactory {
     this.inAppNotificationsRepository,
     this.dateConsultationNotificationRepository,
     this.dateConsultationActualiteMissionLocaleRepository,
-    this.localisationPersistRepository,
     this.remoteCampagneAccueilRepository,
     this.autoInscriptionRepository,
     this.offresSuiviesRepository,
@@ -360,6 +359,7 @@ class StoreFactory {
     this.autoDesinscriptionRepository,
     this.themeRepository,
     this.softUpdateRepository,
+    this.criteresRecherchePersistRepository,
     /*AUTOGENERATE-REDUX-STOREFACTORY-CONSTRUCTOR-REPOSITORY*/
   );
 
@@ -457,7 +457,6 @@ class StoreFactory {
         InAppNotificationsMiddleware(inAppNotificationsRepository).call,
         DateConsultationNotificationMiddleware(dateConsultationNotificationRepository).call,
         DateConsultationActualiteMissionLocaleMiddleware(dateConsultationActualiteMissionLocaleRepository).call,
-        LocalisationPersistMiddleware(localisationPersistRepository).call,
         RemoteCampagneAccueilMiddleware(remoteCampagneAccueilRepository).call,
         AutoInscriptionMiddleware(autoInscriptionRepository).call,
         OffresSuiviesMiddleware(offresSuiviesRepository).call,
@@ -470,6 +469,7 @@ class StoreFactory {
         AutoDesinscriptionMiddleware(autoDesinscriptionRepository).call,
         ThemeMiddleware(themeRepository).call,
         SoftUpdateMiddleware(softUpdateRepository, remoteConfigRepository).call,
+        CriteresRecherchePersistMiddleware(criteresRecherchePersistRepository).call,
         /*AUTOGENERATE-REDUX-STOREFACTORY-ADD-MIDDLEWARE*/
         ..._debugMiddlewares(),
         ..._stagingMiddlewares(initialState.configurationState.getFlavor()),

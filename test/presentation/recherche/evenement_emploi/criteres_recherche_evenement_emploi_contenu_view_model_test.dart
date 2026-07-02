@@ -1,8 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pass_emploi_app/features/localisation_persist/localisation_persist_state.dart';
+import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_state.dart';
 import 'package:pass_emploi_app/features/recherche/evenement_emploi/evenement_emploi_criteres_recherche.dart';
 import 'package:pass_emploi_app/features/recherche/evenement_emploi/evenement_emploi_filtres_recherche.dart';
 import 'package:pass_emploi_app/features/recherche/recherche_actions.dart';
+import 'package:pass_emploi_app/models/criteres_recherche_utilisateur.dart';
 import 'package:pass_emploi_app/models/evenement_emploi/secteur_activite.dart';
 import 'package:pass_emploi_app/models/recherche/recherche_request.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
@@ -17,7 +18,11 @@ void main() {
     test('should display last searched location when initialised', () {
       // Given
       final store = givenState()
-          .copyWith(localisationPersistState: LocalisationPersistSuccessState(mockCommuneLocation()))
+          .copyWith(
+            criteresRecherchePersistState: CriteresRecherchePersistSuccessState(
+              CriteresRechercheUtilisateur(location: mockCommuneLocation()),
+            ),
+          )
           .store();
 
       // When
@@ -29,8 +34,13 @@ void main() {
 
     test('should not display last searched department when initialised', () {
       // Given
-      final store =
-          givenState().copyWith(localisationPersistState: LocalisationPersistSuccessState(mockLocationParis())).store();
+      final store = givenState()
+          .copyWith(
+            criteresRecherchePersistState: CriteresRecherchePersistSuccessState(
+              CriteresRechercheUtilisateur(location: mockLocationParis()),
+            ),
+          )
+          .store();
 
       // When
       final viewModel = CriteresRechercheEvenementEmploiContenuViewModel.create(store);
@@ -41,7 +51,9 @@ void main() {
 
     test('should display last searched location when null', () {
       // Given
-      final store = givenState().copyWith(localisationPersistState: LocalisationPersistSuccessState(null)).store();
+      final store = givenState()
+          .copyWith(criteresRecherchePersistState: CriteresRecherchePersistSuccessState(CriteresRechercheUtilisateur()))
+          .store();
 
       // When
       final viewModel = CriteresRechercheEvenementEmploiContenuViewModel.create(store);
@@ -52,7 +64,8 @@ void main() {
 
     test('should not display last searched location when not initialised', () {
       // Given
-      final store = givenState().copyWith(localisationPersistState: LocalisationPersistNotInitializedState()).store();
+      final store =
+          givenState().copyWith(criteresRecherchePersistState: CriteresRecherchePersistNotInitializedState()).store();
 
       // When
       final viewModel = CriteresRechercheEvenementEmploiContenuViewModel.create(store);

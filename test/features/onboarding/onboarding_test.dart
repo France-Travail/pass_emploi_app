@@ -22,9 +22,6 @@ import '../../dsl/sut_redux.dart';
 class RechercheEventRequestMock extends Mock
     implements RechercheRequest<EvenementEmploiCriteresRecherche, EvenementEmploiFiltresRecherche> {}
 
-class RechercheOffreRequestMock extends Mock
-    implements RechercheRequest<EmploiCriteresRecherche, EmploiFiltresRecherche> {}
-
 void main() {
   setUpAll(() {
     registerFallbackValue(Onboarding());
@@ -150,7 +147,17 @@ void main() {
 
       group('when searching for offre', () {
         sut.whenDispatchingAction(
-          () => RechercheRequestAction<EmploiCriteresRecherche, EmploiFiltresRecherche>(RechercheOffreRequestMock()),
+          () => RechercheRequestAction<EmploiCriteresRecherche, EmploiFiltresRecherche>(
+            RechercheRequest(
+              EmploiCriteresRecherche(
+                keyword: '',
+                location: null,
+                rechercheType: RechercheType.offreEmploiAndAlternance,
+              ),
+              EmploiFiltresRecherche.noFiltre(),
+              1,
+            ),
+          ),
         );
 
         test('should update onboarding state', () {

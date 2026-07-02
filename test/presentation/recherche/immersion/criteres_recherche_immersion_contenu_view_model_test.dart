@@ -1,8 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pass_emploi_app/features/localisation_persist/localisation_persist_state.dart';
+import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_state.dart';
 import 'package:pass_emploi_app/features/recherche/immersion/immersion_criteres_recherche.dart';
 import 'package:pass_emploi_app/features/recherche/immersion/immersion_filtres_recherche.dart';
 import 'package:pass_emploi_app/features/recherche/recherche_actions.dart';
+import 'package:pass_emploi_app/models/criteres_recherche_utilisateur.dart';
+import 'package:pass_emploi_app/models/metier.dart';
 import 'package:pass_emploi_app/models/recherche/recherche_request.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/recherche/immersion/criteres_recherche_immersion_contenu_view_model.dart';
@@ -16,7 +18,11 @@ void main() {
     test('should display last searched location when initialised', () {
       // Given
       final store = givenState()
-          .copyWith(localisationPersistState: LocalisationPersistSuccessState(mockCommuneLocation()))
+          .copyWith(
+            criteresRecherchePersistState: CriteresRecherchePersistSuccessState(
+              CriteresRechercheUtilisateur(location: mockCommuneLocation()),
+            ),
+          )
           .store();
 
       // When
@@ -28,8 +34,13 @@ void main() {
 
     test('should not display last searched department when initialised', () {
       // Given
-      final store =
-          givenState().copyWith(localisationPersistState: LocalisationPersistSuccessState(mockLocationParis())).store();
+      final store = givenState()
+          .copyWith(
+            criteresRecherchePersistState: CriteresRecherchePersistSuccessState(
+              CriteresRechercheUtilisateur(location: mockLocationParis()),
+            ),
+          )
+          .store();
 
       // When
       final viewModel = CriteresRechercheImmersionContenuViewModel.create(store);
@@ -40,7 +51,9 @@ void main() {
 
     test('should display last searched location when null', () {
       // Given
-      final store = givenState().copyWith(localisationPersistState: LocalisationPersistSuccessState(null)).store();
+      final store = givenState()
+          .copyWith(criteresRecherchePersistState: CriteresRecherchePersistSuccessState(CriteresRechercheUtilisateur()))
+          .store();
 
       // When
       final viewModel = CriteresRechercheImmersionContenuViewModel.create(store);
@@ -51,13 +64,66 @@ void main() {
 
     test('should not display last searched location when not initialised', () {
       // Given
-      final store = givenState().copyWith(localisationPersistState: LocalisationPersistNotInitializedState()).store();
+      final store =
+          givenState().copyWith(criteresRecherchePersistState: CriteresRecherchePersistNotInitializedState()).store();
 
       // When
       final viewModel = CriteresRechercheImmersionContenuViewModel.create(store);
 
       // Then
       expect(viewModel.initialLocation, null);
+    });
+
+    test('should prefill metier with persisted metier rome', () {
+      // Given
+      final metier = Metier(codeRome: 'A1101', libelle: 'Conduite d’engins agricoles');
+      final store = givenState()
+          .copyWith(
+            criteresRecherchePersistState: CriteresRecherchePersistSuccessState(
+              CriteresRechercheUtilisateur(metier: MetierRomeCritere(metier)),
+            ),
+          )
+          .store();
+
+      // When
+      final viewModel = CriteresRechercheImmersionContenuViewModel.create(store);
+
+      // Then
+      expect(viewModel.initialMetier, metier);
+    });
+
+    test('should not prefill metier with persisted texte libre', () {
+      // Given
+      final store = givenState()
+          .copyWith(
+            criteresRecherchePersistState: CriteresRecherchePersistSuccessState(
+              CriteresRechercheUtilisateur(metier: MetierTexteLibreCritere('Boulanger')),
+            ),
+          )
+          .store();
+
+      // When
+      final viewModel = CriteresRechercheImmersionContenuViewModel.create(store);
+
+      // Then
+      expect(viewModel.initialMetier, null);
+    });
+
+    test('should prefill distance with persisted rayon', () {
+      // Given
+      final store = givenState()
+          .copyWith(
+            criteresRecherchePersistState: CriteresRecherchePersistSuccessState(
+              CriteresRechercheUtilisateur(rayon: 42),
+            ),
+          )
+          .store();
+
+      // When
+      final viewModel = CriteresRechercheImmersionContenuViewModel.create(store);
+
+      // Then
+      expect(viewModel.initialDistance, 42);
     });
   });
   group('displayState', () {

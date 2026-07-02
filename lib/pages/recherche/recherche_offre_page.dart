@@ -93,11 +93,7 @@ class _RechercheOffrePageState<Result> extends State<RechercheOffrePage<Result>>
           distinct: true,
           converter: (store) {
             final state = widget.rechercheState(store.state);
-            return const [
-              RechercheStatus.nouvelleRecherche,
-              RechercheStatus.initialLoading,
-              RechercheStatus.failure,
-            ].contains(state.status);
+            return state.status == RechercheStatus.nouvelleRecherche;
           },
           builder: (context, showCriteresFullScreen) {
             return AnimatedSwitcher(

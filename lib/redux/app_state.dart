@@ -42,7 +42,6 @@ import 'package:pass_emploi_app/features/ia_ft_suggestions/ia_ft_suggestions_sta
 import 'package:pass_emploi_app/features/immersion/details/immersion_details_state.dart';
 import 'package:pass_emploi_app/features/in_app_feedback/in_app_feedback_state.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_state.dart';
-import 'package:pass_emploi_app/features/localisation_persist/localisation_persist_state.dart';
 import 'package:pass_emploi_app/features/location/search_location_state.dart';
 import 'package:pass_emploi_app/features/login/login_state.dart';
 import 'package:pass_emploi_app/features/matching_demarche/matching_demarche_state.dart';
@@ -88,6 +87,7 @@ import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_miss
 import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription_state.dart';
 import 'package:pass_emploi_app/features/theme/theme_state.dart';
 import 'package:pass_emploi_app/features/soft_update/soft_update_state.dart';
+import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_state.dart';
 /*AUTOGENERATE-REDUX-APP-STATE-IMPORT*/
 
 class AppState extends Equatable {
@@ -165,7 +165,6 @@ class AppState extends Equatable {
   final InAppNotificationsState inAppNotificationsState;
   final DateConsultationNotificationState dateConsultationNotificationState;
   final DateConsultationActualiteMissionLocaleState dateConsultationActualiteMissionLocaleState;
-  final LocalisationPersistState localisationPersistState;
   final RemoteCampagneAccueilState remoteCampagneAccueilState;
   final AutoInscriptionState autoInscriptionState;
   final OffresSuiviesState offresSuiviesState;
@@ -177,6 +176,7 @@ class AppState extends Equatable {
   final AutoDesinscriptionState autoDesinscriptionState;
   final ThemeState themeState;
   final SoftUpdateState softUpdateState;
+  final CriteresRecherchePersistState criteresRecherchePersistState;
   /*AUTOGENERATE-REDUX-APP-STATE-PROPERTY*/
 
   AppState({
@@ -254,7 +254,6 @@ class AppState extends Equatable {
     required this.inAppNotificationsState,
     required this.dateConsultationNotificationState,
     required this.dateConsultationActualiteMissionLocaleState,
-    required this.localisationPersistState,
     required this.remoteCampagneAccueilState,
     required this.autoInscriptionState,
     required this.offresSuiviesState,
@@ -266,6 +265,7 @@ class AppState extends Equatable {
     required this.autoDesinscriptionState,
     required this.themeState,
     required this.softUpdateState,
+    required this.criteresRecherchePersistState,
     /*AUTOGENERATE-REDUX-APP-STATE-CONSTRUCTOR*/
   });
 
@@ -344,7 +344,6 @@ class AppState extends Equatable {
     final InAppNotificationsState? inAppNotificationsState,
     final DateConsultationNotificationState? dateConsultationNotificationState,
     final DateConsultationActualiteMissionLocaleState? dateConsultationActualiteMissionLocaleState,
-    final LocalisationPersistState? localisationPersistState,
     final RemoteCampagneAccueilState? remoteCampagneAccueilState,
     final AutoInscriptionState? autoInscriptionState,
     final OffresSuiviesState? offresSuiviesState,
@@ -356,6 +355,7 @@ class AppState extends Equatable {
     final AutoDesinscriptionState? autoDesinscriptionState,
     final ThemeState? themeState,
     final SoftUpdateState? softUpdateState,
+    final CriteresRecherchePersistState? criteresRecherchePersistState,
     /*AUTOGENERATE-REDUX-APP-STATE-COPYPARAM*/
   }) {
     return AppState(
@@ -434,7 +434,6 @@ class AppState extends Equatable {
       dateConsultationNotificationState: dateConsultationNotificationState ?? this.dateConsultationNotificationState,
       dateConsultationActualiteMissionLocaleState:
           dateConsultationActualiteMissionLocaleState ?? this.dateConsultationActualiteMissionLocaleState,
-      localisationPersistState: localisationPersistState ?? this.localisationPersistState,
       remoteCampagneAccueilState: remoteCampagneAccueilState ?? this.remoteCampagneAccueilState,
       autoInscriptionState: autoInscriptionState ?? this.autoInscriptionState,
       offresSuiviesState: offresSuiviesState ?? this.offresSuiviesState,
@@ -446,6 +445,7 @@ class AppState extends Equatable {
       autoDesinscriptionState: autoDesinscriptionState ?? this.autoDesinscriptionState,
       themeState: themeState ?? this.themeState,
       softUpdateState: softUpdateState ?? this.softUpdateState,
+      criteresRecherchePersistState: criteresRecherchePersistState ?? this.criteresRecherchePersistState,
       /*AUTOGENERATE-REDUX-APP-STATE-COPYBODY*/
     );
   }
@@ -526,7 +526,6 @@ class AppState extends Equatable {
       inAppNotificationsState: InAppNotificationsNotInitializedState(),
       dateConsultationNotificationState: DateConsultationNotificationState(),
       dateConsultationActualiteMissionLocaleState: DateConsultationActualiteMissionLocaleState(),
-      localisationPersistState: LocalisationPersistNotInitializedState(),
       remoteCampagneAccueilState: RemoteCampagneAccueilState(),
       autoInscriptionState: AutoInscriptionNotInitializedState(),
       offresSuiviesState: OffresSuiviesState(),
@@ -538,6 +537,7 @@ class AppState extends Equatable {
       autoDesinscriptionState: AutoDesinscriptionNotInitializedState(),
       themeState: ThemeNotInitializedState(),
       softUpdateState: SoftUpdateNotShownState(),
+      criteresRecherchePersistState: CriteresRecherchePersistNotInitializedState(),
       /*AUTOGENERATE-REDUX-APP-STATE-FACTORY*/
     );
   }
@@ -611,7 +611,6 @@ class AppState extends Equatable {
     inAppNotificationsState,
     dateConsultationNotificationState,
     dateConsultationActualiteMissionLocaleState,
-    localisationPersistState,
     remoteCampagneAccueilState,
     autoInscriptionState,
     offresSuiviesState,
@@ -623,6 +622,7 @@ class AppState extends Equatable {
     autoDesinscriptionState,
     themeState,
     softUpdateState,
+    criteresRecherchePersistState,
     /*AUTOGENERATE-REDUX-APP-STATE-EQUATABLE*/
   ];
 
