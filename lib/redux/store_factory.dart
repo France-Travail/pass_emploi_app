@@ -64,6 +64,7 @@ import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_middlewar
 import 'package:pass_emploi_app/features/onboarding/onboarding_middleware.dart';
 import 'package:pass_emploi_app/features/preferences/preferences_middleware.dart';
 import 'package:pass_emploi_app/features/preferences/update/preferences_update_middleware.dart';
+import 'package:pass_emploi_app/features/invite_prenom/invite_prenom_middleware.dart';
 import 'package:pass_emploi_app/features/preferred_login_mode/preferred_login_mode_middleware.dart';
 import 'package:pass_emploi_app/features/push_notification/register/register_push_notification_token_middleware.dart';
 import 'package:pass_emploi_app/features/rating/rating_middleware.dart';
@@ -158,6 +159,7 @@ import 'package:pass_emploi_app/repositories/offres_suivies_repository.dart';
 import 'package:pass_emploi_app/repositories/onboarding_repository.dart';
 import 'package:pass_emploi_app/repositories/piece_jointe_repository.dart';
 import 'package:pass_emploi_app/repositories/preferences_repository.dart';
+import 'package:pass_emploi_app/repositories/invite_prenom_repository.dart';
 import 'package:pass_emploi_app/repositories/preferred_login_mode_repository.dart';
 import 'package:pass_emploi_app/repositories/rating_repository.dart';
 import 'package:pass_emploi_app/repositories/recherches_recentes_repository.dart';
@@ -251,6 +253,7 @@ class StoreFactory {
   final MonSuiviRepository monSuiviRepository;
   final CampagneRecrutementRepository campagneRecrutementRepository;
   final PreferredLoginModeRepository preferredLoginModeRepository;
+  final InvitePrenomRepository invitePrenomRepository;
   final OnboardingRepository onboardingRepository;
   final FirstLaunchOnboardingRepository firstLaunchOnboardingRepository;
   final PieceJointeUseCase pieceJointeUseCase;
@@ -339,6 +342,7 @@ class StoreFactory {
     this.monSuiviRepository,
     this.campagneRecrutementRepository,
     this.preferredLoginModeRepository,
+    this.invitePrenomRepository,
     this.onboardingRepository,
     this.firstLaunchOnboardingRepository,
     this.pieceJointeUseCase,
@@ -446,6 +450,7 @@ class StoreFactory {
         MonSuiviMiddleware(monSuiviRepository, remoteConfigRepository).call,
         CampagneRecrutementMiddleware(campagneRecrutementRepository).call,
         PreferredLoginModeMiddleware(preferredLoginModeRepository).call,
+        InvitePrenomMiddleware(invitePrenomRepository).call,
         OnboardingMiddleware(onboardingRepository, pushNotificationManager).call,
         FirstLaunchOnboardingMiddleware(firstLaunchOnboardingRepository).call,
         MessageImportantMiddleware(chatRepository, detailsJeuneRepository).call,
