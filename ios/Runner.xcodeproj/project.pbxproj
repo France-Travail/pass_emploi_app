@@ -192,8 +192,8 @@
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				FBC7C5AB346040EF73E6923F /* [CP] Embed Pods Frameworks */,
-				7042E32828F84FEC00D013FF /* [firebase_crashlytics] Crashlytics Upload Symbols */,
 				AFC8BBA99184FB62E138FD59 /* [CP] Copy Pods Resources */,
+				7042E32828F84FEC00D013FF /* [firebase_crashlytics] Crashlytics Upload Symbols */,
 			);
 			buildRules = (
 			);
@@ -281,8 +281,12 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
 				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
-				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+				"${DWARF_DSYM_FOLDER_PATH}/App.framework.dSYM",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
 			);
 			name = "[firebase_crashlytics] Crashlytics Upload Symbols";
 			outputFileListPaths = (
@@ -291,7 +295,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo \"Starting [firebase_crashlytics] Crashlytics Upload Symbols build phase.\"\n\nPLIST_DESTINATION=${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app\necho \"- plist path ${PLIST_DESTINATION}\"\n\necho \"- find dSYM from BUILT_PRODUCTS_DIR ${BUILT_PRODUCTS_DIR}\"\nfind ${BUILT_PRODUCTS_DIR} -name \"*.dSYM\" | xargs -I \\{\\} $PODS_ROOT/FirebaseCrashlytics/upload-symbols -gsp ${PLIST_DESTINATION}/GoogleService-Info.plist -p ios \\{\\}\n\necho \"Ending [firebase_crashlytics] Crashlytics Upload Symbols build phase.\"\n";
+			shellScript = "echo \"Starting [firebase_crashlytics] Crashlytics Upload Symbols build phase.\"\n\nPLIST_DESTINATION=\"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\"\nUPLOAD_SYMBOLS=\"${PODS_ROOT}/FirebaseCrashlytics/upload-symbols\"\n\nupload_dsym() {\n  if [ -e \"$1\" ]; then\n    echo \"Uploading $1\"\n    \"$UPLOAD_SYMBOLS\" -gsp \"$PLIST_DESTINATION\" -p ios \"$1\"\n  fi\n}\n\nupload_dsym \"${DWARF_DSYM_FOLDER_PATH}/App.framework.dSYM\"\n\nfind \"${BUILT_PRODUCTS_DIR}\" -name \"*.dSYM\" -print0 | while IFS= read -r -d '' dsym; do\n  upload_dsym \"$dsym\"\ndone\n\necho \"Ending [firebase_crashlytics] Crashlytics Upload Symbols build phase.\"\n";
 		};
 		72EE6D38E43DBD8A7EFE6806 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

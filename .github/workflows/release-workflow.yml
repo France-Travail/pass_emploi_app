@@ -268,6 +268,12 @@ jobs:
           --export-options-plist=ios/prod_export_options.plist \
           --no-pub
 
+      - name: CEJ - Upload dSYMs to Crashlytics
+        shell: bash
+        run: |
+          chmod +x ios/scripts/upload_crashlytics_dsyms.sh
+          ios/scripts/upload_crashlytics_dsyms.sh cejProd
+
       - name: CEJ - Deploy app to App Store Connect
         shell: bash
         run: |
@@ -323,6 +329,12 @@ jobs:
           --export-options-plist=ios/prod_export_options.plist \
           --no-pub \
           --verbose
+
+      - name: BRSA - Upload dSYMs to Crashlytics
+        shell: bash
+        run: |
+          chmod +x ios/scripts/upload_crashlytics_dsyms.sh
+          ios/scripts/upload_crashlytics_dsyms.sh brsaProd
 
       - name: BRSA - Deploy app to App Store Connect
         shell: bash
