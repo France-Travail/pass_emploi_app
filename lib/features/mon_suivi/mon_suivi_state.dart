@@ -27,28 +27,14 @@ class MonSuiviSuccessState extends MonSuiviState {
   MonSuiviSuccessState withUpdatedActions(List<UserAction> actions) {
     return MonSuiviSuccessState(
       interval,
-      MonSuivi(
-        actions: actions,
-        rendezvous: monSuivi.rendezvous,
-        sessionsMilo: monSuivi.sessionsMilo,
-        errorOnSessionMiloRetrieval: monSuivi.errorOnSessionMiloRetrieval,
-        demarches: [],
-        dateDerniereMiseAJourPoleEmploi: null,
-      ),
+      monSuivi.copyWith(actions: actions),
     );
   }
 
   MonSuiviSuccessState withUpdatedDemarches(List<Demarche> demarches) {
     return MonSuiviSuccessState(
       interval,
-      MonSuivi(
-        demarches: demarches,
-        rendezvous: monSuivi.rendezvous,
-        dateDerniereMiseAJourPoleEmploi: monSuivi.dateDerniereMiseAJourPoleEmploi,
-        sessionsMilo: [],
-        actions: [],
-        errorOnSessionMiloRetrieval: false,
-      ),
+      monSuivi.copyWith(demarches: demarches),
     );
   }
 }

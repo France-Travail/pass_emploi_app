@@ -97,6 +97,40 @@ void main() {
     expect(failureUpdate.updateDemarcheState is UpdateDemarcheFailureState, isTrue);
   });
 
+  test("update demarche should preserve eligibleDemarchesIA in mon suivi", () async {
+    // Given - user eligible for IA démarches on Mon suivi
+    final now = DateTime.now();
+    final repository = UpdateDemarcheRepositorySuccessStub();
+    repository.withArgsResolves('id', '2', DemarcheStatus.DONE, now, now);
+    final store = givenState()
+        .loggedInPoleEmploiUser()
+        .monSuivi(
+          monSuivi: mockMonSuivi(
+            demarches: [
+              mockDemarche(id: '1', status: DemarcheStatus.IN_PROGRESS),
+              mockDemarche(id: '2', status: DemarcheStatus.NOT_STARTED),
+            ],
+            eligibleDemarchesIA: true,
+          ),
+        )
+        .store((factory) => {factory.updateDemarcheRepository = repository});
+
+    final successUpdateState = store.onChange.firstWhere((e) => e.updateDemarcheState is UpdateDemarcheSuccessState);
+
+    // When - user marks a démarche as "Terminé" and returns to Mon suivi
+    await store.dispatch(UpdateDemarcheRequestAction(
+      id: '2',
+      dateFin: now,
+      dateDebut: now,
+      status: DemarcheStatus.DONE,
+    ));
+
+    // Then - IA flow must still be available for next "créer une démarche"
+    await successUpdateState;
+    final monSuivi = (store.state.monSuiviState as MonSuiviSuccessState).monSuivi;
+    expect(monSuivi.eligibleDemarchesIA, isTrue);
+  });
+
   test("update demarche when repo fails should not update mon suivi", () async {
     // Given
     final now = DateTime.now();
