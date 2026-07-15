@@ -337,6 +337,7 @@ class Strings {
   static String loginPoleEmploi = "France Travail";
   static String loginMissionLocale = "Mission Locale";
   static String loginAction = "Se connecter";
+  static String loginInviteAction = "Continuer en tant qu'invité";
   static String logoutAction = "Se déconnecter";
 
   // Card and subcomponents
