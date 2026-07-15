@@ -9,6 +9,7 @@ import 'package:pass_emploi_app/features/deep_link/deep_link_state.dart';
 import 'package:pass_emploi_app/features/push_notification/register/register_push_notification_token_actions.dart';
 import 'package:pass_emploi_app/pages/cgu_page.dart';
 import 'package:pass_emploi_app/pages/first_lauch_onboarding_page.dart';
+import 'package:pass_emploi_app/pages/invite_prenom_page.dart';
 import 'package:pass_emploi_app/pages/login_page.dart';
 import 'package:pass_emploi_app/pages/main_page.dart';
 import 'package:pass_emploi_app/pages/spash_screen_page.dart';
@@ -84,6 +85,7 @@ class _RouterPageState extends State<RouterPage> with WidgetsBindingObserver {
       RouterPageDisplayState.splash => SplashScreenPage(),
       RouterPageDisplayState.onboarding => FirstLaunchOnboardingPage(),
       RouterPageDisplayState.login => LoginPage(),
+      RouterPageDisplayState.invitePrenom => InvitePrenomPage(),
       RouterPageDisplayState.cgu => CguPage(),
       RouterPageDisplayState.tutorial => TutorialPage(),
       RouterPageDisplayState.main => MainPage(

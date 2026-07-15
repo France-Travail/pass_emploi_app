@@ -81,6 +81,7 @@ extension on User {
         Accompagnement.equipEmploiRecrut => 'FT_EQUIP_EMPLOI_RECRUT',
       },
       LoginMode.MILO => 'MILO',
+      LoginMode.INVITE => 'INVITE',
       LoginMode.DEMO_PE => 'DEMO',
       LoginMode.DEMO_MILO => 'DEMO',
     };
