@@ -17,10 +17,14 @@ const String _appAuthFlowMarkerStorageKey = "loginInProgress";
 
 enum RefreshTokenStatus { SUCCESSFUL, GENERIC_ERROR, USER_NOT_LOGGED_IN, NETWORK_UNREACHABLE, EXPIRED_REFRESH_TOKEN }
 
-enum AuthenticationMode { GENERIC, SIMILO, POLE_EMPLOI, DEMO }
+enum AuthenticationMode { GENERIC, SIMILO, POLE_EMPLOI, INVITE, DEMO }
 
 const Map<String, String> similoParams = {"kc_idp_hint": "similo-jeune"};
 const Map<String, String> poleEmploiParams = {"kc_idp_hint": "ft-beneficiaire"};
+
+// Mode invité : Connect ne redirige vers aucun IDP externe, il fabrique une
+// identité anonyme et renvoie directement les tokens.
+const Map<String, String> inviteParams = {"kc_idp_hint": "invite"};
 
 sealed class AuthenticatorResponse {}
 
@@ -179,6 +183,7 @@ class Authenticator {
     Map<String, String>? idpHintParameters;
     if (mode == AuthenticationMode.SIMILO) idpHintParameters = similoParams;
     if (mode == AuthenticationMode.POLE_EMPLOI) idpHintParameters = poleEmploiParams;
+    if (mode == AuthenticationMode.INVITE) idpHintParameters = inviteParams;
 
     final installationId = await _readInstallationIdForLogin();
     if (installationId == null) return idpHintParameters;

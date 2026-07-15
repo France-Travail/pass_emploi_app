@@ -17,6 +17,7 @@ class LoginPageViewModel extends Equatable {
   final String? technicalErrorMessage;
   final PreferredLoginModeViewModel? preferredLoginMode;
   final void Function()? onLogin;
+  final void Function() onLoginInvite;
 
   LoginPageViewModel({
     required this.withRequestAccountButton,
@@ -26,6 +27,7 @@ class LoginPageViewModel extends Equatable {
     required this.technicalErrorMessage,
     required this.preferredLoginMode,
     required this.onLogin,
+    required this.onLoginInvite,
   });
 
   factory LoginPageViewModel.create(Store<AppState> store) {
@@ -39,6 +41,7 @@ class LoginPageViewModel extends Equatable {
       technicalErrorMessage: loginState is LoginGenericFailureState ? loginState.message : null,
       preferredLoginMode: PreferredLoginModeViewModel.create(store),
       onLogin: _onLogin(store),
+      onLoginInvite: () => store.dispatch(RequestLoginAction(LoginMode.INVITE)),
     );
   }
 
