@@ -37,7 +37,8 @@ class ProfilPageViewModel extends Equatable {
     final user = state is LoginSuccessState ? state.user : null;
     final themeState = store.state.themeState;
     return ProfilPageViewModel(
-      userName: user != null ? "${user.firstName} ${user.lastName}" : "",
+      // trim : l'invité n'a pas de nom de famille, sans quoi on afficherait "Invité "
+      userName: user != null ? "${user.firstName} ${user.lastName}".trim() : "",
       userEmail: user?.email ?? Strings.missingEmailAddressValue,
       displayMonConseiller: _shouldDisplayMonConseiller(store.state.detailsJeuneState),
       displayDeveloperOptions: store.state.developerOptionsState is DeveloperOptionsActivatedState,
