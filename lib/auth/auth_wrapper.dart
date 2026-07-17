@@ -146,7 +146,11 @@ extension on PlatformException {
             true;
   }
 
-  bool isDeviceClockWrong() => details.toString().contains('minutes');
+  // Validation du iat de l'id_token par AppAuth : le message diffère selon la plateforme.
+  // Android : "Issued at time is more than 10 minutes before or after the current time"
+  // iOS (code -15) : "Issued at time is more than 600 seconds before or after the current time"
+  bool isDeviceClockWrong() =>
+      '$message $details'.contains('Issued at time') || details.toString().contains('minutes');
 
   bool isRefreshTokenExpired() {
     if (code != "token_failed") return false;
