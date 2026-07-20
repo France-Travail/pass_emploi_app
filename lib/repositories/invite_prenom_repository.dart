@@ -15,7 +15,14 @@ class InvitePrenomRepository {
     final url = _url(userId: userId);
     try {
       final response = await _httpClient.get(url);
-      return response.data["prenom"] as String?;
+      final data = response.data;
+      if (data is Map<String, dynamic>) {
+        return data['prenom'] as String? ?? '';
+      }
+      return '';
+    } on DioException catch (e, stack) {
+      if (e.response?.statusCode == 404) return '';
+      _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
     } catch (e, stack) {
       _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
     }
