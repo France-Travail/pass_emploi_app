@@ -106,6 +106,9 @@ class Authenticator {
     } on AuthWrapperNetworkException {
       return RefreshTokenStatus.NETWORK_UNREACHABLE;
     } on AuthWrapperRefreshTokenExpiredException {
+      if (await _preferences.read(key: _refreshTokenKey) != refreshToken) {
+        return RefreshTokenStatus.SUCCESSFUL;
+      }
       await _deleteToken();
       return RefreshTokenStatus.EXPIRED_REFRESH_TOKEN;
     } on AuthWrapperRefreshTokenException {

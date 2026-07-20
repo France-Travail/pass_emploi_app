@@ -185,6 +185,31 @@ void main() {
       expect(await authenticator.isLoggedIn(), false);
     });
 
+    test('refresh token does not destroy the session when a concurrent login renewed it', () async {
+      // Given
+      when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async => authTokenResponse());
+      await authenticator.login(AuthenticationMode.GENERIC);
+
+      // Le refresh attend le verrou d'AuthWrapper, que le login détient pendant
+      // toute la saisie sur la mire de l'IDP : quand il repart, la session a été
+      // renouvelée et le token qu'il a lu avant d'attendre est périmé.
+      when(() => wrapper.refreshToken(_refreshTokenRequest())).thenAnswer((_) async {
+        await secureStorage.write(key: "idToken", value: realPassEmploiIdToken);
+        await secureStorage.write(key: "accessToken", value: "accessTokenRenouvele");
+        await secureStorage.write(key: "refreshToken", value: "refreshTokenRenouvele");
+        throw AuthWrapperRefreshTokenExpiredException('');
+      });
+
+      // When
+      final result = await authenticator.performRefreshToken();
+
+      // Then
+      expect(result, RefreshTokenStatus.SUCCESSFUL);
+      expect(await authenticator.isLoggedIn(), true);
+      expect(await secureStorage.read(key: "accessToken"), "accessTokenRenouvele");
+      expect(await secureStorage.read(key: "refreshToken"), "refreshTokenRenouvele");
+    });
+
     test('refresh token returns GENERIC_ERROR when user is logged in but refresh token fails on generic exception',
         () async {
       // Given
@@ -341,6 +366,20 @@ AuthTokenRequest _tokenRequest({Map<String, String>? additionalParameters}) {
     configuration().authClientSecret,
     additionalParameters,
   );
+}
+
+class _LogoutRepositoryOuLUtilisateurSeReconnecte extends LogoutRepository {
+  final FlutterSecureStorageSpy _preferences;
+
+  _LogoutRepositoryOuLUtilisateurSeReconnecte(this._preferences)
+      : super(authIssuer: '', clientSecret: '', clientId: '');
+
+  @override
+  Future<void> logout(String refreshToken, String userId, LogoutReason reason) async {
+    await _preferences.write(key: 'idToken', value: realPassEmploiIdToken);
+    await _preferences.write(key: 'accessToken', value: 'accessTokenRenouvele');
+    await _preferences.write(key: 'refreshToken', value: 'refreshTokenRenouvele');
+  }
 }
 
 AuthRefreshTokenRequest _refreshTokenRequest() {
