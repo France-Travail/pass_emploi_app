@@ -47,8 +47,8 @@ class AuthWrapper {
       if (e.isNetworkException()) throw AuthWrapperNetworkException(message);
       if (e.isDeviceClockWrong()) throw AuthWrapperWrongDeviceClockException(message);
       if (e.isCodeExchangeFailing() && e.isUserCancellation()) throw UserCanceledLoginException(message);
-      if (e.isCodeExchangeFailing() && !e.isUserCancellation()) throw AuthWrapperCalledCancelException(message);
-      _crashlytics?.recordNonNetworkException(e, stack);
+      _recordAppAuthException(e, stack);
+      if (e.isCodeExchangeFailing()) throw AuthWrapperCalledCancelException(message);
       throw AuthWrapperLoginException(message);
     }
   }
@@ -84,10 +84,16 @@ class AuthWrapper {
     } on PlatformException catch (e, stack) {
       final message = e.toString();
       if (e.isNetworkException()) throw AuthWrapperNetworkException(message);
-      _crashlytics?.recordNonNetworkException(e, stack);
+      _recordAppAuthException(e, stack);
       if (e.isRefreshTokenExpired()) throw AuthWrapperRefreshTokenExpiredException(message);
       throw AuthWrapperRefreshTokenException(message);
     }
+  }
+
+  void _recordAppAuthException(PlatformException e, StackTrace stack) {
+    _crashlytics?.setCustomKey('appauth_error_code', e.code);
+    _crashlytics?.setCustomKey('appauth_error_details', e.details.toString());
+    _crashlytics?.recordNonNetworkException(e, stack);
   }
 }
 
