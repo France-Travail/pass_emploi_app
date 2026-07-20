@@ -26,7 +26,14 @@ class LoginBottomSheet extends StatefulWidget {
 }
 
 class _LoginBottomSheetState extends State<LoginBottomSheet> {
-  void loginModeSelected(LoginButtonViewModel button) => setState(() => selectedLoginMode = button);
+  void loginModeSelected(LoginButtonViewModel button) {
+    if (button is LoginButtonViewModelInvite) {
+      Navigator.pop(context);
+      button.action();
+      return;
+    }
+    setState(() => selectedLoginMode = button);
+  }
   LoginButtonViewModel? selectedLoginMode;
 
   @override

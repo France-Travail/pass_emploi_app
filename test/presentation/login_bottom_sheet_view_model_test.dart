@@ -25,6 +25,7 @@ void main() {
         // Then
         expect(viewModel.loginButtons, [
           LoginButtonViewModelPoleEmploi(store),
+          LoginButtonViewModelInvite(store),
         ]);
       });
 
@@ -40,11 +41,12 @@ void main() {
         // Then
         expect(viewModel.loginButtons, [
           LoginButtonViewModelPoleEmploi(store),
+          LoginButtonViewModelInvite(store),
         ]);
       });
 
       test(
-          "view model when flavor is staging and brand CEJ should show 3 buttons : mission locale, pole emploi and pass emploi",
+          "view model when flavor is staging and brand CEJ should show 3 buttons : pole emploi, mission locale and invite",
           () {
         // Given
         final store = givenState(configuration(flavor: Flavor.STAGING, brand: Brand.cej))
@@ -58,10 +60,11 @@ void main() {
         expect(viewModel.loginButtons, [
           LoginButtonViewModelPoleEmploi(store),
           LoginButtonViewModelMissionLocale(store),
+          LoginButtonViewModelInvite(store),
         ]);
       });
 
-      test("view model when flavor is prod and brand CEJ should show 2 buttons : mission locale and pole emploi", () {
+      test("view model when flavor is prod and brand CEJ should show 3 buttons : pole emploi, mission locale and invite", () {
         // Given
         final store = givenState(configuration(flavor: Flavor.PROD, brand: Brand.cej))
             .copyWith(loginState: UserNotLoggedInState())
@@ -74,6 +77,7 @@ void main() {
         expect(viewModel.loginButtons, [
           LoginButtonViewModelPoleEmploi(store),
           LoginButtonViewModelMissionLocale(store),
+          LoginButtonViewModelInvite(store),
         ]);
       });
 
@@ -92,7 +96,7 @@ void main() {
 
       test('View model triggers RequestLoginAction with SIMILO mode when Mission Locale login is performed', () {
         // Given
-        final store = StoreSpy();
+        final store = StoreSpy.withState(givenState(configuration(flavor: Flavor.PROD, brand: Brand.cej)));
         final viewModel = LoginBottomSheetViewModel.create(store);
 
         // When
@@ -101,6 +105,19 @@ void main() {
         // Then
         expect(store.dispatchedAction, isA<RequestLoginAction>());
         expect((store.dispatchedAction as RequestLoginAction).mode, LoginMode.MILO);
+      });
+
+      test('View model triggers RequestLoginAction with INVITE mode when invite login is performed', () {
+        // Given
+        final store = StoreSpy();
+        final viewModel = LoginBottomSheetViewModel.create(store);
+
+        // When
+        viewModel.loginButtons.last.action();
+
+        // Then
+        expect(store.dispatchedAction, isA<RequestLoginAction>());
+        expect((store.dispatchedAction as RequestLoginAction).mode, LoginMode.INVITE);
       });
     });
   });

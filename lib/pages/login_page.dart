@@ -111,8 +111,6 @@ class _Scaffold extends StatelessWidget {
                                   SizedBox(height: Margins.spacing_base),
                                 ],
                                 _LoginButton(viewModel),
-                                SizedBox(height: Margins.spacing_base),
-                                _InviteButton(viewModel),
                                 SizedBox(height: Margins.spacing_m),
                                 if (viewModel.technicalErrorMessage != null) ...[
                                   _GenericError(viewModel.technicalErrorMessage!),
@@ -164,21 +162,6 @@ class _LoginButton extends StatelessWidget {
       onPressed: () {
         viewModel.onLogin != null ? viewModel.onLogin!.call() : LoginBottomSheet.show(context);
       },
-    );
-  }
-}
-
-class _InviteButton extends StatelessWidget {
-  const _InviteButton(this.viewModel);
-
-  final LoginPageViewModel viewModel;
-
-  @override
-  Widget build(BuildContext context) {
-    if (viewModel.withLoading) return SizedBox.shrink();
-    return SecondaryButton(
-      label: Strings.loginInviteAction,
-      onPressed: () => viewModel.onLoginInvite(),
     );
   }
 }
