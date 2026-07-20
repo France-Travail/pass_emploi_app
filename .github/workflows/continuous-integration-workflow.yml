@@ -366,6 +366,12 @@ jobs:
           --export-options-plist=ios/staging_export_options.plist \
           --no-pub
 
+      - name: CEJ - Upload dSYMs to Crashlytics
+        shell: bash
+        run: |
+          chmod +x ios/scripts/upload_crashlytics_dsyms.sh
+          ios/scripts/upload_crashlytics_dsyms.sh cejStaging
+
       - name: CEJ - Deploy IPA to Firebase App Distribution
         run: |
           mv "$(find $(pwd) -name "\[stg\] CEJ.ipa")" CEJ.ipa
@@ -419,6 +425,12 @@ jobs:
           --export-options-plist=ios/staging_export_options.plist \
           --no-pub \
           --verbose
+
+      - name: BRSA - Upload dSYMs to Crashlytics
+        shell: bash
+        run: |
+          chmod +x ios/scripts/upload_crashlytics_dsyms.sh
+          ios/scripts/upload_crashlytics_dsyms.sh brsaStaging
 
       - name: BRSA - Deploy IPA to Firebase App Distribution
         run: |
