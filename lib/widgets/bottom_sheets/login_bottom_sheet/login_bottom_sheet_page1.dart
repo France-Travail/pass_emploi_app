@@ -12,7 +12,10 @@ import 'package:pass_emploi_app/widgets/buttons/elevated_button_tile.dart';
 import 'package:pass_emploi_app/widgets/info_card.dart';
 
 class LoginBottomSheetPage1 extends StatelessWidget {
-  const LoginBottomSheetPage1({required this.loginButtons, required this.onLoginButtonSelected});
+  const LoginBottomSheetPage1({
+    required this.loginButtons,
+    required this.onLoginButtonSelected,
+  });
 
   final List<LoginButtonViewModel> loginButtons;
   final void Function(LoginButtonViewModel) onLoginButtonSelected;
@@ -27,6 +30,7 @@ class LoginBottomSheetPage1 extends StatelessWidget {
         InfoCard(message: Strings.organismInformations),
         SizedBox(height: Margins.spacing_base),
         ..._buildLoginButtons(),
+        SizedBox(height: Margins.spacing_base),
         _NoOrganismButton(),
         SizedBox(height: Margins.spacing_base),
         SizedBox(height: MediaQuery.of(context).padding.bottom),
@@ -44,6 +48,7 @@ class LoginBottomSheetPage1 extends StatelessWidget {
     return switch (button) {
       LoginButtonViewModelPoleEmploi() => _FranceTravailLoginButton(onSelected: onSelected),
       LoginButtonViewModelMissionLocale() => _MissionLocaleLoginButton(onSelected: onSelected),
+      LoginButtonViewModelInvite() => _InviteLoginButton(onSelected: onSelected),
     };
   }
 }
@@ -78,6 +83,29 @@ class _MissionLocaleLoginButton extends StatelessWidget {
       ),
       onPressed: onSelected,
       label: Strings.loginBottomSeetMissionLocaleButton,
+      suffix: Icon(AppIcons.chevron_right_rounded, color: context.content),
+    );
+  }
+}
+
+class _InviteLoginButton extends StatelessWidget {
+  const _InviteLoginButton({required this.onSelected});
+
+  final void Function() onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButtonTile(
+      leading: Semantics(
+        excludeSemantics: true,
+        child: SizedBox(
+          width: 40,
+          height: 40,
+          child: Icon(AppIcons.person_2_outlined, color: context.content),
+        ),
+      ),
+      onPressed: onSelected,
+      label: Strings.loginInviteAction,
       suffix: Icon(AppIcons.chevron_right_rounded, color: context.content),
     );
   }
