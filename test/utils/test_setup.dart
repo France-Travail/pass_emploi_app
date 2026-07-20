@@ -62,7 +62,6 @@ import 'package:pass_emploi_app/repositories/offres_suivies_repository.dart';
 import 'package:pass_emploi_app/repositories/onboarding_repository.dart';
 import 'package:pass_emploi_app/repositories/piece_jointe_repository.dart';
 import 'package:pass_emploi_app/repositories/preferences_repository.dart';
-import 'package:pass_emploi_app/repositories/invite_prenom_repository.dart';
 import 'package:pass_emploi_app/repositories/preferred_login_mode_repository.dart';
 import 'package:pass_emploi_app/repositories/rating_repository.dart';
 import 'package:pass_emploi_app/repositories/recherches_recentes_repository.dart';
@@ -158,7 +157,6 @@ class TestStoreFactory {
   MonSuiviRepository monSuiviRepository = DummyMonSuiviRepository();
   CampagneRecrutementRepository campagneRecrutementRepository = MockCampagneRecrutementRepository();
   PreferredLoginModeRepository preferredLoginModeRepository = MockPreferredLoginModeRepository();
-  InvitePrenomRepository invitePrenomRepository = MockInvitePrenomRepository();
   OnboardingRepository onboardingRepository = MockOnboardingRepository();
   FirstLaunchOnboardingRepository firstLaunchOnboardingRepository = MockFirstLaunchOnboardingRepository();
   PieceJointeUseCase pieceJointeUseCase = MockPieceJointeUseCase();
@@ -250,7 +248,6 @@ class TestStoreFactory {
       monSuiviRepository,
       campagneRecrutementRepository,
       preferredLoginModeRepository,
-      invitePrenomRepository,
       onboardingRepository,
       firstLaunchOnboardingRepository,
       pieceJointeUseCase,

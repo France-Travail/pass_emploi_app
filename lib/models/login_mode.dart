@@ -1,7 +1,6 @@
 enum LoginMode {
   MILO("MILO"),
   POLE_EMPLOI("POLE_EMPLOI"),
-  INVITE("INVITE"),
   DEMO_PE("DEMO_PE"),
   DEMO_MILO("DEMO_MILO");
 
@@ -20,6 +19,4 @@ extension LoginModeExtension on LoginMode? {
   bool isPe() => this == LoginMode.DEMO_PE || this == LoginMode.POLE_EMPLOI;
 
   bool isMiLo() => this == LoginMode.DEMO_MILO || this == LoginMode.MILO;
-
-  bool isInvite() => this == LoginMode.INVITE;
 }

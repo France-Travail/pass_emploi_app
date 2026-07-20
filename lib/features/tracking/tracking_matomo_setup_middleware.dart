@@ -53,7 +53,6 @@ extension on User {
     return switch (loginMode) {
       LoginMode.MILO => "Mission Locale",
       LoginMode.POLE_EMPLOI => "Pôle emploi",
-      LoginMode.INVITE => "Invité",
       LoginMode.DEMO_PE => "Mode demo",
       LoginMode.DEMO_MILO => "Mode demo",
     };

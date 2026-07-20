@@ -337,17 +337,6 @@ class Strings {
   static String loginPoleEmploi = "France Travail";
   static String loginMissionLocale = "Mission Locale";
   static String loginAction = "Se connecter";
-  static String loginInviteAction = "Continuer en tant qu'invité";
-
-  // Mode invité
-  static String invitePrenomTitle = "Votre prénom";
-  static String invitePrenomSubtitle = "Choisissez le prénom qui sera affiché dans l'application.";
-  static String invitePrenomHint = "Votre prénom";
-  static String invitePrenomValidate = "Valider";
-  static String invitePrenomLoadError = "Impossible de récupérer votre prénom.";
-  static String invitePrenomUpdateError = "La mise à jour a échoué. Réessayez.";
-  static String invitePrenomUpdated(String prenom) => "Enregistré. Bonjour $prenom !";
-  static String invitePrenomNextSteps = "La suite du parcours invité reste à développer.";
   static String logoutAction = "Se déconnecter";
 
   // Card and subcomponents

@@ -6,7 +6,6 @@ import 'package:pass_emploi_app/features/login/login_state.dart';
 import 'package:pass_emploi_app/features/tutorial/tutorial_state.dart';
 import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
-import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/presentation/main_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/external_links.dart';
@@ -14,7 +13,7 @@ import 'package:pass_emploi_app/utils/platform.dart';
 import 'package:pass_emploi_app/utils/store_extensions.dart';
 import 'package:redux/redux.dart';
 
-enum RouterPageDisplayState { splash, onboarding, login, cgu, main, tutorial, invitePrenom }
+enum RouterPageDisplayState { splash, onboarding, login, cgu, main, tutorial }
 
 class RouterPageViewModel extends Equatable {
   final RouterPageDisplayState routerPageDisplayState;
@@ -79,11 +78,6 @@ RouterPageDisplayState _routerPageDisplayState(Store<AppState> store) {
   }
 
   if (loginState is LoginSuccessState) {
-    // Le parcours invité s'arrête à l'écran prénom : ni CGU ni tutoriel, qui
-    // sont pensés pour un vrai compte. La suite reste à développer.
-    if (loginState.user.loginMode.isInvite()) {
-      return RouterPageDisplayState.invitePrenom;
-    }
     if (cguState is CguNeverAcceptedState || cguState is CguUpdateRequiredState) {
       return RouterPageDisplayState.cgu;
     } else if (tutoState is ShowTutorialState) {

@@ -7,12 +7,6 @@ class AuthAccessChecker {
   late Store<AppState> _store;
 
   void logoutUserIfTokenIsExpired(String? message, int statusCode) {
-    // L'invité n'existe pas dans la table jeune : les endpoints jeune lui
-    // répondent légitimement `auth_user_not_found`. C'est un droit manquant,
-    // pas une session morte -> le déconnecter ferait perdre son compte, qu'il
-    // ne peut pas récupérer (aucune identité pour se reconnecter).
-    if (_store.state.isInviteLoginMode()) return;
-
     if (message?.containsExpiredToken() == true) {
       Log.i("Logout user on token expired: $message.");
       _store.dispatch(RequestLogoutAction(LogoutReason.apiResponse401));

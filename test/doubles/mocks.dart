@@ -38,7 +38,6 @@ import 'package:pass_emploi_app/repositories/offres_suivies_repository.dart';
 import 'package:pass_emploi_app/repositories/onboarding_repository.dart';
 import 'package:pass_emploi_app/repositories/piece_jointe_repository.dart';
 import 'package:pass_emploi_app/repositories/preferences_repository.dart';
-import 'package:pass_emploi_app/repositories/invite_prenom_repository.dart';
 import 'package:pass_emploi_app/repositories/preferred_login_mode_repository.dart';
 import 'package:pass_emploi_app/repositories/remote_campagne_accueil_repository.dart';
 import 'package:pass_emploi_app/repositories/remote_config_repository.dart';
@@ -231,13 +230,6 @@ class MockCampagneRecrutementRepository extends Mock implements CampagneRecrutem
 
   void withShouldShowCampagneRecrutement(bool value) {
     when(() => shouldShowCampagneRecrutement()).thenAnswer((_) async => value);
-  }
-}
-
-class MockInvitePrenomRepository extends Mock implements InvitePrenomRepository {
-  MockInvitePrenomRepository() {
-    when(() => getPrenom(any())).thenAnswer((_) async => 'Invité');
-    when(() => updatePrenom(any(), any())).thenAnswer((_) async => true);
   }
 }
 

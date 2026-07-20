@@ -53,7 +53,6 @@ import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_state.dar
 import 'package:pass_emploi_app/features/onboarding/onboarding_state.dart';
 import 'package:pass_emploi_app/features/preferences/preferences_state.dart';
 import 'package:pass_emploi_app/features/preferences/update/preferences_update_state.dart';
-import 'package:pass_emploi_app/features/invite_prenom/invite_prenom_state.dart';
 import 'package:pass_emploi_app/features/preferred_login_mode/preferred_login_mode_state.dart';
 import 'package:pass_emploi_app/features/rating/rating_state.dart';
 import 'package:pass_emploi_app/features/recherche/recherche_state.dart';
@@ -156,7 +155,6 @@ class AppState extends Equatable {
   final ConnectivityState connectivityState;
   final MonSuiviState monSuiviState;
   final PreferredLoginModeState preferredLoginModeState;
-  final InvitePrenomState invitePrenomState;
   final OnboardingState onboardingState;
   final FirstLaunchOnboardingState firstLaunchOnboardingState;
   final MessageImportantState messageImportantState;
@@ -246,7 +244,6 @@ class AppState extends Equatable {
     required this.connectivityState,
     required this.monSuiviState,
     required this.preferredLoginModeState,
-    required this.invitePrenomState,
     required this.onboardingState,
     required this.firstLaunchOnboardingState,
     required this.messageImportantState,
@@ -337,7 +334,6 @@ class AppState extends Equatable {
     final ConnectivityState? connectivityState,
     final MonSuiviState? monSuiviState,
     final PreferredLoginModeState? preferredLoginModeState,
-    final InvitePrenomState? invitePrenomState,
     final OnboardingState? onboardingState,
     final FirstLaunchOnboardingState? firstLaunchOnboardingState,
     final MessageImportantState? messageImportantState,
@@ -427,7 +423,6 @@ class AppState extends Equatable {
       connectivityState: connectivityState ?? this.connectivityState,
       monSuiviState: monSuiviState ?? this.monSuiviState,
       preferredLoginModeState: preferredLoginModeState ?? this.preferredLoginModeState,
-      invitePrenomState: invitePrenomState ?? this.invitePrenomState,
       onboardingState: onboardingState ?? this.onboardingState,
       firstLaunchOnboardingState: firstLaunchOnboardingState ?? this.firstLaunchOnboardingState,
       messageImportantState: messageImportantState ?? this.messageImportantState,
@@ -521,7 +516,6 @@ class AppState extends Equatable {
       connectivityState: ConnectivityState.notInitialized(),
       monSuiviState: MonSuiviNotInitializedState(),
       preferredLoginModeState: PreferredLoginModeNotInitializedState(),
-      invitePrenomState: InvitePrenomNotInitializedState(),
       onboardingState: OnboardingState(),
       firstLaunchOnboardingState: FirstLaunchOnboardingNotInitializedState(),
       messageImportantState: MessageImportantNotInitializedState(),
@@ -648,8 +642,6 @@ extension AppStateUser on AppState {
   bool isMiloLoginMode() => user()?.loginMode.isMiLo() ?? false;
 
   bool isPeLoginMode() => user()?.loginMode.isPe() ?? false;
-
-  bool isInviteLoginMode() => user()?.loginMode.isInvite() ?? false;
 
   Accompagnement accompagnement() => user()?.accompagnement ?? Accompagnement.cej;
 

@@ -53,7 +53,6 @@ import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_reducer.d
 import 'package:pass_emploi_app/features/onboarding/onboarding_reducer.dart';
 import 'package:pass_emploi_app/features/preferences/preferences_reducer.dart';
 import 'package:pass_emploi_app/features/preferences/update/preferences_update_reducer.dart';
-import 'package:pass_emploi_app/features/invite_prenom/invite_prenom_reducer.dart';
 import 'package:pass_emploi_app/features/preferred_login_mode/preferred_login_mode_reducer.dart';
 import 'package:pass_emploi_app/features/rating/rating_reducer.dart';
 import 'package:pass_emploi_app/features/recherche/emploi/emploi_criteres_recherche.dart';
@@ -200,7 +199,6 @@ AppState reducer(AppState current, dynamic action) {
     connectivityState: connectivityReducer(current.connectivityState, action),
     monSuiviState: monSuiviReducer(current.monSuiviState, action),
     preferredLoginModeState: preferredLoginModeReducer(current.preferredLoginModeState, action),
-    invitePrenomState: invitePrenomReducer(current.invitePrenomState, action),
     onboardingState: onboardingReducer(current.onboardingState, action),
     firstLaunchOnboardingState: firstLaunchOnboardingReducer(current.firstLaunchOnboardingState, action),
     messageImportantState: messageImportantReducer(current.messageImportantState, action),
