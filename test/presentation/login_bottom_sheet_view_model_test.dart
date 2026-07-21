@@ -25,11 +25,10 @@ void main() {
         // Then
         expect(viewModel.loginButtons, [
           LoginButtonViewModelPoleEmploi(store),
-          LoginButtonViewModelInvite(store),
         ]);
       });
 
-      test("view model when brand is pass emploi and flavor is staging should display pole emploi button", () {
+      test("view model when brand is pass emploi and flavor is staging should display pole emploi and invite", () {
         // Given
         final store = givenState(configuration(flavor: Flavor.STAGING, brand: Brand.passEmploi))
             .copyWith(loginState: UserNotLoggedInState())
@@ -64,7 +63,7 @@ void main() {
         ]);
       });
 
-      test("view model when flavor is prod and brand CEJ should show 3 buttons : pole emploi, mission locale and invite", () {
+      test("view model when flavor is prod and brand CEJ should show pole emploi and mission locale only", () {
         // Given
         final store = givenState(configuration(flavor: Flavor.PROD, brand: Brand.cej))
             .copyWith(loginState: UserNotLoggedInState())
@@ -77,7 +76,6 @@ void main() {
         expect(viewModel.loginButtons, [
           LoginButtonViewModelPoleEmploi(store),
           LoginButtonViewModelMissionLocale(store),
-          LoginButtonViewModelInvite(store),
         ]);
       });
 
@@ -109,7 +107,7 @@ void main() {
 
       test('View model triggers RequestLoginAction with INVITE mode when invite login is performed', () {
         // Given
-        final store = StoreSpy();
+        final store = StoreSpy.withState(givenState(configuration(flavor: Flavor.STAGING, brand: Brand.passEmploi)));
         final viewModel = LoginBottomSheetViewModel.create(store);
 
         // When
