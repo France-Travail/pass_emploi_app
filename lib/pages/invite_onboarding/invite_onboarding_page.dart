@@ -15,6 +15,7 @@ import 'package:pass_emploi_app/presentation/invite_onboarding/invite_onboarding
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/communes_repository.dart';
 import 'package:pass_emploi_app/repositories/invite_onboarding_repository.dart';
+import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/secure_storage_exception_handler_decorator.dart';
@@ -45,8 +46,9 @@ class _InviteOnboardingPageState extends State<InviteOnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Theme(
-      data: DsfrThemeData.light(),
+      data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
       child: ListenableBuilder(
         listenable: _form,
         builder: (context, _) {
@@ -131,9 +133,33 @@ class _QuestionnaireBody extends StatelessWidget {
         Expanded(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(Margins.spacing_base),
-            child: KeyedSubtree(
-              key: ValueKey(form.step),
-              child: _StepContent(form: form, communesRepository: communesRepository),
+            child: AnimatedSwitcher(
+              duration: AnimationDurations.slow,
+              switchInCurve: Curves.linear,
+              switchOutCurve: Curves.linear,
+              layoutBuilder: (currentChild, previousChildren) {
+                return Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    ...previousChildren,
+                    if (currentChild != null) currentChild,
+                  ],
+                );
+              },
+              // Fade-out puis vide puis fade-in : pas de superposition des textes.
+              transitionBuilder: (child, animation) {
+                return FadeTransition(
+                  opacity: CurvedAnimation(
+                    parent: animation,
+                    curve: const Interval(0.5, 1.0, curve: Curves.easeIn),
+                  ),
+                  child: child,
+                );
+              },
+              child: KeyedSubtree(
+                key: ValueKey(form.step),
+                child: _StepContent(form: form, communesRepository: communesRepository),
+              ),
             ),
           ),
         ),

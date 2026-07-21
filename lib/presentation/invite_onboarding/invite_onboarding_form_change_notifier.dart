@@ -258,8 +258,44 @@ class InviteOnboardingFormChangeNotifier extends ChangeNotifier {
   }
 
   Future<void> skipStep() async {
-    _reloadDraftForStep(step);
+    await _clearCurrentStep();
     _goNext();
+  }
+
+  Future<void> _clearCurrentStep() async {
+    switch (step) {
+      case InviteOnboardingStep.prenom:
+        draftPrenom = '';
+        savedAnswers = savedAnswers.copyWith(clearPrenom: true);
+      case InviteOnboardingStep.dateNaissance:
+        draftBirthDay = '';
+        draftBirthMonth = '';
+        draftBirthYear = '';
+        savedAnswers = savedAnswers.copyWith(clearDateNaissance: true);
+      case InviteOnboardingStep.habitation:
+        draftHabitation = null;
+        draftHabitationQuery = '';
+        savedAnswers = savedAnswers.copyWith(clearHabitation: true);
+      case InviteOnboardingStep.situation:
+        draftSituation = null;
+        savedAnswers = savedAnswers.copyWith(clearSituation: true);
+      case InviteOnboardingStep.objectifs:
+        draftObjectifs = {};
+        savedAnswers = savedAnswers.copyWith(objectifs: {});
+      case InviteOnboardingStep.domaine:
+        draftDomaine = '';
+        savedAnswers = savedAnswers.copyWith(clearDomaine: true, domaineInconnu: false);
+      case InviteOnboardingStep.villeRecherche:
+        draftVilleRecherche = null;
+        draftVilleQuery = '';
+        savedAnswers = savedAnswers.copyWith(clearVilleRecherche: true);
+      case InviteOnboardingStep.freins:
+        draftFreins = {};
+        savedAnswers = savedAnswers.copyWith(freins: {});
+      case InviteOnboardingStep.loader:
+        return;
+    }
+    await _repository.saveAnswers(savedAnswers);
   }
 
   Future<void> selectHabitationAndContinue(InviteCommune commune) async {
