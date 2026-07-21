@@ -7,7 +7,6 @@ import 'package:pass_emploi_app/features/login/login_state.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/invite_prenom_repository.dart';
-import 'package:redux/src/store.dart';
 
 import '../../doubles/fixtures.dart';
 import '../../utils/test_setup.dart';
