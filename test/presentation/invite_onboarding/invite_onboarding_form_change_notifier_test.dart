@@ -54,14 +54,28 @@ void main() {
       verify(() => repository.saveAnswers(any())).called(1);
     });
 
-    test('skip does not save current draft prenom', () async {
+    test('skip discards draft prenom and goes to next step', () async {
       form.updatePrenom('Léa');
 
       await form.skipStep();
 
       expect(form.step, InviteOnboardingStep.dateNaissance);
+      expect(form.draftPrenom, isEmpty);
       expect(form.savedAnswers.prenom, isNull);
-      verifyNever(() => repository.saveAnswers(any()));
+      verify(() => repository.saveAnswers(any())).called(1);
+    });
+
+    test('skip clears previously saved prenom when coming back', () async {
+      form.updatePrenom('Léa');
+      await form.continueStep();
+      form.goBack();
+      form.updatePrenom('');
+
+      await form.skipStep();
+
+      expect(form.step, InviteOnboardingStep.dateNaissance);
+      expect(form.savedAnswers.prenom, isNull);
+      expect(form.draftPrenom, isEmpty);
     });
 
     test('back from step 2 returns to prenom with saved data', () async {
