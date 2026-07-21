@@ -14,7 +14,7 @@ import 'package:pass_emploi_app/utils/platform.dart';
 import 'package:pass_emploi_app/utils/store_extensions.dart';
 import 'package:redux/redux.dart';
 
-enum RouterPageDisplayState { splash, onboarding, login, cgu, main, tutorial, invitePrenom }
+enum RouterPageDisplayState { splash, onboarding, login, cgu, main, tutorial, inviteOnboarding }
 
 class RouterPageViewModel extends Equatable {
   final RouterPageDisplayState routerPageDisplayState;
@@ -79,10 +79,9 @@ RouterPageDisplayState _routerPageDisplayState(Store<AppState> store) {
   }
 
   if (loginState is LoginSuccessState) {
-    // Le parcours invité s'arrête à l'écran prénom : ni CGU ni tutoriel, qui
-    // sont pensés pour un vrai compte. La suite reste à développer.
+    // Parcours invité : questionnaire local, sans CGU ni tutoriel.
     if (loginState.user.loginMode.isInvite()) {
-      return RouterPageDisplayState.invitePrenom;
+      return RouterPageDisplayState.inviteOnboarding;
     }
     if (cguState is CguNeverAcceptedState || cguState is CguUpdateRequiredState) {
       return RouterPageDisplayState.cgu;
