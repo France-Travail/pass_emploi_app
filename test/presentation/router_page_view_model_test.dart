@@ -4,8 +4,10 @@ import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_state.dart';
 import 'package:pass_emploi_app/features/login/login_state.dart';
 import 'package:pass_emploi_app/features/tutorial/tutorial_state.dart';
+import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/cgu.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/tutorial/tutorial.dart';
 import 'package:pass_emploi_app/models/version.dart';
 import 'package:pass_emploi_app/presentation/main_page_view_model.dart';
@@ -322,6 +324,18 @@ void main() {
       final viewModel = RouterPageViewModel.create(store, Platform.IOS);
 
       expect(viewModel.routerPageDisplayState, RouterPageDisplayState.cgu);
+    });
+
+    test('should show invite onboarding when user is logged in as invite', () {
+      final store =
+          givenState() //
+              .copyWith(loginState: successUserState(loginMode: LoginMode.INVITE, accompagnement: Accompagnement.cej))
+              .withFirstLaunchOnboardingSuccessState(false)
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.inviteOnboarding);
     });
   });
 

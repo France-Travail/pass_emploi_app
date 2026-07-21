@@ -29,7 +29,7 @@ List<LoginButtonViewModel> _loginButtons(Store<AppState> store, Flavor flavor, B
   return [
     LoginButtonViewModelPoleEmploi(store),
     if (brand == Brand.cej) LoginButtonViewModelMissionLocale(store),
-    LoginButtonViewModelInvite(store),
+    if (flavor == Flavor.STAGING) LoginButtonViewModelInvite(store),
   ];
 }
 
