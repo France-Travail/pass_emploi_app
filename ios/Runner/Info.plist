@@ -74,6 +74,8 @@
 		<false />
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true />
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>Nous utilisons votre position pour vous proposer des aides et offres près de chez vous.</string>
 		<key>NSCameraUsageDescription</key>
 		<string>Our app uses the camera to capture photos and send them to your advisor.</string>
 		<key>NSMicrophoneUsageDescription</key>
