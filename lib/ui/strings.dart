@@ -337,7 +337,120 @@ class Strings {
   static String loginPoleEmploi = "France Travail";
   static String loginMissionLocale = "Mission Locale";
   static String loginAction = "Se connecter";
+  static String loginInviteAction = "Continuer en tant qu'invité";
+
+  // Mode invité
+  static String invitePrenomTitle = "Votre prénom";
+  static String invitePrenomSubtitle = "Choisissez le prénom qui sera affiché dans l'application.";
+  static String invitePrenomHint = "Votre prénom";
+  static String invitePrenomValidate = "Valider";
+  static String invitePrenomLoadError = "Impossible de récupérer votre prénom.";
+  static String invitePrenomUpdateError = "La mise à jour a échoué. Réessayez.";
+  static String invitePrenomUpdated(String prenom) => "Enregistré. Bonjour $prenom !";
+  static String invitePrenomNextSteps = "La suite du parcours invité reste à développer.";
   static String logoutAction = "Se déconnecter";
+
+  // Onboarding invité
+  static String inviteOnboardingBack = "Retour";
+  static String inviteOnboardingContinue = "Continuer";
+  static String inviteOnboardingSkip = "Passer cette étape";
+  static String inviteOnboardingStepOf(int current, int total) => "Étape $current sur $total";
+
+  static String inviteOnboardingPrenomTitle = "Ton prénom";
+  static String inviteOnboardingPrenomSubtitle = "Juste ton prénom, pour te parler normalement. Rien d'autre. 🙂";
+  static String inviteOnboardingPrenomLabel = "Ton prénom";
+
+  static String inviteOnboardingBirthdateTitle = "Ta date de naissance";
+  static String inviteOnboardingBirthdateGreeting(String? prenom) {
+    final trimmed = prenom?.trim() ?? '';
+    if (trimmed.isEmpty) return "Salut ! L'app est réservée aux 14-25 ans.";
+    return "Salut $trimmed ! L'app est réservée aux 14-25 ans.";
+  }
+
+  static String inviteOnboardingBirthdateSubtitle =
+      "Cette information nous sert à adapter les aides et dispositif auxquels tu as droit 🎂";
+  static String inviteOnboardingBirthdateLabel = "Date de naissance";
+  static String inviteOnboardingBirthdateDayLabel = "Jour";
+  static String inviteOnboardingBirthdateMonthLabel = "Mois";
+  static String inviteOnboardingBirthdateYearLabel = "Année";
+
+  static String inviteOnboardingHabitationTitle = "Où habites-tu ?";
+  static String inviteOnboardingHabitationSubtitle = "Pour te proposer des aides ou dispositif près de chez toi";
+  static String inviteOnboardingHabitationLabel = "Ville ou code postal";
+  static String inviteOnboardingGeolocate = "Me géolocaliser";
+
+  static String inviteOnboardingSituationTitle = "Où en es-tu ?";
+  static String inviteOnboardingSituationSubtitle = "Une seule réponse, choisis celle qui te correspond le plus.";
+  static String inviteOnboardingSituationCollege = "Au collège";
+  static String inviteOnboardingSituationLycee = "Au lycée";
+  static String inviteOnboardingSituationEtudes = "En études supérieures";
+  static String inviteOnboardingSituationEmploi = "En emploi";
+  static String inviteOnboardingSituationAutre = "Autre situation";
+
+  static String inviteOnboardingObjectifsTitle = "Comment peux-t-on t'aider ?";
+  static String inviteOnboardingObjectifsSubtitle =
+      "Sélectionne tout ce qui t'intéresse. Tu peux en choisir plusieurs.";
+  static String inviteOnboardingObjectifOrienter = "M'orienter";
+  static String inviteOnboardingObjectifDecouvrirMetiers = "Découvrir des métiers";
+  static String inviteOnboardingObjectifFormer = "Me former, me qualifier";
+  static String inviteOnboardingObjectifStage = "Trouver un stage, une immersion";
+  static String inviteOnboardingObjectifAlternance = "Trouver une alternance";
+  static String inviteOnboardingObjectifEmploi = "Trouver un emploi";
+  static String inviteOnboardingObjectifEngager = "M'engager";
+  static String inviteOnboardingObjectifMobilite = "Faire une mobilité internationale";
+  static String inviteOnboardingObjectifAccompagne = "Être accompagné dans mes démarches";
+  static String inviteOnboardingObjectifCreerActivite = "Créer mon activité";
+  static String inviteOnboardingObjectifVieQuotidienne = "Vie quotidienne";
+
+  static String inviteOnboardingDomaineTitle = "Dans quel métier ou domaine d'activité ?";
+  static String inviteOnboardingDomaineSubtitle =
+      "Un métier ou un secteur en tête ? Ça nous aide à te suggérer les bonnes offres.";
+  static String inviteOnboardingDomaineLabel = "Métier ou secteur";
+  static String inviteOnboardingDomaineUnknown = "🤔 Je ne sais pas encore";
+
+  static String inviteOnboardingVilleTitle = "Dans quelle ville cherches-tu ?";
+  static String inviteOnboardingVilleSubtitle = "Ta ville et jusqu'où tu es prêt·e à te déplacer.";
+  static String inviteOnboardingVilleLabel = "Ville ou code postal";
+  static String inviteOnboardingVilleOr = "Ou";
+  static String inviteOnboardingRayonLabel = "Dans un rayon de recherche";
+  static String inviteOnboardingRayonDescription(int km) => "de $km km";
+  static String inviteOnboardingRayonValue(int km) => "$km";
+
+  static String inviteOnboardingFreinsTitle = "Quelles sont tes contraintes ?";
+  static String inviteOnboardingFreinsSubtitle = "Sélectionne ce qui te freine. Tu peux en choisir plusieurs";
+  static String inviteOnboardingFreinPasDePermis = "Pas de permis";
+  static String inviteOnboardingFreinPasDeTransport = "Pas de moyens de transport";
+  static String inviteOnboardingFreinPasDeLogement = "Pas de logement stable";
+  static String inviteOnboardingFreinManqueConfiance = "Manque de confiance";
+  static String inviteOnboardingFreinFinDeMois = "Fin de mois difficile";
+  static String inviteOnboardingFreinPasDeDiplome = "Pas de diplôme";
+  static String inviteOnboardingFreinPeuExperience = "Peu d'expérience professionnelle";
+  static String inviteOnboardingFreinHandicap = "Situation de handicap";
+  static String inviteOnboardingFreinSante = "Un problème de santé";
+  static String inviteOnboardingFreinGardeEnfant = "Garde d'enfant";
+  static String inviteOnboardingFreinNumerique = "Difficulté avec le numérique";
+  static String inviteOnboardingFreinFrancais = "Difficulté avec le Français";
+  static String inviteOnboardingFreinAutre = "Autre situation";
+  static String inviteOnboardingFreinRienNeMeBloque = "Rien ne me bloque";
+
+  static String inviteOnboardingLoaderTitle = "On construit ton plan d'action";
+  static String inviteOnboardingLoaderSubtitle =
+      "Quelques secondes le temps de croiser tes réponses avec nos solutions.";
+  static String inviteOnboardingLoaderProfil = "Ton profil";
+  static String inviteOnboardingLoaderPrenom = "Prénom";
+  static String inviteOnboardingLoaderSituation = "Situation";
+  static String inviteOnboardingLoaderDomaine = "Domaine";
+  static String inviteOnboardingLoaderZone = "Zone";
+  static String inviteOnboardingLoaderZoneValue(String ville, int km) => "$ville · $km km";
+  static String inviteOnboardingLoaderObjectifsCount(int count) =>
+      "$count ${count == 1 ? 'objectif' : 'objectifs'}";
+  static String inviteOnboardingLoaderContraintesCount(int count) =>
+      "$count ${count == 1 ? 'contrainte' : 'contraintes'}";
+  static String inviteOnboardingLoaderStepRead = "On lit ton profil";
+  static String inviteOnboardingLoaderStepSolutions = "On sélectionne les solutions près de chez toi";
+  static String inviteOnboardingLoaderStepBuild = "On construit ton plan d'action";
+  static String inviteOnboardingLoaderStepOrder = "On ordonne tes prochaines actions";
+  static String inviteOnboardingGeolocateError = "Impossible de récupérer ta position. Réessaie ou saisis une ville.";
 
   // Card and subcomponents
   static const String emploiTag = "Offre d’emploi";

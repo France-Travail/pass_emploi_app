@@ -29,6 +29,7 @@ List<LoginButtonViewModel> _loginButtons(Store<AppState> store, Flavor flavor, B
   return [
     LoginButtonViewModelPoleEmploi(store),
     if (brand == Brand.cej) LoginButtonViewModelMissionLocale(store),
+    if (flavor == Flavor.STAGING) LoginButtonViewModelInvite(store),
   ];
 }
 
@@ -51,4 +52,9 @@ class LoginButtonViewModelPoleEmploi extends LoginButtonViewModel {
 class LoginButtonViewModelMissionLocale extends LoginButtonViewModel {
   LoginButtonViewModelMissionLocale(Store<AppState> store)
       : super(action: () => store.dispatch(RequestLoginAction(LoginMode.MILO)));
+}
+
+class LoginButtonViewModelInvite extends LoginButtonViewModel {
+  LoginButtonViewModelInvite(Store<AppState> store)
+      : super(action: () => store.dispatch(RequestLoginAction(LoginMode.INVITE)));
 }
