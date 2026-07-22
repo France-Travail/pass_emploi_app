@@ -17,21 +17,23 @@ class InviteOnboardingLoaderStep extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: Margins.spacing_base),
-          Center(
-            child: SizedBox(
-              width: 52,
-              height: 52,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  SizedBox.expand(
-                    child: CircularProgressIndicator(
-                      color: DsfrColorDecisions.backgroundActiveBlueFrance(context),
-                      backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
+          ExcludeSemantics(
+            child: Center(
+              child: SizedBox(
+                width: 52,
+                height: 52,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox.expand(
+                      child: CircularProgressIndicator(
+                        color: DsfrColorDecisions.backgroundActiveBlueFrance(context),
+                        backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
+                      ),
                     ),
-                  ),
-                  const Text('🎯', style: TextStyle(fontSize: 28)),
-                ],
+                    const Text('🎯', style: TextStyle(fontSize: 28)),
+                  ],
+                ),
               ),
             ),
           ),

@@ -25,16 +25,29 @@ class InviteOnboardingFreinsStep extends StatelessWidget {
         ...InviteFrein.values.map(
           (frein) => Padding(
             padding: const EdgeInsets.only(bottom: Margins.spacing_s),
-            child: InviteOnboardingCheckboxRich(
-              label: frein.label,
-              size: DsfrComponentSize.md,
-              value: form.draftFreins.contains(frein),
-              trailingIcon: InviteOnboardingEmojiIllustration(
-                emoji: frein.emoji,
-                backgroundColor: frein.illustrationColor,
-              ),
-              onChanged: (_) => form.toggleFrein(frein),
-            ),
+            child: frein.isExclusive
+                ? DsfrRadioRichButton<InviteFrein>(
+                    title: frein.label,
+                    value: frein,
+                    groupValue: form.draftFreins.contains(frein) ? frein : null,
+                    size: DsfrComponentSize.md,
+                    isExpanded: true,
+                    trailingIcon: InviteOnboardingEmojiIllustration(
+                      emoji: frein.emoji,
+                      backgroundColor: frein.illustrationColor,
+                    ),
+                    onChanged: (_) => form.toggleFrein(frein),
+                  )
+                : InviteOnboardingCheckboxRich(
+                    label: frein.label,
+                    size: DsfrComponentSize.md,
+                    value: form.draftFreins.contains(frein),
+                    trailingIcon: InviteOnboardingEmojiIllustration(
+                      emoji: frein.emoji,
+                      backgroundColor: frein.illustrationColor,
+                    ),
+                    onChanged: (_) => form.toggleFrein(frein),
+                  ),
           ),
         ),
       ],
