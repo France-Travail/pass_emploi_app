@@ -1,6 +1,7 @@
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/features/login/login_state.dart';
 import 'package:pass_emploi_app/features/tutorial/tutorial_actions.dart';
+import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/tutorial/tutorial_page.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -31,10 +32,12 @@ class TutorialMiddleware extends MiddlewareClass<AppState> {
   }
 
   bool _requestPoleEmploiTutorial(LoginMode loginMode) {
-    return [LoginMode.POLE_EMPLOI, LoginMode.DEMO_PE].contains(loginMode);
+    return [LoginMode.POLE_EMPLOI, LoginMode.DEMO_PE].contains(loginMode) ||
+        (loginMode.isInvite() && Brand.isPassEmploi());
   }
 
   bool _requestMiloTutorial(LoginMode loginMode) {
-    return [LoginMode.MILO, LoginMode.DEMO_MILO].contains(loginMode);
+    return [LoginMode.MILO, LoginMode.DEMO_MILO].contains(loginMode) ||
+        (loginMode.isInvite() && Brand.isCej());
   }
 }

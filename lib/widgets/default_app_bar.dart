@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/pages/notifications_center/notifications_center_page.dart';
+import 'package:pass_emploi_app/pages/profil/profil_page.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/font_sizes.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
-import 'package:pass_emploi_app/widgets/buttons/tertiary_icon_button.dart';
 import 'package:pass_emploi_app/widgets/profile_button.dart';
 
 class PrimarySliverAppbar extends StatelessWidget {
@@ -16,89 +15,76 @@ class PrimarySliverAppbar extends StatelessWidget {
   final bool withNewNotifications;
   const PrimarySliverAppbar({required this.title, required this.withNewNotifications});
 
-  static double expandedHeight = 90.0;
+  static const double toolbarHeight = 64.0;
 
   @override
   Widget build(BuildContext context) {
-    return SliverLayoutBuilder(
-      builder: (context, constraints) {
-        return SliverAppBar(
-          surfaceTintColor: AppColors.transparent,
-          expandedHeight: expandedHeight,
-          floating: false,
-          pinned: true,
-          automaticallyImplyLeading: false,
-          elevation: 0.2,
-          backgroundColor: AppColorsSpecifics.acceuilBgColor(context),
-          flexibleSpace: AutoFocusA11y(
-            child: ClipRRect(
-              child: FlexibleSpaceBar(
-                titlePadding: EdgeInsetsDirectional.only(
-                  start: 0,
-                  bottom: Margins.spacing_base,
-                ),
-                expandedTitleScale: FontSizes.xl / FontSizes.huge,
-                title: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Tooltip(
-                          message: title,
-                          excludeFromSemantics: true,
-                          child: AutoFocusA11y(
-                            child: Text(
-                              title,
-                              style: TextStyles.primaryAppBar(context)
-                                  .copyWith(
-                                    fontSize: A11yUtils.withTextScale(context) ? FontSizes.semi : FontSizes.huge,
-                                  )
-                                  .copyWith(color: AppColors.contentOnPrimary),
-                            ),
-                          ),
-                        ),
-                      ),
-                      _CentreNotif(withNewNotifications),
-                      SizedBox(width: Margins.spacing_s),
-                      ProfileButton(),
-                    ],
-                  ),
-                ),
-              ),
+    return SliverAppBar(
+      surfaceTintColor: Colors.transparent,
+      toolbarHeight: toolbarHeight,
+      floating: false,
+      pinned: true,
+      automaticallyImplyLeading: false,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+      titleSpacing: DsfrSpacings.s2w,
+      title: AutoFocusA11y(
+        child: Semantics(
+          header: true,
+          child: Tooltip(
+            message: title,
+            excludeFromSemantics: true,
+            child: Text(
+              title,
+              style: DsfrTextStyle.headline6(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-        );
-      },
+        ),
+      ),
+      actionsPadding: const EdgeInsets.only(right: DsfrSpacings.s2w),
+      actions: [
+        _CentreNotif(withNewNotifications),
+        DsfrButton(
+          icon: DsfrIcons.userAccountCircleLine,
+          iconSemanticLabel: Strings.profilButtonSemanticsLabel,
+          variant: DsfrButtonVariant.tertiaryWithoutBorder,
+          size: DsfrComponentSize.md,
+          onPressed: () => Navigator.of(context).push(ProfilPage.materialPageRoute()),
+        ),
+      ],
     );
   }
 }
 
 class _CentreNotif extends StatelessWidget {
-  const _CentreNotif(
-    this.withNewNotifications,
-  );
+  const _CentreNotif(this.withNewNotifications);
 
   final bool withNewNotifications;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
+      clipBehavior: Clip.none,
       children: [
-        TertiaryIconButton(
-          icon: AppIcons.notifications_outlined,
-          tooltip: Strings.notificationsCenterTooltip,
-          iconColor: AppColors.contentOnPrimary,
-          onTap: () => Navigator.of(context).push(NotificationCenter.route()),
+        DsfrButton(
+          icon: DsfrIcons.mediaNotification3Line,
+          iconSemanticLabel: Strings.notificationsCenterTooltip,
+          variant: DsfrButtonVariant.tertiaryWithoutBorder,
+          size: DsfrComponentSize.md,
+          onPressed: () => Navigator.of(context).push(NotificationCenter.route()),
         ),
         if (withNewNotifications)
           Positioned(
-            right: Margins.spacing_s,
-            top: Margins.spacing_s,
+            right: DsfrSpacings.s1w,
+            top: DsfrSpacings.s1w,
             child: Container(
-              width: 8,
-              height: 8,
+              width: DsfrSpacings.s1w,
+              height: DsfrSpacings.s1w,
               decoration: BoxDecoration(
-                color: AppColors.warning,
+                color: DsfrColorDecisions.backgroundFlatWarning(context),
                 shape: BoxShape.circle,
               ),
             ),

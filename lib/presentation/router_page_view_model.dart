@@ -3,6 +3,7 @@ import 'package:pass_emploi_app/features/cgu/cgu_state.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/first_launch_onboarding/first_launch_onboarding_state.dart';
 import 'package:pass_emploi_app/features/login/login_state.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
 import 'package:pass_emploi_app/features/tutorial/tutorial_state.dart';
 import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
@@ -14,7 +15,7 @@ import 'package:pass_emploi_app/utils/platform.dart';
 import 'package:pass_emploi_app/utils/store_extensions.dart';
 import 'package:redux/redux.dart';
 
-enum RouterPageDisplayState { splash, onboarding, login, cgu, main, tutorial, inviteOnboarding }
+enum RouterPageDisplayState { splash, onboarding, login, cgu, main, tutorial, onboardingQuestionnaire }
 
 class RouterPageViewModel extends Equatable {
   final RouterPageDisplayState routerPageDisplayState;
@@ -73,23 +74,28 @@ RouterPageDisplayState _routerPageDisplayState(Store<AppState> store) {
   final tutoState = store.state.tutorialState;
   final onboardingState = store.state.firstLaunchOnboardingState;
   final cguState = store.state.cguState;
+  final onboardingQuestionnaireState = store.state.onboardingQuestionnaireState;
 
   if (loginState is LoginNotInitializedState || onboardingState is FirstLaunchOnboardingNotInitializedState) {
     return RouterPageDisplayState.splash;
   }
 
   if (loginState is LoginSuccessState) {
-    // Parcours invité : questionnaire local, sans CGU ni tutoriel.
     if (loginState.user.loginMode.isInvite()) {
-      return RouterPageDisplayState.inviteOnboarding;
-    }
-    if (cguState is CguNeverAcceptedState || cguState is CguUpdateRequiredState) {
+      if (onboardingQuestionnaireState is OnboardingQuestionnaireNotInitializedState) {
+        return RouterPageDisplayState.splash;
+      }
+      if (onboardingQuestionnaireState is! OnboardingQuestionnaireSuccessState ||
+          !onboardingQuestionnaireState.finished) {
+        return RouterPageDisplayState.onboardingQuestionnaire;
+      }
+    } else if (cguState is CguNeverAcceptedState || cguState is CguUpdateRequiredState) {
       return RouterPageDisplayState.cgu;
-    } else if (tutoState is ShowTutorialState) {
-      return RouterPageDisplayState.tutorial;
-    } else {
-      return RouterPageDisplayState.main;
     }
+    if (tutoState is ShowTutorialState) {
+      return RouterPageDisplayState.tutorial;
+    }
+    return RouterPageDisplayState.main;
   }
 
   if (onboardingState is FirstLaunchOnboardingSuccessState && onboardingState.showOnboarding) {
@@ -102,7 +108,14 @@ RouterPageDisplayState _routerPageDisplayState(Store<AppState> store) {
 MainPageDisplayState _toMainPageDisplayState(Store<AppState> store) {
   final deepLink = store.getDeepLink();
   if (deepLink != null) {
-    return _toMainPageDisplayStateByDeepLink(deepLink);
+    final displayState = _toMainPageDisplayStateByDeepLink(deepLink);
+    if (store.state.isInviteLoginMode() &&
+        (displayState == MainPageDisplayState.monSuivi ||
+            displayState == MainPageDisplayState.chat ||
+            displayState == MainPageDisplayState.chatActualiteMissionLocale)) {
+      return MainPageDisplayState.accueil;
+    }
+    return displayState;
   }
   return MainPageDisplayState.accueil;
 }
