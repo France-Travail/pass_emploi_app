@@ -3,6 +3,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/features/tutorial/tutorial_actions.dart';
 import 'package:pass_emploi_app/features/tutorial/tutorial_state.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/tutorial/tutorial_page.dart';
 import 'package:pass_emploi_app/repositories/tutorial_repository.dart';
 
@@ -55,6 +56,25 @@ void main() {
     final successAppState = await successState;
     final dataState = (successAppState.tutorialState as ShowTutorialState);
     expect(dataState.pages, poleEmploiTutorials);
+  });
+
+  test("Returns tutorial pages list when user didn't see the tutorial and logged in as invite", () async {
+    // Given
+    when(() => repository.getMiloTutorial()).thenReturn(miloTutorials);
+    when(() => repository.shouldShowTutorial()).thenAnswer((_) async => true);
+    final store = givenState()
+        .loggedInUser(loginMode: LoginMode.INVITE)
+        .store((factory) => {factory.tutorialRepository = repository});
+
+    final successState = store.onChange.firstWhere((e) => e.tutorialState is ShowTutorialState);
+
+    // When
+    store.dispatch(LoginSuccessAction(mockUser(loginMode: LoginMode.INVITE)));
+
+    // Then
+    final successAppState = await successState;
+    final dataState = (successAppState.tutorialState as ShowTutorialState);
+    expect(dataState.pages, miloTutorials);
   });
 
   test("Returns not initialized tutorial state when user already read the tutorial before", () async {

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
-import 'package:pass_emploi_app/presentation/invite_onboarding/invite_onboarding_form_change_notifier.dart';
+import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_form_change_notifier.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 
-class InviteOnboardingBirthdateStep extends StatefulWidget {
-  const InviteOnboardingBirthdateStep({super.key, required this.form});
+class OnboardingQuestionnaireBirthdateStep extends StatefulWidget {
+  const OnboardingQuestionnaireBirthdateStep({super.key, required this.form});
 
-  final InviteOnboardingFormChangeNotifier form;
+  final OnboardingQuestionnaireFormChangeNotifier form;
 
   @override
-  State<InviteOnboardingBirthdateStep> createState() => _InviteOnboardingBirthdateStepState();
+  State<OnboardingQuestionnaireBirthdateStep> createState() => _OnboardingQuestionnaireBirthdateStepState();
 }
 
-class _InviteOnboardingBirthdateStepState extends State<InviteOnboardingBirthdateStep> {
+class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestionnaireBirthdateStep> {
   final FocusNode _dayFocus = FocusNode();
   final FocusNode _monthFocus = FocusNode();
   final FocusNode _yearFocus = FocusNode();
@@ -44,17 +44,17 @@ class _InviteOnboardingBirthdateStepState extends State<InviteOnboardingBirthdat
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          Strings.inviteOnboardingBirthdateGreeting(form.draftPrenom),
+          Strings.onboardingQuestionnaireBirthdateGreeting(form.draftPrenom),
           style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
         ),
         const SizedBox(height: Margins.spacing_s),
         Text(
-          Strings.inviteOnboardingBirthdateSubtitle,
+          Strings.onboardingQuestionnaireBirthdateSubtitle,
           style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
         ),
         const SizedBox(height: Margins.spacing_base),
         Text(
-          Strings.inviteOnboardingBirthdateLabel,
+          Strings.onboardingQuestionnaireBirthdateLabel,
           style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
         ),
         const SizedBox(height: Margins.spacing_s),
@@ -64,7 +64,7 @@ class _InviteOnboardingBirthdateStepState extends State<InviteOnboardingBirthdat
             Expanded(
               flex: 2,
               child: DsfrInput(
-                label: Strings.inviteOnboardingBirthdateDayLabel,
+                label: Strings.onboardingQuestionnaireBirthdateDayLabel,
                 initialValue: form.draftBirthDay,
                 focusNode: _dayFocus,
                 keyboardType: TextInputType.number,
@@ -82,7 +82,7 @@ class _InviteOnboardingBirthdateStepState extends State<InviteOnboardingBirthdat
             Expanded(
               flex: 2,
               child: DsfrInput(
-                label: Strings.inviteOnboardingBirthdateMonthLabel,
+                label: Strings.onboardingQuestionnaireBirthdateMonthLabel,
                 initialValue: form.draftBirthMonth,
                 focusNode: _monthFocus,
                 keyboardType: TextInputType.number,
@@ -99,7 +99,7 @@ class _InviteOnboardingBirthdateStepState extends State<InviteOnboardingBirthdat
             Expanded(
               flex: 3,
               child: DsfrInput(
-                label: Strings.inviteOnboardingBirthdateYearLabel,
+                label: Strings.onboardingQuestionnaireBirthdateYearLabel,
                 initialValue: form.draftBirthYear,
                 focusNode: _yearFocus,
                 keyboardType: TextInputType.number,

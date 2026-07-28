@@ -3,34 +3,34 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:pass_emploi_app/models/invite_onboarding_answers.dart';
-import 'package:pass_emploi_app/presentation/invite_onboarding/invite_onboarding_form_change_notifier.dart';
+import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
+import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_form_change_notifier.dart';
 import 'package:pass_emploi_app/repositories/communes_repository.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 
-class InviteOnboardingLocationStep extends StatefulWidget {
-  const InviteOnboardingLocationStep({
+class OnboardingQuestionnaireLocationStep extends StatefulWidget {
+  const OnboardingQuestionnaireLocationStep({
     super.key,
     required this.form,
     required this.communesRepository,
     required this.isHabitation,
   });
 
-  final InviteOnboardingFormChangeNotifier form;
+  final OnboardingQuestionnaireFormChangeNotifier form;
   final CommunesRepository communesRepository;
   final bool isHabitation;
 
   @override
-  State<InviteOnboardingLocationStep> createState() => _InviteOnboardingLocationStepState();
+  State<OnboardingQuestionnaireLocationStep> createState() => _OnboardingQuestionnaireLocationStepState();
 }
 
-class _InviteOnboardingLocationStepState extends State<InviteOnboardingLocationStep> {
-  List<InviteCommune> _suggestions = [];
+class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestionnaireLocationStep> {
+  List<QuestionnaireCommune> _suggestions = [];
   Timer? _debounce;
   late final TextEditingController _controller;
 
-  InviteOnboardingFormChangeNotifier get form => widget.form;
+  OnboardingQuestionnaireFormChangeNotifier get form => widget.form;
 
   @override
   void initState() {
@@ -40,7 +40,7 @@ class _InviteOnboardingLocationStepState extends State<InviteOnboardingLocationS
   }
 
   @override
-  void didUpdateWidget(covariant InviteOnboardingLocationStep oldWidget) {
+  void didUpdateWidget(covariant OnboardingQuestionnaireLocationStep oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.isHabitation != widget.isHabitation) {
       _controller.text = _currentQuery;
@@ -63,12 +63,12 @@ class _InviteOnboardingLocationStepState extends State<InviteOnboardingLocationS
 
   @override
   Widget build(BuildContext context) {
-    final label = widget.isHabitation ? Strings.inviteOnboardingHabitationLabel : Strings.inviteOnboardingVilleLabel;
+    final label = widget.isHabitation ? Strings.onboardingQuestionnaireHabitationLabel : Strings.onboardingQuestionnaireVilleLabel;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          widget.isHabitation ? Strings.inviteOnboardingHabitationSubtitle : Strings.inviteOnboardingVilleSubtitle,
+          widget.isHabitation ? Strings.onboardingQuestionnaireHabitationSubtitle : Strings.onboardingQuestionnaireVilleSubtitle,
           style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
         ),
         const SizedBox(height: Margins.spacing_base),
@@ -111,14 +111,14 @@ class _InviteOnboardingLocationStepState extends State<InviteOnboardingLocationS
         if (!widget.isHabitation) ...[
           const SizedBox(height: Margins.spacing_base),
           Text(
-            Strings.inviteOnboardingVilleOr,
+            Strings.onboardingQuestionnaireVilleOr,
             textAlign: TextAlign.center,
             style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
           ),
         ],
         const SizedBox(height: Margins.spacing_base),
         DsfrButton(
-          label: Strings.inviteOnboardingGeolocate,
+          label: Strings.onboardingQuestionnaireGeolocate,
           variant: DsfrButtonVariant.secondary,
           size: DsfrComponentSize.lg,
           icon: DsfrIcons.mapMapPin2Line,
@@ -134,14 +134,14 @@ class _InviteOnboardingLocationStepState extends State<InviteOnboardingLocationS
         if (!widget.isHabitation) ...[
           const SizedBox(height: Margins.spacing_l),
           DsfrSlider(
-            label: Strings.inviteOnboardingRayonLabel,
-            description: Strings.inviteOnboardingRayonDescription(form.draftRayonKm),
+            label: Strings.onboardingQuestionnaireRayonLabel,
+            description: Strings.onboardingQuestionnaireRayonDescription(form.draftRayonKm),
             value: form.draftRayonKm.toDouble(),
             min: 10,
             max: 100,
             divisions: 9,
             size: DsfrComponentSize.md,
-            valueLabelBuilder: (value) => Strings.inviteOnboardingRayonValue(value.round()),
+            valueLabelBuilder: (value) => Strings.onboardingQuestionnaireRayonValue(value.round()),
             showMinMaxLabels: true,
             onChanged: form.updateRayon,
           ),
@@ -175,7 +175,7 @@ class _InviteOnboardingLocationStepState extends State<InviteOnboardingLocationS
     });
   }
 
-  Future<void> _onCommuneSelected(InviteCommune commune) async {
+  Future<void> _onCommuneSelected(QuestionnaireCommune commune) async {
     setState(() => _suggestions = []);
     if (widget.isHabitation) {
       await form.selectHabitationAndContinue(commune);
@@ -189,7 +189,7 @@ class _InviteOnboardingLocationStepState extends State<InviteOnboardingLocationS
     try {
       final serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        form.setGeolocationError(Strings.inviteOnboardingGeolocateError);
+        form.setGeolocationError(Strings.onboardingQuestionnaireGeolocateError);
         return;
       }
       var permission = await Geolocator.checkPermission();
@@ -197,7 +197,7 @@ class _InviteOnboardingLocationStepState extends State<InviteOnboardingLocationS
         permission = await Geolocator.requestPermission();
       }
       if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
-        form.setGeolocationError(Strings.inviteOnboardingGeolocateError);
+        form.setGeolocationError(Strings.onboardingQuestionnaireGeolocateError);
         return;
       }
       final position = await Geolocator.getCurrentPosition();
@@ -206,7 +206,7 @@ class _InviteOnboardingLocationStepState extends State<InviteOnboardingLocationS
         longitude: position.longitude,
       );
       if (commune == null) {
-        form.setGeolocationError(Strings.inviteOnboardingGeolocateError);
+        form.setGeolocationError(Strings.onboardingQuestionnaireGeolocateError);
         return;
       }
       setState(() => _suggestions = []);
@@ -218,7 +218,7 @@ class _InviteOnboardingLocationStepState extends State<InviteOnboardingLocationS
       }
       form.setGeolocating(false);
     } catch (_) {
-      form.setGeolocationError(Strings.inviteOnboardingGeolocateError);
+      form.setGeolocationError(Strings.onboardingQuestionnaireGeolocateError);
     }
   }
 }

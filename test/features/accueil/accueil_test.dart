@@ -13,6 +13,7 @@ import 'package:pass_emploi_app/features/user_action/delete/user_action_delete_a
 import 'package:pass_emploi_app/features/user_action/update/user_action_update_actions.dart';
 import 'package:pass_emploi_app/models/accueil/accueil.dart';
 import 'package:pass_emploi_app/models/favori.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/repositories/accueil_repository.dart';
 
 import '../../doubles/dio_mock.dart';
@@ -58,6 +59,14 @@ void main() {
             .store((f) => {f.accueilRepository = AccueilRepositoryErrorStub()});
 
         sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldFail()]);
+      });
+
+      test('should not fetch when user is invite', () {
+        sut.givenStore = givenState() //
+            .loggedInUser(loginMode: LoginMode.INVITE)
+            .store((f) => {f.accueilRepository = AccueilRepositorySuccessStub()});
+
+        sut.thenExpectNever(_shouldLoad());
       });
     });
 

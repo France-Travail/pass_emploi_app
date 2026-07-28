@@ -32,6 +32,7 @@ class AccueilMiddleware extends MiddlewareClass<AppState> {
 
     final user = store.state.user();
     if (user == null) return;
+    if (user.loginMode.isInvite()) return;
 
     if (_needFetchingAccueil(currentPendingActionsCount, action)) {
       store.dispatch(AccueilLoadingAction());

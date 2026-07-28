@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/features/chat/status/chat_status_state.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/models/accompagnement.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/presentation/main_page_view_model.dart';
 
 import '../doubles/spies.dart';
@@ -93,6 +94,17 @@ void main() {
         MainTab.solutions,
         MainTab.evenements,
       ]);
+    });
+
+    test('invite', () {
+      final store = givenState().loggedInUser(loginMode: LoginMode.INVITE).store();
+      final viewModel = MainPageViewModel.create(store);
+      expect(viewModel.tabs, [
+        MainTab.accueil,
+        MainTab.solutions,
+        MainTab.evenements,
+      ]);
+      expect(viewModel.withChatBadge, isFalse);
     });
   });
 
