@@ -350,9 +350,8 @@ class _EmojiAvatar extends StatelessWidget {
   }
 }
 
-// Emojis/colors mirror QuestionnaireObjectif / QuestionnaireFrein in
-// onboarding_questionnaire_answers.dart, keyed by BayesImpactProfileMapper slugs
-// (Goal | Obstacle from 1jeune-des-solutions api-contracts).
+// Emojis/colors mirror QuestionnaireObjectif / QuestionnaireFrein themes
+// returned by the plan-action API (opaque theme slugs).
 String _emojiForTheme(String theme) => switch (theme) {
   // Goals
   'orientation' => '🧭',

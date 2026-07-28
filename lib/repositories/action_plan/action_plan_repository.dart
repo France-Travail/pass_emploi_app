@@ -5,7 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pass_emploi_app/crashlytics/crashlytics.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
-import 'package:pass_emploi_app/repositories/action_plan/bayes_impact_profile_mapper.dart';
+import 'package:pass_emploi_app/repositories/action_plan/action_plan_request_mapper.dart';
 
 class ActionPlanRepository {
   static const _planKey = 'actionPlan';
@@ -14,49 +14,30 @@ class ActionPlanRepository {
   final Dio _httpClient;
   final FlutterSecureStorage _preferences;
   final Crashlytics? _crashlytics;
-  final BayesImpactProfileMapper _mapper;
+  final ActionPlanRequestMapper _mapper;
 
-  ActionPlanRepository({
-    required String baseUrl,
-    required String apiKey,
-    required FlutterSecureStorage preferences,
-    Crashlytics? crashlytics,
-    Dio? httpClient,
-    BayesImpactProfileMapper mapper = const BayesImpactProfileMapper(),
-  }) : _preferences = preferences,
-       _crashlytics = crashlytics,
-       _mapper = mapper,
-       _httpClient =
-           httpClient ??
-           Dio(
-             BaseOptions(
-               baseUrl: baseUrl,
-               headers: {
-                 'Content-Type': 'application/json',
-                 'Authorization': 'Bearer $apiKey',
-                 'X-Api-Key': apiKey,
-               },
-             ),
-           );
+  ActionPlanRepository(
+    this._httpClient,
+    this._preferences, [
+    this._crashlytics,
+    this._mapper = const ActionPlanRequestMapper(),
+  ]);
 
-  Future<ActionPlan?> generate(OnboardingQuestionnaireAnswers answers) async {
+  Future<ActionPlan?> generate(String userId, OnboardingQuestionnaireAnswers answers) async {
     if (!answers.canGenerateActionPlan) return null;
-    const path = '/v1/action-plans';
+    final url = '/jeunes/$userId/plan-action';
     try {
-      final response = await _httpClient.post<Map<String, dynamic>>(
-        path,
-        data: {'profile': _mapper.toProfile(answers)},
-      );
-      final planJson = response.data?['plan'];
-      if (planJson is! Map<String, dynamic>) return null;
-      final plan = ActionPlan.fromJson(planJson);
+      final response = await _httpClient.post(url, data: _mapper.toRequest(answers));
+      final data = response.data;
+      if (data is! Map<String, dynamic>) return null;
+      final plan = ActionPlan.fromApiJson(data);
       final previousProgress = await getProgress();
       final retained = previousProgress.retainForPlan(plan);
       await savePlan(plan);
       await saveProgress(retained);
       return plan.applyProgress(doneIds: retained.doneActionIds, deletedIds: retained.deletedActionIds);
     } catch (e, stack) {
-      _crashlytics?.recordNonNetworkExceptionUrl(e, stack, path);
+      _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
       return null;
     }
   }

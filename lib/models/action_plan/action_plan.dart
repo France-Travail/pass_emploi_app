@@ -52,6 +52,23 @@ class ActionPlanAction extends Equatable {
     );
   }
 
+  factory ActionPlanAction.fromApiJson(Map<String, dynamic> json) {
+    return ActionPlanAction(
+      id: json['id'] as String,
+      label: json['libelle'] as String,
+      kind: switch (json['type'] as String?) {
+        'LIEN' => ActionPlanActionKind.link,
+        'NAVIGATION' => ActionPlanActionKind.app,
+        'CONSEIL' => ActionPlanActionKind.advice,
+        _ => ActionPlanActionKind.advice,
+      },
+      url: json['url'] as String?,
+      deepLink: json['destination'] as String?,
+      serviceName: json['nomService'] as String?,
+      serviceDescription: json['descriptionService'] as String?,
+    );
+  }
+
   Map<String, dynamic> toJson() => {
         'id': id,
         'label': label,
@@ -103,6 +120,18 @@ class ActionPlanObjective extends Equatable {
       theme: json['theme'] as String? ?? '',
       actions: actionsJson is List
           ? actionsJson.whereType<Map<String, dynamic>>().map(ActionPlanAction.fromJson).toList()
+          : const [],
+    );
+  }
+
+  factory ActionPlanObjective.fromApiJson(Map<String, dynamic> json) {
+    final actionsJson = json['actions'];
+    return ActionPlanObjective(
+      id: json['id'] as String,
+      title: json['titre'] as String,
+      theme: json['theme'] as String? ?? '',
+      actions: actionsJson is List
+          ? actionsJson.whereType<Map<String, dynamic>>().map(ActionPlanAction.fromApiJson).toList()
           : const [],
     );
   }
@@ -209,6 +238,19 @@ class ActionPlan extends Equatable {
       generatedAt: json['generatedAt'] != null ? DateTime.tryParse(json['generatedAt'] as String) : null,
       generator: json['generator'] as String?,
       model: json['model'] as String?,
+    );
+  }
+
+  factory ActionPlan.fromApiJson(Map<String, dynamic> json) {
+    final objectivesJson = json['objectives'];
+    return ActionPlan(
+      id: json['id'] as String,
+      greeting: json['accroche'] as String? ?? '',
+      objectives: objectivesJson is List
+          ? objectivesJson.whereType<Map<String, dynamic>>().map(ActionPlanObjective.fromApiJson).toList()
+          : const [],
+      generatedAt: json['genereLe'] != null ? DateTime.tryParse(json['genereLe'] as String) : null,
+      generator: json['generateur'] as String?,
     );
   }
 
