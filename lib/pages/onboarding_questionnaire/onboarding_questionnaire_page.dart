@@ -1,46 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
-import 'package:pass_emploi_app/pages/invite_onboarding/invite_onboarding_birthdate_step.dart';
-import 'package:pass_emploi_app/pages/invite_onboarding/invite_onboarding_domaine_step.dart';
-import 'package:pass_emploi_app/pages/invite_onboarding/invite_onboarding_freins_step.dart';
-import 'package:pass_emploi_app/pages/invite_onboarding/invite_onboarding_loader_step.dart';
-import 'package:pass_emploi_app/pages/invite_onboarding/invite_onboarding_location_step.dart';
-import 'package:pass_emploi_app/pages/invite_onboarding/invite_onboarding_objectifs_step.dart';
-import 'package:pass_emploi_app/pages/invite_onboarding/invite_onboarding_prenom_step.dart';
-import 'package:pass_emploi_app/pages/invite_onboarding/invite_onboarding_situation_step.dart';
-import 'package:pass_emploi_app/presentation/invite_onboarding/invite_onboarding_form_change_notifier.dart';
+import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
+import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_birthdate_step.dart';
+import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_domaine_step.dart';
+import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_freins_step.dart';
+import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_loader_step.dart';
+import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_location_step.dart';
+import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_objectifs_step.dart';
+import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_prenom_step.dart';
+import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_situation_step.dart';
+import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_form_change_notifier.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/communes_repository.dart';
-import 'package:pass_emploi_app/repositories/invite_onboarding_repository.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/utils/secure_storage_exception_handler_decorator.dart';
 
-class InviteOnboardingPage extends StatefulWidget {
+class OnboardingQuestionnairePage extends StatefulWidget {
   @override
-  State<InviteOnboardingPage> createState() => _InviteOnboardingPageState();
+  State<OnboardingQuestionnairePage> createState() => _OnboardingQuestionnairePageState();
 }
 
-class _InviteOnboardingPageState extends State<InviteOnboardingPage> {
-  late final InviteOnboardingFormChangeNotifier _form;
+class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePage> {
+  late final OnboardingQuestionnaireFormChangeNotifier _form;
   late final CommunesRepository _communesRepository;
+  bool _formInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    final storage = SecureStorageExceptionHandlerDecorator(FlutterSecureStorage());
-    _form = InviteOnboardingFormChangeNotifier(InviteOnboardingRepository(storage));
     _communesRepository = CommunesRepository();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_formInitialized) return;
+    _formInitialized = true;
+    final store = StoreProvider.of<AppState>(context);
+    _form = OnboardingQuestionnaireFormChangeNotifier(
+      loadAnswers: () async {
+        final questionnaireState = store.state.onboardingQuestionnaireState;
+        if (questionnaireState is OnboardingQuestionnaireSuccessState) return questionnaireState.answers;
+        return const OnboardingQuestionnaireAnswers();
+      },
+      saveAnswers: (answers) async {
+        store.dispatch(OnboardingQuestionnaireAnswersUpdatedAction(answers));
+      },
+    );
     _form.init();
   }
 
   @override
   void dispose() {
-    _form.dispose();
+    if (_formInitialized) _form.dispose();
     super.dispose();
   }
 
@@ -74,7 +91,7 @@ class _InviteOnboardingPageState extends State<InviteOnboardingPage> {
                         onPressed: _onBack,
                       ),
                       title: Text(
-                        Strings.inviteOnboardingBack,
+                        Strings.onboardingQuestionnaireBack,
                         style: DsfrTextStyle.bodyMdBold(
                           color: DsfrColorDecisions.textActionHighBlueFrance(context),
                         ),
@@ -86,7 +103,7 @@ class _InviteOnboardingPageState extends State<InviteOnboardingPage> {
                 child: _form.isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : _form.step.isLoader
-                    ? InviteOnboardingLoaderStep(answers: _form.savedAnswers)
+                    ? OnboardingQuestionnaireLoaderStep(answers: _form.savedAnswers)
                     : _QuestionnaireBody(
                         form: _form,
                         communesRepository: _communesRepository,
@@ -114,7 +131,7 @@ class _QuestionnaireBody extends StatelessWidget {
     required this.communesRepository,
   });
 
-  final InviteOnboardingFormChangeNotifier form;
+  final OnboardingQuestionnaireFormChangeNotifier form;
   final CommunesRepository communesRepository;
 
   @override
@@ -126,7 +143,7 @@ class _QuestionnaireBody extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
           child: DsfrStepper(
             currentStep: form.step.questionnaireIndex,
-            stepsCount: InviteOnboardingStep.questionnaireCount,
+            stepsCount: OnboardingQuestionnaireStep.questionnaireCount,
             stepTitle: _stepTitle(form.step),
           ),
         ),
@@ -168,30 +185,30 @@ class _QuestionnaireBody extends StatelessWidget {
     );
   }
 
-  String _stepTitle(InviteOnboardingStep step) => switch (step) {
-    InviteOnboardingStep.prenom => Strings.inviteOnboardingPrenomTitle,
-    InviteOnboardingStep.dateNaissance => Strings.inviteOnboardingBirthdateTitle,
-    InviteOnboardingStep.habitation => Strings.inviteOnboardingHabitationTitle,
-    InviteOnboardingStep.situation => Strings.inviteOnboardingSituationTitle,
-    InviteOnboardingStep.objectifs => Strings.inviteOnboardingObjectifsTitle,
-    InviteOnboardingStep.domaine => Strings.inviteOnboardingDomaineTitle,
-    InviteOnboardingStep.villeRecherche => Strings.inviteOnboardingVilleTitle,
-    InviteOnboardingStep.freins => Strings.inviteOnboardingFreinsTitle,
-    InviteOnboardingStep.loader => '',
+  String _stepTitle(OnboardingQuestionnaireStep step) => switch (step) {
+    OnboardingQuestionnaireStep.prenom => Strings.onboardingQuestionnairePrenomTitle,
+    OnboardingQuestionnaireStep.dateNaissance => Strings.onboardingQuestionnaireBirthdateTitle,
+    OnboardingQuestionnaireStep.habitation => Strings.onboardingQuestionnaireHabitationTitle,
+    OnboardingQuestionnaireStep.situation => Strings.onboardingQuestionnaireSituationTitle,
+    OnboardingQuestionnaireStep.objectifs => Strings.onboardingQuestionnaireObjectifsTitle,
+    OnboardingQuestionnaireStep.domaine => Strings.onboardingQuestionnaireDomaineTitle,
+    OnboardingQuestionnaireStep.villeRecherche => Strings.onboardingQuestionnaireVilleTitle,
+    OnboardingQuestionnaireStep.freins => Strings.onboardingQuestionnaireFreinsTitle,
+    OnboardingQuestionnaireStep.loader => '',
   };
 }
 
 class _BottomActions extends StatelessWidget {
   const _BottomActions({required this.form});
 
-  final InviteOnboardingFormChangeNotifier form;
+  final OnboardingQuestionnaireFormChangeNotifier form;
 
   @override
   Widget build(BuildContext context) {
     final hidePrimaryBecauseAutoAdvance =
-        form.step == InviteOnboardingStep.situation ||
-        (form.step == InviteOnboardingStep.habitation && form.draftHabitation == null) ||
-        (form.step == InviteOnboardingStep.villeRecherche && form.draftVilleRecherche == null);
+        form.step == OnboardingQuestionnaireStep.situation ||
+        (form.step == OnboardingQuestionnaireStep.habitation && form.draftHabitation == null) ||
+        (form.step == OnboardingQuestionnaireStep.villeRecherche && form.draftVilleRecherche == null);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(
@@ -205,7 +222,7 @@ class _BottomActions extends StatelessWidget {
         children: [
           if (!hidePrimaryBecauseAutoAdvance)
             DsfrButton(
-              label: Strings.inviteOnboardingContinue,
+              label: Strings.onboardingQuestionnaireContinue,
               variant: DsfrButtonVariant.primary,
               size: DsfrComponentSize.lg,
               onPressed: form.canContinue ? () => form.continueStep() : null,
@@ -213,7 +230,7 @@ class _BottomActions extends StatelessWidget {
           const SizedBox(height: Margins.spacing_s),
           Center(
             child: DsfrButton(
-              label: Strings.inviteOnboardingSkip,
+              label: Strings.onboardingQuestionnaireSkip,
               variant: DsfrButtonVariant.tertiaryWithoutBorder,
               size: DsfrComponentSize.lg,
               onPressed: () => form.skipStep(),
@@ -231,29 +248,29 @@ class _StepContent extends StatelessWidget {
     required this.communesRepository,
   });
 
-  final InviteOnboardingFormChangeNotifier form;
+  final OnboardingQuestionnaireFormChangeNotifier form;
   final CommunesRepository communesRepository;
 
   @override
   Widget build(BuildContext context) {
     return switch (form.step) {
-      InviteOnboardingStep.prenom => InviteOnboardingPrenomStep(form: form),
-      InviteOnboardingStep.dateNaissance => InviteOnboardingBirthdateStep(form: form),
-      InviteOnboardingStep.habitation => InviteOnboardingLocationStep(
+      OnboardingQuestionnaireStep.prenom => OnboardingQuestionnairePrenomStep(form: form),
+      OnboardingQuestionnaireStep.dateNaissance => OnboardingQuestionnaireBirthdateStep(form: form),
+      OnboardingQuestionnaireStep.habitation => OnboardingQuestionnaireLocationStep(
         form: form,
         communesRepository: communesRepository,
         isHabitation: true,
       ),
-      InviteOnboardingStep.situation => InviteOnboardingSituationStep(form: form),
-      InviteOnboardingStep.objectifs => InviteOnboardingObjectifsStep(form: form),
-      InviteOnboardingStep.domaine => InviteOnboardingDomaineStep(form: form),
-      InviteOnboardingStep.villeRecherche => InviteOnboardingLocationStep(
+      OnboardingQuestionnaireStep.situation => OnboardingQuestionnaireSituationStep(form: form),
+      OnboardingQuestionnaireStep.objectifs => OnboardingQuestionnaireObjectifsStep(form: form),
+      OnboardingQuestionnaireStep.domaine => OnboardingQuestionnaireDomaineStep(form: form),
+      OnboardingQuestionnaireStep.villeRecherche => OnboardingQuestionnaireLocationStep(
         form: form,
         communesRepository: communesRepository,
         isHabitation: false,
       ),
-      InviteOnboardingStep.freins => InviteOnboardingFreinsStep(form: form),
-      InviteOnboardingStep.loader => const SizedBox.shrink(),
+      OnboardingQuestionnaireStep.freins => OnboardingQuestionnaireFreinsStep(form: form),
+      OnboardingQuestionnaireStep.loader => const SizedBox.shrink(),
     };
   }
 }

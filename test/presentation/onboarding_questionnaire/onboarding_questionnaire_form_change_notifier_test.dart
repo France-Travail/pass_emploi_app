@@ -1,33 +1,31 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:pass_emploi_app/models/invite_onboarding_answers.dart';
-import 'package:pass_emploi_app/presentation/invite_onboarding/invite_onboarding_form_change_notifier.dart';
-import 'package:pass_emploi_app/repositories/invite_onboarding_repository.dart';
-
-class _MockInviteOnboardingRepository extends Mock implements InviteOnboardingRepository {}
+import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
+import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_form_change_notifier.dart';
 
 void main() {
-  late _MockInviteOnboardingRepository repository;
-  late InviteOnboardingFormChangeNotifier form;
-
-  setUpAll(() {
-    registerFallbackValue(const InviteOnboardingAnswers());
-  });
+  late OnboardingQuestionnaireAnswers storedAnswers;
+  late List<OnboardingQuestionnaireAnswers> savedCalls;
+  late OnboardingQuestionnaireFormChangeNotifier form;
 
   setUp(() {
-    repository = _MockInviteOnboardingRepository();
-    form = InviteOnboardingFormChangeNotifier(repository);
+    storedAnswers = const OnboardingQuestionnaireAnswers();
+    savedCalls = [];
+    form = OnboardingQuestionnaireFormChangeNotifier(
+      loadAnswers: () async => storedAnswers,
+      saveAnswers: (answers) async {
+        storedAnswers = answers;
+        savedCalls.add(answers);
+      },
+    );
   });
 
   group('init', () {
     test('starts at prenom step with prefilled saved answers', () async {
-      when(() => repository.getAnswers()).thenAnswer(
-        (_) async => const InviteOnboardingAnswers(prenom: 'Léa'),
-      );
+      storedAnswers = const OnboardingQuestionnaireAnswers(prenom: 'Léa');
 
       await form.init();
 
-      expect(form.step, InviteOnboardingStep.prenom);
+      expect(form.step, OnboardingQuestionnaireStep.prenom);
       expect(form.draftPrenom, 'Léa');
       expect(form.isLoading, false);
     });
@@ -35,8 +33,6 @@ void main() {
 
   group('continue / skip / back', () {
     setUp(() async {
-      when(() => repository.getAnswers()).thenAnswer((_) async => const InviteOnboardingAnswers());
-      when(() => repository.saveAnswers(any())).thenAnswer((_) async {});
       await form.init();
     });
 
@@ -49,9 +45,9 @@ void main() {
 
       await form.continueStep();
 
-      expect(form.step, InviteOnboardingStep.dateNaissance);
+      expect(form.step, OnboardingQuestionnaireStep.dateNaissance);
       expect(form.savedAnswers.prenom, 'Léa');
-      verify(() => repository.saveAnswers(any())).called(1);
+      expect(savedCalls, hasLength(1));
     });
 
     test('skip discards draft prenom and goes to next step', () async {
@@ -59,10 +55,10 @@ void main() {
 
       await form.skipStep();
 
-      expect(form.step, InviteOnboardingStep.dateNaissance);
+      expect(form.step, OnboardingQuestionnaireStep.dateNaissance);
       expect(form.draftPrenom, isEmpty);
       expect(form.savedAnswers.prenom, isNull);
-      verify(() => repository.saveAnswers(any())).called(1);
+      expect(savedCalls, hasLength(1));
     });
 
     test('skip clears previously saved prenom when coming back', () async {
@@ -73,7 +69,7 @@ void main() {
 
       await form.skipStep();
 
-      expect(form.step, InviteOnboardingStep.dateNaissance);
+      expect(form.step, OnboardingQuestionnaireStep.dateNaissance);
       expect(form.savedAnswers.prenom, isNull);
       expect(form.draftPrenom, isEmpty);
     });
@@ -88,7 +84,7 @@ void main() {
       final shouldLogout = form.goBack();
 
       expect(shouldLogout, false);
-      expect(form.step, InviteOnboardingStep.prenom);
+      expect(form.step, OnboardingQuestionnaireStep.prenom);
       expect(form.draftPrenom, 'Léa');
     });
 
@@ -104,33 +100,30 @@ void main() {
 
   group('freins exclusive option', () {
     setUp(() async {
-      when(() => repository.getAnswers()).thenAnswer((_) async => const InviteOnboardingAnswers());
-      when(() => repository.saveAnswers(any())).thenAnswer((_) async {});
       await form.init();
-      form.step = InviteOnboardingStep.freins;
+      form.step = OnboardingQuestionnaireStep.freins;
     });
 
     test('selecting rienNeMeBloque clears other freins', () {
-      form.toggleFrein(InviteFrein.pasDePermis);
-      form.toggleFrein(InviteFrein.manqueConfiance);
-      form.toggleFrein(InviteFrein.rienNeMeBloque);
+      form.toggleFrein(QuestionnaireFrein.pasDePermis);
+      form.toggleFrein(QuestionnaireFrein.manqueConfiance);
+      form.toggleFrein(QuestionnaireFrein.rienNeMeBloque);
 
-      expect(form.draftFreins, {InviteFrein.rienNeMeBloque});
+      expect(form.draftFreins, {QuestionnaireFrein.rienNeMeBloque});
     });
 
     test('selecting another frein removes rienNeMeBloque', () {
-      form.toggleFrein(InviteFrein.rienNeMeBloque);
-      form.toggleFrein(InviteFrein.pasDePermis);
+      form.toggleFrein(QuestionnaireFrein.rienNeMeBloque);
+      form.toggleFrein(QuestionnaireFrein.pasDePermis);
 
-      expect(form.draftFreins, {InviteFrein.pasDePermis});
+      expect(form.draftFreins, {QuestionnaireFrein.pasDePermis});
     });
   });
 
   group('birthdate validation', () {
     setUp(() async {
-      when(() => repository.getAnswers()).thenAnswer((_) async => const InviteOnboardingAnswers());
       await form.init();
-      form.step = InviteOnboardingStep.dateNaissance;
+      form.step = OnboardingQuestionnaireStep.dateNaissance;
     });
 
     test('complete valid date enables continue', () {
@@ -152,40 +145,36 @@ void main() {
 
   group('situation auto advance', () {
     setUp(() async {
-      when(() => repository.getAnswers()).thenAnswer((_) async => const InviteOnboardingAnswers());
-      when(() => repository.saveAnswers(any())).thenAnswer((_) async {});
       await form.init();
-      form.step = InviteOnboardingStep.situation;
+      form.step = OnboardingQuestionnaireStep.situation;
     });
 
     test('selectSituationAndContinue saves and goes to objectifs', () async {
-      await form.selectSituationAndContinue(InviteSituation.lycee);
+      await form.selectSituationAndContinue(QuestionnaireSituation.lycee);
 
-      expect(form.draftSituation, InviteSituation.lycee);
-      expect(form.savedAnswers.situation, InviteSituation.lycee);
-      expect(form.step, InviteOnboardingStep.objectifs);
-      verify(() => repository.saveAnswers(any())).called(1);
+      expect(form.draftSituation, QuestionnaireSituation.lycee);
+      expect(form.savedAnswers.situation, QuestionnaireSituation.lycee);
+      expect(form.step, OnboardingQuestionnaireStep.objectifs);
+      expect(savedCalls, hasLength(1));
     });
   });
 
   group('ville prefill from habitation', () {
-    const habitation = InviteCommune(code: '59350', nom: 'Lille', codePostal: '59000');
+    const habitation = QuestionnaireCommune(code: '59350', nom: 'Lille', codePostal: '59000');
 
     setUp(() async {
-      when(() => repository.getAnswers()).thenAnswer((_) async => const InviteOnboardingAnswers());
-      when(() => repository.saveAnswers(any())).thenAnswer((_) async {});
       await form.init();
     });
 
     test('arriving on villeRecherche suggests habitation city', () async {
-      form.step = InviteOnboardingStep.habitation;
+      form.step = OnboardingQuestionnaireStep.habitation;
       form.selectHabitation(habitation);
       await form.continueStep();
 
-      form.step = InviteOnboardingStep.domaine;
+      form.step = OnboardingQuestionnaireStep.domaine;
       await form.skipStep();
 
-      expect(form.step, InviteOnboardingStep.villeRecherche);
+      expect(form.step, OnboardingQuestionnaireStep.villeRecherche);
       expect(form.draftVilleRecherche, habitation);
       expect(form.draftVilleQuery, 'Lille (59000)');
     });

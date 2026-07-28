@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class InviteOnboardingEmojiIllustration extends StatelessWidget {
-  const InviteOnboardingEmojiIllustration({
+class OnboardingQuestionnaireEmojiIllustration extends StatelessWidget {
+  const OnboardingQuestionnaireEmojiIllustration({
     super.key,
     required this.emoji,
     required this.backgroundColor,

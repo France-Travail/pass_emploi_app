@@ -89,6 +89,8 @@ import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription
 import 'package:pass_emploi_app/features/theme/theme_state.dart';
 import 'package:pass_emploi_app/features/soft_update/soft_update_state.dart';
 import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_state.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 /*AUTOGENERATE-REDUX-APP-STATE-IMPORT*/
 
 class AppState extends Equatable {
@@ -179,6 +181,8 @@ class AppState extends Equatable {
   final ThemeState themeState;
   final SoftUpdateState softUpdateState;
   final CriteresRecherchePersistState criteresRecherchePersistState;
+  final OnboardingQuestionnaireState onboardingQuestionnaireState;
+  final ActionPlanState actionPlanState;
   /*AUTOGENERATE-REDUX-APP-STATE-PROPERTY*/
 
   AppState({
@@ -269,6 +273,8 @@ class AppState extends Equatable {
     required this.themeState,
     required this.softUpdateState,
     required this.criteresRecherchePersistState,
+    required this.onboardingQuestionnaireState,
+    required this.actionPlanState,
     /*AUTOGENERATE-REDUX-APP-STATE-CONSTRUCTOR*/
   });
 
@@ -360,6 +366,8 @@ class AppState extends Equatable {
     final ThemeState? themeState,
     final SoftUpdateState? softUpdateState,
     final CriteresRecherchePersistState? criteresRecherchePersistState,
+    final OnboardingQuestionnaireState? onboardingQuestionnaireState,
+    final ActionPlanState? actionPlanState,
     /*AUTOGENERATE-REDUX-APP-STATE-COPYPARAM*/
   }) {
     return AppState(
@@ -451,6 +459,8 @@ class AppState extends Equatable {
       themeState: themeState ?? this.themeState,
       softUpdateState: softUpdateState ?? this.softUpdateState,
       criteresRecherchePersistState: criteresRecherchePersistState ?? this.criteresRecherchePersistState,
+      onboardingQuestionnaireState: onboardingQuestionnaireState ?? this.onboardingQuestionnaireState,
+      actionPlanState: actionPlanState ?? this.actionPlanState,
       /*AUTOGENERATE-REDUX-APP-STATE-COPYBODY*/
     );
   }
@@ -544,6 +554,8 @@ class AppState extends Equatable {
       themeState: ThemeNotInitializedState(),
       softUpdateState: SoftUpdateNotShownState(),
       criteresRecherchePersistState: CriteresRecherchePersistNotInitializedState(),
+      onboardingQuestionnaireState: OnboardingQuestionnaireNotInitializedState(),
+      actionPlanState: ActionPlanNotInitializedState(),
       /*AUTOGENERATE-REDUX-APP-STATE-FACTORY*/
     );
   }
@@ -629,6 +641,8 @@ class AppState extends Equatable {
     themeState,
     softUpdateState,
     criteresRecherchePersistState,
+    onboardingQuestionnaireState,
+    actionPlanState,
     /*AUTOGENERATE-REDUX-APP-STATE-EQUATABLE*/
   ];
 
