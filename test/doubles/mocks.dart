@@ -402,7 +402,7 @@ class MockOnboardingQuestionnaireRepository extends Mock implements OnboardingQu
 class MockActionPlanRepository extends Mock implements ActionPlanRepository {
   MockActionPlanRepository() {
     registerFallbackValue(const OnboardingQuestionnaireAnswers());
-    when(() => generate(any())).thenAnswer((_) async => null);
+    when(() => generate(any(), any())).thenAnswer((_) async => null);
     when(() => getStoredPlan()).thenAnswer((_) async => null);
     when(() => toggleDone(any())).thenAnswer((_) async => null);
     when(() => deleteAction(any())).thenAnswer((_) async => null);

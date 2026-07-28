@@ -235,8 +235,6 @@ Configuration configuration({
     'someKey',
     'actualisationPoleEmploiUrl',
     'Europe/Paris',
-    'https://bayes.example.com',
-    'bayes-api-key',
   );
 }
 

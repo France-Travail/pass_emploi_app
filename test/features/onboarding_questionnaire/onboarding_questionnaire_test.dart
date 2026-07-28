@@ -68,7 +68,7 @@ void main() {
     final state = await finished;
     expect(state.actionPlanState, isA<ActionPlanEmptyState>());
     verify(() => repository.saveAnswers(any())).called(1);
-    verifyNever(() => actionPlanRepository.generate(any()));
+    verifyNever(() => actionPlanRepository.generate(any(), any()));
   });
 
   test('complete with enough answers generates plan then marks finished', () async {
@@ -79,7 +79,7 @@ void main() {
     final plan = const ActionPlan(id: 'p1', greeting: 'Salut', objectives: []);
     when(() => repository.saveAnswers(any())).thenAnswer((_) async {});
     when(() => repository.setFinished(true)).thenAnswer((_) async {});
-    when(() => actionPlanRepository.generate(any())).thenAnswer((_) async => plan);
+    when(() => actionPlanRepository.generate(any(), any())).thenAnswer((_) async => plan);
 
     final factory = TestStoreFactory()
       ..onboardingQuestionnaireRepository = repository
@@ -100,7 +100,7 @@ void main() {
     expect((state.actionPlanState as ActionPlanSuccessState).plan.id, 'p1');
     expect((state.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState).answers, answers);
     verify(() => repository.saveAnswers(answers)).called(1);
-    verify(() => actionPlanRepository.generate(answers)).called(1);
+    verify(() => actionPlanRepository.generate(any(), answers)).called(1);
   });
 
   test('answers updated action persists via repository', () async {
