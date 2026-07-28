@@ -69,9 +69,13 @@ class _LockedPlaceholders extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: DsfrColorDecisions.borderActionHighBlueFrance(context)),
             ),
-            child: const Padding(
+            child: Padding(
               padding: EdgeInsets.all(Margins.spacing_s),
-              child: Icon(Icons.lock_outline, size: 48, color: Color(0xFF000091)),
+              child: Image.asset(
+                'assets/dsfr/padlock.webp',
+                width: 80,
+                height: 80,
+              ),
             ),
           ),
         ),
