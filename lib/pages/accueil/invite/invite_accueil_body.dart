@@ -148,7 +148,11 @@ class _Content extends StatelessWidget {
                   padding: const EdgeInsets.all(Margins.spacing_base),
                   child: Row(
                     children: [
-                      Icon(DsfrIcons.userUserLine, color: DsfrColorDecisions.textInvertedBlueFrance(context)),
+                      Image.asset(
+                        'assets/dsfr/avatar.webp',
+                        width: 54,
+                        height: 54,
+                      ),
                       const SizedBox(width: Margins.spacing_base),
                       Expanded(
                         child: Column(
