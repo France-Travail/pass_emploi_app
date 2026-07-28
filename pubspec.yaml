@@ -94,6 +94,7 @@ flutter:
 
   assets:
     - assets/
+    - assets/dsfr/
     - assets/tuto/
     - assets/onboarding/
     - assets/illustrations/
