@@ -1,0 +1,34 @@
+{
+  "id": "0b7956f3-0064-4070-906e-53f47845506d",
+  "accroche": "Voici ton plan d'action, coche les actions au fur et à mesure.",
+  "genereLe": "2026-07-20T22:03:52.448Z",
+  "generateur": "fallback",
+  "objectives": [
+    {
+      "id": "objective-1",
+      "titre": "Trouver une alternance",
+      "theme": "apprenticeship",
+      "actions": [
+        {
+          "id": "p-134",
+          "libelle": "Je me renseigne sur l'alternance",
+          "type": "LIEN",
+          "url": "https://labonnealternance.apprentissage.beta.gouv.fr/guide-alternant",
+          "nomService": "La Bonne Alternance",
+          "descriptionService": "Faciliter la recherche d'alternance pour les jeunes"
+        },
+        {
+          "id": "c-alternance-1",
+          "libelle": "Je consulte les offres d'alternance",
+          "type": "NAVIGATION",
+          "destination": "OFFRES_ALTERNANCE"
+        },
+        {
+          "id": "p-139",
+          "libelle": "J'envoie une candidature spontanée à une entreprise",
+          "type": "CONSEIL"
+        }
+      ]
+    }
+  ]
+}

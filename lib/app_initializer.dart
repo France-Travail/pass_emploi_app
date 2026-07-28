@@ -311,12 +311,7 @@ class AppInitializer {
       SoftUpdateRepository(securedPreferences),
       CriteresRecherchePersistRepository(securedPreferences),
       OnboardingQuestionnaireRepository(securedPreferences),
-      ActionPlanRepository(
-        baseUrl: configuration.bayesImpactBaseUrl,
-        apiKey: configuration.bayesImpactApiKey,
-        preferences: securedPreferences,
-        crashlytics: crashlytics,
-      ),
+      ActionPlanRepository(dioClient, securedPreferences, crashlytics),
       /*AUTOGENERATE-REDUX-APP-INITIALIZER-REPOSITORY-CONSTRUCTOR*/
     ).initializeReduxStore(initialState: AppState.initialState(configuration: configuration));
     accessTokenRetriever.setStore(reduxStore);
