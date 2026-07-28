@@ -21,8 +21,13 @@ class ActionPlanMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(ActionPlanSuccessAction(plan));
       }
     } else if (action is ActionPlanGenerateAction) {
+      final userId = store.state.userId();
+      if (userId == null) {
+        store.dispatch(ActionPlanFailureAction());
+        return;
+      }
       store.dispatch(ActionPlanLoadingAction());
-      final plan = await _repository.generate(action.answers);
+      final plan = await _repository.generate(userId, action.answers);
       if (plan == null) {
         store.dispatch(ActionPlanFailureAction());
       } else {

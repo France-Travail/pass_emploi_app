@@ -40,12 +40,17 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
   Future<void> _complete(Store<AppState> store, OnboardingQuestionnaireAnswers answers) async {
     await _repository.saveAnswers(answers);
     if (answers.canGenerateActionPlan) {
-      store.dispatch(ActionPlanLoadingAction());
-      final plan = await _actionPlanRepository.generate(answers);
-      if (plan != null) {
-        store.dispatch(ActionPlanSuccessAction(plan));
-      } else {
+      final userId = store.state.userId();
+      if (userId == null) {
         store.dispatch(ActionPlanFailureAction());
+      } else {
+        store.dispatch(ActionPlanLoadingAction());
+        final plan = await _actionPlanRepository.generate(userId, answers);
+        if (plan != null) {
+          store.dispatch(ActionPlanSuccessAction(plan));
+        } else {
+          store.dispatch(ActionPlanFailureAction());
+        }
       }
     } else {
       store.dispatch(ActionPlanEmptyAction());
