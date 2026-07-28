@@ -28,6 +28,8 @@ class Configuration extends Equatable {
   final String iSRGX1CertificateForOldDevices;
   final String actualisationPoleEmploiUrl;
   final String fuseauHoraire;
+  final String bayesImpactBaseUrl;
+  final String bayesImpactApiKey;
 
   Configuration(
     this.version,
@@ -47,6 +49,8 @@ class Configuration extends Equatable {
     this.iSRGX1CertificateForOldDevices,
     this.actualisationPoleEmploiUrl,
     this.fuseauHoraire,
+    this.bayesImpactBaseUrl,
+    this.bayesImpactApiKey,
   );
 
   static Future<Configuration> build() async {
@@ -69,6 +73,8 @@ class Configuration extends Equatable {
     final authClientSecret = getOrThrow('AUTH_CLIENT_SECRET');
     final iSRGX1CertificateForOldDevices = utf8.decode(base64Decode(getOrThrow('ISRGX1_CERT_FOR_OLD_DEVICES')));
     final actualisationPoleEmploiUrl = getOrThrow('ACTUALISATION_PE_URL');
+    final bayesImpactBaseUrl = dotenv.get('BAYES_IMPACT_BASE_URL', fallback: '');
+    final bayesImpactApiKey = dotenv.get('BAYES_IMPACT_API_KEY', fallback: '');
     final fuseauHoraire = await FlutterTimezone.getLocalTimezone();
     return Configuration(
       currentVersion,
@@ -88,6 +94,8 @@ class Configuration extends Equatable {
       iSRGX1CertificateForOldDevices,
       actualisationPoleEmploiUrl,
       fuseauHoraire,
+      bayesImpactBaseUrl,
+      bayesImpactApiKey,
     );
   }
 
@@ -129,6 +137,8 @@ class Configuration extends Equatable {
         iSRGX1CertificateForOldDevices,
         actualisationPoleEmploiUrl,
         fuseauHoraire,
+        bayesImpactBaseUrl,
+        bayesImpactApiKey,
       ];
 
   Configuration copyWith({
@@ -149,6 +159,8 @@ class Configuration extends Equatable {
     String? iSRGX1CertificateForOldDevices,
     String? actualisationPoleEmploiUrl,
     String? fuseauHoraire,
+    String? bayesImpactBaseUrl,
+    String? bayesImpactApiKey,
   }) {
     return Configuration(
       version ?? this.version,
@@ -168,6 +180,8 @@ class Configuration extends Equatable {
       iSRGX1CertificateForOldDevices ?? this.iSRGX1CertificateForOldDevices,
       actualisationPoleEmploiUrl ?? this.actualisationPoleEmploiUrl,
       fuseauHoraire ?? this.fuseauHoraire,
+      bayesImpactBaseUrl ?? this.bayesImpactBaseUrl,
+      bayesImpactApiKey ?? this.bayesImpactApiKey,
     );
   }
 }

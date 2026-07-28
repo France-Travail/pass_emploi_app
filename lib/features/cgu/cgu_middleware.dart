@@ -1,5 +1,6 @@
 import 'package:pass_emploi_app/features/cgu/cgu_actions.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/details_jeune/details_jeune_repository.dart';
 import 'package:pass_emploi_app/repositories/remote_config_repository.dart';
@@ -15,6 +16,7 @@ class CguMiddleware extends MiddlewareClass<AppState> {
   void call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
     if (action is LoginSuccessAction) {
+      if (action.user.loginMode.isInvite()) return;
       _handleLoginAction(store, action);
     } else if (action is CguAcceptedAction) {
       final success = await _detailsJeuneRepository.patch(store.state.userId()!, action.date);

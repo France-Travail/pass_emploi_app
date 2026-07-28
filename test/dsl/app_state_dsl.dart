@@ -20,6 +20,8 @@ import 'package:pass_emploi_app/features/events/list/event_list_state.dart';
 import 'package:pass_emploi_app/features/favori/list/favori_list_state.dart';
 import 'package:pass_emploi_app/features/feature_flip/feature_flip_state.dart';
 import 'package:pass_emploi_app/features/first_launch_onboarding/first_launch_onboarding_state.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 import 'package:pass_emploi_app/features/immersion/details/immersion_details_state.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_state.dart';
 import 'package:pass_emploi_app/features/matching_demarche/matching_demarche_state.dart';
@@ -78,6 +80,8 @@ import 'package:pass_emploi_app/models/offre_emploi.dart';
 import 'package:pass_emploi_app/models/offre_emploi_details.dart';
 import 'package:pass_emploi_app/models/offre_suivie.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
+import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
+import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/preferences.dart';
 import 'package:pass_emploi_app/models/recherche/recherche_request.dart';
 import 'package:pass_emploi_app/models/remote_campagne_accueil.dart';
@@ -806,6 +810,20 @@ extension AppStateDSL on AppState {
 
   AppState withFirstLaunchOnboardingSuccessState(bool isFirstLaunch) {
     return copyWith(firstLaunchOnboardingState: FirstLaunchOnboardingSuccessState(isFirstLaunch));
+  }
+
+  AppState withOnboardingQuestionnaire({required bool finished, OnboardingQuestionnaireAnswers answers = const OnboardingQuestionnaireAnswers()}) {
+    return copyWith(
+      onboardingQuestionnaireState: OnboardingQuestionnaireSuccessState(finished: finished, answers: answers),
+    );
+  }
+
+  AppState withActionPlanSuccess(ActionPlan plan) {
+    return copyWith(actionPlanState: ActionPlanSuccessState(plan));
+  }
+
+  AppState withActionPlanEmpty() {
+    return copyWith(actionPlanState: ActionPlanEmptyState());
   }
 
   AppState withFirstLaunchNotInitializedState() {

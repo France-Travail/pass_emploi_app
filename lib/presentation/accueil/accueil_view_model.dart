@@ -44,6 +44,19 @@ class AccueilViewModel extends Equatable {
   });
 
   factory AccueilViewModel.create(Store<AppState> store) {
+    if (store.state.isInviteLoginMode()) {
+      return AccueilViewModel(
+        displayState: DisplayState.CONTENT,
+        items: const [],
+        deepLink: null,
+        shouldResetDeeplink: false,
+        withNewNotifications: false,
+        shouldShowAllowNotifications: false,
+        shouldShowSoftUpdate: false,
+        resetDeeplink: () {},
+        retry: () {},
+      );
+    }
     return AccueilViewModel(
       displayState: _displayState(store),
       items: _items(store),

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
-import 'package:pass_emploi_app/presentation/invite_onboarding/invite_onboarding_form_change_notifier.dart';
+import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_form_change_notifier.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 
-class InviteOnboardingDomaineStep extends StatelessWidget {
-  const InviteOnboardingDomaineStep({super.key, required this.form});
+class OnboardingQuestionnaireDomaineStep extends StatelessWidget {
+  const OnboardingQuestionnaireDomaineStep({super.key, required this.form});
 
-  final InviteOnboardingFormChangeNotifier form;
+  final OnboardingQuestionnaireFormChangeNotifier form;
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +16,12 @@ class InviteOnboardingDomaineStep extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          Strings.inviteOnboardingDomaineSubtitle,
+          Strings.onboardingQuestionnaireDomaineSubtitle,
           style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
         ),
         const SizedBox(height: Margins.spacing_base),
         DsfrInput(
-          label: Strings.inviteOnboardingDomaineLabel,
+          label: Strings.onboardingQuestionnaireDomaineLabel,
           initialValue: form.draftDomaine,
           // Avoid maxLength: broken DSFR UI, see https://github.com/Octo-Open-Source/flutter-dsfr/issues/150
           inputFormatters: [LengthLimitingTextInputFormatter(256)],
@@ -29,7 +29,7 @@ class InviteOnboardingDomaineStep extends StatelessWidget {
         ),
         const SizedBox(height: Margins.spacing_base),
         DsfrButton(
-          label: Strings.inviteOnboardingDomaineUnknown,
+          label: Strings.onboardingQuestionnaireDomaineUnknown,
           variant: DsfrButtonVariant.secondary,
           size: DsfrComponentSize.lg,
           onPressed: () => form.markDomaineUnknownAndContinue(),

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
-import 'package:pass_emploi_app/models/invite_onboarding_answers.dart';
-import 'package:pass_emploi_app/pages/invite_onboarding/invite_onboarding_checkbox_rich.dart';
-import 'package:pass_emploi_app/pages/invite_onboarding/invite_onboarding_emoji_illustration.dart';
-import 'package:pass_emploi_app/presentation/invite_onboarding/invite_onboarding_form_change_notifier.dart';
+import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
+import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_checkbox_rich.dart';
+import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_emoji_illustration.dart';
+import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_form_change_notifier.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 
-class InviteOnboardingFreinsStep extends StatelessWidget {
-  const InviteOnboardingFreinsStep({super.key, required this.form});
+class OnboardingQuestionnaireFreinsStep extends StatelessWidget {
+  const OnboardingQuestionnaireFreinsStep({super.key, required this.form});
 
-  final InviteOnboardingFormChangeNotifier form;
+  final OnboardingQuestionnaireFormChangeNotifier form;
 
   @override
   Widget build(BuildContext context) {
@@ -18,31 +18,31 @@ class InviteOnboardingFreinsStep extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          Strings.inviteOnboardingFreinsSubtitle,
+          Strings.onboardingQuestionnaireFreinsSubtitle,
           style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
         ),
         const SizedBox(height: Margins.spacing_base),
-        ...InviteFrein.values.map(
+        ...QuestionnaireFrein.values.map(
           (frein) => Padding(
             padding: const EdgeInsets.only(bottom: Margins.spacing_s),
             child: frein.isExclusive
-                ? DsfrRadioRichButton<InviteFrein>(
+                ? DsfrRadioRichButton<QuestionnaireFrein>(
                     title: frein.label,
                     value: frein,
                     groupValue: form.draftFreins.contains(frein) ? frein : null,
                     size: DsfrComponentSize.md,
                     isExpanded: true,
-                    trailingIcon: InviteOnboardingEmojiIllustration(
+                    trailingIcon: OnboardingQuestionnaireEmojiIllustration(
                       emoji: frein.emoji,
                       backgroundColor: frein.illustrationColor,
                     ),
                     onChanged: (_) => form.toggleFrein(frein),
                   )
-                : InviteOnboardingCheckboxRich(
+                : OnboardingQuestionnaireCheckboxRich(
                     label: frein.label,
                     size: DsfrComponentSize.md,
                     value: form.draftFreins.contains(frein),
-                    trailingIcon: InviteOnboardingEmojiIllustration(
+                    trailingIcon: OnboardingQuestionnaireEmojiIllustration(
                       emoji: frein.emoji,
                       backgroundColor: frein.illustrationColor,
                     ),

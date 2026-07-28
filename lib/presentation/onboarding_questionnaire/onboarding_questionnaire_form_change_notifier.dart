@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
-import 'package:pass_emploi_app/models/invite_onboarding_answers.dart';
-import 'package:pass_emploi_app/repositories/invite_onboarding_repository.dart';
+import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 
-enum InviteOnboardingStep {
+typedef OnboardingQuestionnaireAnswersLoader = Future<OnboardingQuestionnaireAnswers> Function();
+typedef OnboardingQuestionnaireAnswersSaver = Future<void> Function(OnboardingQuestionnaireAnswers answers);
+
+enum OnboardingQuestionnaireStep {
   prenom,
   dateNaissance,
   habitation,
@@ -13,55 +15,60 @@ enum InviteOnboardingStep {
   freins,
   loader;
 
-  bool get isLoader => this == InviteOnboardingStep.loader;
+  bool get isLoader => this == OnboardingQuestionnaireStep.loader;
 
   int get questionnaireIndex => index + 1;
 
   static const int questionnaireCount = 8;
 
-  InviteOnboardingStep? get previous {
+  OnboardingQuestionnaireStep? get previous {
     if (index == 0) return null;
-    return InviteOnboardingStep.values[index - 1];
+    return OnboardingQuestionnaireStep.values[index - 1];
   }
 
-  InviteOnboardingStep? get next {
-    if (index >= InviteOnboardingStep.values.length - 1) return null;
-    return InviteOnboardingStep.values[index + 1];
+  OnboardingQuestionnaireStep? get next {
+    if (index >= OnboardingQuestionnaireStep.values.length - 1) return null;
+    return OnboardingQuestionnaireStep.values[index + 1];
   }
 }
 
-class InviteOnboardingFormChangeNotifier extends ChangeNotifier {
-  final InviteOnboardingRepository _repository;
+class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
+  final OnboardingQuestionnaireAnswersLoader _loadAnswers;
+  final OnboardingQuestionnaireAnswersSaver _saveAnswers;
 
-  InviteOnboardingStep step = InviteOnboardingStep.prenom;
-  InviteOnboardingAnswers savedAnswers = const InviteOnboardingAnswers();
+  OnboardingQuestionnaireStep step = OnboardingQuestionnaireStep.prenom;
+  OnboardingQuestionnaireAnswers savedAnswers = const OnboardingQuestionnaireAnswers();
 
   String draftPrenom = '';
   String draftBirthDay = '';
   String draftBirthMonth = '';
   String draftBirthYear = '';
-  InviteCommune? draftHabitation;
+  QuestionnaireCommune? draftHabitation;
   String draftHabitationQuery = '';
-  InviteSituation? draftSituation;
-  Set<InviteObjectif> draftObjectifs = {};
+  QuestionnaireSituation? draftSituation;
+  Set<QuestionnaireObjectif> draftObjectifs = {};
   String draftDomaine = '';
-  InviteCommune? draftVilleRecherche;
+  QuestionnaireCommune? draftVilleRecherche;
   String draftVilleQuery = '';
   int draftRayonKm = 20;
-  Set<InviteFrein> draftFreins = {};
+  Set<QuestionnaireFrein> draftFreins = {};
 
   bool isLoading = true;
   bool isGeolocating = false;
   String? geolocationError;
 
-  InviteOnboardingFormChangeNotifier(this._repository);
+  OnboardingQuestionnaireFormChangeNotifier({
+    required OnboardingQuestionnaireAnswersLoader loadAnswers,
+    required OnboardingQuestionnaireAnswersSaver saveAnswers,
+  })  : _loadAnswers = loadAnswers,
+        _saveAnswers = saveAnswers;
 
   Future<void> init() async {
     isLoading = true;
     notifyListeners();
-    savedAnswers = await _repository.getAnswers();
+    savedAnswers = await _loadAnswers();
     _hydrateDraftsFromSaved();
-    step = InviteOnboardingStep.prenom;
+    step = OnboardingQuestionnaireStep.prenom;
     isLoading = false;
     notifyListeners();
   }
@@ -87,11 +94,11 @@ class InviteOnboardingFormChangeNotifier extends ChangeNotifier {
     draftFreins = Set.of(savedAnswers.freins);
   }
 
-  void _reloadDraftForStep(InviteOnboardingStep target) {
+  void _reloadDraftForStep(OnboardingQuestionnaireStep target) {
     switch (target) {
-      case InviteOnboardingStep.prenom:
+      case OnboardingQuestionnaireStep.prenom:
         draftPrenom = savedAnswers.prenom ?? '';
-      case InviteOnboardingStep.dateNaissance:
+      case OnboardingQuestionnaireStep.dateNaissance:
         final birth = savedAnswers.dateNaissance;
         if (birth != null) {
           draftBirthDay = birth.day.toString().padLeft(2, '0');
@@ -102,34 +109,34 @@ class InviteOnboardingFormChangeNotifier extends ChangeNotifier {
           draftBirthMonth = '';
           draftBirthYear = '';
         }
-      case InviteOnboardingStep.habitation:
+      case OnboardingQuestionnaireStep.habitation:
         draftHabitation = savedAnswers.habitation;
         draftHabitationQuery = savedAnswers.habitation?.displayLabel ?? '';
-      case InviteOnboardingStep.situation:
+      case OnboardingQuestionnaireStep.situation:
         draftSituation = savedAnswers.situation;
-      case InviteOnboardingStep.objectifs:
+      case OnboardingQuestionnaireStep.objectifs:
         draftObjectifs = Set.of(savedAnswers.objectifs);
-      case InviteOnboardingStep.domaine:
+      case OnboardingQuestionnaireStep.domaine:
         draftDomaine = savedAnswers.domaine ?? '';
-      case InviteOnboardingStep.villeRecherche:
+      case OnboardingQuestionnaireStep.villeRecherche:
         _prefillVilleFromHabitation();
-      case InviteOnboardingStep.freins:
+      case OnboardingQuestionnaireStep.freins:
         draftFreins = Set.of(savedAnswers.freins);
-      case InviteOnboardingStep.loader:
+      case OnboardingQuestionnaireStep.loader:
         break;
     }
   }
 
   bool get canContinue => switch (step) {
-        InviteOnboardingStep.prenom => draftPrenom.trim().isNotEmpty,
-        InviteOnboardingStep.dateNaissance => parsedBirthDate != null,
-        InviteOnboardingStep.habitation => draftHabitation != null,
-        InviteOnboardingStep.situation => draftSituation != null,
-        InviteOnboardingStep.objectifs => draftObjectifs.isNotEmpty,
-        InviteOnboardingStep.domaine => draftDomaine.trim().isNotEmpty,
-        InviteOnboardingStep.villeRecherche => draftVilleRecherche != null,
-        InviteOnboardingStep.freins => draftFreins.isNotEmpty,
-        InviteOnboardingStep.loader => false,
+        OnboardingQuestionnaireStep.prenom => draftPrenom.trim().isNotEmpty,
+        OnboardingQuestionnaireStep.dateNaissance => parsedBirthDate != null,
+        OnboardingQuestionnaireStep.habitation => draftHabitation != null,
+        OnboardingQuestionnaireStep.situation => draftSituation != null,
+        OnboardingQuestionnaireStep.objectifs => draftObjectifs.isNotEmpty,
+        OnboardingQuestionnaireStep.domaine => draftDomaine.trim().isNotEmpty,
+        OnboardingQuestionnaireStep.villeRecherche => draftVilleRecherche != null,
+        OnboardingQuestionnaireStep.freins => draftFreins.isNotEmpty,
+        OnboardingQuestionnaireStep.loader => false,
       };
 
   DateTime? get parsedBirthDate {
@@ -175,25 +182,25 @@ class InviteOnboardingFormChangeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void selectHabitation(InviteCommune commune) {
+  void selectHabitation(QuestionnaireCommune commune) {
     draftHabitation = commune;
     draftHabitationQuery = commune.displayLabel;
     geolocationError = null;
     notifyListeners();
   }
 
-  void updateSituation(InviteSituation situation) {
+  void updateSituation(QuestionnaireSituation situation) {
     draftSituation = situation;
     notifyListeners();
   }
 
-  Future<void> selectSituationAndContinue(InviteSituation situation) async {
+  Future<void> selectSituationAndContinue(QuestionnaireSituation situation) async {
     updateSituation(situation);
     await continueStep();
   }
 
-  void toggleObjectif(InviteObjectif objectif) {
-    final next = Set<InviteObjectif>.of(draftObjectifs);
+  void toggleObjectif(QuestionnaireObjectif objectif) {
+    final next = Set<QuestionnaireObjectif>.of(draftObjectifs);
     if (next.contains(objectif)) {
       next.remove(objectif);
     } else {
@@ -217,7 +224,7 @@ class InviteOnboardingFormChangeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void selectVilleRecherche(InviteCommune commune) {
+  void selectVilleRecherche(QuestionnaireCommune commune) {
     draftVilleRecherche = commune;
     draftVilleQuery = commune.displayLabel;
     geolocationError = null;
@@ -229,8 +236,8 @@ class InviteOnboardingFormChangeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleFrein(InviteFrein frein) {
-    final next = Set<InviteFrein>.of(draftFreins);
+  void toggleFrein(QuestionnaireFrein frein) {
+    final next = Set<QuestionnaireFrein>.of(draftFreins);
     if (frein.isExclusive) {
       if (next.contains(frein)) {
         next.remove(frein);
@@ -240,7 +247,7 @@ class InviteOnboardingFormChangeNotifier extends ChangeNotifier {
           ..add(frein);
       }
     } else {
-      next.remove(InviteFrein.rienNeMeBloque);
+      next.remove(QuestionnaireFrein.rienNeMeBloque);
       if (next.contains(frein)) {
         next.remove(frein);
       } else {
@@ -264,96 +271,96 @@ class InviteOnboardingFormChangeNotifier extends ChangeNotifier {
 
   Future<void> _clearCurrentStep() async {
     switch (step) {
-      case InviteOnboardingStep.prenom:
+      case OnboardingQuestionnaireStep.prenom:
         draftPrenom = '';
         savedAnswers = savedAnswers.copyWith(clearPrenom: true);
-      case InviteOnboardingStep.dateNaissance:
+      case OnboardingQuestionnaireStep.dateNaissance:
         draftBirthDay = '';
         draftBirthMonth = '';
         draftBirthYear = '';
         savedAnswers = savedAnswers.copyWith(clearDateNaissance: true);
-      case InviteOnboardingStep.habitation:
+      case OnboardingQuestionnaireStep.habitation:
         draftHabitation = null;
         draftHabitationQuery = '';
         savedAnswers = savedAnswers.copyWith(clearHabitation: true);
-      case InviteOnboardingStep.situation:
+      case OnboardingQuestionnaireStep.situation:
         draftSituation = null;
         savedAnswers = savedAnswers.copyWith(clearSituation: true);
-      case InviteOnboardingStep.objectifs:
+      case OnboardingQuestionnaireStep.objectifs:
         draftObjectifs = {};
         savedAnswers = savedAnswers.copyWith(objectifs: {});
-      case InviteOnboardingStep.domaine:
+      case OnboardingQuestionnaireStep.domaine:
         draftDomaine = '';
         savedAnswers = savedAnswers.copyWith(clearDomaine: true, domaineInconnu: false);
-      case InviteOnboardingStep.villeRecherche:
+      case OnboardingQuestionnaireStep.villeRecherche:
         draftVilleRecherche = null;
         draftVilleQuery = '';
         savedAnswers = savedAnswers.copyWith(clearVilleRecherche: true);
-      case InviteOnboardingStep.freins:
+      case OnboardingQuestionnaireStep.freins:
         draftFreins = {};
         savedAnswers = savedAnswers.copyWith(freins: {});
-      case InviteOnboardingStep.loader:
+      case OnboardingQuestionnaireStep.loader:
         return;
     }
-    await _repository.saveAnswers(savedAnswers);
+    await _saveAnswers(savedAnswers);
   }
 
-  Future<void> selectHabitationAndContinue(InviteCommune commune) async {
+  Future<void> selectHabitationAndContinue(QuestionnaireCommune commune) async {
     selectHabitation(commune);
     await continueStep();
   }
 
-  Future<void> selectVilleAndContinue(InviteCommune commune) async {
+  Future<void> selectVilleAndContinue(QuestionnaireCommune commune) async {
     selectVilleRecherche(commune);
     await continueStep();
   }
 
   Future<void> markDomaineUnknownAndContinue() async {
     savedAnswers = savedAnswers.copyWith(clearDomaine: true, domaineInconnu: true);
-    await _repository.saveAnswers(savedAnswers);
+    await _saveAnswers(savedAnswers);
     draftDomaine = '';
     _goNext();
   }
 
   Future<void> _persistCurrentStep() async {
     switch (step) {
-      case InviteOnboardingStep.prenom:
+      case OnboardingQuestionnaireStep.prenom:
         savedAnswers = savedAnswers.copyWith(prenom: draftPrenom.trim());
-      case InviteOnboardingStep.dateNaissance:
+      case OnboardingQuestionnaireStep.dateNaissance:
         savedAnswers = savedAnswers.copyWith(dateNaissance: parsedBirthDate);
-      case InviteOnboardingStep.habitation:
+      case OnboardingQuestionnaireStep.habitation:
         savedAnswers = savedAnswers.copyWith(habitation: draftHabitation);
         if (savedAnswers.villeRecherche == null && draftHabitation != null) {
           draftVilleRecherche = draftHabitation;
           draftVilleQuery = draftHabitation!.displayLabel;
         }
-      case InviteOnboardingStep.situation:
+      case OnboardingQuestionnaireStep.situation:
         savedAnswers = savedAnswers.copyWith(situation: draftSituation);
-      case InviteOnboardingStep.objectifs:
+      case OnboardingQuestionnaireStep.objectifs:
         savedAnswers = savedAnswers.copyWith(objectifs: Set.of(draftObjectifs));
-      case InviteOnboardingStep.domaine:
+      case OnboardingQuestionnaireStep.domaine:
         savedAnswers = savedAnswers.copyWith(
           domaine: draftDomaine.trim(),
           domaineInconnu: false,
         );
-      case InviteOnboardingStep.villeRecherche:
+      case OnboardingQuestionnaireStep.villeRecherche:
         savedAnswers = savedAnswers.copyWith(
           villeRecherche: draftVilleRecherche,
           rayonKm: draftRayonKm,
         );
-      case InviteOnboardingStep.freins:
+      case OnboardingQuestionnaireStep.freins:
         savedAnswers = savedAnswers.copyWith(freins: Set.of(draftFreins));
-      case InviteOnboardingStep.loader:
+      case OnboardingQuestionnaireStep.loader:
         return;
     }
-    await _repository.saveAnswers(savedAnswers);
+    await _saveAnswers(savedAnswers);
   }
 
   void _goNext() {
     final next = step.next;
     if (next == null) return;
     step = next;
-    if (step == InviteOnboardingStep.villeRecherche) {
+    if (step == OnboardingQuestionnaireStep.villeRecherche) {
       _prefillVilleFromHabitation();
     }
     geolocationError = null;
@@ -369,7 +376,7 @@ class InviteOnboardingFormChangeNotifier extends ChangeNotifier {
 
   /// Returns true if the form should close (logout).
   bool goBack() {
-    if (step == InviteOnboardingStep.loader) return false;
+    if (step == OnboardingQuestionnaireStep.loader) return false;
     final previous = step.previous;
     if (previous == null) return true;
     step = previous;

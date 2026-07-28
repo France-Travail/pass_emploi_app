@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:pass_emploi_app/crashlytics/crashlytics.dart';
-import 'package:pass_emploi_app/models/invite_onboarding_answers.dart';
+import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 
 class CommunesRepository {
   static const _baseUrl = 'https://geo.api.gouv.fr';
@@ -14,7 +14,7 @@ class CommunesRepository {
     : _httpClient = httpClient ?? Dio(BaseOptions(baseUrl: _baseUrl)),
       _crashlytics = crashlytics;
 
-  Future<List<InviteCommune>> search(String query, {int limit = 8}) async {
+  Future<List<QuestionnaireCommune>> search(String query, {int limit = 8}) async {
     final normalized = query.trim().replaceAll(RegExp(r'\s+'), '');
     if (normalized.isEmpty) return [];
 
@@ -26,7 +26,7 @@ class CommunesRepository {
     return searchByName(query.trim(), limit: limit);
   }
 
-  Future<List<InviteCommune>> searchByName(String query, {int limit = 8}) async {
+  Future<List<QuestionnaireCommune>> searchByName(String query, {int limit = 8}) async {
     final trimmed = query.trim();
     if (trimmed.length < 3) return [];
     const path = '/communes';
@@ -42,14 +42,14 @@ class CommunesRepository {
       );
       final data = response.data;
       if (data == null) return [];
-      return data.whereType<Map<String, dynamic>>().map(InviteCommune.fromJson).toList();
+      return data.whereType<Map<String, dynamic>>().map(QuestionnaireCommune.fromJson).toList();
     } catch (e, stack) {
       _crashlytics?.recordNonNetworkExceptionUrl(e, stack, '$_baseUrl$path');
       return [];
     }
   }
 
-  Future<List<InviteCommune>> searchByCodePostal(String codePostal, {int limit = 8}) async {
+  Future<List<QuestionnaireCommune>> searchByCodePostal(String codePostal, {int limit = 8}) async {
     final trimmed = codePostal.trim().replaceAll(RegExp(r'\s+'), '');
     if (!_codePostal.hasMatch(trimmed)) return [];
     const path = '/communes';
@@ -66,7 +66,7 @@ class CommunesRepository {
       if (data == null) return [];
       return data
           .whereType<Map<String, dynamic>>()
-          .map((json) => InviteCommune.fromJson(json, preferredCodePostal: trimmed))
+          .map((json) => QuestionnaireCommune.fromJson(json, preferredCodePostal: trimmed))
           .toList();
     } catch (e, stack) {
       _crashlytics?.recordNonNetworkExceptionUrl(e, stack, '$_baseUrl$path');
@@ -74,7 +74,7 @@ class CommunesRepository {
     }
   }
 
-  Future<InviteCommune?> findByCoordinates({required double latitude, required double longitude}) async {
+  Future<QuestionnaireCommune?> findByCoordinates({required double latitude, required double longitude}) async {
     const path = '/communes';
     try {
       final response = await _httpClient.get<List<dynamic>>(
@@ -89,7 +89,7 @@ class CommunesRepository {
       if (data == null || data.isEmpty) return null;
       final first = data.first;
       if (first is! Map<String, dynamic>) return null;
-      return InviteCommune.fromJson(first);
+      return QuestionnaireCommune.fromJson(first);
     } catch (e, stack) {
       _crashlytics?.recordNonNetworkExceptionUrl(e, stack, '$_baseUrl$path');
       return null;

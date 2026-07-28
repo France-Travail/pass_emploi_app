@@ -1,16 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
-import 'package:pass_emploi_app/models/invite_onboarding_answers.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
+import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
+import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 
-class InviteOnboardingLoaderStep extends StatelessWidget {
-  const InviteOnboardingLoaderStep({super.key, required this.answers});
+class OnboardingQuestionnaireLoaderStep extends StatefulWidget {
+  const OnboardingQuestionnaireLoaderStep({super.key, required this.answers});
 
-  final InviteOnboardingAnswers answers;
+  final OnboardingQuestionnaireAnswers answers;
+
+  @override
+  State<OnboardingQuestionnaireLoaderStep> createState() => _OnboardingQuestionnaireLoaderStepState();
+}
+
+class _OnboardingQuestionnaireLoaderStepState extends State<OnboardingQuestionnaireLoaderStep> {
+  bool _dispatched = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_dispatched) return;
+    _dispatched = true;
+    StoreProvider.of<AppState>(context).dispatch(OnboardingQuestionnaireCompleteAction(widget.answers));
+  }
 
   @override
   Widget build(BuildContext context) {
+    final answers = widget.answers;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(Margins.spacing_base),
       child: Column(
@@ -39,13 +58,13 @@ class InviteOnboardingLoaderStep extends StatelessWidget {
           ),
           const SizedBox(height: Margins.spacing_base),
           Text(
-            Strings.inviteOnboardingLoaderTitle,
+            Strings.onboardingQuestionnaireLoaderTitle,
             textAlign: TextAlign.center,
             style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context)),
           ),
           const SizedBox(height: Margins.spacing_s),
           Text(
-            Strings.inviteOnboardingLoaderSubtitle,
+            Strings.onboardingQuestionnaireLoaderSubtitle,
             textAlign: TextAlign.center,
             style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
           ),
@@ -67,23 +86,23 @@ class InviteOnboardingLoaderStep extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            Strings.inviteOnboardingLoaderProfil,
+                            Strings.onboardingQuestionnaireLoaderProfil,
                             style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context)),
                           ),
                           const SizedBox(height: Margins.spacing_s),
                           if (answers.prenom != null)
-                            _ProfilRow(label: Strings.inviteOnboardingLoaderPrenom, value: answers.prenom!),
+                            _ProfilRow(label: Strings.onboardingQuestionnaireLoaderPrenom, value: answers.prenom!),
                           if (answers.situation != null)
                             _ProfilRow(
-                              label: Strings.inviteOnboardingLoaderSituation,
+                              label: Strings.onboardingQuestionnaireLoaderSituation,
                               value: answers.situation!.label,
                             ),
                           if (answers.domaine != null && answers.domaine!.isNotEmpty)
-                            _ProfilRow(label: Strings.inviteOnboardingLoaderDomaine, value: answers.domaine!),
+                            _ProfilRow(label: Strings.onboardingQuestionnaireLoaderDomaine, value: answers.domaine!),
                           if (answers.villeRecherche != null)
                             _ProfilRow(
-                              label: Strings.inviteOnboardingLoaderZone,
-                              value: Strings.inviteOnboardingLoaderZoneValue(
+                              label: Strings.onboardingQuestionnaireLoaderZone,
+                              value: Strings.onboardingQuestionnaireLoaderZoneValue(
                                 answers.villeRecherche!.nom,
                                 answers.rayonKm,
                               ),
@@ -96,12 +115,12 @@ class InviteOnboardingLoaderStep extends StatelessWidget {
                               children: [
                                 if (answers.objectifs.isNotEmpty)
                                   DsfrTag(
-                                    label: Strings.inviteOnboardingLoaderObjectifsCount(answers.objectifs.length),
+                                    label: Strings.onboardingQuestionnaireLoaderObjectifsCount(answers.objectifs.length),
                                     size: DsfrComponentSize.sm,
                                   ),
                                 if (answers.freins.isNotEmpty)
                                   DsfrTag(
-                                    label: Strings.inviteOnboardingLoaderContraintesCount(answers.freins.length),
+                                    label: Strings.onboardingQuestionnaireLoaderContraintesCount(answers.freins.length),
                                     size: DsfrComponentSize.sm,
                                   ),
                               ],
@@ -116,10 +135,10 @@ class InviteOnboardingLoaderStep extends StatelessWidget {
             ),
           ),
           const SizedBox(height: Margins.spacing_l),
-          _LoaderProgressLine(label: Strings.inviteOnboardingLoaderStepRead, done: true),
-          _LoaderProgressLine(label: Strings.inviteOnboardingLoaderStepSolutions, done: true),
-          _LoaderProgressLine(label: Strings.inviteOnboardingLoaderStepBuild, done: false, inProgress: true),
-          _LoaderProgressLine(label: Strings.inviteOnboardingLoaderStepOrder, done: false),
+          _LoaderProgressLine(label: Strings.onboardingQuestionnaireLoaderStepRead, done: true),
+          _LoaderProgressLine(label: Strings.onboardingQuestionnaireLoaderStepSolutions, done: true),
+          _LoaderProgressLine(label: Strings.onboardingQuestionnaireLoaderStepBuild, done: false, inProgress: true),
+          _LoaderProgressLine(label: Strings.onboardingQuestionnaireLoaderStepOrder, done: false),
         ],
       ),
     );

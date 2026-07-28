@@ -3,6 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/accueil/accueil_actions.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
 import 'package:pass_emploi_app/features/date_consultation_notification/date_consultation_notification_actions.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_actions.dart';
@@ -18,6 +19,7 @@ import 'package:pass_emploi_app/pages/accueil/accueil_onboarding_tile.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_prochain_rendezvous.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_rating_app.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_suivi_des_offres.dart';
+import 'package:pass_emploi_app/pages/accueil/invite/invite_accueil_body.dart';
 import 'package:pass_emploi_app/pages/accueil/remote_campagne_accueil_card.dart';
 import 'package:pass_emploi_app/pages/benevolat_page.dart';
 import 'package:pass_emploi_app/pages/boite_a_outils_page.dart';
@@ -65,6 +67,10 @@ class _AccueilPageState extends State<AccueilPage> {
       tracking: AnalyticsScreenNames.accueil,
       child: StoreConnector<AppState, AccueilViewModel>(
         onInit: (store) {
+          if (store.state.isInviteLoginMode()) {
+            store.dispatch(ActionPlanRequestAction());
+            return;
+          }
           store.dispatch(AccueilRequestAction());
           store.dispatch(InAppNotificationsRequestAction());
           store.dispatch(DateConsultationNotificationRequestAction());
@@ -73,6 +79,7 @@ class _AccueilPageState extends State<AccueilPage> {
         converter: (store) => AccueilViewModel.create(store),
         builder: _builder,
         onDidChange: (previousViewModel, viewModel) {
+          if (StoreProvider.of<AppState>(context).state.isInviteLoginMode()) return;
           _handleSoftUpdateBottomSheet(viewModel);
           _handleNotificationsBottomSheet(viewModel);
           _handleDeeplink(previousViewModel, viewModel);
@@ -83,6 +90,12 @@ class _AccueilPageState extends State<AccueilPage> {
   }
 
   Widget _builder(BuildContext context, AccueilViewModel viewModel) {
+    if (StoreProvider.of<AppState>(context).state.isInviteLoginMode()) {
+      return Scaffold(
+        backgroundColor: context.bg,
+        body: ConnectivityContainer(child: InviteAccueilBody()),
+      );
+    }
     return Scaffold(
       backgroundColor: AppColorsSpecifics.acceuilBgColor(context),
       body: ConnectivityContainer(child: _Body(viewModel)),

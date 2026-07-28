@@ -3,8 +3,8 @@ import 'package:flutter_dsfr/flutter_dsfr.dart';
 
 /// Case à cocher au format « riche » (bordure, libellé, illustration),
 /// alignée sur le [DsfrRadioRichButton] du DSFR Flutter.
-class InviteOnboardingCheckboxRich extends StatelessWidget {
-  const InviteOnboardingCheckboxRich({
+class OnboardingQuestionnaireCheckboxRich extends StatelessWidget {
+  const OnboardingQuestionnaireCheckboxRich({
     super.key,
     required this.label,
     required this.value,

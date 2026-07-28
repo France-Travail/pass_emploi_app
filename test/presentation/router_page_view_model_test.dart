@@ -326,7 +326,47 @@ void main() {
       expect(viewModel.routerPageDisplayState, RouterPageDisplayState.cgu);
     });
 
-    test('should show invite onboarding when user is logged in as invite', () {
+    test('should show onboarding questionnaire when user is logged in as invite and questionnaire unfinished', () {
+      final store =
+          givenState() //
+              .copyWith(loginState: successUserState(loginMode: LoginMode.INVITE, accompagnement: Accompagnement.cej))
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withOnboardingQuestionnaire(finished: false)
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.onboardingQuestionnaire);
+    });
+
+    test('should show main when user is logged in as invite and onboarding finished', () {
+      final store =
+          givenState() //
+              .copyWith(loginState: successUserState(loginMode: LoginMode.INVITE, accompagnement: Accompagnement.cej))
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withOnboardingQuestionnaire(finished: true)
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.main);
+    });
+
+    test('should show tutorial when invite onboarding is finished and tutorial is pending', () {
+      final store =
+          givenState() //
+              .copyWith(loginState: successUserState(loginMode: LoginMode.INVITE, accompagnement: Accompagnement.cej))
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withOnboardingQuestionnaire(finished: true)
+              .copyWith(tutorialState: ShowTutorialState(Tutorial.milo))
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.tutorial);
+    });
+
+    test('should show splash when onboarding questionnaire is not initialized', () {
       final store =
           givenState() //
               .copyWith(loginState: successUserState(loginMode: LoginMode.INVITE, accompagnement: Accompagnement.cej))
@@ -335,7 +375,7 @@ void main() {
 
       final viewModel = RouterPageViewModel.create(store, Platform.IOS);
 
-      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.inviteOnboarding);
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.splash);
     });
   });
 
