@@ -5,6 +5,7 @@ class SecureStorageInMemoryDecorator extends FlutterSecureStorage {
   final FlutterSecureStorage decorated;
   final Map<String, String> _inMemoryStorage = {};
   final _lock = Lock();
+  bool _initialized = false;
 
   SecureStorageInMemoryDecorator(this.decorated);
 
@@ -21,12 +22,8 @@ class SecureStorageInMemoryDecorator extends FlutterSecureStorage {
   }) async {
     return _lock.synchronized(() async {
       await _initInMemoryStorageIfRequired(iOptions, aOptions, lOptions, webOptions, mOptions, wOptions);
-      if (value != null) {
-        _inMemoryStorage[key] = value;
-      } else {
-        _inMemoryStorage.remove(key);
-      }
-      decorated.write(
+      // Persist to disk first so a failed write cannot leave a RAM-only session.
+      await decorated.write(
         key: key,
         value: value,
         iOptions: iOptions,
@@ -36,6 +33,11 @@ class SecureStorageInMemoryDecorator extends FlutterSecureStorage {
         mOptions: mOptions,
         wOptions: wOptions,
       );
+      if (value != null) {
+        _inMemoryStorage[key] = value;
+      } else {
+        _inMemoryStorage.remove(key);
+      }
     });
   }
 
@@ -81,7 +83,7 @@ class SecureStorageInMemoryDecorator extends FlutterSecureStorage {
   }) async {
     return _lock.synchronized(() async {
       await _initInMemoryStorageIfRequired(iOptions, aOptions, lOptions, webOptions, mOptions, wOptions);
-      return _inMemoryStorage;
+      return Map<String, String>.from(_inMemoryStorage);
     });
   }
 
@@ -98,7 +100,7 @@ class SecureStorageInMemoryDecorator extends FlutterSecureStorage {
     return _lock.synchronized(() async {
       await _initInMemoryStorageIfRequired(iOptions, aOptions, lOptions, webOptions, mOptions, wOptions);
       _inMemoryStorage.remove(key);
-      decorated.delete(
+      await decorated.delete(
         key: key,
         iOptions: iOptions,
         aOptions: aOptions,
@@ -121,7 +123,8 @@ class SecureStorageInMemoryDecorator extends FlutterSecureStorage {
   }) async {
     return _lock.synchronized(() async {
       _inMemoryStorage.clear();
-      decorated.deleteAll(
+      _initialized = true;
+      await decorated.deleteAll(
         iOptions: iOptions,
         aOptions: aOptions,
         lOptions: lOptions,
@@ -140,15 +143,15 @@ class SecureStorageInMemoryDecorator extends FlutterSecureStorage {
     AppleOptions? mOptions,
     WindowsOptions? wOptions,
   ) async {
-    if (_inMemoryStorage.isEmpty) {
-      _inMemoryStorage.addAll(await decorated.readAll(
-        iOptions: iOptions,
-        aOptions: aOptions,
-        lOptions: lOptions,
-        webOptions: webOptions,
-        mOptions: mOptions,
-        wOptions: wOptions,
-      ));
-    }
+    if (_initialized) return;
+    _inMemoryStorage.addAll(await decorated.readAll(
+      iOptions: iOptions,
+      aOptions: aOptions,
+      lOptions: lOptions,
+      webOptions: webOptions,
+      mOptions: mOptions,
+      wOptions: wOptions,
+    ));
+    _initialized = true;
   }
 }

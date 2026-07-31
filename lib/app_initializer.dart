@@ -175,7 +175,17 @@ class AppInitializer {
     final crashlytics = CrashlyticsWithFirebase(FirebaseCrashlytics.instance);
     final pushNotificationManager = PushNotificationManager();
     final securedPreferences = SecureStorageInMemoryDecorator(
-      SecureStorageExceptionHandlerDecorator(FlutterSecureStorage(aOptions: AndroidOptions())),
+      SecureStorageExceptionHandlerDecorator(
+        FlutterSecureStorage(
+          aOptions: AndroidOptions(
+            // Avoid silently wiping all tokens on OEM KeyStore / decrypt errors
+            // (Samsung, Honor/MagicOS, Android 16…). Prefer surfacing the error.
+            resetOnError: false,
+            migrateWithBackup: true,
+          ),
+        ),
+        crashlytics,
+      ),
     );
     final remoteConfigRepository = RemoteConfigRepository(firebaseRemoteConfig);
     final logoutRepository = LogoutRepository(

@@ -30,7 +30,10 @@ class SecureStorageExceptionHandlerDecorator extends FlutterSecureStorage {
         wOptions: wOptions,
       );
     } catch (exception, stack) {
-      crashlytics?.recordNonNetworkException(exception, stack);
+      crashlytics?.recordNonNetworkException('SecureStorage write failed for key "$key": $exception', stack);
+      // Rethrow so callers (e.g. login token persistence) do not treat a failed
+      // disk write as success and keep a RAM-only session.
+      rethrow;
     }
   }
 
@@ -55,7 +58,7 @@ class SecureStorageExceptionHandlerDecorator extends FlutterSecureStorage {
         wOptions: wOptions,
       );
     } catch (exception, stack) {
-      crashlytics?.recordNonNetworkException(exception, stack);
+      crashlytics?.recordNonNetworkException('SecureStorage read failed for key "$key": $exception', stack);
       return null;
     }
   }
@@ -80,7 +83,7 @@ class SecureStorageExceptionHandlerDecorator extends FlutterSecureStorage {
         wOptions: wOptions,
       );
     } catch (exception, stack) {
-      crashlytics?.recordNonNetworkException(exception, stack);
+      crashlytics?.recordNonNetworkException('SecureStorage containsKey failed for key "$key": $exception', stack);
       return false;
     }
   }
@@ -94,20 +97,18 @@ class SecureStorageExceptionHandlerDecorator extends FlutterSecureStorage {
     AppleOptions? mOptions,
     WindowsOptions? wOptions,
   }) async {
-    {
-      try {
-        return await decorated.readAll(
-          iOptions: iOptions,
-          aOptions: aOptions,
-          lOptions: lOptions,
-          webOptions: webOptions,
-          mOptions: mOptions,
-          wOptions: wOptions,
-        );
-      } catch (exception, stack) {
-        crashlytics?.recordNonNetworkException(exception, stack);
-        return {};
-      }
+    try {
+      return await decorated.readAll(
+        iOptions: iOptions,
+        aOptions: aOptions,
+        lOptions: lOptions,
+        webOptions: webOptions,
+        mOptions: mOptions,
+        wOptions: wOptions,
+      );
+    } catch (exception, stack) {
+      crashlytics?.recordNonNetworkException('SecureStorage readAll failed: $exception', stack);
+      return {};
     }
   }
 
@@ -132,7 +133,7 @@ class SecureStorageExceptionHandlerDecorator extends FlutterSecureStorage {
         wOptions: wOptions,
       );
     } catch (exception, stack) {
-      crashlytics?.recordNonNetworkException(exception, stack);
+      crashlytics?.recordNonNetworkException('SecureStorage delete failed for key "$key": $exception', stack);
     }
   }
 
@@ -155,7 +156,7 @@ class SecureStorageExceptionHandlerDecorator extends FlutterSecureStorage {
         wOptions: wOptions,
       );
     } catch (exception, stack) {
-      crashlytics?.recordNonNetworkException(exception, stack);
+      crashlytics?.recordNonNetworkException('SecureStorage deleteAll failed: $exception', stack);
     }
   }
 }
