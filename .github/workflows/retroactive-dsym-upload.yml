@@ -155,17 +155,21 @@ jobs:
 
           mkdir -p artifacts
           ditto -c -k --sequesterRsrc --keepParent "${ARCHIVE_PATH}/dSYMs" "artifacts/cej-dsyms-${{ inputs.tag }}.zip"
+
+          if [ "${UPLOAD_TO_CRASHLYTICS}" = "true" ]; then
+            UPLOAD_SYMBOLS="ios/Pods/FirebaseCrashlytics/upload-symbols"
+            GOOGLE_SERVICE_PLIST="ios/firebase-config/cejProd/GoogleService-Info.plist"
+            echo "Uploading dSYMs from ${ARCHIVE_PATH}/dSYMs to Crashlytics (cejProd)"
+            find "${ARCHIVE_PATH}/dSYMs" -name "*.dSYM" -print0 | while IFS= read -r -d '' dsym; do
+              echo "Uploading ${dsym}"
+              "${UPLOAD_SYMBOLS}" -gsp "${GOOGLE_SERVICE_PLIST}" -p ios "${dsym}"
+            done
+          fi
         env:
           APPLE_PROD_API_ISSUER: ${{ secrets.APPLE_PROD_API_ISSUER }}
           APPLE_PROD_API_KEY: ${{ secrets.APPLE_PROD_API_KEY }}
           APPLE_P12_PRIVATE_KEY: ${{ secrets.APPLE_P12_PRIVATE_KEY }}
-
-      - name: CEJ - Upload dSYMs to Crashlytics
-        if: ${{ (inputs.flavor == 'both' || inputs.flavor == 'cejProd') && inputs.upload_to_crashlytics }}
-        shell: bash
-        run: |
-          chmod +x ios/scripts/upload_crashlytics_dsyms.sh
-          ios/scripts/upload_crashlytics_dsyms.sh cejProd
+          UPLOAD_TO_CRASHLYTICS: ${{ inputs.upload_to_crashlytics }}
 
       - name: CEJ - Save dSYMs artifact
         if: ${{ inputs.flavor == 'both' || inputs.flavor == 'cejProd' }}
@@ -212,17 +216,21 @@ jobs:
 
           mkdir -p artifacts
           ditto -c -k --sequesterRsrc --keepParent "${ARCHIVE_PATH}/dSYMs" "artifacts/brsa-dsyms-${{ inputs.tag }}.zip"
+
+          if [ "${UPLOAD_TO_CRASHLYTICS}" = "true" ]; then
+            UPLOAD_SYMBOLS="ios/Pods/FirebaseCrashlytics/upload-symbols"
+            GOOGLE_SERVICE_PLIST="ios/firebase-config/brsaProd/GoogleService-Info.plist"
+            echo "Uploading dSYMs from ${ARCHIVE_PATH}/dSYMs to Crashlytics (brsaProd)"
+            find "${ARCHIVE_PATH}/dSYMs" -name "*.dSYM" -print0 | while IFS= read -r -d '' dsym; do
+              echo "Uploading ${dsym}"
+              "${UPLOAD_SYMBOLS}" -gsp "${GOOGLE_SERVICE_PLIST}" -p ios "${dsym}"
+            done
+          fi
         env:
           APPLE_PROD_API_ISSUER: ${{ secrets.APPLE_PROD_API_ISSUER }}
           APPLE_PROD_API_KEY: ${{ secrets.APPLE_PROD_API_KEY }}
           APPLE_P12_PRIVATE_KEY: ${{ secrets.APPLE_P12_PRIVATE_KEY }}
-
-      - name: BRSA - Upload dSYMs to Crashlytics
-        if: ${{ (inputs.flavor == 'both' || inputs.flavor == 'brsaProd') && inputs.upload_to_crashlytics }}
-        shell: bash
-        run: |
-          chmod +x ios/scripts/upload_crashlytics_dsyms.sh
-          ios/scripts/upload_crashlytics_dsyms.sh brsaProd
+          UPLOAD_TO_CRASHLYTICS: ${{ inputs.upload_to_crashlytics }}
 
       - name: BRSA - Save dSYMs artifact
         if: ${{ inputs.flavor == 'both' || inputs.flavor == 'brsaProd' }}
