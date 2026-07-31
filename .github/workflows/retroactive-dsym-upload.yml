@@ -1,0 +1,233 @@
+name: Retroactive dSYM upload
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Git tag to rebuild (e.g. 4.12.2)"
+        required: true
+        type: string
+      flavor:
+        description: "App flavor to rebuild"
+        required: true
+        type: choice
+        default: both
+        options:
+          - both
+          - cejProd
+          - brsaProd
+      xcode_version:
+        description: "Xcode version (use a pinned version if UUIDs do not match Crashlytics)"
+        required: false
+        type: string
+        default: latest-stable
+      upload_to_crashlytics:
+        description: "Upload dSYMs to Firebase Crashlytics"
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  rebuild-dsyms:
+    runs-on: macos-26
+    steps:
+      - name: Checkout tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ inputs.xcode_version }}
+
+      - name: Set Environment Variables
+        uses: ./.github/actions/setvars
+        with:
+          varFilePath: ./.github/variables/myvars.env
+
+      - name: Validate tag
+        shell: bash
+        run: |
+          expected_version="${{ inputs.tag }}"
+          actual_version="$(grep '^version:' pubspec.yaml | awk '{print $2}')"
+          echo "Tag: ${expected_version}, pubspec version: ${actual_version}"
+          if [ "${expected_version}" != "${actual_version}" ]; then
+            echo "::warning::Tag (${expected_version}) does not match pubspec.yaml version (${actual_version})"
+          fi
+
+      - name: Write ssh gitlab private key
+        shell: bash
+        run: |
+          echo "$SSH_GITLAB_PRIVATE_KEY" > ~/.ssh/id_ed25519
+        env:
+          SSH_GITLAB_PRIVATE_KEY: ${{ secrets.SSH_GITLAB_PRIVATE_KEY }}
+
+      - name: ssh agent
+        shell: bash
+        run: |
+          chmod 600 ~/.ssh/id_ed25519
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_ed25519
+          ssh-keyscan -t rsa gitlab.com >> ~/.ssh/known_hosts
+
+      - uses: subosito/flutter-action@v2
+        with:
+          cache: true
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Codemagic CLI tools
+        shell: bash
+        run: pip3 install codemagic-cli-tools
+
+      - name: Write Google configuration for ios
+        shell: bash
+        run: |
+          mkdir -p ios/firebase-config/cejProd
+          mkdir -p ios/firebase-config/brsaProd
+          echo "$CEJ_PROD_GOOGLE_SERVICE_IOS_B64" | base64 --decode > ios/firebase-config/cejProd/GoogleService-Info.plist
+          echo "$BRSA_PROD_GOOGLE_SERVICE_IOS_B64" | base64 --decode > ios/firebase-config/brsaProd/GoogleService-Info.plist
+        env:
+          CEJ_PROD_GOOGLE_SERVICE_IOS_B64: ${{ secrets.CEJ_PROD_GOOGLE_SERVICE_IOS_B64 }}
+          BRSA_PROD_GOOGLE_SERVICE_IOS_B64: ${{ secrets.BRSA_PROD_GOOGLE_SERVICE_IOS_B64 }}
+
+      - name: Write env
+        shell: bash
+        run: |
+          echo "$PROD_RUNTIME_ENV_B64" | base64 --decode > env/.env.prod
+        env:
+          PROD_RUNTIME_ENV_B64: ${{ secrets.PROD_RUNTIME_ENV_B64 }}
+
+      - name: Install Flutter dependencies
+        shell: bash
+        run: flutter pub get
+
+      - name: Install CocoaPods dependencies
+        shell: bash
+        run: find . -name "Podfile" -execdir pod install \;
+
+      - name: Write Apple prod API Key
+        shell: bash
+        run: |
+          mkdir ~/.private_keys
+          echo "$APPLE_PROD_API_KEY_B64" | base64 --decode > ios/AuthKey_"$APPLE_PROD_API_KEY".p8
+        env:
+          APPLE_PROD_API_KEY: ${{ secrets.APPLE_PROD_API_KEY }}
+          APPLE_PROD_API_KEY_B64: ${{ secrets.APPLE_PROD_API_KEY_B64 }}
+
+      - name: CEJ - Build dSYMs
+        if: ${{ inputs.flavor == 'both' || inputs.flavor == 'cejProd' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          keychain initialize
+
+          export APP_STORE_CONNECT_ISSUER_ID="$APPLE_PROD_API_ISSUER"
+          export APP_STORE_CONNECT_KEY_IDENTIFIER="$APPLE_PROD_API_KEY"
+          export APP_STORE_CONNECT_PRIVATE_KEY="$(cat ios/AuthKey_${APPLE_PROD_API_KEY}.p8)"
+          app-store-connect fetch-signing-files fr.fabrique.social.gouv.passemploi \
+            --platform IOS \
+            --type IOS_APP_STORE \
+            --certificate-key=@env:APPLE_P12_PRIVATE_KEY \
+            --create
+
+          keychain add-certificates
+          xcode-project use-profiles --export-options-plist ios/prod_export_options.plist
+
+          flutter build ipa \
+            -t lib/cej_main.dart \
+            --flavor cejProd \
+            --release \
+            --build-number=0 \
+            --export-options-plist=ios/prod_export_options.plist \
+            --no-pub
+
+          ARCHIVE_PATH="$(find build/ios/archive -name "*.xcarchive" -type d | sort | tail -1)"
+          echo "CEJ archive: ${ARCHIVE_PATH}"
+          echo "## CEJ dSYM UUIDs (${{ inputs.tag }})" >> "$GITHUB_STEP_SUMMARY"
+          find "${ARCHIVE_PATH}/dSYMs" -name "*.dSYM" -print0 | while IFS= read -r -d '' dsym; do
+            dwarfdump --uuid "$dsym" | tee -a "$GITHUB_STEP_SUMMARY"
+          done
+
+          mkdir -p artifacts
+          ditto -c -k --sequesterRsrc --keepParent "${ARCHIVE_PATH}/dSYMs" "artifacts/cej-dsyms-${{ inputs.tag }}.zip"
+        env:
+          APPLE_PROD_API_ISSUER: ${{ secrets.APPLE_PROD_API_ISSUER }}
+          APPLE_PROD_API_KEY: ${{ secrets.APPLE_PROD_API_KEY }}
+          APPLE_P12_PRIVATE_KEY: ${{ secrets.APPLE_P12_PRIVATE_KEY }}
+
+      - name: CEJ - Upload dSYMs to Crashlytics
+        if: ${{ (inputs.flavor == 'both' || inputs.flavor == 'cejProd') && inputs.upload_to_crashlytics }}
+        shell: bash
+        run: |
+          chmod +x ios/scripts/upload_crashlytics_dsyms.sh
+          ios/scripts/upload_crashlytics_dsyms.sh cejProd
+
+      - name: CEJ - Save dSYMs artifact
+        if: ${{ inputs.flavor == 'both' || inputs.flavor == 'cejProd' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: cej-dsyms-${{ inputs.tag }}
+          path: artifacts/cej-dsyms-${{ inputs.tag }}.zip
+          retention-days: 90
+
+      - name: BRSA - Build dSYMs
+        if: ${{ inputs.flavor == 'both' || inputs.flavor == 'brsaProd' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          keychain initialize
+
+          export APP_STORE_CONNECT_ISSUER_ID="$APPLE_PROD_API_ISSUER"
+          export APP_STORE_CONNECT_KEY_IDENTIFIER="$APPLE_PROD_API_KEY"
+          export APP_STORE_CONNECT_PRIVATE_KEY="$(cat ios/AuthKey_${APPLE_PROD_API_KEY}.p8)"
+          app-store-connect fetch-signing-files fr.fabrique.social.gouv.passemploi.rsa \
+            --platform IOS \
+            --type IOS_APP_STORE \
+            --certificate-key=@env:APPLE_P12_PRIVATE_KEY \
+            --create
+
+          keychain add-certificates
+          xcode-project use-profiles --export-options-plist ios/prod_export_options.plist
+
+          flutter build ipa \
+            -t lib/brsa_main.dart \
+            --flavor brsaProd \
+            --release \
+            --build-number=0 \
+            --export-options-plist=ios/prod_export_options.plist \
+            --no-pub
+
+          ARCHIVE_PATH="$(find build/ios/archive -name "*.xcarchive" -type d | sort | tail -1)"
+          echo "BRSA archive: ${ARCHIVE_PATH}"
+          echo "## BRSA dSYM UUIDs (${{ inputs.tag }})" >> "$GITHUB_STEP_SUMMARY"
+          find "${ARCHIVE_PATH}/dSYMs" -name "*.dSYM" -print0 | while IFS= read -r -d '' dsym; do
+            dwarfdump --uuid "$dsym" | tee -a "$GITHUB_STEP_SUMMARY"
+          done
+
+          mkdir -p artifacts
+          ditto -c -k --sequesterRsrc --keepParent "${ARCHIVE_PATH}/dSYMs" "artifacts/brsa-dsyms-${{ inputs.tag }}.zip"
+        env:
+          APPLE_PROD_API_ISSUER: ${{ secrets.APPLE_PROD_API_ISSUER }}
+          APPLE_PROD_API_KEY: ${{ secrets.APPLE_PROD_API_KEY }}
+          APPLE_P12_PRIVATE_KEY: ${{ secrets.APPLE_P12_PRIVATE_KEY }}
+
+      - name: BRSA - Upload dSYMs to Crashlytics
+        if: ${{ (inputs.flavor == 'both' || inputs.flavor == 'brsaProd') && inputs.upload_to_crashlytics }}
+        shell: bash
+        run: |
+          chmod +x ios/scripts/upload_crashlytics_dsyms.sh
+          ios/scripts/upload_crashlytics_dsyms.sh brsaProd
+
+      - name: BRSA - Save dSYMs artifact
+        if: ${{ inputs.flavor == 'both' || inputs.flavor == 'brsaProd' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: brsa-dsyms-${{ inputs.tag }}
+          path: artifacts/brsa-dsyms-${{ inputs.tag }}.zip
+          retention-days: 90
