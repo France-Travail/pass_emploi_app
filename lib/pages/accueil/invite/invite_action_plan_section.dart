@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
@@ -345,7 +346,14 @@ class _EmojiAvatar extends StatelessWidget {
       height: 48,
       alignment: Alignment.center,
       decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(15)),
-      child: Text(emoji, style: const TextStyle(fontSize: 24)),
+      child: Text(
+        emoji,
+        style: TextStyle(
+          fontSize: 24,
+          // Force color emoji on iOS for dingbats like ✈️ (U+2708).
+          fontFamily: defaultTargetPlatform == TargetPlatform.iOS ? 'Apple Color Emoji' : null,
+        ),
+      ),
     );
   }
 }

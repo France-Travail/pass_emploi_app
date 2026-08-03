@@ -90,7 +90,6 @@ void main() {
             QuestionnaireFrein.sante,
             QuestionnaireFrein.peuExperience,
             QuestionnaireFrein.francais,
-            QuestionnaireFrein.autre,
           },
         ),
       ),

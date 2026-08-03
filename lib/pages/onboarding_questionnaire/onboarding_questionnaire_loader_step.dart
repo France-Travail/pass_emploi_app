@@ -115,12 +115,11 @@ class _OnboardingQuestionnaireLoaderStepState extends State<OnboardingQuestionna
                               children: [
                                 if (answers.objectifs.isNotEmpty)
                                   DsfrTag(
-                                    label: Strings.onboardingQuestionnaireLoaderObjectifsCount(answers.objectifs.length),
-                                    size: DsfrComponentSize.sm,
-                                  ),
-                                if (answers.freins.isNotEmpty)
-                                  DsfrTag(
-                                    label: Strings.onboardingQuestionnaireLoaderContraintesCount(answers.freins.length),
+                                    backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
+                                    textColor: DsfrColorDecisions.textTitleGrey(context),
+                                    label: Strings.onboardingQuestionnaireLoaderObjectifsCount(
+                                      answers.objectifs.length,
+                                    ),
                                     size: DsfrComponentSize.sm,
                                   ),
                               ],
@@ -137,7 +136,7 @@ class _OnboardingQuestionnaireLoaderStepState extends State<OnboardingQuestionna
           const SizedBox(height: Margins.spacing_l),
           _LoaderProgressLine(label: Strings.onboardingQuestionnaireLoaderStepRead, done: true),
           _LoaderProgressLine(label: Strings.onboardingQuestionnaireLoaderStepSolutions, done: true),
-          _LoaderProgressLine(label: Strings.onboardingQuestionnaireLoaderStepBuild, done: false, inProgress: true),
+          _LoaderProgressLine(label: Strings.onboardingQuestionnaireLoaderStepBuild, done: false),
           _LoaderProgressLine(label: Strings.onboardingQuestionnaireLoaderStepOrder, done: false),
         ],
       ),
@@ -178,32 +177,22 @@ class _ProfilRow extends StatelessWidget {
 }
 
 class _LoaderProgressLine extends StatelessWidget {
-  const _LoaderProgressLine({
-    required this.label,
-    required this.done,
-    this.inProgress = false,
-  });
+  const _LoaderProgressLine({required this.label, required this.done});
 
   final String label;
   final bool done;
-  final bool inProgress;
 
   @override
   Widget build(BuildContext context) {
-    final textColor = done || inProgress
-        ? DsfrColorDecisions.textTitleGrey(context)
-        : DsfrColorDecisions.textDisabledGrey(context);
-    final iconColor = done || inProgress
-        ? DsfrColorDecisions.backgroundActiveBlueFrance(context)
-        : DsfrColorDecisions.textDisabledGrey(context);
+    final textColor = done ? DsfrColorDecisions.textTitleGrey(context) : DsfrColorDecisions.textDisabledGrey(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
           Icon(
-            done ? Icons.check : (inProgress ? Icons.schedule : Icons.circle_outlined),
+            done ? Icons.check : Icons.schedule,
             size: 20,
-            color: iconColor,
+            color: textColor,
           ),
           const SizedBox(width: 12),
           Expanded(

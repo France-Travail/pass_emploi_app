@@ -30,6 +30,7 @@ class OnboardingQuestionnaireDomaineStep extends StatelessWidget {
         const SizedBox(height: Margins.spacing_base),
         DsfrButton(
           label: Strings.onboardingQuestionnaireDomaineUnknown,
+          icon: DsfrIcons.communicationQuestionnaireLine,
           variant: DsfrButtonVariant.secondary,
           size: DsfrComponentSize.lg,
           onPressed: () => form.markDomaineUnknownAndContinue(),
