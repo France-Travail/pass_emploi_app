@@ -24,6 +24,8 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
       await _load(store);
     } else if (action is OnboardingQuestionnaireCompleteAction) {
       await _complete(store, action.answers);
+    } else if (action is OnboardingQuestionnaireFinishAction) {
+      store.dispatch(OnboardingQuestionnaireSuccessAction(finished: true, answers: action.answers));
     } else if (action is OnboardingQuestionnaireResumeAction) {
       await _resume(store);
     } else if (action is OnboardingQuestionnaireAnswersUpdatedAction) {
@@ -55,8 +57,9 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
     } else {
       store.dispatch(ActionPlanEmptyAction());
     }
+    // Persisted early so a kill during the 100% animation still skips the questionnaire on relaunch.
+    // `finished: true` in state is deferred to [OnboardingQuestionnaireFinishAction] so the UI can show 100%.
     await _repository.setFinished(true);
-    store.dispatch(OnboardingQuestionnaireSuccessAction(finished: true, answers: answers));
   }
 
   Future<void> _resume(Store<AppState> store) async {

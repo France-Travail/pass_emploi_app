@@ -47,7 +47,7 @@ void main() {
     expect(questionnaireState.answers.prenom, 'Léa');
   });
 
-  test('complete without enough answers marks finished and empties plan', () async {
+  test('complete without enough answers empties plan and persists finished flag', () async {
     when(() => repository.saveAnswers(any())).thenAnswer((_) async {});
     when(() => repository.setFinished(true)).thenAnswer((_) async {});
 
@@ -57,21 +57,23 @@ void main() {
     final store = factory.initializeReduxStore(
       initialState: givenState().loggedInUser(loginMode: LoginMode.INVITE),
     );
-    final finished = store.onChange.firstWhere(
-      (s) =>
-          s.onboardingQuestionnaireState is OnboardingQuestionnaireSuccessState &&
-          (s.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState).finished,
-    );
+    final emptied = store.onChange.firstWhere((s) => s.actionPlanState is ActionPlanEmptyState);
 
     store.dispatch(OnboardingQuestionnaireCompleteAction(const OnboardingQuestionnaireAnswers()));
 
-    final state = await finished;
+    final state = await emptied;
     expect(state.actionPlanState, isA<ActionPlanEmptyState>());
+    final questionnaireState = state.onboardingQuestionnaireState;
+    if (questionnaireState is OnboardingQuestionnaireSuccessState) {
+      expect(questionnaireState.finished, isFalse);
+    }
     verify(() => repository.saveAnswers(any())).called(1);
+    await untilCalled(() => repository.setFinished(true));
+    verify(() => repository.setFinished(true)).called(1);
     verifyNever(() => actionPlanRepository.generate(any(), any()));
   });
 
-  test('complete with enough answers generates plan then marks finished', () async {
+  test('complete with enough answers generates plan and persists finished flag', () async {
     final answers = const OnboardingQuestionnaireAnswers(
       situation: QuestionnaireSituation.lycee,
       objectifs: {QuestionnaireObjectif.emploi},
@@ -87,20 +89,47 @@ void main() {
     final store = factory.initializeReduxStore(
       initialState: givenState().loggedInUser(loginMode: LoginMode.INVITE),
     );
-    final finished = store.onChange.firstWhere(
-      (s) =>
-          s.onboardingQuestionnaireState is OnboardingQuestionnaireSuccessState &&
-          (s.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState).finished &&
-          s.actionPlanState is ActionPlanSuccessState,
-    );
+    final generated = store.onChange.firstWhere((s) => s.actionPlanState is ActionPlanSuccessState);
 
     store.dispatch(OnboardingQuestionnaireCompleteAction(answers));
 
-    final state = await finished;
+    final state = await generated;
     expect((state.actionPlanState as ActionPlanSuccessState).plan.id, 'p1');
-    expect((state.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState).answers, answers);
+    final questionnaireState = state.onboardingQuestionnaireState;
+    if (questionnaireState is OnboardingQuestionnaireSuccessState) {
+      expect(questionnaireState.finished, isFalse);
+    }
     verify(() => repository.saveAnswers(answers)).called(1);
+    await untilCalled(() => repository.setFinished(true));
+    verify(() => repository.setFinished(true)).called(1);
     verify(() => actionPlanRepository.generate(any(), answers)).called(1);
+  });
+
+  test('finish action marks questionnaire as finished in state', () async {
+    final answers = const OnboardingQuestionnaireAnswers(prenom: 'Léa');
+    final factory = TestStoreFactory()
+      ..onboardingQuestionnaireRepository = repository
+      ..actionPlanRepository = actionPlanRepository;
+    final store = factory.initializeReduxStore(
+      initialState: givenState()
+          .loggedInUser(loginMode: LoginMode.INVITE)
+          .copyWith(
+            onboardingQuestionnaireState: OnboardingQuestionnaireSuccessState(
+              finished: false,
+              answers: answers,
+            ),
+          ),
+    );
+    final finished = store.onChange.firstWhere(
+      (s) =>
+          s.onboardingQuestionnaireState is OnboardingQuestionnaireSuccessState &&
+          (s.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState).finished,
+    );
+
+    store.dispatch(OnboardingQuestionnaireFinishAction(answers));
+
+    final state = await finished;
+    expect((state.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState).answers, answers);
   });
 
   test('answers updated action persists via repository', () async {
