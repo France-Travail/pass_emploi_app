@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingQuestionnaireEmojiIllustration extends StatelessWidget {
@@ -22,7 +23,12 @@ class OnboardingQuestionnaireEmojiIllustration extends StatelessWidget {
         child: Center(
           child: Text(
             emoji,
-            style: const TextStyle(fontSize: 24, height: 32 / 24),
+            style: TextStyle(
+              fontSize: 24,
+              height: 32 / 24,
+              // Force color emoji on iOS for dingbats like ✈️ (U+2708).
+              fontFamily: defaultTargetPlatform == TargetPlatform.iOS ? 'Apple Color Emoji' : null,
+            ),
           ),
         ),
       ),

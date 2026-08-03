@@ -54,12 +54,12 @@ class QuestionnaireCommune extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-        'code': code,
-        'nom': nom,
-        if (codePostal != null) 'codePostal': codePostal,
-        if (latitude != null) 'latitude': latitude,
-        if (longitude != null) 'longitude': longitude,
-      };
+    'code': code,
+    'nom': nom,
+    if (codePostal != null) 'codePostal': codePostal,
+    if (latitude != null) 'latitude': latitude,
+    if (longitude != null) 'longitude': longitude,
+  };
 
   factory QuestionnaireCommune.fromStorageJson(Map<String, dynamic> json) {
     return QuestionnaireCommune(
@@ -83,28 +83,28 @@ enum QuestionnaireSituation {
   autre;
 
   String get label => switch (this) {
-        QuestionnaireSituation.college => Strings.onboardingQuestionnaireSituationCollege,
-        QuestionnaireSituation.lycee => Strings.onboardingQuestionnaireSituationLycee,
-        QuestionnaireSituation.etudesSuperieures => Strings.onboardingQuestionnaireSituationEtudes,
-        QuestionnaireSituation.emploi => Strings.onboardingQuestionnaireSituationEmploi,
-        QuestionnaireSituation.autre => Strings.onboardingQuestionnaireSituationAutre,
-      };
+    QuestionnaireSituation.college => Strings.onboardingQuestionnaireSituationCollege,
+    QuestionnaireSituation.lycee => Strings.onboardingQuestionnaireSituationLycee,
+    QuestionnaireSituation.etudesSuperieures => Strings.onboardingQuestionnaireSituationEtudes,
+    QuestionnaireSituation.emploi => Strings.onboardingQuestionnaireSituationEmploi,
+    QuestionnaireSituation.autre => Strings.onboardingQuestionnaireSituationAutre,
+  };
 
   String get emoji => switch (this) {
-        QuestionnaireSituation.college => '📚',
-        QuestionnaireSituation.lycee => '🎓',
-        QuestionnaireSituation.etudesSuperieures => '🏫',
-        QuestionnaireSituation.emploi => '💼',
-        QuestionnaireSituation.autre => '✨',
-      };
+    QuestionnaireSituation.college => '📚',
+    QuestionnaireSituation.lycee => '🎓',
+    QuestionnaireSituation.etudesSuperieures => '🏫',
+    QuestionnaireSituation.emploi => '💼',
+    QuestionnaireSituation.autre => '✨',
+  };
 
   Color get illustrationColor => switch (this) {
-        QuestionnaireSituation.college => DsfrColors.purpleGlycine950,
-        QuestionnaireSituation.lycee => DsfrColors.blueCumulus950,
-        QuestionnaireSituation.etudesSuperieures => DsfrColors.greenTilleulVerveine950,
-        QuestionnaireSituation.emploi => DsfrColors.pinkTuile925,
-        QuestionnaireSituation.autre => DsfrColors.greenEmeraude950,
-      };
+    QuestionnaireSituation.college => DsfrColors.purpleGlycine950,
+    QuestionnaireSituation.lycee => DsfrColors.blueCumulus950,
+    QuestionnaireSituation.etudesSuperieures => DsfrColors.greenTilleulVerveine950,
+    QuestionnaireSituation.emploi => DsfrColors.pinkTuile925,
+    QuestionnaireSituation.autre => DsfrColors.greenEmeraude950,
+  };
 
   String get storageValue => name;
 
@@ -131,46 +131,46 @@ enum QuestionnaireObjectif {
   vieQuotidienne;
 
   String get label => switch (this) {
-        QuestionnaireObjectif.orienter => Strings.onboardingQuestionnaireObjectifOrienter,
-        QuestionnaireObjectif.decouvrirMetiers => Strings.onboardingQuestionnaireObjectifDecouvrirMetiers,
-        QuestionnaireObjectif.former => Strings.onboardingQuestionnaireObjectifFormer,
-        QuestionnaireObjectif.stageImmersion => Strings.onboardingQuestionnaireObjectifStage,
-        QuestionnaireObjectif.alternance => Strings.onboardingQuestionnaireObjectifAlternance,
-        QuestionnaireObjectif.emploi => Strings.onboardingQuestionnaireObjectifEmploi,
-        QuestionnaireObjectif.engager => Strings.onboardingQuestionnaireObjectifEngager,
-        QuestionnaireObjectif.mobiliteInternationale => Strings.onboardingQuestionnaireObjectifMobilite,
-        QuestionnaireObjectif.accompagne => Strings.onboardingQuestionnaireObjectifAccompagne,
-        QuestionnaireObjectif.creerActivite => Strings.onboardingQuestionnaireObjectifCreerActivite,
-        QuestionnaireObjectif.vieQuotidienne => Strings.onboardingQuestionnaireObjectifVieQuotidienne,
-      };
+    QuestionnaireObjectif.orienter => Strings.onboardingQuestionnaireObjectifOrienter,
+    QuestionnaireObjectif.decouvrirMetiers => Strings.onboardingQuestionnaireObjectifDecouvrirMetiers,
+    QuestionnaireObjectif.former => Strings.onboardingQuestionnaireObjectifFormer,
+    QuestionnaireObjectif.stageImmersion => Strings.onboardingQuestionnaireObjectifStage,
+    QuestionnaireObjectif.alternance => Strings.onboardingQuestionnaireObjectifAlternance,
+    QuestionnaireObjectif.emploi => Strings.onboardingQuestionnaireObjectifEmploi,
+    QuestionnaireObjectif.engager => Strings.onboardingQuestionnaireObjectifEngager,
+    QuestionnaireObjectif.mobiliteInternationale => Strings.onboardingQuestionnaireObjectifMobilite,
+    QuestionnaireObjectif.accompagne => Strings.onboardingQuestionnaireObjectifAccompagne,
+    QuestionnaireObjectif.creerActivite => Strings.onboardingQuestionnaireObjectifCreerActivite,
+    QuestionnaireObjectif.vieQuotidienne => Strings.onboardingQuestionnaireObjectifVieQuotidienne,
+  };
 
   String get emoji => switch (this) {
-        QuestionnaireObjectif.orienter => '🧭',
-        QuestionnaireObjectif.decouvrirMetiers => '🔎',
-        QuestionnaireObjectif.former => '📚',
-        QuestionnaireObjectif.stageImmersion => '👀',
-        QuestionnaireObjectif.alternance => '🔧',
-        QuestionnaireObjectif.emploi => '💼',
-        QuestionnaireObjectif.engager => '🤝',
-        QuestionnaireObjectif.mobiliteInternationale => '✈️',
-        QuestionnaireObjectif.accompagne => '🩹',
-        QuestionnaireObjectif.creerActivite => '🚀',
-        QuestionnaireObjectif.vieQuotidienne => '🍿',
-      };
+    QuestionnaireObjectif.orienter => '🧭',
+    QuestionnaireObjectif.decouvrirMetiers => '🔎',
+    QuestionnaireObjectif.former => '📚',
+    QuestionnaireObjectif.stageImmersion => '👀',
+    QuestionnaireObjectif.alternance => '🔧',
+    QuestionnaireObjectif.emploi => '💼',
+    QuestionnaireObjectif.engager => '🤝',
+    QuestionnaireObjectif.mobiliteInternationale => '✈️',
+    QuestionnaireObjectif.accompagne => '🧰',
+    QuestionnaireObjectif.creerActivite => '🚀',
+    QuestionnaireObjectif.vieQuotidienne => '🍿',
+  };
 
   Color get illustrationColor => switch (this) {
-        QuestionnaireObjectif.orienter => DsfrColors.pinkTuile950,
-        QuestionnaireObjectif.decouvrirMetiers => DsfrColors.greenTilleulVerveine950,
-        QuestionnaireObjectif.former => DsfrColors.purpleGlycine950,
-        QuestionnaireObjectif.stageImmersion => DsfrColors.blueCumulus950,
-        QuestionnaireObjectif.alternance => DsfrColors.blueFrance925,
-        QuestionnaireObjectif.emploi => DsfrColors.greenEmeraude950,
-        QuestionnaireObjectif.engager => DsfrColors.greenTilleulVerveine925,
-        QuestionnaireObjectif.mobiliteInternationale => DsfrColors.purpleGlycine925,
-        QuestionnaireObjectif.accompagne => DsfrColors.pinkTuile925,
-        QuestionnaireObjectif.creerActivite => DsfrColors.greenEmeraude925,
-        QuestionnaireObjectif.vieQuotidienne => DsfrColors.pinkTuile950,
-      };
+    QuestionnaireObjectif.orienter => DsfrColors.pinkTuile950,
+    QuestionnaireObjectif.decouvrirMetiers => DsfrColors.greenTilleulVerveine950,
+    QuestionnaireObjectif.former => DsfrColors.purpleGlycine950,
+    QuestionnaireObjectif.stageImmersion => DsfrColors.greenArchipel950,
+    QuestionnaireObjectif.alternance => DsfrColors.blueEcume950,
+    QuestionnaireObjectif.emploi => DsfrColors.greenEmeraude975,
+    QuestionnaireObjectif.engager => DsfrColors.yellowTournesol950,
+    QuestionnaireObjectif.mobiliteInternationale => DsfrColors.purpleGlycine950,
+    QuestionnaireObjectif.accompagne => DsfrColors.yellowMoutarde950,
+    QuestionnaireObjectif.creerActivite => DsfrColors.greenBourgeon975,
+    QuestionnaireObjectif.vieQuotidienne => DsfrColors.pinkTuile950,
+  };
 
   String get storageValue => name;
 
@@ -195,59 +195,55 @@ enum QuestionnaireFrein {
   gardeEnfant,
   numerique,
   francais,
-  autre,
   rienNeMeBloque;
 
   String get label => switch (this) {
-        QuestionnaireFrein.pasDePermis => Strings.onboardingQuestionnaireFreinPasDePermis,
-        QuestionnaireFrein.pasDeTransport => Strings.onboardingQuestionnaireFreinPasDeTransport,
-        QuestionnaireFrein.pasDeLogement => Strings.onboardingQuestionnaireFreinPasDeLogement,
-        QuestionnaireFrein.manqueConfiance => Strings.onboardingQuestionnaireFreinManqueConfiance,
-        QuestionnaireFrein.finDeMois => Strings.onboardingQuestionnaireFreinFinDeMois,
-        QuestionnaireFrein.pasDeDiplome => Strings.onboardingQuestionnaireFreinPasDeDiplome,
-        QuestionnaireFrein.peuExperience => Strings.onboardingQuestionnaireFreinPeuExperience,
-        QuestionnaireFrein.handicap => Strings.onboardingQuestionnaireFreinHandicap,
-        QuestionnaireFrein.sante => Strings.onboardingQuestionnaireFreinSante,
-        QuestionnaireFrein.gardeEnfant => Strings.onboardingQuestionnaireFreinGardeEnfant,
-        QuestionnaireFrein.numerique => Strings.onboardingQuestionnaireFreinNumerique,
-        QuestionnaireFrein.francais => Strings.onboardingQuestionnaireFreinFrancais,
-        QuestionnaireFrein.autre => Strings.onboardingQuestionnaireFreinAutre,
-        QuestionnaireFrein.rienNeMeBloque => Strings.onboardingQuestionnaireFreinRienNeMeBloque,
-      };
+    QuestionnaireFrein.pasDePermis => Strings.onboardingQuestionnaireFreinPasDePermis,
+    QuestionnaireFrein.pasDeTransport => Strings.onboardingQuestionnaireFreinPasDeTransport,
+    QuestionnaireFrein.pasDeLogement => Strings.onboardingQuestionnaireFreinPasDeLogement,
+    QuestionnaireFrein.manqueConfiance => Strings.onboardingQuestionnaireFreinManqueConfiance,
+    QuestionnaireFrein.finDeMois => Strings.onboardingQuestionnaireFreinFinDeMois,
+    QuestionnaireFrein.pasDeDiplome => Strings.onboardingQuestionnaireFreinPasDeDiplome,
+    QuestionnaireFrein.peuExperience => Strings.onboardingQuestionnaireFreinPeuExperience,
+    QuestionnaireFrein.handicap => Strings.onboardingQuestionnaireFreinHandicap,
+    QuestionnaireFrein.sante => Strings.onboardingQuestionnaireFreinSante,
+    QuestionnaireFrein.gardeEnfant => Strings.onboardingQuestionnaireFreinGardeEnfant,
+    QuestionnaireFrein.numerique => Strings.onboardingQuestionnaireFreinNumerique,
+    QuestionnaireFrein.francais => Strings.onboardingQuestionnaireFreinFrancais,
+    QuestionnaireFrein.rienNeMeBloque => Strings.onboardingQuestionnaireFreinRienNeMeBloque,
+  };
 
   String get emoji => switch (this) {
-        QuestionnaireFrein.pasDePermis => '🚗',
-        QuestionnaireFrein.pasDeTransport => '🚌',
-        QuestionnaireFrein.pasDeLogement => '🏠',
-        QuestionnaireFrein.manqueConfiance => '😟',
-        QuestionnaireFrein.finDeMois => '💶',
-        QuestionnaireFrein.pasDeDiplome => '🎓',
-        QuestionnaireFrein.peuExperience => '💼',
-        QuestionnaireFrein.handicap => '♿',
-        QuestionnaireFrein.sante => '🩺',
-        QuestionnaireFrein.gardeEnfant => '👶',
-        QuestionnaireFrein.numerique => '💻',
-        QuestionnaireFrein.francais => '🗣️',
-        QuestionnaireFrein.autre => '✅',
-        QuestionnaireFrein.rienNeMeBloque => '✨',
-      };
+    QuestionnaireFrein.pasDePermis => '🚗',
+    QuestionnaireFrein.pasDeTransport => '🚌',
+    QuestionnaireFrein.pasDeLogement => '🏠',
+    QuestionnaireFrein.manqueConfiance => '😟',
+    QuestionnaireFrein.finDeMois => '💶',
+    QuestionnaireFrein.pasDeDiplome => '🎓',
+    QuestionnaireFrein.peuExperience => '💼',
+    QuestionnaireFrein.handicap => '♿',
+    QuestionnaireFrein.sante => '🩺',
+    QuestionnaireFrein.gardeEnfant => '👶',
+    QuestionnaireFrein.numerique => '💻',
+    QuestionnaireFrein.francais => '🗣️',
+    QuestionnaireFrein.rienNeMeBloque => '✅',
+  };
 
   Color get illustrationColor => switch (this) {
-        QuestionnaireFrein.pasDePermis => DsfrColors.greenTilleulVerveine950,
-        QuestionnaireFrein.pasDeTransport => DsfrColors.blueFrance925,
-        QuestionnaireFrein.pasDeLogement => DsfrColors.greenEmeraude950,
-        QuestionnaireFrein.manqueConfiance => DsfrColors.pinkTuile950,
-        QuestionnaireFrein.finDeMois => DsfrColors.greenTilleulVerveine925,
-        QuestionnaireFrein.pasDeDiplome => DsfrColors.blueFrance925,
-        QuestionnaireFrein.peuExperience => DsfrColors.greenEmeraude925,
-        QuestionnaireFrein.handicap => DsfrColors.blueCumulus950,
-        QuestionnaireFrein.sante => DsfrColors.purpleGlycine950,
-        QuestionnaireFrein.gardeEnfant => DsfrColors.pinkTuile925,
-        QuestionnaireFrein.numerique => DsfrColors.greenTilleulVerveine950,
-        QuestionnaireFrein.francais => DsfrColors.greenEmeraude950,
-        QuestionnaireFrein.autre => DsfrColors.purpleGlycine950,
-        QuestionnaireFrein.rienNeMeBloque => DsfrColors.greenEmeraude950,
-      };
+    QuestionnaireFrein.pasDePermis => DsfrColors.greenTilleulVerveine950,
+    QuestionnaireFrein.pasDeTransport => DsfrColors.blueFrance950,
+    QuestionnaireFrein.pasDeLogement => DsfrColors.greenEmeraude950,
+    QuestionnaireFrein.manqueConfiance => DsfrColors.warning950,
+    QuestionnaireFrein.finDeMois => DsfrColors.brownCafeCreme925,
+    QuestionnaireFrein.pasDeDiplome => DsfrColors.beigeGrisGaletMain702Active,
+    QuestionnaireFrein.peuExperience => DsfrColors.success950,
+    QuestionnaireFrein.handicap => DsfrColors.greenMenthe950,
+    QuestionnaireFrein.sante => DsfrColors.purpleGlycine925,
+    QuestionnaireFrein.gardeEnfant => DsfrColors.blueEcume925,
+    QuestionnaireFrein.numerique => DsfrColors.yellowMoutarde950,
+    QuestionnaireFrein.francais => DsfrColors.greenEmeraude925,
+    QuestionnaireFrein.rienNeMeBloque => DsfrColors.purpleGlycine950,
+  };
 
   bool get isExclusive => this == QuestionnaireFrein.rienNeMeBloque;
 
@@ -319,17 +315,17 @@ class OnboardingQuestionnaireAnswers extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-        if (prenom != null) 'prenom': prenom,
-        if (dateNaissance != null) 'dateNaissance': dateNaissance!.toIso8601String(),
-        if (habitation != null) 'habitation': habitation!.toJson(),
-        if (situation != null) 'situation': situation!.storageValue,
-        'objectifs': objectifs.map((e) => e.storageValue).toList(),
-        if (domaine != null) 'domaine': domaine,
-        'domaineInconnu': domaineInconnu,
-        if (villeRecherche != null) 'villeRecherche': villeRecherche!.toJson(),
-        'rayonKm': rayonKm,
-        'freins': freins.map((e) => e.storageValue).toList(),
-      };
+    if (prenom != null) 'prenom': prenom,
+    if (dateNaissance != null) 'dateNaissance': dateNaissance!.toIso8601String(),
+    if (habitation != null) 'habitation': habitation!.toJson(),
+    if (situation != null) 'situation': situation!.storageValue,
+    'objectifs': objectifs.map((e) => e.storageValue).toList(),
+    if (domaine != null) 'domaine': domaine,
+    'domaineInconnu': domaineInconnu,
+    if (villeRecherche != null) 'villeRecherche': villeRecherche!.toJson(),
+    'rayonKm': rayonKm,
+    'freins': freins.map((e) => e.storageValue).toList(),
+  };
 
   factory OnboardingQuestionnaireAnswers.fromJson(Map<String, dynamic> json) {
     final objectifsJson = json['objectifs'];
@@ -342,7 +338,10 @@ class OnboardingQuestionnaireAnswers extends Equatable {
           : null,
       situation: QuestionnaireSituation.fromStorage(json['situation'] as String?),
       objectifs: objectifsJson is List
-          ? objectifsJson.map((e) => QuestionnaireObjectif.fromStorage(e as String)).whereType<QuestionnaireObjectif>().toSet()
+          ? objectifsJson
+                .map((e) => QuestionnaireObjectif.fromStorage(e as String))
+                .whereType<QuestionnaireObjectif>()
+                .toSet()
           : {},
       domaine: json['domaine'] as String?,
       domaineInconnu: json['domaineInconnu'] as bool? ?? false,
@@ -399,17 +398,17 @@ class OnboardingQuestionnaireAnswers extends Equatable {
 
   @override
   List<Object?> get props => [
-        prenom,
-        dateNaissance,
-        habitation,
-        situation,
-        objectifs,
-        domaine,
-        domaineInconnu,
-        villeRecherche,
-        rayonKm,
-        freins,
-      ];
+    prenom,
+    dateNaissance,
+    habitation,
+    situation,
+    objectifs,
+    domaine,
+    domaineInconnu,
+    villeRecherche,
+    rayonKm,
+    freins,
+  ];
 }
 
 enum OnboardingQuestionnaireCompleteness { incomplet, partiel, complet }

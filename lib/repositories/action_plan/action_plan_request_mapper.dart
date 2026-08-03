@@ -75,7 +75,6 @@ class ActionPlanRequestMapper {
     QuestionnaireFrein.sante => 'SANTE',
     QuestionnaireFrein.peuExperience => 'PEU_EXPERIENCE',
     QuestionnaireFrein.francais => 'FRANCAIS',
-    QuestionnaireFrein.autre => 'AUTRE',
     QuestionnaireFrein.rienNeMeBloque => 'RIEN_NE_ME_BLOQUE',
   };
 }
