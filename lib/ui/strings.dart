@@ -357,7 +357,8 @@ class Strings {
   static String onboardingQuestionnaireStepOf(int current, int total) => "Étape $current sur $total";
 
   static String onboardingQuestionnairePrenomTitle = "Ton prénom";
-  static String onboardingQuestionnairePrenomSubtitle = "Juste ton prénom, pour te parler normalement. Rien d'autre. 🙂";
+  static String onboardingQuestionnairePrenomSubtitle =
+      "Juste ton prénom, pour te parler normalement. Rien d'autre. 🙂";
   static String onboardingQuestionnairePrenomLabel = "Ton prénom";
 
   static String onboardingQuestionnaireBirthdateTitle = "Ta date de naissance";
@@ -368,19 +369,21 @@ class Strings {
   }
 
   static String onboardingQuestionnaireBirthdateSubtitle =
-      "Cette information nous sert à adapter les aides et dispositif auxquels tu as droit 🎂";
+      "Cette information nous sert à adapter les aides et dispositif auxquels tu as droit. 🎂";
   static String onboardingQuestionnaireBirthdateLabel = "Date de naissance";
   static String onboardingQuestionnaireBirthdateDayLabel = "Jour";
   static String onboardingQuestionnaireBirthdateMonthLabel = "Mois";
   static String onboardingQuestionnaireBirthdateYearLabel = "Année";
 
   static String onboardingQuestionnaireHabitationTitle = "Où habites-tu ?";
-  static String onboardingQuestionnaireHabitationSubtitle = "Pour te proposer des aides ou dispositif près de chez toi";
+  static String onboardingQuestionnaireHabitationSubtitle =
+      "Pour te proposer des aides ou dispositif près de chez toi.";
   static String onboardingQuestionnaireHabitationLabel = "Ville ou code postal";
   static String onboardingQuestionnaireGeolocate = "Me géolocaliser";
 
   static String onboardingQuestionnaireSituationTitle = "Où en es-tu ?";
-  static String onboardingQuestionnaireSituationSubtitle = "Une seule réponse, choisis celle qui te correspond le plus.";
+  static String onboardingQuestionnaireSituationSubtitle =
+      "Une seule réponse, choisis celle qui te correspond le plus.";
   static String onboardingQuestionnaireSituationCollege = "Au collège";
   static String onboardingQuestionnaireSituationLycee = "Au lycée";
   static String onboardingQuestionnaireSituationEtudes = "En études supérieures";
@@ -406,7 +409,7 @@ class Strings {
   static String onboardingQuestionnaireDomaineSubtitle =
       "Un métier ou un secteur en tête ? Ça nous aide à te suggérer les bonnes offres.";
   static String onboardingQuestionnaireDomaineLabel = "Métier ou secteur";
-  static String onboardingQuestionnaireDomaineUnknown = "🤔 Je ne sais pas encore";
+  static String onboardingQuestionnaireDomaineUnknown = "Je ne sais pas encore";
 
   static String onboardingQuestionnaireVilleTitle = "Dans quelle ville cherches-tu ?";
   static String onboardingQuestionnaireVilleSubtitle = "Ta ville et jusqu'où tu es prêt·e à te déplacer.";
@@ -430,7 +433,6 @@ class Strings {
   static String onboardingQuestionnaireFreinGardeEnfant = "Garde d'enfant";
   static String onboardingQuestionnaireFreinNumerique = "Difficulté avec le numérique";
   static String onboardingQuestionnaireFreinFrancais = "Difficulté avec le Français";
-  static String onboardingQuestionnaireFreinAutre = "Autre situation";
   static String onboardingQuestionnaireFreinRienNeMeBloque = "Rien ne me bloque";
 
   static String onboardingQuestionnaireLoaderTitle = "On construit ton plan d'action";
@@ -450,7 +452,8 @@ class Strings {
   static String onboardingQuestionnaireLoaderStepSolutions = "On sélectionne les solutions près de chez toi";
   static String onboardingQuestionnaireLoaderStepBuild = "On construit ton plan d'action";
   static String onboardingQuestionnaireLoaderStepOrder = "On ordonne tes prochaines actions";
-  static String onboardingQuestionnaireGeolocateError = "Impossible de récupérer ta position. Réessaie ou saisis une ville.";
+  static String onboardingQuestionnaireGeolocateError =
+      "Impossible de récupérer ta position. Réessaie ou saisis une ville.";
 
   static String inviteAccueilGreeting(String? prenom) {
     final name = prenom?.trim();
@@ -473,8 +476,7 @@ class Strings {
   static String inviteAccueilResumeQuestionnaire = "Reprendre le questionnaire";
   static String inviteAccueilModifier = "Modifier";
   static String inviteAccueilExplorerTipTitle = "💡 Pas envie de répondre maintenant?";
-  static String inviteAccueilExplorerTipBody =
-      "Tu peux explorer librement les offres et les événements depuis le menu";
+  static String inviteAccueilExplorerTipBody = "Tu peux explorer librement les offres et les événements depuis le menu";
   static String inviteAccueilConseillerTitle = "Être accompagné par un conseiller ?";
   static String inviteAccueilConseillerBody = "Un professionnel près de chez toi peut t'aider à avancer.";
   static String inviteAccueilAfficherPlus = "Afficher plus";
