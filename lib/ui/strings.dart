@@ -438,6 +438,8 @@ class Strings {
   static String onboardingQuestionnaireLoaderTitle = "On construit ton plan d'action";
   static String onboardingQuestionnaireLoaderSubtitle =
       "Quelques secondes le temps de croiser tes réponses avec nos solutions.";
+  static String onboardingQuestionnaireLoaderProgression = "Progression";
+  static String onboardingQuestionnaireLoaderProgressPercent(int percent) => "$percent%";
   static String onboardingQuestionnaireLoaderProfil = "Ton profil";
   static String onboardingQuestionnaireLoaderPrenom = "Prénom";
   static String onboardingQuestionnaireLoaderSituation = "Situation";

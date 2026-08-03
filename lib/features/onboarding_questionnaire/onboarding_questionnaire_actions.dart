@@ -15,6 +15,12 @@ class OnboardingQuestionnaireCompleteAction {
   OnboardingQuestionnaireCompleteAction(this.answers);
 }
 
+class OnboardingQuestionnaireFinishAction {
+  final OnboardingQuestionnaireAnswers answers;
+
+  OnboardingQuestionnaireFinishAction(this.answers);
+}
+
 class OnboardingQuestionnaireResumeAction {}
 
 class OnboardingQuestionnaireAnswersUpdatedAction {
