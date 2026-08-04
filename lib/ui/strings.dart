@@ -473,6 +473,10 @@ class Strings {
   static String inviteAccueilQuestionnaireTitle = "Complète ton questionnaire";
   static String inviteAccueilQuestionnaireDescription =
       "Réponds aux dernières questions pour recevoir un plan d’action plus adapté.";
+  static String inviteAccueilQuestionnaireDescriptionIncomplet =
+      "Réponds à quelques questions pour recevoir un plan d’action adapté.";
+  static String inviteAccueilDiscoveryTitle = "Je découvre l’application en quelques clics.";
+  static String inviteAccueilDiscoveryProgress(int percent) => "$percent%";
   static String inviteAccueilProfilComplete = "Profil complété";
   static String inviteAccueilStepsCount(int current, int total) => "$current/$total étapes";
   static String inviteAccueilResumeQuestionnaire = "Reprendre le questionnaire";
@@ -489,9 +493,6 @@ class Strings {
   static String inviteAccueilPlanEmptyTitle = "Ton plan d'action n'est pas disponible";
   static String inviteAccueilPlanEmptyBody =
       "Aucune action n'a pu être proposée pour le moment. Modifie tes réponses pour obtenir un nouveau plan.";
-  static String inviteAccueilLockedPlanSemantics = "Plan d'action verrouillé";
-  static String inviteAccueilLockedPlanEmploi = "Trouver un emploi";
-  static String inviteAccueilLockedPlanMetiers = "Découvrir des métiers";
   static String inviteAccueilProgressBadge(int done, int total) => "$done/$total";
 
   // Card and subcomponents

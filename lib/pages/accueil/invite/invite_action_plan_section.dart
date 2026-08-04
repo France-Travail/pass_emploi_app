@@ -11,21 +11,16 @@ class InviteActionPlanSection extends StatelessWidget {
   const InviteActionPlanSection({
     super.key,
     required this.plan,
-    required this.locked,
     required this.onToggleDone,
     required this.onDelete,
   });
 
   final ActionPlan? plan;
-  final bool locked;
   final void Function(String actionId) onToggleDone;
   final void Function(String actionId) onDelete;
 
   @override
   Widget build(BuildContext context) {
-    if (locked) {
-      return _LockedPlaceholders();
-    }
     final objectives = plan?.objectives ?? const <ActionPlanObjective>[];
     if (objectives.isEmpty) return const SizedBox.shrink();
 
@@ -41,80 +36,6 @@ class InviteActionPlanSection extends StatelessWidget {
         ],
         const DsfrDivider(),
       ],
-    );
-  }
-}
-
-class _LockedPlaceholders extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Opacity(
-          opacity: 0.35,
-          child: Column(
-            children: [
-              _LockedRow(emoji: '💼', title: Strings.inviteAccueilLockedPlanEmploi),
-              const DsfrDivider(),
-              _LockedRow(emoji: '🔎', title: Strings.inviteAccueilLockedPlanMetiers),
-              const DsfrDivider(),
-            ],
-          ),
-        ),
-        Semantics(
-          label: Strings.inviteAccueilLockedPlanSemantics,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: DsfrColorDecisions.backgroundDefaultGrey(context),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: DsfrColorDecisions.borderActionHighBlueFrance(context)),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(Margins.spacing_s),
-              child: Image.asset(
-                'assets/dsfr/padlock.webp',
-                width: 80,
-                height: 80,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _LockedRow extends StatelessWidget {
-  const _LockedRow({required this.emoji, required this.title});
-
-  final String emoji;
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base, vertical: Margins.spacing_s),
-      child: Row(
-        children: [
-          _EmojiAvatar(emoji: emoji, color: DsfrColors.greenEmeraude950),
-          const SizedBox(width: Margins.spacing_base),
-          Expanded(
-            child: Text(
-              title,
-              style: DsfrTextStyle.bodyMdMedium(color: DsfrColorDecisions.textTitleBlueFrance(context)),
-            ),
-          ),
-          DsfrBadge(
-            label: '0/6',
-            type: DsfrBadgeType.news,
-            size: DsfrComponentSize.sm,
-            withIcon: true,
-          ),
-          const SizedBox(width: Margins.spacing_s),
-          Icon(DsfrIcons.systemArrowDownSLine, color: DsfrColorDecisions.textActionHighBlueFrance(context)),
-        ],
-      ),
     );
   }
 }
