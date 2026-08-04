@@ -68,9 +68,23 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     notifyListeners();
     savedAnswers = await _loadAnswers();
     _hydrateDraftsFromSaved();
-    step = OnboardingQuestionnaireStep.prenom;
+    step = firstIncompleteStep(savedAnswers);
     isLoading = false;
     notifyListeners();
+  }
+
+  /// Première étape sans réponse ; si tout est rempli (ex. modifier), repart du début.
+  @visibleForTesting
+  static OnboardingQuestionnaireStep firstIncompleteStep(OnboardingQuestionnaireAnswers answers) {
+    if (!answers.isPrenomAnswered) return OnboardingQuestionnaireStep.prenom;
+    if (!answers.isDateNaissanceAnswered) return OnboardingQuestionnaireStep.dateNaissance;
+    if (!answers.isHabitationAnswered) return OnboardingQuestionnaireStep.habitation;
+    if (!answers.isSituationAnswered) return OnboardingQuestionnaireStep.situation;
+    if (!answers.isObjectifsAnswered) return OnboardingQuestionnaireStep.objectifs;
+    if (!answers.isDomaineAnswered) return OnboardingQuestionnaireStep.domaine;
+    if (!answers.isVilleRechercheAnswered) return OnboardingQuestionnaireStep.villeRecherche;
+    if (!answers.isFreinsAnswered) return OnboardingQuestionnaireStep.freins;
+    return OnboardingQuestionnaireStep.prenom;
   }
 
   void _hydrateDraftsFromSaved() {
