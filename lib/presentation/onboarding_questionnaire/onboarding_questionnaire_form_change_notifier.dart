@@ -73,7 +73,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Première étape sans réponse ; si tout est rempli (ex. modifier), repart du début.
+  /// Première étape sans réponse ; si tout est rempli (ex. modifier le plan), repart de l'étape 5 (objectifs).
   @visibleForTesting
   static OnboardingQuestionnaireStep firstIncompleteStep(OnboardingQuestionnaireAnswers answers) {
     if (!answers.isPrenomAnswered) return OnboardingQuestionnaireStep.prenom;
@@ -84,7 +84,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     if (!answers.isDomaineAnswered) return OnboardingQuestionnaireStep.domaine;
     if (!answers.isVilleRechercheAnswered) return OnboardingQuestionnaireStep.villeRecherche;
     if (!answers.isFreinsAnswered) return OnboardingQuestionnaireStep.freins;
-    return OnboardingQuestionnaireStep.prenom;
+    return OnboardingQuestionnaireStep.objectifs;
   }
 
   void _hydrateDraftsFromSaved() {
