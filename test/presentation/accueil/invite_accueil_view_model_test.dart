@@ -27,6 +27,7 @@ void main() {
     expect(viewModel.showDiscoveryTile, isTrue);
     expect(viewModel.discoveryProgressPercent, 16);
     expect(viewModel.showConseillerCta, isFalse);
+    expect(viewModel.shouldShowAllowNotifications, isTrue);
     expect(viewModel.displayState, DisplayState.CONTENT);
   });
 
@@ -190,5 +191,18 @@ void main() {
     final viewModel = InviteAccueilViewModel.create(store);
 
     expect(viewModel.showDiscoveryTile, isFalse);
+  });
+
+  test('shouldShowAllowNotifications is false when already dismissed', () {
+    final store = givenState()
+        .loggedInUser(loginMode: LoginMode.INVITE)
+        .withOnboardingQuestionnaire(finished: true)
+        .withActionPlanEmpty()
+        .withOnboardingSuccessState(Onboarding(showNotificationsOnboarding: false))
+        .store();
+
+    final viewModel = InviteAccueilViewModel.create(store);
+
+    expect(viewModel.shouldShowAllowNotifications, isFalse);
   });
 }

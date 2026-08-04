@@ -11,9 +11,17 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/bottom_sheets/notifications_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 
-class InviteAccueilBody extends StatelessWidget {
+class InviteAccueilBody extends StatefulWidget {
+  @override
+  State<InviteAccueilBody> createState() => _InviteAccueilBodyState();
+}
+
+class _InviteAccueilBodyState extends State<InviteAccueilBody> {
+  bool _notificationsBottomSheetShown = false;
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -22,6 +30,8 @@ class InviteAccueilBody extends StatelessWidget {
       child: StoreConnector<AppState, InviteAccueilViewModel>(
         onInit: (store) => store.dispatch(ActionPlanRequestAction()),
         converter: InviteAccueilViewModel.create,
+        onInitialBuild: _handleNotificationsBottomSheet,
+        onDidChange: (_, viewModel) => _handleNotificationsBottomSheet(viewModel),
         distinct: true,
         builder: (context, viewModel) {
           return CustomScrollView(
@@ -33,6 +43,15 @@ class InviteAccueilBody extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void _handleNotificationsBottomSheet(InviteAccueilViewModel viewModel) {
+    if (!viewModel.shouldShowAllowNotifications || _notificationsBottomSheetShown) return;
+    _notificationsBottomSheetShown = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      NotificationsBottomSheet.show(context);
+    });
   }
 }
 

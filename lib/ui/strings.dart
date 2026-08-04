@@ -512,10 +512,11 @@ class Strings {
   static String onboardingTitle = "Terminez la découverte de l’application";
 
   // notifications bottom sheet
-  static String notificationsBottomSheetTitle = "Activez les notifications pour ne rien manquer";
-  static String notificationsBottomSheetcontent =
-      "Messages importants, rappel des rendez-vous, actions à faire, nouvelles offres en fonction de vos critères… On vous prévient au bon moment.";
+  static String notificationsBottomSheetTitle = "Active les notifications";
+  static String notificationsBottomSheetContent =
+      "Abonne toi pour recevoir les messages importants, rappel des rendez-vous, nouvelles offres ou événements adaptés à tes critères";
   static String notificationsBottomSheetButton = "Activer les notifications";
+  static String notificationsBottomSheetDismissButton = "Pas maintenant";
 
   // Accueil
   static String accueilAppBarTitle = "Bonjour";
