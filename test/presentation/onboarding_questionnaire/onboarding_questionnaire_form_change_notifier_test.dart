@@ -53,7 +53,7 @@ void main() {
       expect(form.step, OnboardingQuestionnaireStep.dateNaissance);
     });
 
-    test('starts at prenom when profile is complete so user can edit', () async {
+    test('starts at objectifs when profile is complete so user can update action plan', () async {
       storedAnswers = OnboardingQuestionnaireAnswers(
         prenom: 'Léa',
         dateNaissance: DateTime(2005, 1, 1),
@@ -67,7 +67,9 @@ void main() {
 
       await form.init();
 
-      expect(form.step, OnboardingQuestionnaireStep.prenom);
+      expect(form.step, OnboardingQuestionnaireStep.objectifs);
+      expect(form.step.questionnaireIndex, 5);
+      expect(form.draftObjectifs, {QuestionnaireObjectif.emploi});
       expect(form.draftPrenom, 'Léa');
     });
   });
@@ -105,6 +107,24 @@ void main() {
           ),
         ),
         OnboardingQuestionnaireStep.villeRecherche,
+      );
+    });
+
+    test('returns objectifs when all answers are filled (modifier le plan)', () {
+      expect(
+        OnboardingQuestionnaireFormChangeNotifier.firstIncompleteStep(
+          OnboardingQuestionnaireAnswers(
+            prenom: 'Léa',
+            dateNaissance: DateTime(2005, 1, 1),
+            habitation: const QuestionnaireCommune(code: '59350', nom: 'Lille'),
+            situation: QuestionnaireSituation.lycee,
+            objectifs: {QuestionnaireObjectif.emploi},
+            domaine: 'Commerce',
+            villeRecherche: const QuestionnaireCommune(code: '59350', nom: 'Lille'),
+            freins: {QuestionnaireFrein.rienNeMeBloque},
+          ),
+        ),
+        OnboardingQuestionnaireStep.objectifs,
       );
     });
   });
