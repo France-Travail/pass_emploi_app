@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
+import 'package:pass_emploi_app/pages/accueil/invite/invite_action_plan_empty_state.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/invite_action_plan_section.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/onboarding_questionnaire_progress_card.dart';
 import 'package:pass_emploi_app/presentation/accueil/invite_accueil_view_model.dart';
@@ -10,7 +11,6 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
-import 'package:pass_emploi_app/widgets/retry.dart';
 
 class InviteAccueilBody extends StatelessWidget {
   @override
@@ -48,12 +48,6 @@ class _Content extends StatelessWidget {
         child: Center(child: CircularProgressIndicator()),
       );
     }
-    if (viewModel.displayState == DisplayState.FAILURE) {
-      return Padding(
-        padding: const EdgeInsets.all(Margins.spacing_base),
-        child: Retry(Strings.inviteAccueilPlanFailure, viewModel.retryGenerate),
-      );
-    }
 
     return Padding(
       padding: const EdgeInsets.all(Margins.spacing_base),
@@ -71,18 +65,29 @@ class _Content extends StatelessWidget {
             Strings.inviteAccueilPlanTitle,
             style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context)),
           ),
+          if (!viewModel.showPlanEmptyState) ...[
+            const SizedBox(height: Margins.spacing_base),
+            Text(
+              viewModel.planSubtitle,
+              style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
+            ),
+          ],
           const SizedBox(height: Margins.spacing_base),
-          Text(
-            viewModel.planSubtitle,
-            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
-          ),
-          const SizedBox(height: Margins.spacing_base),
-          InviteActionPlanSection(
-            plan: viewModel.plan,
-            locked: viewModel.showLockedPlan,
-            onToggleDone: viewModel.toggleDone,
-            onDelete: viewModel.deleteAction,
-          ),
+          if (viewModel.showPlanEmptyState)
+            InviteActionPlanEmptyState(
+              kind: viewModel.planEmptyKind!,
+              showRetry: viewModel.showRetryGenerate,
+              showModifier: viewModel.showModifierButton,
+              onRetry: viewModel.retryGenerate,
+              onModifier: viewModel.resumeOnboarding,
+            )
+          else
+            InviteActionPlanSection(
+              plan: viewModel.plan,
+              locked: viewModel.showLockedPlan,
+              onToggleDone: viewModel.toggleDone,
+              onDelete: viewModel.deleteAction,
+            ),
           if (viewModel.showQuestionnaireCard && viewModel.mode == InviteAccueilMode.partiel) ...[
             const SizedBox(height: Margins.spacing_base),
             OnboardingQuestionnaireProgressCard(
@@ -90,16 +95,7 @@ class _Content extends StatelessWidget {
               onResume: viewModel.resumeOnboarding,
             ),
           ],
-          if (viewModel.showRetryGenerate) ...[
-            const SizedBox(height: Margins.spacing_base),
-            DsfrButton(
-              label: Strings.inviteAccueilRetryPlan,
-              variant: DsfrButtonVariant.secondary,
-              size: DsfrComponentSize.lg,
-              onPressed: viewModel.retryGenerate,
-            ),
-          ],
-          if (viewModel.showModifierButton) ...[
+          if (viewModel.showModifierButton && !viewModel.showPlanEmptyState) ...[
             const SizedBox(height: Margins.spacing_base),
             DsfrButton(
               label: Strings.inviteAccueilModifier,
@@ -137,7 +133,7 @@ class _Content extends StatelessWidget {
           if (viewModel.showConseillerCta) ...[
             const SizedBox(height: Margins.spacing_base),
             Material(
-              color: DsfrColorDecisions.backgroundActionHighBlueFrance(context),
+              color: DsfrColorDecisions.artworkDecorativeBlueFrance(context),
               borderRadius: BorderRadius.circular(4),
               child: InkWell(
                 onTap: () {
@@ -161,17 +157,17 @@ class _Content extends StatelessWidget {
                             Text(
                               Strings.inviteAccueilConseillerTitle,
                               style: DsfrTextStyle.bodyMdBold(
-                                color: DsfrColorDecisions.textInvertedBlueFrance(context),
+                                color: DsfrColorDecisions.textTitleBlueFrance(context),
                               ),
                             ),
                             Text(
                               Strings.inviteAccueilConseillerBody,
-                              style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textInvertedBlueFrance(context)),
+                              style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textMentionGrey(context)),
                             ),
                           ],
                         ),
                       ),
-                      Icon(DsfrIcons.systemArrowRightSLine, color: DsfrColorDecisions.textInvertedBlueFrance(context)),
+                      Icon(DsfrIcons.systemArrowRightSLine, color: DsfrColorDecisions.textTitleBlueFrance(context)),
                     ],
                   ),
                 ),

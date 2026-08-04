@@ -13,6 +13,8 @@ import 'package:redux/redux.dart';
 
 enum InviteAccueilMode { incomplet, partiel, complet }
 
+enum InvitePlanEmptyKind { failure, empty }
+
 class InviteAccueilViewModel extends Equatable {
   final DisplayState displayState;
   final InviteAccueilMode mode;
@@ -22,6 +24,8 @@ class InviteAccueilViewModel extends Equatable {
   final String planSubtitle;
   final bool showQuestionnaireCard;
   final bool showLockedPlan;
+  final bool showPlanEmptyState;
+  final InvitePlanEmptyKind? planEmptyKind;
   final bool showConseillerCta;
   final bool showModifierButton;
   final bool showExplorerTip;
@@ -41,6 +45,8 @@ class InviteAccueilViewModel extends Equatable {
     required this.planSubtitle,
     required this.showQuestionnaireCard,
     required this.showLockedPlan,
+    required this.showPlanEmptyState,
+    required this.planEmptyKind,
     required this.showConseillerCta,
     required this.showModifierButton,
     required this.showExplorerTip,
@@ -67,9 +73,18 @@ class InviteAccueilViewModel extends Equatable {
     final plan = actionPlanState is ActionPlanSuccessState ? actionPlanState.plan : null;
     final displayState = switch (actionPlanState) {
       ActionPlanLoadingState() || ActionPlanNotInitializedState() => DisplayState.LOADING,
-      ActionPlanFailureState() => mode == InviteAccueilMode.incomplet ? DisplayState.CONTENT : DisplayState.FAILURE,
       _ => DisplayState.CONTENT,
     };
+
+    final showLockedPlan = mode == InviteAccueilMode.incomplet;
+    final isFailure = actionPlanState is ActionPlanFailureState;
+    final hasNoObjectives = plan == null || plan.objectives.isEmpty;
+    final showPlanEmptyState = !showLockedPlan && (isFailure || hasNoObjectives);
+    final planEmptyKind = !showPlanEmptyState
+        ? null
+        : isFailure
+        ? InvitePlanEmptyKind.failure
+        : InvitePlanEmptyKind.empty;
 
     final prenom = answers.prenom?.trim().isNotEmpty == true ? answers.prenom : store.state.user()?.firstName;
 
@@ -85,11 +100,15 @@ class InviteAccueilViewModel extends Equatable {
         InviteAccueilMode.complet => Strings.inviteAccueilPlanSubtitleComplet,
       },
       showQuestionnaireCard: mode != InviteAccueilMode.complet,
-      showLockedPlan: mode == InviteAccueilMode.incomplet,
+      showLockedPlan: showLockedPlan,
+      showPlanEmptyState: showPlanEmptyState,
+      planEmptyKind: planEmptyKind,
       showConseillerCta: mode == InviteAccueilMode.complet,
-      showModifierButton: mode == InviteAccueilMode.complet,
+      // Un seul CTA dans l'empty state : Modifier si plan vide, Réessayer si échec.
+      showModifierButton: mode == InviteAccueilMode.complet && planEmptyKind != InvitePlanEmptyKind.failure,
       showExplorerTip: mode == InviteAccueilMode.incomplet,
-      showRetryGenerate: actionPlanState is ActionPlanFailureState && answers.canGenerateActionPlan,
+      showRetryGenerate:
+          showPlanEmptyState && planEmptyKind == InvitePlanEmptyKind.failure && answers.canGenerateActionPlan,
       retryLoad: () => store.dispatch(ActionPlanRequestAction()),
       resumeOnboarding: () => store.dispatch(OnboardingQuestionnaireResumeAction()),
       retryGenerate: () => store.dispatch(ActionPlanGenerateAction(answers)),
@@ -108,6 +127,8 @@ class InviteAccueilViewModel extends Equatable {
     planSubtitle,
     showQuestionnaireCard,
     showLockedPlan,
+    showPlanEmptyState,
+    planEmptyKind,
     showConseillerCta,
     showModifierButton,
     showExplorerTip,

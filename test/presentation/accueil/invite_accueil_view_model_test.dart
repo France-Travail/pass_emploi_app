@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
@@ -73,7 +74,20 @@ void main() {
         .loggedInUser(loginMode: LoginMode.INVITE)
         .withOnboardingQuestionnaire(finished: true, answers: answers)
         .withActionPlanSuccess(
-          const ActionPlan(id: 'plan-1', greeting: 'Salut', objectives: []),
+          ActionPlan(
+            id: 'plan-1',
+            greeting: 'Salut',
+            objectives: [
+              ActionPlanObjective(
+                id: 'obj-1',
+                title: 'Trouver un emploi',
+                theme: 'job',
+                actions: [
+                  ActionPlanAction(id: 'a-1', label: 'Je cherche', kind: ActionPlanActionKind.advice),
+                ],
+              ),
+            ],
+          ),
         )
         .store();
 
@@ -83,5 +97,80 @@ void main() {
     expect(viewModel.showQuestionnaireCard, isFalse);
     expect(viewModel.showModifierButton, isTrue);
     expect(viewModel.showConseillerCta, isTrue);
+    expect(viewModel.showPlanEmptyState, isFalse);
+  });
+
+  test('complet with empty objectives shows empty state with modifier only', () {
+    final answers = OnboardingQuestionnaireAnswers(
+      prenom: 'Léa',
+      dateNaissance: DateTime(2005, 5, 5),
+      habitation: const QuestionnaireCommune(code: '75056', nom: 'Paris'),
+      situation: QuestionnaireSituation.lycee,
+      objectifs: {QuestionnaireObjectif.emploi},
+      domaineInconnu: true,
+      villeRecherche: const QuestionnaireCommune(code: '75056', nom: 'Paris'),
+      freins: {QuestionnaireFrein.rienNeMeBloque},
+    );
+    final store = givenState()
+        .loggedInUser(loginMode: LoginMode.INVITE)
+        .withOnboardingQuestionnaire(finished: true, answers: answers)
+        .withActionPlanSuccess(
+          const ActionPlan(id: 'plan-1', greeting: 'Salut', objectives: []),
+        )
+        .store();
+
+    final viewModel = InviteAccueilViewModel.create(store);
+
+    expect(viewModel.showPlanEmptyState, isTrue);
+    expect(viewModel.planEmptyKind, InvitePlanEmptyKind.empty);
+    expect(viewModel.showRetryGenerate, isFalse);
+    expect(viewModel.showModifierButton, isTrue);
+    expect(viewModel.displayState, DisplayState.CONTENT);
+  });
+
+  test('partiel with action plan failure shows failure empty state with retry only', () {
+    final answers = const OnboardingQuestionnaireAnswers(
+      situation: QuestionnaireSituation.lycee,
+      objectifs: {QuestionnaireObjectif.emploi},
+      prenom: 'Léa',
+    );
+    final store = givenState()
+        .loggedInUser(loginMode: LoginMode.INVITE)
+        .withOnboardingQuestionnaire(finished: true, answers: answers)
+        .copyWith(actionPlanState: ActionPlanFailureState())
+        .store();
+
+    final viewModel = InviteAccueilViewModel.create(store);
+
+    expect(viewModel.showPlanEmptyState, isTrue);
+    expect(viewModel.planEmptyKind, InvitePlanEmptyKind.failure);
+    expect(viewModel.showRetryGenerate, isTrue);
+    expect(viewModel.showModifierButton, isFalse);
+    expect(viewModel.displayState, DisplayState.CONTENT);
+  });
+
+  test('complet with action plan failure shows retry only', () {
+    final answers = OnboardingQuestionnaireAnswers(
+      prenom: 'Léa',
+      dateNaissance: DateTime(2005, 5, 5),
+      habitation: const QuestionnaireCommune(code: '75056', nom: 'Paris'),
+      situation: QuestionnaireSituation.lycee,
+      objectifs: {QuestionnaireObjectif.emploi},
+      domaineInconnu: true,
+      villeRecherche: const QuestionnaireCommune(code: '75056', nom: 'Paris'),
+      freins: {QuestionnaireFrein.rienNeMeBloque},
+    );
+    final store = givenState()
+        .loggedInUser(loginMode: LoginMode.INVITE)
+        .withOnboardingQuestionnaire(finished: true, answers: answers)
+        .copyWith(actionPlanState: ActionPlanFailureState())
+        .store();
+
+    final viewModel = InviteAccueilViewModel.create(store);
+
+    expect(viewModel.showPlanEmptyState, isTrue);
+    expect(viewModel.planEmptyKind, InvitePlanEmptyKind.failure);
+    expect(viewModel.showRetryGenerate, isTrue);
+    expect(viewModel.showModifierButton, isFalse);
   });
 }
