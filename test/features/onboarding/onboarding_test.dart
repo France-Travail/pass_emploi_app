@@ -68,6 +68,27 @@ void main() {
       });
     });
 
+    group("when dismissing notifications onboarding", () {
+      sut.whenDispatchingAction(() => OnboardingNotificationsDismissedAction());
+
+      test('should update onboarding state without requesting permission', () {
+        final givenOnboarding = Onboarding(showNotificationsOnboarding: true);
+
+        when(() => repository.get()).thenAnswer((_) async => givenOnboarding);
+        when(() => repository.save(any())).thenAnswer((_) async {});
+
+        sut.givenStore =
+            givenState() //
+                .copyWith(onboardingState: OnboardingState(onboarding: givenOnboarding))
+                .store(
+                  (f) => {f.onboardingRepository = repository, f.pushNotificationManager = pushNotificationManager},
+                );
+
+        sut.thenExpectAtSomePoint(_shouldSucceed(givenOnboarding.copyWith(showNotificationsOnboarding: false)));
+        verifyNever(() => pushNotificationManager.requestPermission());
+      });
+    });
+
     group('on completed', () {
       group('when sending a message', () {
         sut.whenDispatchingAction(() => SendMessageAction('any'));

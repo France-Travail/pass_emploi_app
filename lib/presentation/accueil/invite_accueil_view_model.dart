@@ -35,6 +35,7 @@ class InviteAccueilViewModel extends Equatable {
   final bool showModifierButton;
   final bool showExplorerTip;
   final bool showRetryGenerate;
+  final bool shouldShowAllowNotifications;
   final VoidCallback retryLoad;
   final VoidCallback resumeOnboarding;
   final VoidCallback retryGenerate;
@@ -60,6 +61,7 @@ class InviteAccueilViewModel extends Equatable {
     required this.showModifierButton,
     required this.showExplorerTip,
     required this.showRetryGenerate,
+    required this.shouldShowAllowNotifications,
     required this.retryLoad,
     required this.resumeOnboarding,
     required this.retryGenerate,
@@ -132,6 +134,7 @@ class InviteAccueilViewModel extends Equatable {
       showExplorerTip: mode == InviteAccueilMode.incomplet,
       showRetryGenerate:
           showPlanEmptyState && planEmptyKind == InvitePlanEmptyKind.failure && answers.canGenerateActionPlan,
+      shouldShowAllowNotifications: onboarding?.showNotificationsOnboarding ?? false,
       retryLoad: () => store.dispatch(ActionPlanRequestAction()),
       resumeOnboarding: () => store.dispatch(OnboardingQuestionnaireResumeAction()),
       retryGenerate: () => store.dispatch(ActionPlanGenerateAction(answers)),
@@ -160,5 +163,6 @@ class InviteAccueilViewModel extends Equatable {
     showModifierButton,
     showExplorerTip,
     showRetryGenerate,
+    shouldShowAllowNotifications,
   ];
 }
