@@ -20,14 +20,92 @@ void main() {
   });
 
   group('init', () {
-    test('starts at prenom step with prefilled saved answers', () async {
+    test('starts at prenom when no answers are saved', () async {
+      await form.init();
+
+      expect(form.step, OnboardingQuestionnaireStep.prenom);
+      expect(form.isLoading, false);
+    });
+
+    test('starts at first incomplete step with prefilled saved answers', () async {
       storedAnswers = const OnboardingQuestionnaireAnswers(prenom: 'Léa');
+
+      await form.init();
+
+      expect(form.step, OnboardingQuestionnaireStep.dateNaissance);
+      expect(form.draftPrenom, 'Léa');
+      expect(form.isLoading, false);
+    });
+
+    test('starts at dateNaissance when only birthdate is missing among early steps', () async {
+      storedAnswers = OnboardingQuestionnaireAnswers(
+        prenom: 'Léa',
+        habitation: const QuestionnaireCommune(code: '59350', nom: 'Lille', codePostal: '59000'),
+        situation: QuestionnaireSituation.lycee,
+        objectifs: {QuestionnaireObjectif.emploi},
+        domaine: 'Commerce',
+        villeRecherche: const QuestionnaireCommune(code: '59350', nom: 'Lille', codePostal: '59000'),
+        freins: {QuestionnaireFrein.rienNeMeBloque},
+      );
+
+      await form.init();
+
+      expect(form.step, OnboardingQuestionnaireStep.dateNaissance);
+    });
+
+    test('starts at prenom when profile is complete so user can edit', () async {
+      storedAnswers = OnboardingQuestionnaireAnswers(
+        prenom: 'Léa',
+        dateNaissance: DateTime(2005, 1, 1),
+        habitation: const QuestionnaireCommune(code: '59350', nom: 'Lille', codePostal: '59000'),
+        situation: QuestionnaireSituation.lycee,
+        objectifs: {QuestionnaireObjectif.emploi},
+        domaine: 'Commerce',
+        villeRecherche: const QuestionnaireCommune(code: '59350', nom: 'Lille', codePostal: '59000'),
+        freins: {QuestionnaireFrein.rienNeMeBloque},
+      );
 
       await form.init();
 
       expect(form.step, OnboardingQuestionnaireStep.prenom);
       expect(form.draftPrenom, 'Léa');
-      expect(form.isLoading, false);
+    });
+  });
+
+  group('firstIncompleteStep', () {
+    test('returns each step when it is the first missing answer', () {
+      expect(
+        OnboardingQuestionnaireFormChangeNotifier.firstIncompleteStep(const OnboardingQuestionnaireAnswers()),
+        OnboardingQuestionnaireStep.prenom,
+      );
+      expect(
+        OnboardingQuestionnaireFormChangeNotifier.firstIncompleteStep(
+          const OnboardingQuestionnaireAnswers(prenom: 'Léa'),
+        ),
+        OnboardingQuestionnaireStep.dateNaissance,
+      );
+      expect(
+        OnboardingQuestionnaireFormChangeNotifier.firstIncompleteStep(
+          OnboardingQuestionnaireAnswers(prenom: 'Léa', dateNaissance: DateTime(2005, 1, 1)),
+        ),
+        OnboardingQuestionnaireStep.habitation,
+      );
+    });
+
+    test('treats domaineInconnu as answered domaine', () {
+      expect(
+        OnboardingQuestionnaireFormChangeNotifier.firstIncompleteStep(
+          OnboardingQuestionnaireAnswers(
+            prenom: 'Léa',
+            dateNaissance: DateTime(2005, 1, 1),
+            habitation: const QuestionnaireCommune(code: '59350', nom: 'Lille'),
+            situation: QuestionnaireSituation.lycee,
+            objectifs: {QuestionnaireObjectif.emploi},
+            domaineInconnu: true,
+          ),
+        ),
+        OnboardingQuestionnaireStep.villeRecherche,
+      );
     });
   });
 
