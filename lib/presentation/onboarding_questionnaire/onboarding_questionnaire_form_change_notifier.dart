@@ -3,6 +3,7 @@ import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 
 typedef OnboardingQuestionnaireAnswersLoader = Future<OnboardingQuestionnaireAnswers> Function();
 typedef OnboardingQuestionnaireAnswersSaver = Future<void> Function(OnboardingQuestionnaireAnswers answers);
+typedef OnboardingQuestionnaireFinishWithoutGeneration = void Function(OnboardingQuestionnaireAnswers answers);
 
 enum OnboardingQuestionnaireStep {
   prenom,
@@ -35,6 +36,7 @@ enum OnboardingQuestionnaireStep {
 class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
   final OnboardingQuestionnaireAnswersLoader _loadAnswers;
   final OnboardingQuestionnaireAnswersSaver _saveAnswers;
+  final OnboardingQuestionnaireFinishWithoutGeneration? _onFinishWithoutGeneration;
 
   OnboardingQuestionnaireStep step = OnboardingQuestionnaireStep.prenom;
   OnboardingQuestionnaireAnswers savedAnswers = const OnboardingQuestionnaireAnswers();
@@ -60,8 +62,10 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
   OnboardingQuestionnaireFormChangeNotifier({
     required OnboardingQuestionnaireAnswersLoader loadAnswers,
     required OnboardingQuestionnaireAnswersSaver saveAnswers,
+    OnboardingQuestionnaireFinishWithoutGeneration? onFinishWithoutGeneration,
   })  : _loadAnswers = loadAnswers,
-        _saveAnswers = saveAnswers;
+        _saveAnswers = saveAnswers,
+        _onFinishWithoutGeneration = onFinishWithoutGeneration;
 
   Future<void> init() async {
     isLoading = true;
@@ -373,6 +377,11 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
   void _goNext() {
     final next = step.next;
     if (next == null) return;
+    // Loader is only useful while generate() runs; otherwise finish immediately.
+    if (next == OnboardingQuestionnaireStep.loader && !savedAnswers.canGenerateActionPlan) {
+      _onFinishWithoutGeneration?.call(savedAnswers);
+      return;
+    }
     step = next;
     if (step == OnboardingQuestionnaireStep.villeRecherche) {
       _prefillVilleFromHabitation();

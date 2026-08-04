@@ -57,16 +57,18 @@ void main() {
     final store = factory.initializeReduxStore(
       initialState: givenState().loggedInUser(loginMode: LoginMode.INVITE),
     );
-    final emptied = store.onChange.firstWhere((s) => s.actionPlanState is ActionPlanEmptyState);
+    final finished = store.onChange.firstWhere(
+      (s) =>
+          s.actionPlanState is ActionPlanEmptyState &&
+          s.onboardingQuestionnaireState is OnboardingQuestionnaireSuccessState &&
+          (s.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState).finished,
+    );
 
     store.dispatch(OnboardingQuestionnaireCompleteAction(const OnboardingQuestionnaireAnswers()));
 
-    final state = await emptied;
+    final state = await finished;
     expect(state.actionPlanState, isA<ActionPlanEmptyState>());
-    final questionnaireState = state.onboardingQuestionnaireState;
-    if (questionnaireState is OnboardingQuestionnaireSuccessState) {
-      expect(questionnaireState.finished, isFalse);
-    }
+    expect((state.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState).finished, isTrue);
     verify(() => repository.saveAnswers(any())).called(1);
     await untilCalled(() => repository.setFinished(true));
     verify(() => repository.setFinished(true)).called(1);
