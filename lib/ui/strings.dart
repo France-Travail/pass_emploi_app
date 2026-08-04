@@ -472,7 +472,7 @@ class Strings {
       "Ton plan d’action apparaîtra ici une fois ton questionnaire terminé.";
   static String inviteAccueilQuestionnaireTitle = "Complète ton questionnaire";
   static String inviteAccueilQuestionnaireDescription =
-      "Réponds à quelques questions pour recevoir un plan d’action adapté.";
+      "Réponds aux dernières questions pour recevoir un plan d’action plus adapté.";
   static String inviteAccueilProfilComplete = "Profil complété";
   static String inviteAccueilStepsCount(int current, int total) => "$current/$total étapes";
   static String inviteAccueilResumeQuestionnaire = "Reprendre le questionnaire";
