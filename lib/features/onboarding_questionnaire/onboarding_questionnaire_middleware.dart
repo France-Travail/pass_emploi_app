@@ -1,8 +1,8 @@
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
-import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
-import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
+import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
 import 'package:pass_emploi_app/repositories/onboarding_questionnaire_repository.dart';
@@ -44,6 +44,7 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
     if (answers.canGenerateActionPlan) {
       final userId = store.state.userId();
       if (userId == null) {
+        store.dispatch(ActionPlanLoadingAction());
         store.dispatch(ActionPlanFailureAction());
       } else {
         store.dispatch(ActionPlanLoadingAction());
@@ -54,12 +55,15 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
           store.dispatch(ActionPlanFailureAction());
         }
       }
+      // Persisted early so a kill during the 100% animation still skips the questionnaire on relaunch.
+      // `finished: true` in state is deferred to [OnboardingQuestionnaireFinishAction] so the UI can show 100%.
+      await _repository.setFinished(true);
     } else {
       store.dispatch(ActionPlanEmptyAction());
+      await _repository.setFinished(true);
+      // No loader when generate is skipped: mark finished immediately so the router leaves the questionnaire.
+      store.dispatch(OnboardingQuestionnaireSuccessAction(finished: true, answers: answers));
     }
-    // Persisted early so a kill during the 100% animation still skips the questionnaire on relaunch.
-    // `finished: true` in state is deferred to [OnboardingQuestionnaireFinishAction] so the UI can show 100%.
-    await _repository.setFinished(true);
   }
 
   Future<void> _resume(Store<AppState> store) async {
