@@ -115,7 +115,6 @@ void main() {
           'SANTE',
           'PEU_EXPERIENCE',
           'FRANCAIS',
-          'AUTRE',
         ],
       },
     );

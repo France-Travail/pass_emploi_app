@@ -9,10 +9,12 @@ class OnboardingQuestionnaireProgressCard extends StatelessWidget {
     super.key,
     required this.answers,
     required this.onResume,
+    this.description,
   });
 
   final OnboardingQuestionnaireAnswers answers;
   final VoidCallback onResume;
+  final String? description;
 
   @override
   Widget build(BuildContext context) {
@@ -30,31 +32,14 @@ class OnboardingQuestionnaireProgressCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: DsfrColorDecisions.backgroundDefaultGrey(context),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: const Text('🚀', style: TextStyle(fontSize: 24)),
-                ),
-                const SizedBox(width: Margins.spacing_base),
-                Expanded(
-                  child: Text(
-                    Strings.inviteAccueilQuestionnaireTitle,
-                    style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleBlueFrance(context)),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: Margins.spacing_base),
             Text(
-              Strings.inviteAccueilQuestionnaireDescription,
-              style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+              Strings.inviteAccueilQuestionnaireTitle,
+              style: DsfrTextStyle.headline6(color: DsfrColorDecisions.textTitleGrey(context)),
+            ),
+            const SizedBox(height: Margins.spacing_s),
+            Text(
+              description ?? Strings.inviteAccueilQuestionnaireDescription,
+              style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
             ),
             const SizedBox(height: Margins.spacing_base),
             Row(
@@ -62,23 +47,29 @@ class OnboardingQuestionnaireProgressCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     Strings.inviteAccueilProfilComplete,
-                    style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+                    style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
                   ),
                 ),
                 Text(
                   Strings.inviteAccueilStepsCount(current, total),
-                  style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+                  style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
                 ),
               ],
             ),
-            const SizedBox(height: Margins.spacing_base),
+            const SizedBox(height: Margins.spacing_s),
             ClipRRect(
               borderRadius: BorderRadius.circular(100),
-              child: LinearProgressIndicator(
-                value: progress,
-                minHeight: 12,
-                backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
-                color: DsfrColorDecisions.backgroundActionHighBlueFrance(context),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  border: Border.all(color: DsfrColorDecisions.borderActionHighBlueFrance(context)),
+                ),
+                child: LinearProgressIndicator(
+                  value: progress,
+                  minHeight: 12,
+                  backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+                  color: DsfrColorDecisions.backgroundActionHighBlueFrance(context),
+                ),
               ),
             ),
             const SizedBox(height: Margins.spacing_xs),

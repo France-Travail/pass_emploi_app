@@ -4,6 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/invite_action_plan_empty_state.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/invite_action_plan_section.dart';
+import 'package:pass_emploi_app/pages/accueil/invite/invite_discovery_tile.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/onboarding_questionnaire_progress_card.dart';
 import 'package:pass_emploi_app/presentation/accueil/invite_accueil_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
@@ -49,50 +50,65 @@ class _Content extends StatelessWidget {
       );
     }
 
+    final questionnaireDescription = viewModel.mode == InviteAccueilMode.incomplet
+        ? Strings.inviteAccueilQuestionnaireDescriptionIncomplet
+        : Strings.inviteAccueilQuestionnaireDescription;
+
     return Padding(
       padding: const EdgeInsets.all(Margins.spacing_base),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (viewModel.showDiscoveryTile) ...[
+            InviteDiscoveryTile(
+              progressPercent: viewModel.discoveryProgressPercent,
+              isCompleted: viewModel.discoveryCompleted,
+              onHide: viewModel.hideDiscovery,
+            ),
+            const SizedBox(height: Margins.spacing_s),
+          ],
           if (viewModel.showQuestionnaireCard && viewModel.mode == InviteAccueilMode.incomplet) ...[
             OnboardingQuestionnaireProgressCard(
               answers: viewModel.answers,
               onResume: viewModel.resumeOnboarding,
+              description: questionnaireDescription,
             ),
-            const SizedBox(height: Margins.spacing_base),
+            const SizedBox(height: Margins.spacing_s),
           ],
-          Text(
-            Strings.inviteAccueilPlanTitle,
-            style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context)),
-          ),
-          if (!viewModel.showPlanEmptyState) ...[
-            const SizedBox(height: Margins.spacing_base),
+          if (viewModel.showPlanSection) ...[
             Text(
-              viewModel.planSubtitle,
-              style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
+              Strings.inviteAccueilPlanTitle,
+              style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context)),
             ),
+            if (!viewModel.showPlanEmptyState) ...[
+              const SizedBox(height: Margins.spacing_base),
+              Text(
+                viewModel.planSubtitle,
+                style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
+              ),
+            ],
+            const SizedBox(height: Margins.spacing_base),
+            if (viewModel.showPlanEmptyState)
+              InviteActionPlanEmptyState(
+                kind: viewModel.planEmptyKind!,
+                showRetry: viewModel.showRetryGenerate,
+                showModifier: viewModel.showModifierButton,
+                onRetry: viewModel.retryGenerate,
+                onModifier: viewModel.resumeOnboarding,
+              )
+            else
+              InviteActionPlanSection(
+                plan: viewModel.plan,
+                onToggleDone: viewModel.toggleDone,
+                onDelete: viewModel.deleteAction,
+              ),
           ],
-          const SizedBox(height: Margins.spacing_base),
-          if (viewModel.showPlanEmptyState)
-            InviteActionPlanEmptyState(
-              kind: viewModel.planEmptyKind!,
-              showRetry: viewModel.showRetryGenerate,
-              showModifier: viewModel.showModifierButton,
-              onRetry: viewModel.retryGenerate,
-              onModifier: viewModel.resumeOnboarding,
-            )
-          else
-            InviteActionPlanSection(
-              plan: viewModel.plan,
-              locked: viewModel.showLockedPlan,
-              onToggleDone: viewModel.toggleDone,
-              onDelete: viewModel.deleteAction,
-            ),
           if (viewModel.showQuestionnaireCard && viewModel.mode == InviteAccueilMode.partiel) ...[
             const SizedBox(height: Margins.spacing_base),
             OnboardingQuestionnaireProgressCard(
               answers: viewModel.answers,
               onResume: viewModel.resumeOnboarding,
+              description: questionnaireDescription,
             ),
           ],
           if (viewModel.showModifierButton && !viewModel.showPlanEmptyState) ...[
@@ -106,11 +122,12 @@ class _Content extends StatelessWidget {
             ),
           ],
           if (viewModel.showExplorerTip) ...[
-            const SizedBox(height: Margins.spacing_base),
+            const SizedBox(height: Margins.spacing_s),
             DecoratedBox(
               decoration: BoxDecoration(
-                color: DsfrColorDecisions.backgroundActionLowBlueFrance(context),
+                color: DsfrColorDecisions.backgroundDefaultGrey(context),
                 borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: DsfrColorDecisions.artworkDecorativeBlueFrance(context)),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(Margins.spacing_base),
@@ -119,11 +136,11 @@ class _Content extends StatelessWidget {
                   children: [
                     Text(
                       Strings.inviteAccueilExplorerTipTitle,
-                      style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+                      style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
                     ),
                     Text(
                       Strings.inviteAccueilExplorerTipBody,
-                      style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+                      style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textTitleGrey(context)),
                     ),
                   ],
                 ),
