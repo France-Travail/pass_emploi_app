@@ -483,7 +483,12 @@ class Strings {
   static String inviteAccueilConseillerBody = "Un professionnel près de chez toi peut t'aider à avancer.";
   static String inviteAccueilAfficherPlus = "Afficher plus";
   static String inviteAccueilRetryPlan = "Réessayer de générer mon plan";
-  static String inviteAccueilPlanFailure = "Impossible de générer ton plan d'action pour le moment.";
+  static String inviteAccueilPlanFailureTitle = "Ton plan d'action n'a pas pu être généré";
+  static String inviteAccueilPlanFailureBody =
+      "Impossible de générer ton plan d'action pour le moment. Réessaie dans un instant.";
+  static String inviteAccueilPlanEmptyTitle = "Ton plan d'action n'est pas disponible";
+  static String inviteAccueilPlanEmptyBody =
+      "Aucune action n'a pu être proposée pour le moment. Modifie tes réponses pour obtenir un nouveau plan.";
   static String inviteAccueilLockedPlanSemantics = "Plan d'action verrouillé";
   static String inviteAccueilLockedPlanEmploi = "Trouver un emploi";
   static String inviteAccueilLockedPlanMetiers = "Découvrir des métiers";
