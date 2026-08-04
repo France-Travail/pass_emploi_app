@@ -2,9 +2,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
+import 'package:pass_emploi_app/features/onboarding/onboarding_actions.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
+import 'package:pass_emploi_app/models/onboarding.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -22,8 +24,11 @@ class InviteAccueilViewModel extends Equatable {
   final OnboardingQuestionnaireAnswers answers;
   final ActionPlan? plan;
   final String planSubtitle;
+  final bool showDiscoveryTile;
+  final int discoveryProgressPercent;
+  final bool discoveryCompleted;
   final bool showQuestionnaireCard;
-  final bool showLockedPlan;
+  final bool showPlanSection;
   final bool showPlanEmptyState;
   final InvitePlanEmptyKind? planEmptyKind;
   final bool showConseillerCta;
@@ -33,6 +38,7 @@ class InviteAccueilViewModel extends Equatable {
   final VoidCallback retryLoad;
   final VoidCallback resumeOnboarding;
   final VoidCallback retryGenerate;
+  final VoidCallback hideDiscovery;
   final void Function(String actionId) toggleDone;
   final void Function(String actionId) deleteAction;
 
@@ -43,8 +49,11 @@ class InviteAccueilViewModel extends Equatable {
     required this.answers,
     required this.plan,
     required this.planSubtitle,
+    required this.showDiscoveryTile,
+    required this.discoveryProgressPercent,
+    required this.discoveryCompleted,
     required this.showQuestionnaireCard,
-    required this.showLockedPlan,
+    required this.showPlanSection,
     required this.showPlanEmptyState,
     required this.planEmptyKind,
     required this.showConseillerCta,
@@ -54,6 +63,7 @@ class InviteAccueilViewModel extends Equatable {
     required this.retryLoad,
     required this.resumeOnboarding,
     required this.retryGenerate,
+    required this.hideDiscovery,
     required this.toggleDone,
     required this.deleteAction,
   });
@@ -71,15 +81,17 @@ class InviteAccueilViewModel extends Equatable {
     };
 
     final plan = actionPlanState is ActionPlanSuccessState ? actionPlanState.plan : null;
-    final displayState = switch (actionPlanState) {
-      ActionPlanLoadingState() || ActionPlanNotInitializedState() => DisplayState.LOADING,
-      _ => DisplayState.CONTENT,
-    };
+    final showPlanSection = mode != InviteAccueilMode.incomplet;
+    final displayState = !showPlanSection
+        ? DisplayState.CONTENT
+        : switch (actionPlanState) {
+            ActionPlanLoadingState() || ActionPlanNotInitializedState() => DisplayState.LOADING,
+            _ => DisplayState.CONTENT,
+          };
 
-    final showLockedPlan = mode == InviteAccueilMode.incomplet;
     final isFailure = actionPlanState is ActionPlanFailureState;
     final hasNoObjectives = plan == null || plan.objectives.isEmpty;
-    final showPlanEmptyState = !showLockedPlan && (isFailure || hasNoObjectives);
+    final showPlanEmptyState = showPlanSection && (isFailure || hasNoObjectives);
     final planEmptyKind = !showPlanEmptyState
         ? null
         : isFailure
@@ -87,6 +99,14 @@ class InviteAccueilViewModel extends Equatable {
         : InvitePlanEmptyKind.empty;
 
     final prenom = answers.prenom?.trim().isNotEmpty == true ? answers.prenom : store.state.user()?.firstName;
+
+    final onboarding = store.state.onboardingState.onboarding;
+    final showDiscoveryTile = onboarding?.showOnboarding ?? false;
+    final accompagnement = store.state.accompagnement();
+    final completedSteps = onboarding != null ? onboarding.completedSteps(accompagnement) : 0;
+    final totalSteps = onboarding != null ? onboarding.totalSteps(accompagnement) : 1;
+    final discoveryProgressPercent = totalSteps == 0 ? 0 : (100 * completedSteps) ~/ totalSteps;
+    final discoveryCompleted = onboarding?.isCompleted(accompagnement) ?? false;
 
     return InviteAccueilViewModel(
       displayState: displayState,
@@ -99,8 +119,11 @@ class InviteAccueilViewModel extends Equatable {
         InviteAccueilMode.partiel => Strings.inviteAccueilPlanSubtitlePartiel,
         InviteAccueilMode.complet => Strings.inviteAccueilPlanSubtitleComplet,
       },
+      showDiscoveryTile: showDiscoveryTile,
+      discoveryProgressPercent: discoveryProgressPercent,
+      discoveryCompleted: discoveryCompleted,
       showQuestionnaireCard: mode != InviteAccueilMode.complet,
-      showLockedPlan: showLockedPlan,
+      showPlanSection: showPlanSection,
       showPlanEmptyState: showPlanEmptyState,
       planEmptyKind: planEmptyKind,
       showConseillerCta: mode == InviteAccueilMode.complet,
@@ -112,6 +135,7 @@ class InviteAccueilViewModel extends Equatable {
       retryLoad: () => store.dispatch(ActionPlanRequestAction()),
       resumeOnboarding: () => store.dispatch(OnboardingQuestionnaireResumeAction()),
       retryGenerate: () => store.dispatch(ActionPlanGenerateAction(answers)),
+      hideDiscovery: () => store.dispatch(OnboardingHideAction()),
       toggleDone: (id) => store.dispatch(ActionPlanToggleDoneAction(id)),
       deleteAction: (id) => store.dispatch(ActionPlanDeleteAction(id)),
     );
@@ -125,8 +149,11 @@ class InviteAccueilViewModel extends Equatable {
     answers,
     plan,
     planSubtitle,
+    showDiscoveryTile,
+    discoveryProgressPercent,
+    discoveryCompleted,
     showQuestionnaireCard,
-    showLockedPlan,
+    showPlanSection,
     showPlanEmptyState,
     planEmptyKind,
     showConseillerCta,

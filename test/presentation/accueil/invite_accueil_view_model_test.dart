@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
+import 'package:pass_emploi_app/models/onboarding.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/presentation/accueil/invite_accueil_view_model.dart';
@@ -9,18 +10,22 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import '../../dsl/app_state_dsl.dart';
 
 void main() {
-  test('incomplet mode shows questionnaire and locked plan', () {
+  test('incomplet mode shows questionnaire without plan section', () {
     final store = givenState()
         .loggedInUser(loginMode: LoginMode.INVITE)
         .withOnboardingQuestionnaire(finished: true)
         .withActionPlanEmpty()
+        .withOnboardingSuccessState(Onboarding())
         .store();
 
     final viewModel = InviteAccueilViewModel.create(store);
 
     expect(viewModel.mode, InviteAccueilMode.incomplet);
     expect(viewModel.showQuestionnaireCard, isTrue);
-    expect(viewModel.showLockedPlan, isTrue);
+    expect(viewModel.showPlanSection, isFalse);
+    expect(viewModel.showExplorerTip, isTrue);
+    expect(viewModel.showDiscoveryTile, isTrue);
+    expect(viewModel.discoveryProgressPercent, 16);
     expect(viewModel.showConseillerCta, isFalse);
     expect(viewModel.displayState, DisplayState.CONTENT);
   });
@@ -55,7 +60,7 @@ void main() {
 
     expect(viewModel.mode, InviteAccueilMode.partiel);
     expect(viewModel.showQuestionnaireCard, isTrue);
-    expect(viewModel.showLockedPlan, isFalse);
+    expect(viewModel.showPlanSection, isTrue);
     expect(viewModel.plan?.objectives.first.title, 'Trouver un emploi');
   });
 
@@ -172,5 +177,18 @@ void main() {
     expect(viewModel.planEmptyKind, InvitePlanEmptyKind.failure);
     expect(viewModel.showRetryGenerate, isTrue);
     expect(viewModel.showModifierButton, isFalse);
+  });
+
+  test('discovery tile hidden when onboarding is dismissed', () {
+    final store = givenState()
+        .loggedInUser(loginMode: LoginMode.INVITE)
+        .withOnboardingQuestionnaire(finished: true)
+        .withActionPlanEmpty()
+        .withOnboardingSuccessState(Onboarding(showOnboarding: false))
+        .store();
+
+    final viewModel = InviteAccueilViewModel.create(store);
+
+    expect(viewModel.showDiscoveryTile, isFalse);
   });
 }
