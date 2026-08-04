@@ -41,8 +41,10 @@ class _OnboardingQuestionnaireLoaderStepState extends State<OnboardingQuestionna
     if (_dispatched) return;
     _dispatched = true;
     _startedAt = DateTime.now();
+    final store = StoreProvider.of<AppState>(context);
+    _seenNonTerminalState = !_isGenerationDone(store.state.actionPlanState);
     _tickTimer = Timer.periodic(_tickInterval, (_) => _onTick());
-    StoreProvider.of<AppState>(context).dispatch(OnboardingQuestionnaireCompleteAction(widget.answers));
+    store.dispatch(OnboardingQuestionnaireCompleteAction(widget.answers));
   }
 
   @override

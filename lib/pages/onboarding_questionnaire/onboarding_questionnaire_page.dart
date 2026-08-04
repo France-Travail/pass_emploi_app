@@ -51,6 +51,9 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
       saveAnswers: (answers) async {
         store.dispatch(OnboardingQuestionnaireAnswersUpdatedAction(answers));
       },
+      onFinishWithoutGeneration: (answers) {
+        store.dispatch(OnboardingQuestionnaireCompleteAction(answers));
+      },
     );
     _form.init();
   }
