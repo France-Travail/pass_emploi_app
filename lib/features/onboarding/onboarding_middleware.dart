@@ -28,6 +28,8 @@ class OnboardingMiddleware extends MiddlewareClass<AppState> {
       store.dispatch(OnboardingSuccessAction(result));
     } else if (action is OnboardingPushNotificationPermissionRequestAction) {
       await _handleNotificationsPermissions(store);
+    } else if (action is OnboardingNotificationsDismissedAction) {
+      _updateOnboarding(store, (onboarding) => onboarding?.copyWith(showNotificationsOnboarding: false));
     } else if (action is SendMessageAction) {
       _updateOnboarding(store, (onboarding) => onboarding?.copyWith(messageCompleted: true));
     } else if (action is UserActionCreateSuccessAction || action is CreateDemarcheSuccessAction) {

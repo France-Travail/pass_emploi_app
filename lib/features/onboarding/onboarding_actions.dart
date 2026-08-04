@@ -8,6 +8,8 @@ class OnboardingSuccessAction {
 
 class OnboardingPushNotificationPermissionRequestAction {}
 
+class OnboardingNotificationsDismissedAction {}
+
 class ResetOnboardingShowcaseAction {}
 
 class OnboardingHideAction {}
