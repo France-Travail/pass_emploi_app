@@ -1,32 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/mode_demo/explication_page_mode_demo.dart';
-import 'package:pass_emploi_app/features/preferred_login_mode/preferred_login_mode_actions.dart';
-import 'package:pass_emploi_app/models/brand.dart';
-import 'package:pass_emploi_app/pages/cej_information_page.dart';
 import 'package:pass_emploi_app/presentation/login_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
+import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
-import 'package:pass_emploi_app/ui/media_sizes.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/biseau_background.dart';
-import 'package:pass_emploi_app/widgets/bottom_sheets/login_bottom_sheet/login_bottom_sheet_home.dart';
-import 'package:pass_emploi_app/widgets/buttons/elevated_button_tile.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/drawables/app_logo.dart';
+import 'package:pass_emploi_app/widgets/dsfr/bloc_marque.dart';
 import 'package:pass_emploi_app/widgets/login_page_remote_message.dart';
-import 'package:pass_emploi_app/widgets/welcome.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -34,7 +23,6 @@ class LoginPage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.login,
       child: StoreConnector<AppState, LoginPageViewModel>(
-        onInit: (store) => store.dispatch(PreferredLoginModeRequestAction()),
         converter: (store) => LoginPageViewModel.create(store),
         builder: (context, viewModel) => _Scaffold(viewModel),
         onWillChange: _onWillChange,
@@ -64,130 +52,161 @@ class LoginPage extends StatelessWidget {
 class _Scaffold extends StatelessWidget {
   final LoginPageViewModel viewModel;
 
-  _Scaffold(this.viewModel);
+  const _Scaffold(this.viewModel);
 
   @override
   Widget build(BuildContext context) {
-    final shrink = Brand.isCej() && MediaQuery.of(context).size.height < MediaSizes.height_xs;
-    return Scaffold(
-      backgroundColor: context.bg,
-      body: Stack(
-        children: [
-          BiseauBackground(),
-          SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_m),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: CustomScrollView(
-                  shrinkWrap: true,
-                  physics: BouncingScrollPhysics(),
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          GestureDetector(
-                            child: AppLogo(width: 120),
-                            onDoubleTap: () => Navigator.push(context, ExplicationModeDemoPage.materialPageRoute()),
-                          ),
-                          SizedBox(height: shrink ? Margins.spacing_base : Margins.spacing_m),
-                          Welcome(),
-                          SizedBox(height: shrink ? 0 : Margins.spacing_xl),
-                          CardContainer(
-                            padding: EdgeInsets.only(
-                              left: Margins.spacing_m,
-                              right: Margins.spacing_m,
-                              top: Margins.spacing_m,
-                            ),
-                            backgroundColor: AppColorsSpecifics.bgToGrey100(context),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                LoginPageRemoteMessageCard(),
-                                if (viewModel.preferredLoginMode != null) ...[
-                                  _PreferredLoginMode(viewModel.preferredLoginMode!),
-                                  SizedBox(height: Margins.spacing_base),
-                                ],
-                                _LoginButton(viewModel),
-                                SizedBox(height: Margins.spacing_m),
-                                if (viewModel.technicalErrorMessage != null) ...[
-                                  _GenericError(viewModel.technicalErrorMessage!),
-                                  SizedBox(height: Margins.spacing_m),
-                                ],
-                                if (viewModel.withWrongDeviceClockMessage) ...[
-                                  _ErrorBanner(
-                                    title: Strings.loginWrongDeviceClockError,
-                                    description: Strings.loginWrongDeviceClockErrorDescription,
-                                  ),
-                                  SizedBox(height: Margins.spacing_m),
-                                ],
-                                Divider(height: 1, color: AppColors.primaryLighten),
-                                _InformationsLegales(),
-                              ],
-                            ),
-                          ),
-                          if (viewModel.withRequestAccountButton) ...[
-                            SizedBox(height: Margins.spacing_base),
-                            _AskAccount(),
-                          ],
-                          SizedBox(height: Margins.spacing_l),
-                          _AccessibilityIndicator(viewModel.accessibilityLevelLabel),
-                          SizedBox(height: Margins.spacing_xl),
-                        ],
-                      ),
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return Theme(
+      data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+      child: Scaffold(
+        backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_m),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: BlocMarque(),
+                ),
+                const SizedBox(height: Margins.spacing_s),
+                GestureDetector(
+                  onDoubleTap: () => Navigator.push(context, ExplicationModeDemoPage.materialPageRoute()),
+                  child: const Center(child: AppLogo(width: 120)),
+                ),
+                const SizedBox(height: Margins.spacing_l),
+                if (viewModel.withOrganismChoice) ...[
+                  Text(
+                    Strings.loginChooseAccountTitle,
+                    style: DsfrTextStyle.headline2(color: DsfrColorDecisions.textTitleGrey(context)),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: Margins.spacing_base),
+                  Text(
+                    Strings.loginChooseAccountDescription,
+                    style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textTitleGrey(context)),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: Margins.spacing_base),
+                ],
+                LoginPageRemoteMessageCard(),
+                if (viewModel.withLoading)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: Margins.spacing_m),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else ...[
+                  _OrganismButton(
+                    label: Strings.loginBottomSeetFranceTravailButton,
+                    logo: Drawables.franceTravailLogo,
+                    onPressed: viewModel.onFranceTravailLogin,
+                  ),
+                  if (viewModel.onMissionLocaleLogin != null) ...[
+                    const SizedBox(height: Margins.spacing_base),
+                    _OrganismButton(
+                      label: Strings.loginBottomSeetMissionLocaleButton,
+                      logo: Drawables.missionLocaleLogo,
+                      onPressed: viewModel.onMissionLocaleLogin!,
                     ),
                   ],
+                ],
+                if (viewModel.technicalErrorMessage != null) ...[
+                  const SizedBox(height: Margins.spacing_m),
+                  _GenericError(viewModel.technicalErrorMessage!),
+                ],
+                if (viewModel.withWrongDeviceClockMessage) ...[
+                  const SizedBox(height: Margins.spacing_m),
+                  _ErrorBanner(
+                    title: Strings.loginWrongDeviceClockError,
+                    description: Strings.loginWrongDeviceClockErrorDescription,
+                  ),
+                ],
+                if (viewModel.withInviteButton && viewModel.onInviteLogin != null) ...[
+                  const SizedBox(height: Margins.spacing_l),
+                  Divider(height: 1, color: DsfrColors.blueFrance950),
+                  const SizedBox(height: Margins.spacing_base),
+                  Text(
+                    Strings.loginNoAccountLabel,
+                    style: DsfrTextStyle.bodySmBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: Margins.spacing_base),
+                  DsfrButton(
+                    label: Strings.loginInviteActionCta,
+                    variant: DsfrButtonVariant.secondary,
+                    size: DsfrComponentSize.lg,
+                    icon: DsfrIcons.systemArrowRightLine,
+                    iconLocation: DsfrButtonIconLocation.right,
+                    onPressed: viewModel.onInviteLogin,
+                  ),
+                ],
+                const SizedBox(height: Margins.spacing_l),
+                _InformationsLegales(),
+                const SizedBox(height: Margins.spacing_m),
+                Text(
+                  viewModel.accessibilityLevelLabel,
+                  textAlign: TextAlign.center,
+                  style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textDefaultGrey(context)),
                 ),
-              ),
+                const SizedBox(height: Margins.spacing_xl),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 }
 
-class _LoginButton extends StatelessWidget {
-  const _LoginButton(this.viewModel);
+class _OrganismButton extends StatelessWidget {
+  const _OrganismButton({
+    required this.label,
+    required this.logo,
+    required this.onPressed,
+  });
 
-  final LoginPageViewModel viewModel;
+  final String label;
+  final String logo;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
-    if (viewModel.withLoading) return Center(child: CircularProgressIndicator());
-    return PrimaryActionButton(
-      label: Strings.loginAction,
-      onPressed: () {
-        viewModel.onLogin != null ? viewModel.onLogin!.call() : LoginBottomSheet.show(context);
-      },
-    );
-  }
-}
-
-class _AskAccount extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Semantics(
-          header: true,
-          child: Text(
-            Strings.noAccount,
-            style: TextStyles.textSMedium(color: AppColors.contentOnPrimary),
-            textAlign: TextAlign.center,
+    final borderColor = DsfrColorDecisions.borderActionHighBlueFrance(context);
+    final textColor = DsfrColorDecisions.textActionHighBlueFrance(context);
+    return Material(
+      color: DsfrColorDecisions.backgroundDefaultGrey(context),
+      child: InkWell(
+        onTap: onPressed,
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 68),
+          decoration: BoxDecoration(
+            border: Border.all(color: borderColor),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Semantics(
+                excludeSemantics: true,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.asset(logo, width: 48, height: 48, fit: BoxFit.cover),
+                ),
+              ),
+              const SizedBox(width: Margins.spacing_s),
+              Flexible(
+                child: Text(
+                  label,
+                  style: DsfrTextStyle.bodyLgMedium(color: textColor),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
           ),
         ),
-        SizedBox(height: Margins.spacing_s),
-        SecondaryButton(
-          label: Strings.askAccount,
-          backgroundColor: AppColors.transparent,
-          foregroundColor: AppColors.contentOnPrimary,
-          onPressed: () => Navigator.push(context, CejInformationPage.materialPageRoute()),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -195,40 +214,24 @@ class _AskAccount extends StatelessWidget {
 class _InformationsLegales extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      focusable: true,
-      child: ExpansionTile(
-        onExpansionChanged: (_) {
-          Future.delayed(AnimationDurations.medium, () {
-            if (context.mounted) {
-              Scrollable.of(
-                context,
-              ).position.ensureVisible(context.findRenderObject()!, duration: AnimationDurations.fast);
-            }
-          });
-        },
-        tilePadding: EdgeInsets.zero,
-        title: Text(Strings.legalInformation, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-        expandedCrossAxisAlignment: CrossAxisAlignment.start,
-        expandedAlignment: Alignment.topLeft,
-        children: [
-          Column(
+    return DsfrAccordionsGroup(
+      values: [
+        DsfrAccordion(
+          headerLabel: Strings.legalInformation,
+          body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: Margins.spacing_s),
               Link(Strings.legalNoticeLabel, Strings.legalNoticeUrl),
-              SizedBox(height: Margins.spacing_m),
+              const SizedBox(height: Margins.spacing_base),
               Link(Strings.privacyPolicyLabel, Strings.privacyPolicyUrl),
-              SizedBox(height: Margins.spacing_m),
+              const SizedBox(height: Margins.spacing_base),
               Link(Strings.termsOfServiceLabel, Strings.termsOfServiceUrl),
-              SizedBox(height: Margins.spacing_m),
+              const SizedBox(height: Margins.spacing_base),
               Link(Strings.accessibilityLevelLabel, Strings.accessibilityUrl),
-              SizedBox(height: Margins.spacing_m),
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -242,7 +245,7 @@ class Link extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.transparent,
+      color: Colors.transparent,
       child: InkWell(
         onTap: () {
           PassEmploiMatomoTracker.instance.trackOutlink(link);
@@ -252,15 +255,21 @@ class Link extends StatelessWidget {
           crossAxisAlignment: WrapCrossAlignment.end,
           children: [
             Padding(
-              padding: const EdgeInsets.only(bottom: 3),
+              padding: const EdgeInsets.only(bottom: 2),
               child: Icon(
-                AppIcons.open_in_new_rounded,
-                color: AppColorsSpecifics.primaryToLighten(context),
-                size: Dimens.icon_size_base,
+                DsfrIcons.systemExternalLinkLine,
+                color: DsfrColorDecisions.textActionHighBlueFrance(context),
+                size: 16,
               ),
             ),
-            SizedBox(width: Margins.spacing_s),
-            Text(label, style: TextStyles.internalLink(context)),
+            const SizedBox(width: Margins.spacing_xs),
+            Text(
+              label,
+              style: DsfrTextStyle.bodySmMedium(color: DsfrColorDecisions.textActionHighBlueFrance(context)).copyWith(
+                decoration: TextDecoration.underline,
+                decorationColor: DsfrColorDecisions.textActionHighBlueFrance(context),
+              ),
+            ),
             Semantics(label: Strings.link),
           ],
         ),
@@ -298,9 +307,9 @@ class _ErrorBanner extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(title, style: TextStyles.textSBoldWithColor(AppColors.warning)),
-            SizedBox(height: Margins.spacing_s),
-            Text(description, style: TextStyles.textXsRegular(color: AppColors.warning)),
+            Text(title, style: DsfrTextStyle.bodySmBold(color: AppColors.warning)),
+            const SizedBox(height: Margins.spacing_s),
+            Text(description, style: DsfrTextStyle.bodyXs(color: AppColors.warning)),
           ],
         ),
       ),
@@ -311,7 +320,7 @@ class _ErrorBanner extends StatelessWidget {
 class _ErrorInfoDialog extends StatelessWidget {
   final String message;
 
-  _ErrorInfoDialog(this.message);
+  const _ErrorInfoDialog(this.message);
 
   @override
   Widget build(BuildContext context) {
@@ -319,42 +328,6 @@ class _ErrorInfoDialog extends StatelessWidget {
       title: const Text('Erreur technique'),
       content: Text(message),
       actions: [TextButton(child: Text(Strings.close), onPressed: () => Navigator.of(context).pop())],
-    );
-  }
-}
-
-class _PreferredLoginMode extends StatelessWidget {
-  const _PreferredLoginMode(this.loginMode);
-
-  final PreferredLoginModeViewModel loginMode;
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButtonTile(
-      onPressed: () {
-        LoginBottomSheet.show(context);
-      },
-      label: loginMode.title,
-      leading: Semantics(
-        excludeSemantics: true,
-        child: SizedBox(width: 40, height: 40, child: Image.asset(loginMode.logo, fit: BoxFit.cover)),
-      ),
-      suffix: Icon(AppIcons.chevron_right_rounded, color: context.content),
-    );
-  }
-}
-
-class _AccessibilityIndicator extends StatelessWidget {
-  final String accessibilityLevelLabel;
-
-  const _AccessibilityIndicator(this.accessibilityLevelLabel);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      accessibilityLevelLabel,
-      textAlign: TextAlign.center,
-      style: TextStyles.textXsRegular(color: AppColors.contentOnPrimary),
     );
   }
 }
