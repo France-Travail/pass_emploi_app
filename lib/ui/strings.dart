@@ -174,20 +174,24 @@ class Strings {
   static String softUpdateBottomSheetClose = "Plus tard";
 
   // First Launch Onboarding
-  static String start = "Démarrer";
+  static String firstLaunchOnboardingTagline = "Tes envies,\ntes projets,\ntes solutions.";
+  static String firstLaunchOnboardingDescription =
+      "L'app des 14-25 ans qui t'accompagne dans tous tes projets : études, emploi, logement, mobilité, santé, loisirs et bien plus";
 
-  static String firstLaunchOnboardingCardTitle1 = "Echangez à tout moment avec votre conseiller dédié";
-  static String firstLaunchOnboardingCardTitle2 = Brand.isCej()
-      ? "Créez et suivez vos actions dans le cadre des 15h d’activité"
-      : "Créez et suivez vos démarches dans le cadre des 15h d’activité";
-  static String firstLaunchOnboardingCardTitle3 =
-      "Trouvez les offres et les événements en lien avec votre projet professionnel";
+  static String firstLaunchOnboardingCardTitle1 =
+      "Un plan d’action personnalisé pour démarrer selon tes objectifs";
+  static String firstLaunchOnboardingCardTitle2 =
+      "Des offres d’emploi et des événements adaptés à ton projet";
+  static String firstLaunchOnboardingCardTitle3 = "Echange avec ton conseiller pour t’aider";
 
   // Entree
-  static String welcome = "Bienvenue";
-  static String welcomeMessage = "L’application dédiée à votre accompagnement";
-  static String noAccount = "Pas de compte ?";
+  static String republiqueFrancaise = "République Française";
   static String askAccount = "Demander un compte";
+  static String loginChooseAccountTitle = "Choisissez un compte";
+  static String loginChooseAccountDescription =
+      "Si vous disposez de plusieurs accès, sélectionnez l'organisme qui vous accompagne actuellement.";
+  static String loginNoAccountLabel = "Je n'ai pas de compte France Travail ou Mission Locale";
+  static String loginInviteActionCta = "C’est parti, sans compte";
   static String suiviParConseillerCej =
       "Dans le cadre de mon Contrat d'Engagement Jeune, je suis suivi par un conseiller :";
   static String suiviParConseillerPassEmploi = "Je suis suivi par un conseiller :";
@@ -200,7 +204,6 @@ class Strings {
   // Onboarding
   static String skip = "Passer";
   static String continueLabel = "Continuer";
-  static String letsGo = "C'est parti !";
   static String gotIt = "C'est compris";
   static String discover = "Découvrir";
 
@@ -272,60 +275,9 @@ class Strings {
   static String mesOutilsDescription = "Trouver l’aide adaptée à votre projet professionel";
   static String decouvrirLeService = "Découvrir le service";
 
-  // Login bottom sheet
-  static const String loginBottomSeetFranceTravailButton = "France travail";
+  // Login organisms
+  static const String loginBottomSeetFranceTravailButton = "France Travail";
   static const String loginBottomSeetMissionLocaleButton = "Mission Locale";
-  static const String loginBottomSeetNoOrganism = "Je ne suis inscrit à aucun de ces organismes";
-
-  static const String loginBottomSeetTitlePage1 = "Sélectionnez l’organisme dont dépend votre conseiller CEJ : ";
-  static const String organismInformations =
-      "L’organisme est celui avec lequel vous avez signé votre contrat CEJ. Cette information est visible sur votre contrat CEJ dans la case “Opérateur”.";
-
-  static const String loginBottomSeetTitlePage2 = "Pour vous connecter, vous aurez besoin des éléments suivants : ";
-
-  static List<String> loginInfosUserName(bool isPoleEmploi) =>
-      isPoleEmploi ? loginBottomSheetEmailInfosPoleEmploi : loginBottomSheetEmailInfosCej;
-
-  static List<String> loginBottomSheetPasswordInfos(bool isPoleEmploi) =>
-      isPoleEmploi ? loginBottomSheetPasswordInfosPoleEmploi : loginBottomSheetPasswordInfosCej;
-
-  static const List<String> loginBottomSheetEmailInfosCej = [
-    "L’adresse mail",
-    " que vous avez fourni à votre conseiller",
-  ];
-  static const List<String> loginBottomSheetPasswordInfosCej = [
-    "Le mot de passe",
-    " créé lors de la réception du mail d’activation",
-  ];
-
-  static const List<String> loginBottomSheetEmailInfosPoleEmploi = [
-    "Le nom d’utilisateur",
-    " créé lors de votre inscription à France Travail",
-  ];
-  static const List<String> loginBottomSheetPasswordInfosPoleEmploi = [
-    "Le mot de passe",
-    " de votre espace personnel France Travail",
-  ];
-
-  static String loginBottomSheetRecuperationInfos(bool isPoleEmploi) =>
-      isPoleEmploi ? loginBottomSheetRecuperationInfosPoleEmploi : loginBottomSheetRecuperationInfosCej;
-
-  static const String loginBottomSheetRecuperationInfosCej =
-      "Si vous avez oublié votre mot de passe ou vous n’avez pas reçu le mail d’activation, vous pourrez le réinitialiser en cliquant sur Mot de passe oublié.";
-
-  static const String loginBottomSheetRecuperationInfosPoleEmploi =
-      "Si vous avez oublié votre nom d’utilisateur ou votre mot de passe, vous pourrez les récupérer à l’étape suivante.";
-
-  static String loginOpenInNewDescription(bool isPoleEmploi) =>
-      isPoleEmploi ? loginOpenInNewDescriptionPoleEmploi : loginOpenInNewDescriptionCej;
-
-  static const String loginOpenInNewDescriptionCej =
-      "Vous serez redirigé vers la page d'authentification de Mission Locale pour vous connecter.";
-
-  static const String loginOpenInNewDescriptionPoleEmploi =
-      "Vous serez redirigé vers la page d'authentification de France Travail pour vous connecter.";
-
-  static const String loginNoAccount = "Pas de compte ?";
 
   // Login
   static String loginWrongDeviceClockError = "L'heure de votre téléphone semble erronée, impossible de vous connecter.";
@@ -337,7 +289,6 @@ class Strings {
   static String loginPoleEmploi = "France Travail";
   static String loginMissionLocale = "Mission Locale";
   static String loginAction = "Se connecter";
-  static String loginInviteAction = "Continuer en tant qu'invité";
 
   // Mode invité
   static String invitePrenomTitle = "Votre prénom";
@@ -1354,7 +1305,7 @@ class Strings {
   static String privacyPolicyLabel = "Politique de confidentialité";
   static String accessibilityLevelLabel = "Niveau d’accessibilité";
   static String accessibilityLevelNonConforme = "Non conforme";
-  static String termsOfServiceLabel = "Conditions d'utilisation";
+  static String termsOfServiceLabel = "Conditions Générales d'Utilisation";
 
   static String legalNoticeUrl = Brand.isCej() ? _CejStrings.legalNoticeUrl : _PassEmploiStrings.legalNoticeUrl;
   static String privacyPolicyUrl = Brand.isCej() ? _CejStrings.privacyPolicyUrl : _PassEmploiStrings.privacyPolicyUrl;

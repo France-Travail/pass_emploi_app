@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pass_emploi_app/widgets/dsfr/emoji_tile.dart';
 
 class OnboardingQuestionnaireEmojiIllustration extends StatelessWidget {
   const OnboardingQuestionnaireEmojiIllustration({
@@ -13,25 +13,12 @@ class OnboardingQuestionnaireEmojiIllustration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: const BorderRadius.all(Radius.circular(15)),
-      ),
-      child: SizedBox.square(
-        dimension: 48,
-        child: Center(
-          child: Text(
-            emoji,
-            style: TextStyle(
-              fontSize: 24,
-              height: 32 / 24,
-              // Force color emoji on iOS for dingbats like ✈️ (U+2708).
-              fontFamily: defaultTargetPlatform == TargetPlatform.iOS ? 'Apple Color Emoji' : null,
-            ),
-          ),
-        ),
-      ),
+    return EmojiTile(
+      emoji: emoji,
+      backgroundColor: backgroundColor,
+      size: 48,
+      emojiSize: 24,
+      borderRadius: 15,
     );
   }
 }
