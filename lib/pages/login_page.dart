@@ -100,14 +100,14 @@ class _Scaffold extends StatelessWidget {
                 else ...[
                   _OrganismButton(
                     label: Strings.loginBottomSeetFranceTravailButton,
-                    logo: Drawables.franceTravailLogo,
+                    logo: Drawables.franceTravailLogoTitle,
                     onPressed: viewModel.onFranceTravailLogin,
                   ),
                   if (viewModel.onMissionLocaleLogin != null) ...[
                     const SizedBox(height: Margins.spacing_base),
                     _OrganismButton(
                       label: Strings.loginBottomSeetMissionLocaleButton,
-                      logo: Drawables.missionLocaleLogo,
+                      logo: Drawables.missionLocaleLogoTitle,
                       onPressed: viewModel.onMissionLocaleLogin!,
                     ),
                   ],

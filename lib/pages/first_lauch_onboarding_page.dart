@@ -213,7 +213,7 @@ class _PageViewScreenState extends State<_PageViewScreen> {
       child: _SizeReportingWidget(
         onSizeChange: (size) => _onPageHeightChanged(index, size.height),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_xl),
+          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_xl, vertical: Margins.spacing_s),
           child: child,
         ),
       ),
@@ -247,11 +247,7 @@ class _DiscoveryCard extends StatelessWidget {
           topLeft: Radius.circular(Dimens.radius_base),
           topRight: Radius.circular(Dimens.radius_s),
         ),
-        border: Border(
-          top: BorderSide(color: DsfrColorDecisions.borderDefaultGrey(context)),
-          left: BorderSide(color: DsfrColorDecisions.borderDefaultGrey(context)),
-          right: BorderSide(color: DsfrColorDecisions.borderDefaultGrey(context)),
-        ),
+        border: Border.all(color: DsfrColorDecisions.borderDefaultGrey(context)),
         boxShadow: const [
           BoxShadow(
             color: Color(0x29000012),
@@ -298,10 +294,6 @@ class _DiscoveryCard extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-          Container(
-            height: 4,
-            color: DsfrColorDecisions.borderActionHighBlueFrance(context),
           ),
         ],
       ),
