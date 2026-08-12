@@ -23,8 +23,8 @@ class AlerteDeletableCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlerteCardContent(
-      title: _buildAlerteTitle(_tagLabel(offreType)),
-      subtitle: _buildAlerteSubtitle(title),
+      title: _typeLabel(offreType),
+      subtitle: _subtitle(title, place),
       onDelete: onDelete,
       onTap: onTap,
       trackingSource: trackingSource,
@@ -32,17 +32,16 @@ class AlerteDeletableCard extends StatelessWidget {
   }
 }
 
-String _tagLabel(OffreType offreType) {
+String _typeLabel(OffreType offreType) {
   return switch (offreType) {
-    OffreType.emploi => Strings.emploiTag,
+    OffreType.emploi => Strings.offreTypeEmploiLabel,
     OffreType.alternance => Strings.alternanceTag,
     OffreType.immersion => Strings.immersionTag,
     OffreType.serviceCivique => Strings.serviceCiviqueTag,
   };
 }
 
-String _buildAlerteTitle(String tagLabel) => "${Strings.alerte} $tagLabel";
-
-String _buildAlerteSubtitle(String title) {
-  return title;
+String _subtitle(String title, String? place) {
+  if (place == null || place.isEmpty) return title;
+  return '$title - $place';
 }

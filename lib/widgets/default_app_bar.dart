@@ -8,7 +8,6 @@ import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
-import 'package:pass_emploi_app/widgets/profile_button.dart';
 
 class PrimarySliverAppbar extends StatelessWidget {
   final String title;
@@ -98,7 +97,6 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool canPop;
   final IconButton? actionButton;
-  final bool withProfileButton;
   final bool withAutofocusA11y;
 
   const PrimaryAppBar({
@@ -106,7 +104,6 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.title,
     this.canPop = false,
     this.actionButton,
-    this.withProfileButton = true,
     this.withAutofocusA11y = false,
   });
 
@@ -114,9 +111,12 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       toolbarHeight: toolBarHeight,
-      leading: canPop ? BackButton(color: AppColorsSpecifics.primaryAppBarFgColor(context)) : null,
+      automaticallyImplyLeading: canPop,
+      leading: canPop ? BackButton(color: DsfrColorDecisions.textTitleGrey(context)) : null,
       scrolledUnderElevation: 0,
-      backgroundColor: AppColorsSpecifics.primaryAppBarBackgroundColor(context),
+      surfaceTintColor: Colors.transparent,
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+      titleSpacing: DsfrSpacings.s2w,
       title: Semantics(
         header: true,
         focusable: withAutofocusA11y,
@@ -127,28 +127,23 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
             enabled: withAutofocusA11y,
             child: Text(
               title,
-              style: TextStyles.primaryAppBar(context),
-              overflow: TextOverflow.fade,
+              style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ),
         ),
       ),
       elevation: 0,
       centerTitle: false,
+      actionsPadding: actionButton != null ? const EdgeInsets.only(right: DsfrSpacings.s2w) : EdgeInsets.zero,
       actions: [
-        if (actionButton != null) ...[
-          actionButton!,
-          SizedBox(width: Margins.spacing_base),
-        ],
-        if (withProfileButton) ...[
-          ProfileButton(),
-          SizedBox(width: Margins.spacing_base),
-        ],
+        if (actionButton != null) actionButton!,
       ],
     );
   }
 
-  static const toolBarHeight = 64.0;
+  static const toolBarHeight = 56.0;
 
   @override
   Size get preferredSize => Size.fromHeight(toolBarHeight);

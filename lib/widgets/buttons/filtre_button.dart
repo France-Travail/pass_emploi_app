@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 
 class FiltreButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -15,30 +10,22 @@ class FiltreButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PrimaryActionButton(
-      label: Strings.filtrer,
-      icon: AppIcons.tune_rounded,
-      iconSize: Dimens.icon_size_base,
-      onPressed: onPressed,
-      suffix: filtresCount != null && filtresCount! > 0
-          ? SizedBox.shrink(
-              child: OverflowBox(
-                maxWidth: double.infinity,
-                maxHeight: double.infinity,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.contentOnPrimary,
-                    shape: BoxShape.circle,
-                  ),
-                  padding: EdgeInsets.all(Margins.spacing_xs),
-                  child: Text(
-                    filtresCount.toString(),
-                    style: TextStyles.textBaseBoldWithColor(AppColors.primary),
-                  ),
-                ),
-              ),
-            )
-          : null,
+    final label = filtresCount != null && filtresCount! > 0
+        ? "${Strings.filtrer} ($filtresCount)"
+        : Strings.filtrer;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
+      child: SizedBox(
+        width: MediaQuery.sizeOf(context).width - DsfrSpacings.s2w * 2,
+        child: DsfrButton(
+          label: label,
+          icon: DsfrIcons.mediaEqualizerLine,
+          variant: DsfrButtonVariant.primary,
+          size: DsfrComponentSize.lg,
+          onPressed: onPressed,
+        ),
+      ),
     );
   }
 }

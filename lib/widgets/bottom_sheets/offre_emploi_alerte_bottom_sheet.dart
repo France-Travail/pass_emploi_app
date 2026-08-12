@@ -6,7 +6,7 @@ import 'package:pass_emploi_app/presentation/alerte_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/alerte_bottom_sheet.dart';
-import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
+import 'package:pass_emploi_app/widgets/bottom_sheets/filtres_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/offre_emploi_bottom_sheet_form.dart';
 import 'package:redux/redux.dart';
 
@@ -28,13 +28,9 @@ class OffreEmploiAlerteBottomSheet extends AbstractAlerteBottomSheet<OffreEmploi
 
   @override
   Widget buildSaveSearch(BuildContext context, OffreEmploiAlerteViewModel itemViewModel) {
-    return _buildForm(context, itemViewModel);
-  }
-
-  Widget _buildForm(BuildContext context, OffreEmploiAlerteViewModel viewModel) {
-    return BottomSheetWrapper(
+    return FiltresBottomSheet(
       title: Strings.createAlerteTitle,
-      body: OffreEmploiBottomSheetForm(viewModel, onlyAlternance),
+      body: OffreEmploiBottomSheetForm(itemViewModel, onlyAlternance),
     );
   }
 

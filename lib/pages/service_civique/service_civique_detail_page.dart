@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
@@ -13,26 +14,21 @@ import 'package:pass_emploi_app/pages/offre_page.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/service_civique/service_civique_detail_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/postuler_offre_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/buttons/delete_favori_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/share_button.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
-import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/errors/favori_not_found_error.dart';
-import 'package:pass_emploi_app/widgets/external_link.dart';
 import 'package:pass_emploi_app/widgets/favori_heart.dart';
 import 'package:pass_emploi_app/widgets/favori_state_selector.dart';
-import 'package:pass_emploi_app/widgets/tags/data_tag.dart';
-import 'package:pass_emploi_app/widgets/title_section.dart';
+import 'package:pass_emploi_app/widgets/offre_details/offre_details_actions_footer.dart';
+import 'package:pass_emploi_app/widgets/offre_details/offre_details_app_bar.dart';
+import 'package:pass_emploi_app/widgets/offre_details/offre_details_header.dart';
+import 'package:pass_emploi_app/widgets/offre_details/offre_details_section_title.dart';
+import 'package:pass_emploi_app/widgets/offre_details/offre_details_tag.dart';
 
 class ServiceCiviqueDetailPage extends StatelessWidget {
   final String idOffre;
@@ -70,19 +66,18 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
   }
 
   Scaffold _scaffold(Widget body, BuildContext context, String? url, String? title) {
-    final backgroundColor = context.bg;
     return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: SecondaryAppBar(
-        title: Strings.serviceCiviqueDetailTitle,
-        backgroundColor: backgroundColor,
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+      appBar: OffreDetailsAppBar(
         actions: [
-          SizedBox(width: Margins.spacing_base),
           FavoriHeart<ServiceCivique>(
             offreId: idOffre,
-            withBorder: true,
+            withBorder: false,
             from: OffrePage.serviceCiviqueDetails,
             onFavoriRemoved: popPageWhenFavoriIsRemoved ? () => Navigator.pop(context) : null,
+            icon: DsfrIcons.systemStarLine,
+            iconActive: DsfrIcons.systemStarFill,
+            iconColor: DsfrColorDecisions.textActionHighBlueFrance(context),
           ),
           if (url != null)
             ShareButton(
@@ -101,14 +96,17 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
     return switch (viewModel.displayState) {
       DisplayState.EMPTY => _content(context, viewModel),
       DisplayState.CONTENT => _content(context, viewModel),
-      DisplayState.LOADING => _loading(),
-      DisplayState.FAILURE => _error(),
+      DisplayState.LOADING => Center(
+          child: CircularProgressIndicator(color: DsfrColorDecisions.backgroundActionHighBlueFrance(context)),
+        ),
+      DisplayState.FAILURE => Center(
+          child: Text(
+            Strings.offreDetailsError,
+            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+          ),
+        ),
     };
   }
-
-  Widget _loading() => Center(child: CircularProgressIndicator(color: AppColors.primary));
-
-  Widget _error() => Center(child: Text(Strings.offreDetailsError));
 
   Widget _content(BuildContext context, ServiceCiviqueDetailViewModel viewModel) {
     final ServiceCiviqueDetail? detail = viewModel.detail;
@@ -117,73 +115,92 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
     final String titre = detail?.titre ?? serviceCivique?.title ?? "";
     final String domaine =
         Domaine.fromTag(detail?.domaine)?.titre ?? Domaine.fromTag(serviceCivique?.domain)?.titre ?? "";
-    return Stack(
+    final isEmpty = viewModel.displayState == DisplayState.EMPTY;
+
+    final footerActions = <OffreDetailsAction>[];
+    if (detail?.lienAnnonce != null) {
+      footerActions.add(
+        OffreDetailsAction(
+          label: Strings.postulerButtonTitle,
+          icon: viewModel.shouldShowCvBottomSheet ? null : DsfrIcons.systemExternalLinkLine,
+          semanticsLink: true,
+          onPressed: () {
+            final url = detail!.lienAnnonce!;
+            if (viewModel.shouldShowCvBottomSheet) {
+              showPassEmploiBottomSheet(
+                context: context,
+                builder: (context) => PostulerOffreBottomSheet(onPostuler: () => _applyToOffer(context, url)),
+              );
+            } else {
+              _applyToOffer(context, url);
+            }
+          },
+        ),
+      );
+    }
+
+    return Column(
       children: [
-        SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(Margins.spacing_m, Margins.spacing_m, Margins.spacing_m, 64),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(DsfrSpacings.s2w, DsfrSpacings.s2w, DsfrSpacings.s2w, DsfrSpacings.s3w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (viewModel.displayState == DisplayState.EMPTY)
-                  Padding(padding: const EdgeInsets.only(bottom: 20), child: FavoriNotFoundError()),
-                Text(domaine, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-                _spacer(Margins.spacing_s),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: Margins.spacing_s),
-                  child: Text(titre, style: TextStyles.textMBold.copyWith(color: context.content)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: Margins.spacing_m),
-                  child: Text(organisation, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-                ),
-                if (detail != null) _tags(detail),
-                if (viewModel.dateDerniereConsultation != null) ...[
-                  CardComplement.dateDerniereConsultation(viewModel.dateDerniereConsultation!),
-                  SizedBox(height: Margins.spacing_base),
+                OffreDetailsPageTitle(Strings.serviceCiviqueDetailTitle),
+                const SizedBox(height: DsfrSpacings.s1w),
+                if (isEmpty) ...[
+                  FavoriNotFoundError(),
+                  const SizedBox(height: DsfrSpacings.s2w),
                 ],
-                if (detail != null) _description(context, detail),
-                if (detail != null) _organisation(context, detail),
-                if (detail != null) _spacer(60),
-                if (viewModel.displayState == DisplayState.EMPTY)
-                  Align(alignment: Alignment.bottomCenter, child: _incompleteDataFooter()),
+                OffreDetailsHeader(
+                  dateLabel: viewModel.dateDerniereConsultation != null
+                      ? Strings.offreLastSeen(viewModel.dateDerniereConsultation!)
+                      : null,
+                  leading: domaine.isNotEmpty
+                      ? Text(
+                          domaine,
+                          style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context)),
+                        )
+                      : null,
+                  title: titre,
+                  subtitle: organisation.isNotEmpty ? organisation : null,
+                  tags: detail != null ? _tags(detail) : const [],
+                ),
+                if (detail != null) ...[
+                  const SizedBox(height: DsfrSpacings.s2w),
+                  _description(context, detail),
+                  _organisation(context, detail),
+                ],
               ],
             ),
           ),
         ),
-        if (detail?.lienAnnonce != null)
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: _footer(context, detail!.lienAnnonce!, viewModel.shouldShowCvBottomSheet),
-          ),
+        if (footerActions.isNotEmpty)
+          OffreDetailsActionsFooter(actions: footerActions)
+        else if (isEmpty)
+          _incompleteDataFooter(),
       ],
     );
   }
 
-  Widget _spacer(double height) => SizedBox(height: height);
-
-  Widget _tags(ServiceCiviqueDetail detail) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: Margins.spacing_base),
-      child: Wrap(
-        runSpacing: Margins.spacing_s,
-        spacing: Margins.spacing_s,
-        children: [
-          DataTag.location(
-            detail.codeDepartement != null ? "${detail.codeDepartement} - ${detail.ville}" : detail.ville,
-          ),
-          DataTag(
-            label: "Commence le ${detail.dateDeDebut}",
-            iconSemantics: IconWithSemantics(AppIcons.today_rounded, Strings.iconAlternativeDateDeDebut),
-          ),
-          if (detail.dateDeFin != null)
-            DataTag(
-              label: "Termine le ${detail.dateDeFin}",
-              iconSemantics: IconWithSemantics(AppIcons.today_rounded, Strings.iconAlternativeDateDeFin),
-            ),
-        ],
+  List<OffreDetailsTag> _tags(ServiceCiviqueDetail detail) {
+    return [
+      OffreDetailsTag.location(
+        detail.codeDepartement != null ? "${detail.codeDepartement} - ${detail.ville}" : detail.ville,
       ),
-    );
+      OffreDetailsTag(
+        label: "Commence le ${detail.dateDeDebut}",
+        icon: DsfrIcons.businessCalendarLine,
+        iconSemanticLabel: Strings.iconAlternativeDateDeDebut,
+      ),
+      if (detail.dateDeFin != null)
+        OffreDetailsTag(
+          label: "Termine le ${detail.dateDeFin}",
+          icon: DsfrIcons.businessCalendarLine,
+          iconSemanticLabel: Strings.iconAlternativeDateDeFin,
+        ),
+    ];
   }
 
   Widget _description(BuildContext context, ServiceCiviqueDetail detail) {
@@ -192,14 +209,21 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
         : detail.ville;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
       children: [
-        TitleSection(label: Strings.serviceCiviqueMissionTitle),
-        _spacer(Margins.spacing_m),
-        Text(missionFullAdresse, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-        if (detail.description != null) _spacer(Margins.spacing_s),
-        if (detail.description != null) Text(detail.description!, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-        _spacer(Margins.spacing_m),
+        OffreDetailsSectionTitle(Strings.serviceCiviqueMissionTitle),
+        const SizedBox(height: DsfrSpacings.s2w),
+        Text(
+          missionFullAdresse,
+          style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+        ),
+        if (detail.description != null) ...[
+          const SizedBox(height: DsfrSpacings.s1w),
+          Text(
+            detail.description!,
+            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+          ),
+        ],
+        const SizedBox(height: DsfrSpacings.s2w),
       ],
     );
   }
@@ -207,52 +231,36 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
   Widget _organisation(BuildContext context, ServiceCiviqueDetail detail) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
       children: [
-        TitleSection(label: Strings.serviceCiviqueOrganisationTitle),
-        _spacer(Margins.spacing_m),
-        Text(detail.organisation, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-        if (detail.urlOrganisation != null) _spacer(Margins.spacing_s),
-        if (detail.urlOrganisation != null) ExternalLink(label: detail.urlOrganisation!, url: detail.urlOrganisation!),
-        if (detail.adresseOrganisation != null) _spacer(Margins.spacing_s),
-        if (detail.adresseOrganisation != null) Text(detail.adresseOrganisation!, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-        if (detail.descriptionOrganisation != null) _spacer(Margins.spacing_s),
-        if (detail.descriptionOrganisation != null)
-          Text(detail.descriptionOrganisation!, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-      ],
-    );
-  }
-
-  Widget _footer(BuildContext context, String url, bool shouldShowCvBottomSheet) {
-    return Container(
-      color: context.bg,
-      padding: const EdgeInsets.all(Margins.spacing_base),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            child: Semantics(
-              link: true,
-              child: PrimaryActionButton(
-                label: Strings.postulerButtonTitle,
-                onPressed: () {
-                  if (shouldShowCvBottomSheet) {
-                    showPassEmploiBottomSheet(
-                      context: context,
-                      builder: (context) => PostulerOffreBottomSheet(onPostuler: () => _applyToOffer(context, url)),
-                    );
-                  } else {
-                    _applyToOffer(context, url);
-                  }
-                },
-                icon: shouldShowCvBottomSheet ? null : AppIcons.open_in_new_rounded,
-                semanticsRoleLink: true,
-              ),
-            ),
+        OffreDetailsSectionTitle(Strings.serviceCiviqueOrganisationTitle),
+        const SizedBox(height: DsfrSpacings.s2w),
+        Text(
+          detail.organisation,
+          style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+        ),
+        if (detail.urlOrganisation != null) ...[
+          const SizedBox(height: DsfrSpacings.s1w),
+          DsfrLink(
+            label: detail.urlOrganisation!,
+            icon: DsfrIcons.systemExternalLinkLine,
+            onTap: () => launchExternalUrl(detail.urlOrganisation!),
           ),
         ],
-      ),
+        if (detail.adresseOrganisation != null) ...[
+          const SizedBox(height: DsfrSpacings.s1w),
+          Text(
+            detail.adresseOrganisation!,
+            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+          ),
+        ],
+        if (detail.descriptionOrganisation != null) ...[
+          const SizedBox(height: DsfrSpacings.s1w),
+          Text(
+            detail.descriptionOrganisation!,
+            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+          ),
+        ],
+      ],
     );
   }
 
@@ -267,16 +275,15 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
 
   EvenementEngagement _postulerEvent() => EvenementEngagement.OFFRE_SERVICE_CIVIQUE_POSTULEE;
 
-  Padding _incompleteDataFooter() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Expanded(
-            child: DeleteFavoriButton<ServiceCivique>(offreId: idOffre, from: OffrePage.serviceCiviqueDetails),
-          ),
-        ],
+  Widget _incompleteDataFooter() {
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.all(DsfrSpacings.s2w),
+        child: SizedBox(
+          width: double.infinity,
+          child: DeleteFavoriButton<ServiceCivique>(offreId: idOffre, from: OffrePage.serviceCiviqueDetails),
+        ),
       ),
     );
   }

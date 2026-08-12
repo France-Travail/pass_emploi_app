@@ -35,7 +35,7 @@ class ServiceCiviqueDetailViewModel {
       detail: detail,
       serviceCivique: _serviceCivique(state),
       dateDerniereConsultation: store.getOffreDateDerniereConsultationOrNull(detail?.id ?? ""),
-      isNotFound: detail == null,
+      isNotFound: state is ServiceCiviqueDetailFailureState,
     );
   }
 

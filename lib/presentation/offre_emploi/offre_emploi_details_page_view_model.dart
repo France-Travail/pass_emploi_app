@@ -108,7 +108,9 @@ class OffreEmploiDetailsPageViewModel {
 
 OffreEmploiDetailsPageDisplayState _displayState(OffreEmploiDetailsState state) {
   if (state is OffreEmploiDetailsSuccessState) return OffreEmploiDetailsPageDisplayState.SHOW_DETAILS;
-  if (state is OffreEmploiDetailsLoadingState) return OffreEmploiDetailsPageDisplayState.SHOW_LOADER;
+  if (state is OffreEmploiDetailsLoadingState || state is OffreEmploiDetailsNotInitializedState) {
+    return OffreEmploiDetailsPageDisplayState.SHOW_LOADER;
+  }
   return OffreEmploiDetailsPageDisplayState.SHOW_ERROR;
 }
 
@@ -202,7 +204,7 @@ OffreEmploiDetailsPageViewModel _viewModelForNotFound(
     shouldShowOffreSuiviForm: false,
     onPostuler: () {},
     datePostulation: null,
-    isNotFound: true,
+    isNotFound: state is OffreEmploiDetailsFailureState,
   );
 }
 

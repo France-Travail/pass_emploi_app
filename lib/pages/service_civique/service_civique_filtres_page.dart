@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
@@ -6,11 +7,9 @@ import 'package:pass_emploi_app/models/service_civique/domain.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/service_civique/service_civique_filtres_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
+import 'package:pass_emploi_app/widgets/bottom_sheets/filtres_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/buttons/filter_button.dart';
 import 'package:pass_emploi_app/widgets/date_pickers/date_picker.dart';
 import 'package:pass_emploi_app/widgets/radio_list_tile.dart';
@@ -32,19 +31,22 @@ class ServiceCiviqueFiltresPage extends StatefulWidget {
 class _ServiceCiviqueFiltresPageState extends State<ServiceCiviqueFiltresPage> {
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Tracker(
       tracking: AnalyticsScreenNames.serviceCiviqueFiltres,
-      child: StoreConnector<AppState, ServiceCiviqueFiltresViewModel>(
-        converter: (store) => ServiceCiviqueFiltresViewModel.create(store),
-        builder: (context, viewModel) => _scaffold(context, viewModel),
-        distinct: true,
+      child: Theme(
+        data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        child: StoreConnector<AppState, ServiceCiviqueFiltresViewModel>(
+          converter: (store) => ServiceCiviqueFiltresViewModel.create(store),
+          builder: (context, viewModel) => _scaffold(context, viewModel),
+          distinct: true,
+        ),
       ),
     );
   }
 
   Widget _scaffold(BuildContext context, ServiceCiviqueFiltresViewModel viewModel) {
-    return BottomSheetWrapper(
-      backgroundColor: context.grey100,
+    return FiltresBottomSheet(
       title: Strings.serviceCiviqueFiltresTitle,
       body: _Content(viewModel: viewModel),
     );
@@ -61,15 +63,26 @@ class _Content extends StatefulWidget {
 }
 
 class _ContentState extends State<_Content> {
-  double? _currentSliderValue;
+  late double _currentSliderValue;
   DateTime? _currentStartDate;
-  Domaine? _currentDomainValue;
+  late Domaine _currentDomainValue;
+  int _filtersKey = 0;
 
   @override
   void initState() {
     super.initState();
+    _currentSliderValue = widget.viewModel.initialDistanceValue.toDouble();
     _currentStartDate = widget.viewModel.initialStartDateValue;
     _currentDomainValue = widget.viewModel.initialDomainValue;
+  }
+
+  void _resetFiltres() {
+    setState(() {
+      _currentSliderValue = defaultDistanceValueOnServiceCiviqueFiltre.toDouble();
+      _currentStartDate = null;
+      _currentDomainValue = Domaine.all;
+      _filtersKey++;
+    });
   }
 
   @override
@@ -77,19 +90,21 @@ class _ContentState extends State<_Content> {
     return Stack(
       children: [
         _Filters(
+          key: ValueKey(_filtersKey),
           viewModel: widget.viewModel,
+          initialDistanceValue: _currentSliderValue,
+          initialStartDateValue: _currentStartDate,
+          initialDomainValue: _currentDomainValue,
           onDistanceValueChange: (distance) => _setDistanceFilterState(distance),
           onStartDateValueChange: (date, isActive) => _setStartDateFilterState(date, isActive),
           onDomainValueChange: (domain) => _setDomainFilterState(domain),
         ),
         Align(
           alignment: Alignment.bottomCenter,
-          child: SizedBox(
-            width: double.infinity,
-            child: FilterButton(
-              isEnabled: _isButtonEnabled(widget.viewModel),
-              onPressed: () => _onButtonClick(widget.viewModel),
-            ),
+          child: FilterButton(
+            isEnabled: _isButtonEnabled(widget.viewModel),
+            onPressed: () => _onButtonClick(widget.viewModel),
+            onReset: _resetFiltres,
           ),
         ),
       ],
@@ -104,7 +119,7 @@ class _ContentState extends State<_Content> {
     setState(() => _currentStartDate = isActive ? date : null);
   }
 
-  void _setDomainFilterState(Domaine? domain) {
+  void _setDomainFilterState(Domaine domain) {
     setState(() => _currentDomainValue = domain);
   }
 
@@ -112,25 +127,29 @@ class _ContentState extends State<_Content> {
 
   void _onButtonClick(ServiceCiviqueFiltresViewModel viewModel) {
     viewModel.updateFiltres(
-      _sliderValueToDisplay(viewModel.initialDistanceValue),
+      _currentSliderValue.toInt(),
       _currentDomainValue,
       _currentStartDate,
     );
     Navigator.pop(context, true);
   }
-
-  int _sliderValueToDisplay(int viewModelInitialDistanceValue) =>
-      _currentSliderValue != null ? _currentSliderValue!.toInt() : viewModelInitialDistanceValue;
 }
 
 class _Filters extends StatefulWidget {
   final ServiceCiviqueFiltresViewModel viewModel;
+  final double initialDistanceValue;
+  final DateTime? initialStartDateValue;
+  final Domaine initialDomainValue;
   final Function(double) onDistanceValueChange;
   final Function(DateTime?, bool) onStartDateValueChange;
   final Function(Domaine) onDomainValueChange;
 
   _Filters({
+    super.key,
     required this.viewModel,
+    required this.initialDistanceValue,
+    required this.initialStartDateValue,
+    required this.initialDomainValue,
     required this.onDistanceValueChange,
     required this.onStartDateValueChange,
     required this.onDomainValueChange,
@@ -143,28 +162,28 @@ class _Filters extends StatefulWidget {
 class _FiltersState extends State<_Filters> {
   bool _isActiveDate = false;
   DateTime? _currentStartDate;
-  Domaine? _currentDomainValue;
+  late Domaine _currentDomainValue;
 
   @override
   void initState() {
     super.initState();
-    _currentStartDate = widget.viewModel.initialStartDateValue ?? DateTime.now();
-    _isActiveDate = widget.viewModel.initialStartDateValue != null;
-    _currentDomainValue = widget.viewModel.initialDomainValue;
+    _currentStartDate = widget.initialStartDateValue ?? DateTime.now();
+    _isActiveDate = widget.initialStartDateValue != null;
+    _currentDomainValue = widget.initialDomainValue;
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(height: Margins.spacing_l),
           if (widget.viewModel.shouldDisplayDistanceFiltre) ...[
             DistanceSlider(
-              initialDistanceValue: widget.viewModel.initialDistanceValue.toDouble(),
+              initialDistanceValue: widget.initialDistanceValue,
               onValueChange: (value) => widget.onDistanceValueChange(value),
             ),
-            SizedBox(height: Margins.spacing_l),
+            const SizedBox(height: DsfrSpacings.s2w),
           ],
           _StartDateFilters(
             initialDateValue: _isActiveDate ? _currentStartDate : null,
@@ -172,12 +191,12 @@ class _FiltersState extends State<_Filters> {
             onDateChange: _onDateChange,
             isActiveDate: _isActiveDate,
           ),
-          SizedBox(height: Margins.spacing_l),
+          const SizedBox(height: DsfrSpacings.s2w),
           _DomainFilters(
-            currentDomainValue: _currentDomainValue!,
+            currentDomainValue: _currentDomainValue,
             onValueChange: (value) => widget.onDomainValueChange(value),
           ),
-          SizedBox(height: Margins.spacing_huge),
+          const SizedBox(height: 200),
         ],
       ),
     );
@@ -214,14 +233,18 @@ class _StartDateFilters extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(Strings.startDateFiltreTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+        Text(
+          Strings.startDateFiltreTitle,
+          style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context)),
+        ),
+        const SizedBox(height: DsfrSpacings.s1w),
         DateToggle(
           onIsActiveChange: onIsActiveChange,
           isActiveDate: isActiveDate,
         ),
-        SizedBox(height: Margins.spacing_s),
+        const SizedBox(height: DsfrSpacings.s1w),
         DatePicker(
           onDateSelected: onDateChange,
           initialDateValue: initialDateValue,
@@ -232,27 +255,25 @@ class _StartDateFilters extends StatelessWidget {
   }
 }
 
-class _DomainFilters extends StatefulWidget {
+class _DomainFilters extends StatelessWidget {
   final Function(Domaine) onValueChange;
   final Domaine currentDomainValue;
 
   _DomainFilters({required this.onValueChange, required this.currentDomainValue});
 
   @override
-  State<_DomainFilters> createState() => _DomainFiltersState();
-}
-
-class _DomainFiltersState extends State<_DomainFilters> {
-  @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(Strings.domainFiltreTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-        SizedBox(height: Margins.spacing_s),
+        Text(
+          Strings.domainFiltreTitle,
+          style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context)),
+        ),
+        const SizedBox(height: DsfrSpacings.s1w),
         _DomainList(
-          onValueChange: (value) => widget.onValueChange(value),
-          initialDomainValue: widget.currentDomainValue,
+          onValueChange: onValueChange,
+          initialDomainValue: currentDomainValue,
         ),
       ],
     );
@@ -281,7 +302,7 @@ class _DomainListState extends State<_DomainList> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: Domaine.values
           .map(
             (domain) => CustomRadioGroup<Domaine>(

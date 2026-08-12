@@ -45,6 +45,7 @@ class Drawables {
 
   static String blocMarqueLight = "${_assets}dsfr/bloc_marque_light.svg";
   static String blocMarqueDark = "${_assets}dsfr/bloc_marque_dark.svg";
+  static String illustrationRechercheEmpty = "${_assets}dsfr/illustration_recherche_empty.webp";
 
   static String iaFtIllustration = "${_assets}IA.svg";
 
@@ -56,11 +57,6 @@ class Drawables {
 
   static String success = "${_assets}success.webp";
   static String notFound = "${_assets}not_found.webp";
-
-  static String rechercheHomeOffresEmploi = "${_assets}emploi.svg";
-  static String rechercheHomeOffresAlternance = "${_assets}alternance.svg";
-  static String rechercheHomeOffresImmersion = "${_assets}immersion.svg";
-  static String rechercheHomeOffresServiceCivique = "${_assets}service_civique.svg";
 
   static String megaphone = "${_assets}megaphone.svg";
 }

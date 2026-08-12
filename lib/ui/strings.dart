@@ -83,7 +83,7 @@ class Strings {
 
   // Menu
   static String menuAccueil = "Accueil";
-  static String menuMonSuivi = "Mon suivi";
+  static String menuMonSuivi = "Agenda";
   static const String menuChat = "Messages";
   static String menuSolutions = "Offres";
   static String menuFavoris = "Favoris";
@@ -178,10 +178,8 @@ class Strings {
   static String firstLaunchOnboardingDescription =
       "L'app des 14-25 ans qui t'accompagne dans tous tes projets : études, emploi, logement, mobilité, santé, loisirs et bien plus";
 
-  static String firstLaunchOnboardingCardTitle1 =
-      "Un plan d’action personnalisé pour démarrer selon tes objectifs";
-  static String firstLaunchOnboardingCardTitle2 =
-      "Des offres d’emploi et des événements adaptés à ton projet";
+  static String firstLaunchOnboardingCardTitle1 = "Un plan d’action personnalisé pour démarrer selon tes objectifs";
+  static String firstLaunchOnboardingCardTitle2 = "Des offres d’emploi et des événements adaptés à ton projet";
   static String firstLaunchOnboardingCardTitle3 = "Echange avec ton conseiller pour t’aider";
 
   // Entree
@@ -1017,23 +1015,26 @@ class Strings {
   static String iaFtEmptyError = "Décrivez vos démarches";
 
   // Recherche
-  static String derniereRecherche = "Dernière recherche";
-  static String dernieresRecherches = "Dernières recherches";
+  static String derniereRecherche = "Recherches récentes";
+  static String dernieresRecherches = "Recherches récentes";
   static String vosPreferencesMetiers = "Vos préférences métiers";
   static String rechercheDerniereOffreConsultee = "Dernière offre consultée";
   static String rechercheHomeOffresEmploiTitle = "Emploi";
-  static String rechercheHomeOffresEmploiSubtitle = "Trouvez un emploi qui vous correspond.";
+  static String rechercheHomeOffresEmploiSubtitle = "CDD, CDI, saisonnier";
   static String rechercheHomeOffresAlternanceTitle = "Alternance";
-  static String rechercheHomeOffresAlternanceSubtitle = "Alliez travail en entreprise et formation.";
+  static String rechercheHomeOffresAlternanceSubtitle = "Apprentissage & contrat pro";
   static String rechercheHomeOffresImmersionTitle = "Immersion";
-  static String rechercheHomeOffresImmersionSubtitle = "Découvrez un métier au sein d’une entreprise.";
+  static String rechercheHomeOffresImmersionSubtitle = "Découvrir un métier";
   static String rechercheHomeOffresServiceCiviqueTitle = "Service civique";
-  static String rechercheHomeOffresServiceCiviqueSubtitle = "Engagez-vous dans une mission d’intérêt général.";
-  static String rechercheHomeCriteresTitle = "Ma recherche";
-  static String rechercheHomeCriteresMetierVide =
-      "Aucun métier renseigné"; // TODO: Si rien de renseigné alors ne rien afficher
-  static String rechercheHomeCriteresLieuVide =
-      "Aucun lieu renseigné"; // TODO: Si rien de renseigné alors ne rien afficher
+  static String rechercheHomeOffresServiceCiviqueSubtitle = "Missions d’engagement";
+  static String rechercheHomeCriteresTitle = "Ta recherche";
+  static String rechercheHomeExplorerParType = "Explorer par type";
+  static String rechercheHomeCriteresMetierVide = "Aucun métier renseigné";
+  static String rechercheHomeCriteresLieuVide = "Aucun lieu renseigné";
+  static String rechercheHomeEmploiEmoji = "💼";
+  static String rechercheHomeAlternanceEmoji = "🔁";
+  static String rechercheHomeImmersionEmoji = "👀";
+  static String rechercheHomeServiceCiviqueEmoji = "🤝";
   static String rechercheOffresEmploiTitle = "Offres d’emploi";
   static String rechercheOffresAlternanceTitle = "Offres d’alternance";
   static String rechercheOffresImmersionTitle = "Offres d’immersion";
@@ -1042,6 +1043,31 @@ class Strings {
   static String recherchePlaceholderTitle = "Effectuez votre recherche pour afficher des résultats";
   static String rechercheLancerUneRechercheHint = "Lancez une recherche pour afficher les offres vous correspondant";
   static String rechercheEditButton = "Modifier ma recherche";
+  static String filtrerLesResultats = "Filtrer les résultats";
+  static String modifierMesCriteres = "Modifier mes critères";
+  static String rechercheEmptyTitleEmploi = "Aucune offre d'emploi trouvée";
+  static String rechercheEmptyTitleAlternance = "Aucune offre d'alternance trouvée";
+  static String rechercheEmptyTitleImmersion = "Aucune offre d'immersion trouvée";
+  static String rechercheEmptyTitleServiceCivique = "Aucune offre de service civique trouvée";
+  static String rechercheEmptyTitleEvenementEmploi = "Aucun événement trouvé";
+
+  static String rechercheResultsOffresCount(int count) => count <= 1 ? "$count offre" : "$count offres";
+
+  static String rechercheResultsEvenementsCount(int count) => count <= 1 ? "$count événement" : "$count événements";
+
+  static String rechercheEmptySubtitle({String? metier, String? lieu}) {
+    if (metier != null && metier.isNotEmpty && lieu != null && lieu.isNotEmpty) {
+      return "Pas d'offres disponibles en $metier à $lieu pour le moment. Essaie d'élargir ta recherche.";
+    }
+    if (metier != null && metier.isNotEmpty) {
+      return "Pas d'offres disponibles en $metier pour le moment. Essaie d'élargir ta recherche.";
+    }
+    if (lieu != null && lieu.isNotEmpty) {
+      return "Pas d'offres disponibles à $lieu pour le moment. Essaie d'élargir ta recherche.";
+    }
+    return "Pas d'offres disponibles pour le moment. Essaie d'élargir ta recherche.";
+  }
+
   static String rechercheRecentesTitle = "Recherches récentes";
 
   static String rechercheCriteresActifsZero = "0 critère actif";
@@ -1063,7 +1089,7 @@ class Strings {
   static String locationMandatoryTitle = "*Lieu";
   static String searchButton = "Rechercher";
   static String offreDetails = "Détails de l'offre";
-  static String metierHint = "Métier, compétence, secteur...";
+  static String metierHint = "Mot clé, secteur, compétences....";
   static String rechercheTabTitle = "Recherche";
   static String offresEnregistreesTabTitle = "Suivi des offres";
   static String alertesTabTitle = "Alertes";
@@ -1206,12 +1232,15 @@ class Strings {
   // Offre emploi filtres
   static String filtrer = "Filtrer";
   static String offresEmploiFiltresTitle = "Filtrer les annonces";
-  static String searchRadius = "Dans un rayon de : ";
+  static String searchRadius = "Dans un rayon de recherche";
+  static String searchRadiusDescription(int km) => "de $km km";
+  static String searchRadiusValue(int km) => "$km";
   static String applyFiltres = "Appliquer les filtres";
+  static String resetFiltres = "Réinitialiser";
 
   static String kmFormat(int int) => "$int km";
   static String experienceSectionTitle = "Expérience";
-  static String experienceSectionDescription = "Afficher uniquement les offres débutants acceptés";
+  static String experienceSectionDescription = "Débutant accepté";
 
   static String experienceSectionEnabled(bool enabled) => enabled
       ? "Désactiver l'affichage des offres débutants acceptés uniquement"
@@ -1270,6 +1299,11 @@ class Strings {
   static String offresEnregistreesEmptySubtitle =
       "Retrouvez ici les offres qui vous intéressent et celles où vous avez postulé.";
   static String offresEnregistreesEmptyButton = "Lancer une recherche";
+  static String suiviPostuleesCount(int count) => count <= 1 ? "$count postulée" : "$count postulées";
+  static String suiviFavorisCount(int count) => count <= 1 ? "$count favori" : "$count favoris";
+  static String suiviFavorisEmptyHint = "Sauvegarde une offre depuis les résultats pour la retrouver ici.";
+  static String candidatureEnvoyee = "Candidature envoyée";
+  static String offreTypeEmploiLabel = "Emploi";
   static String offresEnregistreesError = "Erreur lors de la récupération de vos offres suivies";
   static String favorisUnknownContractType = 'Type de contrat inconnu';
   static String favorisUnknownSecteur = 'Secteur d\'activité inconnu';
@@ -1455,6 +1489,12 @@ class Strings {
   static String alerteSeeResults = "Voir les résultats";
 
   static String alerteDeleteMessageTitle = "Souhaitez-vous supprimer l’alerte ?";
+  static String alertesCountTitle(int count) => count <= 1 ? "$count alerte" : "$count alertes";
+  static String alertesCreationHint =
+      "💡 Les alertes se créent depuis les résultats d’offres d’emploi ou d’alternance.";
+  static String supprimerLesAlertesConfirmTitle = "Supprimer toutes les alertes ?";
+  static String supprimerLesAlertesConfirmSubtitle = "Cette action supprimera définitivement les alertes affichées.";
+
   static String alerteDeleteMessageSubtitle = "Vous n’aurez plus accès à la page de résultats ni aux notifications.";
   static String alerteDeleteError = "Erreur lors de la suppression de la recherche.";
 
@@ -1797,7 +1837,7 @@ class Strings {
   static String offreSuivieConfirmationPageDescription = "👏 Bravo pour votre engagement !";
   static String youConsultedThisOfferAt(String timeAgo) => "Vous avez consulté cette offre $timeAgo";
   static String youSavedThisOfferAt(String timeAgo) => "Vous avez enregistré cette offre $timeAgo";
-  static String ouEnEtesVous = "Où en êtes-vous ?";
+  static String ouEnEtesVous = "Où en es-tu ?";
 
   static String jaiPostule = "J’ai postulé";
   static String caMinteresse = "Ça m’intéresse";

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/date_consultation_offre/date_consultation_offre_actions.dart';
 import 'package:pass_emploi_app/features/immersion/details/immersion_details_actions.dart';
 import 'package:pass_emploi_app/models/immersion.dart';
+import 'package:pass_emploi_app/models/immersion_details.dart';
 import 'package:pass_emploi_app/network/post_evenement_engagement.dart';
 import 'package:pass_emploi_app/pages/immersion/immersion_contact_form_page.dart';
 import 'package:pass_emploi_app/pages/immersion/immersion_contact_mode.dart';
@@ -12,27 +14,22 @@ import 'package:pass_emploi_app/pages/offre_not_found_page.dart';
 import 'package:pass_emploi_app/pages/offre_page.dart';
 import 'package:pass_emploi_app/presentation/immersion/immersion_details_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/platform.dart';
 import 'package:pass_emploi_app/widgets/buttons/delete_favori_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
 import 'package:pass_emploi_app/widgets/default_animated_switcher.dart';
-import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/errors/favori_not_found_error.dart';
 import 'package:pass_emploi_app/widgets/favori_heart.dart';
 import 'package:pass_emploi_app/widgets/favori_state_selector.dart';
-import 'package:pass_emploi_app/widgets/info_card.dart';
+import 'package:pass_emploi_app/widgets/offre_details/offre_details_actions_footer.dart';
+import 'package:pass_emploi_app/widgets/offre_details/offre_details_app_bar.dart';
+import 'package:pass_emploi_app/widgets/offre_details/offre_details_header.dart';
+import 'package:pass_emploi_app/widgets/offre_details/offre_details_section_title.dart';
+import 'package:pass_emploi_app/widgets/offre_details/offre_details_tag.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
-import 'package:pass_emploi_app/widgets/sepline.dart';
-import 'package:pass_emploi_app/widgets/tags/immersion_tags.dart';
 
 class ImmersionDetailsPage extends StatelessWidget {
   final String _immersionId;
@@ -74,7 +71,9 @@ class ImmersionDetailsPage extends StatelessWidget {
       ImmersionDetailsPageDisplayState.SHOW_DETAILS =>
         viewModel.isNotFound ? OffreNotFoundPage() : _content(context, viewModel),
       ImmersionDetailsPageDisplayState.SHOW_INCOMPLETE_DETAILS => _content(context, viewModel),
-      ImmersionDetailsPageDisplayState.SHOW_LOADER => Center(child: CircularProgressIndicator()),
+      ImmersionDetailsPageDisplayState.SHOW_LOADER => Center(
+          child: CircularProgressIndicator(color: DsfrColorDecisions.backgroundActionHighBlueFrance(context)),
+        ),
       ImmersionDetailsPageDisplayState.SHOW_ERROR => Retry(
         Strings.offreDetailsError,
         () => viewModel.onRetry(_immersionId),
@@ -83,18 +82,18 @@ class ImmersionDetailsPage extends StatelessWidget {
   }
 
   Scaffold _scaffold(Widget body, BuildContext context, String offreId) {
-    final backgroundColor = context.bg;
     return Scaffold(
-      backgroundColor: backgroundColor,
-      appBar: SecondaryAppBar(
-        title: Strings.offreDetails,
-        backgroundColor: backgroundColor,
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+      appBar: OffreDetailsAppBar(
         actions: [
           FavoriHeart<Immersion>(
             offreId: offreId,
-            withBorder: true,
+            withBorder: false,
             from: OffrePage.immersionDetails,
             onFavoriRemoved: popPageWhenFavoriIsRemoved ? () => Navigator.pop(context) : null,
+            icon: DsfrIcons.systemStarLine,
+            iconActive: DsfrIcons.systemStarFill,
+            iconColor: DsfrColorDecisions.textActionHighBlueFrance(context),
           ),
         ],
       ),
@@ -103,144 +102,145 @@ class ImmersionDetailsPage extends StatelessWidget {
   }
 
   Widget _content(BuildContext context, ImmersionDetailsViewModel viewModel) {
-    return Stack(
+    final showIncomplete = viewModel.displayState == ImmersionDetailsPageDisplayState.SHOW_INCOMPLETE_DETAILS;
+    final footerActions = <OffreDetailsAction>[];
+
+    if (!showIncomplete) {
+      footerActions.add(
+        OffreDetailsAction(
+          label: Strings.immersitionContactFormTitle,
+          onPressed: () => Navigator.push(context, ImmersionContactFormPage.materialPageRoute()),
+        ),
+      );
+      if (viewModel.withSecondaryCallToActions == true) {
+        for (final cta in viewModel.secondaryCallToActions!) {
+          footerActions.add(
+            OffreDetailsAction(
+              label: cta.label,
+              icon: cta.icon,
+              variant: DsfrButtonVariant.secondary,
+              semanticsLink: true,
+              onPressed: () {
+                context.trackEvenementEngagement(cta.eventType);
+                launchExternalUrl(cta.uri.toString());
+              },
+            ),
+          );
+        }
+      }
+    }
+
+    return Column(
       children: [
-        SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(Margins.spacing_base, Margins.spacing_base, Margins.spacing_base, 100),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(DsfrSpacings.s2w, DsfrSpacings.s2w, DsfrSpacings.s2w, DsfrSpacings.s3w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                OffreDetailsPageTitle(Strings.offreDetails),
+                const SizedBox(height: DsfrSpacings.s1w),
                 if (viewModel.fitForDisabledWorkers) ...[
                   CardTag.disabledWorkersWelcome(),
-                  SizedBox(height: Margins.spacing_base),
+                  const SizedBox(height: DsfrSpacings.s2w),
                 ],
-                _Title(viewModel.title),
-                SizedBox(height: Margins.spacing_s),
-                Text(viewModel.companyName, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-                SizedBox(height: Margins.spacing_s),
-                ImmersionTags(
-                  secteurActivite: viewModel.secteurActivite,
-                  ville: viewModel.ville,
-                  modeDistanciel: viewModel.modeDistanciel,
+                OffreDetailsHeader(
+                  dateLabel: viewModel.dateDerniereConsultation != null
+                      ? Strings.offreLastSeen(viewModel.dateDerniereConsultation!)
+                      : null,
+                  title: viewModel.title,
+                  subtitle: viewModel.companyName,
+                  tags: _tags(viewModel),
                 ),
-                if (viewModel.dateDerniereConsultation != null) ...[
-                  SizedBox(height: Margins.spacing_m),
-                  CardComplement.dateDerniereConsultation(viewModel.dateDerniereConsultation!),
-                ],
-                SizedBox(height: Margins.spacing_m),
-                Text(Strings.lentreprise, style: TextStyles.textMBold.copyWith(color: context.content)),
-                SizedBox(height: Margins.spacing_m),
-                SepLine(0, 0),
-                SizedBox(height: Margins.spacing_base),
+                const SizedBox(height: DsfrSpacings.s2w),
+                OffreDetailsSectionTitle(Strings.lentreprise),
+                const SizedBox(height: DsfrSpacings.s2w),
                 ContactModeTag(contactMode: viewModel.contactMode),
-                SizedBox(height: Margins.spacing_base),
-                if (viewModel.displayState == ImmersionDetailsPageDisplayState.SHOW_INCOMPLETE_DETAILS)
+                const SizedBox(height: DsfrSpacings.s2w),
+                if (showIncomplete)
                   FavoriNotFoundError()
                 else ...[
-                  Text(Strings.immersionDescriptionLabel, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-                  SizedBox(height: Margins.spacing_m),
+                  Text(
+                    Strings.immersionDescriptionLabel,
+                    style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+                  ),
+                  const SizedBox(height: DsfrSpacings.s2w),
                   if (viewModel.address != null && viewModel.address!.isNotEmpty) ...[
-                    _Title(Strings.adresse),
-                    Text(viewModel.address ?? '', style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-                    SizedBox(height: Margins.spacing_m),
+                    OffreDetailsSectionTitle(Strings.adresse, size: OffreDetailsSectionTitleSize.headline6),
+                    const SizedBox(height: DsfrSpacings.s1w),
+                    Text(
+                      viewModel.address!,
+                      style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+                    ),
+                    const SizedBox(height: DsfrSpacings.s2w),
                   ],
                   if (viewModel.informationComplementaire != null &&
                       viewModel.informationComplementaire!.isNotEmpty) ...[
-                    _Title(Strings.informationComplementaire),
-                    Text(viewModel.informationComplementaire ?? '', style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-                    SizedBox(height: Margins.spacing_m),
+                    OffreDetailsSectionTitle(
+                      Strings.informationComplementaire,
+                      size: OffreDetailsSectionTitleSize.headline6,
+                    ),
+                    const SizedBox(height: DsfrSpacings.s1w),
+                    Text(
+                      viewModel.informationComplementaire!,
+                      style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+                    ),
+                    const SizedBox(height: DsfrSpacings.s2w),
                   ],
                   if (viewModel.website != null && viewModel.website!.isNotEmpty) ...[
-                    _Title(Strings.siteWeb),
-                    Text(viewModel.website ?? '', style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-                    SizedBox(height: Margins.spacing_m),
+                    OffreDetailsSectionTitle(Strings.siteWeb, size: OffreDetailsSectionTitleSize.headline6),
+                    const SizedBox(height: DsfrSpacings.s1w),
+                    DsfrLink(
+                      label: viewModel.website!,
+                      icon: DsfrIcons.systemExternalLinkLine,
+                      onTap: () => launchExternalUrl(viewModel.website!),
+                    ),
+                    const SizedBox(height: DsfrSpacings.s2w),
                   ],
-                  SizedBox(height: Margins.spacing_m),
-                  InfoCard(message: Strings.contactWarning),
-                  SizedBox(height: Margins.spacing_m),
-                  if (viewModel.withSecondaryCallToActions == true) ..._secondaryCallToActions(context, viewModel),
+                  DsfrAlert(
+                    type: DsfrAlertType.info,
+                    description: DsfrAlertDescriptionText(Strings.contactWarning),
+                  ),
                 ],
               ],
             ),
           ),
         ),
-        if (viewModel.displayState == ImmersionDetailsPageDisplayState.SHOW_INCOMPLETE_DETAILS)
-          Align(alignment: Alignment.bottomCenter, child: _incompleteDataFooter(viewModel))
-        else
-          Align(alignment: Alignment.bottomCenter, child: _footer(context, viewModel)),
+        if (footerActions.isNotEmpty)
+          OffreDetailsActionsFooter(actions: footerActions)
+        else if (showIncomplete)
+          _incompleteDataFooter(viewModel),
       ],
     );
   }
 
-  Padding _incompleteDataFooter(ImmersionDetailsViewModel viewModel) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Expanded(
-            child: DeleteFavoriButton<Immersion>(offreId: viewModel.id, from: OffrePage.immersionDetails),
-          ),
-        ],
-      ),
-    );
+  List<OffreDetailsTag> _tags(ImmersionDetailsViewModel viewModel) {
+    return [
+      OffreDetailsTag.location(viewModel.ville),
+      OffreDetailsTag(label: viewModel.secteurActivite),
+      if (viewModel.modeDistanciel != null)
+        OffreDetailsTag(label: _modeDistancielLabel(viewModel.modeDistanciel!)),
+    ];
   }
 
-  String? encodeQueryParameters(Map<String, String> params) {
-    return params.entries.map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}').join('&');
+  String _modeDistancielLabel(ImmersionModeDistanciel mode) {
+    return switch (mode) {
+      ImmersionModeDistanciel.FULL_REMOTE => Strings.modeDistancielFullRemote,
+      ImmersionModeDistanciel.HYBRID => Strings.modeDistancielHybrid,
+      ImmersionModeDistanciel.ON_SITE => Strings.modeDistancielOnSite,
+    };
   }
 
-  Widget _footer(BuildContext context, ImmersionDetailsViewModel viewModel) {
-    return Container(
-      color: context.bg,
-      padding: EdgeInsets.only(
-        left: Margins.spacing_m,
-        right: Margins.spacing_m,
-        bottom: MediaQuery.of(context).padding.bottom,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SepLine(0, 0),
-          SizedBox(height: Margins.spacing_base),
-          PrimaryActionButton(
-            onPressed: () => Navigator.push(context, ImmersionContactFormPage.materialPageRoute()),
-            label: Strings.immersitionContactFormTitle,
-          ),
-        ],
-      ),
-    );
-  }
-
-  List<Widget> _secondaryCallToActions(BuildContext context, ImmersionDetailsViewModel viewModel) {
-    final buttons = viewModel.secondaryCallToActions!.map((cta) {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: Margins.spacing_m),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minWidth: double.infinity),
-          child: SecondaryButton(
-            label: cta.label,
-            icon: cta.icon,
-            onPressed: () {
-              context.trackEvenementEngagement(cta.eventType);
-              launchExternalUrl(cta.uri.toString());
-            },
-          ),
+  Widget _incompleteDataFooter(ImmersionDetailsViewModel viewModel) {
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.all(DsfrSpacings.s2w),
+        child: SizedBox(
+          width: double.infinity,
+          child: DeleteFavoriButton<Immersion>(offreId: viewModel.id, from: OffrePage.immersionDetails),
         ),
-      );
-    }).toList();
-    return [SepLine(Margins.spacing_m, Margins.spacing_m), ...buttons];
-  }
-}
-
-class _Title extends StatelessWidget {
-  final String title;
-  const _Title(this.title);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(title, style: TextStyles.textBaseBold.copyWith(color: context.content));
+      ),
+    );
   }
 }

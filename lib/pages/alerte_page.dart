@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
@@ -11,6 +12,7 @@ import 'package:pass_emploi_app/models/alerte/immersion_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/offre_emploi_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/service_civique_alerte.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
+import 'package:pass_emploi_app/models/location.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/offre_type.dart';
 import 'package:pass_emploi_app/pages/generic_success_page.dart';
@@ -18,6 +20,7 @@ import 'package:pass_emploi_app/pages/offre_filters_bottom_sheet.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_emploi_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_immersion_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_service_civique_page.dart';
+import 'package:pass_emploi_app/pages/suggestions_recherche/suggestions_alerte_location_form.dart';
 import 'package:pass_emploi_app/presentation/alerte/alerte_list_view_model.dart';
 import 'package:pass_emploi_app/presentation/alerte/alerte_navigation_state.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
@@ -26,28 +29,21 @@ import 'package:pass_emploi_app/presentation/suggestions/suggestions_recherche_l
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/redux/store_connector_aware.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/utils/store_extensions.dart';
 import 'package:pass_emploi_app/widgets/alerte_card.dart';
 import 'package:pass_emploi_app/widgets/animated_list_loader.dart';
 import 'package:pass_emploi_app/widgets/buttons/filtre_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/cards/alerte_deletable_card.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/dialogs/alerte_delete_dialog.dart';
 import 'package:pass_emploi_app/widgets/illustration/empty_state_placeholder.dart';
 import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
 import 'package:pass_emploi_app/widgets/loading_overlay.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
-import 'package:pass_emploi_app/widgets/textes.dart';
 
 class AlertePage extends StatefulWidget {
   @override
@@ -99,7 +95,7 @@ class _AlertePageState extends State<AlertePage> {
 
   Widget _body(AlerteListViewModel viewModel) {
     return Scaffold(
-      backgroundColor: context.grey100,
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
       body: _content(viewModel),
       floatingActionButton: _floatingActionButton(context, viewModel),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -156,35 +152,54 @@ class _AlertePageState extends State<AlertePage> {
       slivers: [
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.only(
-              top: Margins.spacing_base,
-              left: Margins.spacing_base,
-              right: Margins.spacing_base,
+            padding: const EdgeInsets.fromLTRB(DsfrSpacings.s2w, DsfrSpacings.s2w, DsfrSpacings.s2w, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Semantics(
+                  header: true,
+                  child: Text(
+                    Strings.alertesCountTitle(alertes.length),
+                    style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+                  ),
+                ),
+                const SizedBox(height: DsfrSpacings.s3v),
+                Text(
+                  Strings.alertesCreationHint,
+                  style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textTitleGrey(context)),
+                ),
+              ],
             ),
-            child: _SectionTitle(title: Strings.alertesTabTitle),
           ),
         ),
         if (alertes.isEmpty)
+          const SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
+              child: SizedBox(height: DsfrSpacings.s2w),
+            ),
+          ),
+        if (alertes.isEmpty)
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+              padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
               child: _noAlerte(),
             ),
           )
         else
           SliverPadding(
-            padding: const EdgeInsets.all(Margins.spacing_base),
+            padding: const EdgeInsets.all(DsfrSpacings.s2w),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  if (index.isOdd) return SizedBox(height: Margins.spacing_base);
+                  if (index.isOdd) return const SizedBox(height: DsfrSpacings.s3v);
                   final itemIndex = index ~/ 2;
                   final alerte = alertes[itemIndex];
                   return switch (alerte) {
                     OffreEmploiAlerte() => _buildEmploiCard(context, alerte, viewModel),
                     ImmersionAlerte() => _buildImmersionCard(context, alerte, viewModel),
                     ServiceCiviqueAlerte() => _buildServiceCiviqueCard(context, alerte, viewModel),
-                    _ => SizedBox.shrink(),
+                    _ => const SizedBox.shrink(),
                   };
                 },
                 childCount: alertes.isEmpty ? 0 : alertes.length * 2 - 1,
@@ -193,10 +208,11 @@ class _AlertePageState extends State<AlertePage> {
           ),
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.all(Margins.spacing_base),
-            child: _suggestionsSection(suggestionsViewModel),
+            padding: const EdgeInsets.all(DsfrSpacings.s2w),
+            child: _suggestionsSection(context, suggestionsViewModel),
           ),
         ),
+        const SliverToBoxAdapter(child: SizedBox(height: DsfrSpacings.s8w)),
       ],
     );
   }
@@ -337,20 +353,29 @@ class _AlerteLoading extends StatelessWidget {
   ];
 }
 
-Widget _suggestionsSection(SuggestionsRechercheListViewModel viewModel) {
+Widget _suggestionsSection(BuildContext context, SuggestionsRechercheListViewModel viewModel) {
   final content = switch (viewModel.displayState) {
     DisplayState.EMPTY => _SuggestionsEmpty(viewModel: viewModel),
     DisplayState.CONTENT => _SuggestionsList(viewModel: viewModel),
-    DisplayState.LOADING => Center(child: CircularProgressIndicator()),
+    DisplayState.LOADING => Center(
+      child: CircularProgressIndicator(
+        color: DsfrColorDecisions.backgroundActionHighBlueFrance(context),
+      ),
+    ),
     DisplayState.FAILURE => Retry(Strings.vosSuggestionsAlertesError, () => viewModel.retryFetchSuggestions()),
   };
   return Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
-      _SectionTitle(title: Strings.suggestionsDeRechercheTitle),
-      SizedBox(height: Margins.spacing_base),
+      Semantics(
+        header: true,
+        child: Text(
+          Strings.suggestionsDeRechercheTitle,
+          style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+        ),
+      ),
+      const SizedBox(height: DsfrSpacings.s2w),
       content,
-      SizedBox(height: Margins.spacing_base),
     ],
   );
 }
@@ -358,18 +383,22 @@ Widget _suggestionsSection(SuggestionsRechercheListViewModel viewModel) {
 class _SuggestionsList extends StatelessWidget {
   final SuggestionsRechercheListViewModel viewModel;
 
-  _SuggestionsList({required this.viewModel});
+  const _SuggestionsList({required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
     final suggestionIds = viewModel.suggestionIds;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        Text(
+          Strings.suggestionsDeRechercheHeader,
+          style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context)),
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
         for (int index = 0; index < suggestionIds.length; index++) ...[
-          index == 0
-              ? _SuggestionsHeader(suggestionId: suggestionIds[index])
-              : _SuggestionCard(suggestionId: suggestionIds[index]),
-          if (index < suggestionIds.length - 1) SizedBox(height: Margins.spacing_base),
+          _SuggestionCard(suggestionId: suggestionIds[index]),
+          if (index < suggestionIds.length - 1) const SizedBox(height: DsfrSpacings.s3v),
         ],
       ],
     );
@@ -379,57 +408,18 @@ class _SuggestionsList extends StatelessWidget {
 class _SuggestionsEmpty extends StatelessWidget {
   final SuggestionsRechercheListViewModel viewModel;
 
-  _SuggestionsEmpty({required this.viewModel});
+  const _SuggestionsEmpty({required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_xl),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(height: Margins.spacing_xl),
-          Center(
-            child: SizedBox(
-              height: 130,
-              width: 130,
-              child: Illustration.grey(AppIcons.checklist_rounded),
-            ),
-          ),
-          SizedBox(height: Margins.spacing_base),
-          Text(
-            Strings.emptySuggestionAlerteListTitre,
-            style: TextStyles.textBaseBold.copyWith(color: context.content),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: Margins.spacing_base),
-          Text(
-            viewModel.loginMode?.isMiLo() == true
-                ? Strings.emptySuggestionAlerteListDescriptionMilo
-                : Strings.emptySuggestionAlerteListDescriptionPoleEmploi,
-            style: TextStyles.textBaseRegular.copyWith(color: context.content),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: Margins.spacing_xl),
-        ],
+    return DsfrAlert(
+      type: DsfrAlertType.info,
+      title: Strings.emptySuggestionAlerteListTitre,
+      description: DsfrAlertDescriptionText(
+        viewModel.loginMode?.isMiLo() == true
+            ? Strings.emptySuggestionAlerteListDescriptionMilo
+            : Strings.emptySuggestionAlerteListDescriptionPoleEmploi,
       ),
-    );
-  }
-}
-
-class _SuggestionsHeader extends StatelessWidget {
-  final String suggestionId;
-
-  _SuggestionsHeader({required this.suggestionId});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(Strings.suggestionsDeRechercheHeader, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-        SizedBox(height: Margins.spacing_base),
-        _SuggestionCard(suggestionId: suggestionId),
-      ],
     );
   }
 }
@@ -437,7 +427,7 @@ class _SuggestionsHeader extends StatelessWidget {
 class _SuggestionCard extends StatelessWidget {
   final String suggestionId;
 
-  _SuggestionCard({required this.suggestionId});
+  const _SuggestionCard({required this.suggestionId});
 
   @override
   Widget build(BuildContext context) {
@@ -449,89 +439,131 @@ class _SuggestionCard extends StatelessWidget {
   }
 
   Widget _builder(BuildContext context, SuggestionRechercheCardViewModel? viewModel) {
-    if (viewModel == null) return SizedBox(height: 0);
+    if (viewModel == null) return const SizedBox.shrink();
 
-    return CardContainer(
-      padding: EdgeInsets.all(Margins.spacing_base),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              Icon(AppIcons.notification_add_outlined, color: AppColorsSpecifics.primaryToLighten(context)),
-              SizedBox(width: Margins.spacing_base),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "${Strings.alerte} ${viewModel.type.toAlerteTagLabel()}",
-                      style: TextStyles.textSBold.copyWith(color: context.content),
-                    ),
-                    Text(viewModel.titre, style: TextStyles.textSRegular(color: context.content)),
-                  ],
+    final source = viewModel.source;
+    final localisation = viewModel.localisation;
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: DsfrColorDecisions.backgroundDefaultGrey(context),
+        borderRadius: const BorderRadius.all(Radius.circular(4)),
+        border: Border.all(color: DsfrColorDecisions.borderDefaultGrey(context)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(DsfrSpacings.s3v),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Wrap(
+              spacing: DsfrSpacings.s1w,
+              runSpacing: DsfrSpacings.s1v,
+              children: [
+                DsfrTag(
+                  label: _suggestionTypeLabel(viewModel.type),
+                  size: DsfrComponentSize.sm,
+                  backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
+                  textColor: DsfrColorDecisions.textLabelGrey(context),
                 ),
+                if (source != null)
+                  DsfrTag(
+                    label: source,
+                    size: DsfrComponentSize.sm,
+                    backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
+                    textColor: DsfrColorDecisions.textLabelGrey(context),
+                  ),
+              ],
+            ),
+            const SizedBox(height: DsfrSpacings.s1w),
+            Text(
+              viewModel.titre,
+              style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+            ),
+            if (localisation != null && localisation.isNotEmpty) ...[
+              const SizedBox(height: DsfrSpacings.s1v),
+              Row(
+                children: [
+                  Icon(
+                    DsfrIcons.mapMapPin2Line,
+                    size: DsfrSpacings.s2w,
+                    color: DsfrColorDecisions.textDefaultGrey(context),
+                  ),
+                  const SizedBox(width: DsfrSpacings.s1v),
+                  Expanded(
+                    child: Text(
+                      localisation,
+                      style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context)),
+                    ),
+                  ),
+                ],
               ),
             ],
-          ),
-          SizedBox(height: Margins.spacing_base),
-          _SuggestionButtons(
-            onTapAjouter: () => viewModel.ajouterSuggestion(),
-            onTapRefuser: () => viewModel.refuserSuggestion(),
-          ),
-        ],
+            const SizedBox(height: DsfrSpacings.s2w),
+            _SuggestionButtons(
+              onTapAjouter: () => _onAjouter(context, viewModel),
+              onTapRefuser: viewModel.refuserSuggestion,
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  Future<void> _onAjouter(BuildContext context, SuggestionRechercheCardViewModel viewModel) async {
+    if (!viewModel.withLocationForm) {
+      viewModel.ajouterSuggestion();
+      return;
+    }
+
+    final locationAndRayon = await Navigator.of(context).push(
+      SuggestionsAlerteLocationForm.materialPageRoute(type: viewModel.type),
+    );
+    if (locationAndRayon == null) return;
+
+    final (Location location, double rayon) = locationAndRayon;
+    viewModel.ajouterSuggestion(location: location, rayon: rayon);
   }
 }
 
 class _SuggestionButtons extends StatelessWidget {
-  final Function() onTapAjouter;
-  final Function() onTapRefuser;
+  final VoidCallback onTapAjouter;
+  final VoidCallback onTapRefuser;
 
-  _SuggestionButtons({required this.onTapAjouter, required this.onTapRefuser});
+  const _SuggestionButtons({required this.onTapAjouter, required this.onTapRefuser});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: _Refuser(onTapRefuser: onTapRefuser)),
-        SizedBox(width: Margins.spacing_base),
-        Expanded(child: _Ajouter(onTapAjouter: onTapAjouter)),
+        Expanded(
+          child: DsfrButton(
+            label: Strings.refuserLabel,
+            variant: DsfrButtonVariant.secondary,
+            size: DsfrComponentSize.md,
+            onPressed: onTapRefuser,
+          ),
+        ),
+        const SizedBox(width: DsfrSpacings.s2w),
+        Expanded(
+          child: DsfrButton(
+            label: Strings.ajouter,
+            variant: DsfrButtonVariant.primary,
+            size: DsfrComponentSize.md,
+            onPressed: onTapAjouter,
+          ),
+        ),
       ],
     );
   }
 }
 
-class _Refuser extends StatelessWidget {
-  final Function() onTapRefuser;
-
-  _Refuser({required this.onTapRefuser});
-
-  @override
-  Widget build(BuildContext context) {
-    return SecondaryButton(
-      label: Strings.refuserLabel,
-      onPressed: onTapRefuser,
-    );
-  }
-}
-
-class _Ajouter extends StatelessWidget {
-  final Function() onTapAjouter;
-
-  _Ajouter({required this.onTapAjouter});
-
-  @override
-  Widget build(BuildContext context) {
-    return PrimaryActionButton(
-      heightPadding: Margins.spacing_base,
-      label: Strings.ajouter,
-      iconRightPadding: Margins.spacing_xs,
-      withShadow: false,
-      onPressed: onTapAjouter,
-    );
-  }
+String _suggestionTypeLabel(OffreType type) {
+  return switch (type) {
+    OffreType.emploi => Strings.offreTypeEmploiLabel,
+    OffreType.alternance => Strings.alternanceTag,
+    OffreType.immersion => Strings.immersionTag,
+    OffreType.serviceCivique => Strings.serviceCiviqueTag,
+  };
 }
 
 void _displaySuccessSnackbar(
@@ -544,110 +576,45 @@ void _displaySuccessSnackbar(
 
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      padding: const EdgeInsets.only(left: 24, bottom: 14),
-      duration: Duration(days: 365),
-      backgroundColor: AppColors.successLighten,
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  color: AppColors.success,
-                  shape: BoxShape.circle,
+      duration: const Duration(days: 365),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      padding: EdgeInsets.zero,
+      content: ColoredBox(
+        color: DsfrColorDecisions.backgroundDefaultGrey(context),
+        child: DsfrAlert(
+          type: DsfrAlertType.success,
+          title: Strings.suggestionRechercheAjoutee,
+          description: DsfrAlertDescriptionWidget(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  Strings.suggestionRechercheAjouteeDescription,
+                  style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: Icon(
-                    AppIcons.check_rounded,
-                    color: AppColors.contentOnPrimary,
-                  ),
+                const SizedBox(height: DsfrSpacings.s1w),
+                DsfrLink(
+                  label: Strings.voirResultatsSuggestion,
+                  icon: DsfrIcons.systemArrowRightLine,
+                  iconPosition: DsfrLinkIconPosition.end,
+                  size: DsfrComponentSize.md,
+                  onTap: () {
+                    newViewModel.seeOffreResults();
+                    newViewModel.resetTraiterState();
+                    clearAllSnackBars();
+                  },
                 ),
-              ),
-              SizedBox(width: 10.0),
-              Expanded(
-                child: Text(
-                  Strings.suggestionRechercheAjoutee,
-                  style: TextStyles.textBaseBoldWithColor(AppColors.success),
-                ),
-              ),
-              _CloseSnackbar(newViewModel),
-            ],
+              ],
+            ),
           ),
-          Text(
-            Strings.suggestionRechercheAjouteeDescription,
-            style: TextStyles.textBaseRegularWithColor(AppColors.success),
-          ),
-          SizedBox(height: Margins.spacing_s),
-          _SeeResults(newViewModel),
-        ],
+          onClose: () {
+            newViewModel.resetTraiterState();
+            clearAllSnackBars();
+          },
+        ),
       ),
     ),
   );
-}
-
-class _CloseSnackbar extends StatelessWidget {
-  final SuggestionsRechercheListViewModel viewModel;
-
-  _CloseSnackbar(this.viewModel);
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        viewModel.resetTraiterState();
-        clearAllSnackBars();
-      },
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 24, 16),
-        child: Icon(
-          AppIcons.close_rounded,
-          color: AppColors.success,
-        ),
-      ),
-    );
-  }
-}
-
-class _SeeResults extends StatelessWidget {
-  final SuggestionsRechercheListViewModel viewModel;
-
-  _SeeResults(this.viewModel);
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        viewModel.seeOffreResults();
-        viewModel.resetTraiterState();
-        clearAllSnackBars();
-      },
-      child: Row(
-        children: [
-          Text(
-            Strings.voirResultatsSuggestion,
-            style: TextStyles.textBaseBoldWithColor(AppColors.success).copyWith(decoration: TextDecoration.underline),
-          ),
-          Icon(
-            AppIcons.chevron_right_rounded,
-            color: AppColors.success,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SectionTitle extends StatelessWidget {
-  final String title;
-  const _SectionTitle({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return MediumSectionTitle(title);
-  }
 }
