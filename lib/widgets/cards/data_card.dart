@@ -54,8 +54,8 @@ class DataCard<T> extends StatelessWidget {
         final mention = dateActionViewModel.datePostulation != null
             ? Strings.offrePostulatedSeen(dateActionViewModel.datePostulation!)
             : dateActionViewModel.dateDerniereConsultation != null
-                ? Strings.offreLastSeen(dateActionViewModel.dateDerniereConsultation!)
-                : null;
+            ? Strings.offreLastSeen(dateActionViewModel.dateDerniereConsultation!)
+            : null;
 
         return Material(
           color: DsfrColorDecisions.backgroundDefaultGrey(context),
@@ -120,8 +120,7 @@ class DataCard<T> extends StatelessWidget {
                                         spacing: DsfrSpacings.s1w,
                                         runSpacing: DsfrSpacings.s1w,
                                         children: [
-                                          if (category?.isNotEmpty == true)
-                                            OffreDetailsTag(label: category!),
+                                          if (category?.isNotEmpty == true) OffreDetailsTag(label: category!),
                                           if (lieu?.isNotEmpty == true) OffreDetailsTag.location(lieu!),
                                           if (contractLabel != null) OffreDetailsTag.contractType(contractLabel),
                                           if (secteurActivite?.isNotEmpty == true)
@@ -157,16 +156,20 @@ class DataCard<T> extends StatelessWidget {
                     ),
                   ),
                   if (withFavori && id != null && from != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: DsfrSpacings.s1w, right: DsfrSpacings.s1w),
-                      child: FavoriHeart<T>(
-                        offreId: id!,
-                        a11yLabel: sousTitre != null ? '$titre ${sousTitre!}' : titre,
-                        withBorder: false,
-                        from: from!,
-                        icon: DsfrIcons.systemStarLine,
-                        iconActive: DsfrIcons.systemStarFill,
-                        iconColor: DsfrColorDecisions.textActionHighBlueFrance(context),
+                    Align(
+                      alignment: Alignment.topRight,
+                      widthFactor: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: DsfrSpacings.s1w, right: DsfrSpacings.s1w),
+                        child: FavoriHeart<T>(
+                          offreId: id!,
+                          a11yLabel: sousTitre != null ? '$titre ${sousTitre!}' : titre,
+                          withBorder: false,
+                          from: from!,
+                          icon: DsfrIcons.systemStarLine,
+                          iconActive: DsfrIcons.systemStarFill,
+                          iconColor: DsfrColorDecisions.textActionHighBlueFrance(context),
+                        ),
                       ),
                     ),
                 ],
