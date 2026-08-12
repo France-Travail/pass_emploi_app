@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 
 class DateToggle extends StatelessWidget {
   final Function(bool) onIsActiveChange;
@@ -11,34 +10,12 @@ class DateToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ExcludeSemantics(child: Text(Strings.startDate, style: TextStyles.textSRegular(color: context.content))),
-        _StartDateToggle(
-          onIsActiveChange: onIsActiveChange,
-          isActiveDate: isActiveDate,
-        ),
-      ],
-    );
-  }
-}
-
-class _StartDateToggle extends StatelessWidget {
-  final Function(bool) onIsActiveChange;
-  final bool isActiveDate;
-
-  _StartDateToggle({
-    required this.onIsActiveChange,
-    required this.isActiveDate,
-  });
-
-  @override
-  Widget build(BuildContext context) {
     return Semantics(
       label: Strings.startDateEnabled(isActiveDate),
-      child: Switch.adaptive(
+      child: DsfrToggleSwitch(
+        label: Strings.startDate,
         value: isActiveDate,
+        status: isActiveDate ? Strings.yes : Strings.no,
         onChanged: onIsActiveChange,
       ),
     );

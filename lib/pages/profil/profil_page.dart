@@ -65,7 +65,7 @@ class _Scaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.grey100,
-      appBar: PrimaryAppBar(title: Strings.menuProfil, withProfileButton: false, canPop: true),
+      appBar: PrimaryAppBar(title: Strings.menuProfil, canPop: true),
       body: Semantics(
         container: true,
         child: SingleChildScrollView(

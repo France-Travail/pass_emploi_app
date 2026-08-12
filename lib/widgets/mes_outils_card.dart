@@ -1,54 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/pages/boite_a_outils_page.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 
 class MesOutilsCard extends StatelessWidget {
   const MesOutilsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return CardContainer(
-      onTap: () {
-        PassEmploiMatomoTracker.instance.trackEvent(
-          eventCategory: AnalyticsEventNames.mesOutilsCategory,
-          action: AnalyticsEventNames.mesOutilsAction,
-        );
-        Navigator.push(context, BoiteAOutilsPage.materialPageRoute());
-      },
-      child: Row(
-        children: [
-          Image.asset(
-            "assets/roadsign.webp",
-            height: 56,
-            width: 56,
+    return Material(
+      color: DsfrColorDecisions.backgroundDefaultGrey(context),
+      borderRadius: const BorderRadius.all(Radius.circular(8)),
+      child: InkWell(
+        onTap: () {
+          PassEmploiMatomoTracker.instance.trackEvent(
+            eventCategory: AnalyticsEventNames.mesOutilsCategory,
+            action: AnalyticsEventNames.mesOutilsAction,
+          );
+          Navigator.push(context, BoiteAOutilsPage.materialPageRoute());
+        },
+        borderRadius: const BorderRadius.all(Radius.circular(8)),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            border: Border.all(color: DsfrColorDecisions.artworkDecorativeBlueFrance(context)),
           ),
-          SizedBox(width: Margins.spacing_base),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          child: Padding(
+            padding: const EdgeInsets.all(DsfrSpacings.s2w),
+            child: Row(
               children: [
-                Text(
-                  Strings.mesOutils,
-                  style: TextStyles.textBaseBold.copyWith(color: context.content),
+                Image.asset(
+                  "assets/roadsign.webp",
+                  height: 56,
+                  width: 56,
                 ),
-                SizedBox(height: Margins.spacing_xs),
-                Text(
-                  Strings.mesOutilsDescription,
-                  style: TextStyles.textSMedium(color: context.content),
+                const SizedBox(width: DsfrSpacings.s2w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        Strings.mesOutils,
+                        style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                      ),
+                      const SizedBox(height: DsfrSpacings.s1v),
+                      Text(
+                        Strings.mesOutilsDescription,
+                        style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context)),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: DsfrSpacings.s1w),
+                Icon(
+                  DsfrIcons.systemArrowRightSLine,
+                  color: DsfrColorDecisions.textTitleBlueFrance(context),
                 ),
               ],
             ),
           ),
-          SizedBox(width: Margins.spacing_s),
-          Icon(AppIcons.chevron_right_rounded, color: context.content),
-        ],
+        ),
       ),
     );
   }

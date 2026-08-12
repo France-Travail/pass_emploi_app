@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pass_emploi_app/analytics/ignore_tracking_context_provider.dart';
 import 'package:pass_emploi_app/models/evenement_emploi/secteur_activite.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
+import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/recherche/secteur_activite_selection_page.dart';
+import 'package:pass_emploi_app/widgets/text_form_fields/utils/read_only_text_form_field.dart';
+
+const _heroTag = 'secteur-activite';
 
 class SecteurActiviteSelector extends StatefulWidget {
   final Function(SecteurActivite? secteur) onSecteurActiviteSelected;
@@ -25,6 +23,7 @@ class SecteurActiviteSelector extends StatefulWidget {
 
 class _SecteurActiviteSelectorState extends State<SecteurActiviteSelector> {
   SecteurActivite? _selectedSecteurActivite;
+  final GlobalKey globalKey = GlobalKey();
 
   @override
   void initState() {
@@ -34,113 +33,27 @@ class _SecteurActiviteSelectorState extends State<SecteurActiviteSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return _SecteurActiviteField(
-      onFieldTap: () => Navigator.push(
+    final hasSelection = _selectedSecteurActivite != null;
+    return ReadOnlyTextFormField(
+      key: globalKey,
+      title: Strings.secteurActiviteLabel,
+      hint: Strings.secteurActiviteHint,
+      heroTag: _heroTag,
+      textFormFieldKey: Key(_selectedSecteurActivite?.name ?? 'all'),
+      withDeleteButton: hasSelection,
+      a11ySuppressionLabel: Strings.secteurActiviteAll,
+      initialValue: hasSelection ? _selectedSecteurActivite!.label : Strings.secteurActiviteAll,
+      onTextTap: () => Navigator.push(
         IgnoreTrackingContext.of(context).nonTrackingContext,
         SecteurActiviteSelectionPage.materialPageRoute(initialValue: _selectedSecteurActivite),
       ).then((secteur) => _updateSecteurActivite(secteur)),
-      value: _selectedSecteurActivite,
+      onDeleteTap: () => _updateSecteurActivite(null),
     );
   }
 
   void _updateSecteurActivite(SecteurActivite? secteur) {
     setState(() => _selectedSecteurActivite = secteur);
     widget.onSecteurActiviteSelected(secteur);
-  }
-}
-
-class _SecteurActiviteField extends StatefulWidget {
-  final Function() onFieldTap;
-  final SecteurActivite? value;
-
-  const _SecteurActiviteField({
-    required this.onFieldTap,
-    required this.value,
-  });
-
-  @override
-  State<_SecteurActiviteField> createState() => _SecteurActiviteFieldState();
-}
-
-class _SecteurActiviteFieldState extends State<_SecteurActiviteField> {
-  late final FocusNode _focusNode;
-
-  @override
-  void initState() {
-    super.initState();
-    _focusNode = FocusNode(
-      onKeyEvent: (node, event) {
-        if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.enter) {
-          widget.onFieldTap();
-          return KeyEventResult.handled;
-        }
-        return KeyEventResult.ignored;
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(Strings.secteurActiviteLabel, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-          SizedBox(height: Margins.spacing_base),
-          // A11y - GestureDetector is not focusable by itself
-          Focus(
-            focusNode: _focusNode,
-            child: GestureDetector(
-              onTap: widget.onFieldTap,
-              child: Container(
-                constraints: BoxConstraints(minHeight: 56),
-                width: double.maxFinite,
-                alignment: Alignment.centerLeft,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(Dimens.radius_base),
-                  border: Border.all(color: context.content),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(child: _SelectedSecteurActivite(widget.value?.label ?? Strings.secteurActiviteAll)),
-                    Icon(AppIcons.chevron_down_rounded, color: context.grey800),
-                    SizedBox(width: Margins.spacing_s),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SelectedSecteurActivite extends StatelessWidget {
-  final String label;
-
-  const _SelectedSecteurActivite(this.label);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(Margins.spacing_s),
-      child: Wrap(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_s, vertical: Margins.spacing_xs),
-            decoration: BoxDecoration(
-              color: AppColors.primaryLighten,
-              borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base)),
-            ),
-            child: Text(
-              label,
-              style: TextStyles.textSMedium(color: AppColors.primary),
-            ),
-          ),
-        ],
-      ),
-    );
+    globalKey.requestFocusDelayed(duration: const Duration(milliseconds: 300));
   }
 }

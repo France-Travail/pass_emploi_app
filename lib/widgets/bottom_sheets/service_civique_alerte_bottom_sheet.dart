@@ -6,7 +6,7 @@ import 'package:pass_emploi_app/presentation/alerte_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/alerte_bottom_sheet.dart';
-import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
+import 'package:pass_emploi_app/widgets/bottom_sheets/filtres_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/service_civique_bottom_sheet_form.dart';
 import 'package:redux/redux.dart';
 
@@ -20,11 +20,10 @@ class ServiceCiviqueAlerteBottomSheet extends AbstractAlerteBottomSheet<ServiceC
 
   @override
   Widget buildSaveSearch(BuildContext context, ServiceCiviqueAlerteViewModel itemViewModel) {
-    return _buildForm(context, itemViewModel);
-  }
-
-  Widget _buildForm(BuildContext context, ServiceCiviqueAlerteViewModel viewModel) {
-    return BottomSheetWrapper(body: ServiceCiviqueBottomSheetForm(viewModel), title: Strings.createAlerteTitle);
+    return FiltresBottomSheet(
+      title: Strings.createAlerteTitle,
+      body: ServiceCiviqueBottomSheetForm(itemViewModel),
+    );
   }
 
   @override

@@ -1,45 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 
 class MultilineAppBar extends StatelessWidget {
-  final String title;
+  final String? title;
   final String? hint;
   final VoidCallback onCloseButtonPressed;
 
-  const MultilineAppBar({required this.title, required this.onCloseButtonPressed, this.hint});
+  const MultilineAppBar({this.title, required this.onCloseButtonPressed, this.hint});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ConstrainedBox(
-          constraints: BoxConstraints.tightFor(width: kToolbarHeight, height: kToolbarHeight),
-          child: IconButton(
+        Align(
+          alignment: Alignment.centerLeft,
+          child: DsfrButton(
+            label: Strings.back,
+            icon: DsfrIcons.systemArrowLeftSLine,
+            variant: DsfrButtonVariant.tertiaryWithoutBorder,
+            size: DsfrComponentSize.md,
             onPressed: onCloseButtonPressed,
-            tooltip: Strings.close,
-            icon: Icon(Icons.close, color: context.content),
           ),
         ),
-        SizedBox(width: Margins.spacing_base),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(top: Margins.spacing_s, right: Margins.spacing_base),
+        if (title != null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(Margins.spacing_base, 0, Margins.spacing_base, Margins.spacing_s),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                  Semantics(
-                    header: true,
-                    child: Text(title, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-                  ),
+                Semantics(
+                  header: true,
+                  child: Text(title!, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+                ),
                 if (hint != null) Text(hint!, style: TextStyles.textSRegularWithColor(context.content)),
               ],
             ),
           ),
-        ),
       ],
     );
   }

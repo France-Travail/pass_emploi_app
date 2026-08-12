@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:pass_emploi_app/features/alerte/get/alerte_get_action.dart';
@@ -15,11 +16,7 @@ import 'package:pass_emploi_app/models/alerte/offre_emploi_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/service_civique_alerte.dart';
 import 'package:pass_emploi_app/models/recherche/recherche_request.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:redux/redux.dart';
 
 enum RechercheType { emploi, alternance, immersion, serviceCivique, evenementEmploi, unknown }
@@ -51,15 +48,14 @@ class _RechercheCriteresFullScreenState<Result> extends State<RechercheCriteresF
       builder: (context, viewModel) {
         return SizedBox.expand(
           child: ColoredBox(
-            color: context.bg,
+            color: DsfrColorDecisions.backgroundDefaultGrey(context),
             child: SingleChildScrollView(
               clipBehavior: Clip.none,
               child: Padding(
-                padding: const EdgeInsets.all(Margins.spacing_base),
+                padding: const EdgeInsets.all(DsfrSpacings.s2w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(height: Margins.spacing_base),
                     widget.buildCriteresContentWidget(
                       onNumberOfCriteresChanged: (number) {
                         setState(() => _criteresActifsCount = number);
@@ -74,7 +70,6 @@ class _RechercheCriteresFullScreenState<Result> extends State<RechercheCriteresF
                         );
                       },
                     ),
-                    const SizedBox(height: Margins.spacing_base),
                     _RecentSearches<Result>(
                       rechercheState: widget.rechercheState,
                       rechercheType: widget.rechercheType,
@@ -124,29 +119,53 @@ class _RecentSearches<Result> extends StatelessWidget {
       converter: (store) => _RecentSearchesViewModel.create(store, rechercheState, rechercheType),
       builder: (context, viewModel) {
         if (viewModel.items.isEmpty) return const SizedBox.shrink();
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                Strings.rechercheRecentesTitle,
-                style: TextStyle(fontWeight: FontWeight.w600, color: context.content),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s2w),
+              child: Row(
+                children: [
+                  Icon(
+                    DsfrIcons.systemTimeLine,
+                    size: 16,
+                    color: DsfrColorDecisions.textTitleGrey(context),
+                  ),
+                  const SizedBox(width: DsfrSpacings.s1w),
+                  Expanded(
+                    child: Text(
+                      Strings.rechercheRecentesTitle,
+                      style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: Margins.spacing_s),
-              for (final item in viewModel.items) ...[
-                _RechercheRecenteTile(
-                  alerte: item.alerte,
-                  text: item.title,
-                  onTap: () => viewModel.onTapRecentSearch(item.alerte),
-                ),
-                Divider(
-                  color: context.grey500,
-                  height: 1,
-                ),
-              ],
-            ],
-          ),
+            ),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(DsfrSpacings.s1w),
+                border: Border.all(color: DsfrColorDecisions.artworkDecorativeBlueFrance(context)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (var i = 0; i < viewModel.items.length; i++) ...[
+                    if (i > 0)
+                      Divider(
+                        height: 1,
+                        thickness: 1,
+                        color: DsfrColorDecisions.artworkDecorativeBlueFrance(context),
+                      ),
+                    _RechercheRecenteTile(
+                      alerte: viewModel.items[i].alerte,
+                      text: viewModel.items[i].title,
+                      onTap: () => viewModel.onTapRecentSearch(viewModel.items[i].alerte),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
         );
       },
     );
@@ -163,26 +182,14 @@ class _RechercheRecenteTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.transparent,
+      color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: Margins.spacing_base),
-          child: Row(
-            children: [
-              Icon(
-                Icons.schedule_outlined,
-                color: context.grey800,
-                size: Dimens.icon_size_m,
-              ),
-              SizedBox(width: Margins.spacing_base),
-              Expanded(
-                child: Text(
-                  text,
-                  style: TextStyles.textBaseRegular.copyWith(color: context.content),
-                ),
-              ),
-            ],
+          padding: const EdgeInsets.all(DsfrSpacings.s2w),
+          child: Text(
+            text,
+            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textActionHighBlueFrance(context)),
           ),
         ),
       ),

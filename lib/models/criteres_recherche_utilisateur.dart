@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:pass_emploi_app/models/location.dart';
 import 'package:pass_emploi_app/models/metier.dart';
+import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 
 sealed class MetierCritere extends Equatable {
   String get label;
@@ -54,13 +55,42 @@ class CriteresRechercheUtilisateur extends Equatable {
 
   const CriteresRechercheUtilisateur({this.metier, this.location, this.rayon});
 
-  CriteresRechercheUtilisateur copyWith({MetierCritere? metier, Location? location, int? rayon}) {
+  CriteresRechercheUtilisateur copyWith({
+    MetierCritere? Function()? metier,
+    Location? Function()? location,
+    int? Function()? rayon,
+  }) {
     return CriteresRechercheUtilisateur(
-      metier: metier ?? this.metier,
-      location: location ?? this.location,
-      rayon: rayon ?? this.rayon,
+      metier: metier != null ? metier() : this.metier,
+      location: location != null ? location() : this.location,
+      rayon: rayon != null ? rayon() : this.rayon,
     );
   }
+
+  factory CriteresRechercheUtilisateur.fromOnboardingAnswers(OnboardingQuestionnaireAnswers answers) {
+    final domaine = answers.domaine?.trim();
+    final metier = !answers.domaineInconnu && domaine != null && domaine.isNotEmpty
+        ? MetierTexteLibreCritere(domaine)
+        : null;
+    final ville = answers.villeRecherche;
+    final location = ville == null
+        ? null
+        : Location(
+            libelle: ville.nom,
+            code: ville.code,
+            type: LocationType.COMMUNE,
+            codePostal: ville.codePostal,
+            latitude: ville.latitude,
+            longitude: ville.longitude,
+          );
+    return CriteresRechercheUtilisateur(
+      metier: metier,
+      location: location,
+      rayon: location != null ? answers.rayonKm : null,
+    );
+  }
+
+  bool get hasAny => metier != null || location != null;
 
   factory CriteresRechercheUtilisateur.fromJson(dynamic json) {
     return CriteresRechercheUtilisateur(

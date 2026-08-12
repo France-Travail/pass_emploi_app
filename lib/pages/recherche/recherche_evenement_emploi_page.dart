@@ -41,6 +41,12 @@ class RechercheEvenementEmploiPage extends RechercheOffrePage<EvenementEmploi> {
   String placeHolderSubtitle() => Strings.eventPlaceholderSubtitle;
 
   @override
+  String emptyTitle() => Strings.rechercheEmptyTitleEvenementEmploi;
+
+  @override
+  String Function(int count) resultsCountLabel() => Strings.rechercheResultsEvenementsCount;
+
+  @override
   RechercheState rechercheState(AppState appState) => appState.rechercheEvenementEmploiState;
 
   @override
@@ -50,7 +56,10 @@ class RechercheEvenementEmploiPage extends RechercheOffrePage<EvenementEmploi> {
   FavoriIdsState<EvenementEmploi> favorisState(AppState appState) => FavoriIdsState<EvenementEmploi>.notInitialized();
 
   @override
-  Widget buildAlertBottomSheet() => SizedBox.shrink();
+  Widget? buildAlertBottomSheet() => null;
+
+  @override
+  bool withCreateAlerte() => false;
 
   @override
   Future<bool?>? buildFiltresBottomSheet(BuildContext context) => EvenementEmploiFiltresPage.show(context);

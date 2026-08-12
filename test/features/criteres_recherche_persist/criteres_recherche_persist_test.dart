@@ -150,7 +150,7 @@ void main() {
         ),
       );
 
-      test('should keep previously persisted metier', () {
+      test('should clear previously persisted metier', () {
         sut.givenStore = givenState()
             .copyWith(
               criteresRecherchePersistState: CriteresRecherchePersistSuccessState(
@@ -161,9 +161,7 @@ void main() {
             .store((f) => {f.criteresRecherchePersistRepository = repository});
 
         sut.thenExpectChangingStatesThroughOrder([
-          _shouldSucceedWith(
-            CriteresRechercheUtilisateur(metier: MetierTexteLibreCritere('Boulanger'), location: mockCommuneLocation()),
-          ),
+          _shouldSucceedWith(CriteresRechercheUtilisateur(location: mockCommuneLocation())),
         ]);
       });
     });

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/models/location.dart';
 import 'package:pass_emploi_app/models/metier.dart';
 import 'package:pass_emploi_app/presentation/recherche/immersion/criteres_recherche_immersion_contenu_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/a11y/mandatory_fields_label.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/errors/error_text.dart';
 import 'package:pass_emploi_app/widgets/slider/distance_slider.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/location_autocomplete.dart';
@@ -52,47 +51,48 @@ class _CriteresRechercheImmersionContenuState extends State<CriteresRechercheImm
       _selectedMetier = viewModel.initialMetier;
       _selectedDistance = viewModel.initialDistance.toDouble();
     }
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          MandatoryFieldsLabel.all(),
-          const SizedBox(height: Margins.spacing_base),
-          MetierAutocomplete(
-            title: Strings.metierLabel,
-            hint: Strings.metierHint,
-            initialValue: viewModel.initialMetier,
-            onMetierSelected: (metier) {
-              _selectedMetier = metier;
-              _updateCriteresActifsCount();
-            },
-          ),
-          SizedBox(height: Margins.spacing_m),
-          LocationAutocomplete(
-            title: Strings.locationTitle,
-            villesOnly: true,
-            hint: Strings.locationHint,
-            initialValue: viewModel.initialLocation,
-            onLocationSelected: (location) {
-              _selectedLocation = location;
-              _updateCriteresActifsCount();
-            },
-          ),
-          SizedBox(height: Margins.spacing_m),
-          DistanceSlider(
-            initialDistanceValue: viewModel.initialDistance.toDouble(),
-            onValueChange: (value) => _selectedDistance = value,
-          ),
-          const SizedBox(height: Margins.spacing_m),
-          if (viewModel.displayState.isFailure()) ErrorText(Strings.genericError),
-          PrimaryActionButton(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        MandatoryFieldsLabel.all(),
+        const SizedBox(height: DsfrSpacings.s2w),
+        MetierAutocomplete(
+          title: Strings.metierLabel,
+          hint: Strings.metierHint,
+          initialValue: viewModel.initialMetier,
+          onMetierSelected: (metier) {
+            _selectedMetier = metier;
+            _updateCriteresActifsCount();
+          },
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        LocationAutocomplete(
+          title: Strings.locationTitle,
+          villesOnly: true,
+          hint: Strings.locationHint,
+          initialValue: viewModel.initialLocation,
+          onLocationSelected: (location) {
+            _selectedLocation = location;
+            _updateCriteresActifsCount();
+          },
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        DistanceSlider(
+          initialDistanceValue: viewModel.initialDistance.toDouble(),
+          onValueChange: (value) => _selectedDistance = value,
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        if (viewModel.displayState.isFailure()) ErrorText(Strings.genericError),
+        SizedBox(
+          width: double.infinity,
+          child: DsfrButton(
             label: Strings.searchButton,
+            variant: DsfrButtonVariant.primary,
+            size: DsfrComponentSize.lg,
             onPressed: _isSearchButtonEnabled(viewModel) ? () => _search(viewModel) : null,
           ),
-          const SizedBox(height: Margins.spacing_m),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

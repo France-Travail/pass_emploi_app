@@ -26,6 +26,7 @@ void main() {
 
     // Then
     expect(viewModel.displayState, OffreEmploiDetailsPageDisplayState.SHOW_LOADER);
+    expect(viewModel.isNotFound, isFalse);
   });
 
   test("getDetails when state is failure should set display state properly", () {
@@ -37,6 +38,7 @@ void main() {
 
     // Then
     expect(viewModel.displayState, OffreEmploiDetailsPageDisplayState.SHOW_ERROR);
+    expect(viewModel.isNotFound, isTrue);
   });
 
   test("getDetails when state is success should set display state properly and convert data to view model", () {

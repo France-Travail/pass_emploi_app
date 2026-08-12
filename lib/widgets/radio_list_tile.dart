@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 
 class CustomRadioGroup<T> extends StatelessWidget {
   const CustomRadioGroup({
@@ -17,16 +16,14 @@ class CustomRadioGroup<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RadioGroup(
-      onChanged: onChanged,
-      groupValue: groupValue,
-      child: RadioListTile<T>(
-        visualDensity: VisualDensity.compact,
-        contentPadding: EdgeInsets.zero,
-        activeColor: AppColorsSpecifics.primaryToLighten(context),
-        title: Text(title, style: TextStyles.textBaseMedium.copyWith(color: context.content)),
-        controlAffinity: ListTileControlAffinity.leading,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: DsfrSpacings.s1w),
+      child: DsfrRadioButton<T>(
+        label: title,
         value: value,
+        groupValue: groupValue,
+        size: DsfrComponentSize.md,
+        onChanged: onChanged,
       ),
     );
   }

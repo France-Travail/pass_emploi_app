@@ -1,20 +1,26 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/favori/ids/favori_ids_state.dart';
 import 'package:pass_emploi_app/features/recherche/recherche_actions.dart';
 import 'package:pass_emploi_app/features/recherche/recherche_state.dart';
+import 'package:pass_emploi_app/models/alerte/alerte_from_request.dart';
+import 'package:pass_emploi_app/models/alerte/immersion_alerte.dart';
+import 'package:pass_emploi_app/models/alerte/offre_emploi_alerte.dart';
+import 'package:pass_emploi_app/models/alerte/service_civique_alerte.dart';
 import 'package:pass_emploi_app/presentation/recherche/bloc_resultat_recherche_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/animated_list_loader.dart';
+import 'package:pass_emploi_app/widgets/recherche/recherche_empty_state.dart';
 import 'package:pass_emploi_app/widgets/recherche/recherche_message_placeholder.dart';
-import 'package:pass_emploi_app/widgets/retry.dart';
 import 'package:pass_emploi_app/widgets/recherche/resultat_recherche_contenu.dart';
+import 'package:pass_emploi_app/widgets/retry.dart';
 
 class BlocResultatRecherche<Result> extends StatefulWidget {
   final Key listResultatKey;
@@ -24,6 +30,9 @@ class BlocResultatRecherche<Result> extends StatefulWidget {
   final String analyticsType;
   final String placeHolderTitle;
   final String placeHolderSubtitle;
+  final String emptyTitle;
+  final String Function(int count) resultsCountLabel;
+  final Widget? Function()? buildAlertBottomSheet;
 
   BlocResultatRecherche({
     required this.listResultatKey,
@@ -33,6 +42,9 @@ class BlocResultatRecherche<Result> extends StatefulWidget {
     required this.analyticsType,
     required this.placeHolderTitle,
     required this.placeHolderSubtitle,
+    required this.emptyTitle,
+    required this.resultsCountLabel,
+    this.buildAlertBottomSheet,
   });
 
   @override
@@ -64,7 +76,18 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
       case BlocResultatRechercheDisplayState.failure:
         return Retry(Strings.genericError, () => viewModel.onRetry());
       case BlocResultatRechercheDisplayState.empty:
-        return RechercheMessagePlaceholder(Strings.noContentErrorTitle, subtitle: Strings.noContentErrorSubtitle);
+        return StoreConnector<AppState, _EmptyCriteriaViewModel>(
+          distinct: true,
+          converter: (store) => _EmptyCriteriaViewModel.fromState(widget.rechercheState(store.state)),
+          builder: (context, criteria) => RechercheEmptyState<Result>(
+            title: widget.emptyTitle,
+            subtitle: Strings.rechercheEmptySubtitle(
+              metier: criteria.metier,
+              lieu: criteria.lieu,
+            ),
+            buildAlertBottomSheet: widget.buildAlertBottomSheet,
+          ),
+        );
       case BlocResultatRechercheDisplayState.results:
       case BlocResultatRechercheDisplayState.editRecherche:
         final bool withOpacity = viewModel.displayState == BlocResultatRechercheDisplayState.editRecherche;
@@ -75,7 +98,7 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
             onTapDown: (_) => viewModel.onListWithOpacityTouch(),
             child: AnimatedOpacity(
               opacity: disabled ? 0.2 : 1,
-              duration: Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 200),
               child: AbsorbPointer(
                 absorbing: disabled,
                 child: Focus(
@@ -91,6 +114,7 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
                     viewModel: viewModel,
                     favorisState: widget.favorisState,
                     buildResultItem: widget.buildResultItem,
+                    resultsCountLabel: widget.resultsCountLabel,
                   ),
                 ),
               ),
@@ -101,13 +125,12 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
   }
 
   Widget _buildLoadingPlaceholder(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     return AnimatedListLoader(
       nested: true,
       placeholders: [
         for (var i = 0; i < 3; i++) ...[
-          AnimatedListLoader.placeholderBuilder(width: screenWidth, height: 170),
-          SizedBox(height: Margins.spacing_base),
+          AnimatedListLoader.placeholderBuilder(width: double.infinity, height: 120),
+          if (i < 2) const SizedBox(height: DsfrSpacings.s2w),
         ],
       ],
     );
@@ -130,4 +153,40 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
       );
     }
   }
+}
+
+class _EmptyCriteriaViewModel extends Equatable {
+  final String? metier;
+  final String? lieu;
+
+  const _EmptyCriteriaViewModel({this.metier, this.lieu});
+
+  factory _EmptyCriteriaViewModel.fromState(RechercheState rechercheState) {
+    final request = rechercheState.request;
+    if (request == null) return const _EmptyCriteriaViewModel();
+
+    final alerte = createAlerteFromRequest(request);
+    if (alerte is OffreEmploiAlerte) {
+      return _EmptyCriteriaViewModel(
+        metier: alerte.keyword?.isNotEmpty == true ? alerte.keyword : null,
+        lieu: alerte.location?.libelle,
+      );
+    }
+    if (alerte is ImmersionAlerte) {
+      return _EmptyCriteriaViewModel(
+        metier: alerte.metier.isNotEmpty ? alerte.metier : null,
+        lieu: alerte.ville,
+      );
+    }
+    if (alerte is ServiceCiviqueAlerte) {
+      return _EmptyCriteriaViewModel(lieu: alerte.ville);
+    }
+    return _EmptyCriteriaViewModel(
+      metier: alerte?.getTitle(),
+      lieu: alerte?.getLocation()?.libelle,
+    );
+  }
+
+  @override
+  List<Object?> get props => [metier, lieu];
 }

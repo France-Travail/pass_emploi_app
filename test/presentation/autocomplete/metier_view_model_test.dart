@@ -37,7 +37,7 @@ void main() {
       final result = MetierViewModel.create(store);
       // Then
       expect(result.metiersSuggestions, [
-        MetierTitleItem("Dernière recherche"),
+        MetierTitleItem("Recherches récentes"),
         MetierSuggestionItem(
           Metier(libelle: 'Boulangerie - viennoiserie', codeRome: 'D1102'),
           MetierSource.dernieresRecherches,
@@ -109,7 +109,7 @@ void main() {
       final viewModel = MetierViewModel.create(store);
       // Then
       expect(viewModel.metiersSuggestions, [
-        MetierTitleItem("Dernière recherche"),
+        MetierTitleItem("Recherches récentes"),
         MetierSuggestionItem(Metier(libelle: 'chevalier', codeRome: '1'), MetierSource.dernieresRecherches),
       ]);
       expect(viewModel.containsDiagorienteFavoris, false);
@@ -128,7 +128,7 @@ void main() {
       final viewModel = MetierViewModel.create(store);
       // Then
       expect(viewModel.metiersSuggestions, [
-        MetierTitleItem("Dernières recherches"),
+        MetierTitleItem("Recherches récentes"),
         MetierSuggestionItem(Metier(libelle: '1', codeRome: '1'), MetierSource.dernieresRecherches),
         MetierSuggestionItem(Metier(libelle: '2', codeRome: '2'), MetierSource.dernieresRecherches),
         MetierSuggestionItem(Metier(libelle: '3', codeRome: '3'), MetierSource.dernieresRecherches),
@@ -146,7 +146,7 @@ void main() {
       final viewModel = MetierViewModel.create(store);
       // Then
       expect(viewModel.metiersSuggestions, [
-        MetierTitleItem("Dernières recherches"),
+        MetierTitleItem("Recherches récentes"),
         MetierSuggestionItem(Metier(libelle: '1', codeRome: '1'), MetierSource.dernieresRecherches),
         MetierSuggestionItem(Metier(libelle: '2', codeRome: '2'), MetierSource.dernieresRecherches),
       ]);

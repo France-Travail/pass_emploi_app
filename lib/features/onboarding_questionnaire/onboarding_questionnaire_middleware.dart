@@ -1,6 +1,8 @@
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
+import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_actions.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
+import 'package:pass_emploi_app/models/criteres_recherche_utilisateur.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -41,6 +43,7 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
 
   Future<void> _complete(Store<AppState> store, OnboardingQuestionnaireAnswers answers) async {
     await _repository.saveAnswers(answers);
+    _persistRechercheCriteres(store, answers);
     if (answers.canGenerateActionPlan) {
       final userId = store.state.userId();
       if (userId == null) {
@@ -55,15 +58,20 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
           store.dispatch(ActionPlanFailureAction());
         }
       }
-      // Persisted early so a kill during the 100% animation still skips the questionnaire on relaunch.
-      // `finished: true` in state is deferred to [OnboardingQuestionnaireFinishAction] so the UI can show 100%.
+
       await _repository.setFinished(true);
     } else {
       store.dispatch(ActionPlanEmptyAction());
       await _repository.setFinished(true);
-      // No loader when generate is skipped: mark finished immediately so the router leaves the questionnaire.
+
       store.dispatch(OnboardingQuestionnaireSuccessAction(finished: true, answers: answers));
     }
+  }
+
+  void _persistRechercheCriteres(Store<AppState> store, OnboardingQuestionnaireAnswers answers) {
+    final criteres = CriteresRechercheUtilisateur.fromOnboardingAnswers(answers);
+    if (!criteres.hasAny) return;
+    store.dispatch(CriteresRecherchePersistWriteAction(criteres));
   }
 
   Future<void> _resume(Store<AppState> store) async {
