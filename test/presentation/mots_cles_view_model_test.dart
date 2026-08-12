@@ -52,7 +52,7 @@ void main() {
     final result = MotsClesViewModel.create(store);
     // Then
     expect(result.motsCles, [
-      MotsClesTitleItem("Dernières recherches"),
+      MotsClesTitleItem("Recherches récentes"),
       MotsClesSuggestionItem("Boulangerie", MotCleSource.dernieresRecherches),
       MotsClesSuggestionItem("Flutter", MotCleSource.dernieresRecherches),
       MotsClesTitleItem("Vos préférences métiers"),
@@ -74,7 +74,7 @@ void main() {
     final result = MotsClesViewModel.create(store);
     // Then
     expect(result.motsCles, [
-      MotsClesTitleItem("Dernière recherche"),
+      MotsClesTitleItem("Recherches récentes"),
       MotsClesSuggestionItem("chevalier", MotCleSource.dernieresRecherches),
     ]);
     expect(result.containsDiagorienteFavoris, false);
@@ -93,7 +93,7 @@ void main() {
     final result = MotsClesViewModel.create(store);
     // Then
     expect(result.motsCles, [
-      MotsClesTitleItem("Dernières recherches"),
+      MotsClesTitleItem("Recherches récentes"),
       MotsClesSuggestionItem("1", MotCleSource.dernieresRecherches),
       MotsClesSuggestionItem("2", MotCleSource.dernieresRecherches),
       MotsClesSuggestionItem("3", MotCleSource.dernieresRecherches),
@@ -111,7 +111,7 @@ void main() {
     final result = MotsClesViewModel.create(store);
     // Then
     expect(result.motsCles, [
-      MotsClesTitleItem("Dernières recherches"),
+      MotsClesTitleItem("Recherches récentes"),
       MotsClesSuggestionItem("1", MotCleSource.dernieresRecherches),
       MotsClesSuggestionItem("2", MotCleSource.dernieresRecherches),
     ]);
@@ -128,7 +128,7 @@ void main() {
     final result = MotsClesViewModel.create(store);
     // Then
     expect(result.motsCles, [
-      MotsClesTitleItem("Dernières recherches"),
+      MotsClesTitleItem("Recherches récentes"),
       MotsClesSuggestionItem("1", MotCleSource.dernieresRecherches),
       MotsClesSuggestionItem("2", MotCleSource.dernieresRecherches),
     ]);

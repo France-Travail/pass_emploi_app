@@ -57,7 +57,6 @@ class _Body extends StatelessWidget {
       backgroundColor: context.grey100,
       appBar: PrimaryAppBar(
         title: Strings.notificationsSettingsAppbarTitle,
-        withProfileButton: false,
         canPop: true,
       ),
       body: switch (viewModel.displayState) {

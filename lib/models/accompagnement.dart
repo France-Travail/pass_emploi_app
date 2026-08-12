@@ -6,7 +6,7 @@ enum Accompagnement {
   avenirPro,
   accompagnementIntensif,
   accompagnementGlobal,
-  equipEmploiRecrut;
+  equipEmploiRecrut,
 }
 
 extension AccompagnementExt on Accompagnement {

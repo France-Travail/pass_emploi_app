@@ -19,6 +19,9 @@ class FavoriHeart<T> extends StatelessWidget {
   final OffrePage from;
   final String a11yLabel;
   final Function()? onFavoriRemoved;
+  final IconData? icon;
+  final IconData? iconActive;
+  final Color? iconColor;
 
   FavoriHeart({
     required this.offreId,
@@ -26,6 +29,9 @@ class FavoriHeart<T> extends StatelessWidget {
     required this.from,
     this.a11yLabel = ' ',
     this.onFavoriRemoved,
+    this.icon,
+    this.iconActive,
+    this.iconColor,
   }) : super();
 
   @override
@@ -57,11 +63,13 @@ class FavoriHeart<T> extends StatelessWidget {
   Widget _buildOffreEnregistreButton(BuildContext context, FavoriHeartViewModel<T> viewModel) {
     return DebouncedButton(
       childBuilder: (onTapDebounced) => SecondaryIconButton(
-        icon: viewModel.isFavori ? AppIcons.bookmark_remove : AppIcons.bookmark,
+        icon: viewModel.isFavori
+            ? (iconActive ?? AppIcons.bookmark_remove)
+            : (icon ?? AppIcons.bookmark),
         tooltip: viewModel.isFavori
             ? Strings.offreEnregistreeRemove(a11yLabel)
             : Strings.offreEnregistreeAdd(a11yLabel),
-        iconColor: AppColorsSpecifics.primaryToLighten(context),
+        iconColor: iconColor ?? AppColorsSpecifics.primaryToLighten(context),
         borderColor: withBorder ? AppColors.primary : AppColors.transparent,
         onTap: onTapDebounced,
       ),

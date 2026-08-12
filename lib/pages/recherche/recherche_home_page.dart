@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/models/offre_type.dart';
@@ -9,17 +9,10 @@ import 'package:pass_emploi_app/pages/recherche/recherche_offre_immersion_page.d
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_service_civique_page.dart';
 import 'package:pass_emploi_app/presentation/recherche/recherche_home_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
-import 'package:pass_emploi_app/ui/drawables.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
+import 'package:pass_emploi_app/widgets/dsfr/emoji_tile.dart';
 import 'package:pass_emploi_app/widgets/mes_outils_card.dart';
 import 'package:pass_emploi_app/widgets/onboarding/onboarding_showcase.dart';
-import 'package:pass_emploi_app/widgets/tags/data_tag.dart';
 
 class RechercheHomePage extends StatefulWidget {
   @override
@@ -41,8 +34,19 @@ class _RechercheHomePageState extends State<RechercheHomePage> {
   Widget _builder(BuildContext context, RechercheHomePageViewModel viewModel) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(Margins.spacing_base),
-        child: Column(children: [_NosOffres(viewModel: viewModel)]),
+        padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: DsfrSpacings.s2w),
+            _CriteresUtilisateur(metierLabel: viewModel.metierLabel, lieuLabel: viewModel.lieuLabel),
+            const SizedBox(height: DsfrSpacings.s3v),
+            _NosOffres(viewModel: viewModel),
+            const SizedBox(height: DsfrSpacings.s2w),
+            const MesOutilsCard(),
+            const SizedBox(height: DsfrSpacings.s3w),
+          ],
+        ),
       ),
     );
   }
@@ -69,50 +73,54 @@ class _NosOffres extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _CriteresUtilisateur(metierLabel: viewModel.metierLabel, lieuLabel: viewModel.lieuLabel),
-        SizedBox(height: Margins.spacing_base),
+        Semantics(
+          header: true,
+          child: Text(
+            Strings.rechercheHomeExplorerParType,
+            style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+          ),
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
         _SolutionGrid(
           tiles: [
             if (offreTypes.contains(OffreType.emploi))
               OnboardingShowcase(
                 source: ShowcaseSource.offre,
                 child: _BlocSolution(
-                  gradientColors: AppColors.gradientOffre,
+                  emoji: Strings.rechercheHomeEmploiEmoji,
+                  emojiBackground: DsfrColors.blueEcume925,
                   title: Strings.rechercheHomeOffresEmploiTitle,
                   subtitle: Strings.rechercheHomeOffresEmploiSubtitle,
-                  svgPath: Drawables.rechercheHomeOffresEmploi,
                   onTap: () => _onOffreTypeTap(context, OffreType.emploi),
                 ),
               ),
             if (offreTypes.contains(OffreType.alternance))
               _BlocSolution(
-                gradientColors: AppColors.gradientAlternance,
+                emoji: Strings.rechercheHomeAlternanceEmoji,
+                emojiBackground: DsfrColors.success950,
                 title: Strings.rechercheHomeOffresAlternanceTitle,
                 subtitle: Strings.rechercheHomeOffresAlternanceSubtitle,
-                svgPath: Drawables.rechercheHomeOffresAlternance,
                 onTap: () => _onOffreTypeTap(context, OffreType.alternance),
               ),
             if (offreTypes.contains(OffreType.immersion))
               _BlocSolution(
-                gradientColors: AppColors.gradientImmersion,
+                emoji: Strings.rechercheHomeImmersionEmoji,
+                emojiBackground: DsfrColors.greenTilleulVerveine950,
                 title: Strings.rechercheHomeOffresImmersionTitle,
                 subtitle: Strings.rechercheHomeOffresImmersionSubtitle,
-                svgPath: Drawables.rechercheHomeOffresImmersion,
                 onTap: () => _onOffreTypeTap(context, OffreType.immersion),
               ),
             if (offreTypes.contains(OffreType.serviceCivique))
               _BlocSolution(
-                gradientColors: AppColors.gradientServiceCivique,
+                emoji: Strings.rechercheHomeServiceCiviqueEmoji,
+                emojiBackground: DsfrColors.purpleGlycine925,
                 title: Strings.rechercheHomeOffresServiceCiviqueTitle,
                 subtitle: Strings.rechercheHomeOffresServiceCiviqueSubtitle,
-                svgPath: Drawables.rechercheHomeOffresServiceCivique,
                 onTap: () => _onOffreTypeTap(context, OffreType.serviceCivique),
               ),
           ],
-          gap: Margins.spacing_base,
+          gap: DsfrSpacings.s3v,
         ),
-        SizedBox(height: Margins.spacing_base),
-        MesOutilsCard(),
       ],
     );
   }
@@ -126,42 +134,44 @@ class _CriteresUtilisateur extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(Strings.rechercheHomeCriteresTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-        SizedBox(height: Margins.spacing_s),
-        Wrap(
-          spacing: Margins.spacing_xs,
-          runSpacing: Margins.spacing_xs,
-          children: [
-            _CritereRow(
-              icon: AppIcons.work_outline_rounded,
-              label: metierLabel,
-              emptyLabel: Strings.rechercheHomeCriteresMetierVide,
-            ),
-            _CritereRow(
-              icon: AppIcons.place_outlined,
-              label: lieuLabel,
-              emptyLabel: Strings.rechercheHomeCriteresLieuVide,
-            ),
-          ],
+    return Semantics(
+      container: true,
+      label: Strings.rechercheHomeCriteresTitle,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: DsfrColorDecisions.backgroundDefaultGrey(context),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          border: Border.all(color: DsfrColorDecisions.backgroundOpenBlueFrance(context)),
         ),
-      ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s3v, vertical: DsfrSpacings.s1w + 2),
+          child: Wrap(
+            spacing: DsfrSpacings.s1w,
+            runSpacing: DsfrSpacings.s1w,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text(
+                Strings.rechercheHomeCriteresTitle.toUpperCase(),
+                style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textTitleGrey(context)),
+              ),
+              DsfrTag(
+                label: metierLabel ?? Strings.rechercheHomeCriteresMetierVide,
+                size: DsfrComponentSize.md,
+                backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
+                textColor: DsfrColorDecisions.textLabelGrey(context),
+              ),
+              DsfrTag(
+                label: lieuLabel ?? Strings.rechercheHomeCriteresLieuVide,
+                size: DsfrComponentSize.md,
+                icon: DsfrIcons.mapMapPin2Line,
+                backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
+                textColor: DsfrColorDecisions.textLabelGrey(context),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
-  }
-}
-
-class _CritereRow extends StatelessWidget {
-  final IconData icon;
-  final String? label;
-  final String emptyLabel;
-
-  const _CritereRow({required this.icon, required this.label, required this.emptyLabel});
-
-  @override
-  Widget build(BuildContext context) {
-    return DataTag(label: label ?? emptyLabel, iconSemantics: IconWithSemantics(icon, emptyLabel));
   }
 }
 
@@ -173,70 +183,127 @@ class _SolutionGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final totalWidth = constraints.maxWidth;
-        final tileWidth = (totalWidth - gap) / 2;
-
-        return Wrap(
-          spacing: gap,
-          runSpacing: gap,
+    final rows = <Widget>[];
+    for (var i = 0; i < tiles.length; i += 2) {
+      final left = tiles[i];
+      final right = i + 1 < tiles.length ? tiles[i + 1] : null;
+      rows.add(
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (final tile in tiles)
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: tileWidth,
-                  minHeight: _responsiveChildHeight(context),
-                ),
-                child: tile,
-              ),
+            Expanded(child: left),
+            SizedBox(width: gap),
+            Expanded(child: right ?? const SizedBox.shrink()),
           ],
-        );
-      },
+        ),
+      );
+      if (i + 2 < tiles.length) {
+        rows.add(SizedBox(height: gap));
+      }
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: rows,
     );
-  }
-
-  double _responsiveChildHeight(BuildContext context) {
-    final textScaleFactor = MediaQuery.textScalerOf(context).scale(1);
-    return 200 * textScaleFactor;
   }
 }
 
 class _BlocSolution extends StatelessWidget {
+  static const _titleMaxLines = 2;
+  static const _subtitleMaxLines = 2;
+
   final String title;
   final String subtitle;
-  final String svgPath;
-  final List<Color> gradientColors;
-  final void Function() onTap;
+  final String emoji;
+  final Color emojiBackground;
+  final VoidCallback onTap;
 
   const _BlocSolution({
     required this.title,
     required this.subtitle,
-    required this.svgPath,
-    required this.gradientColors,
+    required this.emoji,
+    required this.emojiBackground,
     required this.onTap,
   });
 
+  double _linesHeight(BuildContext context, TextStyle style, int lines) {
+    final fontSize = style.fontSize ?? 14;
+    final heightFactor = style.height ?? 1.0;
+    return MediaQuery.textScalerOf(context).scale(fontSize) * heightFactor * lines;
+  }
+
   @override
   Widget build(BuildContext context) {
+    const radius = BorderRadius.vertical(top: Radius.circular(8));
+    final titleStyle = DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleBlueFrance(context));
+    final subtitleStyle = DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context));
+
     return Semantics(
       button: true,
-      child: CardContainer(
-        gradient: LinearGradient(
-          colors: gradientColors,
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-        onTap: onTap,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SvgPicture.asset(svgPath, width: Dimens.icon_size_m, height: Dimens.icon_size_m),
-            SizedBox(height: Margins.spacing_s),
-            Text(title, style: TextStyles.textMBold.copyWith(color: AppColors.contentOnPrimary)),
-            SizedBox(height: Margins.spacing_s),
-            Text(subtitle, style: TextStyles.textBaseRegular.copyWith(color: AppColors.contentOnPrimary)),
-          ],
+      label: '$title. $subtitle',
+      child: Material(
+        color: DsfrColorDecisions.backgroundDefaultGrey(context),
+        borderRadius: radius,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: radius,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: radius,
+              border: Border.all(color: DsfrColorDecisions.artworkDecorativeBlueFrance(context)),
+            ),
+            child: ClipRRect(
+              borderRadius: radius,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s3w, vertical: DsfrSpacings.s2w),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        EmojiTile(
+                          emoji: emoji,
+                          backgroundColor: emojiBackground,
+                          size: DsfrSpacings.s6w,
+                          borderRadius: 15,
+                        ),
+                        const SizedBox(height: DsfrSpacings.s1w),
+                        SizedBox(
+                          height: _linesHeight(context, titleStyle, _titleMaxLines),
+                          width: double.infinity,
+                          child: Text(
+                            title,
+                            textAlign: TextAlign.center,
+                            maxLines: _titleMaxLines,
+                            overflow: TextOverflow.ellipsis,
+                            style: titleStyle,
+                          ),
+                        ),
+                        const SizedBox(height: DsfrSpacings.s1v),
+                        SizedBox(
+                          height: _linesHeight(context, subtitleStyle, _subtitleMaxLines),
+                          width: double.infinity,
+                          child: Text(
+                            subtitle,
+                            textAlign: TextAlign.center,
+                            maxLines: _subtitleMaxLines,
+                            overflow: TextOverflow.ellipsis,
+                            style: subtitleStyle,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  ColoredBox(
+                    color: DsfrColorDecisions.borderActionHighBlueFrance(context),
+                    child: const SizedBox(height: 4),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );

@@ -135,15 +135,18 @@ class _MetierAutocompletePageState extends State<_MetierAutocompletePage> {
             hint: widget.hint,
             onCloseButtonPressed: () => Navigator.pop(context, widget.selectedMetier),
           ),
-          Semantics(
-            label: '${widget.title} ${Strings.a11YMetiersExplanationLabel}',
-            child: DebounceTextFormField(
-              heroTag: _heroTag,
-              initialValue: widget.selectedMetier?.libelle,
-              onChanged: (text) {
-                if (text.isEmpty != emptyInput) setState(() => emptyInput = text.isEmpty);
-                viewModel.onInputMetier(text);
-              },
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+            child: Semantics(
+              label: '${widget.title} ${Strings.a11YMetiersExplanationLabel}',
+              child: DebounceTextFormField(
+                heroTag: _heroTag,
+                initialValue: widget.selectedMetier?.libelle,
+                onChanged: (text) {
+                  if (text.isEmpty != emptyInput) setState(() => emptyInput = text.isEmpty);
+                  viewModel.onInputMetier(text);
+                },
+              ),
             ),
           ),
           TextFormFieldSepLine(),

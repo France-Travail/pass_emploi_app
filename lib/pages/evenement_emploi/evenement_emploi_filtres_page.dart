@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
@@ -8,12 +9,8 @@ import 'package:pass_emploi_app/presentation/checkbox_value_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/evenement_emploi/evenement_emploi_filtres_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
-import 'package:pass_emploi_app/ui/shadows.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
 import 'package:pass_emploi_app/widgets/buttons/filter_button.dart';
 import 'package:pass_emploi_app/widgets/checkbox_group.dart';
@@ -31,17 +28,21 @@ class EvenementEmploiFiltresPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Tracker(
       tracking: AnalyticsScreenNames.evenementEmploiFiltres,
-      child: StoreConnector<AppState, EvenementEmploiFiltresViewModel>(
-        converter: (store) => EvenementEmploiFiltresViewModel.create(store),
-        builder: (_, viewModel) => _Scaffold(viewModel),
-        distinct: true,
-        onWillChange: (previousVM, newVM) {
-          if (previousVM?.displayState == DisplayState.LOADING && newVM.displayState == DisplayState.CONTENT) {
-            Navigator.pop(context, true);
-          }
-        },
+      child: Theme(
+        data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        child: StoreConnector<AppState, EvenementEmploiFiltresViewModel>(
+          converter: (store) => EvenementEmploiFiltresViewModel.create(store),
+          builder: (_, viewModel) => _Scaffold(viewModel),
+          distinct: true,
+          onWillChange: (previousVM, newVM) {
+            if (previousVM?.displayState == DisplayState.LOADING && newVM.displayState == DisplayState.CONTENT) {
+              Navigator.pop(context, true);
+            }
+          },
+        ),
       ),
     );
   }
@@ -75,9 +76,10 @@ class _ScaffoldState extends State<_Scaffold> {
   Widget build(BuildContext context) {
     return BottomSheetWrapper(
       title: Strings.evenementEmploiFiltres,
-      padding: EdgeInsets.symmetric(horizontal: Margins.spacing_m),
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_m),
       body: Scaffold(
-        backgroundColor: context.bg,
+        backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
         body: _Filtres(
           viewModel: widget.viewModel,
           currentDateDebut: _currentDateDebut,
@@ -149,26 +151,26 @@ class _Filtres extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: context.bg,
+      color: DsfrColorDecisions.backgroundDefaultGrey(context),
       child: SingleChildScrollView(
         clipBehavior: Clip.none,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(height: Margins.spacing_m),
+            const SizedBox(height: DsfrSpacings.s2w),
             _TypeFiltre(
               initialTypeValue: viewModel.initialTypeValue,
-              onValueChange: (value) => onTypeValueChange(value),
+              onValueChange: onTypeValueChange,
             ),
-            SizedBox(height: Margins.spacing_m),
+            const SizedBox(height: DsfrSpacings.s3w),
             CheckBoxGroup<EvenementEmploiModalite>(
-              contentPadding: EdgeInsets.only(left: Margins.spacing_base, right: Margins.spacing_s),
               title: Strings.evenementEmploiFiltresModalites,
               options: viewModel.modalitesFiltres,
               onSelectedOptionsUpdated: (selectedOptions) {
                 onModalitesValueChange(selectedOptions as List<CheckboxValueViewModel<EvenementEmploiModalite>>);
               },
             ),
-            SizedBox(height: Margins.spacing_m),
+            const SizedBox(height: DsfrSpacings.s3w),
             _DateFiltres(
               onDateDebutValueChange: onDateDebutValueChange,
               onDateFinValueChange: onDateFinValueChange,
@@ -176,7 +178,7 @@ class _Filtres extends StatelessWidget {
               initialDateFin: currentDateFin,
             ),
             if (viewModel.displayState.isFailure()) ErrorText(Strings.genericError),
-            SizedBox(height: 200),
+            const SizedBox(height: 200),
           ],
         ),
       ),
@@ -206,35 +208,28 @@ class _TypeFiltreState extends State<_TypeFiltre> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(Strings.evenementEmploiFiltresType, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-        SizedBox(height: Margins.spacing_base),
-        DecoratedBox(
-          decoration: BoxDecoration(
-            color: context.bg,
-            borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base)),
-            boxShadow: [Shadows.radius_base],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base, vertical: Margins.spacing_s),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [null, ...EvenementEmploiType.values]
-                  .map(
-                    (type) => CustomRadioGroup<EvenementEmploiType?>(
-                      title: type?.label ?? Strings.evenementEmploiTypeAll,
-                      value: type,
-                      groupValue: _currentValue,
-                      onChanged: (value) {
-                        widget.onValueChange(value);
-                        setState(() => _currentValue = value);
-                      },
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
+        Text(
+          Strings.evenementEmploiFiltresType,
+          style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [null, ...EvenementEmploiType.values]
+              .map(
+                (type) => CustomRadioGroup<EvenementEmploiType?>(
+                  title: type?.label ?? Strings.evenementEmploiTypeAll,
+                  value: type,
+                  groupValue: _currentValue,
+                  onChanged: (value) {
+                    widget.onValueChange(value);
+                    setState(() => _currentValue = value);
+                  },
+                ),
+              )
+              .toList(),
         ),
       ],
     );
@@ -258,48 +253,36 @@ class _DateFiltres extends StatelessWidget {
   Widget build(BuildContext context) {
     final (DateTime? initialDateFin, DateTime? firstDateFin, bool showInitialDateFin) = _dateFinParams();
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(Strings.evenementEmploiFiltresDate, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-        SizedBox(height: Margins.spacing_base),
-        DecoratedBox(
-          decoration: BoxDecoration(
-            color: context.bg,
-            borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base)),
-            boxShadow: [Shadows.radius_base],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(Margins.spacing_base),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  Strings.evenementEmploiFiltresDateDebut,
-                  style: TextStyles.textBaseMedium.copyWith(color: context.content),
-                ),
-                SizedBox(height: Margins.spacing_s),
-                DatePicker(
-                  onDateSelected: onDateDebutValueChange,
-                  initialDateValue: initialDateDebut,
-                  isActiveDate: true,
-                  firstDate: DateTime.now(),
-                ),
-                SizedBox(height: Margins.spacing_base),
-                Text(
-                  Strings.evenementEmploiFiltresDateFin,
-                  style: TextStyles.textBaseMedium.copyWith(color: context.content),
-                ),
-                SizedBox(height: Margins.spacing_s),
-                DatePicker(
-                  onDateSelected: onDateFinValueChange,
-                  initialDateValue: initialDateFin,
-                  isActiveDate: true,
-                  firstDate: firstDateFin,
-                  showInitialDate: showInitialDateFin,
-                ),
-              ],
-            ),
-          ),
+        Text(
+          Strings.evenementEmploiFiltresDate,
+          style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        Text(
+          Strings.evenementEmploiFiltresDateDebut,
+          style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
+        ),
+        const SizedBox(height: DsfrSpacings.s1w),
+        DatePicker(
+          onDateSelected: onDateDebutValueChange,
+          initialDateValue: initialDateDebut,
+          isActiveDate: true,
+          firstDate: DateTime.now(),
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        Text(
+          Strings.evenementEmploiFiltresDateFin,
+          style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
+        ),
+        const SizedBox(height: DsfrSpacings.s1w),
+        DatePicker(
+          onDateSelected: onDateFinValueChange,
+          initialDateValue: initialDateFin,
+          isActiveDate: true,
+          firstDate: firstDateFin,
+          showInitialDate: showInitialDateFin,
         ),
       ],
     );
