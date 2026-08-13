@@ -79,7 +79,9 @@ class _AccueilPageState extends State<AccueilPage> {
         converter: (store) => AccueilViewModel.create(store),
         builder: _builder,
         onDidChange: (previousViewModel, viewModel) {
-          if (StoreProvider.of<AppState>(context).state.isInviteLoginMode()) return;
+          if (StoreProvider.of<AppState>(context).state.isInviteLoginMode()) {
+            return;
+          }
           _handleSoftUpdateBottomSheet(viewModel);
           _handleNotificationsBottomSheet(viewModel);
           _handleDeeplink(previousViewModel, viewModel);
@@ -102,7 +104,10 @@ class _AccueilPageState extends State<AccueilPage> {
     );
   }
 
-  Future<void> _handleDeeplink(AccueilViewModel? oldViewModel, AccueilViewModel newViewModel) async {
+  Future<void> _handleDeeplink(
+    AccueilViewModel? oldViewModel,
+    AccueilViewModel newViewModel,
+  ) async {
     if (newViewModel.deepLink is CreationDemarcheDeepLink) {
       await _handleRappelCreationDemarcheDeeplink();
     } else if (newViewModel.deepLink is CreationActionDeepLink) {
@@ -112,25 +117,35 @@ class _AccueilPageState extends State<AccueilPage> {
     } else if (newViewModel.deepLink is LaBonneAlternanceDeepLink) {
       await _handleLaBonneAlternanceDeeplink();
     } else {
-      final route = switch (newViewModel.deepLink) {
-        final RendezvousDeepLink deeplink => RendezvousDetailsPage.materialPageRoute(
-          RendezvousStateSource.noSource,
-          deeplink.idRendezvous,
-        ),
-        final SessionMiloDeepLink deeplink => RendezvousDetailsPage.materialPageRoute(
-          RendezvousStateSource.sessionMiloDetails,
-          deeplink.idSessionMilo,
-        ),
-        final ActionDeepLink deeplink => UserActionDetailPage.materialPageRoute(
-          deeplink.idAction,
-          UserActionStateSource.noSource,
-        ),
-        OutilsDeepLink() => BoiteAOutilsPage.materialPageRoute(),
-        CampagneDeepLink() => CampagneQuestionPage.materialPageRoute(0),
-        _ => null,
-      };
-
-      if (route != null) Navigator.push(context, route);
+      switch (newViewModel.deepLink) {
+        case final RendezvousDeepLink deeplink:
+          await RendezvousDetailsPage.show(
+            context,
+            RendezvousStateSource.noSource,
+            deeplink.idRendezvous,
+          );
+        case final SessionMiloDeepLink deeplink:
+          await RendezvousDetailsPage.show(
+            context,
+            RendezvousStateSource.sessionMiloDetails,
+            deeplink.idSessionMilo,
+          );
+        case final ActionDeepLink deeplink:
+          await UserActionDetailPage.show(
+            context,
+            deeplink.idAction,
+            UserActionStateSource.noSource,
+          );
+        case OutilsDeepLink():
+          await Navigator.push(context, BoiteAOutilsPage.materialPageRoute());
+        case CampagneDeepLink():
+          await Navigator.push(
+            context,
+            CampagneQuestionPage.materialPageRoute(0),
+          );
+        default:
+          break;
+      }
       if (newViewModel.shouldResetDeeplink) newViewModel.resetDeeplink();
     }
   }
@@ -174,14 +189,20 @@ class _AccueilPageState extends State<AccueilPage> {
     await _displayMonSuiviPage();
     if (mounted) {
       final store = StoreProvider.of<AppState>(context);
-      CreateUserActionFormPage.pushUserActionCreationTunnel(store, navigator, UserActionStateSource.monSuivi);
+      CreateUserActionFormPage.pushUserActionCreationTunnel(
+        store,
+        navigator,
+        UserActionStateSource.monSuivi,
+      );
     }
   }
 
   dynamic _displayMonSuiviPage() {
     StoreProvider.of<AppState>(
       context,
-    ).dispatch(HandleDeepLinkAction(MonSuiviDeepLink(), DeepLinkOrigin.inAppNavigation));
+    ).dispatch(
+      HandleDeepLinkAction(MonSuiviDeepLink(), DeepLinkOrigin.inAppNavigation),
+    );
   }
 
   void _handleSoftUpdateBottomSheet(AccueilViewModel viewModel) {
@@ -209,14 +230,20 @@ class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        PrimarySliverAppbar(title: Strings.accueilAppBarTitle, withNewNotifications: viewModel.withNewNotifications),
+        PrimarySliverAppbar(
+          title: Strings.accueilAppBarTitle,
+          withNewNotifications: viewModel.withNewNotifications,
+        ),
         SliverToBoxAdapter(
           child: AnimatedSwitcher(
             duration: AnimationDurations.fast,
             child: switch (viewModel.displayState) {
               DisplayState.LOADING => AccueilLoading(),
               DisplayState.CONTENT => _Blocs(viewModel),
-              DisplayState.EMPTY || DisplayState.FAILURE => Retry(Strings.accueilError, () => viewModel.retry()),
+              DisplayState.EMPTY || DisplayState.FAILURE => Retry(
+                Strings.accueilError,
+                () => viewModel.retry(),
+              ),
             },
           ),
         ),
@@ -247,7 +274,10 @@ class _Blocs extends StatelessWidget {
                   colors: AppColorsSpecifics.acceuilBgGradient(context),
                 ),
               ),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: _buildItemsWithGradient()),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: _buildItemsWithGradient(),
+              ),
             ),
             ColoredBox(
               color: context.grey100,
@@ -306,11 +336,16 @@ class _Blocs extends StatelessWidget {
 
   Widget _buildItem(AccueilItem item) {
     return switch (item) {
-      final AccueilDateDeMigrationItem item => AccueilDateDeMigration(dateDeMigration: item.dateDeMigration),
+      final AccueilDateDeMigrationItem item => AccueilDateDeMigration(
+        dateDeMigration: item.dateDeMigration,
+      ),
       final AccueilZenithMessageItem item => CardContainer(
         child: RemoteMessageWidget(remoteMessage: item.accueilZenithMessage),
       ),
-      final ErrorDegradeeItem item => InformationBandeau(icon: AppIcons.error_rounded, text: item.message),
+      final ErrorDegradeeItem item => InformationBandeau(
+        icon: AppIcons.error_rounded,
+        text: item.message,
+      ),
       final OnboardingItem item => AccueilOnboardingTile(item),
       final OffreSuivieAccueilItem item => OffreSuivieForm(
         offreId: item.offreId,
@@ -320,7 +355,10 @@ class _Blocs extends StatelessWidget {
       ),
       final RemoteCampagneAccueilItem item => RemoteCampagneAccueilCard(item),
       final CampagneRecrutementItem item => CampagneRecrutementCard(item),
-      final CampagneEvaluationItem item => _CampagneCard(title: item.titre, description: item.description),
+      final CampagneEvaluationItem item => _CampagneCard(
+        title: item.titre,
+        description: item.description,
+      ),
       final AccueilCetteSemaineItem item => AccueilCetteSemaine(item),
       final AccueilProchainRendezvousItem item => AccueilProchainRendezVous.fromRendezVous(item.rendezvousId),
       final AccueilProchaineSessionMiloItem item => AccueilProchainRendezVous.fromSession(item.sessionId),

@@ -506,11 +506,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: main
-      resolved-ref: c687b8c2071a7237cb49a1cf9a14ba5a88b0c526
+      ref: "0.4.1"
+      resolved-ref: "1829dddf41716b2ec44998ea317c923e5a6a1777"
       url: "https://github.com/Octo-Open-Source/flutter-dsfr.git"
     source: git
-    version: "0.4.0"
+    version: "0.4.1"
   flutter_image_compress:
     dependency: "direct main"
     description:
