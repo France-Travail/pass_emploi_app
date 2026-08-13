@@ -19,11 +19,19 @@ class DuplicateUserActionPage extends StatelessWidget {
   final UserActionStateSource source;
   final String userActionId;
 
-  const DuplicateUserActionPage({super.key, required this.source, required this.userActionId});
+  const DuplicateUserActionPage({
+    super.key,
+    required this.source,
+    required this.userActionId,
+  });
 
-  static MaterialPageRoute<void> route(UserActionStateSource source, String userActionId) {
+  static MaterialPageRoute<void> route(
+    UserActionStateSource source,
+    String userActionId,
+  ) {
     return MaterialPageRoute<void>(
-      builder: (_) => DuplicateUserActionPage(source: source, userActionId: userActionId),
+      builder: (_) =>
+          DuplicateUserActionPage(source: source, userActionId: userActionId),
     );
   }
 
@@ -32,26 +40,43 @@ class DuplicateUserActionPage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.userActionDuplicate,
       child: StoreConnector<AppState, DuplicateUserActionViewModel>(
-        converter: (store) => DuplicateUserActionViewModel.create(store, source, userActionId),
+        converter: (store) =>
+            DuplicateUserActionViewModel.create(store, source, userActionId),
         builder: (context, viewModel) => _Body(viewModel),
-        onWillChange: (previousVm, newVm) => _handleDisplayState(context, newVm),
+        onWillChange: (previousVm, newVm) =>
+            _handleDisplayState(context, newVm),
         distinct: true,
       ),
     );
   }
 
-  Future<void> _handleDisplayState(BuildContext context, DuplicateUserActionViewModel viewModel) async {
+  Future<void> _handleDisplayState(
+    BuildContext context,
+    DuplicateUserActionViewModel viewModel,
+  ) async {
     final displayState = viewModel.displayState;
     if (displayState is DismissWithFailure) {
-      Navigator.pop(context);
-      CreateUserActionFormPage.showSuccessPageForOfflineCreation(context);
+      final navigator = Navigator.of(context);
+      navigator.pop();
+      CreateUserActionFormPage.showSuccessPageForOfflineCreation(navigator.context);
     } else if (displayState is ShowConfirmationPage) {
-      Navigator.push(context, DuplicateUserActionConfirmationPage.route(displayState.userActionCreatedId, source)).then(
+      Navigator.push(
+        context,
+        DuplicateUserActionConfirmationPage.route(
+          displayState.userActionCreatedId,
+          source,
+        ),
+      ).then(
         (result) {
           if (!context.mounted) return;
-          Navigator.pop(context);
+          final navigator = Navigator.of(context);
+          navigator.pop();
           if (result is NavigateToUserActionDetails) {
-            Navigator.push(context, UserActionDetailPage.materialPageRoute(result.userActionId, result.source));
+            UserActionDetailPage.show(
+              navigator.context,
+              result.userActionId,
+              result.source,
+            );
           }
         },
       );
@@ -71,7 +96,10 @@ class _Body extends StatelessWidget {
       children: [
         Scaffold(
           backgroundColor: bgColor,
-          appBar: SecondaryAppBar(title: Strings.duplicateUserAction, backgroundColor: bgColor),
+          appBar: SecondaryAppBar(
+            title: Strings.duplicateUserAction,
+            backgroundColor: bgColor,
+          ),
           body: Padding(
             padding: const EdgeInsets.all(Margins.spacing_base),
             child: EditUserActionForm(
@@ -83,8 +111,12 @@ class _Body extends StatelessWidget {
                 description: viewModel.description,
                 type: viewModel.type,
               ),
-              onSaved: (actionDto) =>
-                  viewModel.duplicate(actionDto.date, actionDto.title, actionDto.description, actionDto.type),
+              onSaved: (actionDto) => viewModel.duplicate(
+                actionDto.date,
+                actionDto.title,
+                actionDto.description,
+                actionDto.type,
+              ),
             ),
           ),
         ),

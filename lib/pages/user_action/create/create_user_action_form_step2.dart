@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/models/user_action_type.dart';
-import 'package:pass_emploi_app/pages/user_action/create/widgets/user_action_stepper.dart';
 import 'package:pass_emploi_app/presentation/user_action/creation_form/create_user_action_form_view_model.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/pass_emploi_chip.dart';
-import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
 class CreateUserActionFormStep2 extends StatefulWidget {
@@ -45,63 +41,44 @@ class _CreateUserActionFormStep2State extends State<CreateUserActionFormStep2> {
       child: Tracker(
         tracking: AnalyticsScreenNames.createUserActionStep2,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+          padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: Margins.spacing_base),
-              Semantics(
-                container: true,
-                header: true,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    UserActionStepperTexts(index: 1),
-                    const SizedBox(height: Margins.spacing_s),
-                    Text(
-                      widget.actionType.label,
-                      style: TextStyles.textMBold.copyWith(color: context.content),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: Margins.spacing_m),
+              const SizedBox(height: DsfrSpacings.s2w),
               Semantics(
                 label: Strings.mandatoryField,
                 child: Text(
                   Strings.userActionSubtitleStep2,
-                  style: TextStyles.textBaseBold.copyWith(color: context.content),
+                  style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
                 ),
               ),
-              const SizedBox(height: Margins.spacing_base),
+              const SizedBox(height: DsfrSpacings.s1v),
+              Text(
+                Strings.mandatoryField,
+                style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textMentionGrey(context)),
+              ),
+              const SizedBox(height: DsfrSpacings.s2w),
               _SuggestionTagWrap(
                 titleSource: widget.viewModel.titleSource,
                 onSelected: (value) => widget.onTitleChanged(value),
                 actionType: widget.actionType,
               ),
               if (widget.viewModel.titleSource.isFromUserInput) ...[
-                const SizedBox(height: Margins.spacing_m),
+                const SizedBox(height: DsfrSpacings.s3w),
                 Semantics(
                   label: Strings.mandatoryField,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        Strings.userActionTitleTextfieldStep2,
-                        style: TextStyles.textBaseBold.copyWith(color: context.content),
-                      ),
-                      const SizedBox(height: Margins.spacing_s),
-                      BaseTextField(
-                        controller: titleController,
-                        maxLength: 60,
-                        maxLines: 1,
-                        onChanged: (value) => widget.onTitleChanged(CreateActionTitleFromUserInput(value)),
-                      ),
-                    ],
+                  child: DsfrInput(
+                    key: widget.viewModel.titleInputKey,
+                    label: Strings.userActionTitleTextfieldStep2,
+                    controller: titleController,
+                    // Avoid maxLength: broken DSFR UI, see https://github.com/Octo-Open-Source/flutter-dsfr/issues/150
+                    inputFormatters: [LengthLimitingTextInputFormatter(60)],
+                    onChanged: (value) => widget.onTitleChanged(CreateActionTitleFromUserInput(value)),
                   ),
                 ),
               ],
-              SizedBox(height: 600),
+              const SizedBox(height: 200),
             ],
           ),
         ),
@@ -125,43 +102,44 @@ class _SuggestionTagWrap extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<UserActionCategory> suggestionList = actionType.suggestionList;
     return Wrap(
-      spacing: Margins.spacing_s,
-      runSpacing: Margins.spacing_s,
+      // DsfrTag réserve ~8px à droite pour le checkmark : spacing 0 pour un gap visuel égal au runSpacing.
+      spacing: 0,
+      runSpacing: DsfrSpacings.s1w,
       children: switch (titleSource) {
         CreateActionTitleNotInitialized() => [
           ...suggestionList.map(
-            (suggestion) => PassEmploiChip<UserActionCategory>(
+            (suggestion) => DsfrTag(
               label: suggestion.value,
-              value: suggestion,
+              size: DsfrComponentSize.md,
               isSelected: false,
-              onTagSelected: (value) => onSelected(CreateActionTitleFromSuggestions(value)),
-              onTagDeleted: () => onSelected(CreateActionTitleNotInitialized()),
+              onSelectionChanged: (_) => onSelected(CreateActionTitleFromSuggestions(suggestion)),
             ),
           ),
-          PassEmploiChip<String>(
+          DsfrTag(
             label: Strings.userActionOther,
-            value: '',
+            size: DsfrComponentSize.md,
             isSelected: false,
-            onTagSelected: (value) => onSelected(CreateActionTitleFromUserInput(value)),
-            onTagDeleted: () => onSelected(CreateActionTitleNotInitialized()),
+            onSelectionChanged: (_) => onSelected(CreateActionTitleFromUserInput('')),
           ),
         ],
         CreateActionTitleFromSuggestions() => [
-          PassEmploiChip<String>(
+          DsfrTag(
             label: titleSource.title,
-            value: titleSource.title,
+            size: DsfrComponentSize.md,
             isSelected: true,
-            onTagSelected: (value) => onSelected(CreateActionTitleFromUserInput(value)),
-            onTagDeleted: () => onSelected(CreateActionTitleNotInitialized()),
+            onSelectionChanged: (selected) {
+              if (!selected) onSelected(CreateActionTitleNotInitialized());
+            },
           ),
         ],
         CreateActionTitleFromUserInput() => [
-          PassEmploiChip<String>(
+          DsfrTag(
             label: Strings.userActionOther,
-            value: '',
+            size: DsfrComponentSize.md,
             isSelected: true,
-            onTagSelected: (value) => onSelected(CreateActionTitleFromUserInput(value)),
-            onTagDeleted: () => onSelected(CreateActionTitleNotInitialized()),
+            onSelectionChanged: (selected) {
+              if (!selected) onSelected(CreateActionTitleNotInitialized());
+            },
           ),
         ],
       },
@@ -275,84 +253,56 @@ class _UserActionDescriptionFieldState extends State<UserActionDescriptionField>
 
   @override
   Widget build(BuildContext context) {
+    final errorMessage = _errorText ?? (widget.isInvalid ? Strings.descriptionMandatory : null);
     return Semantics(
       container: true,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Text(
-            Strings.userActionDescriptionTextfieldStep2,
-            key: widget.descriptionKey,
-            style: TextStyles.textBaseBold.copyWith(color: context.content),
+          Expanded(
+            child: DsfrInput(
+              key: widget.descriptionKey,
+              label: Strings.userActionDescriptionTextfieldStep2,
+              hintText: Strings.userActionDescriptionDescriptionfieldStep2,
+              placeholder: widget.hintText,
+              controller: widget.descriptionController,
+              focusNode: widget.descriptionFocusNode,
+              minLines: 3,
+              maxLines: 5,
+              // Avoid maxLength: broken DSFR UI, see https://github.com/Octo-Open-Source/flutter-dsfr/issues/150
+              inputFormatters: [LengthLimitingTextInputFormatter(_maxLength)],
+              componentState: errorMessage != null
+                  ? DsfrComponentState.error(errorMessage: errorMessage)
+                  : const DsfrComponentState.none(),
+              onChanged: (value) {
+                setState(() => _errorText = null);
+                widget.onDescriptionChanged(value);
+              },
+            ),
           ),
-          const SizedBox(height: Margins.spacing_s),
-          Text(
-            Strings.userActionDescriptionDescriptionfieldStep2,
-            style: TextStyles.textSRegular(color: context.content),
-          ),
-          const SizedBox(height: Margins.spacing_base),
-          Stack(
+          const SizedBox(width: DsfrSpacings.s1w),
+          Column(
             children: [
-              Stack(
-                children: [
-                  BaseTextField(
-                    focusNode: widget.descriptionFocusNode,
-                    controller: widget.descriptionController,
-                    hintText: widget.hintText,
-                    maxLines: 5,
-                    minLines: 1,
-                    maxLength: _maxLength,
-                    errorText: _errorText,
-                    onChanged: (value) {
-                      setState(() => _errorText = null);
-                      widget.onDescriptionChanged(value);
-                    },
-                    isInvalid: widget.isInvalid,
-                    suffixIcon: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Opacity(
-                          opacity: widget.descriptionController.text.isNotEmpty ? 1.0 : 0.0,
-                          child: Row(
-                            children: [
-                              IconButton(
-                                tooltip: Strings.clear,
-                                icon: Icon(Icons.clear, color: context.content),
-                                onPressed: widget.onClear,
-                              ),
-                              SizedBox(
-                                height: 28.0,
-                                child: VerticalDivider(
-                                  color: context.grey500,
-                                  thickness: 1,
-                                  width: 1,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        IconButton(
-                          tooltip: _isListening ? Strings.dictationStop : Strings.dictationStart,
-                          onPressed: () {
-                            if (_isListening) {
-                              _stopListening();
-                            } else {
-                              _startListening();
-                            }
-                          },
-                          icon: Container(
-                            padding: EdgeInsets.all(2),
-                            child: Icon(
-                              _isListening ? Icons.stop_circle_rounded : Icons.mic,
-                              color: AppColorsSpecifics.primaryToLighten(context),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              if (widget.descriptionController.text.isNotEmpty)
+                DsfrButton(
+                  icon: DsfrIcons.systemCloseLine,
+                  iconSemanticLabel: Strings.clear,
+                  variant: DsfrButtonVariant.tertiaryWithoutBorder,
+                  size: DsfrComponentSize.md,
+                  onPressed: widget.onClear,
+                ),
+              DsfrButton(
+                icon: _isListening ? DsfrIcons.mediaStopCircleFill : DsfrIcons.mediaMicFill,
+                iconSemanticLabel: _isListening ? Strings.dictationStop : Strings.dictationStart,
+                variant: DsfrButtonVariant.primary,
+                size: DsfrComponentSize.md,
+                onPressed: () {
+                  if (_isListening) {
+                    _stopListening();
+                  } else {
+                    _startListening();
+                  }
+                },
               ),
             ],
           ),

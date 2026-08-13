@@ -30,7 +30,10 @@ class CreateDemarcheSuccessPage extends StatelessWidget {
   final CreateDemarcheSource source;
 
   static Route<dynamic> route(CreateDemarcheSource source) {
-    return MaterialPageRoute(fullscreenDialog: true, builder: (context) => CreateDemarcheSuccessPage(source: source));
+    return MaterialPageRoute(
+      fullscreenDialog: true,
+      builder: (context) => CreateDemarcheSuccessPage(source: source),
+    );
   }
 
   @override
@@ -40,14 +43,19 @@ class CreateDemarcheSuccessPage extends StatelessWidget {
         return StoreConnector<AppState, CreateDemarcheSuccessViewModel>(
           builder: (context, viewModel) => Tracker(
             tracking: switch (source) {
-              CreateDemarcheSource.personnalisee => AnalyticsScreenNames.createDemarchePersonnaliseeSuccess,
-              CreateDemarcheSource.fromReferentiel => AnalyticsScreenNames.createDemarcheFromReferentielSuccess,
-              CreateDemarcheSource.iaFt => AnalyticsScreenNames.createDemarcheIaFtSuccess,
-              CreateDemarcheSource.duplicate => AnalyticsScreenNames.createDemarcheDuplicateSuccess,
+              CreateDemarcheSource.personnalisee =>
+                AnalyticsScreenNames.createDemarchePersonnaliseeSuccess,
+              CreateDemarcheSource.fromReferentiel =>
+                AnalyticsScreenNames.createDemarcheFromReferentielSuccess,
+              CreateDemarcheSource.iaFt =>
+                AnalyticsScreenNames.createDemarcheIaFtSuccess,
+              CreateDemarcheSource.duplicate =>
+                AnalyticsScreenNames.createDemarcheDuplicateSuccess,
             },
             child: _Content(viewModel, source),
           ),
-          converter: (store) => CreateDemarcheSuccessViewModel.create(store, source),
+          converter: (store) =>
+              CreateDemarcheSuccessViewModel.create(store, source),
           distinct: true,
           onDispose: (store) => store.dispatch(CreateDemarcheResetAction()),
           onInit: (_) => confettiController.play(),
@@ -66,7 +74,9 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return switch (viewModel.displayState) {
       DisplayState.CONTENT => _Body(viewModel, source),
-      DisplayState.FAILURE => _Scaffold(body: Center(child: ErrorText(Strings.genericCreationError))),
+      DisplayState.FAILURE => _Scaffold(
+        body: Center(child: ErrorText(Strings.genericCreationError)),
+      ),
       _ => _Scaffold(body: const Center(child: CircularProgressIndicator())),
     };
   }
@@ -84,7 +94,7 @@ class _Body extends StatelessWidget {
         onGoActionDetail: viewModel.demarcheId != null
             ? () {
                 Navigator.pop(context);
-                Navigator.of(context).push(DemarcheDetailPage.materialPageRoute(viewModel.demarcheId!));
+                DemarcheDetailPage.show(context, viewModel.demarcheId!);
               }
             : null,
         onCreateMore: () {
@@ -103,10 +113,13 @@ class _Body extends StatelessWidget {
               children: [
                 InAppFeedback(
                   feature: switch (source) {
-                    CreateDemarcheSource.personnalisee => "create-demarche-personnalisee",
-                    CreateDemarcheSource.fromReferentiel => "create-demarche-referentiel",
+                    CreateDemarcheSource.personnalisee =>
+                      "create-demarche-personnalisee",
+                    CreateDemarcheSource.fromReferentiel =>
+                      "create-demarche-referentiel",
                     CreateDemarcheSource.iaFt => "create-demarche-ia-ft",
-                    CreateDemarcheSource.duplicate => "create-demarche-duplicate",
+                    CreateDemarcheSource.duplicate =>
+                      "create-demarche-duplicate",
                   },
                   label: Strings.feedbackCreateDemarche,
                   disabledPlaceholder: switch (source) {
@@ -123,11 +136,18 @@ class _Body extends StatelessWidget {
                   },
                 ),
                 SizedBox(height: Margins.spacing_m),
-                Center(child: SizedBox(height: 130, width: 130, child: Image.asset(Drawables.success))),
+                Center(
+                  child: SizedBox(
+                    height: 130,
+                    width: 130,
+                    child: Image.asset(Drawables.success),
+                  ),
+                ),
                 SizedBox(height: Margins.spacing_xl),
                 Text(
                   switch (source) {
-                    CreateDemarcheSource.iaFt => Strings.demarcheSuccessTitlePlural,
+                    CreateDemarcheSource.iaFt =>
+                      Strings.demarcheSuccessTitlePlural,
                     _ => Strings.demarcheSuccessTitle,
                   },
                   textAlign: TextAlign.center,
@@ -136,7 +156,8 @@ class _Body extends StatelessWidget {
                 SizedBox(height: Margins.spacing_m),
                 Text(
                   switch (source) {
-                    CreateDemarcheSource.iaFt => Strings.demarcheSuccessSubtitlePlural,
+                    CreateDemarcheSource.iaFt =>
+                      Strings.demarcheSuccessSubtitlePlural,
                     _ => Strings.demarcheSuccessSubtitle,
                   },
                   textAlign: TextAlign.center,
@@ -153,7 +174,11 @@ class _Body extends StatelessWidget {
 }
 
 class _Buttons extends StatelessWidget {
-  const _Buttons({required this.onGoActionDetail, required this.onCreateMore, required this.source});
+  const _Buttons({
+    required this.onGoActionDetail,
+    required this.onCreateMore,
+    required this.source,
+  });
 
   final void Function()? onGoActionDetail;
   final void Function() onCreateMore;
@@ -175,17 +200,28 @@ class _Buttons extends StatelessWidget {
                 Navigator.pop(context);
                 StoreProvider.of<AppState>(
                   context,
-                ).dispatch(HandleDeepLinkAction(MonSuiviDeepLink(), DeepLinkOrigin.inAppNavigation));
+                ).dispatch(
+                  HandleDeepLinkAction(
+                    MonSuiviDeepLink(),
+                    DeepLinkOrigin.inAppNavigation,
+                  ),
+                );
               },
             ),
           ] else ...[
             if (onGoActionDetail != null) ...[
               AutoFocusA11y(
-                child: PrimaryActionButton(label: Strings.demarcheSuccessConsulter, onPressed: onGoActionDetail),
+                child: PrimaryActionButton(
+                  label: Strings.demarcheSuccessConsulter,
+                  onPressed: onGoActionDetail,
+                ),
               ),
             ],
             const SizedBox(height: Margins.spacing_base),
-            SecondaryButton(label: Strings.demarcheSuccessCreerUneAutre, onPressed: onCreateMore),
+            SecondaryButton(
+              label: Strings.demarcheSuccessCreerUneAutre,
+              onPressed: onCreateMore,
+            ),
           ],
         ],
       ),
@@ -194,7 +230,11 @@ class _Buttons extends StatelessWidget {
 }
 
 class _Scaffold extends StatelessWidget {
-  const _Scaffold({this.floatingActionButtonLocation, this.floatingActionButton, required this.body});
+  const _Scaffold({
+    this.floatingActionButtonLocation,
+    this.floatingActionButton,
+    required this.body,
+  });
   final FloatingActionButtonLocation? floatingActionButtonLocation;
   final Widget? floatingActionButton;
   final Widget body;
@@ -205,7 +245,10 @@ class _Scaffold extends StatelessWidget {
       backgroundColor: context.bg,
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
-      appBar: SecondaryAppBar(title: Strings.createDemarcheAppBarTitle, backgroundColor: context.bg),
+      appBar: SecondaryAppBar(
+        title: Strings.createDemarcheAppBarTitle,
+        backgroundColor: context.bg,
+      ),
       body: body,
     );
   }

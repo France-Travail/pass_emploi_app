@@ -48,7 +48,7 @@ dependencies:
   flutter_dsfr:
     git:
       url: https://github.com/Octo-Open-Source/flutter-dsfr.git
-      ref: main
+      ref: 0.4.1
   # Native features
   webview_flutter: "4.10.0"
   flutter_local_notifications: ^19.4.0

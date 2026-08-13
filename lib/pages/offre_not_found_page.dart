@@ -48,7 +48,7 @@ class OffreNotFoundPage extends StatelessWidget {
                   children: [
                     Center(
                       child: SvgPicture.asset(
-                        Drawables.illustrationCompass,
+                        Drawables.illustrationWarning,
                         width: 160,
                         height: 160,
                         excludeFromSemantics: true,

@@ -73,7 +73,12 @@ class CreateUserActionFormPage extends StatefulWidget {
       );
       _openDetails(navigator, result.userActionId, result.source);
     } else if (result is NavigateToMonSuivi) {
-      store.dispatch(HandleDeepLinkAction(MonSuiviDeepLink(), DeepLinkOrigin.inAppNavigation));
+      store.dispatch(
+        HandleDeepLinkAction(
+          MonSuiviDeepLink(),
+          DeepLinkOrigin.inAppNavigation,
+        ),
+      );
     } else {
       PassEmploiMatomoTracker.instance.trackEvent(
         eventCategory: AnalyticsEventNames.createActionv2EventCategory,
@@ -82,8 +87,12 @@ class CreateUserActionFormPage extends StatefulWidget {
     }
   }
 
-  static void _openDetails(NavigatorState navigator, String userActionId, UserActionStateSource source) {
-    navigator.push(UserActionDetailPage.materialPageRoute(userActionId, source));
+  static void _openDetails(
+    NavigatorState navigator,
+    String userActionId,
+    UserActionStateSource source,
+  ) {
+    UserActionDetailPage.show(navigator.context, userActionId, source);
   }
 
   static void showSuccessPageForOfflineCreation(BuildContext context) {
@@ -122,7 +131,10 @@ class _CreateUserActionFormPageState extends State<CreateUserActionFormPage> {
     );
   }
 
-  Future<void> _handleDisplayState(BuildContext context, UserActionCreateViewModel viewModel) async {
+  Future<void> _handleDisplayState(
+    BuildContext context,
+    UserActionCreateViewModel viewModel,
+  ) async {
     final displayState = viewModel.displayState;
     if (displayState is DismissWithFailure) {
       Navigator.pop(context);
@@ -131,7 +143,10 @@ class _CreateUserActionFormPageState extends State<CreateUserActionFormPage> {
       if (successShown) return;
       Navigator.push(
         context,
-        CreateUserActionConfirmationPage.route(widget.source, multipleActions: multipleActions),
+        CreateUserActionConfirmationPage.route(
+          widget.source,
+          multipleActions: multipleActions,
+        ),
       ).then((result) {
         if (context.mounted) Navigator.pop(context, result);
       });
@@ -165,7 +180,10 @@ class _Body extends StatelessWidget {
   }
 }
 
-void _trackActionSubmitted(CreateUserActionFormViewModel viewModel, int numberOfActions) {
+void _trackActionSubmitted(
+  CreateUserActionFormViewModel viewModel,
+  int numberOfActions,
+) {
   for (var i = 0; i < numberOfActions; i++) {
     final category = viewModel.step1.actionCategory;
     if (category != null) _trackCategorySelected(category);

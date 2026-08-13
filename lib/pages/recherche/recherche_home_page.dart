@@ -10,7 +10,7 @@ import 'package:pass_emploi_app/pages/recherche/recherche_offre_service_civique_
 import 'package:pass_emploi_app/presentation/recherche/recherche_home_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/widgets/dsfr/emoji_tile.dart';
+import 'package:pass_emploi_app/widgets/dsfr/emoji_solution_tile.dart';
 import 'package:pass_emploi_app/widgets/mes_outils_card.dart';
 import 'package:pass_emploi_app/widgets/onboarding/onboarding_showcase.dart';
 
@@ -81,12 +81,12 @@ class _NosOffres extends StatelessWidget {
           ),
         ),
         const SizedBox(height: DsfrSpacings.s2w),
-        _SolutionGrid(
+        EmojiSolutionGrid(
           tiles: [
             if (offreTypes.contains(OffreType.emploi))
               OnboardingShowcase(
                 source: ShowcaseSource.offre,
-                child: _BlocSolution(
+                child: EmojiSolutionTile(
                   emoji: Strings.rechercheHomeEmploiEmoji,
                   emojiBackground: DsfrColors.blueEcume925,
                   title: Strings.rechercheHomeOffresEmploiTitle,
@@ -95,7 +95,7 @@ class _NosOffres extends StatelessWidget {
                 ),
               ),
             if (offreTypes.contains(OffreType.alternance))
-              _BlocSolution(
+              EmojiSolutionTile(
                 emoji: Strings.rechercheHomeAlternanceEmoji,
                 emojiBackground: DsfrColors.success950,
                 title: Strings.rechercheHomeOffresAlternanceTitle,
@@ -103,7 +103,7 @@ class _NosOffres extends StatelessWidget {
                 onTap: () => _onOffreTypeTap(context, OffreType.alternance),
               ),
             if (offreTypes.contains(OffreType.immersion))
-              _BlocSolution(
+              EmojiSolutionTile(
                 emoji: Strings.rechercheHomeImmersionEmoji,
                 emojiBackground: DsfrColors.greenTilleulVerveine950,
                 title: Strings.rechercheHomeOffresImmersionTitle,
@@ -111,7 +111,7 @@ class _NosOffres extends StatelessWidget {
                 onTap: () => _onOffreTypeTap(context, OffreType.immersion),
               ),
             if (offreTypes.contains(OffreType.serviceCivique))
-              _BlocSolution(
+              EmojiSolutionTile(
                 emoji: Strings.rechercheHomeServiceCiviqueEmoji,
                 emojiBackground: DsfrColors.purpleGlycine925,
                 title: Strings.rechercheHomeOffresServiceCiviqueTitle,
@@ -119,7 +119,6 @@ class _NosOffres extends StatelessWidget {
                 onTap: () => _onOffreTypeTap(context, OffreType.serviceCivique),
               ),
           ],
-          gap: DsfrSpacings.s3v,
         ),
       ],
     );
@@ -168,141 +167,6 @@ class _CriteresUtilisateur extends StatelessWidget {
                 textColor: DsfrColorDecisions.textLabelGrey(context),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _SolutionGrid extends StatelessWidget {
-  final List<Widget> tiles;
-  final double gap;
-
-  const _SolutionGrid({required this.tiles, required this.gap});
-
-  @override
-  Widget build(BuildContext context) {
-    final rows = <Widget>[];
-    for (var i = 0; i < tiles.length; i += 2) {
-      final left = tiles[i];
-      final right = i + 1 < tiles.length ? tiles[i + 1] : null;
-      rows.add(
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(child: left),
-            SizedBox(width: gap),
-            Expanded(child: right ?? const SizedBox.shrink()),
-          ],
-        ),
-      );
-      if (i + 2 < tiles.length) {
-        rows.add(SizedBox(height: gap));
-      }
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: rows,
-    );
-  }
-}
-
-class _BlocSolution extends StatelessWidget {
-  static const _titleMaxLines = 2;
-  static const _subtitleMaxLines = 2;
-
-  final String title;
-  final String subtitle;
-  final String emoji;
-  final Color emojiBackground;
-  final VoidCallback onTap;
-
-  const _BlocSolution({
-    required this.title,
-    required this.subtitle,
-    required this.emoji,
-    required this.emojiBackground,
-    required this.onTap,
-  });
-
-  double _linesHeight(BuildContext context, TextStyle style, int lines) {
-    final fontSize = style.fontSize ?? 14;
-    final heightFactor = style.height ?? 1.0;
-    return MediaQuery.textScalerOf(context).scale(fontSize) * heightFactor * lines;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    const radius = BorderRadius.vertical(top: Radius.circular(8));
-    final titleStyle = DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleBlueFrance(context));
-    final subtitleStyle = DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context));
-
-    return Semantics(
-      button: true,
-      label: '$title. $subtitle',
-      child: Material(
-        color: DsfrColorDecisions.backgroundDefaultGrey(context),
-        borderRadius: radius,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: radius,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              borderRadius: radius,
-              border: Border.all(color: DsfrColorDecisions.artworkDecorativeBlueFrance(context)),
-            ),
-            child: ClipRRect(
-              borderRadius: radius,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s3w, vertical: DsfrSpacings.s2w),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        EmojiTile(
-                          emoji: emoji,
-                          backgroundColor: emojiBackground,
-                          size: DsfrSpacings.s6w,
-                          borderRadius: 15,
-                        ),
-                        const SizedBox(height: DsfrSpacings.s1w),
-                        SizedBox(
-                          height: _linesHeight(context, titleStyle, _titleMaxLines),
-                          width: double.infinity,
-                          child: Text(
-                            title,
-                            textAlign: TextAlign.center,
-                            maxLines: _titleMaxLines,
-                            overflow: TextOverflow.ellipsis,
-                            style: titleStyle,
-                          ),
-                        ),
-                        const SizedBox(height: DsfrSpacings.s1v),
-                        SizedBox(
-                          height: _linesHeight(context, subtitleStyle, _subtitleMaxLines),
-                          width: double.infinity,
-                          child: Text(
-                            subtitle,
-                            textAlign: TextAlign.center,
-                            maxLines: _subtitleMaxLines,
-                            overflow: TextOverflow.ellipsis,
-                            style: subtitleStyle,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  ColoredBox(
-                    color: DsfrColorDecisions.borderActionHighBlueFrance(context),
-                    child: const SizedBox(height: 4),
-                  ),
-                ],
-              ),
-            ),
           ),
         ),
       ),

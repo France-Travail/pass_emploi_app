@@ -53,7 +53,11 @@ class _ContentMessage extends StatelessWidget {
     final style = sender == Sender.jeune
         ? TextStyles.textSRegular(color: AppColors.contentOnPrimary) //
         : TextStyles.textSRegular(color: context.content);
-    return SelectableTextWithClickableLinks(content, linkStyle: style, style: style);
+    return SelectableTextWithClickableLinks(
+      content,
+      linkStyle: style,
+      style: style,
+    );
   }
 }
 
@@ -64,7 +68,9 @@ class _PartageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const border = RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8)));
+    const border = RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+    );
     return Semantics(
       button: true,
       child: Material(
@@ -79,7 +85,12 @@ class _PartageCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(item.titrePartage, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+                Text(
+                  item.titrePartage,
+                  style: TextStyles.textBaseBold.copyWith(
+                    color: context.content,
+                  ),
+                ),
                 SizedBox(height: Margins.spacing_s),
                 _SeeSharedDetails(item),
               ],
@@ -128,10 +139,16 @@ class _PartageCard extends StatelessWidget {
         );
         break;
       case OffreType.immersion:
-        Navigator.push(context, ImmersionDetailsPage.materialPageRoute(offreItem.idPartage));
+        Navigator.push(
+          context,
+          ImmersionDetailsPage.materialPageRoute(offreItem.idPartage),
+        );
         break;
       case OffreType.civique:
-        Navigator.push(context, ServiceCiviqueDetailPage.materialPageRoute(offreItem.idPartage));
+        Navigator.push(
+          context,
+          ServiceCiviqueDetailPage.materialPageRoute(offreItem.idPartage),
+        );
         break;
       case OffreType.inconnu:
         break;
@@ -139,16 +156,17 @@ class _PartageCard extends StatelessWidget {
   }
 
   void _showEventDetailsPage(BuildContext context, EventMessageItem item) {
-    Navigator.push(
+    RendezvousDetailsPage.show(
       context,
-      RendezvousDetailsPage.materialPageRoute(
-        RendezvousStateSource.noSource,
-        item.idPartage,
-      ),
+      RendezvousStateSource.noSource,
+      item.idPartage,
     );
   }
 
-  void _showEvenementEmploiDetailsPage(BuildContext context, EvenementEmploiMessageItem item) {
+  void _showEvenementEmploiDetailsPage(
+    BuildContext context,
+    EvenementEmploiMessageItem item,
+  ) {
     Navigator.push(
       context,
       EvenementEmploiDetailsPage.materialPageRoute(
@@ -157,13 +175,14 @@ class _PartageCard extends StatelessWidget {
     );
   }
 
-  void _showSessionMiloDetailsPage(BuildContext context, SessionMiloMessageItem item) {
-    Navigator.push(
+  void _showSessionMiloDetailsPage(
+    BuildContext context,
+    SessionMiloMessageItem item,
+  ) {
+    RendezvousDetailsPage.show(
       context,
-      RendezvousDetailsPage.materialPageRoute(
-        RendezvousStateSource.sessionMiloDetails,
-        item.idPartage,
-      ),
+      RendezvousStateSource.sessionMiloDetails,
+      item.idPartage,
     );
   }
 }
@@ -182,7 +201,10 @@ class _SeeSharedDetails extends StatelessWidget {
         Expanded(child: Container()),
         Padding(
           padding: const EdgeInsets.only(right: 4.0),
-          child: Text(_title(), style: TextStyles.textSRegular(color: context.content)),
+          child: Text(
+            _title(),
+            style: TextStyles.textSRegular(color: context.content),
+          ),
         ),
         Icon(AppIcons.chevron_right_rounded, color: context.grey800),
       ],
