@@ -16,22 +16,23 @@ import 'package:redux/redux.dart';
 
 class RendezvousCard extends StatelessWidget {
   final RendezvousCardViewModel Function(Store<AppState>) converter;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final bool withChrome;
 
   const RendezvousCard({
     super.key,
     required this.converter,
-    required this.onTap,
+    this.onTap,
     this.withChrome = true,
-  });
+  }) : assert(!withChrome || onTap != null);
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, RendezvousCardViewModel>(
       converter: converter,
-      builder: (context, viewModel) =>
-          withChrome ? _ChromeContent(viewModel, onTap) : _EmbeddedContent(viewModel, onTap),
+      builder: (context, viewModel) => withChrome
+          ? _ChromeContent(viewModel, onTap!)
+          : _EmbeddedContent(viewModel),
     );
   }
 }
@@ -48,88 +49,92 @@ class _ChromeContent extends StatelessWidget {
       onTap: onTap,
       imagePath: viewModel.assetImage,
       title: viewModel.title,
-      tag: DsfrCategoryTag.evenement(label: viewModel.tag, typeCode: viewModel.typeCode),
+      tag: DsfrCategoryTag.evenement(
+        label: viewModel.tag,
+        typeCode: viewModel.typeCode,
+      ),
       pillule: viewModel.isAnnule ? DsfrStatusBadge.canceled() : null,
       complements: [
         CardComplement.date(text: viewModel.date),
         CardComplement.hour(text: viewModel.hourAndDuration),
-        if (viewModel.place != null) CardComplement.place(text: viewModel.place!),
-        if (viewModel.nombreDePlacesRestantes != null) CardComplement.person(text: viewModel.nombreDePlacesRestantes!),
+        if (viewModel.place != null)
+          CardComplement.place(text: viewModel.place!),
+        if (viewModel.nombreDePlacesRestantes != null)
+          CardComplement.person(text: viewModel.nombreDePlacesRestantes!),
       ],
       secondaryTags: secondaryTags(viewModel.inscriptionStatus),
     );
   }
 
-  List<Widget>? secondaryTags(InscriptionStatus inscriptionStatus) => switch (inscriptionStatus) {
+  List<Widget>? secondaryTags(InscriptionStatus inscriptionStatus) =>
+      switch (inscriptionStatus) {
         InscriptionStatus.inscrit => [
-            DsfrCategoryTag.secondary(
-              label: Strings.eventVousEtesDejaInscrit,
-              icon: DsfrIcons.systemCheckboxCircleFill,
-            ),
-          ],
+          DsfrCategoryTag.secondary(
+            label: Strings.eventVousEtesDejaInscrit,
+            icon: DsfrIcons.systemCheckboxCircleFill,
+          ),
+        ],
         InscriptionStatus.autodesinscription => [
-            DsfrCategoryTag.secondary(label: Strings.eventAnnulerMonInscription),
-          ],
+          DsfrCategoryTag.secondary(label: Strings.eventAnnulerMonInscription),
+        ],
         InscriptionStatus.notInscrit => [
-            DsfrCategoryTag.secondary(label: Strings.eventInscrivezVousPourParticiper),
-          ],
+          DsfrCategoryTag.secondary(
+            label: Strings.eventInscrivezVousPourParticiper,
+          ),
+        ],
         InscriptionStatus.autoinscription => [
-            DsfrCategoryTag.secondary(label: Strings.eventAutoInscription),
-          ],
+          DsfrCategoryTag.secondary(label: Strings.eventAutoInscription),
+        ],
         InscriptionStatus.full => [
-            DsfrStatusBadge.complet(),
-          ],
+          DsfrStatusBadge.complet(),
+        ],
         InscriptionStatus.hidden => null,
       };
 }
 
 class _EmbeddedContent extends StatelessWidget {
   final RendezvousCardViewModel viewModel;
-  final VoidCallback onTap;
 
-  const _EmbeddedContent(this.viewModel, this.onTap);
+  const _EmbeddedContent(this.viewModel);
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Wrap(
-                spacing: DsfrSpacings.s1w,
-                runSpacing: DsfrSpacings.s1w,
-                children: [
-                  DsfrCategoryTag.evenement(label: viewModel.tag, typeCode: viewModel.typeCode),
-                  if (viewModel.isAnnule) DsfrStatusBadge.canceled(),
-                ],
-              ),
-              const SizedBox(height: DsfrSpacings.s1w),
-              Text(
-                viewModel.title,
-                style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
-              ),
-              const SizedBox(height: DsfrSpacings.s1v),
-              _Complement(
-                icon: DsfrIcons.systemTimeLine,
-                text: viewModel.hourAndDuration,
-                semanticsLabel: viewModel.hourAndDuration.toTimeAndDurationForScreenReaders(),
-              ),
-              if (viewModel.place != null) ...[
-                const SizedBox(height: DsfrSpacings.s1v),
-                _Complement(
-                  icon: DsfrIcons.mapMapPin2Line,
-                  text: viewModel.place!,
-                ),
-              ],
-            ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Wrap(
+          spacing: DsfrSpacings.s1w,
+          runSpacing: DsfrSpacings.s1w,
+          children: [
+            DsfrCategoryTag.evenement(
+              label: viewModel.tag,
+              typeCode: viewModel.typeCode,
+            ),
+            if (viewModel.isAnnule) DsfrStatusBadge.canceled(),
+          ],
+        ),
+        const SizedBox(height: DsfrSpacings.s1w),
+        Text(
+          viewModel.title,
+          style: DsfrTextStyle.bodyMdBold(
+            color: DsfrColorDecisions.textTitleGrey(context),
           ),
         ),
-      ),
+        const SizedBox(height: DsfrSpacings.s1v),
+        _Complement(
+          icon: DsfrIcons.systemTimeLine,
+          text: viewModel.hourAndDuration,
+          semanticsLabel: viewModel.hourAndDuration
+              .toTimeAndDurationForScreenReaders(),
+        ),
+        if (viewModel.place != null) ...[
+          const SizedBox(height: DsfrSpacings.s1v),
+          _Complement(
+            icon: DsfrIcons.mapMapPin2Line,
+            text: viewModel.place!,
+          ),
+        ],
+      ],
     );
   }
 }
@@ -177,14 +182,12 @@ extension RendezvousCardFromId on String {
     bool withChrome = true,
   }) {
     return RendezvousCard(
-      converter: (store) => RendezvousCardViewModel.create(store, stateSource, this),
+      converter: (store) =>
+          RendezvousCardViewModel.create(store, stateSource, this),
       withChrome: withChrome,
       onTap: () {
         context.trackEvenementEngagement(evenementEngagement);
-        Navigator.push(
-          context,
-          RendezvousDetailsPage.materialPageRoute(_stateSource(stateSource), this),
-        );
+        RendezvousDetailsPage.show(context, _stateSource(stateSource), this);
       },
     );
   }
@@ -203,7 +206,6 @@ RendezvousStateSource _stateSource(RendezvousStateSource stateSource) {
     RendezvousStateSource.accueilProchainRendezvous ||
     RendezvousStateSource.monSuivi ||
     RendezvousStateSource.eventListAnimationsCollectives ||
-    RendezvousStateSource.accueilLesEvenements =>
-      stateSource,
+    RendezvousStateSource.accueilLesEvenements => stateSource,
   };
 }

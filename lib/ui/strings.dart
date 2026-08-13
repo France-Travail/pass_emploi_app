@@ -524,10 +524,17 @@ class Strings {
   static String agendaTitle = "Agenda";
   static String monSuiviCetteSemaine = "Cette semaine";
   static String monSuiviSemaineProchaine = "Semaine prochaine";
-  static String monSuiviSemaineIntervalSameMonth(int startDay, int endDay, String month) =>
-      "Semaine du $startDay au $endDay $month";
-  static String monSuiviSemaineIntervalDifferentMonths(int startDay, String startMonth, int endDay, String endMonth) =>
-      "Semaine du $startDay $startMonth au $endDay $endMonth";
+  static String monSuiviSemaineIntervalSameMonth(
+    int startDay,
+    int endDay,
+    String month,
+  ) => "Semaine du $startDay au $endDay $month";
+  static String monSuiviSemaineIntervalDifferentMonths(
+    int startDay,
+    String startMonth,
+    int endDay,
+    String endMonth,
+  ) => "Semaine du $startDay $startMonth au $endDay $endMonth";
   static String monSuiviEmptyPastMilo = "Aucun événement ni action";
   static String monSuiviEmptyPastPoleEmploi = "Aucun rendez-vous ni démarche";
   static String monSuiviEmptyFuture = "Rien de prévu";
@@ -583,7 +590,10 @@ class Strings {
 
   static String rendezvousModalityDetailsMessage(String modality) => "Le rendez-vous se fera $modality";
 
-  static String rendezvousModalityCardMessage(String modality, String conseiller) => "$modality avec $conseiller";
+  static String rendezvousModalityCardMessage(
+    String modality,
+    String conseiller,
+  ) => "$modality avec $conseiller";
   static String placesRestantes(int count) => "$count ${count == 1 ? placesRestanteSingulier : placesRestantePluriel}";
   static String placesRestanteSingulier = "place restante";
   static String placesRestantePluriel = "places restantes";
@@ -606,7 +616,7 @@ class Strings {
   static const String userActionFinishButton = 'Terminer';
 
   static const String userActionTitleStep1 = 'Catégorie';
-  static const String userActionTitleStep3 = 'Statut et date';
+  static const String userActionTitleStep3 = 'Date et description';
 
   static const String userActionSubtitleStep1 = 'Choisissez une catégorie';
 
@@ -810,6 +820,7 @@ class Strings {
   static String defineActionStatus = "Définir le statut";
   static String actionCreatedBy = "Créée par";
   static String duplicateAction = "Ajouter une date";
+  static String deleteDuplicatedAction = "Supprimer cette action";
   static String fillAllFields = "Veuillez remplir tous les champs";
   static String dateMandatory = "La date est obligatoire";
   static String descriptionMandatory = "La description est obligatoire";
@@ -850,6 +861,12 @@ class Strings {
   static String userActionBottomSheetTitle = "Éditer l’action";
   static String userActionBottomSheetDelete = "Supprimer";
   static String userActionBottomSheetEdit = "Modifier";
+  static String moreActions = "Plus d’actions";
+  static String markActionAsDone = "Marquer comme terminé";
+  static String completeActionNotYet = "Pas encore";
+  static String actionDoneWhen = "Tu l'as terminée quand ?";
+  static String otherDate = "Autre date";
+  static String cannotFinishActionInFuture = "On ne peut pas terminer une action dans le futur.";
 
   // User action done bottom sheet
   static String userActionDoneBottomSheetTitle = "Quand avez-vous terminé l'action ?";
@@ -1717,8 +1734,14 @@ class Strings {
     "↗ CGU.",
     "\n\nPoints clés de la mise à jour :\n",
   ];
-  static List<String> cguNeverAcceptedSwitch = ["J’ai lu et j’accepte les", " ↗ Conditions Générales d’Utilisation"];
-  static List<String> cguUpdateRequiredSwitch = ["J’ai lu et j’accepte les nouvelles", " ↗ CGU"];
+  static List<String> cguNeverAcceptedSwitch = [
+    "J’ai lu et j’accepte les",
+    " ↗ Conditions Générales d’Utilisation",
+  ];
+  static List<String> cguUpdateRequiredSwitch = [
+    "J’ai lu et j’accepte les nouvelles",
+    " ↗ CGU",
+  ];
   static String cguSwitchError = "Acceptez les Conditions Générales d’Utilisation pour utiliser l’application.";
   static String cguAccept = "Valider";
   static String cguRefuse = "Refuser et se déconnecter";

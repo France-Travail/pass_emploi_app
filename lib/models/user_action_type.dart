@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 
@@ -166,5 +167,25 @@ extension UserActionReferentielTypePresentation on UserActionReferentielType {
         UserActionReferentielType.formation => AppIcons.school_outlined,
         UserActionReferentielType.logement => AppIcons.door_front_door_outlined,
         UserActionReferentielType.sante => AppIcons.local_hospital_outlined,
+      };
+
+  String get emoji => switch (this) {
+        UserActionReferentielType.emploi => '💼',
+        UserActionReferentielType.projetProfessionnel => '🎯',
+        UserActionReferentielType.cultureSportLoisirs => '⚽️',
+        UserActionReferentielType.citoyennete => '🗳️',
+        UserActionReferentielType.formation => '🎓',
+        UserActionReferentielType.logement => '🏠',
+        UserActionReferentielType.sante => '🩺',
+      };
+
+  Color get emojiBackground => switch (this) {
+        UserActionReferentielType.emploi => DsfrColors.success950,
+        UserActionReferentielType.projetProfessionnel => DsfrColors.blueCumulus950,
+        UserActionReferentielType.cultureSportLoisirs => DsfrColors.pinkTuile925,
+        UserActionReferentielType.citoyennete => DsfrColors.greenTilleulVerveine950,
+        UserActionReferentielType.formation => DsfrColors.greenMenthe950,
+        UserActionReferentielType.logement => DsfrColors.brownCaramel950,
+        UserActionReferentielType.sante => DsfrColors.purpleGlycine925,
       };
 }

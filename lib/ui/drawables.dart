@@ -48,7 +48,6 @@ class Drawables {
   static String illustrationRechercheEmpty = "${_assets}dsfr/illustration_recherche_empty.webp";
   static String illustrationSuccess = "${_assets}dsfr/success.svg";
   static String illustrationWarning = "${_assets}dsfr/warning.svg";
-  static String illustrationCompass = "${_assets}dsfr/compass.svg";
 
   static String iaFtIllustration = "${_assets}IA.svg";
 

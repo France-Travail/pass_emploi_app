@@ -107,13 +107,13 @@ class CreateUserActionFormViewModel extends ChangeNotifier {
 
   void titleChanged(CreateActionTitleSource titleSource) {
     displayState = CreateUserActionDisplayState.step2;
+    final shouldFocusTitleInput = titleSource is CreateActionTitleFromUserInput && !step2.titleSource.isFromUserInput;
     step2 = step2.copyWith(titleSource: titleSource);
     notifyListeners();
 
-    (switch (titleSource) {
-      CreateActionTitleFromUserInput() => step2.titleInputKey.requestFocusDelayed(),
-      _ => null,
-    });
+    if (shouldFocusTitleInput) {
+      step2.titleInputKey.requestFocusDelayed();
+    }
 
     if (titleSource is CreateActionTitleFromSuggestions) {
       viewChangedForward();

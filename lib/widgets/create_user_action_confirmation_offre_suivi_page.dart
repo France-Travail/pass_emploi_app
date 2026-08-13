@@ -31,16 +31,23 @@ class CreateUserActionConfirmationOffreSuiviPage extends StatelessWidget {
     return StoreConnector<AppState, CreateActionSuccessViewModel>(
       converter: (store) => CreateActionSuccessViewModel.create(store),
       builder: (context, viewModel) {
-          return Scaffold(
+        return Scaffold(
+          backgroundColor: context.bg,
+          appBar: SecondaryAppBar(
+            title: Strings.createActionAppBarTitle,
             backgroundColor: context.bg,
-            appBar: SecondaryAppBar(title: Strings.createActionAppBarTitle, backgroundColor: context.bg),
+          ),
           floatingActionButton: viewModel.displayState == DisplayState.CONTENT
               ? _Buttons(
                   onGoActionDetail: () {
-                    Navigator.pop(context);
-                    Navigator.of(
-                      context,
-                    ).push(UserActionDetailPage.materialPageRoute(viewModel.actionId, UserActionStateSource.noSource));
+                    final navigator = Navigator.of(context);
+                    final actionId = viewModel.actionId;
+                    navigator.pop();
+                    UserActionDetailPage.show(
+                      navigator.context,
+                      actionId,
+                      UserActionStateSource.noSource,
+                    );
                   },
                 )
               : null,
@@ -60,7 +67,9 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return switch (viewModel.displayState) {
       DisplayState.CONTENT => _Body(),
-      DisplayState.FAILURE => Center(child: ErrorText(Strings.genericCreationError)),
+      DisplayState.FAILURE => Center(
+        child: ErrorText(Strings.genericCreationError),
+      ),
       _ => const Center(child: CircularProgressIndicator()),
     };
   }
@@ -76,7 +85,13 @@ class _Body extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(height: Margins.spacing_xl),
-            Center(child: SizedBox(height: 130, width: 130, child: Image.asset(Drawables.success))),
+            Center(
+              child: SizedBox(
+                height: 130,
+                width: 130,
+                child: Image.asset(Drawables.success),
+              ),
+            ),
             SizedBox(height: Margins.spacing_xl),
             Text(
               Strings.userActionConfirmationTitleSingular,

@@ -1,17 +1,11 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/models/user_action_type.dart';
-import 'package:pass_emploi_app/pages/user_action/create/widgets/user_action_stepper.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
-import 'package:pass_emploi_app/ui/media_sizes.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
+import 'package:pass_emploi_app/widgets/dsfr/emoji_solution_tile.dart';
 
 class CreateUserActionFormStep1 extends StatelessWidget {
   const CreateUserActionFormStep1({super.key, required this.onActionTypeSelected});
@@ -24,40 +18,24 @@ class CreateUserActionFormStep1 extends StatelessWidget {
       child: Tracker(
         tracking: AnalyticsScreenNames.createUserActionStep1,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+          padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: Margins.spacing_s),
-              Semantics(
-                container: true,
-                header: true,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    UserActionStepperTexts(index: 0),
-                    const SizedBox(height: Margins.spacing_s),
-                    Text(
-                      Strings.userActionTitleStep1,
-                      style: TextStyles.textMBold.copyWith(color: context.content),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: Margins.spacing_m),
+              const SizedBox(height: DsfrSpacings.s2w),
               Semantics(
                 sortKey: const OrdinalSortKey(1),
                 child: Text(
                   Strings.userActionSubtitleStep1,
-                  style: TextStyles.textBaseBold.copyWith(color: context.content),
+                  style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
                 ),
               ),
-              const SizedBox(height: Margins.spacing_m),
+              const SizedBox(height: DsfrSpacings.s2w),
               Semantics(
                 sortKey: const OrdinalSortKey(2),
                 child: ActionCategorySelector(onActionSelected: onActionTypeSelected),
               ),
-              const SizedBox(height: Margins.spacing_base),
+              const SizedBox(height: DsfrSpacings.s2w),
             ],
           ),
         ),
@@ -73,81 +51,18 @@ class ActionCategorySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      semanticChildCount: UserActionReferentielTypePresentation.all.length,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: Margins.spacing_base,
-        crossAxisSpacing: Margins.spacing_base,
-        childAspectRatio: _responsiveChildAspectRatioForA11y(context),
-      ),
-      itemCount: UserActionReferentielTypePresentation.all.length,
-      itemBuilder: (context, index) {
-        final type = UserActionReferentielTypePresentation.all[index];
-        return ActionCategoryCard(
-          onTap: () => onActionSelected.call(type),
-          icon: type.icon,
-          label: type.label,
-          description: type.description,
-        );
-      },
-    );
-  }
-
-  double _responsiveChildAspectRatioForA11y(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final textScaleFactor = MediaQuery.textScalerOf(context).scale(1);
-    if (height < MediaSizes.height_xs) return textScaleFactor > 1 ? 0.5 : 2 / 3;
-    // manualy ajusted for a11y at 235%
-    return min(1, 0.8 / textScaleFactor);
-  }
-}
-
-class ActionCategoryCard extends StatelessWidget {
-  const ActionCategoryCard({
-    super.key,
-    required this.icon,
-    required this.label,
-    required this.description,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String label;
-  final String description;
-  final void Function() onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final primaryColor = AppColorsSpecifics.primaryToLighten(context);
-    return Semantics(
-      button: true,
-      child: CardContainer(
-        onTap: onTap,
-        backgroundColor: context.bg,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 32, color: primaryColor),
-            const SizedBox(height: Margins.spacing_s),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              style: TextStyles.textBaseBold.copyWith(color: primaryColor),
+    return EmojiSolutionGrid(
+      tiles: UserActionReferentielTypePresentation.all
+          .map(
+            (type) => EmojiSolutionTile(
+              onTap: () => onActionSelected(type),
+              emoji: type.emoji,
+              emojiBackground: type.emojiBackground,
+              title: type.label,
+              subtitle: type.description,
             ),
-            const SizedBox(height: Margins.spacing_s),
-            Flexible(
-              child: Text(
-                description,
-                textAlign: TextAlign.center,
-                style: TextStyles.textSRegular(color: context.grey800),
-              ),
-            ),
-          ],
-        ),
-      ),
+          )
+          .toList(),
     );
   }
 }
