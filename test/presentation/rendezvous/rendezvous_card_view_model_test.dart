@@ -180,6 +180,7 @@ void main() {
         RendezvousCardViewModel(
           id: '1',
           tag: 'Atelier',
+          typeCode: RendezvousTypeCode.ATELIER,
           date: "23 décembre 2021",
           hourAndDuration: "10h20 - 11h20",
           inscriptionStatus: InscriptionStatus.hidden,

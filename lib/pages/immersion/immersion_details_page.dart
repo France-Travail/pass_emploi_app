@@ -19,8 +19,8 @@ import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/platform.dart';
 import 'package:pass_emploi_app/widgets/buttons/delete_favori_button.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
 import 'package:pass_emploi_app/widgets/default_animated_switcher.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/errors/favori_not_found_error.dart';
 import 'package:pass_emploi_app/widgets/favori_heart.dart';
 import 'package:pass_emploi_app/widgets/favori_state_selector.dart';
@@ -141,7 +141,7 @@ class ImmersionDetailsPage extends StatelessWidget {
                 OffreDetailsPageTitle(Strings.offreDetails),
                 const SizedBox(height: DsfrSpacings.s1w),
                 if (viewModel.fitForDisabledWorkers) ...[
-                  CardTag.disabledWorkersWelcome(),
+                  DsfrCategoryTag.meta(label: Strings.disabledWorkersWelcome),
                   const SizedBox(height: DsfrSpacings.s2w),
                 ],
                 OffreDetailsHeader(

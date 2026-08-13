@@ -275,7 +275,7 @@ class _AlertePageState extends State<AlertePage> {
 
   void _showDeleteDialog(AlerteListViewModel viewModel, String alerteId, AlerteType type) {
     final context = this.context;
-    showDialog(context: context, builder: (_) => AlerteDeleteDialog(alerteId, type)).then((result) {
+    AlerteDeleteDialog.show(context, alerteId, type).then((result) {
       if (result == true && context.mounted) {
         Navigator.push(
           context,

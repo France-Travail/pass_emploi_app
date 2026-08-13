@@ -31,6 +31,7 @@ class RendezvousDetailsViewModel extends Equatable {
   final String navbarTitle;
   final String id;
   final String tag;
+  final RendezvousTypeCode typeCode;
   final String date;
   final String hourAndDuration;
   final String conseillerPresenceLabel;
@@ -70,6 +71,7 @@ class RendezvousDetailsViewModel extends Equatable {
     required this.navbarTitle,
     required this.id,
     required this.tag,
+    required this.typeCode,
     required this.date,
     required this.hourAndDuration,
     required this.conseillerPresenceLabel,
@@ -123,6 +125,7 @@ class RendezvousDetailsViewModel extends Equatable {
       navbarTitle: _navbarTitle(source, rdv),
       id: rdv.id,
       tag: _takeTypeLabelOrPrecision(rdv),
+      typeCode: rdv.type.code,
       date: rdv.date.toDayWithFullMonthContextualized(),
       hourAndDuration: _hours(rdv),
       modality: _modality(rdv),
@@ -172,6 +175,7 @@ class RendezvousDetailsViewModel extends Equatable {
       navbarTitle: Strings.eventTitle,
       id: '',
       tag: '',
+      typeCode: RendezvousTypeCode.AUTRE,
       date: '',
       hourAndDuration: '',
       conseillerPresenceLabel: '',
@@ -200,6 +204,7 @@ class RendezvousDetailsViewModel extends Equatable {
       navbarTitle,
       id,
       tag,
+      typeCode,
       date,
       hourAndDuration,
       conseillerPresenceLabel,

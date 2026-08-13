@@ -33,6 +33,7 @@ import 'package:pass_emploi_app/widgets/comment.dart';
 import 'package:pass_emploi_app/widgets/confetti_wrapper.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/loading_overlay.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
@@ -187,7 +188,7 @@ class _Content extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      viewModel.pillule.toActionCardPillule(),
+                      DsfrStatusBadge.fromPillule(pillule: viewModel.pillule, forDemarche: false),
                       SizedBox(height: Margins.spacing_base),
                       _Title(title: viewModel.title),
                       SizedBox(height: Margins.spacing_m),

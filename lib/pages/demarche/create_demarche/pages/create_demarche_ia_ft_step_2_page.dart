@@ -18,9 +18,9 @@ import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/base_card.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/date_pickers/date_picker.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 
 class CreateDemarcheIaFtStep2Page extends StatelessWidget {
   const CreateDemarcheIaFtStep2Page(this.formViewModel);
@@ -250,12 +250,7 @@ class _DemarcheIaCard extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: Margins.spacing_s),
           child: BaseCard(
-            tag: CardTag(
-              icon: AppIcons.work_outline_rounded,
-              text: suggestion.label ?? Strings.otherDemarche,
-              contentColor: AppColors.primary,
-              backgroundColor: AppColors.primaryLighten,
-            ),
+            tag: DsfrCategoryTag.emploiCategory(label: suggestion.label ?? Strings.otherDemarche),
             iconButton: IconButton(
               onPressed: () => onDelete(suggestion.id),
               icon: Icon(

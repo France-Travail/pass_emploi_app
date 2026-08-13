@@ -521,9 +521,13 @@ class Strings {
       : "$heuresEnCoursDeCalcul activités en cours de calcul.\nProchaine actualisation dans moins d’une heure";
 
   // Mon Suivi
-  static String monSuiviTitle = "Mon suivi";
+  static String agendaTitle = "Agenda";
   static String monSuiviCetteSemaine = "Cette semaine";
   static String monSuiviSemaineProchaine = "Semaine prochaine";
+  static String monSuiviSemaineIntervalSameMonth(int startDay, int endDay, String month) =>
+      "Semaine du $startDay au $endDay $month";
+  static String monSuiviSemaineIntervalDifferentMonths(int startDay, String startMonth, int endDay, String endMonth) =>
+      "Semaine du $startDay $startMonth au $endDay $endMonth";
   static String monSuiviEmptyPastMilo = "Aucun événement ni action";
   static String monSuiviEmptyPastPoleEmploi = "Aucun rendez-vous ni démarche";
   static String monSuiviEmptyFuture = "Rien de prévu";
@@ -563,7 +567,7 @@ class Strings {
   static String rendezvousVisioModalityMessage =
       'Le rendez-vous se fera en visio. La visio sera disponible le jour du rendez-vous.';
   static String withConseiller = " avec ";
-  static String individualInterview = "Entretien individuel conseiller";
+  static String individualInterview = "Entretien individuel";
   static String publicInfo = "Information collective";
   static String shareToConseiller = "Partager à mon conseiller";
   static String shareToConseillerDemandeInscription = "Faire une demande d’inscription";
@@ -1288,6 +1292,7 @@ class Strings {
   // Favoris
   static String mesFavorisPageTitle = "Mon suivis des offres";
   static String miscellaneousErrorRetry = "Une erreur est survenue. Veuillez réessayer";
+  static String favoriUpdateError = "La mise à jour de l’offre suivie a échoué. Veuillez réessayer.";
 
   static String offreNumberAndLastUpdate(String offreId, String lastUpdate) =>
       "Offre n°$offreId, actualisée $lastUpdate";

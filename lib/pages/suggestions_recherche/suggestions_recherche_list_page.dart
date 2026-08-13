@@ -23,8 +23,8 @@ import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/base_card.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
 import 'package:pass_emploi_app/widgets/loading_overlay.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
@@ -220,10 +220,10 @@ class _Card extends StatelessWidget {
 
     return BaseCard(
       title: viewModel.titre,
-      tag: viewModel.type.toCardTag(),
+      tag: DsfrCategoryTag.offre(viewModel.type),
       complements: [if (viewModel.localisation != null) CardComplement.place(text: viewModel.localisation!)],
       secondaryTags: [
-        if (source != null) CardTag.secondary(text: source, semanticsLabel: Strings.source + source),
+        if (source != null) DsfrCategoryTag.secondary(label: source, semanticsLabel: Strings.source + source),
       ],
       actions: [
         _Buttons(

@@ -29,10 +29,10 @@ import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_pillule.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/cards/profil/mon_conseiller_card.dart';
 import 'package:pass_emploi_app/widgets/contact_page.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/pressed_tip.dart';
 import 'package:pass_emploi_app/widgets/radio_list_tile.dart';
@@ -105,12 +105,7 @@ class _Scaffold extends StatelessWidget {
                   children: [
                     _SectionTitle(Strings.themeLabel),
                     SizedBox(width: Margins.spacing_base),
-                    CardPillule(
-                      text: Strings.betaTag,
-                      backgroundColor: AppColors.additional1Lighten,
-                      contentColor: AppColors.contentLight,
-                      excludeSemantics: false,
-                    ),
+                    DsfrStatusBadge.beta(),
                   ],
                 ),
                 SizedBox(height: Margins.spacing_base),

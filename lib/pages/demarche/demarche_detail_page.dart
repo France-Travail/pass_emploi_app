@@ -18,11 +18,11 @@ import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
 import 'package:pass_emploi_app/widgets/confetti_wrapper.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
 import 'package:pass_emploi_app/widgets/date_echeance_in_detail.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/info_card.dart';
 import 'package:pass_emploi_app/widgets/loading_overlay.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
@@ -138,7 +138,12 @@ class _Body extends StatelessWidget {
                           runSpacing: Margins.spacing_base,
                           children: [
                             _Categorie(viewModel.label!),
-                            viewModel.pillule?.toDemarcheCardPillule(excludeSemantics: true) ?? SizedBox.shrink(),
+                            if (viewModel.pillule != null)
+                              DsfrStatusBadge.fromPillule(
+                                pillule: viewModel.pillule!,
+                                forDemarche: true,
+                                excludeSemantics: true,
+                              ),
                           ],
                         ),
                       ],
@@ -188,11 +193,7 @@ class _Categorie extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CardTag(
-      text: label,
-      contentColor: AppColors.primary,
-      backgroundColor: AppColors.primaryLighten,
-    );
+    return DsfrCategoryTag.emploiCategory(label: label);
   }
 }
 
