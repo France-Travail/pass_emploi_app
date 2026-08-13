@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/models/favori.dart';
@@ -12,6 +13,7 @@ import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/buttons/debounced_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_icon_button.dart';
 import 'package:pass_emploi_app/widgets/favori_state_selector.dart';
+import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
 
 class FavoriHeart<T> extends StatelessWidget {
   final String offreId;
@@ -46,12 +48,7 @@ class FavoriHeart<T> extends StatelessWidget {
       distinct: true,
       onDidChange: (_, viewModel) {
         if (viewModel.withError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(Strings.miscellaneousErrorRetry, style: TextStyle(color: context.content)),
-              duration: Duration(seconds: 2),
-            ),
-          );
+          _displayFavoriErrorSnackbar(context);
         }
         if (!viewModel.isFavori) {
           onFavoriRemoved?.call();
@@ -63,9 +60,7 @@ class FavoriHeart<T> extends StatelessWidget {
   Widget _buildOffreEnregistreButton(BuildContext context, FavoriHeartViewModel<T> viewModel) {
     return DebouncedButton(
       childBuilder: (onTapDebounced) => SecondaryIconButton(
-        icon: viewModel.isFavori
-            ? (iconActive ?? AppIcons.bookmark_remove)
-            : (icon ?? AppIcons.bookmark),
+        icon: viewModel.isFavori ? (iconActive ?? AppIcons.bookmark_remove) : (icon ?? AppIcons.bookmark),
         tooltip: viewModel.isFavori
             ? Strings.offreEnregistreeRemove(a11yLabel)
             : Strings.offreEnregistreeAdd(a11yLabel),
@@ -85,6 +80,30 @@ class FavoriHeart<T> extends StatelessWidget {
     final widgetName = FavoriHeartAnalyticsHelper().getAnalyticsWidgetName(from, newFavoriStatus);
     if (widgetName != null) PassEmploiMatomoTracker.instance.trackScreen(widgetName);
   }
+}
+
+void _displayFavoriErrorSnackbar(BuildContext context) {
+  clearAllSnackBars();
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      // a11y : le message ne disparaît pas automatiquement
+      duration: const Duration(days: 365),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      padding: EdgeInsets.zero,
+      content: ColoredBox(
+        color: DsfrColorDecisions.backgroundDefaultGrey(context),
+        child: DsfrAlert(
+          type: DsfrAlertType.error,
+          title: Strings.error,
+          description: DsfrAlertDescriptionText(Strings.favoriUpdateError),
+          semanticCloseLabel: Strings.closeInformationMessage,
+          onClose: clearAllSnackBars,
+        ),
+      ),
+    ),
+  );
 }
 
 class FavoriHeartAnalyticsHelper {

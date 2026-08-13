@@ -6,10 +6,10 @@ import 'package:pass_emploi_app/presentation/offre_emploi/offre_emploi_origin_vi
 import 'package:pass_emploi_app/utils/date_derniere_consultation_provider.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/base_card.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/favori_heart.dart';
 import 'package:pass_emploi_app/widgets/offre_emploi_origin.dart';
-import 'package:pass_emploi_app/widgets/tags/data_tag.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 
 class FavoriLikeableCard<T> extends StatelessWidget {
   final String id;
@@ -49,8 +49,12 @@ class FavoriLikeableCard<T> extends StatelessWidget {
           tag: OffreEmploiOriginViewModel.from(origin)?.toWidget(OffreEmploiOriginSize.small),
           iconButton: specialAction,
           secondaryTags: [
-            offreType.toCardTag(),
-            if (place != null) DataTag.location(place!),
+            DsfrCategoryTag.offre(offreType),
+            if (place != null)
+              DsfrCategoryTag.meta(
+                label: place!,
+                icon: DsfrIcons.mapMapPin2Fill,
+              ),
           ],
           complements: [
             if (dateActionViewModel.datePostulation != null)

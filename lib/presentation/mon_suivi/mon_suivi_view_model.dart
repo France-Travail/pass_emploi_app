@@ -139,8 +139,8 @@ String _semaineInterval(DateTime monday) {
   final sunday = monday.add(Duration(days: 6));
   final periodOnSameMonth = monday.month == sunday.month;
   return periodOnSameMonth
-      ? "${monday.day} - ${sunday.day} ${sunday.toMonth()} ${sunday.year}"
-      : "${monday.day} ${monday.toMonth()} - ${sunday.day} ${sunday.toMonth()} ${sunday.year}";
+      ? Strings.monSuiviSemaineIntervalSameMonth(monday.day, sunday.day, sunday.toMonth())
+      : Strings.monSuiviSemaineIntervalDifferentMonths(monday.day, monday.toMonth(), sunday.day, sunday.toMonth());
 }
 
 Map<String, List<MonSuiviEntry>> _entriesByDay(MonSuiviState state) {
@@ -224,20 +224,20 @@ class EmptyDayMonSuiviItem extends DayMonSuiviItem {
 }
 
 class MonSuiviDay extends Equatable {
-  final String shortened;
+  final String name;
   final String number;
   final String month;
 
-  MonSuiviDay(this.shortened, this.number, this.month);
+  MonSuiviDay(this.name, this.number, this.month);
 
   factory MonSuiviDay.fromDateTime(DateTime dateTime) => MonSuiviDay(
-        dateTime.toDayShortened(),
+        dateTime.toDayName(),
         dateTime.day.toString(),
         dateTime.toMonth(),
       );
 
   @override
-  List<Object?> get props => [shortened, number];
+  List<Object?> get props => [name, number];
 }
 
 sealed class MonSuiviEntry extends Equatable {}

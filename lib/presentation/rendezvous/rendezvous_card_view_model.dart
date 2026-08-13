@@ -14,6 +14,7 @@ enum InscriptionStatus { inscrit, notInscrit, autoinscription, autodesinscriptio
 class RendezvousCardViewModel extends Equatable {
   final String id;
   final String tag;
+  final RendezvousTypeCode typeCode;
   final String date;
   final String hourAndDuration;
   final InscriptionStatus inscriptionStatus;
@@ -27,6 +28,7 @@ class RendezvousCardViewModel extends Equatable {
   RendezvousCardViewModel({
     required this.id,
     required this.tag,
+    required this.typeCode,
     required this.date,
     required this.hourAndDuration,
     required this.inscriptionStatus,
@@ -43,6 +45,7 @@ class RendezvousCardViewModel extends Equatable {
     return RendezvousCardViewModel(
       id: rdv.id,
       tag: rdv.type.label,
+      typeCode: rdv.type.code,
       date: rdv.date.toDayWithFullMonthContextualized(),
       hourAndDuration: _hours(rdv),
       inscriptionStatus: _inscription(rdv, source),
@@ -60,6 +63,7 @@ class RendezvousCardViewModel extends Equatable {
     return [
       id,
       tag,
+      typeCode,
       date,
       hourAndDuration,
       inscriptionStatus,
