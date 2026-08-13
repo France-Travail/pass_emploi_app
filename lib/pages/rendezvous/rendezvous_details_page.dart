@@ -24,10 +24,10 @@ import 'package:pass_emploi_app/widgets/buttons/lien_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_pillule.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/info_card.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 import 'package:pass_emploi_app/widgets/sepline.dart';
 import 'package:pass_emploi_app/widgets/text_with_clickable_links.dart';
@@ -134,15 +134,15 @@ class _RendezvousDetailsPageState extends State<RendezvousDetailsPage> {
               spacing: Margins.spacing_base,
               runSpacing: Margins.spacing_base,
               children: [
-                CardTag.evenement(text: viewModel.tag),
+                DsfrCategoryTag.evenement(label: viewModel.tag, typeCode: viewModel.typeCode),
                 if (viewModel.isInscrit) ...[
-                  CardTag.secondary(
-                    text: Strings.eventVousEtesDejaInscrit,
-                    icon: AppIcons.check_circle_outline_rounded,
+                  DsfrCategoryTag.secondary(
+                    label: Strings.eventVousEtesDejaInscrit,
+                    icon: DsfrIcons.systemCheckboxCircleFill,
                   ),
                 ],
-                if (viewModel.isComplet) ...[CardTag.warning(text: Strings.eventComplet)],
-                if (viewModel.isAnnule) CardPillule.evenementCanceled(),
+                if (viewModel.isComplet) DsfrStatusBadge.complet(),
+                if (viewModel.isAnnule) DsfrStatusBadge.canceled(),
               ],
             ),
             SizedBox(height: Margins.spacing_base),

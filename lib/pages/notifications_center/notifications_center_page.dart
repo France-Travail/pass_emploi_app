@@ -12,8 +12,8 @@ import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/base_card.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_pillule.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/illustration/empty_state_placeholder.dart';
 import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
 import 'package:pass_emploi_app/widgets/in_app_feedback.dart';
@@ -110,7 +110,7 @@ class _NotificationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseCard(
-      pillule: notification.isNew ? CardPillule.newNotification() : null,
+      pillule: notification.isNew ? DsfrStatusBadge.nouveau() : null,
       title: notification.title,
       subtitle: notification.description,
       complements: [CardComplement.date(text: notification.date)],
