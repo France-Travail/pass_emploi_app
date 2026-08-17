@@ -1,6 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:pass_emploi_app/features/thematiques_demarche/thematiques_demarche_actions.dart';
@@ -9,17 +8,9 @@ import 'package:pass_emploi_app/presentation/demarche/thematiques_demarche_view_
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
-import 'package:pass_emploi_app/ui/media_sizes.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
-import 'package:pass_emploi_app/widgets/illustration/empty_state_placeholder.dart';
-import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
+import 'package:pass_emploi_app/widgets/dsfr/emoji_solution_tile.dart';
+import 'package:pass_emploi_app/widgets/retry.dart';
 
 class CreateDemarcheStep1Page extends StatelessWidget {
   const CreateDemarcheStep1Page(this.formViewModel, {super.key});
@@ -45,7 +36,7 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(Margins.spacing_base),
+      padding: const EdgeInsets.all(DsfrSpacings.s2w),
       child: AnimatedSwitcher(
         duration: AnimationDurations.fast,
         child: switch (thematiqueViewModel.displayState) {
@@ -58,7 +49,7 @@ class _Content extends StatelessWidget {
             formViewModel,
             onCreateCustomDemarche: _onCreateCustomDemarcheSelected,
           ),
-          _ => _LoadingPlaceholder(),
+          _ => const _LoadingPlaceholder(),
         },
       ),
     );
@@ -70,38 +61,32 @@ class _Content extends StatelessWidget {
 }
 
 class _LoadingPlaceholder extends StatelessWidget {
+  const _LoadingPlaceholder();
+
   @override
   Widget build(BuildContext context) {
     return AnimationLimiter(
-      child: GridView.builder(
-        shrinkWrap: true,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 1,
-          crossAxisSpacing: Margins.spacing_base,
-          mainAxisSpacing: Margins.spacing_base,
-        ),
-        physics: NeverScrollableScrollPhysics(),
-        padding: EdgeInsets.zero,
-        itemCount: 7,
-        itemBuilder: (context, index) {
-          return AnimationConfiguration.staggeredList(
+      child: EmojiSolutionGrid(
+        tiles: List.generate(
+          7,
+          (index) => AnimationConfiguration.staggeredList(
             position: index,
             duration: AnimationDurations.fast,
             delay: AnimationDurations.veryFast,
             child: SlideAnimation(
               verticalOffset: 50.0,
               child: FadeInAnimation(
-                child: Container(
+                child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: context.grey100,
-                    borderRadius: BorderRadius.circular(Dimens.radius_base),
+                    color: DsfrColorDecisions.backgroundContrastGrey(context),
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
                   ),
+                  child: const SizedBox(height: 157),
                 ),
               ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }
@@ -114,24 +99,12 @@ class _ErrorMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            EmptyStatePlaceholder(
-              illustration: Illustration.orange(AppIcons.construction),
-              title: Strings.thematiquesErrorTitle,
-              subtitle: Strings.thematiquesErrorSubtitle,
-            ),
-            const SizedBox(height: Margins.spacing_m),
-            PrimaryActionButton(label: Strings.retry, onPressed: viewModel.onRetry),
-            const SizedBox(height: Margins.spacing_xl),
-            _CreateCustomDemarche(onCreateCustomDemarche),
-          ],
-        ),
-      ),
+    return Column(
+      children: [
+        Retry(Strings.thematiquesErrorSubtitle, viewModel.onRetry),
+        const SizedBox(height: DsfrSpacings.s4w),
+        _CreateCustomDemarche(onCreateCustomDemarche),
+      ],
     );
   }
 }
@@ -147,68 +120,23 @@ class _Success extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: Margins.spacing_base),
-        Text(Strings.thematiquesDemarcheDescriptionShort, style: TextStyles.textMBold.copyWith(color: context.content)),
-        const SizedBox(height: Margins.spacing_base),
-        GridView.builder(
-          shrinkWrap: true,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: _responsiveChildAspectRatioForA11y(context),
-            crossAxisSpacing: Margins.spacing_base,
-            mainAxisSpacing: Margins.spacing_base,
-          ),
-          physics: NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.zero,
-          itemCount: thematiqueViewModel.thematiques.length,
-          itemBuilder: (context, index) {
-            return _ThematiqueTile(thematiqueViewModel.thematiques[index], (thematique) {
-              formViewModel.thematiqueSelected(thematique);
-            });
-          },
+        const SizedBox(height: DsfrSpacings.s2w),
+        EmojiSolutionGrid(
+          tiles: thematiqueViewModel.thematiques
+              .map(
+                (thematique) => EmojiSolutionTile(
+                  onTap: () => formViewModel.thematiqueSelected(thematique),
+                  emoji: thematique.emoji,
+                  emojiBackground: thematique.emojiBackground,
+                  title: thematique.title,
+                ),
+              )
+              .toList(),
         ),
-        const SizedBox(height: Margins.spacing_base),
+        const SizedBox(height: DsfrSpacings.s3v),
         _CreateCustomDemarche(onCreateCustomDemarche),
-        const SizedBox(height: Margins.spacing_xl),
+        const SizedBox(height: DsfrSpacings.s5w),
       ],
-    );
-  }
-
-  double _responsiveChildAspectRatioForA11y(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final textScaleFactor = MediaQuery.textScalerOf(context).scale(1);
-    if (height < MediaSizes.height_xs) return textScaleFactor > 1 ? 0.5 : 2 / 3;
-    // manualy ajusted for a11y at 235%
-    return min(1, 0.9 / textScaleFactor);
-  }
-}
-
-class _ThematiqueTile extends StatelessWidget {
-  const _ThematiqueTile(this.thematique, this.onThematiqueSelected);
-  final ThematiqueDemarcheItem thematique;
-  final void Function(ThematiqueDemarcheItem) onThematiqueSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    final primaryColor = AppColorsSpecifics.primaryToLighten(context);
-    return Semantics(
-      button: true,
-      child: CardContainer(
-        backgroundColor: context.bg,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(thematique.icon, size: Dimens.icon_size_l, color: primaryColor),
-            const SizedBox(height: Margins.spacing_base),
-            Text(
-              thematique.title,
-              textAlign: TextAlign.center,
-              style: TextStyles.textSBold.copyWith(color: context.content),
-            ),
-          ],
-        ),
-        onTap: () => onThematiqueSelected(thematique),
-      ),
     );
   }
 }
@@ -220,34 +148,13 @@ class _CreateCustomDemarche extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      child: CardContainer(
-        backgroundColor: context.bg,
-        onTap: onCreateCustomDemarche,
-        child: Row(
-          children: [
-            Icon(
-              AppIcons.search_rounded,
-              size: Dimens.icon_size_l,
-              color: AppColorsSpecifics.primaryToLighten(context),
-            ),
-            SizedBox(width: Margins.spacing_base),
-            Expanded(
-              child: Column(
-                children: [
-                  Text(Strings.customDemarcheTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-                  SizedBox(height: Margins.spacing_base),
-                  Text(
-                    Strings.customDemarcheSubtitle,
-                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+    return EmojiSolutionTile(
+      onTap: onCreateCustomDemarche,
+      emoji: '🤔',
+      emojiBackground: DsfrColors.purpleGlycine925,
+      title: Strings.customDemarcheTitle,
+      subtitle: Strings.customDemarcheSubtitle,
+      textAlign: TextAlign.start,
     );
   }
 }

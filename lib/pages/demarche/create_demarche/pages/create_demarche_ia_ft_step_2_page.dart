@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
@@ -9,17 +10,10 @@ import 'package:pass_emploi_app/presentation/create_demarche_ia_ft_step_2_view_m
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
+import 'package:pass_emploi_app/utils/date_extensions.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/base_card.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
-import 'package:pass_emploi_app/widgets/date_pickers/date_picker.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 
 class CreateDemarcheIaFtStep2Page extends StatelessWidget {
@@ -61,18 +55,18 @@ class _Loading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(Margins.spacing_base),
+      padding: const EdgeInsets.all(DsfrSpacings.s2w),
       child: Column(
         children: [
           Image.asset(Drawables.iaFtSuggestionsLoading, width: 200, height: 200),
-          const SizedBox(height: Margins.spacing_base),
+          const SizedBox(height: DsfrSpacings.s2w),
           Text(
             Strings.iaFtSuggestionsLoading,
-            style: TextStyles.textMBold.copyWith(color: context.content),
+            style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: Margins.spacing_l),
-          CircularProgressIndicator(),
+          const SizedBox(height: DsfrSpacings.s4w),
+          const CircularProgressIndicator(),
         ],
       ),
     );
@@ -86,19 +80,24 @@ class _Failure extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(Margins.spacing_base),
+      padding: const EdgeInsets.all(DsfrSpacings.s2w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Image.asset(Drawables.iaFtSuggestionsFailure, width: 200, height: 200),
-          const SizedBox(height: Margins.spacing_m),
+          const SizedBox(height: DsfrSpacings.s3w),
           Text(
             Strings.iaFtSuggestionsFailure,
-            style: TextStyles.textMBold.copyWith(color: context.content),
+            style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: Margins.spacing_m),
-          PrimaryActionButton(onPressed: () => viewModel.onNavigateBackward(), label: Strings.back),
+          const SizedBox(height: DsfrSpacings.s3w),
+          DsfrButton(
+            label: Strings.back,
+            variant: DsfrButtonVariant.primary,
+            size: DsfrComponentSize.md,
+            onPressed: () => viewModel.onNavigateBackward(),
+          ),
         ],
       ),
     );
@@ -113,19 +112,24 @@ class _Empty extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(Margins.spacing_base),
+        padding: const EdgeInsets.all(DsfrSpacings.s2w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Image.asset(Drawables.iaFtSuggestionsEmpty, width: 200, height: 200),
-            const SizedBox(height: Margins.spacing_m),
+            const SizedBox(height: DsfrSpacings.s3w),
             Text(
               Strings.iaFtSuggestionsEmpty,
-              style: TextStyles.textMBold.copyWith(color: context.content),
+              style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: Margins.spacing_m),
-            PrimaryActionButton(onPressed: () => viewModel.onNavigateBackward(), label: Strings.back),
+            const SizedBox(height: DsfrSpacings.s3w),
+            DsfrButton(
+              label: Strings.back,
+              variant: DsfrButtonVariant.primary,
+              size: DsfrComponentSize.md,
+              onPressed: () => viewModel.onNavigateBackward(),
+            ),
           ],
         ),
       ),
@@ -152,7 +156,18 @@ class _ContentState extends State<_Content> {
       suggestions: widget.viewModel.suggestions,
       onSubmit: (actions) => widget.formViewModel.submitDemarcheIaFt(actions),
     );
-    notifier.addListener(() => setState(() {}));
+    notifier.addListener(_onNotifierChanged);
+  }
+
+  @override
+  void dispose() {
+    notifier.removeListener(_onNotifierChanged);
+    notifier.dispose();
+    super.dispose();
+  }
+
+  void _onNotifierChanged() {
+    if (mounted) setState(() {});
   }
 
   @override
@@ -165,38 +180,28 @@ class _ContentState extends State<_Content> {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        SizedBox.expand(
-          child: ColoredBox(color: context.grey100),
-        ),
         SingleChildScrollView(
-          padding: const EdgeInsets.all(Margins.spacing_base),
+          padding: const EdgeInsets.all(DsfrSpacings.s2w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (notifier.error != null) ...[
-                CardContainer(
-                  backgroundColor: AppColors.warningLighten,
-                  child: Row(
-                    children: [
-                      Icon(AppIcons.error_rounded, color: AppColors.warning),
-                      SizedBox(width: Margins.spacing_s),
-                      Expanded(
-                        child: Text(notifier.error!, style: TextStyles.textSBold.copyWith(color: AppColors.warning)),
-                      ),
-                    ],
-                  ),
+                DsfrAlert(
+                  type: DsfrAlertType.error,
+                  description: DsfrAlertDescriptionText(notifier.error!),
                 ),
-                const SizedBox(height: Margins.spacing_base),
+                const SizedBox(height: DsfrSpacings.s2w),
               ],
               Text(
                 Strings.iaFtSuggestionsContent(suggestions.length),
-                style: TextStyles.textMBold.copyWith(color: context.content),
+                style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
               ),
-              const SizedBox(height: Margins.spacing_base),
-              ListView.builder(
+              const SizedBox(height: DsfrSpacings.s2w),
+              ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: suggestions.length,
+                separatorBuilder: (context, index) => const SizedBox(height: DsfrSpacings.s2w),
                 itemBuilder: (context, index) => _DemarcheIaCard(
                   showError: notifier.error != null && notifier.getDate(suggestions[index].id) == null,
                   suggestion: suggestions[index],
@@ -212,23 +217,32 @@ class _ContentState extends State<_Content> {
                   },
                 ),
               ),
-              const SizedBox(height: Margins.spacing_huge),
-              const SizedBox(height: Margins.spacing_huge),
+              const SizedBox(height: DsfrSpacings.s8w),
+              const SizedBox(height: DsfrSpacings.s8w),
             ],
           ),
         ),
-        Positioned(
-          bottom: MediaQuery.of(context).padding.bottom,
-          left: Margins.spacing_base,
-          right: Margins.spacing_base,
-          child: _SubmitButton(notifier),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: ColoredBox(
+            color: DsfrColorDecisions.backgroundDefaultGrey(context),
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: DsfrSpacings.s2w,
+                left: DsfrSpacings.s2w,
+                right: DsfrSpacings.s2w,
+                bottom: MediaQuery.of(context).padding.bottom + DsfrSpacings.s2w,
+              ),
+              child: _SubmitButton(notifier),
+            ),
+          ),
         ),
       ],
     );
   }
 }
 
-class _DemarcheIaCard extends StatelessWidget {
+class _DemarcheIaCard extends StatefulWidget {
   const _DemarcheIaCard({
     required this.showError,
     required this.suggestion,
@@ -244,39 +258,89 @@ class _DemarcheIaCard extends StatelessWidget {
   final void Function(String id) onDelete;
 
   @override
+  State<_DemarcheIaCard> createState() => _DemarcheIaCardState();
+}
+
+class _DemarcheIaCardState extends State<_DemarcheIaCard> {
+  late final TextEditingController _dateController;
+
+  @override
+  void initState() {
+    super.initState();
+    _dateController = TextEditingController(text: widget.date?.toDay() ?? '');
+  }
+
+  @override
+  void didUpdateWidget(covariant _DemarcheIaCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final nextDateText = widget.date?.toDay() ?? '';
+    if (_dateController.text != nextDateText) {
+      _dateController.text = nextDateText;
+    }
+  }
+
+  @override
+  void dispose() {
+    _dateController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Builder(
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: Margins.spacing_s),
-          child: BaseCard(
-            tag: DsfrCategoryTag.emploiCategory(label: suggestion.label ?? Strings.otherDemarche),
-            iconButton: IconButton(
-              onPressed: () => onDelete(suggestion.id),
-              icon: Icon(
-                AppIcons.close_rounded,
-                color: AppColors.primary,
-                semanticLabel: "${Strings.suppressionLabel} ${suggestion.sousTitre ?? ""}",
-              ),
-            ),
-            title: suggestion.titre ?? '',
-            body: suggestion.sousTitre ?? '',
-            additionalChild: Column(
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: DsfrColorDecisions.backgroundDefaultGrey(context),
+        borderRadius: const BorderRadius.all(Radius.circular(4)),
+        border: Border.all(color: DsfrColorDecisions.borderDefaultGrey(context)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(DsfrSpacings.s2w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(Strings.dateShortMandatory, style: TextStyles.textBaseMedium.copyWith(color: context.content)),
-                const SizedBox(height: Margins.spacing_s),
-                DatePicker(
-                  errorText: showError ? Strings.dateShortMandatory : null,
-                  initialDateValue: date,
-                  isActiveDate: true,
-                  onDateSelected: (date) => onDateChanged(suggestion.id, date),
+                Flexible(
+                  child: DsfrCategoryTag.emploiCategory(label: widget.suggestion.label ?? Strings.otherDemarche),
+                ),
+                DsfrButton(
+                  icon: DsfrIcons.systemCloseLine,
+                  iconSemanticLabel: "${Strings.suppressionLabel} ${widget.suggestion.sousTitre ?? ""}",
+                  variant: DsfrButtonVariant.tertiaryWithoutBorder,
+                  size: DsfrComponentSize.sm,
+                  onPressed: () => widget.onDelete(widget.suggestion.id),
                 ),
               ],
             ),
-          ),
-        );
-      },
+            const SizedBox(height: DsfrSpacings.s1w),
+            Text(
+              widget.suggestion.titre ?? '',
+              style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+            ),
+            if (widget.suggestion.sousTitre != null && widget.suggestion.sousTitre!.isNotEmpty) ...[
+              const SizedBox(height: DsfrSpacings.s1v),
+              Text(
+                widget.suggestion.sousTitre!,
+                style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context)),
+              ),
+            ],
+            const SizedBox(height: DsfrSpacings.s2w),
+            DsfrDateInput(
+              label: Strings.thematiquesDemarcheDateShort,
+              controller: _dateController,
+              firstDate: DateTime(2020),
+              lastDate: DateTime(2101),
+              initialDate: widget.date ?? DateTime.now(),
+              locale: const Locale('fr', 'FR'),
+              composantState: widget.showError
+                  ? DsfrComponentState.error(errorMessage: Strings.dateMandatory)
+                  : const DsfrComponentState.none(),
+              onChanged: (date) => widget.onDateChanged(widget.suggestion.id, date),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -289,7 +353,12 @@ class _SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: PrimaryActionButton(onPressed: () => notifier.submit(), label: Strings.iaFtSuggestionsSubmit),
+      child: DsfrButton(
+        label: Strings.iaFtSuggestionsSubmit,
+        variant: DsfrButtonVariant.primary,
+        size: DsfrComponentSize.md,
+        onPressed: () => notifier.submit(),
+      ),
     );
   }
 }
