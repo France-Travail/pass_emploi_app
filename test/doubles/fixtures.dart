@@ -1185,7 +1185,6 @@ Accueil mockAccueilMilo({List<Rendezvous>? evenements}) {
     alertes: getMockedAlerte(),
     favoris: mock3Favoris(),
     campagne: mockCampagne(),
-    peutVoirLeComptageDesHeures: true,
   );
 }
 
@@ -1390,6 +1389,7 @@ MonSuivi mockMonSuivi({
   bool errorOnSessionMiloRetrieval = false,
   DateTime? dateDerniereMiseAJourPoleEmploi,
   bool eligibleDemarchesIA = false,
+  bool peutVoirLeComptageDesHeures = false,
 }) {
   return MonSuivi(
     actions: actions ?? [],
@@ -1399,6 +1399,7 @@ MonSuivi mockMonSuivi({
     errorOnSessionMiloRetrieval: errorOnSessionMiloRetrieval,
     dateDerniereMiseAJourPoleEmploi: dateDerniereMiseAJourPoleEmploi,
     eligibleDemarchesIA: eligibleDemarchesIA,
+    peutVoirLeComptageDesHeures: peutVoirLeComptageDesHeures,
   );
 }
 

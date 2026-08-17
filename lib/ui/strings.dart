@@ -511,8 +511,8 @@ class Strings {
   static String comptageDesHeures15 = "🎉 Félicitations pour vos 15h d’activités \u{00A0}!";
   static String comptageDesHeures15Plus = "Objectif dépassé ! Bravo\u{00A0}👏";
   static String updatedAgo(String timeAgo) => "Actualisé $timeAgo";
-  static String realizedHours = "validées";
-  static String declaredHours = "déclarées";
+  static String realizedHours = "validée";
+  static String declaredHours = "réalisée";
 
   static String comptageDesHeuresError = "Il y a eu une erreur lors de la récupération de vos heures\u{00A0}😕";
 
@@ -615,7 +615,6 @@ class Strings {
   static const String userActionNextButton = 'Continuer';
   static const String userActionFinishButton = 'Terminer';
 
-  static const String userActionTitleStep1 = 'Catégorie';
   static const String userActionTitleStep3 = 'Date et description';
 
   static const String userActionSubtitleStep1 = 'Choisissez une catégorie';
