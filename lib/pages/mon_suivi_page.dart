@@ -28,6 +28,7 @@ import 'package:pass_emploi_app/widgets/animated_list_loader.dart';
 import 'package:pass_emploi_app/widgets/cards/demarche_card.dart';
 import 'package:pass_emploi_app/widgets/cards/rendezvous_card.dart';
 import 'package:pass_emploi_app/widgets/cards/user_action_card.dart';
+import 'package:pass_emploi_app/widgets/comptage_des_heures_card.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/onboarding/ft_ia_showcase.dart';
@@ -225,8 +226,65 @@ class _Content extends StatelessWidget {
           const SizedBox(height: DsfrSpacings.s1w),
           _UserActionsPendingCard(viewModel.pendingActionCreations),
         ],
+        if (viewModel.withComptageDesHeures) const _ScrollAwareComptageDesHeures(),
         Expanded(child: _TodayCenteredMonSuiviList(viewModel)),
       ],
+    );
+  }
+}
+
+class _ScrollAwareComptageDesHeures extends StatefulWidget {
+  const _ScrollAwareComptageDesHeures();
+
+  @override
+  State<_ScrollAwareComptageDesHeures> createState() => _ScrollAwareComptageDesHeuresState();
+}
+
+class _ScrollAwareComptageDesHeuresState extends State<_ScrollAwareComptageDesHeures> {
+  bool _visible = true;
+  ScrollController? _controller;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final controller = _StateProvider.maybeOf(context)?.scrollController;
+    if (_controller == controller) return;
+    _controller?.removeListener(_onScroll);
+    _controller = controller;
+    _controller?.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _controller?.removeListener(_onScroll);
+    super.dispose();
+  }
+
+  void _onScroll() {
+    final shouldShow = (_controller?.offset ?? 0) == 0;
+    if (shouldShow != _visible) setState(() => _visible = shouldShow);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final visible = _visible || A11yUtils.withScreenReader(context);
+    return ClipRect(
+      child: AnimatedAlign(
+        duration: AnimationDurations.fast,
+        curve: Curves.fastEaseInToSlowEaseOut,
+        alignment: Alignment.topCenter,
+        heightFactor: visible ? 1 : 0,
+        child: IgnorePointer(
+          ignoring: !visible,
+          child: ExcludeSemantics(
+            excluding: !visible,
+            child: const Padding(
+              padding: EdgeInsets.fromLTRB(DsfrSpacings.s2w, DsfrSpacings.s1w, DsfrSpacings.s2w, 0),
+              child: ComptageDesHeuresCard(),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

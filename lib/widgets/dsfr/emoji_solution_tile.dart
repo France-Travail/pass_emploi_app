@@ -40,18 +40,20 @@ class EmojiSolutionTile extends StatelessWidget {
   static const _subtitleMaxLines = 2;
 
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final String emoji;
   final Color emojiBackground;
   final VoidCallback onTap;
+  final TextAlign textAlign;
 
   const EmojiSolutionTile({
     super.key,
     required this.title,
-    required this.subtitle,
+    this.subtitle,
     required this.emoji,
     required this.emojiBackground,
     required this.onTap,
+    this.textAlign = TextAlign.center,
   });
 
   double _linesHeight(BuildContext context, TextStyle style, int lines) {
@@ -66,9 +68,10 @@ class EmojiSolutionTile extends StatelessWidget {
     final titleStyle = DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleBlueFrance(context));
     final subtitleStyle = DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context));
 
+    final semanticsLabel = (subtitle == null || subtitle!.isEmpty) ? title : '$title. $subtitle';
     return Semantics(
       button: true,
-      label: '$title. $subtitle',
+      label: semanticsLabel,
       child: Material(
         color: DsfrColorDecisions.backgroundDefaultGrey(context),
         borderRadius: radius,
@@ -103,24 +106,26 @@ class EmojiSolutionTile extends StatelessWidget {
                           width: double.infinity,
                           child: Text(
                             title,
-                            textAlign: TextAlign.center,
+                            textAlign: textAlign,
                             maxLines: _titleMaxLines,
                             overflow: TextOverflow.ellipsis,
                             style: titleStyle,
                           ),
                         ),
-                        const SizedBox(height: DsfrSpacings.s1v),
-                        SizedBox(
-                          height: _linesHeight(context, subtitleStyle, _subtitleMaxLines),
-                          width: double.infinity,
-                          child: Text(
-                            subtitle,
-                            textAlign: TextAlign.center,
-                            maxLines: _subtitleMaxLines,
-                            overflow: TextOverflow.ellipsis,
-                            style: subtitleStyle,
+                        if (subtitle != null && subtitle!.isNotEmpty) ...[
+                          const SizedBox(height: DsfrSpacings.s1v),
+                          SizedBox(
+                            height: _linesHeight(context, subtitleStyle, _subtitleMaxLines),
+                            width: double.infinity,
+                            child: Text(
+                              subtitle!,
+                              textAlign: textAlign,
+                              maxLines: _subtitleMaxLines,
+                              overflow: TextOverflow.ellipsis,
+                              style: subtitleStyle,
+                            ),
                           ),
-                        ),
+                        ],
                       ],
                     ),
                   ),

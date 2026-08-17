@@ -14,6 +14,7 @@ class MonSuivi extends Equatable {
   final bool errorOnSessionMiloRetrieval;
   final DateTime? dateDerniereMiseAJourPoleEmploi;
   final bool eligibleDemarchesIA;
+  final bool peutVoirLeComptageDesHeures;
 
   MonSuivi({
     required this.actions,
@@ -23,6 +24,7 @@ class MonSuivi extends Equatable {
     required this.errorOnSessionMiloRetrieval,
     required this.dateDerniereMiseAJourPoleEmploi,
     this.eligibleDemarchesIA = false,
+    this.peutVoirLeComptageDesHeures = false,
   });
 
   factory MonSuivi.fromMiloJson(dynamic json) {
@@ -34,6 +36,7 @@ class MonSuivi extends Equatable {
       errorOnSessionMiloRetrieval: jsonSessionMilo == null,
       demarches: [],
       dateDerniereMiseAJourPoleEmploi: null,
+      peutVoirLeComptageDesHeures: json["peutVoirLeComptageDesHeures"] as bool? ?? false,
     );
   }
 
@@ -63,6 +66,7 @@ class MonSuivi extends Equatable {
       errorOnSessionMiloRetrieval: errorOnSessionMiloRetrieval || monSuivi.errorOnSessionMiloRetrieval,
       dateDerniereMiseAJourPoleEmploi: monSuivi.dateDerniereMiseAJourPoleEmploi,
       eligibleDemarchesIA: eligibleDemarchesIA,
+      peutVoirLeComptageDesHeures: peutVoirLeComptageDesHeures,
     );
   }
 
@@ -74,6 +78,7 @@ class MonSuivi extends Equatable {
     bool? errorOnSessionMiloRetrieval,
     DateTime? dateDerniereMiseAJourPoleEmploi,
     bool? eligibleDemarchesIA,
+    bool? peutVoirLeComptageDesHeures,
   }) {
     return MonSuivi(
       actions: actions ?? this.actions,
@@ -83,6 +88,7 @@ class MonSuivi extends Equatable {
       errorOnSessionMiloRetrieval: errorOnSessionMiloRetrieval ?? this.errorOnSessionMiloRetrieval,
       dateDerniereMiseAJourPoleEmploi: dateDerniereMiseAJourPoleEmploi ?? this.dateDerniereMiseAJourPoleEmploi,
       eligibleDemarchesIA: eligibleDemarchesIA ?? this.eligibleDemarchesIA,
+      peutVoirLeComptageDesHeures: peutVoirLeComptageDesHeures ?? this.peutVoirLeComptageDesHeures,
     );
   }
 
@@ -95,5 +101,6 @@ class MonSuivi extends Equatable {
     errorOnSessionMiloRetrieval,
     dateDerniereMiseAJourPoleEmploi,
     eligibleDemarchesIA,
+    peutVoirLeComptageDesHeures,
   ];
 }

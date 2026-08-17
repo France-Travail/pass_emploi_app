@@ -399,4 +399,39 @@ void main() {
     expect(store.dispatchedAction is MonSuiviRequestAction, isTrue);
     expect((store.dispatchedAction as MonSuiviRequestAction).period, MonSuiviPeriod.next);
   });
+
+  group('withComptageDesHeures', () {
+    test('should return true when mon suivi success and peutVoirLeComptageDesHeures is true', () {
+      // Given
+      final store = givenState().monSuivi(monSuivi: mockMonSuivi(peutVoirLeComptageDesHeures: true)).store();
+
+      // When
+      final viewModel = MonSuiviViewModel.create(store);
+
+      // Then
+      expect(viewModel.withComptageDesHeures, isTrue);
+    });
+
+    test('should return false when mon suivi success and peutVoirLeComptageDesHeures is false', () {
+      // Given
+      final store = givenState().monSuivi(monSuivi: mockMonSuivi(peutVoirLeComptageDesHeures: false)).store();
+
+      // When
+      final viewModel = MonSuiviViewModel.create(store);
+
+      // Then
+      expect(viewModel.withComptageDesHeures, isFalse);
+    });
+
+    test('should return false when mon suivi is not success', () {
+      // Given
+      final store = givenState().copyWith(monSuiviState: MonSuiviFailureState()).store();
+
+      // When
+      final viewModel = MonSuiviViewModel.create(store);
+
+      // Then
+      expect(viewModel.withComptageDesHeures, isFalse);
+    });
+  });
 }

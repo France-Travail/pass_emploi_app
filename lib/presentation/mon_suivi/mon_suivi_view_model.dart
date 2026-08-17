@@ -23,6 +23,7 @@ class MonSuiviViewModel extends Equatable {
   final String? monSuiviDemarchesKoMessage;
   final int pendingActionCreations;
   final bool withPagination;
+  final bool withComptageDesHeures;
   final Function() onLoadPreviousPeriod;
   final Function() onLoadNextPeriod;
   final Function() onRetry;
@@ -38,6 +39,7 @@ class MonSuiviViewModel extends Equatable {
     required this.monSuiviDemarchesKoMessage,
     required this.pendingActionCreations,
     required this.withPagination,
+    required this.withComptageDesHeures,
     required this.onLoadPreviousPeriod,
     required this.onLoadNextPeriod,
     required this.onRetry,
@@ -58,6 +60,7 @@ class MonSuiviViewModel extends Equatable {
       monSuiviDemarchesKoMessage: featureFlip.withMonSuiviDemarchesKoMessage,
       pendingActionCreations: store.state.userActionCreatePendingState.getPendingCreationsCount(),
       withPagination: store.state.isMiloLoginMode(),
+      withComptageDesHeures: _withComptageDesHeures(state),
       onLoadPreviousPeriod: () => store.dispatch(MonSuiviRequestAction(MonSuiviPeriod.previous)),
       onLoadNextPeriod: () => store.dispatch(MonSuiviRequestAction(MonSuiviPeriod.next)),
       onRetry: () {
@@ -78,6 +81,7 @@ class MonSuiviViewModel extends Equatable {
         withWarningOnWrongPoleEmploiDataRetrieval,
         pendingActionCreations,
         withPagination,
+        withComptageDesHeures,
       ];
 }
 
@@ -92,6 +96,10 @@ DisplayState _displayState(MonSuiviState state) {
 
 bool _withWarningOnWrongSessionMiloRetrieval(MonSuiviState state) {
   return state is MonSuiviSuccessState && state.monSuivi.errorOnSessionMiloRetrieval;
+}
+
+bool _withComptageDesHeures(MonSuiviState state) {
+  return state is MonSuiviSuccessState && state.monSuivi.peutVoirLeComptageDesHeures;
 }
 
 bool _withWarningOnWrongPoleEmploiDataRetrieval(MonSuiviState state, FeatureFlip featureFlip) {

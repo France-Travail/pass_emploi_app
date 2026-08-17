@@ -1,5 +1,6 @@
 {
   "actions": [],
   "rendezVous": [],
-  "sessionsMilo": []
+  "sessionsMilo": [],
+  "peutVoirLeComptageDesHeures": true
 }

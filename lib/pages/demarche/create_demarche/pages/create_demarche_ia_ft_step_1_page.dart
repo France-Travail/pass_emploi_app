@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
-import 'package:pass_emploi_app/widgets/info_card.dart';
-import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
 class CreateDemarcheIaFtStep1Page extends StatefulWidget {
@@ -32,15 +27,22 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
       eventCategory: AnalyticsEventNames.createDemarcheEventCategory,
       action: AnalyticsEventNames.createDemarcheIaDicterPressed,
     );
+    setState(() => _errorText = null);
     final bool available = await _speechToText.initialize(
       onError: (error) {
-        setState(() => _errorText = Strings.genericError);
+        if (!mounted) return;
+        setState(() {
+          _isListening = false;
+          _errorText = Strings.genericError;
+        });
       },
     );
+    if (!mounted) return;
     if (available) {
       setState(() => _isListening = true);
       _speechToText.listen(
         onResult: (result) {
+          if (!mounted) return;
           setState(() {
             if (result.recognizedWords.length >= CreateDemarcheIaFtStep1ViewModel.maxLength) {
               _stopListening();
@@ -55,6 +57,7 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
 
   void _stopListening() {
     _speechToText.stop();
+    if (!mounted) return;
     setState(() => _isListening = false);
   }
 
@@ -64,7 +67,15 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
     _textEditingController = TextEditingController(text: widget.viewModel.iaFtStep2ViewModel.description);
     _textEditingController.addListener(() {
       widget.viewModel.iaFtDescriptionChanged(_textEditingController.text);
+      if (mounted) setState(() {});
     });
+  }
+
+  @override
+  void dispose() {
+    _speechToText.stop();
+    _textEditingController.dispose();
+    super.dispose();
   }
 
   @override
@@ -72,73 +83,67 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
     return Tracker(
       tracking: AnalyticsScreenNames.createDemarcheIaFtStepPrompt,
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+        padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(height: Margins.spacing_base),
-            Text(Strings.iaFtStep2Title, style: TextStyles.textMBold.copyWith(color: context.content)),
-            Text(Strings.iaFtStep2Mandatory, style: TextStyles.textSRegular(color: context.content)),
-            const SizedBox(height: Margins.spacing_base),
-            InfoCard(message: Strings.iaFtStep2Warning),
-            const SizedBox(height: Margins.spacing_base),
-            Stack(
+            const SizedBox(height: DsfrSpacings.s2w),
+            DsfrAlert(
+              type: DsfrAlertType.info,
+              title: Strings.iaFtStep2Warning,
+            ),
+            const SizedBox(height: DsfrSpacings.s2w),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Stack(
+                Expanded(
+                  child: DsfrInput(
+                    label: Strings.iaFtStep2Title,
+                    hintText: Strings.iaFtStep2Mandatory,
+                    placeholder: Strings.iaFtStep2FieldHint,
+                    controller: _textEditingController,
+                    minLines: 3,
+                    maxLines: 5,
+                    inputFormatters: [LengthLimitingTextInputFormatter(CreateDemarcheIaFtStep1ViewModel.maxLength)],
+                    componentState: _errorText != null
+                        ? DsfrComponentState.error(errorMessage: _errorText!)
+                        : const DsfrComponentState.none(),
+                    onChanged: (_) => setState(() => _errorText = null),
+                  ),
+                ),
+                const SizedBox(width: DsfrSpacings.s1w),
+                Column(
                   children: [
-                    BaseTextField(
-                      controller: _textEditingController,
-                      hintText: Strings.iaFtStep2FieldHint,
-                      minLines: 3,
-                      maxLines: null,
-                      maxLength: CreateDemarcheIaFtStep1ViewModel.maxLength,
-                      errorText: _errorText,
-                      onChanged: (value) => setState(() => _errorText = null),
-                      suffixIcon: Opacity(
-                        opacity: 0,
-                        child: ExcludeSemantics(
-                          child: IconButton(onPressed: null, icon: Icon(Icons.close), color: AppColors.primary),
-                        ),
+                    if (_textEditingController.text.isNotEmpty)
+                      DsfrButton(
+                        icon: DsfrIcons.systemCloseLine,
+                        iconSemanticLabel: Strings.clear,
+                        variant: DsfrButtonVariant.tertiaryWithoutBorder,
+                        size: DsfrComponentSize.md,
+                        onPressed: () => _textEditingController.clear(),
                       ),
-                    ),
-                    Positioned(
-                      // manually ajusted
-                      right: 0,
-                      bottom: Margins.spacing_base,
-                      child: IconButton(
-                        tooltip: _isListening ? Strings.iaFtStep2ButtonStop : Strings.iaFtStep2ButtonDicter,
-                        onPressed: () {
-                          if (_isListening) {
-                            _stopListening();
-                          } else {
-                            _startListening();
-                          }
-                        },
-                        icon: Container(
-                          padding: EdgeInsets.all(2),
-                          child: Icon(
-                            _isListening ? Icons.stop_circle_rounded : Icons.mic,
-                            color: AppColorsSpecifics.primaryToLighten(context),
-                          ),
-                        ),
-                      ),
+                    DsfrButton(
+                      icon: _isListening ? DsfrIcons.mediaStopCircleFill : DsfrIcons.mediaMicFill,
+                      iconSemanticLabel: _isListening ? Strings.iaFtStep2ButtonStop : Strings.iaFtStep2ButtonDicter,
+                      variant: DsfrButtonVariant.primary,
+                      size: DsfrComponentSize.md,
+                      onPressed: () {
+                        if (_isListening) {
+                          _stopListening();
+                        } else {
+                          _startListening();
+                        }
+                      },
                     ),
                   ],
                 ),
-                if (_textEditingController.text.isNotEmpty)
-                  Positioned(
-                    right: 0,
-                    child: IconButton(
-                      onPressed: () => _textEditingController.clear(),
-                      icon: Icon(Icons.close),
-                      color: AppColorsSpecifics.primaryToLighten(context),
-                    ),
-                  ),
               ],
             ),
-            const SizedBox(height: Margins.spacing_base),
-            PrimaryActionButton(
+            const SizedBox(height: DsfrSpacings.s4w),
+            DsfrButton(
               label: Strings.iaFtStep2Button,
+              variant: DsfrButtonVariant.primary,
+              size: DsfrComponentSize.md,
               onPressed: () {
                 if (_textEditingController.text.isNotEmpty) {
                   widget.viewModel.navigateToCreateDemarcheIaFtStep2();
@@ -147,13 +152,11 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
                 }
               },
             ),
-            const SizedBox(height: Margins.spacing_l),
-            _OrDivider(),
-            const SizedBox(height: Margins.spacing_l),
+            const SizedBox(height: DsfrSpacings.s3w),
+            const _OrDivider(),
+            const SizedBox(height: DsfrSpacings.s3w),
             ThematiqueButton(viewModel: widget.viewModel),
-            SizedBox(height: Margins.spacing_huge),
-            SizedBox(height: Margins.spacing_huge),
-            SizedBox(height: Margins.spacing_huge),
+            const SizedBox(height: 200),
           ],
         ),
       ),
@@ -166,13 +169,17 @@ class _OrDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = context.grey500;
+    final color = DsfrColorDecisions.borderDefaultGrey(context);
     return Row(
       children: [
         Expanded(child: Divider(color: color, height: 1)),
-        const SizedBox(width: Margins.spacing_base),
-        Text(Strings.or, style: TextStyles.textBaseRegular.copyWith(color: color)),
-        const SizedBox(width: Margins.spacing_base),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
+          child: Text(
+            Strings.or,
+            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textActionHighBlueFrance(context)),
+          ),
+        ),
         Expanded(child: Divider(color: color, height: 1)),
       ],
     );
@@ -185,8 +192,10 @@ class ThematiqueButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SecondaryButton(
+    return DsfrButton(
       label: Strings.thematiquesDemarcheButton,
+      variant: DsfrButtonVariant.secondary,
+      size: DsfrComponentSize.md,
       onPressed: () {
         viewModel.navigateToThematiquesDemarche();
         PassEmploiMatomoTracker.instance.trackEvent(

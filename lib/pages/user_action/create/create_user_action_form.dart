@@ -259,7 +259,7 @@ class _CreateUserActionForm extends StatelessWidget {
   }
 
   String get _stepTitle => switch (formState.displayState) {
-    CreateUserActionDisplayState.step1 => Strings.userActionTitleStep1,
+    CreateUserActionDisplayState.step1 => Strings.thematiquesDemarcheDescriptionShort,
     CreateUserActionDisplayState.step2 => formState.step1.actionCategory!.label,
     CreateUserActionDisplayState.step3 => Strings.userActionTitleStep3,
     _ => '',

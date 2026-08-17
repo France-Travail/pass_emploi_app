@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/features/thematiques_demarche/thematiques_demarche_actions.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_from_referentiel_step_3_view_model.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_step3_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
-import 'package:pass_emploi_app/widgets/date_pickers/date_picker_suggestions.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_date_input_suggestions.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_selectable_card.dart';
 
 class CreateDemarcheFromThematiqueStep3Page extends StatelessWidget {
   const CreateDemarcheFromThematiqueStep3Page(this.formVm);
@@ -34,51 +31,72 @@ class CreateDemarcheFromThematiqueStep3Page extends StatelessWidget {
       builder: (context, storeVm) => Stack(
         children: [
           SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+            padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(height: Margins.spacing_base),
-                Text(selectedThematique.title, style: TextStyles.textMBold.copyWith(color: context.content)),
-                const SizedBox(height: Margins.spacing_s),
-                Text(selectedDemarche.quoi, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-                const SizedBox(height: Margins.spacing_s),
-                Text(Strings.allMandatoryFields, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-                const SizedBox(height: Margins.spacing_m),
-                DatePickerSuggestions(
-                  title: Strings.thematiquesDemarcheDateShort,
+                const SizedBox(height: DsfrSpacings.s1w),
+                Text(
+                  selectedDemarche.quoi,
+                  style: DsfrTextStyle.bodyLg(color: DsfrColorDecisions.textTitleGrey(context)),
+                ),
+                const SizedBox(height: DsfrSpacings.s1w),
+                Text(
+                  Strings.allMandatoryFields,
+                  style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textMentionGrey(context)),
+                ),
+                const SizedBox(height: DsfrSpacings.s3w),
+                DsfrDateInputSuggestions(
+                  label: Strings.thematiquesDemarcheDateShort,
                   dateSource: formVm.fromThematiqueStep3ViewModel.dateSource,
                   onDateChanged: (date) {
                     formVm.dateDemarcheThematiqueChanged(date);
                     if (!date.isNone) {
-                      Future.delayed(Duration(milliseconds: 50), () {
+                      Future.delayed(const Duration(milliseconds: 50), () {
                         if (context.mounted) FocusScope.of(context).nextFocus();
                       });
                     }
                   },
                 ),
                 if (storeVm.isCommentMandatory) ...[
-                  const SizedBox(height: Margins.spacing_m),
-                  Text(Strings.selectMoyen, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-                  const SizedBox(height: Margins.spacing_base),
+                  const SizedBox(height: DsfrSpacings.s3w),
+                  Text(
+                    Strings.selectMoyen,
+                    style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                  ),
+                  const SizedBox(height: DsfrSpacings.s2w),
                   _MoyensList(
                     storeVm: storeVm,
                     onCommentSelected: (comment) => formVm.commentChanged(comment),
                     selectedComment: formVm.fromThematiqueStep3ViewModel.commentItem,
                   ),
                 ],
-                SizedBox(height: Margins.spacing_xl * 2),
+                const SizedBox(height: DsfrSpacings.s8w),
               ],
             ),
           ),
           if (formVm.fromThematiqueStep3ViewModel.isValid(storeVm.isCommentMandatory))
-            Positioned(
-              bottom: MediaQuery.of(context).padding.bottom,
-              left: Margins.spacing_base,
-              right: Margins.spacing_base,
-              child: PrimaryActionButton(
-                label: Strings.validateLaDemarche,
-                onPressed: () => formVm.submitDemarcheThematique(),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: ColoredBox(
+                color: DsfrColorDecisions.backgroundDefaultGrey(context),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    top: DsfrSpacings.s2w,
+                    left: DsfrSpacings.s2w,
+                    right: DsfrSpacings.s2w,
+                    bottom: MediaQuery.of(context).padding.bottom + DsfrSpacings.s2w,
+                  ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: DsfrButton(
+                      label: Strings.validateLaDemarche,
+                      variant: DsfrButtonVariant.primary,
+                      size: DsfrComponentSize.md,
+                      onPressed: () => formVm.submitDemarcheThematique(),
+                    ),
+                  ),
+                ),
               ),
             ),
         ],
@@ -99,28 +117,13 @@ class _MoyensList extends StatelessWidget {
       itemCount: storeVm.comments.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      separatorBuilder: (context, index) => SizedBox(height: Margins.spacing_s),
+      separatorBuilder: (context, index) => const SizedBox(height: DsfrSpacings.s2w),
       itemBuilder: (context, index) {
         final moyen = storeVm.comments[index];
-        return Semantics(
+        return DsfrSelectableCard(
+          label: moyen.label,
           selected: moyen == selectedComment,
-          button: true,
-          child: CardContainer(
-            onTap: () => onCommentSelected(moyen),
-            backgroundColor: moyen == selectedComment ? AppColors.primaryDarken : context.bg,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 40),
-              child: Center(
-                child: Text(
-                  moyen.label,
-                  textAlign: TextAlign.center,
-                  style: TextStyles.textSMedium().copyWith(
-                    color: moyen == selectedComment ? AppColors.contentOnPrimary : context.content,
-                  ),
-                ),
-              ),
-            ),
-          ),
+          onTap: () => onCommentSelected(moyen),
         );
       },
     );
