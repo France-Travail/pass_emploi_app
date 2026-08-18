@@ -11,7 +11,6 @@ import 'package:pass_emploi_app/presentation/user_action/update_form/update_user
 import 'package:pass_emploi_app/presentation/user_action/user_action_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
@@ -78,20 +77,16 @@ class _DisplayState extends StatelessWidget {
   Widget build(BuildContext context) {
     return switch (viewModel.displayState) {
       DisplayState.LOADING => Center(child: CircularProgressIndicator()),
-      DisplayState.CONTENT => Padding(
-        padding: const EdgeInsets.all(Margins.spacing_base),
-        child: EditUserActionForm(
-          requireUpdate: true,
-          confirmationLabel: Strings.updateUserActionSaveButton,
-          actionDto: EditUserActionFormDto(
-            date: viewModel.date,
-            title: viewModel.title,
-            description: viewModel.description,
-            type: viewModel.type,
-          ),
-          onSaved: (actionDto) =>
-              viewModel.save(actionDto.date, actionDto.title, actionDto.description, actionDto.type),
+      DisplayState.CONTENT => EditUserActionForm(
+        requireUpdate: true,
+        confirmationLabel: Strings.updateUserActionSaveButton,
+        actionDto: EditUserActionFormDto(
+          date: viewModel.date,
+          title: viewModel.title,
+          description: viewModel.description,
+          type: viewModel.type,
         ),
+        onSaved: (actionDto) => viewModel.save(actionDto.date, actionDto.title, actionDto.description, actionDto.type),
       ),
       _ => Retry(Strings.userActionDetailsError, viewModel.onRety),
     };
