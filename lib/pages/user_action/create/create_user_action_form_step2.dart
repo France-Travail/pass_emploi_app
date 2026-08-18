@@ -101,48 +101,37 @@ class _SuggestionTagWrap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<UserActionCategory> suggestionList = actionType.suggestionList;
+    final selectedSuggestion = switch (titleSource) {
+      CreateActionTitleFromSuggestions(:final suggestion) => suggestion,
+      _ => null,
+    };
+    final isOtherSelected = titleSource.isFromUserInput;
+
     return Wrap(
       // DsfrTag réserve ~8px à droite pour le checkmark : spacing 0 pour un gap visuel égal au runSpacing.
       spacing: 0,
       runSpacing: DsfrSpacings.s1w,
-      children: switch (titleSource) {
-        CreateActionTitleNotInitialized() => [
-          ...suggestionList.map(
-            (suggestion) => DsfrTag(
-              label: suggestion.value,
-              size: DsfrComponentSize.md,
-              isSelected: false,
-              onSelectionChanged: (_) => onSelected(CreateActionTitleFromSuggestions(suggestion)),
+      children: [
+        ...suggestionList.map((suggestion) {
+          final isSelected = selectedSuggestion == suggestion;
+          return DsfrTag(
+            label: suggestion.value,
+            size: DsfrComponentSize.md,
+            isSelected: isSelected,
+            onSelectionChanged: (selected) => onSelected(
+              selected ? CreateActionTitleFromSuggestions(suggestion) : CreateActionTitleNotInitialized(),
             ),
+          );
+        }),
+        DsfrTag(
+          label: Strings.userActionOther,
+          size: DsfrComponentSize.md,
+          isSelected: isOtherSelected,
+          onSelectionChanged: (selected) => onSelected(
+            selected ? CreateActionTitleFromUserInput('') : CreateActionTitleNotInitialized(),
           ),
-          DsfrTag(
-            label: Strings.userActionOther,
-            size: DsfrComponentSize.md,
-            isSelected: false,
-            onSelectionChanged: (_) => onSelected(CreateActionTitleFromUserInput('')),
-          ),
-        ],
-        CreateActionTitleFromSuggestions() => [
-          DsfrTag(
-            label: titleSource.title,
-            size: DsfrComponentSize.md,
-            isSelected: true,
-            onSelectionChanged: (selected) {
-              if (!selected) onSelected(CreateActionTitleNotInitialized());
-            },
-          ),
-        ],
-        CreateActionTitleFromUserInput() => [
-          DsfrTag(
-            label: Strings.userActionOther,
-            size: DsfrComponentSize.md,
-            isSelected: true,
-            onSelectionChanged: (selected) {
-              if (!selected) onSelected(CreateActionTitleNotInitialized());
-            },
-          ),
-        ],
-      },
+        ),
+      ],
     );
   }
 }

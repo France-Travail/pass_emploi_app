@@ -5,7 +5,7 @@ class _PassEmploiStrings {
   static String appName = "pass emploi";
   static String logoDescription = "Pass emploi";
   static String shouldInformConseiller =
-      "En cas d’imprévu, il est important de prévenir votre conseiller. Vous pouvez le contacter via la messagerie de l’application pass emploi.";
+      "En cas d’imprévu, il est important de prévenir votre conseiller. Vous pouvez le contacter via la messagerie de l’application";
   static String suppressionAccountLabel = "Supprimer mon compte de l’application pass emploi";
   static String warningInformationParagraph1 =
       "En supprimant votre compte de l’application pass emploi, vous perdrez définitivement toutes les données présentes sur l’application :";
@@ -26,7 +26,7 @@ class _CejStrings {
   static String appName = "CEJ";
   static String logoDescription = "Contrat d'Engagement Jeune";
   static String shouldInformConseiller =
-      "En cas d’imprévu, il est important de prévenir votre conseiller. Vous pouvez le contacter via la messagerie de l’application CEJ.";
+      "En cas d’imprévu, il est important de prévenir votre conseiller. Vous pouvez le contacter via la messagerie de l’application";
   static String suppressionAccountLabel = "Supprimer mon compte de l’application CEJ";
   static String warningInformationParagraph1 =
       "En supprimant votre compte de l’application CEJ, vous perdrez définitivement toutes les données présentes sur l’application :";
@@ -504,7 +504,7 @@ class Strings {
   static String downloadParcoursEmploi = "Télécharger l'application";
 
   // Comptage des heures
-  static String comptageDesHeures0To5 = "C’est le moment de compléter vos actions\u{00A0}!\u{00A0}🚀";
+  static String comptageDesHeures0To5 = "Bon début, continuez comme ça\u{00A0}!\u{00A0}💪";
   static String comptageDesHeures5To10 = "Bon début, continuez comme ça\u{00A0}!\u{00A0}💪";
   static String comptageDesHeures10To15 =
       "Vous vous rapprochez de votre objectif : encore un petit effort\u{00A0}!\u{00A0}🌟";
