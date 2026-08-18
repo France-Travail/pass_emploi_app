@@ -159,17 +159,25 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final parentRoute = ModalRoute.of(context);
+    final canPop = parentRoute?.canPop ?? Navigator.of(context).canPop();
+    final isFullscreenDialog = parentRoute?.fullscreenDialog ?? false;
+    final hasActions = actions != null && actions!.isNotEmpty;
+
     return AppBar(
       toolbarHeight: toolBarHeight,
-      titleSpacing: 0,
-      iconTheme: IconThemeData(color: context.content),
+      automaticallyImplyLeading: false,
+      titleSpacing: DsfrSpacings.s1w,
+      leadingWidth: DsfrSpacings.s8w,
+      iconTheme: IconThemeData(color: DsfrColorDecisions.textActionHighBlueFrance(context)),
       elevation: 0,
       centerTitle: false,
       scrolledUnderElevation: 0,
-      surfaceTintColor: AppColors.transparent,
-      leading: leading,
+      surfaceTintColor: Colors.transparent,
+      leading: leading ?? (canPop ? _SecondaryAppBarLeadingButton(isClose: isFullscreenDialog) : null),
       actions: actions,
-      backgroundColor: backgroundColor ?? context.bg,
+      actionsPadding: hasActions ? const EdgeInsets.only(right: DsfrSpacings.s2w) : EdgeInsets.zero,
+      backgroundColor: backgroundColor ?? DsfrColorDecisions.backgroundDefaultGrey(context),
       title: Semantics(
         header: true,
         child: Tooltip(
@@ -177,8 +185,9 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
           excludeFromSemantics: true,
           child: Text(
             title,
-            style: TextStyles.secondaryAppBar(context),
+            style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textTitleGrey(context)),
             overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
         ),
       ),
@@ -189,6 +198,25 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => Size.fromHeight(toolBarHeight);
+}
+
+class _SecondaryAppBarLeadingButton extends StatelessWidget {
+  const _SecondaryAppBarLeadingButton({required this.isClose});
+
+  final bool isClose;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      child: DsfrButton(
+        icon: isClose ? DsfrIcons.systemCloseLine : DsfrIcons.systemArrowLeftSLine,
+        iconSemanticLabel: isClose ? Strings.close : Strings.back,
+        variant: DsfrButtonVariant.tertiaryWithoutBorder,
+        size: DsfrComponentSize.md,
+        onPressed: () => Navigator.of(context).maybePop(),
+      ),
+    );
+  }
 }
 
 class ModeDemoAppBar extends StatelessWidget implements PreferredSizeWidget {
