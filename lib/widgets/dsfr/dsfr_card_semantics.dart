@@ -189,15 +189,16 @@ class DsfrCategoryTag extends StatelessWidget {
               : const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
           child: Row(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (icon != null) ...[
-                Icon(icon, size: 12, color: color),
-                const SizedBox(width: 4),
+                Icon(icon, size: 16, color: color),
+                const SizedBox(width: 6),
               ],
               Flexible(
                 child: Text(
                   displayLabel,
-                  style: DsfrTextStyle.bodyXsBold(color: color),
+                  style: DsfrTextStyle.bodySmBold(color: color),
                 ),
               ),
             ],
