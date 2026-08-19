@@ -31,7 +31,6 @@ import 'package:pass_emploi_app/models/cv_pole_emploi.dart';
 import 'package:pass_emploi_app/models/demarche.dart';
 import 'package:pass_emploi_app/models/demarche_du_referentiel.dart';
 import 'package:pass_emploi_app/models/details_jeune.dart';
-import 'package:pass_emploi_app/models/diagoriente_urls.dart';
 import 'package:pass_emploi_app/models/evenement_emploi/evenement_emploi.dart';
 import 'package:pass_emploi_app/models/evenement_emploi/evenement_emploi_details.dart';
 import 'package:pass_emploi_app/models/evenement_emploi/evenement_emploi_modalite.dart';
@@ -1040,14 +1039,6 @@ RechercheRequest<EmploiCriteresRecherche, EmploiFiltresRecherche> rechercheEmplo
 }
 
 EmploiFiltresRecherche mockEmploiFiltreZeroDistance() => EmploiFiltresRecherche.withFiltres(distance: 0);
-
-DiagorienteUrls mockDiagorienteUrls() {
-  return DiagorienteUrls(
-    chatBotUrl: 'chatBotUrl',
-    metiersFavorisUrl: 'metiersFavorisUrl',
-    metiersRecommandesUrl: 'metiersRecommandesUrl',
-  );
-}
 
 Favori mockFavori({
   String id = 'id',

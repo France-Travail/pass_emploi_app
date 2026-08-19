@@ -15,7 +15,6 @@ import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_state.dart';
 import 'package:pass_emploi_app/features/demarche/search/seach_demarche_state.dart';
 import 'package:pass_emploi_app/features/demarche/update/update_demarche_state.dart';
-import 'package:pass_emploi_app/features/diagoriente_preferences_metier/diagoriente_preferences_metier_state.dart';
 import 'package:pass_emploi_app/features/events/list/event_list_state.dart';
 import 'package:pass_emploi_app/features/favori/list/favori_list_state.dart';
 import 'package:pass_emploi_app/features/feature_flip/feature_flip_state.dart';
@@ -74,7 +73,6 @@ import 'package:pass_emploi_app/models/immersion_details.dart';
 import 'package:pass_emploi_app/models/in_app_notification.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/matching_demarche_du_referentiel.dart';
-import 'package:pass_emploi_app/models/metier.dart';
 import 'package:pass_emploi_app/models/mon_suivi.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
 import 'package:pass_emploi_app/models/offre_emploi_details.dart';
@@ -638,21 +636,6 @@ extension AppStateDSL on AppState {
 
   AppState withImmersionDetailsLoading() {
     return copyWith(immersionDetailsState: ImmersionDetailsLoadingState());
-  }
-
-  AppState withDiagorientePreferencesMetierLoadingState() =>
-      copyWith(diagorientePreferencesMetierState: DiagorientePreferencesMetierLoadingState());
-
-  AppState withDiagorientePreferencesMetierFailureState() =>
-      copyWith(diagorientePreferencesMetierState: DiagorientePreferencesMetierFailureState());
-
-  AppState withDiagorientePreferencesMetierSuccessState({List<Metier> metiersFavoris = const []}) {
-    return copyWith(
-      diagorientePreferencesMetierState: DiagorientePreferencesMetierSuccessState(
-        mockDiagorienteUrls(),
-        metiersFavoris,
-      ),
-    );
   }
 
   AppState favoriListLoadingState() => copyWith(favoriListState: FavoriListLoadingState());

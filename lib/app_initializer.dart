@@ -60,8 +60,6 @@ import 'package:pass_emploi_app/repositories/demarche/update_demarche_repository
 import 'package:pass_emploi_app/repositories/derniere_offre_consultee_repository.dart';
 import 'package:pass_emploi_app/repositories/details_jeune/details_jeune_repository.dart';
 import 'package:pass_emploi_app/repositories/developer_option_repository.dart';
-import 'package:pass_emploi_app/repositories/diagoriente_metiers_favoris_repository.dart';
-import 'package:pass_emploi_app/repositories/diagoriente_urls_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_emploi/evenement_emploi_details_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_emploi/evenement_emploi_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_engagement/evenement_engagement_repository.dart';
@@ -286,8 +284,6 @@ class AppInitializer {
       SuggestionsRechercheRepository(dioClient, requestCacheManager, crashlytics),
       AnimationsCollectivesRepository(dioClient, crashlytics),
       SessionMiloRepository(dioClient, crashlytics),
-      DiagorienteUrlsRepository(dioClient, crashlytics),
-      DiagorienteMetiersFavorisRepository(dioClient, requestCacheManager, crashlytics),
       GetFavorisRepository(dioClient, crashlytics),
       RecherchesRecentesRepository(securedPreferences),
       ContactImmersionRepository(dioClient, crashlytics),

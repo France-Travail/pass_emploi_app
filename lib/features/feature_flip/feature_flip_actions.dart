@@ -25,12 +25,6 @@ class FeatureFlipAccueilZenithMessageAction {
   FeatureFlipAccueilZenithMessageAction(this.accueilZenithMessage);
 }
 
-class FeatureFlipDiagorienteEnabledAction {
-  final bool isDiagorienteEnabled;
-
-  FeatureFlipDiagorienteEnabledAction(this.isDiagorienteEnabled);
-}
-
 class FeatureFlipActualiteMissionLocaleEnabledAction {
   final bool isActualiteMissionLocaleEnabled;
 
