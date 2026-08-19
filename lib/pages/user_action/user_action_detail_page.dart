@@ -87,27 +87,24 @@ class _ActionDetailPageState extends State<UserActionDetailPage> {
               widget.source,
               widget.userActionId,
             ),
-            builder: (context, viewModel) =>
-                StoreConnector<AppState, UserActionDoneBottomSheetViewModel>(
-                  converter: (store) =>
-                      UserActionDoneBottomSheetViewModel.create(
-                        store,
-                        widget.source,
-                        widget.userActionId,
-                      ),
-                  builder: (context, doneViewModel) => _Sheet(
-                    viewModel: viewModel,
-                    doneViewModel: doneViewModel,
-                    source: widget.source,
-                  ),
-                  onDidChange: (previous, next) {
-                    if (previous?.displayState != DisplayState.CONTENT &&
-                        next.displayState == DisplayState.CONTENT) {
-                      confettiController.play();
-                    }
-                  },
-                  distinct: true,
-                ),
+            builder: (context, viewModel) => StoreConnector<AppState, UserActionDoneBottomSheetViewModel>(
+              converter: (store) => UserActionDoneBottomSheetViewModel.create(
+                store,
+                widget.source,
+                widget.userActionId,
+              ),
+              builder: (context, doneViewModel) => _Sheet(
+                viewModel: viewModel,
+                doneViewModel: doneViewModel,
+                source: widget.source,
+              ),
+              onDidChange: (previous, next) {
+                if (previous?.displayState != DisplayState.CONTENT && next.displayState == DisplayState.CONTENT) {
+                  confettiController.play();
+                }
+              },
+              distinct: true,
+            ),
             onDispose: (store) {
               if (widget.source == UserActionStateSource.noSource) {
                 store.dispatch(UserActionDetailsResetAction());
@@ -126,11 +123,9 @@ class _ActionDetailPageState extends State<UserActionDetailPage> {
     if (viewModel.updateDisplayState == UpdateDisplayState.SHOW_UPDATE_ERROR) {
       showSnackBarWithSystemError(context, Strings.updateStatusError);
       viewModel.resetUpdateStatus();
-    } else if (viewModel.updateDisplayState ==
-        UpdateDisplayState.TO_DISMISS_AFTER_UPDATE) {
+    } else if (viewModel.updateDisplayState == UpdateDisplayState.TO_DISMISS_AFTER_UPDATE) {
       _trackSuccessfulUpdate();
-    } else if (viewModel.deleteDisplayState ==
-        DeleteDisplayState.TO_DISMISS_AFTER_DELETION) {
+    } else if (viewModel.deleteDisplayState == DeleteDisplayState.TO_DISMISS_AFTER_DELETION) {
       final navigator = Navigator.of(context);
       navigator.pop();
       navigator.push(
@@ -139,8 +134,7 @@ class _ActionDetailPageState extends State<UserActionDetailPage> {
           content: Strings.deleteActionSuccess,
         ),
       );
-    } else if (viewModel.deleteDisplayState ==
-        DeleteDisplayState.SHOW_DELETE_ERROR) {
+    } else if (viewModel.deleteDisplayState == DeleteDisplayState.SHOW_DELETE_ERROR) {
       showSnackBarWithSystemError(context, Strings.deleteActionError);
     }
   }
@@ -185,8 +179,7 @@ class _Sheet extends StatelessWidget {
             isSuccess: isSuccess,
           ),
         ),
-        if (_isLoading(viewModel) ||
-            doneViewModel.displayState == DisplayState.LOADING)
+        if (_isLoading(viewModel) || doneViewModel.displayState == DisplayState.LOADING)
           Positioned.fill(child: LoadingOverlay()),
       ],
     );
@@ -419,12 +412,8 @@ class _FinishActionSectionState extends State<_FinishActionSection> {
           children: [
             for (final suggestion in suggestions)
               DsfrButton(
-                label: suggestion.date.isToday()
-                    ? Strings.dateSuggestionAujourdhui
-                    : Strings.dateSuggestionHier,
-                variant: _isSuggestionSelected(suggestion)
-                    ? DsfrButtonVariant.primary
-                    : DsfrButtonVariant.secondary,
+                label: suggestion.date.isToday() ? Strings.dateSuggestionAujourdhui : Strings.dateSuggestionHier,
+                variant: _isSuggestionSelected(suggestion) ? DsfrButtonVariant.primary : DsfrButtonVariant.secondary,
                 size: DsfrComponentSize.sm,
                 onPressed: () => _selectSuggestion(suggestion),
               ),
@@ -460,9 +449,7 @@ class _FinishActionSectionState extends State<_FinishActionSection> {
           icon: DsfrIcons.systemCheckLine,
           variant: DsfrButtonVariant.primary,
           size: DsfrComponentSize.md,
-          onPressed: _date.isValid
-              ? () => widget.doneViewModel.onActionDone(_date.selectedDate)
-              : null,
+          onPressed: _date.isValid ? () => widget.doneViewModel.onActionDone(_date.selectedDate) : null,
         ),
         const SizedBox(height: DsfrSpacings.s1w),
         DsfrButton(
@@ -477,8 +464,7 @@ class _FinishActionSectionState extends State<_FinishActionSection> {
 
   bool _isSuggestionSelected(DateSuggestionViewModel suggestion) {
     return switch (_date) {
-      DateFromSuggestion(:final date) =>
-        DateUtils.dateOnly(date) == DateUtils.dateOnly(suggestion.date),
+      DateFromSuggestion(:final date) => DateUtils.dateOnly(date) == DateUtils.dateOnly(suggestion.date),
       _ => false,
     };
   }
@@ -515,8 +501,7 @@ class _CommentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, ActionCommentaireViewModel>(
-      onInit: (store) =>
-          store.dispatch(ActionCommentaireListRequestAction(actionId)),
+      onInit: (store) => store.dispatch(ActionCommentaireListRequestAction(actionId)),
       converter: (store) => ActionCommentaireViewModel.create(store, actionId),
       builder: (context, viewModel) => _build(context, viewModel),
       distinct: true,
@@ -556,8 +541,7 @@ class _CommentCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: DsfrSpacings.s2w),
-        if (viewModel.lastComment != null)
-          Comment(comment: viewModel.lastComment!),
+        if (viewModel.lastComment != null) Comment(comment: viewModel.lastComment!),
         if (viewModel.lastComment == null)
           Text(
             Strings.noComments,
@@ -568,9 +552,7 @@ class _CommentCard extends StatelessWidget {
         const SizedBox(height: DsfrSpacings.s3w),
         DsfrButton(
           onPressed: () => _onCommentClick(context, actionId, actionTitle),
-          label: commentsNumber < 1
-              ? Strings.addComment
-              : Strings.seeNComments(commentsNumber.toString()),
+          label: commentsNumber < 1 ? Strings.addComment : Strings.seeNComments(commentsNumber.toString()),
           variant: DsfrButtonVariant.secondary,
           size: DsfrComponentSize.md,
         ),
