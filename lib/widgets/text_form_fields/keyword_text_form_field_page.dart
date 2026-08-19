@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:pass_emploi_app/analytics/analytics_constants.dart';
-import 'package:pass_emploi_app/features/diagoriente_preferences_metier/diagoriente_preferences_metier_actions.dart';
 import 'package:pass_emploi_app/presentation/mots_cles_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/utils/autocomplete_suggestions_group.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/utils/debounce_text_form_field.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/utils/full_screen_text_form_field_scaffold.dart';
@@ -37,8 +34,6 @@ class KeywordTextFormFieldPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return FullScreenTextFormFieldScaffold(
       body: StoreConnector<AppState, MotsClesViewModel>(
-        onInit: (store) => store.dispatch(DiagorientePreferencesMetierRequestAction()),
-        onInitialBuild: _onInitialBuild,
         converter: (store) => MotsClesViewModel.create(store),
         builder: (context, viewModel) {
           return _Body(
@@ -52,15 +47,6 @@ class KeywordTextFormFieldPage extends StatelessWidget {
         distinct: true,
       ),
     );
-  }
-
-  void _onInitialBuild(MotsClesViewModel viewModel) {
-    if (viewModel.containsDiagorienteFavoris) {
-      PassEmploiMatomoTracker.instance.trackEvent(
-        eventCategory: AnalyticsEventNames.autocompleteMotCleDiagorienteMetiersFavorisEventCategory,
-        action: AnalyticsEventNames.autocompleteMotCleDiagorienteMetiersFavorisDisplayAction,
-      );
-    }
   }
 }
 
@@ -143,30 +129,17 @@ class _BodyState extends State<_Body> {
       if (item is MotsClesTitleItem) {
         flushGroup();
         currentTitle = item.title;
-        currentIcon = _iconForTitle(item.title);
+        currentIcon = DsfrIcons.systemTimeLine;
       } else if (item is MotsClesSuggestionItem) {
         currentChildren.add(
           AutocompleteSuggestionTile(
             text: item.text,
-            onTap: () {
-              if (item.source == MotCleSource.diagorienteMetiersFavoris) {
-                PassEmploiMatomoTracker.instance.trackEvent(
-                  eventCategory: AnalyticsEventNames.autocompleteMotCleDiagorienteMetiersFavorisEventCategory,
-                  action: AnalyticsEventNames.autocompleteMotCleDiagorienteMetiersFavorisClickAction,
-                );
-              }
-              Navigator.pop(context, item.text);
-            },
+            onTap: () => Navigator.pop(context, item.text),
           ),
         );
       }
     }
     flushGroup();
     return groups;
-  }
-
-  IconData? _iconForTitle(String title) {
-    if (title == Strings.vosPreferencesMetiers) return DsfrIcons.weatherFlashlightLine;
-    return DsfrIcons.systemTimeLine;
   }
 }
