@@ -5,21 +5,23 @@ class DateSuggestionListViewModel {
   final List<DateSuggestionViewModel> suggestions;
 
   factory DateSuggestionListViewModel.createFuture(DateTime now) {
+    final yesterday = now.subtract(Duration(days: 1));
+    final tomorrow = now.add(Duration(days: 1));
     return DateSuggestionListViewModel(suggestions: [
       DateSuggestionViewModel(
-        "${Strings.dateSuggestionHier} (${now.subtract(Duration(days: 1)).toDayOfWeek()})",
-        "${Strings.dateSuggestionHier} (${now.subtract(Duration(days: 1)).toDayWithFullMonth()})",
-        now.subtract(Duration(days: 1)),
+        Strings.dateSuggestionHier,
+        "${Strings.dateSuggestionHier} (${yesterday.toDayWithFullMonth()})",
+        yesterday,
       ),
       DateSuggestionViewModel(
-        "${Strings.dateSuggestionAujourdhui} (${now.toDayOfWeek()})",
+        Strings.dateSuggestionAujourdhui,
         "${Strings.dateSuggestionAujourdhui} (${now.toDayWithFullMonth()})",
         now,
       ),
       DateSuggestionViewModel(
-        "${Strings.dateSuggestionDemain} (${now.add(Duration(days: 1)).toDayOfWeek()})",
-        "${Strings.dateSuggestionDemain} (${now.add(Duration(days: 1)).toDayWithFullMonth()})",
-        now.add(Duration(days: 1)),
+        Strings.dateSuggestionDemain,
+        "${Strings.dateSuggestionDemain} (${tomorrow.toDayWithFullMonth()})",
+        tomorrow,
       ),
     ]);
   }
@@ -34,13 +36,13 @@ class DateSuggestionListViewModel {
     return DateSuggestionListViewModel(suggestions: [
       if (isValid(now))
         DateSuggestionViewModel(
-          "${Strings.dateSuggestionAujourdhui} (${now.toDayOfWeek()})",
+          Strings.dateSuggestionAujourdhui,
           "${Strings.dateSuggestionAujourdhui} (${now.toDayWithFullMonth()})",
           now,
         ),
       if (isValid(yesterday))
         DateSuggestionViewModel(
-          "${Strings.dateSuggestionHier} (${yesterday.toDayOfWeek()})",
+          Strings.dateSuggestionHier,
           "${Strings.dateSuggestionHier} (${yesterday.toDayWithFullMonth()})",
           yesterday,
         ),

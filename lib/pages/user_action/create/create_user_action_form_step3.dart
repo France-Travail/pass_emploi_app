@@ -5,12 +5,12 @@ import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/models/user_action_type.dart';
 import 'package:pass_emploi_app/pages/user_action/create/create_user_action_form_step2.dart';
 import 'package:pass_emploi_app/presentation/model/date_input_source.dart';
-import 'package:pass_emploi_app/presentation/model/date_suggestions_view_model.dart';
 import 'package:pass_emploi_app/presentation/user_action/creation_form/create_user_action_form_view_model.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/date_extensions.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_date_input_suggestions.dart';
 
 class CreateUserActionFormStep3 extends StatelessWidget {
   const CreateUserActionFormStep3({
@@ -255,7 +255,7 @@ class _DuplicateUserActionItemState extends State<_DuplicateUserActionItem> {
                   onChanged: (date) => widget.onDateChanged(DateFromPicker(date)),
                 ),
                 const SizedBox(height: DsfrSpacings.s1w),
-                _DateSuggestions(
+                DsfrDateSuggestions(
                   dateSource: widget.duplicatedUserAction.dateSource,
                   onSelected: widget.onDateChanged,
                 ),
@@ -299,62 +299,6 @@ class _DuplicateUserActionItemState extends State<_DuplicateUserActionItem> {
             ),
           ),
       ],
-    );
-  }
-}
-
-class _DateSuggestions extends StatelessWidget {
-  const _DateSuggestions({
-    required this.onSelected,
-    required this.dateSource,
-  });
-
-  final void Function(DateInputSource) onSelected;
-  final DateInputSource dateSource;
-
-  @override
-  Widget build(BuildContext context) {
-    final dateSuggestionsViewModel = DateSuggestionListViewModel.createFuture(DateTime.now());
-    return Wrap(
-      spacing: DsfrSpacings.s1w,
-      runSpacing: DsfrSpacings.s1w,
-      children: switch (dateSource) {
-        DateNotInitialized() =>
-          dateSuggestionsViewModel.suggestions
-              .map(
-                (suggestion) => Semantics(
-                  button: true,
-                  label: suggestion.a11yLabel,
-                  child: DsfrButton(
-                    label: suggestion.label,
-                    variant: DsfrButtonVariant.secondary,
-                    size: DsfrComponentSize.sm,
-                    onPressed: () => onSelected(DateFromSuggestion(suggestion.date, suggestion.label)),
-                  ),
-                ),
-              )
-              .toList(),
-        DateFromSuggestion() => [
-          DsfrTag(
-            label: (dateSource as DateFromSuggestion).label,
-            size: DsfrComponentSize.md,
-            isSelected: true,
-            onSelectionChanged: (selected) {
-              if (!selected) onSelected(DateNotInitialized());
-            },
-          ),
-        ],
-        DateFromPicker() => [
-          DsfrButton(
-            icon: DsfrIcons.systemCloseLine,
-            iconSemanticLabel: Strings.removeDateTooltip,
-            label: Strings.removeDateTooltip,
-            variant: DsfrButtonVariant.tertiaryWithoutBorder,
-            size: DsfrComponentSize.sm,
-            onPressed: () => onSelected(DateNotInitialized()),
-          ),
-        ],
-      },
     );
   }
 }
