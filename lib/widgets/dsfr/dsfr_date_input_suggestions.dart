@@ -74,7 +74,7 @@ class _DsfrDateInputSuggestionsState extends State<DsfrDateInputSuggestions> {
           onChanged: (date) => widget.onDateChanged(DateFromPicker(date)),
         ),
         const SizedBox(height: DsfrSpacings.s1w),
-        _DateSuggestions(
+        DsfrDateSuggestions(
           dateSource: widget.dateSource,
           onSelected: widget.onDateChanged,
         ),
@@ -83,8 +83,9 @@ class _DsfrDateInputSuggestionsState extends State<DsfrDateInputSuggestions> {
   }
 }
 
-class _DateSuggestions extends StatelessWidget {
-  const _DateSuggestions({
+class DsfrDateSuggestions extends StatelessWidget {
+  const DsfrDateSuggestions({
+    super.key,
     required this.onSelected,
     required this.dateSource,
   });
@@ -98,32 +99,19 @@ class _DateSuggestions extends StatelessWidget {
     return Wrap(
       spacing: DsfrSpacings.s1w,
       runSpacing: DsfrSpacings.s1w,
-      children: switch (dateSource) {
-        DateNotInitialized() => dateSuggestionsViewModel.suggestions
-            .map(
-              (suggestion) => Semantics(
-                button: true,
-                label: suggestion.a11yLabel,
-                child: DsfrButton(
-                  label: suggestion.label,
-                  variant: DsfrButtonVariant.secondary,
-                  size: DsfrComponentSize.sm,
-                  onPressed: () => onSelected(DateFromSuggestion(suggestion.date, suggestion.label)),
-                ),
-              ),
-            )
-            .toList(),
-        DateFromSuggestion() => [
-          DsfrTag(
-            label: (dateSource as DateFromSuggestion).label,
-            size: DsfrComponentSize.md,
-            isSelected: true,
-            onSelectionChanged: (selected) {
-              if (!selected) onSelected(DateNotInitialized());
-            },
+      children: [
+        for (final suggestion in dateSuggestionsViewModel.suggestions)
+          Semantics(
+            button: true,
+            label: suggestion.a11yLabel,
+            child: DsfrButton(
+              label: suggestion.label,
+              variant: _isSuggestionSelected(suggestion) ? DsfrButtonVariant.primary : DsfrButtonVariant.secondary,
+              size: DsfrComponentSize.sm,
+              onPressed: () => onSelected(DateFromSuggestion(suggestion.date, suggestion.label)),
+            ),
           ),
-        ],
-        DateFromPicker() => [
+        if (dateSource is DateFromPicker)
           DsfrButton(
             icon: DsfrIcons.systemCloseLine,
             iconSemanticLabel: Strings.removeDateTooltip,
@@ -132,8 +120,14 @@ class _DateSuggestions extends StatelessWidget {
             size: DsfrComponentSize.sm,
             onPressed: () => onSelected(DateNotInitialized()),
           ),
-        ],
-      },
+      ],
     );
+  }
+
+  bool _isSuggestionSelected(DateSuggestionViewModel suggestion) {
+    return switch (dateSource) {
+      DateFromSuggestion(:final date) => DateUtils.dateOnly(date) == DateUtils.dateOnly(suggestion.date),
+      _ => false,
+    };
   }
 }
