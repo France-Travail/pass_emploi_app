@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/ignore_tracking_context_provider.dart';
-import 'package:pass_emploi_app/features/diagoriente_preferences_metier/diagoriente_preferences_metier_actions.dart';
 import 'package:pass_emploi_app/features/metier/search_metier_actions.dart';
 import 'package:pass_emploi_app/models/metier.dart';
 import 'package:pass_emploi_app/presentation/autocomplete/metier_view_model.dart';
@@ -13,7 +11,6 @@ import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/utils/debounce_text_form_field.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/utils/full_screen_text_form_field_scaffold.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/utils/multiline_app_bar.dart';
@@ -105,24 +102,12 @@ class _MetierAutocompletePageState extends State<_MetierAutocompletePage> {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, MetierViewModel>(
-      onInit: (store) => store.dispatch(DiagorientePreferencesMetierRequestAction()),
-      onInitialBuild: _onInitialBuild,
+      onInitialBuild: (viewModel) => viewModel.onInputMetier(widget.selectedMetier?.libelle),
       converter: (store) => MetierViewModel.create(store),
       onDispose: (store) => store.dispatch(SearchMetierResetAction()),
       builder: _builder,
       distinct: true,
     );
-  }
-
-  void _onInitialBuild(MetierViewModel viewModel) {
-    if (viewModel.containsDiagorienteFavoris) {
-      PassEmploiMatomoTracker.instance.trackEvent(
-        eventCategory: AnalyticsEventNames.autocompleteMetierDiagorienteMetiersFavorisEventCategory,
-        action: AnalyticsEventNames.autocompleteMetierDiagorienteMetiersFavorisDisplayAction,
-      );
-    }
-
-    viewModel.onInputMetier(widget.selectedMetier?.libelle);
   }
 
   Widget _builder(BuildContext context, MetierViewModel viewModel) {
@@ -198,15 +183,7 @@ class _MetierListTile extends StatelessWidget {
             Expanded(child: Text(metier.libelle, style: TextStyles.textBaseRegular.copyWith(color: context.content))),
           ],
         ),
-        onTap: () {
-          if (source == MetierSource.diagorienteMetiersFavoris) {
-            PassEmploiMatomoTracker.instance.trackEvent(
-              eventCategory: AnalyticsEventNames.autocompleteMetierDiagorienteMetiersFavorisEventCategory,
-              action: AnalyticsEventNames.autocompleteMetierDiagorienteMetiersFavorisClickAction,
-            );
-          }
-          onMetierTap(metier);
-        },
+        onTap: () => onMetierTap(metier),
       ),
     );
   }

@@ -1,6 +1,5 @@
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:pass_emploi_app/repositories/action_commentaire_repository.dart';
-import 'package:pass_emploi_app/repositories/diagoriente_metiers_favoris_repository.dart';
 import 'package:pass_emploi_app/repositories/suggestions_recherche_repository.dart';
 import 'package:uuid/uuid.dart';
 
@@ -34,10 +33,6 @@ class PassEmploiCacheManager {
 
   Future<void> removeSuggestionsRechercheResource({required String userId}) async {
     await _delete(_baseUrl + SuggestionsRechercheRepository.getSuggestionsUrl(userId: userId));
-  }
-
-  Future<void> removeDiagorienteFavorisResource({required String userId}) async {
-    await _delete(_baseUrl + DiagorienteMetiersFavorisRepository.getUrl(userId: userId));
   }
 
   void emptyCache() => _cacheStore.clean();

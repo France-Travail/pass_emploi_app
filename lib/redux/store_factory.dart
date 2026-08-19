@@ -36,7 +36,6 @@ import 'package:pass_emploi_app/features/demarche/update/update_demarche_middlew
 import 'package:pass_emploi_app/features/details_jeune/details_jeune_middleware.dart';
 import 'package:pass_emploi_app/features/developer_option/activation/developer_options_middleware.dart';
 import 'package:pass_emploi_app/features/developer_option/matomo/matomo_logging_middleware.dart';
-import 'package:pass_emploi_app/features/diagoriente_preferences_metier/diagoriente_preferences_metier_middleware.dart';
 import 'package:pass_emploi_app/features/evenement_emploi/details/evenement_emploi_details_middleware.dart';
 import 'package:pass_emploi_app/features/events/list/event_list_middleware.dart';
 import 'package:pass_emploi_app/features/favori/ids/favori_ids_middleware.dart';
@@ -136,8 +135,6 @@ import 'package:pass_emploi_app/repositories/demarche/update_demarche_repository
 import 'package:pass_emploi_app/repositories/derniere_offre_consultee_repository.dart';
 import 'package:pass_emploi_app/repositories/details_jeune/details_jeune_repository.dart';
 import 'package:pass_emploi_app/repositories/developer_option_repository.dart';
-import 'package:pass_emploi_app/repositories/diagoriente_metiers_favoris_repository.dart';
-import 'package:pass_emploi_app/repositories/diagoriente_urls_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_emploi/evenement_emploi_details_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_emploi/evenement_emploi_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_engagement/evenement_engagement_repository.dart';
@@ -243,8 +240,6 @@ class StoreFactory {
   final SuggestionsRechercheRepository suggestionsRechercheRepository;
   final AnimationsCollectivesRepository animationsCollectivesRepository;
   final SessionMiloRepository sessionMiloRepository;
-  final DiagorienteUrlsRepository diagorienteUrlsRepository;
-  final DiagorienteMetiersFavorisRepository diagorienteMetiersFavorisRepository;
   final GetFavorisRepository getFavorisRepository;
   final RecherchesRecentesRepository recherchesRecentesRepository;
   final ContactImmersionRepository contactImmersionRepository;
@@ -334,8 +329,6 @@ class StoreFactory {
     this.suggestionsRechercheRepository,
     this.animationsCollectivesRepository,
     this.sessionMiloRepository,
-    this.diagorienteUrlsRepository,
-    this.diagorienteMetiersFavorisRepository,
     this.getFavorisRepository,
     this.recherchesRecentesRepository,
     this.contactImmersionRepository,
@@ -444,7 +437,6 @@ class StoreFactory {
         RechercheImmersionMiddleware(immersionRepository).call,
         RechercheServiceCiviqueMiddleware(serviceCiviqueRepository).call,
         RechercheEvenementEmploiMiddleware(evenementEmploiRepository).call,
-        DiagorientePreferencesMetierMiddleware(diagorienteUrlsRepository, diagorienteMetiersFavorisRepository).call,
         FavoriListMiddleware(getFavorisRepository).call,
         RecherchesRecentesMiddleware(recherchesRecentesRepository).call,
         ContactImmersionMiddleware(contactImmersionRepository).call,

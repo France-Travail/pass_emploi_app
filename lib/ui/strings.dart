@@ -1037,7 +1037,6 @@ class Strings {
   // Recherche
   static String derniereRecherche = "Recherches récentes";
   static String dernieresRecherches = "Recherches récentes";
-  static String vosPreferencesMetiers = "Vos préférences métiers";
   static String rechercheDerniereOffreConsultee = "Dernière offre consultée";
   static String rechercheHomeOffresEmploiTitle = "Emploi";
   static String rechercheHomeOffresEmploiSubtitle = "CDD, CDI, saisonnier";
@@ -1587,9 +1586,9 @@ class Strings {
   static String voirResultatsSuggestion = "Voir les résultats";
   static String emptySuggestionAlerteListTitre = "Vous n’avez pas encore de suggestions d’alerte";
   static String emptySuggestionAlerteListDescriptionMilo =
-      "Vous pouvez découvrir vos métiers favoris dans votre profil pour avoir des suggestions qui vous correspondent";
+      "De nouvelles suggestions pourront vous être proposées plus tard.";
   static String emptySuggestionAlerteListDescriptionPoleEmploi =
-      "Vous pouvez remplir votre profil France Travail et découvrir vos métiers favoris dans votre profil pour avoir des suggestions qui vous correspondent";
+      "Vous pouvez remplir votre profil France Travail pour avoir des suggestions qui vous correspondent";
 
   // Événements
   static String eventListError = "Erreur lors de la récupération des événements";
@@ -1665,25 +1664,6 @@ class Strings {
   static String dateDerniereMiseAJourRendezvous(String date) => "Dernière actualisation de vos rendez-vous le $date";
 
   static String dateDerniereMiseAJourDemarches(String date) => "Dernière actualisation de vos démarches le $date";
-
-  // Diagoriente
-  static String diagorienteEntryPageTitle = "Préférences métiers";
-  static String diagorienteMetiersCardTitle = "Découvrez de nouveaux métiers";
-  static String diagorienteMetiersCardSubtitle =
-      "Explorez les métiers qui correspondent à vos centres d'intérêt en répondant à quelques questions.";
-  static String diagorienteMetiersCardButton = "Commencer";
-  static String diagorienteMetiersCardError =
-      "Une erreur est survenue. Vérifiez votre connexion ou réessayez plus tard.";
-  static String diagorienteChatBotPageTitle = "Découvrir des métiers";
-  static String diagorienteMetiersFavorisPageTitle = "Mes métiers favoris";
-  static String diagorienteDiscoverCardTitle = "Diagoriente";
-  static String diagorienteDiscoverCardSubtitle = "Explorer les métiers qui correspondent à mes centres d’intérêt";
-  static String diagorienteMetiersFavorisCardTitle = "Retrouvez vos métiers favoris";
-  static String diagorienteMetiersFavorisCardSubtitle = "Mes métiers favoris";
-  static String diagorienteMetiersFavorisCardPressedTip = "Voir";
-  static String diagorienteVoirplus = "Voir plus";
-  static String diagorienteAffinerMesResultats = "Affiner mes résultats";
-  static String diagorienteTerminerEtRetournerAuProfil = "Terminer et retourner au profil";
 
   // CV
   static String cvCardTitle = "CV";

@@ -11,7 +11,6 @@ import 'package:pass_emploi_app/features/developer_option/activation/developer_o
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/pages/cv/cv_list_page.dart';
-import 'package:pass_emploi_app/pages/diagoriente/diagoriente_entry_page.dart';
 import 'package:pass_emploi_app/pages/notification_preferences_page.dart';
 import 'package:pass_emploi_app/pages/partage_activite_page.dart';
 import 'package:pass_emploi_app/pages/profil/matomo_logging_page.dart';
@@ -21,7 +20,6 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
-import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
@@ -76,7 +74,6 @@ class _Scaffold extends StatelessWidget {
               children: [
                 _UsernameTitle(userName: viewModel.userName, onTitleTap: viewModel.onTitleTap),
                 SizedBox(height: Margins.spacing_base),
-                _Diagoriente(paddingIfEnabled: EdgeInsets.only(bottom: Margins.spacing_base)),
                 if (viewModel.withDownloadCv) ...[_CurriculumVitaeCard(), SizedBox(height: Margins.spacing_base)],
                 _MailCard(userEmail: viewModel.userEmail),
                 SizedBox(height: Margins.spacing_base),
@@ -234,32 +231,6 @@ class _Scaffold extends StatelessWidget {
   }
 }
 
-class _Diagoriente extends StatelessWidget {
-  const _Diagoriente({required this.paddingIfEnabled});
-  final EdgeInsetsGeometry paddingIfEnabled;
-
-  @override
-  Widget build(BuildContext context) {
-    return StoreConnector<AppState, bool>(
-      converter: (store) => store.state.featureFlipState.featureFlip.isDiagorienteEnabled,
-      builder: (context, isDiagorienteEnabled) {
-        if (isDiagorienteEnabled) {
-          return Padding(
-            padding: paddingIfEnabled,
-            child: _OutilCard(
-              title: Strings.diagorienteDiscoverCardTitle,
-              subtitle: Strings.diagorienteDiscoverCardSubtitle,
-              imagePath: Drawables.diagorienteLogo,
-              onTap: () => Navigator.push(context, DiagorienteEntryPage.materialPageRoute()),
-            ),
-          );
-        }
-        return SizedBox.shrink();
-      },
-    );
-  }
-}
-
 class _SectionTitle extends StatelessWidget {
   final String title;
 
@@ -270,43 +241,6 @@ class _SectionTitle extends StatelessWidget {
     return Semantics(
       header: true,
       child: Text(title, style: TextStyles.textLBold(color: context.content)),
-    );
-  }
-}
-
-class _OutilCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final String imagePath;
-  final VoidCallback onTap;
-
-  const _OutilCard({required this.title, required this.subtitle, required this.imagePath, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      child: CardContainer(
-        onTap: onTap,
-        child: Row(
-          children: [
-            Image.asset(imagePath, width: 42, height: 42),
-            SizedBox(width: Margins.spacing_s),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-                  SizedBox(height: Margins.spacing_xs),
-                  Text(subtitle, style: TextStyles.textSRegular(color: context.content)),
-                ],
-              ),
-            ),
-            SizedBox(width: Margins.spacing_s),
-            Icon(AppIcons.chevron_right_rounded, color: context.content),
-          ],
-        ),
-      ),
     );
   }
 }

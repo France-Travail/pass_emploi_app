@@ -27,7 +27,6 @@ import 'package:pass_emploi_app/features/demarche/update/update_demarche_reducer
 import 'package:pass_emploi_app/features/details_jeune/details_jeune_reducer.dart';
 import 'package:pass_emploi_app/features/developer_option/activation/developer_options_reducer.dart';
 import 'package:pass_emploi_app/features/developer_option/matomo/matomo_logging_reducer.dart';
-import 'package:pass_emploi_app/features/diagoriente_preferences_metier/diagoriente_preferences_metier_reducer.dart';
 import 'package:pass_emploi_app/features/evenement_emploi/details/evenement_emploi_details_reducer.dart';
 import 'package:pass_emploi_app/features/events/list/event_list_reducer.dart';
 import 'package:pass_emploi_app/features/favori/ids/favori_ids_reducer.dart';
@@ -187,10 +186,6 @@ AppState reducer(AppState current, dynamic action) {
           current.rechercheEvenementEmploiState,
           action,
         ),
-    diagorientePreferencesMetierState: diagorientePreferencesMetierReducer(
-      current.diagorientePreferencesMetierState,
-      action,
-    ),
     recherchesRecentesState: recherchesRecentesReducer(current.recherchesRecentesState, action),
     contactImmersionState: contactImmersionReducer(current.contactImmersionState, action),
     accueilState: accueilReducer(current.accueilState, action),

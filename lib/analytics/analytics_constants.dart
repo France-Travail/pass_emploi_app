@@ -132,10 +132,6 @@ class AnalyticsScreenNames {
 
   static const actionCommentsPage = "/actions/detail/comments/view";
 
-  static const diagorienteEntryPage = "/diagoriente";
-  static const diagorienteChatBot = "/diagoriente/chatbot";
-  static const diagorienteFavoris = "/diagoriente/favoris";
-
   static const cvListPage = "/cv/list";
   static const cguPage = "cgu";
 
@@ -235,14 +231,6 @@ class AnalyticsEventNames {
   static const createActionStep3TermineAction = "Statut : Terminé";
   static const createActionStep3AvecRappelAction = "Rappel : Oui";
   static const createActionStep3SansRappelAction = "Rappel : Non";
-
-  static const autocompleteMotCleDiagorienteMetiersFavorisEventCategory = "Préférences métiers dans les mots clés";
-  static const autocompleteMotCleDiagorienteMetiersFavorisDisplayAction = "Affichage des préférences métiers";
-  static const autocompleteMotCleDiagorienteMetiersFavorisClickAction = "Clic préférences métiers";
-
-  static const autocompleteMetierDiagorienteMetiersFavorisEventCategory = "Préférences métiers dans métier";
-  static const autocompleteMetierDiagorienteMetiersFavorisDisplayAction = "Affichage des préférences métiers";
-  static const autocompleteMetierDiagorienteMetiersFavorisClickAction = "Clic préférences métiers";
 
   static const webAuthPageEventCategory = "Mire connexion mobile";
   static const webAuthPageSuccessAction = "Connexion post mire OK";

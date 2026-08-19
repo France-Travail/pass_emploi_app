@@ -5,64 +5,17 @@ import '../doubles/fixtures.dart';
 import '../dsl/app_state_dsl.dart';
 
 void main() {
-  test('create view model without recherches recentes and without metiers favoris', () {
+  test('create view model without recherches recentes', () {
     // Given
     final store = givenState() //
         .loggedIn() //
         .withRecentsSearches([]) //
-        .withDiagorientePreferencesMetierSuccessState(metiersFavoris: []) //
         .store();
     // When
     final result = MotsClesViewModel.create(store);
     // Then
     expect(result.motsCles, []);
-    expect(result.containsDiagorienteFavoris, false);
     expect(result.containsMotsClesRecents, false);
-  });
-
-  test('create view model with metiers favoris in alphabetic order', () {
-    // Given
-    final store = givenState() //
-        .loggedIn() //
-        .withRecentsSearches([]) //
-        .withDiagorientePreferencesMetierSuccessState(metiersFavoris: mockAutocompleteMetiers()) //
-        .store();
-    // When
-    final result = MotsClesViewModel.create(store);
-    // Then
-    expect(result.motsCles, [
-      MotsClesTitleItem("Vos préférences métiers"),
-      MotsClesSuggestionItem(
-          "Cavalier dresseur / Cavalière dresseuse de chevaux", MotCleSource.diagorienteMetiersFavoris),
-      MotsClesSuggestionItem("Céréalier / Céréalière", MotCleSource.diagorienteMetiersFavoris),
-      MotsClesSuggestionItem("Chevrier / Chevrière", MotCleSource.diagorienteMetiersFavoris),
-    ]);
-    expect(result.containsDiagorienteFavoris, true);
-    expect(result.containsMotsClesRecents, false);
-  });
-
-  test('create view model with both metiers favoris and recherches recentes', () {
-    // Given
-    final store = givenState() //
-        .loggedIn() //
-        .withRecentsSearches(getMockedAlerte()) //
-        .withDiagorientePreferencesMetierSuccessState(metiersFavoris: mockAutocompleteMetiers()) //
-        .store();
-    // When
-    final result = MotsClesViewModel.create(store);
-    // Then
-    expect(result.motsCles, [
-      MotsClesTitleItem("Recherches récentes"),
-      MotsClesSuggestionItem("Boulangerie", MotCleSource.dernieresRecherches),
-      MotsClesSuggestionItem("Flutter", MotCleSource.dernieresRecherches),
-      MotsClesTitleItem("Vos préférences métiers"),
-      MotsClesSuggestionItem(
-          "Cavalier dresseur / Cavalière dresseuse de chevaux", MotCleSource.diagorienteMetiersFavoris),
-      MotsClesSuggestionItem("Céréalier / Céréalière", MotCleSource.diagorienteMetiersFavoris),
-      MotsClesSuggestionItem("Chevrier / Chevrière", MotCleSource.diagorienteMetiersFavoris),
-    ]);
-    expect(result.containsDiagorienteFavoris, true);
-    expect(result.containsMotsClesRecents, true);
   });
 
   test('create view model with 1 recherche recente', () {
@@ -77,7 +30,6 @@ void main() {
       MotsClesTitleItem("Recherches récentes"),
       MotsClesSuggestionItem("chevalier", MotCleSource.dernieresRecherches),
     ]);
-    expect(result.containsDiagorienteFavoris, false);
     expect(result.containsMotsClesRecents, true);
   });
 
