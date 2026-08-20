@@ -1605,8 +1605,8 @@ class Strings {
 
   // Événements
   static String eventListError = "Erreur lors de la récupération des événements";
-  static String eventListEmpty = "Il n’y a pas encore d’évènement dans votre Mission Locale";
-  static String eventListEmptySubtitle = "Vous retrouverez ici tous les événements programmés de votre mission locale";
+  static String eventListEmpty = "Il n’y a pas encore d’événement dans votre Mission Locale";
+  static String eventListEmptySubtitle = "Vous retrouverez ici tous les événements programmés de votre mission locale.";
   static String eventListHeaderText = "Retrouvez ici l’ensemble des événements organisés par votre Mission locale";
   static String eventVousEtesDejaInscrit = "Je suis déjà inscrit";
   static String eventAnnulerMonInscription = "Annulation possible";
@@ -1616,7 +1616,7 @@ class Strings {
   static String eventAppBarTitle = "Événements";
   static String eventTabMaMissionLocale = "Ma Mission Locale";
   static String eventTabExternes = "Externes";
-  static String eventEmploiDetailsAppBarTitle = "Détail de l’événement";
+  static String eventEmploiDetailsAppBarTitle = "Détails de l’événement";
   static String eventEmploiDetailsPartagerConseiller = "Partager l'événement à mon conseiller";
   static String eventEmploiDetailsInscription = "Je m'inscris";
   static String eventPlaceholderTitle = "Trouvez un événement";
@@ -1652,7 +1652,7 @@ class Strings {
   static const String secteurActiviteSpectacle = "Spectacle";
   static const String secteurActiviteSupport = "Support à l'entreprise";
   static const String secteurActiviteTransport = "Transport et Logistique";
-  static const String evenementEmploiTypeAll = "Tous les types d'événement";
+  static const String evenementEmploiTypeAll = "Tous les types d’événements";
   static const String evenementEmploiTypeReunionInformation = "Réunion d'information";
   static const String evenementEmploiTypeForum = "Forum";
   static const String evenementEmploiTypeConference = "Conférence";
@@ -1666,7 +1666,7 @@ class Strings {
   static const String evenementEmploiDetails = "Détail de l'événement";
   static const String evenementEmploiFiltres = "Filtrer les événements";
   static const String evenementEmploiFiltresModalites = "Modalités d'accès";
-  static const String evenementEmploiFiltresType = "Par type d’événement";
+  static const String evenementEmploiFiltresType = "Type d’événements";
   static const String evenementEmploiFiltresDate = "Période";
   static const String evenementEmploiFiltresDateDebut = "Date de début";
   static const String evenementEmploiFiltresDateFin = "Date de fin";
@@ -1771,6 +1771,8 @@ class Strings {
   static String iconAlternativeContractType = "Type de contrat";
   static String iconAlternativeSalary = "Salaire";
   static String iconAlternativeDuration = "Temps de travail";
+  static String iconAlternativeDate = "Date";
+  static String iconAlternativeHour = "Horaire";
   static String iconAlternativeDateDeDebut = "Date de début";
   static String iconAlternativeDateDeFin = "Date de fin";
   static String a11yHours = " heures ";

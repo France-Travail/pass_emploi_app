@@ -8,17 +8,36 @@ class OffreDetailsTag extends StatelessWidget {
     required this.label,
     this.icon,
     this.iconSemanticLabel,
+    this.semanticsLabel,
   });
 
   final String label;
   final IconData? icon;
   final String? iconSemanticLabel;
+  final String? semanticsLabel;
 
   factory OffreDetailsTag.location(String location) {
     return OffreDetailsTag(
       label: location,
       icon: DsfrIcons.mapMapPin2Line,
       iconSemanticLabel: Strings.iconAlternativeLocation,
+    );
+  }
+
+  factory OffreDetailsTag.date(String date) {
+    return OffreDetailsTag(
+      label: date,
+      icon: DsfrIcons.businessCalendarEventLine,
+      iconSemanticLabel: Strings.iconAlternativeDate,
+    );
+  }
+
+  factory OffreDetailsTag.hour(String hour, {String? semanticsLabel}) {
+    return OffreDetailsTag(
+      label: hour,
+      icon: DsfrIcons.systemTimeLine,
+      iconSemanticLabel: Strings.iconAlternativeHour,
+      semanticsLabel: semanticsLabel,
     );
   }
 
@@ -49,7 +68,7 @@ class OffreDetailsTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: iconSemanticLabel != null ? '$iconSemanticLabel : $label' : label,
+      label: semanticsLabel ?? (iconSemanticLabel != null ? '$iconSemanticLabel : $label' : label),
       child: ExcludeSemantics(
         child: DsfrTag(
           label: label,

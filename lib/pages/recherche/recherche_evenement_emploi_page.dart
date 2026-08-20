@@ -62,6 +62,9 @@ class RechercheEvenementEmploiPage extends RechercheOffrePage<EvenementEmploi> {
   bool withCreateAlerte() => false;
 
   @override
+  bool withBackButton() => false;
+
+  @override
   Future<bool?>? buildFiltresBottomSheet(BuildContext context) => EvenementEmploiFiltresPage.show(context);
 
   @override
