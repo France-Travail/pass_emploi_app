@@ -159,6 +159,7 @@ class _Scaffold extends StatelessWidget {
                   size: DsfrComponentSize.lg,
                   onPressed: () => context.dispatch(RequestLogoutAction(LogoutReason.userLogout)),
                 ),
+                const SizedBox(height: DsfrSpacings.s4w),
                 if (kDebugMode || viewModel.displayDeveloperOptions) ...[
                   const SizedBox(height: DsfrSpacings.s4w),
                   _SectionTitle(Strings.developerOptions),
