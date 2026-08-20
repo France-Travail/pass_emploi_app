@@ -21,6 +21,14 @@ import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 
 class OnboardingQuestionnairePage extends StatefulWidget {
+  final bool editMode;
+
+  const OnboardingQuestionnairePage({super.key, this.editMode = false});
+
+  static MaterialPageRoute<void> materialPageRoute({bool editMode = true}) {
+    return MaterialPageRoute(builder: (_) => OnboardingQuestionnairePage(editMode: editMode));
+  }
+
   @override
   State<OnboardingQuestionnairePage> createState() => _OnboardingQuestionnairePageState();
 }
@@ -51,8 +59,14 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
       saveAnswers: (answers) async {
         store.dispatch(OnboardingQuestionnaireAnswersUpdatedAction(answers));
       },
+      startAtFirstStep: widget.editMode,
+      skipActionPlanGeneration: widget.editMode,
       onFinishWithoutGeneration: (answers) {
         store.dispatch(OnboardingQuestionnaireCompleteAction(answers));
+        if (widget.editMode) {
+          store.dispatch(OnboardingQuestionnaireFinishAction(answers));
+          if (context.mounted) Navigator.of(context).pop();
+        }
       },
     );
     _form.init();
@@ -121,8 +135,11 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
 
   void _onBack() {
     if (_form.step.isLoader) return;
-    final shouldLogout = _form.goBack();
-    if (shouldLogout) {
+    final shouldClose = _form.goBack();
+    if (!shouldClose) return;
+    if (widget.editMode) {
+      Navigator.of(context).maybePop();
+    } else {
       StoreProvider.of<AppState>(context).dispatch(RequestLogoutAction(LogoutReason.userLogout));
     }
   }

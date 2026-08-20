@@ -20,12 +20,12 @@ import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/platform.dart';
 import 'package:pass_emploi_app/widgets/buttons/delete_favori_button.dart';
 import 'package:pass_emploi_app/widgets/default_animated_switcher.dart';
+import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/errors/favori_not_found_error.dart';
 import 'package:pass_emploi_app/widgets/favori_heart.dart';
 import 'package:pass_emploi_app/widgets/favori_state_selector.dart';
 import 'package:pass_emploi_app/widgets/offre_details/offre_details_actions_footer.dart';
-import 'package:pass_emploi_app/widgets/offre_details/offre_details_app_bar.dart';
 import 'package:pass_emploi_app/widgets/offre_details/offre_details_header.dart';
 import 'package:pass_emploi_app/widgets/offre_details/offre_details_section_title.dart';
 import 'package:pass_emploi_app/widgets/offre_details/offre_details_tag.dart';
@@ -84,7 +84,7 @@ class ImmersionDetailsPage extends StatelessWidget {
   Scaffold _scaffold(Widget body, BuildContext context, String offreId) {
     return Scaffold(
       backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
-      appBar: OffreDetailsAppBar(
+      appBar: BackAppBar(
         actions: [
           FavoriHeart<Immersion>(
             offreId: offreId,
@@ -138,7 +138,7 @@ class ImmersionDetailsPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                OffreDetailsPageTitle(Strings.offreDetails),
+                PageTitle(Strings.offreDetails),
                 const SizedBox(height: DsfrSpacings.s1w),
                 if (viewModel.fitForDisabledWorkers) ...[
                   DsfrCategoryTag.meta(label: Strings.disabledWorkersWelcome),

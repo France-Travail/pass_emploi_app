@@ -125,6 +125,7 @@ class AnalyticsScreenNames {
   static const suppressionAccount = "/profil/suppression-compte";
   static const shareActivity = "/profil/autorisation-partage-conseiller";
   static const notificationPreferences = "/profil/preferences-push-notification";
+  static const confidentialite = "/profil/confidentialite";
 
   static const explicationModeDemo = "/entree/mode-demo";
 

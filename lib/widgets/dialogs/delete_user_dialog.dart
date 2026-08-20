@@ -1,21 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/profil/suppression_compte_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/font_sizes.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
+import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
-import 'package:pass_emploi_app/widgets/buttons/colored_action_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
-import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
-import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
+import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 
 class DeleteAlertDialog extends StatefulWidget {
+  const DeleteAlertDialog();
+
+  static Future<void> show(BuildContext context) {
+    PassEmploiMatomoTracker.instance.trackScreen(AnalyticsActionNames.suppressionAccountConfirmation);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: DsfrColorDecisions.backgroundTransparent(context),
+      barrierColor: DsfrColorDecisions.backgroundOverlayGrey(context),
+      barrierLabel: Strings.bottomSheetBarrierLabel,
+      elevation: 0,
+      shape: const RoundedRectangleBorder(),
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+        child: Theme(
+          data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+          child: DsfrModal(
+            isDismissible: true,
+            closeLabel: Strings.close,
+            child: const DeleteAlertDialog(),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   State<DeleteAlertDialog> createState() => _DeleteAlertDialogState();
 }
@@ -26,6 +50,12 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
   bool _showError = false;
 
   @override
+  void dispose() {
+    _inputController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, SuppressionCompteViewModel>(
       converter: (store) => SuppressionCompteViewModel.create(store),
@@ -34,87 +64,68 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
   }
 
   Widget _build(BuildContext context, SuppressionCompteViewModel viewModel) {
-    return Dialog(
-      surfaceTintColor: AppColors.transparent,
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(Margins.spacing_base),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              _DeleteAlertCrossButton(),
-              Center(
-                child: SizedBox.square(
-                  dimension: 100,
-                  child: Illustration.red(AppIcons.delete),
-                ),
-              ),
-              SizedBox(height: Margins.spacing_m),
-              Semantics(
-                excludeSemantics: true,
-                child: Text(
-                  Strings.lastWarningBeforeSuppression,
-                  style: TextStyles.textBaseBold.copyWith(color: context.content),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              SizedBox(height: Margins.spacing_m),
-              Semantics(
-                label: Strings.lastWarningBeforeSuppression,
-                child: _DeleteAlertTextField(
-                  controller: _inputController,
-                  getFieldContent: () => _fieldContent,
-                  onChanged: (value) {
-                    setState(() {
-                      _fieldContent = value;
-                      _showError = false;
-                    });
-                  },
-                  showError: _showError,
-                ),
-              ),
-              SizedBox(height: Margins.spacing_m),
-              Row(
-                children: [
-                  Expanded(
-                    child: SecondaryButton(
-                      label: Strings.cancelLabel,
-                      fontSize: FontSizes.medium,
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ),
-                  SizedBox(width: Margins.spacing_base),
-                  Expanded(
-                    child: ValueListenableBuilder<TextEditingValue>(
-                      valueListenable: _inputController,
-                      builder: (context, value, child) => ColoredActionButton(
-                        label: Strings.suppressionLabel,
-                        textColor: AppColors.warning,
-                        backgroundColor: AppColors.warningLighten,
-                        disabledBackgroundColor: AppColors.warningLighten,
-                        rippleColor: AppColors.warningLighten,
-                        withShadow: true,
-                        onPressed: _canDeleteAccount(viewModel)
-                            ? () {
-                                viewModel.onDeleteUser();
-                                Navigator.pop(context);
-                              }
-                            : () {
-                                setState(() {
-                                  _showError = true;
-                                  A11yUtils.announce(Strings.mandatorySuppressionLabelError);
-                                });
-                              },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Center(
+          child: SvgPicture.asset(
+            Drawables.illustrationWarning,
+            width: 80,
+            height: 80,
+            excludeFromSemantics: true,
           ),
         ),
-      ),
+        const SizedBox(height: DsfrSpacings.s3w),
+        Semantics(
+          header: true,
+          child: Text(
+            Strings.warning,
+            style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+          ),
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        DsfrInput(
+          label: Strings.lastWarningBeforeSuppression,
+          controller: _inputController,
+          keyboardType: TextInputType.text,
+          textInputAction: TextInputAction.done,
+          componentState: _showError && _isNotValid()
+              ? DsfrComponentState.error(errorMessage: Strings.mandatorySuppressionLabelError)
+              : const DsfrComponentState.none(),
+          onChanged: (value) {
+            setState(() {
+              _fieldContent = value;
+              _showError = false;
+            });
+          },
+        ),
+        const SizedBox(height: DsfrSpacings.s4w),
+        DsfrButton(
+          label: Strings.suppressionLabel,
+          icon: DsfrIcons.systemDeleteBinLine,
+          variant: DsfrButtonVariant.secondary,
+          size: DsfrComponentSize.lg,
+          foregroundColor: DsfrColorDecisions.textDefaultError(context),
+          onPressed: _canDeleteAccount(viewModel)
+              ? () {
+                  viewModel.onDeleteUser();
+                  Navigator.pop(context);
+                }
+              : () {
+                  setState(() {
+                    _showError = true;
+                    A11yUtils.announce(Strings.mandatorySuppressionLabelError);
+                  });
+                },
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        DsfrButton(
+          label: Strings.cancelLabel,
+          variant: DsfrButtonVariant.secondary,
+          size: DsfrComponentSize.lg,
+          onPressed: () => Navigator.pop(context),
+        ),
+      ],
     );
   }
 
@@ -129,69 +140,11 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
   }
 
   bool _isFormValid() => _fieldContent != null && _fieldContent!.isNotEmpty;
-}
-
-class _DeleteAlertCrossButton extends StatelessWidget {
-  const _DeleteAlertCrossButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topRight,
-      child: IconButton(
-        onPressed: () => Navigator.pop(context),
-        tooltip: Strings.closeDialog,
-        icon: Padding(
-          padding: const EdgeInsets.all(Margins.spacing_s),
-          child: Icon(
-            AppIcons.close_rounded,
-            color: context.content,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _DeleteAlertTextField extends StatefulWidget {
-  final TextEditingController controller;
-  final String? Function() getFieldContent;
-  final Function(String) onChanged;
-  final bool showError;
-
-  const _DeleteAlertTextField({
-    required this.controller,
-    required this.getFieldContent,
-    required this.onChanged,
-    required this.showError,
-  });
-
-  @override
-  State<_DeleteAlertTextField> createState() => _DeleteAlertTextFieldState();
-}
-
-class _DeleteAlertTextFieldState extends State<_DeleteAlertTextField> {
-  @override
-  Widget build(BuildContext context) {
-    final displayErorr = _isNotValid() && widget.showError;
-    return BaseTextField(
-      controller: widget.controller,
-      errorText: (displayErorr) ? Strings.mandatorySuppressionLabelError : null,
-      keyboardType: TextInputType.multiline,
-      textInputAction: TextInputAction.done,
-      onChanged: (value) {
-        setState(() {
-          widget.onChanged(value);
-        });
-      },
-    );
-  }
 
   bool _isNotValid() {
-    final fieldContent = widget.getFieldContent();
-    if (fieldContent != null) {
-      if (fieldContent.isEmpty) return true;
-      final stringToCheck = fieldContent.toLowerCase().trim();
+    if (_fieldContent != null) {
+      if (_fieldContent!.isEmpty) return true;
+      final stringToCheck = _fieldContent!.toLowerCase().trim();
       return stringToCheck != Strings.suppressionLabel.toLowerCase();
     }
     return false;

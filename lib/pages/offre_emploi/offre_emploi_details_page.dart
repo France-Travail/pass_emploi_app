@@ -25,12 +25,12 @@ import 'package:pass_emploi_app/widgets/bottom_sheets/offre_suivie_bottom_sheet.
 import 'package:pass_emploi_app/widgets/bottom_sheets/postuler_offre_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/buttons/delete_favori_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/share_button.dart';
+import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/errors/favori_not_found_error.dart';
 import 'package:pass_emploi_app/widgets/favori_heart.dart';
 import 'package:pass_emploi_app/widgets/favori_state_selector.dart';
 import 'package:pass_emploi_app/widgets/help_tooltip.dart';
 import 'package:pass_emploi_app/widgets/offre_details/offre_details_actions_footer.dart';
-import 'package:pass_emploi_app/widgets/offre_details/offre_details_app_bar.dart';
 import 'package:pass_emploi_app/widgets/offre_details/offre_details_header.dart';
 import 'package:pass_emploi_app/widgets/offre_details/offre_details_section_title.dart';
 import 'package:pass_emploi_app/widgets/offre_details/offre_details_tag.dart';
@@ -100,7 +100,7 @@ class OffreEmploiDetailsPage extends StatelessWidget {
   Widget _scaffold(Widget body, BuildContext context, String? url, String? offreId, String? title) {
     return Scaffold(
       backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
-      appBar: OffreDetailsAppBar(
+      appBar: BackAppBar(
         actions: [
           if (offreId != null)
             FavoriHeart<OffreEmploi>(
@@ -180,7 +180,7 @@ class OffreEmploiDetailsPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                OffreDetailsPageTitle(Strings.offreDetails),
+                PageTitle(Strings.offreDetails),
                 const SizedBox(height: DsfrSpacings.s1w),
                 _header(context, viewModel),
                 const SizedBox(height: DsfrSpacings.s2w),
