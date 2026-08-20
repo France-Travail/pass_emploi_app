@@ -37,6 +37,8 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
   final OnboardingQuestionnaireAnswersLoader _loadAnswers;
   final OnboardingQuestionnaireAnswersSaver _saveAnswers;
   final OnboardingQuestionnaireFinishWithoutGeneration? _onFinishWithoutGeneration;
+  final bool startAtFirstStep;
+  final bool skipActionPlanGeneration;
 
   OnboardingQuestionnaireStep step = OnboardingQuestionnaireStep.prenom;
   OnboardingQuestionnaireAnswers savedAnswers = const OnboardingQuestionnaireAnswers();
@@ -63,6 +65,8 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     required OnboardingQuestionnaireAnswersLoader loadAnswers,
     required OnboardingQuestionnaireAnswersSaver saveAnswers,
     OnboardingQuestionnaireFinishWithoutGeneration? onFinishWithoutGeneration,
+    this.startAtFirstStep = false,
+    this.skipActionPlanGeneration = false,
   })  : _loadAnswers = loadAnswers,
         _saveAnswers = saveAnswers,
         _onFinishWithoutGeneration = onFinishWithoutGeneration;
@@ -72,7 +76,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     notifyListeners();
     savedAnswers = await _loadAnswers();
     _hydrateDraftsFromSaved();
-    step = firstIncompleteStep(savedAnswers);
+    step = startAtFirstStep ? OnboardingQuestionnaireStep.prenom : firstIncompleteStep(savedAnswers);
     isLoading = false;
     notifyListeners();
   }
@@ -378,7 +382,8 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     final next = step.next;
     if (next == null) return;
     // Loader is only useful while generate() runs; otherwise finish immediately.
-    if (next == OnboardingQuestionnaireStep.loader && !savedAnswers.canGenerateActionPlan) {
+    if (next == OnboardingQuestionnaireStep.loader &&
+        (skipActionPlanGeneration || !savedAnswers.canGenerateActionPlan)) {
       _onFinishWithoutGeneration?.call(savedAnswers);
       return;
     }

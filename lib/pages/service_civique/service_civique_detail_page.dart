@@ -21,11 +21,11 @@ import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/postuler_offre_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/buttons/delete_favori_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/share_button.dart';
+import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/errors/favori_not_found_error.dart';
 import 'package:pass_emploi_app/widgets/favori_heart.dart';
 import 'package:pass_emploi_app/widgets/favori_state_selector.dart';
 import 'package:pass_emploi_app/widgets/offre_details/offre_details_actions_footer.dart';
-import 'package:pass_emploi_app/widgets/offre_details/offre_details_app_bar.dart';
 import 'package:pass_emploi_app/widgets/offre_details/offre_details_header.dart';
 import 'package:pass_emploi_app/widgets/offre_details/offre_details_section_title.dart';
 import 'package:pass_emploi_app/widgets/offre_details/offre_details_tag.dart';
@@ -68,7 +68,7 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
   Scaffold _scaffold(Widget body, BuildContext context, String? url, String? title) {
     return Scaffold(
       backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
-      appBar: OffreDetailsAppBar(
+      appBar: BackAppBar(
         actions: [
           FavoriHeart<ServiceCivique>(
             offreId: idOffre,
@@ -147,7 +147,7 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                OffreDetailsPageTitle(Strings.serviceCiviqueDetailTitle),
+                PageTitle(Strings.serviceCiviqueDetailTitle),
                 const SizedBox(height: DsfrSpacings.s1w),
                 if (isEmpty) ...[
                   FavoriNotFoundError(),

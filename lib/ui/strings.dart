@@ -297,7 +297,7 @@ class Strings {
   static String invitePrenomUpdateError = "La mise à jour a échoué. Réessayez.";
   static String invitePrenomUpdated(String prenom) => "Enregistré. Bonjour $prenom !";
   static String invitePrenomNextSteps = "La suite du parcours invité reste à développer.";
-  static String logoutAction = "Se déconnecter";
+  static String logoutAction = "Me déconnecter";
 
   // Onboarding invité
   static String onboardingQuestionnaireBack = "Retour";
@@ -1350,6 +1350,13 @@ class Strings {
   // Profil
   static String personalInformation = "Informations personnelles";
   static String profilButtonSemanticsLabel = "Voir mon Profil";
+  static String myAccountLabel = "Mon compte";
+  static String modifyMyInformation = "Modifier mes informations";
+  static String emailAddressAccountLabel = "Adresse mail du compte";
+  static String conseillerTileSubtitle(String date) => "Ton conseiller depuis le $date";
+  static String cvTileSubtitle = "Télécharger vos CV France Travail";
+  static String privacyAndDataLabel = "Confidentialités et données";
+  static String privacyAndDataSubtitle = "RGAA, RGPD, données stockées";
 
   static String sinceDate(String date) => "Depuis le $date";
   static String emailAddressLabel = "Adresse e-mail";
@@ -1360,6 +1367,7 @@ class Strings {
   static String accessibilityLevelLabel = "Niveau d’accessibilité";
   static String accessibilityLevelNonConforme = "Non conforme";
   static String termsOfServiceLabel = "Conditions Générales d'Utilisation";
+  static String termsOfUseLabel = "Conditions d’utilisations";
 
   static String legalNoticeUrl = Brand.isCej() ? _CejStrings.legalNoticeUrl : _PassEmploiStrings.legalNoticeUrl;
   static String privacyPolicyUrl = Brand.isCej() ? _CejStrings.privacyPolicyUrl : _PassEmploiStrings.privacyPolicyUrl;
@@ -1370,22 +1378,24 @@ class Strings {
 
   // Profil: Settings & account suppression
   static String betaTag = "Bêta";
-  static String settingsLabel = "Paramètres application";
+  static String settingsLabel = "Paramètres";
   static String themeLabel = "Apparence";
-  static String themeModeLight = "Jour";
-  static String themeModeDark = "Nuit";
-  static String themeModeSystem = "Système";
-  static String suppressionPageTitle = "Suppression de compte";
+  static String themeModeLight = "Thème clair";
+  static String themeModeDark = "Thème sombre";
+  static String themeModeSystem = "Thème Système";
+  static String themeModeSystemDescription = "Utilise les paramètres système.";
+  static String suppressionPageTitle = "Supprimer mon compte";
   static String suppressionAccountLabel = Brand.isCej()
       ? _CejStrings.suppressionAccountLabel
       : _PassEmploiStrings.suppressionAccountLabel;
-  static String activityShareLabel = "Partage de votre activité";
-  static String notificationsLabel = "Gérer vos notifications";
+  static String activityShareLabel = "Partager votre activité";
+  static String activitySharePageTitle = "Partage de ton activité";
+  static String notificationsLabel = "Gérer les notifications";
 
   static String partageFavorisEnabled(bool enabled) =>
       enabled ? "Désactiver le partage de mes offres suivies" : "Activer le partage de mes offres suivies";
   static String activityShareDescription =
-      "Autorisez le partage pour permettre au conseiller d’avoir un suivi de votre activité.";
+      "Autorise le partage pour permettre au conseiller d’avoir un suivi de ton activité.";
   static String warning = "Attention";
   static String suppressionButtonLabel = "Supprimer mon compte";
   static String warningInformationParagraph1 = Brand.isCej()
@@ -1416,12 +1426,15 @@ class Strings {
   static String shareFavoriteLabel = "Partager mes offres suivies";
 
   static String helpTitle = "Besoin d’aide ?";
-  static String ratingAppLabel = "Partager votre avis sur l'application";
-  static String contactTeamLabel = "Contacter l'équipe de l'application";
+  static String ratingAppLabel = "Donner mon avis";
+  static String ratingAppSubtitle = "Ton retour fait évoluer l’appli";
+  static String contactTeamLabel = "Contacter l’équipe";
+  static String contactTeamSubtitle = "Une question, un souci ?";
 
   // Notifications settings
-  static const String notificationsSettingsAppbarTitle = "Gérer vos notifications";
   static const String notificationsSettingsSubtitle = "Recevoir des notifications pour les événements suivants :";
+  static const String notificationsToggleEnabled = "Activé";
+  static const String notificationsToggleDisabled = "Désactivé";
 
   static const String notificationsSettingsAlertesTitle = "Alertes";
   static const String notificationsSettingsAlertesSubtitle =
@@ -1735,7 +1748,6 @@ class Strings {
 
   static String feedbackProvenanceOffre(String provenance) =>
       "Connaître la source d’une offre ($provenance, etc) m’intéresse.";
-  static String feedbackCentreNotification = "Retrouver mes notifications dans l'app m'intéresse.";
   static String feedbackCreateDemarche = "Qu’avez-vous pensé de la nouvelle saisie des démarches ?";
   static String feedbackCreateDemarcheSuggestions =
       "Qu'avez-vous pensé de cette fonctionnalité et des démarches suggérées ?";
