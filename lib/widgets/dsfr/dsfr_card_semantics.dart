@@ -41,6 +41,12 @@ class DsfrCategoryStyle {
     textColor: DsfrColorDecisions.textLabelGrey,
   );
 
+  static DsfrCategoryStyle success({IconData? icon}) => DsfrCategoryStyle(
+    icon: icon,
+    backgroundColor: DsfrColorDecisions.backgroundContrastSuccess,
+    textColor: DsfrColorDecisions.textDefaultSuccess,
+  );
+
   static Color _purpleBackground(BuildContext context) {
     return DsfrColorDecisions.isLightMode(context) ? DsfrColors.purpleGlycine950 : DsfrColors.purpleGlycine125;
   }
@@ -128,6 +134,19 @@ class DsfrCategoryTag extends StatelessWidget {
 
   factory DsfrCategoryTag.emploiCategory({required String label}) {
     return DsfrCategoryTag(label: label, style: DsfrCategoryStyle.info());
+  }
+
+  factory DsfrCategoryTag.success({
+    required String label,
+    IconData? icon,
+    String? semanticsLabel,
+  }) {
+    return DsfrCategoryTag(
+      label: label,
+      style: DsfrCategoryStyle.success(icon: icon),
+      semanticsLabel: semanticsLabel,
+      uppercase: false,
+    );
   }
 
   factory DsfrCategoryTag.evenement({

@@ -20,7 +20,6 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/offre_suivie_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/postuler_offre_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/buttons/delete_favori_button.dart';
@@ -476,11 +475,9 @@ class OffreEmploiDetailsPage extends StatelessWidget {
     final onPostuler = viewModel.onPostuler;
 
     if (shouldShowCvBottomSheet) {
-      showPassEmploiBottomSheet(
-        context: context,
-        builder: (context) => PostulerOffreBottomSheet(
-          onPostuler: () => _applyToOffer(context, url!, shouldShowOffreSuiviBottomSheet, onPostuler),
-        ),
+      PostulerOffreBottomSheet.show(
+        context,
+        onPostuler: () => _applyToOffer(context, url!, shouldShowOffreSuiviBottomSheet, onPostuler),
       );
     } else {
       _applyToOffer(context, url!, shouldShowOffreSuiviBottomSheet, onPostuler);

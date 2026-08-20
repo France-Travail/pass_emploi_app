@@ -126,14 +126,9 @@ class _CvListView extends StatelessWidget {
         final cv = cvList[index];
         final isLoading = viewModel.downloadStatus(cv.url).isLoading();
         if (isLoading) return const _LoadingIndicator();
-        return Semantics(
-          hint: Strings.cvDownload,
-          child: DsfrDownloadFiles.tile(
-            size: DsfrComponentSize.md,
-            label: cv.titre,
-            details: cv.nomFichier,
-            onTap: () => _downloadCv(context, cv),
-          ),
+        return _CvCard(
+          cv: cv,
+          onDownload: () => _downloadCv(context, cv),
         );
       },
     );
@@ -142,6 +137,50 @@ class _CvListView extends StatelessWidget {
   void _downloadCv(BuildContext context, CvPoleEmploi cv) {
     viewModel.onDownload(cv);
     context.trackEvenementEngagement(EvenementEngagement.CV_PE_TELECHARGE);
+  }
+}
+
+class _CvCard extends StatelessWidget {
+  const _CvCard({required this.cv, required this.onDownload});
+
+  final CvPoleEmploi cv;
+  final VoidCallback onDownload;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: DsfrColorDecisions.backgroundDefaultGrey(context),
+        borderRadius: const BorderRadius.all(Radius.circular(4)),
+        border: Border.all(color: DsfrColorDecisions.borderDefaultGrey(context)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(DsfrSpacings.s2w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              cv.titre,
+              style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+            ),
+            const SizedBox(height: DsfrSpacings.s2w),
+            Semantics(
+              button: true,
+              label: '${Strings.cvDownload} ${cv.titre}',
+              child: ExcludeSemantics(
+                child: DsfrButton(
+                  label: Strings.cvDownload,
+                  icon: DsfrIcons.systemDownloadLine,
+                  variant: DsfrButtonVariant.secondary,
+                  size: DsfrComponentSize.lg,
+                  onPressed: onDownload,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

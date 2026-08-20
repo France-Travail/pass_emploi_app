@@ -49,6 +49,8 @@ abstract class RechercheOffrePage<Result> extends StatefulWidget {
 
   bool withCreateAlerte() => true;
 
+  bool withBackButton() => true;
+
   Future<bool?>? buildFiltresBottomSheet(BuildContext context);
 
   Widget buildCriteresContentWidget({required Function(int) onNumberOfCriteresChanged});
@@ -86,34 +88,40 @@ class _RechercheOffrePageState<Result> extends State<RechercheOffrePage<Result>>
           builder: (context) {
             final backgroundColor = DsfrColorDecisions.backgroundDefaultGrey(context);
             final pageTitle = widget.appBarTitle();
-            return Scaffold(
-              backgroundColor: backgroundColor,
-              appBar: _RechercheBackAppBar<Result>(
-                backgroundColor: backgroundColor,
-                rechercheState: widget.rechercheState,
-              ),
-              floatingActionButton: ActionsRecherche(
-                buildViewModel: widget.buildActionsRechercheViewModel,
-                buildAlertBottomSheet: widget.buildAlertBottomSheet,
-                hasResults: (appState) {
-                  final results = widget.rechercheState(appState).results;
-                  return results != null && results.isNotEmpty;
-                },
-              ),
-              floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-              resizeToAvoidBottomInset: false,
-              body: StoreConnector<AppState, bool>(
-                distinct: true,
-                converter: (store) {
-                  final state = widget.rechercheState(store.state);
-                  return state.status == RechercheStatus.nouvelleRecherche;
-                },
-                builder: (context, showCriteresFullScreen) {
-                  return AnimatedSwitcher(
+            return StoreConnector<AppState, _RechercheOffreLayout>(
+              distinct: true,
+              converter: (store) {
+                final state = widget.rechercheState(store.state);
+                final showCriteresFullScreen = state.status == RechercheStatus.nouvelleRecherche;
+                return _RechercheOffreLayout(
+                  showCriteresFullScreen: showCriteresFullScreen,
+                  showBackAppBar: widget.withBackButton() || (showCriteresFullScreen && state.results != null),
+                );
+              },
+              builder: (context, layout) {
+                return Scaffold(
+                  backgroundColor: backgroundColor,
+                  appBar: layout.showBackAppBar
+                      ? _RechercheBackAppBar<Result>(
+                          backgroundColor: backgroundColor,
+                          rechercheState: widget.rechercheState,
+                        )
+                      : null,
+                  floatingActionButton: ActionsRecherche(
+                    buildViewModel: widget.buildActionsRechercheViewModel,
+                    buildAlertBottomSheet: widget.buildAlertBottomSheet,
+                    hasResults: (appState) {
+                      final results = widget.rechercheState(appState).results;
+                      return results != null && results.isNotEmpty;
+                    },
+                  ),
+                  floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+                  resizeToAvoidBottomInset: false,
+                  body: AnimatedSwitcher(
                     duration: AnimationDurations.fast,
                     switchInCurve: Curves.easeInOut,
                     switchOutCurve: Curves.easeInOut,
-                    child: showCriteresFullScreen
+                    child: layout.showCriteresFullScreen
                         ? Column(
                             key: const ValueKey("rechercheCriteresFullScreen"),
                             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -173,9 +181,9 @@ class _RechercheOffrePageState<Result> extends State<RechercheOffrePage<Result>>
                               ),
                             ),
                           ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             );
           },
         ),
@@ -184,6 +192,19 @@ class _RechercheOffrePageState<Result> extends State<RechercheOffrePage<Result>>
   }
 
   void _onFiltreApplied() => (_listResultatKey.currentState as ResultatRechercheContenuState?)?.scrollToTop();
+}
+
+class _RechercheOffreLayout extends Equatable {
+  final bool showCriteresFullScreen;
+  final bool showBackAppBar;
+
+  const _RechercheOffreLayout({
+    required this.showCriteresFullScreen,
+    required this.showBackAppBar,
+  });
+
+  @override
+  List<Object?> get props => [showCriteresFullScreen, showBackAppBar];
 }
 
 class _RechercheBackAppBar<Result> extends StatelessWidget implements PreferredSizeWidget {
