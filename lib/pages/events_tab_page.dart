@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/features/recherche/evenement_emploi/evenement_emploi_criteres_recherche.dart';
 import 'package:pass_emploi_app/features/recherche/evenement_emploi/evenement_emploi_filtres_recherche.dart';
@@ -9,12 +10,11 @@ import 'package:pass_emploi_app/pages/event_list_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_evenement_emploi_page.dart';
 import 'package:pass_emploi_app/presentation/events/event_tab_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
-import 'package:pass_emploi_app/widgets/pass_emploi_tab_bar.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_tertiary_navigation.dart';
 import 'package:redux/redux.dart';
 
 class EventsTabPage extends StatefulWidget {
@@ -75,28 +75,25 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.grey100,
-      appBar: PrimaryAppBar(title: Strings.eventAppBarTitle, withAutofocusA11y: true),
-      body: ConnectivityContainer(
-        child: DefaultTabController(
-          initialIndex: viewModel.tabs._index(initialTab),
-          length: viewModel.tabs.length,
-          child: Builder(
-            builder: (context) {
-              if (viewModel.tabs.length == 1) return viewModel.tabs._pages()[0];
-              return Column(
-                children: [
-                  PassEmploiTabBar(tabLabels: viewModel.tabs._titles()),
-                  Expanded(
-                    child: TabBarView(
-                      children: viewModel.tabs._pages(),
+    return DefaultTabController(
+      initialIndex: viewModel.tabs._index(initialTab),
+      length: viewModel.tabs.length,
+      child: Scaffold(
+        backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+        appBar: PrimaryAppBar(title: Strings.eventAppBarTitle, withAutofocusA11y: true),
+        body: ConnectivityContainer(
+          child: viewModel.tabs.length == 1
+              ? viewModel.tabs._pages()[0]
+              : Column(
+                  children: [
+                    DsfrTertiaryNavigation(labels: viewModel.tabs._titles()),
+                    Expanded(
+                      child: TabBarView(
+                        children: viewModel.tabs._pages(),
+                      ),
                     ),
-                  ),
-                ],
-              );
-            },
-          ),
+                  ],
+                ),
         ),
       ),
     );

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/pages/evenement_emploi/evenement_emploi_details_page.dart';
 import 'package:pass_emploi_app/presentation/evenement_emploi/evenement_emploi_item_view_model.dart';
-import 'package:pass_emploi_app/widgets/offre_details/offre_details_tag.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_event_card.dart';
 
 class EvenementEmploiCard extends StatelessWidget {
   final EvenementEmploiItemViewModel _viewModel;
@@ -11,100 +13,42 @@ class EvenementEmploiCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: [
+    return DsfrEventCard(
+      onTap: () => Navigator.of(context).push(
+        EvenementEmploiDetailsPage.materialPageRoute(_viewModel.id),
+      ),
+      semanticsLabel: [
         _viewModel.type,
         _viewModel.titre,
         _viewModel.dateLabel,
         _viewModel.heureLabel,
         _viewModel.locationLabel,
       ].join('. '),
-      child: Material(
-        color: DsfrColorDecisions.backgroundDefaultGrey(context),
-        borderRadius: const BorderRadius.all(Radius.circular(4)),
-        child: InkWell(
-          onTap: () => Navigator.of(context).push(
-            EvenementEmploiDetailsPage.materialPageRoute(_viewModel.id),
-          ),
-          borderRadius: const BorderRadius.all(Radius.circular(4)),
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(4)),
-              border: Border.all(color: DsfrColorDecisions.borderDefaultGrey(context)),
-            ),
-            child: IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(DsfrSpacings.s3v),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(Radius.circular(8)),
-                          border: Border.all(color: DsfrColorDecisions.backgroundOpenBlueFrance(context)),
-                          color: DsfrColorDecisions.backgroundContrastInfo(context),
-                        ),
-                        child: SizedBox.square(
-                          dimension: DsfrSpacings.s6w,
-                          child: Icon(
-                            DsfrIcons.businessCalendarEventLine,
-                            color: DsfrColorDecisions.textTitleBlueFrance(context),
-                            size: DsfrSpacings.s3w,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(
-                        0,
-                        DsfrSpacings.s3v,
-                        DsfrSpacings.s3v,
-                        DsfrSpacings.s3v,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _viewModel.titre,
-                            style: DsfrTextStyle.bodyMdBold(
-                              color: DsfrColorDecisions.textTitleBlueFrance(context),
-                            ),
-                          ),
-                          const SizedBox(height: DsfrSpacings.s1w),
-                          Wrap(
-                            spacing: DsfrSpacings.s1w,
-                            runSpacing: DsfrSpacings.s1w,
-                            children: [
-                              OffreDetailsTag(
-                                label: _viewModel.type,
-                                icon: DsfrIcons.businessCalendarEventLine,
-                              ),
-                              OffreDetailsTag(
-                                label: _viewModel.dateLabel,
-                                icon: DsfrIcons.businessCalendarLine,
-                              ),
-                              OffreDetailsTag(
-                                label: _viewModel.heureLabel,
-                                icon: DsfrIcons.systemTimeLine,
-                              ),
-                              if (_viewModel.locationLabel.isNotEmpty)
-                                OffreDetailsTag.location(_viewModel.locationLabel),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          DsfrStatusBadge(type: DsfrBadgeType.information, label: _viewModel.type),
+          const SizedBox(height: DsfrSpacings.s1w),
+          Text(
+            _viewModel.titre,
+            style: DsfrTextStyle.bodyMdBold(
+              color: DsfrColorDecisions.textTitleGrey(context),
             ),
           ),
-        ),
+          const SizedBox(height: DsfrSpacings.s1v),
+          DsfrEventCardComplement(
+            icon: DsfrIcons.systemTimeLine,
+            text: _viewModel.heureLabel,
+            semanticsLabel: _viewModel.heureLabel.toTimeAndDurationForScreenReaders(),
+          ),
+          if (_viewModel.locationLabel.trim().isNotEmpty) ...[
+            const SizedBox(height: DsfrSpacings.s1v),
+            DsfrEventCardComplement(
+              icon: DsfrIcons.mapMapPin2Line,
+              text: _viewModel.locationLabel,
+            ),
+          ],
+        ],
       ),
     );
   }

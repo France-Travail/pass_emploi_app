@@ -17,7 +17,6 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
-import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/postuler_offre_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/buttons/delete_favori_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/share_button.dart';
@@ -127,9 +126,9 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
           onPressed: () {
             final url = detail!.lienAnnonce!;
             if (viewModel.shouldShowCvBottomSheet) {
-              showPassEmploiBottomSheet(
-                context: context,
-                builder: (context) => PostulerOffreBottomSheet(onPostuler: () => _applyToOffer(context, url)),
+              PostulerOffreBottomSheet.show(
+                context,
+                onPostuler: () => _applyToOffer(context, url),
               );
             } else {
               _applyToOffer(context, url);

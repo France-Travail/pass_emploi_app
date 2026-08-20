@@ -9,9 +9,8 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/base_card.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_event_card.dart';
 import 'package:redux/redux.dart';
 
 class RendezvousCard extends StatelessWidget {
@@ -30,9 +29,7 @@ class RendezvousCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreConnector<AppState, RendezvousCardViewModel>(
       converter: converter,
-      builder: (context, viewModel) => withChrome
-          ? _ChromeContent(viewModel, onTap!)
-          : _EmbeddedContent(viewModel),
+      builder: (context, viewModel) => withChrome ? _ChromeContent(viewModel, onTap!) : _EmbeddedContent(viewModel),
     );
   }
 }
@@ -45,51 +42,18 @@ class _ChromeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseCard(
+    return DsfrEventCard(
       onTap: onTap,
-      imagePath: viewModel.assetImage,
-      title: viewModel.title,
-      tag: DsfrCategoryTag.evenement(
-        label: viewModel.tag,
-        typeCode: viewModel.typeCode,
-      ),
-      pillule: viewModel.isAnnule ? DsfrStatusBadge.canceled() : null,
-      complements: [
-        CardComplement.date(text: viewModel.date),
-        CardComplement.hour(text: viewModel.hourAndDuration),
-        if (viewModel.place != null)
-          CardComplement.place(text: viewModel.place!),
-        if (viewModel.nombreDePlacesRestantes != null)
-          CardComplement.person(text: viewModel.nombreDePlacesRestantes!),
-      ],
-      secondaryTags: secondaryTags(viewModel.inscriptionStatus),
+      semanticsLabel: [
+        viewModel.tag,
+        viewModel.title,
+        viewModel.date,
+        viewModel.hourAndDuration,
+        if (viewModel.place != null) viewModel.place!,
+      ].join('. '),
+      child: _EventBody(viewModel, showInscriptionTags: true),
     );
   }
-
-  List<Widget>? secondaryTags(InscriptionStatus inscriptionStatus) =>
-      switch (inscriptionStatus) {
-        InscriptionStatus.inscrit => [
-          DsfrCategoryTag.secondary(
-            label: Strings.eventVousEtesDejaInscrit,
-            icon: DsfrIcons.systemCheckboxCircleFill,
-          ),
-        ],
-        InscriptionStatus.autodesinscription => [
-          DsfrCategoryTag.secondary(label: Strings.eventAnnulerMonInscription),
-        ],
-        InscriptionStatus.notInscrit => [
-          DsfrCategoryTag.secondary(
-            label: Strings.eventInscrivezVousPourParticiper,
-          ),
-        ],
-        InscriptionStatus.autoinscription => [
-          DsfrCategoryTag.secondary(label: Strings.eventAutoInscription),
-        ],
-        InscriptionStatus.full => [
-          DsfrStatusBadge.complet(),
-        ],
-        InscriptionStatus.hidden => null,
-      };
 }
 
 class _EmbeddedContent extends StatelessWidget {
@@ -99,6 +63,20 @@ class _EmbeddedContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return _EventBody(viewModel, showInscriptionTags: false);
+  }
+}
+
+class _EventBody extends StatelessWidget {
+  final RendezvousCardViewModel viewModel;
+  final bool showInscriptionTags;
+
+  const _EventBody(this.viewModel, {required this.showInscriptionTags});
+
+  @override
+  Widget build(BuildContext context) {
+    final inscriptionTags = showInscriptionTags ? _inscriptionTags(viewModel.inscriptionStatus) : null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -111,6 +89,7 @@ class _EmbeddedContent extends StatelessWidget {
               typeCode: viewModel.typeCode,
             ),
             if (viewModel.isAnnule) DsfrStatusBadge.canceled(),
+            if (inscriptionTags != null && inscriptionTags.isNotEmpty) ...[...inscriptionTags],
           ],
         ),
         const SizedBox(height: DsfrSpacings.s1w),
@@ -121,57 +100,52 @@ class _EmbeddedContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: DsfrSpacings.s1v),
-        _Complement(
+        DsfrEventCardComplement(
           icon: DsfrIcons.systemTimeLine,
           text: viewModel.hourAndDuration,
-          semanticsLabel: viewModel.hourAndDuration
-              .toTimeAndDurationForScreenReaders(),
+          semanticsLabel: viewModel.hourAndDuration.toTimeAndDurationForScreenReaders(),
         ),
         if (viewModel.place != null) ...[
           const SizedBox(height: DsfrSpacings.s1v),
-          _Complement(
+          DsfrEventCardComplement(
             icon: DsfrIcons.mapMapPin2Line,
             text: viewModel.place!,
+          ),
+        ],
+        if (viewModel.nombreDePlacesRestantes != null) ...[
+          const SizedBox(height: DsfrSpacings.s1v),
+          DsfrEventCardComplement(
+            icon: DsfrIcons.userGroupLine,
+            text: viewModel.nombreDePlacesRestantes!,
           ),
         ],
       ],
     );
   }
-}
 
-class _Complement extends StatelessWidget {
-  final IconData icon;
-  final String text;
-  final String? semanticsLabel;
-
-  const _Complement({
-    required this.icon,
-    required this.text,
-    this.semanticsLabel,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final color = DsfrColorDecisions.textDefaultGrey(context);
-    return Semantics(
-      label: semanticsLabel,
-      child: Row(
-        children: [
-          Icon(icon, size: DsfrSpacings.s2w, color: color),
-          const SizedBox(width: DsfrSpacings.s1v),
-          Expanded(
-            child: ExcludeSemantics(
-              excluding: semanticsLabel != null,
-              child: Text(
-                text,
-                style: DsfrTextStyle.bodySm(color: color),
-              ),
-            ),
-          ),
-        ],
+  List<Widget> _inscriptionTags(InscriptionStatus inscriptionStatus) => switch (inscriptionStatus) {
+    InscriptionStatus.inscrit => [
+      DsfrCategoryTag.success(
+        label: Strings.eventVousEtesDejaInscrit,
+        icon: DsfrIcons.systemCheckboxCircleFill,
       ),
-    );
-  }
+    ],
+    InscriptionStatus.autodesinscription => [
+      DsfrCategoryTag.secondary(label: Strings.eventAnnulerMonInscription),
+    ],
+    InscriptionStatus.notInscrit => [
+      DsfrCategoryTag.secondary(
+        label: Strings.eventInscrivezVousPourParticiper,
+      ),
+    ],
+    InscriptionStatus.autoinscription => [
+      DsfrCategoryTag.secondary(label: Strings.eventAutoInscription),
+    ],
+    InscriptionStatus.full => [
+      DsfrStatusBadge.complet(),
+    ],
+    InscriptionStatus.hidden => [],
+  };
 }
 
 extension RendezvousCardFromId on String {
@@ -182,8 +156,7 @@ extension RendezvousCardFromId on String {
     bool withChrome = true,
   }) {
     return RendezvousCard(
-      converter: (store) =>
-          RendezvousCardViewModel.create(store, stateSource, this),
+      converter: (store) => RendezvousCardViewModel.create(store, stateSource, this),
       withChrome: withChrome,
       onTap: () {
         context.trackEvenementEngagement(evenementEngagement);
@@ -200,8 +173,7 @@ RendezvousStateSource _stateSource(RendezvousStateSource stateSource) {
     RendezvousStateSource.accueilProchaineSession ||
     RendezvousStateSource.accueilLesEvenementsSession ||
     RendezvousStateSource.monSuiviSessionMilo ||
-    RendezvousStateSource.sessionMiloDetails =>
-      RendezvousStateSource.sessionMiloDetails,
+    RendezvousStateSource.sessionMiloDetails => RendezvousStateSource.sessionMiloDetails,
     RendezvousStateSource.noSource ||
     RendezvousStateSource.accueilProchainRendezvous ||
     RendezvousStateSource.monSuivi ||
