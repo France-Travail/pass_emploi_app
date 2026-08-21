@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 
 class ChatListView extends StatelessWidget {
   final ScrollController? controller;
@@ -16,11 +16,7 @@ class ChatListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       reverse: true,
-      padding: const EdgeInsets.only(
-        left: Margins.spacing_base,
-        right: Margins.spacing_base,
-        top: Margins.spacing_base,
-      ),
+      padding: const EdgeInsets.all(DsfrSpacings.s2w),
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,

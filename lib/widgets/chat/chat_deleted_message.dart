@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/presentation/chat/chat_item.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 
 class DeletedMessage extends StatelessWidget {
   const DeletedMessage(this.item);
@@ -14,15 +11,18 @@ class DeletedMessage extends StatelessWidget {
     return Align(
       alignment: item.sender.isJeune ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: Margins.spacing_s),
-        padding: EdgeInsets.symmetric(vertical: Margins.spacing_s, horizontal: Margins.spacing_base),
+        margin: const EdgeInsets.symmetric(vertical: DsfrSpacings.s1w),
+        padding: const EdgeInsets.symmetric(
+          vertical: DsfrSpacings.s1w,
+          horizontal: DsfrSpacings.s2w,
+        ),
         decoration: BoxDecoration(
-          border: Border.all(color: context.grey500),
-          borderRadius: BorderRadius.circular(Dimens.radius_base),
+          border: Border.all(color: DsfrColorDecisions.borderDefaultGrey(context)),
+          borderRadius: BorderRadius.circular(DsfrSpacings.s1v),
         ),
         child: Text(
           item.content,
-          style: TextStyles.textSRegular(color: context.grey800),
+          style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textMentionGrey(context)),
         ),
       ),
     );
