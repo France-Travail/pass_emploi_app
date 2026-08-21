@@ -45,7 +45,7 @@ class DsfrBottomSheet extends StatelessWidget {
     this.actions,
     this.isDismissible = true,
     this.closeLabel,
-    this.maxHeightFactor = 0.85,
+    this.maxHeightFactor = 0.80,
     this.shrinkWrap = false,
   });
 
