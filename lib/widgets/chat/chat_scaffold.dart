@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/chat/chat_content.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
@@ -8,7 +8,6 @@ import 'package:pass_emploi_app/widgets/default_animated_switcher.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/preview_file_invisible_handler.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
-import 'package:pass_emploi_app/widgets/sepline.dart';
 
 class ChatScaffold extends StatelessWidget {
   final DisplayState displayState;
@@ -29,12 +28,12 @@ class ChatScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final body = Container(
-      color: context.grey100,
+    final backgroundColor = DsfrColorDecisions.backgroundDefaultGrey(context);
+    final body = ColoredBox(
+      color: backgroundColor,
       child: ConnectivityContainer(
         child: Column(
           children: [
-            SepLine(0, 0),
             Expanded(
               child: DefaultAnimatedSwitcher(
                 child: _Body(
@@ -53,7 +52,7 @@ class ChatScaffold extends StatelessWidget {
     if (!withScaffold) return body;
 
     return Scaffold(
-      backgroundColor: context.grey100,
+      backgroundColor: backgroundColor,
       appBar: withAppBar ? PrimaryAppBar(title: title) : null,
       body: body,
     );

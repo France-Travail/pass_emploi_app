@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/widgets/chat/chat_list_view.dart';
 import 'package:pass_emploi_app/widgets/chat/chat_text_field.dart';
 import 'package:pass_emploi_app/widgets/chat/empty_chat_placeholder.dart';
@@ -38,6 +34,12 @@ class ChatContent extends StatefulWidget {
 
 class _ChatContentState extends State<ChatContent> {
   final FocusNode _focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,31 +114,28 @@ class _MessageImportantItemState extends State<_MessageImportantItem> {
 
   @override
   Widget build(BuildContext context) {
-    final foregroundColor = context.grey100;
     if (isKeyboardVisible) {
       return SizedBox.shrink();
     }
 
-    final textSRegular = TextStyles.textSRegular(color: foregroundColor);
+    final textStyle = DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context));
 
-    return Container(
-      padding: EdgeInsets.all(Margins.spacing_base),
-      decoration: BoxDecoration(
-        color: AppColors.disabled,
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        DsfrSpacings.s2w,
+        0,
+        DsfrSpacings.s2w,
+        DsfrSpacings.s2w,
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(AppIcons.info_rounded, color: foregroundColor),
-          SizedBox(width: Margins.spacing_s),
-          Expanded(
-            child: SelectableTextWithClickableLinks(
-              widget.message,
-              linkStyle: textSRegular,
-              style: textSRegular,
-            ),
+      child: DsfrAlert(
+        type: DsfrAlertType.info,
+        description: DsfrAlertDescriptionWidget(
+          SelectableTextWithClickableLinks(
+            widget.message,
+            linkStyle: textStyle,
+            style: textStyle,
           ),
-        ],
+        ),
       ),
     );
   }

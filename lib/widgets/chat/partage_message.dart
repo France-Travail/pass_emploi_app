@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/models/chat/message.dart';
 import 'package:pass_emploi_app/models/chat/sender.dart';
 import 'package:pass_emploi_app/pages/evenement_emploi/evenement_emploi_details_page.dart';
@@ -10,11 +11,6 @@ import 'package:pass_emploi_app/pages/user_action/update/update_user_action_page
 import 'package:pass_emploi_app/presentation/chat/chat_item.dart';
 import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_state_source.dart';
 import 'package:pass_emploi_app/presentation/user_action/user_action_state_source.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
-import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/chat/chat_message_container.dart';
 import 'package:pass_emploi_app/widgets/text_with_clickable_links.dart';
 
@@ -30,7 +26,7 @@ class PartageMessage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _ContentMessage(content: item.content, sender: item.sender),
-          SizedBox(height: Margins.spacing_base),
+          SizedBox(height: DsfrSpacings.s1w),
           _PartageCard(item: item),
         ],
       ),
@@ -50,9 +46,7 @@ class _ContentMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = sender == Sender.jeune
-        ? TextStyles.textSRegular(color: AppColors.contentOnPrimary) //
-        : TextStyles.textSRegular(color: context.content);
+    final style = chatBubbleTextStyle(context, isMyMessage: sender == Sender.jeune);
     return SelectableTextWithClickableLinks(
       content,
       linkStyle: style,
@@ -68,36 +62,9 @@ class _PartageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const border = RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(8)),
-    );
-    return Semantics(
-      button: true,
-      child: Material(
-        shape: border,
-        color: context.grey100,
-        child: InkWell(
-          onTap: () => _onTap(context),
-          splashColor: AppColors.primaryLighten,
-          customBorder: border,
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  item.titrePartage,
-                  style: TextStyles.textBaseBold.copyWith(
-                    color: context.content,
-                  ),
-                ),
-                SizedBox(height: Margins.spacing_s),
-                _SeeSharedDetails(item),
-              ],
-            ),
-          ),
-        ),
-      ),
+    return ChatBubbleActionButton(
+      label: item.titrePartage,
+      onPressed: () => _onTap(context),
     );
   }
 
@@ -187,36 +154,3 @@ class _PartageCard extends StatelessWidget {
   }
 }
 
-class _SeeSharedDetails extends StatelessWidget {
-  final PartageMessageItem item;
-
-  _SeeSharedDetails(this.item);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(child: Container()),
-        Padding(
-          padding: const EdgeInsets.only(right: 4.0),
-          child: Text(
-            _title(),
-            style: TextStyles.textSRegular(color: context.content),
-          ),
-        ),
-        Icon(AppIcons.chevron_right_rounded, color: context.grey800),
-      ],
-    );
-  }
-
-  String _title() {
-    if (item is OffreMessageItem) {
-      return Strings.voirOffre;
-    } else if (item is EventMessageItem) {
-      return Strings.voirEvent;
-    }
-    return '';
-  }
-}

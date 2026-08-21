@@ -12,10 +12,12 @@ class DsfrTertiaryNavigation extends StatelessWidget {
     super.key,
     required this.labels,
     this.controller,
+    this.badgeCountByTabIndex = const {},
   });
 
   final List<String> labels;
   final TabController? controller;
+  final Map<int, int> badgeCountByTabIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +50,29 @@ class DsfrTertiaryNavigation extends StatelessWidget {
         }
         return Colors.transparent;
       }),
-      tabs: [for (final label in labels) Tab(text: label)],
+      tabs: [
+        for (var i = 0; i < labels.length; i++) _tab(labels[i], badgeCountByTabIndex[i] ?? 0),
+      ],
+    );
+  }
+
+  Tab _tab(String label, int badgeCount) {
+    if (badgeCount <= 0) return Tab(text: label);
+    return Tab(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(label),
+          const SizedBox(width: DsfrSpacings.s1w),
+          DsfrBadge(
+            label: badgeCount > 9 ? '9+' : '$badgeCount',
+            type: DsfrBadgeType.news,
+            size: DsfrComponentSize.sm,
+            backgroundCustomColor: DsfrColors.purpleGlycine950,
+            textCustomColor: DsfrColors.purpleGlycineSun319,
+          ),
+        ],
+      ),
     );
   }
 }

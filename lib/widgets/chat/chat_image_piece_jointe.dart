@@ -1,16 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/features/chat/piece_jointe/piece_jointe_actions.dart';
 import 'package:pass_emploi_app/presentation/chat/chat_item.dart';
 import 'package:pass_emploi_app/presentation/chat/piece_jointe_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/widgets/chat/chat_message_container.dart';
 import 'package:pass_emploi_app/widgets/chat/chat_piece_jointe.dart';
 
@@ -61,7 +58,7 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     if (imagePath == null) return _Failure();
     return ClipRRect(
-      borderRadius: BorderRadius.circular(Dimens.radius_base),
+      borderRadius: BorderRadius.circular(DsfrSpacings.s1v),
       child: Image.file(File(imagePath!)),
     );
   }
@@ -70,16 +67,21 @@ class _Content extends StatelessWidget {
 class _Loading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: context.bg,
-      width: double.infinity,
+    return ColoredBox(
+      color: DsfrColorDecisions.backgroundContrastGrey(context),
       child: Padding(
-        padding: const EdgeInsets.all(Margins.spacing_base),
+        padding: const EdgeInsets.all(DsfrSpacings.s2w),
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Icon(AppIcons.image_outlined, color: context.grey100, size: Dimens.icon_size_l),
-            CircularProgressIndicator(),
+            Icon(
+              DsfrIcons.mediaImageLine,
+              color: DsfrColorDecisions.textMentionGrey(context),
+              size: DsfrSpacings.s4w,
+            ),
+            CircularProgressIndicator(
+              color: DsfrColorDecisions.backgroundActionHighBlueFrance(context),
+            ),
           ],
         ),
       ),
@@ -90,10 +92,15 @@ class _Loading extends StatelessWidget {
 class _Failure extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(Margins.spacing_s),
-      decoration: BoxDecoration(color: context.bg, borderRadius: BorderRadius.circular(Dimens.radius_base)),
-      child: FileWasDeleted(),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: DsfrColorDecisions.backgroundContrastGrey(context),
+        borderRadius: BorderRadius.circular(DsfrSpacings.s1v),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(DsfrSpacings.s1w),
+        child: FileWasDeleted(),
+      ),
     );
   }
 }
