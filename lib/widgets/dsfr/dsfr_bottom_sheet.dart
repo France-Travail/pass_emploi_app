@@ -45,7 +45,7 @@ class DsfrBottomSheet extends StatelessWidget {
     this.actions,
     this.isDismissible = true,
     this.closeLabel,
-    this.maxHeightFactor = 0.92,
+    this.maxHeightFactor = 0.85,
     this.shrinkWrap = false,
   });
 
@@ -101,7 +101,7 @@ class DsfrBottomSheet extends StatelessWidget {
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.fromLTRB(
                       DsfrSpacings.s2w,
-                      DsfrSpacings.s2w,
+                      0,
                       DsfrSpacings.s2w,
                       DsfrSpacings.s2w,
                     ),
@@ -112,7 +112,7 @@ class DsfrBottomSheet extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
                     DsfrSpacings.s2w,
-                    DsfrSpacings.s4w,
+                    0,
                     DsfrSpacings.s2w,
                     DsfrSpacings.s2w,
                   ),

@@ -105,8 +105,8 @@ class Strings {
   static String chatError = "Erreur lors de la récupération de votre messagerie";
   static String chatTabMonConseiller = "Mon conseiller";
   static String chatTabMaMissionLocale = "Ma mission locale";
-  static String actualiteMissionLocaleEmptyTitle = "Aucune actualité pour le moment";
-  static String actualiteMissionLocaleEmptySubtitle = "Retrouvez ici les actualités de votre mission locale";
+  static String actualiteMissionLocaleEmptyTitle = "Retrouvez ici les actualités de votre mission locale";
+  static String actualiteMissionLocaleEmptySubtitle = "Pas d'actualités publiées pour le moment";
   static String actualiteMissionLocaleError = "Erreur lors de la récupération des actualités";
   static String newConseillerTitle = "Vous échangez avec votre nouveau conseiller.";
   static String newConseillerTemporaireTitle = "Vous échangez temporairement avec un nouveau conseiller.";
