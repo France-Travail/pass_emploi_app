@@ -10,7 +10,13 @@ void main() {
   final mockFirebase = MockFirebaseInstanceIdGetter();
   final mockNotification = MockPushNotificationManager();
   final sut = DioRepositorySut<ConfigurationApplicationRepository>();
-  sut.givenRepository((client) => ConfigurationApplicationRepository(client, mockFirebase, mockNotification));
+  sut.givenRepository(
+    (client) => ConfigurationApplicationRepository(
+      client,
+      mockFirebase,
+      mockNotification,
+    ),
+  );
 
   setUp(() {
     reset(mockFirebase);
@@ -20,7 +26,10 @@ void main() {
   });
 
   group("sendEvent", () {
-    sut.when((repository) => repository.configureApplication("userId", "fuseauHoraire"));
+    sut.when(
+      (repository) =>
+          repository.configureApplication("userId", "fuseauHoraire"),
+    );
 
     group('when response is valid', () {
       sut.givenResponseCode(201);
@@ -37,30 +46,58 @@ void main() {
         );
       });
 
-      test('request should be valid enven if firebase instance ID throw an error', () async {
-        when(() => mockFirebase.getFirebaseInstanceId()).thenThrow(Exception("error"));
-        await sut.expectRequestBody(
-          method: HttpMethod.put,
-          url: "/jeunes/userId/configuration-application",
-          options: Options(headers: {}),
-          jsonBody: {
-            'registration_token': 'token',
-            'fuseauHoraire': 'fuseauHoraire',
-          },
-        );
-      });
+      test(
+        'request should be valid enven if firebase instance ID throw an error',
+        () async {
+          when(
+            () => mockFirebase.getFirebaseInstanceId(),
+          ).thenThrow(Exception("error"));
+          await sut.expectRequestBody(
+            method: HttpMethod.put,
+            url: "/jeunes/userId/configuration-application",
+            options: Options(headers: {}),
+            jsonBody: {
+              'registration_token': 'token',
+              'fuseauHoraire': 'fuseauHoraire',
+            },
+          );
+        },
+      );
 
-      test('request should be valid enven if firebase messaging throw an error', () async {
-        when(() => mockNotification.getToken()).thenThrow(Exception("error"));
-        await sut.expectRequestBody(
-          method: HttpMethod.put,
-          url: "/jeunes/userId/configuration-application",
-          options: Options(headers: {'X-InstanceId': "firebaseId"}),
-          jsonBody: {
-            'registration_token': '',
-            'fuseauHoraire': 'fuseauHoraire',
-          },
-        );
+      test(
+        'request should be valid enven if firebase messaging throw an error',
+        () async {
+          when(() => mockNotification.getToken()).thenThrow(Exception("error"));
+          await sut.expectRequestBody(
+            method: HttpMethod.put,
+            url: "/jeunes/userId/configuration-application",
+            options: Options(headers: {'X-InstanceId': "firebaseId"}),
+            jsonBody: {
+              'registration_token': '',
+              'fuseauHoraire': 'fuseauHoraire',
+            },
+          );
+        },
+      );
+
+      test('response should be true', () async {
+        await sut.expectTrueAsResult();
+      });
+    });
+
+    group('when response is invalid', () {
+      sut.givenResponseCode(500);
+
+      test('response should be false', () async {
+        await sut.expectFalseAsResult();
+      });
+    });
+
+    group('when response throws exception', () {
+      sut.givenThrowingExceptionResponse();
+
+      test('response should be false', () async {
+        await sut.expectFalseAsResult();
       });
     });
   });

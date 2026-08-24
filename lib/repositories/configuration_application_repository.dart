@@ -18,7 +18,7 @@ class ConfigurationApplicationRepository {
     this._crashlytics,
   ]);
 
-  Future<void> configureApplication(String userId, String fuseauHoraire) async {
+  Future<bool> configureApplication(String userId, String fuseauHoraire) async {
     final url = "/jeunes/$userId/configuration-application";
 
     try {
@@ -30,12 +30,16 @@ class ConfigurationApplicationRepository {
         options: Options(headers: headers),
         data: customJsonEncode(configurationData),
       );
+      return true;
     } catch (e, stack) {
       _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
+      return false;
     }
   }
 
-  Future<PutConfigurationApplication> _buildConfigurationData(String fuseauHoraire) async {
+  Future<PutConfigurationApplication> _buildConfigurationData(
+    String fuseauHoraire,
+  ) async {
     try {
       final token = await _pushNotificationManager.getToken();
       return PutConfigurationApplication(
@@ -53,10 +57,15 @@ class ConfigurationApplicationRepository {
 
   Future<Map<String, String>> _buildHeaders() async {
     try {
-      final firebaseInstanceId = await _firebaseInstanceIdGetter.getFirebaseInstanceId();
+      final firebaseInstanceId = await _firebaseInstanceIdGetter
+          .getFirebaseInstanceId();
       return {'X-InstanceId': firebaseInstanceId};
     } catch (e, stack) {
-      _crashlytics?.recordNonNetworkExceptionUrl(e, stack, 'getFirebaseInstanceId');
+      _crashlytics?.recordNonNetworkExceptionUrl(
+        e,
+        stack,
+        'getFirebaseInstanceId',
+      );
       return {};
     }
   }

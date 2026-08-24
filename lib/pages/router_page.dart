@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/features/bootstrap/bootstrap_action.dart';
 import 'package:pass_emploi_app/features/connectivity/connectivity_actions.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_state.dart';
+import 'package:pass_emploi_app/features/push_notification/register/register_push_notification_token_actions.dart';
 import 'package:pass_emploi_app/pages/cgu_page.dart';
 import 'package:pass_emploi_app/pages/first_lauch_onboarding_page.dart';
 import 'package:pass_emploi_app/pages/login_page.dart';
@@ -49,10 +50,14 @@ class _RouterPageState extends State<RouterPage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.paused) {
-      StoreProvider.of<AppState>(context).dispatch(UnsubscribeFromConnectivityUpdatesAction());
+      StoreProvider.of<AppState>(
+        context,
+      ).dispatch(UnsubscribeFromConnectivityUpdatesAction());
     }
     if (state == AppLifecycleState.resumed) {
-      StoreProvider.of<AppState>(context).dispatch(SubscribeToConnectivityUpdatesAction());
+      final store = StoreProvider.of<AppState>(context);
+      store.dispatch(SubscribeToConnectivityUpdatesAction());
+      store.dispatch(ConfigureApplicationOnForegroundAction());
     }
   }
 
@@ -64,7 +69,8 @@ class _RouterPageState extends State<RouterPage> with WidgetsBindingObserver {
         store.dispatch(SubscribeToConnectivityUpdatesAction());
         _trackA11y();
       },
-      converter: (store) => RouterPageViewModel.create(store, PlatformUtils.getPlatform),
+      converter: (store) =>
+          RouterPageViewModel.create(store, PlatformUtils.getPlatform),
       builder: (context, viewModel) => _content(viewModel),
       ignoreChange: (state) => state.deepLinkState is UsedDeepLinkState,
       onWillChange: _onWillChange,
@@ -87,14 +93,20 @@ class _RouterPageState extends State<RouterPage> with WidgetsBindingObserver {
     };
   }
 
-  Future<void> _onWillChange(RouterPageViewModel? oldVm, RouterPageViewModel newVm) async {
+  Future<void> _onWillChange(
+    RouterPageViewModel? oldVm,
+    RouterPageViewModel newVm,
+  ) async {
     if (newVm.routerPageDisplayState == RouterPageDisplayState.login ||
         newVm.routerPageDisplayState == RouterPageDisplayState.main) {
       _removeAllScreensAboveRouterPage();
     }
   }
 
-  Future<void> _onDidChange(RouterPageViewModel? oldVm, RouterPageViewModel newVm) async {
+  Future<void> _onDidChange(
+    RouterPageViewModel? oldVm,
+    RouterPageViewModel newVm,
+  ) async {
     if (newVm.storeUrl != null) {
       launchExternalUrl(newVm.storeUrl!);
       newVm.onAppStoreOpened();
@@ -116,7 +128,8 @@ class _RouterPageState extends State<RouterPage> with WidgetsBindingObserver {
   }
 
   Future<void> _handleStoppedApplicationOpenedFromPushNotification() async {
-    final RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    final RemoteMessage? initialMessage = await FirebaseMessaging.instance
+        .getInitialMessage();
     if (initialMessage != null) _handleDeepLink(initialMessage);
   }
 

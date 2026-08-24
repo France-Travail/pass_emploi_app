@@ -64,10 +64,18 @@ import 'fixtures.dart';
 import 'mocks.dart';
 
 class DummyRegisterTokenRepository extends ConfigurationApplicationRepository {
-  DummyRegisterTokenRepository() : super(DioMock(), DummyFirebaseInstanceIdGetter(), MockPushNotificationManager());
+  DummyRegisterTokenRepository()
+    : super(
+        DioMock(),
+        DummyFirebaseInstanceIdGetter(),
+        MockPushNotificationManager(),
+      );
 
   @override
-  Future<void> configureApplication(String userId, String fuseauHoraire) async {}
+  Future<bool> configureApplication(
+    String userId,
+    String fuseauHoraire,
+  ) async => true;
 }
 
 class DummyAuthenticator extends Authenticator {
@@ -91,7 +99,8 @@ class DummyUserActionRepository extends UserActionRepository {
 }
 
 class DummyChatRepository extends ChatRepository {
-  DummyChatRepository() : super(DummyChatCrypto(), DummyCrashlytics(), ModeDemoRepository());
+  DummyChatRepository()
+    : super(DummyChatCrypto(), DummyCrashlytics(), ModeDemoRepository());
 
   @override
   Stream<List<Message>> messagesStream(String userId) async* {}
@@ -108,10 +117,18 @@ class DummyCrashlytics extends Crashlytics {
   void setUserIdentifier(String identifier) {}
 
   @override
-  void recordNonNetworkException(dynamic exception, [StackTrace? stack, Uri? failingEndpoint]) {}
+  void recordNonNetworkException(
+    dynamic exception, [
+    StackTrace? stack,
+    Uri? failingEndpoint,
+  ]) {}
 
   @override
-  void recordNonNetworkExceptionUrl(dynamic exception, [StackTrace? stack, String? failingEndpoint]) {}
+  void recordNonNetworkExceptionUrl(
+    dynamic exception, [
+    StackTrace? stack,
+    String? failingEndpoint,
+  ]) {}
 
   @override
   void log(String message) {}
@@ -196,7 +213,8 @@ class DummyImmersionAlerteRepository extends ImmersionAlerteRepository {
   DummyImmersionAlerteRepository() : super(DioMock());
 }
 
-class DummyServiceCiviqueAlerteRepository extends ServiceCiviqueAlerteRepository {
+class DummyServiceCiviqueAlerteRepository
+    extends ServiceCiviqueAlerteRepository {
   DummyServiceCiviqueAlerteRepository() : super(DioMock());
 }
 
@@ -212,23 +230,29 @@ class DummyServiceCiviqueRepository extends ServiceCiviqueRepository {
   DummyServiceCiviqueRepository() : super(DioMock());
 }
 
-class DummyServiceCiviqueDetailRepository extends ServiceCiviqueDetailRepository {
+class DummyServiceCiviqueDetailRepository
+    extends ServiceCiviqueDetailRepository {
   DummyServiceCiviqueDetailRepository() : super(DioMock());
 }
 
-class DummyServiceCiviqueFavorisRepository extends ServiceCiviqueFavorisRepository {
+class DummyServiceCiviqueFavorisRepository
+    extends ServiceCiviqueFavorisRepository {
   DummyServiceCiviqueFavorisRepository() : super(DioMock());
 }
 
 class DummyLogoutRepository extends LogoutRepository {
-  DummyLogoutRepository() : super(authIssuer: '', clientSecret: '', clientId: '');
+  DummyLogoutRepository()
+    : super(authIssuer: '', clientSecret: '', clientId: '');
 }
 
 class DummyPassEmploiCacheManager extends PassEmploiCacheManager {
   DummyPassEmploiCacheManager() : super(MockCacheStore(), '');
 
   @override
-  Future<void> removeResource(CachedResource resourceToRemove, String userId) async {}
+  Future<void> removeResource(
+    CachedResource resourceToRemove,
+    String userId,
+  ) async {}
 
   @override
   Future<void> removeAllFavorisResources() async {}
@@ -237,7 +261,9 @@ class DummyPassEmploiCacheManager extends PassEmploiCacheManager {
   Future<void> removeActionCommentaireResource(String actionId) async {}
 
   @override
-  Future<void> removeSuggestionsRechercheResource({required String userId}) async {}
+  Future<void> removeSuggestionsRechercheResource({
+    required String userId,
+  }) async {}
 
   @override
   Future<void> emptyCache() => Future<void>.value();
@@ -296,14 +322,18 @@ class DummyRatingRepository extends RatingRepository {
 }
 
 class DummyActionCommentaireRepository extends ActionCommentaireRepository {
-  DummyActionCommentaireRepository() : super(DioMock(), DummyPassEmploiCacheManager());
+  DummyActionCommentaireRepository()
+    : super(DioMock(), DummyPassEmploiCacheManager());
 }
 
-class DummySuggestionsRechercheRepository extends SuggestionsRechercheRepository {
-  DummySuggestionsRechercheRepository() : super(DioMock(), DummyPassEmploiCacheManager());
+class DummySuggestionsRechercheRepository
+    extends SuggestionsRechercheRepository {
+  DummySuggestionsRechercheRepository()
+    : super(DioMock(), DummyPassEmploiCacheManager());
 }
 
-class DummyAnimationsCollectivesRepository extends AnimationsCollectivesRepository {
+class DummyAnimationsCollectivesRepository
+    extends AnimationsCollectivesRepository {
   DummyAnimationsCollectivesRepository() : super(DioMock());
 }
 
@@ -352,7 +382,8 @@ class DummyEvenementEmploiRepository extends EvenementEmploiRepository {
       );
 }
 
-class DummyEvenementEmploiDetailsRepository extends EvenementEmploiDetailsRepository {
+class DummyEvenementEmploiDetailsRepository
+    extends EvenementEmploiDetailsRepository {
   DummyEvenementEmploiDetailsRepository() : super(DioMock());
 }
 
