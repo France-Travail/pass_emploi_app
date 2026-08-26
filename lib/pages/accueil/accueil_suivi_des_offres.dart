@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/presentation/accueil/accueil_item.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/textes.dart';
 
 class AccueilSuiviDesOffres extends StatelessWidget {
@@ -25,34 +21,23 @@ class AccueilSuiviDesOffres extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         LargeSectionTitle(Strings.accueilOffresEnregistreesSection),
-        SizedBox(height: Margins.spacing_base),
-        _Illustration(),
-      ],
-    );
-  }
-}
-
-class _Illustration extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return CardContainer(
-      onTap: () => _goToOffresEnregistrees(context),
-      child: Row(
-        children: [
-          Image.asset("assets/illustrations/accueil_offres_suivies.webp", width: 70, height: 70),
-          SizedBox(width: Margins.spacing_base),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(Strings.suivezVosOffres, style: TextStyles.textSBold.copyWith(color: context.content)),
-                Text(Strings.suivezVosOffresDescription, style: TextStyles.textSRegular(color: context.content)),
-              ],
+        const SizedBox(height: DsfrSpacings.s2w),
+        Semantics(
+          button: true,
+          label: '${Strings.suivezVosOffres}. ${Strings.suivezVosOffresDescription}',
+          onTap: () => _goToOffresEnregistrees(context),
+          child: ExcludeSemantics(
+            child: DsfrTile(
+              size: DsfrComponentSize.sm,
+              direction: Axis.horizontal,
+              title: Strings.suivezVosOffres,
+              description: Strings.suivezVosOffresDescription,
+              imageAsset: 'assets/illustrations/accueil_offres_suivies.webp',
+              onTap: () => _goToOffresEnregistrees(context),
             ),
           ),
-          Icon(AppIcons.chevron_right_rounded, color: context.content),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/demarche/create/create_demarche_actions.dart';
@@ -14,7 +15,7 @@ import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/date_extensions.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
+import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 
 class CreateDemarcheIaFtStep2Page extends StatelessWidget {
   const CreateDemarcheIaFtStep2Page(this.formViewModel);
@@ -26,8 +27,11 @@ class CreateDemarcheIaFtStep2Page extends StatelessWidget {
       tracking: AnalyticsScreenNames.createDemarcheIaFtSuggestions,
       child: StoreConnector<AppState, CreateDemarcheIaFtStep2ViewModel>(
         converter: (store) => CreateDemarcheIaFtStep2ViewModel.create(store),
-        onInit: (store) =>
-            store.dispatch(IaFtSuggestionsRequestAction(query: formViewModel.iaFtStep2ViewModel.description)),
+        onInit: (store) => store.dispatch(
+          IaFtSuggestionsRequestAction(
+            query: formViewModel.iaFtStep2ViewModel.description,
+          ),
+        ),
         builder: (context, viewModel) => _Body(formViewModel: formViewModel, viewModel: viewModel),
       ),
     );
@@ -54,20 +58,44 @@ class _Loading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(DsfrSpacings.s2w),
-      child: Column(
-        children: [
-          Image.asset(Drawables.iaFtSuggestionsLoading, width: 200, height: 200),
-          const SizedBox(height: DsfrSpacings.s2w),
-          Text(
-            Strings.iaFtSuggestionsLoading,
-            style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: DsfrSpacings.s4w),
-          const CircularProgressIndicator(),
-        ],
+    return Semantics(
+      liveRegion: true,
+      child: Padding(
+        padding: const EdgeInsets.all(DsfrSpacings.s2w),
+        child: Column(
+          children: [
+            ExcludeSemantics(
+              child: SvgPicture.asset(
+                Drawables.illustrationSystem,
+                height: 240,
+              ),
+            ),
+            const SizedBox(height: DsfrSpacings.s2w),
+            Text(
+              Strings.iaFtSuggestionsLoading,
+              style: DsfrTextStyle.bodyXlBold(
+                color: DsfrColorDecisions.textTitleGrey(context),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: DsfrSpacings.s1w),
+            Text(
+              Strings.iaFtSuggestionsLoadingWait,
+              style: DsfrTextStyle.bodyXlBold(
+                color: DsfrColorDecisions.textTitleGrey(context),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: DsfrSpacings.s4w),
+            ExcludeSemantics(
+              child: CircularProgressIndicator(
+                color: DsfrColorDecisions.backgroundActionHighBlueFrance(
+                  context,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -84,19 +112,31 @@ class _Failure extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Image.asset(Drawables.iaFtSuggestionsFailure, width: 200, height: 200),
+          Center(
+            child: SvgPicture.asset(
+              Drawables.illustrationWarning,
+              width: 160,
+              height: 160,
+              excludeFromSemantics: true,
+            ),
+          ),
           const SizedBox(height: DsfrSpacings.s3w),
           Text(
             Strings.iaFtSuggestionsFailure,
-            style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+            style: DsfrTextStyle.bodyMdBold(
+              color: DsfrColorDecisions.textTitleGrey(context),
+            ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: DsfrSpacings.s3w),
-          DsfrButton(
-            label: Strings.back,
-            variant: DsfrButtonVariant.primary,
-            size: DsfrComponentSize.md,
-            onPressed: () => viewModel.onNavigateBackward(),
+          SizedBox(
+            width: double.infinity,
+            child: DsfrButton(
+              label: Strings.back,
+              variant: DsfrButtonVariant.primary,
+              size: DsfrComponentSize.md,
+              onPressed: () => viewModel.onNavigateBackward(),
+            ),
           ),
         ],
       ),
@@ -116,19 +156,31 @@ class _Empty extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Image.asset(Drawables.iaFtSuggestionsEmpty, width: 200, height: 200),
+            Center(
+              child: SvgPicture.asset(
+                Drawables.illustrationWarning,
+                width: 160,
+                height: 160,
+                excludeFromSemantics: true,
+              ),
+            ),
             const SizedBox(height: DsfrSpacings.s3w),
             Text(
               Strings.iaFtSuggestionsEmpty,
-              style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+              style: DsfrTextStyle.bodyMdBold(
+                color: DsfrColorDecisions.textTitleGrey(context),
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: DsfrSpacings.s3w),
-            DsfrButton(
-              label: Strings.back,
-              variant: DsfrButtonVariant.primary,
-              size: DsfrComponentSize.md,
-              onPressed: () => viewModel.onNavigateBackward(),
+            SizedBox(
+              width: double.infinity,
+              child: DsfrButton(
+                label: Strings.back,
+                variant: DsfrButtonVariant.primary,
+                size: DsfrComponentSize.md,
+                onPressed: () => viewModel.onNavigateBackward(),
+              ),
             ),
           ],
         ),
@@ -186,15 +238,25 @@ class _ContentState extends State<_Content> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (notifier.error != null) ...[
-                DsfrAlert(
-                  type: DsfrAlertType.error,
-                  description: DsfrAlertDescriptionText(notifier.error!),
+                AutoFocusA11y(
+                  child: Semantics(
+                    liveRegion: true,
+                    child: DsfrAlert(
+                      type: DsfrAlertType.error,
+                      description: DsfrAlertDescriptionText(notifier.error!),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: DsfrSpacings.s2w),
               ],
-              Text(
-                Strings.iaFtSuggestionsContent(suggestions.length),
-                style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+              Semantics(
+                header: true,
+                child: Text(
+                  Strings.iaFtSuggestionsContent(suggestions.length),
+                  style: DsfrTextStyle.bodyMdBold(
+                    color: DsfrColorDecisions.textTitleGrey(context),
+                  ),
+                ),
               ),
               const SizedBox(height: DsfrSpacings.s2w),
               ListView.separated(
@@ -287,58 +349,76 @@ class _DemarcheIaCardState extends State<_DemarcheIaCard> {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: DsfrColorDecisions.backgroundDefaultGrey(context),
-        borderRadius: const BorderRadius.all(Radius.circular(4)),
-        border: Border.all(color: DsfrColorDecisions.borderDefaultGrey(context)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(DsfrSpacings.s2w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  child: DsfrCategoryTag.emploiCategory(label: widget.suggestion.label ?? Strings.otherDemarche),
+    final categoryLabel = widget.suggestion.label ?? Strings.otherDemarche;
+    return Semantics(
+      container: true,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: DsfrColorDecisions.backgroundDefaultGrey(context),
+          borderRadius: const BorderRadius.all(Radius.circular(4)),
+          border: Border.all(
+            color: DsfrColorDecisions.borderDefaultGrey(context),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(DsfrSpacings.s2w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: DsfrBadge(
+                      label: categoryLabel,
+                      type: DsfrBadgeType.information,
+                      size: DsfrComponentSize.sm,
+                    ),
+                  ),
+                  DsfrButton(
+                    icon: DsfrIcons.systemCloseLine,
+                    iconSemanticLabel:
+                        "${Strings.suppressionLabel} ${widget.suggestion.sousTitre ?? widget.suggestion.titre ?? ""}",
+                    variant: DsfrButtonVariant.tertiaryWithoutBorder,
+                    size: DsfrComponentSize.sm,
+                    onPressed: () => widget.onDelete(widget.suggestion.id),
+                  ),
+                ],
+              ),
+              const SizedBox(height: DsfrSpacings.s1w),
+              Text(
+                widget.suggestion.titre ?? '',
+                style: DsfrTextStyle.bodyMdBold(
+                  color: DsfrColorDecisions.textTitleGrey(context),
                 ),
-                DsfrButton(
-                  icon: DsfrIcons.systemCloseLine,
-                  iconSemanticLabel: "${Strings.suppressionLabel} ${widget.suggestion.sousTitre ?? ""}",
-                  variant: DsfrButtonVariant.tertiaryWithoutBorder,
-                  size: DsfrComponentSize.sm,
-                  onPressed: () => widget.onDelete(widget.suggestion.id),
+              ),
+              if (widget.suggestion.sousTitre != null && widget.suggestion.sousTitre!.isNotEmpty) ...[
+                const SizedBox(height: DsfrSpacings.s1v),
+                Text(
+                  widget.suggestion.sousTitre!,
+                  style: DsfrTextStyle.bodySm(
+                    color: DsfrColorDecisions.textDefaultGrey(context),
+                  ),
                 ),
               ],
-            ),
-            const SizedBox(height: DsfrSpacings.s1w),
-            Text(
-              widget.suggestion.titre ?? '',
-              style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
-            ),
-            if (widget.suggestion.sousTitre != null && widget.suggestion.sousTitre!.isNotEmpty) ...[
-              const SizedBox(height: DsfrSpacings.s1v),
-              Text(
-                widget.suggestion.sousTitre!,
-                style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context)),
+              const SizedBox(height: DsfrSpacings.s2w),
+              DsfrDateInput(
+                label: Strings.thematiquesDemarcheDateShort,
+                controller: _dateController,
+                firstDate: DateTime(2020),
+                lastDate: DateTime(2101),
+                initialDate: widget.date ?? DateTime.now(),
+                locale: const Locale('fr', 'FR'),
+                composantState: widget.showError
+                    ? DsfrComponentState.error(
+                        errorMessage: Strings.dateMandatory,
+                      )
+                    : const DsfrComponentState.none(),
+                onChanged: (date) => widget.onDateChanged(widget.suggestion.id, date),
               ),
             ],
-            const SizedBox(height: DsfrSpacings.s2w),
-            DsfrDateInput(
-              label: Strings.thematiquesDemarcheDateShort,
-              controller: _dateController,
-              firstDate: DateTime(2020),
-              lastDate: DateTime(2101),
-              initialDate: widget.date ?? DateTime.now(),
-              locale: const Locale('fr', 'FR'),
-              composantState: widget.showError
-                  ? DsfrComponentState.error(errorMessage: Strings.dateMandatory)
-                  : const DsfrComponentState.none(),
-              onChanged: (date) => widget.onDateChanged(widget.suggestion.id, date),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -364,9 +444,11 @@ class _SubmitButton extends StatelessWidget {
 }
 
 class DemarcheIaSuggestionsChangeNotifier extends ChangeNotifier {
-  DemarcheIaSuggestionsChangeNotifier({required List<DemarcheIaSuggestion> suggestions, required this.onSubmit})
-    : _suggestions = List.from(suggestions),
-      _dates = {for (var s in suggestions) s.id: null};
+  DemarcheIaSuggestionsChangeNotifier({
+    required List<DemarcheIaSuggestion> suggestions,
+    required this.onSubmit,
+  }) : _suggestions = List.from(suggestions),
+       _dates = {for (var s in suggestions) s.id: null};
 
   final void Function(List<CreateDemarcheRequestAction>) onSubmit;
   final List<DemarcheIaSuggestion> _suggestions;

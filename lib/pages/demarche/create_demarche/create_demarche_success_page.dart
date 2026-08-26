@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
@@ -10,14 +12,9 @@ import 'package:pass_emploi_app/pages/demarche/demarche_detail_page.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_success_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/confetti_wrapper.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/errors/error_text.dart';
@@ -43,19 +40,14 @@ class CreateDemarcheSuccessPage extends StatelessWidget {
         return StoreConnector<AppState, CreateDemarcheSuccessViewModel>(
           builder: (context, viewModel) => Tracker(
             tracking: switch (source) {
-              CreateDemarcheSource.personnalisee =>
-                AnalyticsScreenNames.createDemarchePersonnaliseeSuccess,
-              CreateDemarcheSource.fromReferentiel =>
-                AnalyticsScreenNames.createDemarcheFromReferentielSuccess,
-              CreateDemarcheSource.iaFt =>
-                AnalyticsScreenNames.createDemarcheIaFtSuccess,
-              CreateDemarcheSource.duplicate =>
-                AnalyticsScreenNames.createDemarcheDuplicateSuccess,
+              CreateDemarcheSource.personnalisee => AnalyticsScreenNames.createDemarchePersonnaliseeSuccess,
+              CreateDemarcheSource.fromReferentiel => AnalyticsScreenNames.createDemarcheFromReferentielSuccess,
+              CreateDemarcheSource.iaFt => AnalyticsScreenNames.createDemarcheIaFtSuccess,
+              CreateDemarcheSource.duplicate => AnalyticsScreenNames.createDemarcheDuplicateSuccess,
             },
             child: _Content(viewModel, source),
           ),
-          converter: (store) =>
-              CreateDemarcheSuccessViewModel.create(store, source),
+          converter: (store) => CreateDemarcheSuccessViewModel.create(store, source),
           distinct: true,
           onDispose: (store) => store.dispatch(CreateDemarcheResetAction()),
           onInit: (_) => confettiController.play(),
@@ -89,82 +81,84 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final title = switch (source) {
+      CreateDemarcheSource.iaFt => Strings.demarcheSuccessTitlePlural,
+      _ => Strings.demarcheSuccessTitle,
+    };
+    final content = switch (source) {
+      CreateDemarcheSource.iaFt => Strings.demarcheSuccessSubtitlePlural,
+      _ => Strings.demarcheSuccessSubtitle,
+    };
+
     return _Scaffold(
-      floatingActionButton: _Buttons(
-        onGoActionDetail: viewModel.demarcheId != null
-            ? () {
-                Navigator.pop(context);
-                DemarcheDetailPage.show(context, viewModel.demarcheId!);
-              }
-            : null,
-        onCreateMore: () {
-          Navigator.pop(context);
-          Navigator.of(context).push(CreateDemarcheFormPage.route());
-        },
-        source: source,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                InAppFeedback(
-                  feature: switch (source) {
-                    CreateDemarcheSource.personnalisee =>
-                      "create-demarche-personnalisee",
-                    CreateDemarcheSource.fromReferentiel =>
-                      "create-demarche-referentiel",
-                    CreateDemarcheSource.iaFt => "create-demarche-ia-ft",
-                    CreateDemarcheSource.duplicate =>
-                      "create-demarche-duplicate",
-                  },
-                  label: Strings.feedbackCreateDemarche,
-                  disabledPlaceholder: switch (source) {
-                    CreateDemarcheSource.iaFt => InAppFeedback(
-                      feature: "create-demarche-ia-ft-suggestions",
-                      label: Strings.feedbackCreateDemarcheSuggestions,
-                      responses: [
-                        Strings.feedbackCreateDemarcheSuggestionsResponse1,
-                        Strings.feedbackCreateDemarcheSuggestionsResponse2,
-                        Strings.feedbackCreateDemarcheSuggestionsResponse3,
-                      ],
-                    ),
-                    _ => null,
-                  },
-                ),
-                SizedBox(height: Margins.spacing_m),
-                Center(
-                  child: SizedBox(
-                    height: 130,
-                    width: 130,
-                    child: Image.asset(Drawables.success),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  InAppFeedback(
+                    feature: switch (source) {
+                      CreateDemarcheSource.personnalisee => "create-demarche-personnalisee",
+                      CreateDemarcheSource.fromReferentiel => "create-demarche-referentiel",
+                      CreateDemarcheSource.iaFt => "create-demarche-ia-ft",
+                      CreateDemarcheSource.duplicate => "create-demarche-duplicate",
+                    },
+                    label: Strings.feedbackCreateDemarche,
+                    disabledPlaceholder: switch (source) {
+                      CreateDemarcheSource.iaFt => InAppFeedback(
+                        feature: "create-demarche-ia-ft-suggestions",
+                        label: Strings.feedbackCreateDemarcheSuggestions,
+                        responses: [
+                          Strings.feedbackCreateDemarcheSuggestionsResponse1,
+                          Strings.feedbackCreateDemarcheSuggestionsResponse2,
+                          Strings.feedbackCreateDemarcheSuggestionsResponse3,
+                        ],
+                      ),
+                      _ => null,
+                    },
                   ),
-                ),
-                SizedBox(height: Margins.spacing_xl),
-                Text(
-                  switch (source) {
-                    CreateDemarcheSource.iaFt =>
-                      Strings.demarcheSuccessTitlePlural,
-                    _ => Strings.demarcheSuccessTitle,
-                  },
-                  textAlign: TextAlign.center,
-                  style: TextStyles.textMBold.copyWith(color: context.content),
-                ),
-                SizedBox(height: Margins.spacing_m),
-                Text(
-                  switch (source) {
-                    CreateDemarcheSource.iaFt =>
-                      Strings.demarcheSuccessSubtitlePlural,
-                    _ => Strings.demarcheSuccessSubtitle,
-                  },
-                  textAlign: TextAlign.center,
-                  style: TextStyles.textSRegular(color: context.content),
-                ),
-                SizedBox(height: Margins.spacing_xx_huge),
-              ],
+                  const SizedBox(height: DsfrSpacings.s3w),
+                  Center(
+                    child: SvgPicture.asset(
+                      Drawables.illustrationSuccess,
+                      width: 160,
+                      height: 160,
+                      excludeFromSemantics: true,
+                    ),
+                  ),
+                  const SizedBox(height: DsfrSpacings.s3w),
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+                  ),
+                  const SizedBox(height: DsfrSpacings.s1w),
+                  Text(
+                    content,
+                    textAlign: TextAlign.center,
+                    style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+                  ),
+                  const SizedBox(height: DsfrSpacings.s3w),
+                  _Buttons(
+                    onGoActionDetail: viewModel.demarcheId != null
+                        ? () {
+                            Navigator.pop(context);
+                            DemarcheDetailPage.show(context, viewModel.demarcheId!);
+                          }
+                        : null,
+                    onCreateMore: () {
+                      Navigator.pop(context);
+                      Navigator.of(context).push(CreateDemarcheFormPage.route());
+                    },
+                    source: source,
+                  ),
+                  const SizedBox(height: DsfrSpacings.s4w),
+                ],
+              ),
             ),
           ),
         ),
@@ -186,68 +180,79 @@ class _Buttons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (source == CreateDemarcheSource.iaFt) ...[
-            const SizedBox(height: Margins.spacing_base),
-            PrimaryActionButton(
-              label: Strings.consulterMesDemarches,
-              onPressed: () {
-                Navigator.pop(context);
-                StoreProvider.of<AppState>(
-                  context,
-                ).dispatch(
-                  HandleDeepLinkAction(
-                    MonSuiviDeepLink(),
-                    DeepLinkOrigin.inAppNavigation,
-                  ),
-                );
-              },
-            ),
-          ] else ...[
-            if (onGoActionDetail != null) ...[
-              AutoFocusA11y(
-                child: PrimaryActionButton(
-                  label: Strings.demarcheSuccessConsulter,
-                  onPressed: onGoActionDetail,
-                ),
+    if (source == CreateDemarcheSource.iaFt) {
+      return AutoFocusA11y(
+        child: DsfrButton(
+          label: Strings.consulterMesDemarches,
+          variant: DsfrButtonVariant.primary,
+          size: DsfrComponentSize.lg,
+          onPressed: () {
+            Navigator.pop(context);
+            StoreProvider.of<AppState>(context).dispatch(
+              HandleDeepLinkAction(
+                MonSuiviDeepLink(),
+                DeepLinkOrigin.inAppNavigation,
               ),
-            ],
-            const SizedBox(height: Margins.spacing_base),
-            SecondaryButton(
-              label: Strings.demarcheSuccessCreerUneAutre,
-              onPressed: onCreateMore,
+            );
+          },
+        ),
+      );
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (onGoActionDetail != null) ...[
+          AutoFocusA11y(
+            child: DsfrButton(
+              label: Strings.demarcheSuccessConsulter,
+              variant: DsfrButtonVariant.primary,
+              size: DsfrComponentSize.lg,
+              onPressed: onGoActionDetail,
             ),
-          ],
+          ),
+          const SizedBox(height: DsfrSpacings.s2w),
         ],
-      ),
+        DsfrButton(
+          label: Strings.demarcheSuccessCreerUneAutre,
+          variant: DsfrButtonVariant.secondary,
+          size: DsfrComponentSize.lg,
+          onPressed: onCreateMore,
+        ),
+      ],
     );
   }
 }
 
 class _Scaffold extends StatelessWidget {
-  const _Scaffold({
-    this.floatingActionButtonLocation,
-    this.floatingActionButton,
-    required this.body,
-  });
-  final FloatingActionButtonLocation? floatingActionButtonLocation;
-  final Widget? floatingActionButton;
+  const _Scaffold({required this.body});
   final Widget body;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.bg,
-      floatingActionButton: floatingActionButton,
-      floatingActionButtonLocation: floatingActionButtonLocation,
-      appBar: SecondaryAppBar(
-        title: Strings.createDemarcheAppBarTitle,
-        backgroundColor: context.bg,
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+      appBar: AppBar(
+        toolbarHeight: PrimaryAppBar.toolBarHeight,
+        titleSpacing: DsfrSpacings.s2w,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+        iconTheme: IconThemeData(color: DsfrColorDecisions.textTitleGrey(context)),
+        title: Semantics(
+          header: true,
+          child: Tooltip(
+            message: Strings.createDemarcheAppBarTitle,
+            excludeFromSemantics: true,
+            child: Text(
+              Strings.createDemarcheAppBarTitle,
+              style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
       ),
       body: body,
     );
