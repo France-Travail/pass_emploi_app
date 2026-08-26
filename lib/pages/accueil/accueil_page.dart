@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
@@ -36,19 +37,13 @@ import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_state_source.
 import 'package:pass_emploi_app/presentation/user_action/user_action_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
+import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/notifications_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/soft_update_bottom_sheet.dart';
-import 'package:pass_emploi_app/widgets/cards/campagne_card.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
-import 'package:pass_emploi_app/widgets/information_bandeau.dart';
-import 'package:pass_emploi_app/widgets/login_page_remote_message.dart';
 import 'package:pass_emploi_app/widgets/offre_suivie_form.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 
@@ -92,15 +87,23 @@ class _AccueilPageState extends State<AccueilPage> {
   }
 
   Widget _builder(BuildContext context, AccueilViewModel viewModel) {
-    if (StoreProvider.of<AppState>(context).state.isInviteLoginMode()) {
-      return Scaffold(
-        backgroundColor: context.bg,
-        body: ConnectivityContainer(child: InviteAccueilBody()),
-      );
-    }
-    return Scaffold(
-      backgroundColor: AppColorsSpecifics.acceuilBgColor(context),
-      body: ConnectivityContainer(child: _Body(viewModel)),
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return Theme(
+      data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+      child: Builder(
+        builder: (context) {
+          if (StoreProvider.of<AppState>(context).state.isInviteLoginMode()) {
+            return Scaffold(
+              backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+              body: ConnectivityContainer(child: InviteAccueilBody()),
+            );
+          }
+          return Scaffold(
+            backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+            body: ConnectivityContainer(child: _Body(viewModel)),
+          );
+        },
+      ),
     );
   }
 
@@ -228,26 +231,30 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        PrimarySliverAppbar(
-          title: Strings.accueilAppBarTitle,
-          withNewNotifications: viewModel.withNewNotifications,
-        ),
-        SliverToBoxAdapter(
-          child: AnimatedSwitcher(
-            duration: AnimationDurations.fast,
-            child: switch (viewModel.displayState) {
-              DisplayState.LOADING => AccueilLoading(),
-              DisplayState.CONTENT => _Blocs(viewModel),
-              DisplayState.EMPTY || DisplayState.FAILURE => Retry(
-                Strings.accueilError,
-                () => viewModel.retry(),
-              ),
-            },
+    return RefreshIndicator.adaptive(
+      onRefresh: () async => viewModel.retry(),
+      child: CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        slivers: [
+          PrimarySliverAppbar(
+            title: Strings.accueilAppBarTitle,
+            withNewNotifications: viewModel.withNewNotifications,
           ),
-        ),
-      ],
+          SliverToBoxAdapter(
+            child: AnimatedSwitcher(
+              duration: AnimationDurations.fast,
+              child: switch (viewModel.displayState) {
+                DisplayState.LOADING => AccueilLoading(),
+                DisplayState.CONTENT => _Blocs(viewModel),
+                DisplayState.EMPTY || DisplayState.FAILURE => Retry(
+                  Strings.accueilError,
+                  () => viewModel.retry(),
+                ),
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -259,79 +266,19 @@ class _Blocs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator.adaptive(
-      onRefresh: () async => viewModel.retry(),
-      child: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(Margins.spacing_base),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: AppColorsSpecifics.acceuilBgGradient(context),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: _buildItemsWithGradient(),
-              ),
-            ),
-            ColoredBox(
-              color: context.grey100,
-              child: Padding(
-                padding: const EdgeInsets.all(Margins.spacing_base),
-                child: Column(children: _buildItemsWithoutGradient()),
-              ),
-            ),
+    final visibleItems = viewModel.items.where((item) => item is! AccueilColorSeparatorItem).toList();
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(DsfrSpacings.s2w, DsfrSpacings.s2w, DsfrSpacings.s2w, DsfrSpacings.s4w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (int i = 0; i < visibleItems.length; i++) ...[
+            _buildItem(visibleItems[i]),
+            if (i < visibleItems.length - 1) const SizedBox(height: DsfrSpacings.s2w),
           ],
-        ),
+        ],
       ),
     );
-  }
-
-  List<Widget> _buildItemsWithGradient() {
-    final items = <Widget>[];
-
-    for (int i = 0; i < viewModel.items.length; i++) {
-      final item = viewModel.items[i];
-
-      if (item is AccueilColorSeparatorItem) {
-        items.add(_buildItem(item));
-        break;
-      }
-
-      items.add(_buildItem(item));
-      if (i < viewModel.items.length - 1) {
-        items.add(SizedBox(height: Margins.spacing_m));
-      }
-    }
-    return items;
-  }
-
-  List<Widget> _buildItemsWithoutGradient() {
-    final items = <Widget>[];
-    bool foundSeparator = false;
-
-    for (int i = 0; i < viewModel.items.length; i++) {
-      final item = viewModel.items[i];
-
-      if (item is AccueilColorSeparatorItem) {
-        foundSeparator = true;
-        continue;
-      }
-
-      if (foundSeparator) {
-        items.add(_buildItem(item));
-        if (i < viewModel.items.length - 1) {
-          items.add(SizedBox(height: Margins.spacing_m));
-        }
-      }
-    }
-
-    return items;
   }
 
   Widget _buildItem(AccueilItem item) {
@@ -339,12 +286,14 @@ class _Blocs extends StatelessWidget {
       final AccueilDateDeMigrationItem item => AccueilDateDeMigration(
         dateDeMigration: item.dateDeMigration,
       ),
-      final AccueilZenithMessageItem item => CardContainer(
-        child: RemoteMessageWidget(remoteMessage: item.accueilZenithMessage),
+      final AccueilZenithMessageItem item => DsfrAlert(
+        type: DsfrAlertType.info,
+        title: item.accueilZenithMessage.title,
+        description: DsfrAlertDescriptionText(item.accueilZenithMessage.description),
       ),
-      final ErrorDegradeeItem item => InformationBandeau(
-        icon: AppIcons.error_rounded,
-        text: item.message,
+      final ErrorDegradeeItem item => DsfrAlert(
+        type: DsfrAlertType.warning,
+        description: DsfrAlertDescriptionText(item.message),
       ),
       final OnboardingItem item => AccueilOnboardingTile(item),
       final OffreSuivieAccueilItem item => OffreSuivieForm(
@@ -365,7 +314,7 @@ class _Blocs extends StatelessWidget {
       final AccueilEvenementsItem item => AccueilEvenements(item),
       final AccueilAlertesItem item => AccueilAlertes(item),
       final AccueilSuiviDesOffresItem item => AccueilSuiviDesOffres(item),
-      AccueilColorSeparatorItem() => SizedBox.shrink(),
+      AccueilColorSeparatorItem() => const SizedBox.shrink(),
       RatingAppItem() => AccueilRatingAppCard(),
     };
   }
@@ -375,14 +324,24 @@ class _CampagneCard extends StatelessWidget {
   final String title;
   final String description;
 
-  _CampagneCard({required this.title, required this.description});
+  const _CampagneCard({required this.title, required this.description});
 
   @override
   Widget build(BuildContext context) {
-    return CampagneCard(
+    return Semantics(
+      button: true,
+      label: '$title. $description',
       onTap: () => Navigator.push(context, CampagneQuestionPage.materialPageRoute(0)),
-      titre: title,
-      description: description,
+      child: ExcludeSemantics(
+        child: DsfrTile(
+          size: DsfrComponentSize.sm,
+          direction: Axis.horizontal,
+          title: title,
+          description: description,
+          imageAsset: Drawables.evalImage,
+          onTap: () => Navigator.push(context, CampagneQuestionPage.materialPageRoute(0)),
+        ),
+      ),
     );
   }
 }

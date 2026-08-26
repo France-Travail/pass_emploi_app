@@ -52,6 +52,7 @@ class Drawables {
   static String illustrationThemeSystem = "${_assets}dsfr/system.svg";
   static String illustrationThemeSun = "${_assets}dsfr/sun.svg";
   static String illustrationThemeMoon = "${_assets}dsfr/moon.svg";
+  static String illustrationSystem = "${_assets}dsfr/illustration_system.svg";
 
   static String iaFtIllustration = "${_assets}IA.svg";
 
