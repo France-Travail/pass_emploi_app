@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/network/post_evenement_engagement.dart';
 import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_state_source.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/cards/rendezvous_card.dart';
 import 'package:pass_emploi_app/widgets/textes.dart';
@@ -26,7 +26,7 @@ class AccueilProchainRendezVous extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         LargeSectionTitle(Strings.accueilRendezvousSection),
-        SizedBox(height: Margins.spacing_base),
+        const SizedBox(height: DsfrSpacings.s2w),
         id.rendezvousCard(
           context: context,
           stateSource: stateSource,

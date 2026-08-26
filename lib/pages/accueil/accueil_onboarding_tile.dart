@@ -1,16 +1,11 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/features/onboarding/onboarding_actions.dart';
 import 'package:pass_emploi_app/pages/onboarding_page.dart';
 import 'package:pass_emploi_app/presentation/accueil/accueil_item.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 
 class AccueilOnboardingTile extends StatelessWidget {
   const AccueilOnboardingTile(this.onboardingItem);
@@ -18,8 +13,19 @@ class AccueilOnboardingTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isCompleted = onboardingItem.completedSteps == onboardingItem.totalSteps;
-    return CardContainer(
+    final bool isCompleted =
+        onboardingItem.completedSteps == onboardingItem.totalSteps;
+    final progressPercent = onboardingItem.totalSteps == 0
+        ? 0
+        : ((onboardingItem.completedSteps / onboardingItem.totalSteps) * 100)
+              .round();
+    const radius = BorderRadius.all(Radius.circular(4));
+
+    return Semantics(
+      button: true,
+      label: isCompleted
+          ? Strings.onboardingAccueilTitleCompleted
+          : '${Strings.onboardingAccueilTitle}. ${onboardingItem.completedSteps} sur ${onboardingItem.totalSteps}',
       onTap: () {
         if (isCompleted) {
           StoreProvider.of<AppState>(context).dispatch(OnboardingHideAction());
@@ -27,131 +33,74 @@ class AccueilOnboardingTile extends StatelessWidget {
           Navigator.of(context).push(OnboardingPage.route());
         }
       },
-      padding: EdgeInsets.zero,
-      child: Container(
-        padding: const EdgeInsets.all(Margins.spacing_base),
-        decoration: BoxDecoration(
-          color: context.bg,
-        ),
-        child: Row(
-          children: [
-            OnboardingStepper(
-              completedSteps: onboardingItem.completedSteps,
-              totalSteps: onboardingItem.totalSteps,
+      child: Material(
+        color: DsfrColorDecisions.backgroundDefaultGrey(context),
+        borderRadius: radius,
+        child: InkWell(
+          onTap: () {
+            if (isCompleted) {
+              StoreProvider.of<AppState>(
+                context,
+              ).dispatch(OnboardingHideAction());
+            } else {
+              Navigator.of(context).push(OnboardingPage.route());
+            }
+          },
+          borderRadius: radius,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: radius,
+              border: Border.all(
+                color: DsfrColorDecisions.borderActionHighBlueFrance(context),
+              ),
             ),
-            const SizedBox(width: Margins.spacing_base),
-            if (isCompleted) ...[
-              Expanded(
-                child: Text(
-                  Strings.onboardingAccueilTitleCompleted,
-                  style: TextStyles.textBaseBold.copyWith(color: context.content),
+            child: Padding(
+              padding: const EdgeInsets.all(DsfrSpacings.s2w),
+              child: ExcludeSemantics(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DsfrBadge(
+                      label: Strings.inviteAccueilDiscoveryProgress(
+                        progressPercent,
+                      ),
+                      type: isCompleted
+                          ? DsfrBadgeType.success
+                          : DsfrBadgeType.news,
+                      size: DsfrComponentSize.sm,
+                      withIcon: true,
+                    ),
+                    const SizedBox(height: DsfrSpacings.s1w),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            isCompleted
+                                ? Strings.onboardingAccueilTitleCompleted
+                                : Strings.onboardingAccueilTitle,
+                            style: DsfrTextStyle.bodyMdBold(
+                              color: DsfrColorDecisions.textTitleGrey(context),
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          isCompleted
+                              ? DsfrIcons.systemCloseLine
+                              : DsfrIcons.systemArrowRightSLine,
+                          color: DsfrColorDecisions.textTitleBlueFrance(
+                            context,
+                          ),
+                          size: 16,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(width: Margins.spacing_base),
-              Icon(
-                Icons.close_rounded,
-                color: context.content,
-              ),
-            ] else ...[
-              Expanded(
-                child: Text(
-                  Strings.onboardingAccueilTitle,
-                  style: TextStyles.textBaseBold.copyWith(color: context.content),
-                ),
-              ),
-              const SizedBox(width: Margins.spacing_base),
-              Icon(
-                Icons.chevron_right_rounded,
-                color: context.content,
-              ),
-            ],
-          ],
+            ),
+          ),
         ),
       ),
     );
   }
-}
-
-class OnboardingStepper extends StatelessWidget {
-  final int completedSteps;
-  final int totalSteps;
-  final Color? textColor;
-
-  const OnboardingStepper({
-    required this.completedSteps,
-    required this.totalSteps,
-    this.textColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final double progress = completedSteps / totalSteps;
-
-    return SizedBox(
-      width: 60,
-      height: 60,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          CustomPaint(
-            size: const Size(60, 60),
-            painter: _StepperPainter(progress),
-          ),
-          Text(
-            '$completedSteps/$totalSteps',
-            style: TextStyles.textSBold.copyWith(color: textColor ?? context.content),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _StepperPainter extends CustomPainter {
-  final double progress;
-
-  _StepperPainter(this.progress);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    const strokeWidth = 8.0;
-    const startAngle = 3 * pi / 4; // 135°
-    const sweepAngle = 1.5 * pi; // 270°
-
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = (size.width - strokeWidth) / 2;
-
-    final backgroundPaint = Paint()
-      ..color = AppColors.accent1Lighten
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round;
-
-    final progressPaint = Paint()
-      ..color = AppColors.accent1
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round;
-
-    // Dessine l'arc de fond
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      startAngle,
-      sweepAngle,
-      false,
-      backgroundPaint,
-    );
-
-    // Dessine l'arc de progression
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      startAngle,
-      sweepAngle * progress,
-      false,
-      progressPaint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }

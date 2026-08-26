@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 
 class LargeSectionTitle extends StatelessWidget {
-  const LargeSectionTitle(this.title, {this.color});
+  const LargeSectionTitle(this.title);
   final String title;
-  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class LargeSectionTitle extends StatelessWidget {
       header: true,
       child: Text(
         title,
-        style: TextStyles.accueilSection.copyWith(color: color ?? AppColorsSpecifics.primaryToLighten(context)),
+        style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
       ),
     );
   }
