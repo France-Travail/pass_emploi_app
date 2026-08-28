@@ -61,6 +61,8 @@ class Drawables {
   static String iaFtSuggestionsFailure = "${_assets}ia_ft_suggestions_failure.webp";
 
   static String evalImage = "${_assets}evalluation_illustration.webp";
+  static String presseCard = "${_assets}dsfr/presse_card.webp";
+  static String ratingStar = "${_assets}dsfr/star_line.svg";
 
   static String success = "${_assets}success.webp";
   static String notFound = "${_assets}not_found.webp";
