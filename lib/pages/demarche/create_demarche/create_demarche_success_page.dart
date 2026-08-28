@@ -22,6 +22,19 @@ import 'package:pass_emploi_app/widgets/in_app_feedback.dart';
 
 enum CreateDemarcheSource { personnalisee, fromReferentiel, iaFt, duplicate }
 
+String? _feedbackFeatureForSource(CreateDemarcheSource source) {
+  switch (source) {
+    case CreateDemarcheSource.personnalisee:
+      return "create-demarche-personnalisee";
+    case CreateDemarcheSource.fromReferentiel:
+      return "create-demarche-referentiel";
+    case CreateDemarcheSource.duplicate:
+      return "create-demarche-duplicate";
+    case CreateDemarcheSource.iaFt:
+      return null;
+  }
+}
+
 class CreateDemarcheSuccessPage extends StatelessWidget {
   const CreateDemarcheSuccessPage({super.key, required this.source});
   final CreateDemarcheSource source;
@@ -89,6 +102,7 @@ class _Body extends StatelessWidget {
       CreateDemarcheSource.iaFt => Strings.demarcheSuccessSubtitlePlural,
       _ => Strings.demarcheSuccessSubtitle,
     };
+    final feedbackFeature = _feedbackFeatureForSource(source);
 
     return _Scaffold(
       body: SafeArea(
@@ -100,28 +114,13 @@ class _Body extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  InAppFeedback(
-                    feature: switch (source) {
-                      CreateDemarcheSource.personnalisee => "create-demarche-personnalisee",
-                      CreateDemarcheSource.fromReferentiel => "create-demarche-referentiel",
-                      CreateDemarcheSource.iaFt => "create-demarche-ia-ft",
-                      CreateDemarcheSource.duplicate => "create-demarche-duplicate",
-                    },
-                    label: Strings.feedbackCreateDemarche,
-                    disabledPlaceholder: switch (source) {
-                      CreateDemarcheSource.iaFt => InAppFeedback(
-                        feature: "create-demarche-ia-ft-suggestions",
-                        label: Strings.feedbackCreateDemarcheSuggestions,
-                        responses: [
-                          Strings.feedbackCreateDemarcheSuggestionsResponse1,
-                          Strings.feedbackCreateDemarcheSuggestionsResponse2,
-                          Strings.feedbackCreateDemarcheSuggestionsResponse3,
-                        ],
-                      ),
-                      _ => null,
-                    },
-                  ),
-                  const SizedBox(height: DsfrSpacings.s3w),
+                  if (feedbackFeature != null) ...[
+                    InAppFeedback(
+                      feature: feedbackFeature,
+                      label: Strings.feedbackCreateDemarche,
+                    ),
+                    const SizedBox(height: DsfrSpacings.s3w),
+                  ],
                   Center(
                     child: SvgPicture.asset(
                       Drawables.illustrationSuccess,
