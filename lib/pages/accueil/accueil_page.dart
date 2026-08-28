@@ -44,6 +44,7 @@ import 'package:pass_emploi_app/widgets/bottom_sheets/notifications_bottom_sheet
 import 'package:pass_emploi_app/widgets/bottom_sheets/soft_update_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_tuile_card.dart';
 import 'package:pass_emploi_app/widgets/offre_suivie_form.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 
@@ -328,20 +329,11 @@ class _CampagneCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: '$title. $description',
+    return DsfrTuileCard(
+      leading: DsfrTuileCardImage(imageAsset: Drawables.evalImage),
+      title: title,
+      description: description,
       onTap: () => Navigator.push(context, CampagneQuestionPage.materialPageRoute(0)),
-      child: ExcludeSemantics(
-        child: DsfrTile(
-          size: DsfrComponentSize.sm,
-          direction: Axis.horizontal,
-          title: title,
-          description: description,
-          imageAsset: Drawables.evalImage,
-          onTap: () => Navigator.push(context, CampagneQuestionPage.materialPageRoute(0)),
-        ),
-      ),
     );
   }
 }

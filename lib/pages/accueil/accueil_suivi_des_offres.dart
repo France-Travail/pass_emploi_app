@@ -6,8 +6,10 @@ import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/presentation/accueil/accueil_item.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_tuile_card.dart';
 import 'package:pass_emploi_app/widgets/textes.dart';
 
 class AccueilSuiviDesOffres extends StatelessWidget {
@@ -22,20 +24,11 @@ class AccueilSuiviDesOffres extends StatelessWidget {
       children: [
         LargeSectionTitle(Strings.accueilOffresEnregistreesSection),
         const SizedBox(height: DsfrSpacings.s2w),
-        Semantics(
-          button: true,
-          label: '${Strings.suivezVosOffres}. ${Strings.suivezVosOffresDescription}',
+        DsfrTuileCard(
+          leading: DsfrTuileCardImage(imageAsset: Drawables.presseCard),
+          title: Strings.suivezVosOffres,
+          description: Strings.suivezVosOffresDescription,
           onTap: () => _goToOffresEnregistrees(context),
-          child: ExcludeSemantics(
-            child: DsfrTile(
-              size: DsfrComponentSize.sm,
-              direction: Axis.horizontal,
-              title: Strings.suivezVosOffres,
-              description: Strings.suivezVosOffresDescription,
-              imageAsset: 'assets/illustrations/accueil_offres_suivies.webp',
-              onTap: () => _goToOffresEnregistrees(context),
-            ),
-          ),
         ),
       ],
     );
