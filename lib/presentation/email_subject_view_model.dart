@@ -54,6 +54,8 @@ extension on User {
       Accompagnement.accompagnementIntensif => "${Strings.franceTravail} - ${Strings.accompagnementIntensif}",
       Accompagnement.accompagnementGlobal => "${Strings.franceTravail} - ${Strings.accompagnementGlobal}",
       Accompagnement.equipEmploiRecrut => "${Strings.franceTravail} - ${Strings.equipEmploiRecrut}",
+      Accompagnement.ftDemandeurDEmploi => '${Strings.franceTravail} - Demandeur d\'emploi',
+      Accompagnement.ftEspaceCandidat => '${Strings.franceTravail} - Espace candidat',
     };
   }
 }
