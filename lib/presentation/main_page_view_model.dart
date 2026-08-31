@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/features/date_consultation_actualite_mission_loc
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
+import 'package:pass_emploi_app/models/user.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:redux/redux.dart';
 
@@ -49,14 +50,12 @@ class MainPageViewModel extends Equatable {
     return MainPageViewModel(
       tabs: [
         MainTab.accueil,
-        if (user?.loginMode.isInvite() != true) ...[
-          if (user?.accompagnement != Accompagnement.avenirPro) MainTab.monSuivi,
-          MainTab.chat,
-        ],
+        if (_showAgenda(user)) MainTab.monSuivi,
         MainTab.solutions,
         MainTab.evenements,
+        if (_showMessages(user)) MainTab.chat,
       ],
-      withChatBadge: user?.loginMode.isInvite() == true ? false : (hasUnreadChat || hasNewActualite),
+      withChatBadge: _showMessages(user) && (hasUnreadChat || hasNewActualite),
       resetDeeplink: () => store.dispatch(ResetDeeplinkAction()),
       actualisationPoleEmploiUrl: store.state.configurationState.configuration?.actualisationPoleEmploiUrl ?? "",
     );
@@ -64,6 +63,19 @@ class MainPageViewModel extends Equatable {
 
   @override
   List<Object?> get props => [tabs, withChatBadge];
+}
+
+bool _showAgenda(User? user) {
+  if (user == null || user.loginMode.isInvite()) return false;
+  if (user.accompagnement == Accompagnement.ftEspaceCandidat) return false;
+  return true;
+}
+
+bool _showMessages(User? user) {
+  if (user == null || user.loginMode.isInvite()) return false;
+  if (user.accompagnement == Accompagnement.ftDemandeurDEmploi) return false;
+  if (user.accompagnement == Accompagnement.ftEspaceCandidat) return false;
+  return true;
 }
 
 bool _hasNewActualite(
