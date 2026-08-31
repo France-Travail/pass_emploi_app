@@ -7,6 +7,8 @@ enum Accompagnement {
   accompagnementIntensif,
   accompagnementGlobal,
   equipEmploiRecrut,
+  ftDemandeurDEmploi,
+  ftEspaceCandidat,
 }
 
 extension AccompagnementExt on Accompagnement {
@@ -20,6 +22,8 @@ extension AccompagnementExt on Accompagnement {
       "accompagnementIntensif" => Accompagnement.accompagnementIntensif,
       "accompagnementGlobal" => Accompagnement.accompagnementGlobal,
       "equipEmploiRecrut" => Accompagnement.equipEmploiRecrut,
+      "ftDemandeurDEmploi" => Accompagnement.ftDemandeurDEmploi,
+      "ftEspaceCandidat" => Accompagnement.ftEspaceCandidat,
       _ => throw Exception("Unknown accompagnement: $accompagnement"),
     };
   }

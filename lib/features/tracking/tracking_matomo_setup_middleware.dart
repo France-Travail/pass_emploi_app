@@ -69,6 +69,8 @@ extension on User {
       Accompagnement.accompagnementIntensif => 'Accompagnement intensif',
       Accompagnement.accompagnementGlobal => 'Accompagnement global',
       Accompagnement.equipEmploiRecrut => 'Equip emploi recrut',
+      Accompagnement.ftDemandeurDEmploi => 'Demandeur d\'emploi FT',
+      Accompagnement.ftEspaceCandidat => 'Espace candidat FT',
     };
   }
 }

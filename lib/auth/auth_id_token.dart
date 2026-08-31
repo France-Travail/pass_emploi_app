@@ -68,6 +68,8 @@ class AuthIdToken extends Equatable {
       'FT_ACCOMPAGNEMENT_INTENSIF' => LoginMode.POLE_EMPLOI,
       'FT_ACCOMPAGNEMENT_GLOBAL' => LoginMode.POLE_EMPLOI,
       'FT_EQUIP_EMPLOI_RECRUT' => LoginMode.POLE_EMPLOI,
+      'FT_DEMANDEUR_D_EMPLOI' => LoginMode.POLE_EMPLOI,
+      'FT_ESPACE_CANDIDAT' => LoginMode.POLE_EMPLOI,
       _ => throw Exception('Unknown login mode'),
     };
   }
@@ -81,6 +83,8 @@ class AuthIdToken extends Equatable {
       'FT_ACCOMPAGNEMENT_INTENSIF' => Accompagnement.accompagnementIntensif,
       'FT_ACCOMPAGNEMENT_GLOBAL' => Accompagnement.accompagnementGlobal,
       'FT_EQUIP_EMPLOI_RECRUT' => Accompagnement.equipEmploiRecrut,
+      'FT_DEMANDEUR_D_EMPLOI' => Accompagnement.ftDemandeurDEmploi,
+      'FT_ESPACE_CANDIDAT' => Accompagnement.ftEspaceCandidat,
       _ => Accompagnement.cej,
     };
   }
