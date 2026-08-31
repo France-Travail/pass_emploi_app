@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/auth/auth_token_request.dart';
 import 'package:pass_emploi_app/auth/auth_token_response.dart';
 import 'package:pass_emploi_app/auth/auth_wrapper.dart';
 import 'package:pass_emploi_app/auth/authenticator.dart';
+import 'package:pass_emploi_app/crashlytics/crashlytics.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/repositories/auth/logout_repository.dart';
@@ -140,6 +141,95 @@ void main() {
 
       // Then
       expect(await authenticator.isLoggedIn(), false);
+    });
+  });
+
+  group('Interrupted login detection', () {
+    late MockCrashlytics crashlytics;
+
+    setUpAll(() {
+      registerFallbackValue(StackTrace.empty);
+    });
+
+    setUp(() {
+      crashlytics = MockCrashlytics();
+      authenticator = Authenticator(wrapper, logoutRepository, configuration(), secureStorage, crashlytics);
+    });
+
+    test('marker is present while AppAuth flow is running', () async {
+      // Given
+      String? markerDuringFlow;
+      when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async {
+        markerDuringFlow = await secureStorage.read(key: 'loginInProgress');
+        return authTokenResponse();
+      });
+
+      // When
+      await authenticator.login(AuthenticationMode.GENERIC);
+
+      // Then
+      expect(markerDuringFlow, startsWith('GENERIC|'));
+    });
+
+    test('marker is cleared when login completes successfully', () async {
+      // Given
+      when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async => authTokenResponse());
+
+      // When
+      await authenticator.login(AuthenticationMode.GENERIC);
+
+      // Then
+      expect(await secureStorage.read(key: 'loginInProgress'), isNull);
+    });
+
+    test('marker is cleared when login fails', () async {
+      // Given
+      when(() => wrapper.login(_tokenRequest())).thenThrow(Exception());
+
+      // When
+      await authenticator.login(AuthenticationMode.GENERIC);
+
+      // Then
+      expect(await secureStorage.read(key: 'loginInProgress'), isNull);
+    });
+
+    test('interrupted login from a previous session is reported to crashlytics and marker is cleared', () async {
+      // Given : marqueur laissé par une session morte pendant le flow AppAuth
+      final startedAt = DateTime.now().millisecondsSinceEpoch - 90000;
+      await secureStorage.write(key: 'loginInProgress', value: 'SIMILO|$startedAt');
+
+      // When
+      await authenticator.checkForInterruptedLogin();
+
+      // Then
+      verify(() => crashlytics.setCustomKey('interrupted_login_mode', 'SIMILO')).called(1);
+      final elapsed = verify(() => crashlytics.setCustomKey('interrupted_login_elapsed_seconds', captureAny()))
+          .captured
+          .single as String;
+      expect(int.parse(elapsed), inInclusiveRange(90, 92));
+      verify(() => crashlytics.recordNonNetworkException(any(), any())).called(1);
+      expect(await secureStorage.read(key: 'loginInProgress'), isNull);
+    });
+
+    test('interrupted login with malformed marker is reported with unknown elapsed time', () async {
+      // Given
+      await secureStorage.write(key: 'loginInProgress', value: 'SIMILO');
+
+      // When
+      await authenticator.checkForInterruptedLogin();
+
+      // Then
+      verify(() => crashlytics.setCustomKey('interrupted_login_mode', 'SIMILO')).called(1);
+      verify(() => crashlytics.setCustomKey('interrupted_login_elapsed_seconds', 'unknown')).called(1);
+      verify(() => crashlytics.recordNonNetworkException(any(), any())).called(1);
+    });
+
+    test('nothing is reported when no login was interrupted', () async {
+      // When
+      await authenticator.checkForInterruptedLogin();
+
+      // Then
+      verifyZeroInteractions(crashlytics);
     });
   });
 
@@ -374,6 +464,8 @@ void main() {
     expect(token, isNull);
   });
 }
+
+class MockCrashlytics extends Mock implements Crashlytics {}
 
 AuthTokenRequest _tokenRequest({Map<String, String>? additionalParameters}) {
   return AuthTokenRequest(

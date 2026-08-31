@@ -49,6 +49,18 @@ void main() {
       sut.thenExpectChangingStatesThroughOrder([_shouldNotBeLoggedIn()]);
     });
 
+    test('interrupted login from a previous session is checked to be reported to crashlytics', () async {
+      // Given
+      final authenticator = MockAuthenticator();
+      when(() => authenticator.isLoggedIn()).thenAnswer((_) async => false);
+      sut.givenStore = givenState().store((f) => f.authenticator = authenticator);
+
+      // Then
+      sut.thenExpectChangingStatesThroughOrder([_shouldNotBeLoggedIn()]);
+      await untilCalled(() => authenticator.checkForInterruptedLogin());
+      verify(() => authenticator.checkForInterruptedLogin()).called(1);
+    });
+
     test('user is not logged in if she was previously logged in with a corrupted ID token & token should be deleted',
         () async {
       // Given

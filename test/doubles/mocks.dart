@@ -62,6 +62,10 @@ import 'dio_mock.dart';
 import 'fixtures.dart';
 
 class MockAuthenticator extends Mock implements Authenticator {
+  MockAuthenticator() {
+    when(() => checkForInterruptedLogin()).thenAnswer((_) async {});
+  }
+
   static MockAuthenticator successful() {
     final authenticator = MockAuthenticator();
     registerFallbackValue(AuthenticationMode.SIMILO);

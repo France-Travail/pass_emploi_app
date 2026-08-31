@@ -36,6 +36,7 @@ class LoginMiddleware extends MiddlewareClass<AppState> {
     final userId = store.state.userId();
     next(action);
     if (action is BootstrapAction) {
+      _authenticator.checkForInterruptedLogin();
       _checkIfUserIsLoggedIn(store);
     } else if (action is RequestLoginAction) {
       _logUser(store, action.mode);
