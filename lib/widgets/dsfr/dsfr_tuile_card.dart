@@ -75,6 +75,7 @@ class DsfrTuileCard extends StatelessWidget {
                           DsfrButton(
                             label: Strings.close,
                             icon: DsfrIcons.systemCloseLine,
+                            iconLocation: DsfrButtonIconLocation.right,
                             iconSemanticLabel: dismissSemanticLabel,
                             variant: DsfrButtonVariant.tertiaryWithoutBorder,
                             size: DsfrComponentSize.sm,
