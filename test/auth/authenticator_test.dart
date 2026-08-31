@@ -10,6 +10,7 @@ import 'package:pass_emploi_app/crashlytics/crashlytics.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/repositories/auth/logout_repository.dart';
+import 'package:pass_emploi_app/repositories/installation_id_repository.dart';
 
 import '../doubles/dummies.dart';
 import '../doubles/fixtures.dart';
@@ -230,6 +231,70 @@ void main() {
 
       // Then
       verifyZeroInteractions(crashlytics);
+    });
+  });
+
+  group('Installation id forwarding', () {
+    setUp(() {
+      authenticator = Authenticator(
+        wrapper,
+        logoutRepository,
+        configuration(),
+        secureStorage,
+        null,
+        InstallationIdRepository(secureStorage),
+      );
+    });
+
+    test('login forwards installation id to Connect alongside idp hint', () async {
+      // Given
+      await secureStorage.write(key: '_installationId', value: 'installation-uuid');
+      when(
+        () => wrapper.login(
+          _tokenRequest(additionalParameters: {'kc_idp_hint': 'similo-jeune', 'installation_id': 'installation-uuid'}),
+        ),
+      ).thenAnswer((_) async => authTokenResponse());
+
+      // When
+      final result = await authenticator.login(AuthenticationMode.SIMILO);
+
+      // Then
+      expect(result, isA<SuccessAuthenticatorResponse>());
+    });
+
+    test('login forwards installation id to Connect without idp hint in GENERIC mode', () async {
+      // Given
+      await secureStorage.write(key: '_installationId', value: 'installation-uuid');
+      when(
+        () => wrapper.login(_tokenRequest(additionalParameters: {'installation_id': 'installation-uuid'})),
+      ).thenAnswer((_) async => authTokenResponse());
+
+      // When
+      final result = await authenticator.login(AuthenticationMode.GENERIC);
+
+      // Then
+      expect(result, isA<SuccessAuthenticatorResponse>());
+    });
+
+    test('login is not blocked when installation id cannot be read', () async {
+      // Given : le stockage du repository jette, le login doit partir sans le paramètre
+      final throwingStorage = MockFlutterSecureStorage();
+      when(() => throwingStorage.read(key: any(named: 'key'))).thenThrow(Exception('KeyStore error'));
+      final authenticator = Authenticator(
+        wrapper,
+        logoutRepository,
+        configuration(),
+        secureStorage,
+        null,
+        InstallationIdRepository(throwingStorage),
+      );
+      when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async => authTokenResponse());
+
+      // When
+      final result = await authenticator.login(AuthenticationMode.GENERIC);
+
+      // Then
+      expect(result, isA<SuccessAuthenticatorResponse>());
     });
   });
 

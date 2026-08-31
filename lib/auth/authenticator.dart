@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/configuration/configuration.dart';
 import 'package:pass_emploi_app/crashlytics/crashlytics.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/repositories/auth/logout_repository.dart';
+import 'package:pass_emploi_app/repositories/installation_id_repository.dart';
 
 const String _idTokenKey = "idToken";
 const String _accessTokenKey = "accessToken";
@@ -41,8 +42,16 @@ class Authenticator {
   final Configuration _configuration;
   final FlutterSecureStorage _preferences;
   final Crashlytics? _crashlytics;
+  final InstallationIdRepository? _installationIdRepository;
 
-  Authenticator(this._authWrapper, this._logoutRepository, this._configuration, this._preferences, [this._crashlytics]);
+  Authenticator(
+    this._authWrapper,
+    this._logoutRepository,
+    this._configuration,
+    this._preferences, [
+    this._crashlytics,
+    this._installationIdRepository,
+  ]);
 
   Future<AuthenticatorResponse> login(AuthenticationMode mode) async {
     await _markLoginInProgress(mode);
@@ -54,7 +63,7 @@ class Authenticator {
           _configuration.authIssuer,
           _configuration.authScopes,
           _configuration.authClientSecret,
-          _additionalParams(mode),
+          await _additionalParams(mode),
         ),
       );
       await _saveToken(response);
@@ -178,9 +187,25 @@ class Authenticator {
     await _preferences.delete(key: _refreshTokenKey);
   }
 
-  Map<String, String>? _additionalParams(AuthenticationMode mode) {
-    if (mode == AuthenticationMode.SIMILO) return similoParams;
-    if (mode == AuthenticationMode.POLE_EMPLOI) return poleEmploiParams;
-    return null;
+  Future<Map<String, String>?> _additionalParams(AuthenticationMode mode) async {
+    Map<String, String>? modeParams;
+    if (mode == AuthenticationMode.SIMILO) modeParams = similoParams;
+    if (mode == AuthenticationMode.POLE_EMPLOI) modeParams = poleEmploiParams;
+
+    // Transmis en query du /auth pour que Connect logge l'installation id sur
+    // tout le parcours de login : les échecs y sont sinon anonymes tant que
+    // l'app n'a pas atteint l'API (qui reçoit X-InstallationId en header).
+    final installationId = await _installationId();
+    if (installationId == null) return modeParams;
+    return {...?modeParams, 'installation_id': installationId};
+  }
+
+  Future<String?> _installationId() async {
+    try {
+      return await _installationIdRepository?.getInstallationId();
+    } catch (_) {
+      // Un stockage défaillant ne doit pas empêcher le login pour un identifiant de diagnostic.
+      return null;
+    }
   }
 }

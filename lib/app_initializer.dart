@@ -194,12 +194,14 @@ class AppInitializer {
       clientId: configuration.authClientId,
       crashlytics: crashlytics,
     );
+    final installationIdRepository = InstallationIdRepository(securedPreferences);
     final authenticator = Authenticator(
       AuthWrapper(FlutterAppAuth(), Lock(), crashlytics),
       logoutRepository,
       configuration,
       securedPreferences,
       crashlytics,
+      installationIdRepository,
     );
     final accessTokenRetriever = AuthAccessTokenRetriever(authenticator, remoteConfigRepository, securedPreferences, Lock());
     final authAccessChecker = AuthAccessChecker();
@@ -208,7 +210,7 @@ class AppInitializer {
     final modeDemoRepository = ModeDemoRepository();
     final baseUrl = configuration.serverBaseUrl;
     final monitoringInterceptor = MonitoringInterceptor(
-      InstallationIdRepository(securedPreferences),
+      installationIdRepository,
       AppVersionRepository(),
     );
     final unauthorizedInterceptor = LogoutAfterTooMany401Interceptor(remoteConfigRepository);
