@@ -4,7 +4,7 @@ class ExternalLinks {
   static final String campagneRecrutement = Brand.isCej()
       ? "https://framaforms.org/participez-a-la-conception-de-lapplication-du-contrat-dengagement-jeune-1707239593"
       : "https://tally.so/r/wbxAy1";
-  static final String proposerUneIdee = campagneRecrutement;
+  static final String proposerUneIdee = "https://tally.so/forms/GxAdLL/edit";
   static const String unJeuneUneSolution = "https://www.1jeune1solution.gouv.fr/contrat-engagement-jeune";
   static const String espaceCandidats = "https://candidat.pole-emploi.fr/espacepersonnel/";
   static const String boiteAOutilsDiagoriente = "https://plateforme.diagoriente.beta.gouv.fr/";
