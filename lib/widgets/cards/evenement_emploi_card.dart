@@ -17,6 +17,8 @@ class EvenementEmploiCard extends StatelessWidget {
       onTap: () => Navigator.of(context).push(
         EvenementEmploiDetailsPage.materialPageRoute(_viewModel.id),
       ),
+      emoji: _viewModel.emoji,
+      emojiBackgroundColor: _viewModel.emojiBackground,
       semanticsLabel: [
         _viewModel.type,
         _viewModel.titre,

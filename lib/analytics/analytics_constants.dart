@@ -188,6 +188,7 @@ class AnalyticsActionNames {
   static const skipRating = "/notation/skip";
   static const negativeRating = "/notation/defavorable";
   static const positiveRating = "/notation/favorable";
+  static const proposeIdea = "/notation/proposer-idee";
 
   static const contactEmailSent = "/contact/email-sent";
 

@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/models/conseiller.dart';
 
 class Rendezvous extends Equatable {
@@ -137,4 +139,32 @@ enum RendezvousSource { milo, passEmploi }
 
 extension RendezvousSourceExt on RendezvousSource {
   bool get isMilo => this == RendezvousSource.milo;
+}
+
+const rendezvousDefaultEmoji = '📅';
+
+Color get rendezvousDefaultEmojiBackground => DsfrColors.blueCumulus950;
+
+extension RendezvousTypeCodeVisual on RendezvousTypeCode {
+  String get emoji => switch (this) {
+        RendezvousTypeCode.ACTIVITE_EXTERIEURES => '🌳',
+        RendezvousTypeCode.ATELIER => '🛠️',
+        RendezvousTypeCode.ENTRETIEN_INDIVIDUEL_CONSEILLER => '👤',
+        RendezvousTypeCode.ENTRETIEN_PARTENAIRE => '🤝',
+        RendezvousTypeCode.INFORMATION_COLLECTIVE => 'ℹ️',
+        RendezvousTypeCode.VISITE => '🏢',
+        RendezvousTypeCode.PRESTATION => '📋',
+        RendezvousTypeCode.AUTRE => rendezvousDefaultEmoji,
+      };
+
+  Color get emojiBackground => switch (this) {
+        RendezvousTypeCode.ACTIVITE_EXTERIEURES => DsfrColors.greenTilleulVerveine950,
+        RendezvousTypeCode.ATELIER => DsfrColors.brownCaramel950,
+        RendezvousTypeCode.ENTRETIEN_INDIVIDUEL_CONSEILLER => DsfrColors.purpleGlycine925,
+        RendezvousTypeCode.ENTRETIEN_PARTENAIRE => DsfrColors.greenMenthe950,
+        RendezvousTypeCode.INFORMATION_COLLECTIVE => DsfrColors.blueCumulus950,
+        RendezvousTypeCode.VISITE => DsfrColors.blueFrance950,
+        RendezvousTypeCode.PRESTATION => DsfrColors.pinkTuile925,
+        RendezvousTypeCode.AUTRE => rendezvousDefaultEmojiBackground,
+      };
 }

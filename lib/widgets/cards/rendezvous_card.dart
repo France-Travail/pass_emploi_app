@@ -17,19 +17,23 @@ class RendezvousCard extends StatelessWidget {
   final RendezvousCardViewModel Function(Store<AppState>) converter;
   final VoidCallback? onTap;
   final bool withChrome;
+  final bool showDate;
 
   const RendezvousCard({
     super.key,
     required this.converter,
     this.onTap,
     this.withChrome = true,
+    this.showDate = false,
   }) : assert(!withChrome || onTap != null);
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, RendezvousCardViewModel>(
       converter: converter,
-      builder: (context, viewModel) => withChrome ? _ChromeContent(viewModel, onTap!) : _EmbeddedContent(viewModel),
+      builder: (context, viewModel) => withChrome
+          ? _ChromeContent(viewModel, onTap!, showDate: showDate)
+          : _EmbeddedContent(viewModel, showDate: showDate),
     );
   }
 }
@@ -37,13 +41,16 @@ class RendezvousCard extends StatelessWidget {
 class _ChromeContent extends StatelessWidget {
   final RendezvousCardViewModel viewModel;
   final VoidCallback onTap;
+  final bool showDate;
 
-  const _ChromeContent(this.viewModel, this.onTap);
+  const _ChromeContent(this.viewModel, this.onTap, {required this.showDate});
 
   @override
   Widget build(BuildContext context) {
     return DsfrEventCard(
       onTap: onTap,
+      emoji: viewModel.emoji,
+      emojiBackgroundColor: viewModel.emojiBackground,
       semanticsLabel: [
         viewModel.tag,
         viewModel.title,
@@ -51,27 +58,29 @@ class _ChromeContent extends StatelessWidget {
         viewModel.hourAndDuration,
         if (viewModel.place != null) viewModel.place!,
       ].join('. '),
-      child: _EventBody(viewModel, showInscriptionTags: true),
+      child: _EventBody(viewModel, showInscriptionTags: true, showDate: showDate),
     );
   }
 }
 
 class _EmbeddedContent extends StatelessWidget {
   final RendezvousCardViewModel viewModel;
+  final bool showDate;
 
-  const _EmbeddedContent(this.viewModel);
+  const _EmbeddedContent(this.viewModel, {required this.showDate});
 
   @override
   Widget build(BuildContext context) {
-    return _EventBody(viewModel, showInscriptionTags: false);
+    return _EventBody(viewModel, showInscriptionTags: false, showDate: showDate);
   }
 }
 
 class _EventBody extends StatelessWidget {
   final RendezvousCardViewModel viewModel;
   final bool showInscriptionTags;
+  final bool showDate;
 
-  const _EventBody(this.viewModel, {required this.showInscriptionTags});
+  const _EventBody(this.viewModel, {required this.showInscriptionTags, required this.showDate});
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +109,13 @@ class _EventBody extends StatelessWidget {
           ),
         ),
         const SizedBox(height: DsfrSpacings.s1v),
+        if (showDate) ...[
+          DsfrEventCardComplement(
+            icon: DsfrIcons.businessCalendarEventLine,
+            text: viewModel.date,
+          ),
+          const SizedBox(height: DsfrSpacings.s1v),
+        ],
         DsfrEventCardComplement(
           icon: DsfrIcons.systemTimeLine,
           text: viewModel.hourAndDuration,
@@ -154,10 +170,12 @@ extension RendezvousCardFromId on String {
     required RendezvousStateSource stateSource,
     required EvenementEngagement evenementEngagement,
     bool withChrome = true,
+    bool showDate = false,
   }) {
     return RendezvousCard(
       converter: (store) => RendezvousCardViewModel.create(store, stateSource, this),
       withChrome: withChrome,
+      showDate: showDate,
       onTap: () {
         context.trackEvenementEngagement(evenementEngagement);
         RendezvousDetailsPage.show(context, _stateSource(stateSource), this);

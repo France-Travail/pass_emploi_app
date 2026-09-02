@@ -24,6 +24,7 @@ import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/errors/favori_not_found_error.dart';
 import 'package:pass_emploi_app/widgets/favori_heart.dart';
 import 'package:pass_emploi_app/widgets/favori_state_selector.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/offre_details/offre_details_actions_footer.dart';
 import 'package:pass_emploi_app/widgets/offre_details/offre_details_header.dart';
 import 'package:pass_emploi_app/widgets/offre_details/offre_details_section_title.dart';
@@ -156,12 +157,7 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
                   dateLabel: viewModel.dateDerniereConsultation != null
                       ? Strings.offreLastSeen(viewModel.dateDerniereConsultation!)
                       : null,
-                  leading: domaine.isNotEmpty
-                      ? Text(
-                          domaine,
-                          style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context)),
-                        )
-                      : null,
+                  leading: domaine.isNotEmpty ? DsfrCategoryTag.secteur(label: domaine) : null,
                   title: titre,
                   subtitle: organisation.isNotEmpty ? organisation : null,
                   tags: detail != null ? _tags(detail) : const [],

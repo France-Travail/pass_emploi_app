@@ -17,14 +17,11 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/favori_list_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/animated_list_loader.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/cards/suivi_offre_card.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_empty_state.dart';
 import 'package:pass_emploi_app/widgets/favori_state_selector.dart';
-import 'package:pass_emploi_app/widgets/illustration/empty_state_placeholder.dart';
-import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 import 'package:redux/redux.dart';
 
@@ -178,19 +175,12 @@ class _Content extends StatelessWidget {
 class _Empty extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: EmptyStatePlaceholder(
-        illustration: Illustration.blue(AppIcons.bookmark),
-        title: Strings.offresEnregistreesEmptyTitle,
-        subtitle: Strings.offresEnregistreesEmptySubtitle,
-        action: SizedBox(
-          width: double.infinity,
-          child: PrimaryActionButton(
-            label: Strings.offresEnregistreesEmptyButton,
-            onPressed: () => DefaultTabController.of(context).animateTo(0),
-          ),
-        ),
-      ),
+    return DsfrEmptyState(
+      centered: true,
+      title: Strings.offresEnregistreesEmptyTitle,
+      subtitle: Strings.offresEnregistreesEmptySubtitle,
+      buttonLabel: Strings.offresEnregistreesEmptyButton,
+      onButtonPressed: () => DefaultTabController.of(context).animateTo(0),
     );
   }
 }

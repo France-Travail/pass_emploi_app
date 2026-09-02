@@ -66,14 +66,14 @@ class _Content extends StatelessWidget {
         if (viewModel.heuresEnCoursDeCalcul != null) ...[
           Text(
             viewModel.heuresEnCoursDeCalcul!,
-            style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultInfo(context)),
+            style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textTitleGrey(context)),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: DsfrSpacings.s3v),
         ],
         Text(
           viewModel.title,
-          style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+          style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: DsfrSpacings.s3v),
@@ -125,7 +125,7 @@ class _HourStat extends StatelessWidget {
         Flexible(
           child: Text(
             label,
-            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
+            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
           ),
         ),
       ],

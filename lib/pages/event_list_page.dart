@@ -142,11 +142,13 @@ class _Content extends StatelessWidget {
                         context: context,
                         stateSource: RendezvousStateSource.eventListAnimationsCollectives,
                         evenementEngagement: EvenementEngagement.ANIMATION_COLLECTIVE_AFFICHEE,
+                        showDate: true,
                       ),
                       final SessionMiloId s => s.id.rendezvousCard(
                         context: context,
                         stateSource: RendezvousStateSource.eventListSessionsMilo,
                         evenementEngagement: EvenementEngagement.SESSION_AFFICHEE,
+                        showDate: true,
                       ),
                     };
                   },

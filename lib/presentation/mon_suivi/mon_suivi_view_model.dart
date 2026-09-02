@@ -241,7 +241,7 @@ class MonSuiviDay extends Equatable {
   factory MonSuiviDay.fromDateTime(DateTime dateTime) => MonSuiviDay(
         dateTime.toDayName(),
         dateTime.day.toString(),
-        dateTime.toMonth(),
+        dateTime.toAbbreviatedMonth(),
       );
 
   @override
