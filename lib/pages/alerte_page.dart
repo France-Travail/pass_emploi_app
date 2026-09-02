@@ -36,11 +36,9 @@ import 'package:pass_emploi_app/utils/store_extensions.dart';
 import 'package:pass_emploi_app/widgets/alerte_card.dart';
 import 'package:pass_emploi_app/widgets/animated_list_loader.dart';
 import 'package:pass_emploi_app/widgets/buttons/filtre_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/cards/alerte_deletable_card.dart';
 import 'package:pass_emploi_app/widgets/dialogs/alerte_delete_dialog.dart';
-import 'package:pass_emploi_app/widgets/illustration/empty_state_placeholder.dart';
-import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_empty_state.dart';
 import 'package:pass_emploi_app/widgets/loading_overlay.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
@@ -106,7 +104,7 @@ class _AlertePageState extends State<AlertePage> {
     if (viewModel.displayState != DisplayState.CONTENT) return SizedBox();
 
     if (_selectedFilter == OffreFilter.tous && viewModel.alertes.isEmpty) {
-      return PrimaryActionButton(label: Strings.alertesListEmptyButton, onPressed: () => _goToRecherche(context));
+      return SizedBox();
     }
 
     return FiltreButton(
@@ -218,13 +216,17 @@ class _AlertePageState extends State<AlertePage> {
   }
 
   Widget _noAlerte() {
-    return Column(
-      children: [
-        _selectedFilter == OffreFilter.tous
-            ? _EmptyListPlaceholder.noFavori()
-            : _EmptyListPlaceholder.noFavoriFiltered(),
-        SizedBox(height: Margins.spacing_huge),
-      ],
+    if (_selectedFilter == OffreFilter.tous) {
+      return DsfrEmptyState(
+        title: Strings.alertesListEmptyTitle,
+        subtitle: Strings.alertesListEmptySubtitle,
+        buttonLabel: Strings.alertesListEmptyButton,
+        onButtonPressed: () => _goToRecherche(context),
+      );
+    }
+    return DsfrEmptyState(
+      title: Strings.alertesFilteredListEmptyTitle,
+      subtitle: Strings.alertesFilteredListEmptySubtitle,
     );
   }
 
@@ -298,35 +300,6 @@ class _AlertePageState extends State<AlertePage> {
       OffreFilter.immersion => AnalyticsScreenNames.alerteListFilterImmersion,
       OffreFilter.serviceCivique => AnalyticsScreenNames.alerteListFilterServiceCivique,
     });
-  }
-}
-
-class _EmptyListPlaceholder extends StatelessWidget {
-  final String title;
-  final String subtitle;
-
-  _EmptyListPlaceholder({required this.title, required this.subtitle});
-
-  factory _EmptyListPlaceholder.noFavori() {
-    return _EmptyListPlaceholder(title: Strings.alertesListEmptyTitle, subtitle: Strings.alertesListEmptySubtitle);
-  }
-
-  factory _EmptyListPlaceholder.noFavoriFiltered() {
-    return _EmptyListPlaceholder(
-      title: Strings.alertesFilteredListEmptyTitle,
-      subtitle: Strings.alertesFilteredListEmptySubtitle,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: EmptyStatePlaceholder(
-        illustration: Illustration.grey(Icons.search, withWhiteBackground: true),
-        title: title,
-        subtitle: subtitle,
-      ),
-    );
   }
 }
 

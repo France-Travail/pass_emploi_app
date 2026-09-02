@@ -72,11 +72,9 @@ class DsfrBottomSheet extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  DsfrSpacings.s1w,
-                  DsfrSpacings.s2w,
-                  DsfrSpacings.s1w,
-                  0,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: DsfrSpacings.s1w,
+                  vertical: DsfrSpacings.s2w,
                 ),
                 child: Row(
                   children: [

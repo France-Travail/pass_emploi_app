@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/models/evenement_emploi/evenement_emploi.dart';
+import 'package:pass_emploi_app/models/evenement_emploi/evenement_emploi_type.dart';
 import 'package:pass_emploi_app/presentation/evenement_emploi/evenement_emploi_item_view_model.dart';
 
 void main() {
@@ -29,6 +30,8 @@ void main() {
         locationLabel: '21000 Dijon',
         dateLabel: '20/01/2021',
         heureLabel: '10h - 12h30',
+        emoji: EvenementEmploiType.atelier.emoji,
+        emojiBackground: EvenementEmploiType.atelier.emojiBackground,
       ),
     );
   });

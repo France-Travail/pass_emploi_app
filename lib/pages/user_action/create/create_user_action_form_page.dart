@@ -3,6 +3,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
+import 'package:pass_emploi_app/models/requests/user_action_create_request.dart';
+import 'package:pass_emploi_app/models/user_action.dart';
 import 'package:pass_emploi_app/models/user_action_type.dart';
 import 'package:pass_emploi_app/pages/generic_success_page.dart';
 import 'package:pass_emploi_app/pages/user_action/create/create_user_action_confirmation_page.dart';
@@ -116,16 +118,22 @@ class CreateUserActionFormPage extends StatefulWidget {
 class _CreateUserActionFormPageState extends State<CreateUserActionFormPage> {
   bool multipleActions = false;
   bool successShown = false;
+  bool showActionDoneTag = false;
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, UserActionCreateViewModel>(
       converter: (state) => UserActionCreateViewModel.create(state),
-      builder: (context, viewModel) => _Body(viewModel, (numberOfActions) {
-        if (numberOfActions > 1) {
-          multipleActions = true;
-        }
-      }),
+      builder: (context, viewModel) => _Body(
+        viewModel,
+        onSubmit: (numberOfActions, requests) {
+          if (numberOfActions > 1) {
+            multipleActions = true;
+          }
+          showActionDoneTag =
+              requests.isNotEmpty && requests.every((request) => request.initialStatus == UserActionStatus.DONE);
+        },
+      ),
       onWillChange: (previousVm, newVm) => _handleDisplayState(context, newVm),
       distinct: true,
     );
@@ -146,6 +154,7 @@ class _CreateUserActionFormPageState extends State<CreateUserActionFormPage> {
         CreateUserActionConfirmationPage.route(
           widget.source,
           multipleActions: multipleActions,
+          showActionDoneTag: showActionDoneTag,
         ),
       ).then((result) {
         if (context.mounted) Navigator.pop(context, result);
@@ -157,9 +166,9 @@ class _CreateUserActionFormPageState extends State<CreateUserActionFormPage> {
 
 class _Body extends StatelessWidget {
   final UserActionCreateViewModel _viewModel;
-  final void Function(int numberOfActions) _onSubmit;
+  final void Function(int numberOfActions, List<UserActionCreateRequest> requests) onSubmit;
 
-  const _Body(this._viewModel, this._onSubmit);
+  const _Body(this._viewModel, {required this.onSubmit});
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +179,7 @@ class _Body extends StatelessWidget {
             final requests = viewModel.toRequests;
             _viewModel.createUserActions(requests);
             _trackActionSubmitted(viewModel, requests.length);
-            _onSubmit(requests.length);
+            onSubmit(requests.length, requests);
           },
           onAbort: () => Navigator.pop(context),
         ),

@@ -6,8 +6,8 @@ import 'package:pass_emploi_app/pages/offre_page.dart';
 import 'package:pass_emploi_app/presentation/offre_emploi/offre_emploi_origin_view_model.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/date_derniere_consultation_provider.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_event_card.dart';
 import 'package:pass_emploi_app/widgets/favori_heart.dart';
-import 'package:pass_emploi_app/widgets/offre_details/offre_details_tag.dart';
 
 class DataCard<T> extends StatelessWidget {
   final Widget? leading;
@@ -79,17 +79,19 @@ class DataCard<T> extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(DsfrSpacings.s3v),
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: _Logo(origin: origin),
+                            if (origin != null) ...[
+                              Padding(
+                                padding: const EdgeInsets.all(DsfrSpacings.s3v),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: _Logo(origin: origin),
+                                ),
                               ),
-                            ),
+                            ],
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                  0,
+                                padding: EdgeInsets.fromLTRB(
+                                  origin != null ? 0 : DsfrSpacings.s3v,
                                   DsfrSpacings.s3v,
                                   DsfrSpacings.s3v,
                                   DsfrSpacings.s3v,
@@ -100,38 +102,23 @@ class DataCard<T> extends StatelessWidget {
                                     Text(
                                       titre,
                                       style: DsfrTextStyle.bodyMdBold(
-                                        color: DsfrColorDecisions.textTitleBlueFrance(context),
+                                        color: DsfrColorDecisions.textTitleGrey(context),
                                       ),
                                     ),
                                     if (sousTitre != null && sousTitre!.isNotEmpty)
                                       Text(
                                         sousTitre!,
                                         style: DsfrTextStyle.bodySm(
-                                          color: DsfrColorDecisions.textDefaultGrey(context),
+                                          color: DsfrColorDecisions.textTitleGrey(context),
                                         ),
                                       ),
                                     if (leading != null) ...[
-                                      const SizedBox(height: DsfrSpacings.s1w),
+                                      const SizedBox(height: DsfrSpacings.s1v),
                                       leading!,
                                     ],
-                                    if (_hasTags(contractLabel)) ...[
-                                      const SizedBox(height: DsfrSpacings.s1w),
-                                      Wrap(
-                                        spacing: DsfrSpacings.s1w,
-                                        runSpacing: DsfrSpacings.s1w,
-                                        children: [
-                                          if (category?.isNotEmpty == true) OffreDetailsTag(label: category!),
-                                          if (lieu?.isNotEmpty == true) OffreDetailsTag.location(lieu!),
-                                          if (contractLabel != null) OffreDetailsTag.contractType(contractLabel),
-                                          if (secteurActivite?.isNotEmpty == true)
-                                            OffreDetailsTag(label: secteurActivite!),
-                                          if (date != null && date!.isNotEmpty)
-                                            OffreDetailsTag(
-                                              label: date!,
-                                              icon: DsfrIcons.businessCalendarEventLine,
-                                            ),
-                                        ],
-                                      ),
+                                    if (_hasComplements(contractLabel)) ...[
+                                      const SizedBox(height: DsfrSpacings.s1v),
+                                      ..._buildComplements(contractLabel),
                                     ],
                                     if (mention != null) ...[
                                       const SizedBox(height: DsfrSpacings.s1w),
@@ -192,12 +179,29 @@ class DataCard<T> extends StatelessWidget {
     return null;
   }
 
-  bool _hasTags(String? contractLabel) {
+  bool _hasComplements(String? contractLabel) {
     return category?.isNotEmpty == true ||
         lieu?.isNotEmpty == true ||
         contractLabel != null ||
         secteurActivite?.isNotEmpty == true ||
         (date != null && date!.isNotEmpty);
+  }
+
+  List<Widget> _buildComplements(String? contractLabel) {
+    final complements = <({IconData icon, String text})>[
+      if (category?.isNotEmpty == true) (icon: DsfrIcons.systemInformationLine, text: category!),
+      if (lieu?.isNotEmpty == true) (icon: DsfrIcons.mapMapPin2Line, text: lieu!),
+      if (contractLabel != null) (icon: DsfrIcons.businessBriefcaseLine, text: contractLabel),
+      if (secteurActivite?.isNotEmpty == true) (icon: DsfrIcons.systemInformationLine, text: secteurActivite!),
+      if (date != null && date!.isNotEmpty) (icon: DsfrIcons.businessCalendarEventLine, text: date!),
+    ];
+
+    return [
+      for (var i = 0; i < complements.length; i++) ...[
+        if (i > 0) const SizedBox(height: DsfrSpacings.s1v),
+        DsfrEventCardComplement(icon: complements[i].icon, text: complements[i].text),
+      ],
+    ];
   }
 
   String _semanticsLabel(String? contractLabel, String? mention) {

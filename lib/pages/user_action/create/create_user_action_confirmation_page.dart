@@ -10,24 +10,32 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/errors/error_text.dart';
 
 class CreateUserActionConfirmationPage extends StatelessWidget {
   final UserActionStateSource source;
   final bool multipleActions;
+  final bool showActionDoneTag;
 
   const CreateUserActionConfirmationPage({
     super.key,
     required this.source,
     required this.multipleActions,
+    this.showActionDoneTag = false,
   });
 
-  static Route<CreateActionFormResult> route(UserActionStateSource source, {required bool multipleActions}) {
+  static Route<CreateActionFormResult> route(
+    UserActionStateSource source, {
+    required bool multipleActions,
+    bool showActionDoneTag = false,
+  }) {
     return MaterialPageRoute<CreateActionFormResult>(
       fullscreenDialog: true,
       builder: (_) => CreateUserActionConfirmationPage(
         source: source,
         multipleActions: multipleActions,
+        showActionDoneTag: showActionDoneTag,
       ),
     );
   }
@@ -60,6 +68,7 @@ class CreateUserActionConfirmationPage extends StatelessWidget {
             child: _Content(
               viewModel: viewModel,
               multipleActions: multipleActions,
+              showActionDoneTag: showActionDoneTag,
               source: source,
             ),
           ),
@@ -70,15 +79,26 @@ class CreateUserActionConfirmationPage extends StatelessWidget {
 }
 
 class _Content extends StatelessWidget {
-  const _Content({required this.viewModel, required this.multipleActions, required this.source});
+  const _Content({
+    required this.viewModel,
+    required this.multipleActions,
+    required this.showActionDoneTag,
+    required this.source,
+  });
   final CreateActionSuccessViewModel viewModel;
   final bool multipleActions;
+  final bool showActionDoneTag;
   final UserActionStateSource source;
 
   @override
   Widget build(BuildContext context) {
     return switch (viewModel.displayState) {
-      DisplayState.CONTENT => _Body(viewModel: viewModel, multipleActions: multipleActions, source: source),
+      DisplayState.CONTENT => _Body(
+          viewModel: viewModel,
+          multipleActions: multipleActions,
+          showActionDoneTag: showActionDoneTag,
+          source: source,
+        ),
       DisplayState.FAILURE => Center(child: ErrorText(Strings.genericCreationError)),
       _ => const Center(child: CircularProgressIndicator()),
     };
@@ -86,9 +106,15 @@ class _Content extends StatelessWidget {
 }
 
 class _Body extends StatelessWidget {
-  const _Body({required this.viewModel, required this.multipleActions, required this.source});
+  const _Body({
+    required this.viewModel,
+    required this.multipleActions,
+    required this.showActionDoneTag,
+    required this.source,
+  });
   final CreateActionSuccessViewModel viewModel;
   final bool multipleActions;
+  final bool showActionDoneTag;
   final UserActionStateSource source;
 
   @override
@@ -111,6 +137,10 @@ class _Body extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: DsfrSpacings.s3v),
+                  if (showActionDoneTag) ...[
+                    DsfrCategoryTag.actionDone(),
+                    const SizedBox(height: DsfrSpacings.s3v),
+                  ],
                   Text(
                     multipleActions
                         ? Strings.userActionConfirmationTitlePlural

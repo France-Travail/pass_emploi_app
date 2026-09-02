@@ -108,7 +108,7 @@ class _CreateDemarcheAppBar extends StatelessWidget implements PreferredSizeWidg
 
   @override
   Widget build(BuildContext context) {
-    final backColor = DsfrColorDecisions.textActionHighBlueFrance(context);
+    final backColor = DsfrColorDecisions.textTitleGrey(context);
     return AppBar(
       toolbarHeight: preferredSize.height,
       backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),

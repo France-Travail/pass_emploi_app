@@ -72,6 +72,8 @@ extension DateExtensions on DateTime {
 
   String toMonth() => DateFormat('MMMM', locale).format(this);
 
+  String toAbbreviatedMonth() => DateFormat('MMM', locale).format(this);
+
   String toFullMonthAndYear() => DateFormat('MMMM yyyy', locale).format(this);
 
   String toHour() => DateFormat('HH:mm').format(this);

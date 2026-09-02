@@ -14,6 +14,7 @@ import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/errors/error_text.dart';
 
 class CreateUserActionConfirmationOffreSuiviPage extends StatelessWidget {
@@ -93,6 +94,8 @@ class _Body extends StatelessWidget {
               ),
             ),
             SizedBox(height: Margins.spacing_xl),
+            DsfrCategoryTag.actionDone(),
+            SizedBox(height: Margins.spacing_s),
             Text(
               Strings.userActionConfirmationTitleSingular,
               style: TextStyles.textMBold.copyWith(color: context.content),
