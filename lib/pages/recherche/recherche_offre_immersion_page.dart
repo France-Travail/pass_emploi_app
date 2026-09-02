@@ -16,6 +16,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/immersion_alerte_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/cards/data_card.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_event_card.dart';
 import 'package:pass_emploi_app/widgets/recherche/criteres_recherche_immersion_contenu.dart';
 import 'package:redux/redux.dart';
 
@@ -79,11 +80,9 @@ class RechercheOffreImmersionPage extends RechercheOffrePage<Immersion> {
       from: OffrePage.immersionResults,
       id: item.id,
       leading: item.fitForDisabledWorkers
-          ? DsfrTag(
-              label: Strings.disabledWorkersWelcome,
-              size: DsfrComponentSize.sm,
-              backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
-              textColor: DsfrColorDecisions.textLabelGrey(context),
+          ? DsfrEventCardComplement(
+              icon: DsfrIcons.userUserLine,
+              text: Strings.disabledWorkersWelcome,
             )
           : null,
     );

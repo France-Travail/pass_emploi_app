@@ -175,7 +175,7 @@
       "source": "PASS_EMPLOI",
       "type": {
         "code": "ENTRETIEN_INDIVIDUEL_CONSEILLER",
-        "label": "Entretien individuel conseiller"
+        "label": "Entretien individuel"
       },
       "date": "2021-11-28T13:34:00.000Z",
       "isLocaleDate": false,
@@ -203,7 +203,7 @@
       "source": "PASS_EMPLOI",
       "type": {
         "code": "ENTRETIEN_INDIVIDUEL_CONSEILLER",
-        "label": "Entretien individuel conseiller"
+        "label": "Entretien individuel"
       },
       "date": "2021-11-28T13:34:00.000Z",
       "isLocaleDate": false,
@@ -231,7 +231,7 @@
       "source": "PASS_EMPLOI",
       "type": {
         "code": "ENTRETIEN_INDIVIDUEL_CONSEILLER",
-        "label": "Entretien individuel conseiller"
+        "label": "Entretien individuel"
       },
       "date": "2021-11-28T13:34:00.000Z",
       "isLocaleDate": false,

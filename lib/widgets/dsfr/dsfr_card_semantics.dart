@@ -23,6 +23,11 @@ class DsfrCategoryStyle {
     textColor: DsfrColorDecisions.textDefaultInfo,
   );
 
+  static DsfrCategoryStyle precision() => DsfrCategoryStyle(
+    backgroundColor: (_) => DsfrColors.blueCumulus925,
+    textColor: DsfrColorDecisions.textDefaultInfo,
+  );
+
   static DsfrCategoryStyle news({IconData icon = DsfrIcons.businessCalendarEventFill}) => DsfrCategoryStyle(
     icon: icon,
     backgroundColor: DsfrColorDecisionsExtension.backgroundContrastNew,
@@ -31,6 +36,11 @@ class DsfrCategoryStyle {
 
   static DsfrCategoryStyle purple({IconData icon = DsfrIcons.userUserFill}) => DsfrCategoryStyle(
     icon: icon,
+    backgroundColor: _purpleBackground,
+    textColor: _purpleForeground,
+  );
+
+  static DsfrCategoryStyle secteur() => DsfrCategoryStyle(
     backgroundColor: _purpleBackground,
     textColor: _purpleForeground,
   );
@@ -186,6 +196,41 @@ class DsfrCategoryTag extends StatelessWidget {
       style: DsfrCategoryStyle.grey(icon: icon),
       semanticsLabel: semanticsLabel,
       uppercase: false,
+    );
+  }
+
+  factory DsfrCategoryTag.info({
+    required String label,
+    IconData? icon,
+    String? semanticsLabel,
+  }) {
+    return DsfrCategoryTag(
+      label: label,
+      style: DsfrCategoryStyle.info(icon: icon ?? DsfrIcons.systemInformationFill),
+      semanticsLabel: semanticsLabel,
+    );
+  }
+
+  factory DsfrCategoryTag.precision({
+    required String label,
+    String? semanticsLabel,
+  }) {
+    return DsfrCategoryTag(
+      label: label,
+      style: DsfrCategoryStyle.precision(),
+      semanticsLabel: semanticsLabel,
+    );
+  }
+
+  factory DsfrCategoryTag.secteur({required String label}) {
+    return DsfrCategoryTag(label: label, style: DsfrCategoryStyle.secteur());
+  }
+
+  factory DsfrCategoryTag.actionDone({String? semanticsLabel}) {
+    return DsfrCategoryTag(
+      label: Strings.userActionConfirmationDoneTag,
+      style: DsfrCategoryStyle.success(),
+      semanticsLabel: semanticsLabel,
     );
   }
 

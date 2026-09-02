@@ -140,13 +140,12 @@ class ImmersionDetailsPage extends StatelessWidget {
               children: [
                 PageTitle(Strings.offreDetails),
                 const SizedBox(height: DsfrSpacings.s1w),
-                if (viewModel.fitForDisabledWorkers) ...[
-                  DsfrCategoryTag.meta(label: Strings.disabledWorkersWelcome),
-                  const SizedBox(height: DsfrSpacings.s2w),
-                ],
                 OffreDetailsHeader(
                   dateLabel: viewModel.dateDerniereConsultation != null
                       ? Strings.offreLastSeen(viewModel.dateDerniereConsultation!)
+                      : null,
+                  leading: viewModel.fitForDisabledWorkers
+                      ? DsfrCategoryTag.precision(label: Strings.disabledWorkersWelcome)
                       : null,
                   title: viewModel.title,
                   subtitle: viewModel.companyName,

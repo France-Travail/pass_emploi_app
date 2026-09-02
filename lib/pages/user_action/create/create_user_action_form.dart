@@ -98,7 +98,7 @@ class _CreateUserActionAppBar extends StatelessWidget implements PreferredSizeWi
 
   @override
   Widget build(BuildContext context) {
-    final backColor = DsfrColorDecisions.textActionHighBlueFrance(context);
+    final backColor = DsfrColorDecisions.textTitleGrey(context);
     return AppBar(
       toolbarHeight: preferredSize.height,
       backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
@@ -190,6 +190,7 @@ class _NavButtons extends StatelessWidget {
                 label: Strings.back,
                 variant: DsfrButtonVariant.secondary,
                 size: DsfrComponentSize.md,
+                foregroundColor: DsfrColorDecisions.textTitleGrey(context),
                 onPressed: onGoBackPressed,
               ),
             ),

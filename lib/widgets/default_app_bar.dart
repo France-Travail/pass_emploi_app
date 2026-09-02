@@ -36,7 +36,7 @@ class PrimarySliverAppbar extends StatelessWidget {
             excludeFromSemantics: true,
             child: Text(
               title,
-              style: DsfrTextStyle.headline6(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+              style: DsfrTextStyle.headline6(color: DsfrColorDecisions.textTitleGrey(context)),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -149,6 +149,40 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(toolBarHeight);
 }
 
+class BackLabelButton extends StatelessWidget {
+  const BackLabelButton({super.key, required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = DsfrColorDecisions.textTitleGrey(context);
+    return TextButton(
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        foregroundColor: color,
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        minimumSize: const Size(0, DsfrSpacings.s5w),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        shape: const RoundedRectangleBorder(),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(DsfrIcons.systemArrowLeftSLine, size: 16, color: color),
+          const SizedBox(width: DsfrSpacings.s1w),
+          Flexible(
+            child: Text(
+              Strings.back,
+              style: DsfrTextStyle.bodyMdMedium(color: color),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
   const BackAppBar({
     super.key,
@@ -177,13 +211,7 @@ class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
       leadingWidth: 140,
       leading: Align(
         alignment: Alignment.centerLeft,
-        child: DsfrButton(
-          label: Strings.back,
-          icon: DsfrIcons.systemArrowLeftSLine,
-          variant: DsfrButtonVariant.tertiaryWithoutBorder,
-          size: DsfrComponentSize.md,
-          onPressed: () => Navigator.of(context).maybePop(),
-        ),
+        child: BackLabelButton(onPressed: () => Navigator.of(context).maybePop()),
       ),
       actions: [
         for (final action in actions)
@@ -279,6 +307,7 @@ class _SecondaryAppBarLeadingButton extends StatelessWidget {
         iconSemanticLabel: isClose ? Strings.close : Strings.back,
         variant: DsfrButtonVariant.tertiaryWithoutBorder,
         size: DsfrComponentSize.md,
+        iconColor: DsfrColorDecisions.textTitleGrey(context),
         onPressed: () => Navigator.of(context).maybePop(),
       ),
     );

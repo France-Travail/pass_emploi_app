@@ -214,8 +214,13 @@ class InviteActionPlanActionTile extends StatelessWidget {
                             Flexible(
                               child: Text(
                                 action.serviceName!,
-                                style: DsfrTextStyle.bodyXs(
+                                style: DsfrTextStyle.bodySm(
                                   color: DsfrColorDecisions.textActionHighBlueFrance(context),
+                                ).copyWith(
+                                  decoration: _hasLink ? TextDecoration.underline : null,
+                                  decorationColor: _hasLink
+                                      ? DsfrColorDecisions.textActionHighBlueFrance(context)
+                                      : null,
                                 ),
                               ),
                             ),

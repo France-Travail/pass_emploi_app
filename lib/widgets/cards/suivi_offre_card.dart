@@ -73,14 +73,14 @@ class SuiviOffreCard<T> extends StatelessWidget {
                               Text(
                                 title,
                                 style: DsfrTextStyle.bodyMdBold(
-                                  color: DsfrColorDecisions.textTitleBlueFrance(context),
+                                  color: DsfrColorDecisions.textTitleGrey(context),
                                 ),
                               ),
                               if (subtitle.isNotEmpty) ...[
                                 Text(
                                   subtitle,
                                   style: DsfrTextStyle.bodySm(
-                                    color: DsfrColorDecisions.textDefaultGrey(context),
+                                    color: DsfrColorDecisions.textTitleGrey(context),
                                   ),
                                 ),
                               ],

@@ -11,15 +11,15 @@ class ContactModeTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (contactMode) {
-      ImmersionContactMode.MAIL => DsfrCategoryTag.meta(
+      ImmersionContactMode.MAIL => DsfrCategoryTag.info(
           label: Strings.contactByMail,
           icon: DsfrIcons.businessMailFill,
         ),
-      ImmersionContactMode.PHONE => DsfrCategoryTag.meta(
+      ImmersionContactMode.PHONE => DsfrCategoryTag.info(
           label: Strings.contactByPhone,
           icon: DsfrIcons.devicePhoneFill,
         ),
-      ImmersionContactMode.PRESENTIEL => DsfrCategoryTag.meta(
+      ImmersionContactMode.PRESENTIEL => DsfrCategoryTag.info(
           label: Strings.contactByPresen,
           icon: DsfrIcons.mapMapPin2Fill,
         ),

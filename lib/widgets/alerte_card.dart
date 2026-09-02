@@ -97,7 +97,7 @@ class AlerteCardContent extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+                        style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
                       ),
                       Text(
                         subtitle,

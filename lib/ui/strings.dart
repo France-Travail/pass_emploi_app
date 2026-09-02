@@ -655,6 +655,7 @@ class Strings {
 
   static const String userActionConfirmationTitleSingular = "Action créée";
   static const String userActionConfirmationTitlePlural = "Action(s) créée(s)";
+  static const String userActionConfirmationDoneTag = "Action terminée";
   static const String userActionConfirmationSubtitle =
       "L’action est en route vers votre conseiller. Vous pourrez en discuter ensemble lors de votre prochain rendez-vous\u{00A0}!";
   static const String userActionConfirmationSubtitlePlural =
@@ -1574,6 +1575,9 @@ class Strings {
   //Appstore rating
   static String ratingLabel = 'Êtes-vous satisfait de l’application\u{00A0}?';
   static String ratingButton = 'Je donne mon avis';
+  static String rateAppOnStoresLabel = 'Noter l’application sur les stores';
+  static String proposeIdeaLabel = 'Proposer une idée';
+  static String proposeIdeaSubtitle = 'Aide nous à améliorer l’app';
   static String positiveRating = "Oui ! \nBeau boulot, j’adore l’app.";
   static String negativeRating = "Non... \nJ’ai quelques remarques.";
   static String happyEmoji = "😍";
