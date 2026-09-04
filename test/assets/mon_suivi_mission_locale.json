@@ -48,5 +48,6 @@
       },
       "inscription": "INSCRIT"
     }
-  ]
+  ],
+  "peutVoirLeComptageDesHeures": true
 }

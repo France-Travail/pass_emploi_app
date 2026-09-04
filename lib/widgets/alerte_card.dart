@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/models/alerte/alerte.dart';
@@ -13,13 +14,8 @@ import 'package:pass_emploi_app/presentation/alerte_card_view_model.dart';
 import 'package:pass_emploi_app/presentation/alerte_navigator_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/redux/store_connector_aware.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 
 class AlerteNavigator extends StatefulWidget {
   final Widget child;
@@ -77,41 +73,58 @@ class AlerteCardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CardContainer(
-      onTap: () {
-        _trackAlerteCardPressed(trackingSource);
-        onTap();
-      },
-      padding: EdgeInsets.all(Margins.spacing_base),
-      child: Row(
-        children: [
-          Icon(AppIcons.notifications_outlined, color: AppColorsSpecifics.primaryToLighten(context)),
-          SizedBox(width: Margins.spacing_base),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Material(
+      color: DsfrColorDecisions.backgroundDefaultGrey(context),
+      borderRadius: const BorderRadius.all(Radius.circular(4)),
+      child: InkWell(
+        onTap: () {
+          _trackAlerteCardPressed(trackingSource);
+          onTap();
+        },
+        borderRadius: const BorderRadius.all(Radius.circular(4)),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(4)),
+            border: Border.all(color: DsfrColorDecisions.borderDefaultGrey(context)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(DsfrSpacings.s3v),
+            child: Row(
               children: [
-                Text(title, style: TextStyles.textSBold.copyWith(color: context.content)),
-                Text(subtitle, style: TextStyles.textSRegular(color: context.content)),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                      ),
+                      Text(
+                        subtitle,
+                        style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textTitleGrey(context)),
+                      ),
+                    ],
+                  ),
+                ),
+                if (onDelete != null)
+                  IconButton(
+                    onPressed: onDelete,
+                    tooltip: Strings.alerteDeleteMessageTitle,
+                    icon: Icon(
+                      DsfrIcons.systemDeleteBinLine,
+                      color: DsfrColorDecisions.textTitleBlueFrance(context),
+                      size: DsfrSpacings.s2w,
+                    ),
+                  ),
+                Icon(
+                  DsfrIcons.systemArrowRightSLine,
+                  color: DsfrColorDecisions.textTitleBlueFrance(context),
+                  size: DsfrSpacings.s2w,
+                ),
               ],
             ),
           ),
-          SizedBox(width: Margins.spacing_base),
-          if (onDelete != null)
-            IconButton(
-              onPressed: onDelete,
-              icon: Container(
-                padding: EdgeInsets.all(Margins.spacing_s),
-                decoration: BoxDecoration(
-                  color: AppColorsSpecifics.primaryButtonBackgroundColor(context),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(AppIcons.delete, color: AppColorsSpecifics.primaryButtonForegroundColor(context)),
-              ),
-            ),
-          SizedBox(width: Margins.spacing_base),
-          Icon(AppIcons.chevron_right_rounded, color: context.content),
-        ],
+        ),
       ),
     );
   }

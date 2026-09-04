@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/models/rendezvous.dart';
 import 'package:pass_emploi_app/models/session_milo.dart';
 import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_state_source.dart';
@@ -14,6 +15,7 @@ enum InscriptionStatus { inscrit, notInscrit, autoinscription, autodesinscriptio
 class RendezvousCardViewModel extends Equatable {
   final String id;
   final String tag;
+  final RendezvousTypeCode typeCode;
   final String date;
   final String hourAndDuration;
   final InscriptionStatus inscriptionStatus;
@@ -23,10 +25,13 @@ class RendezvousCardViewModel extends Equatable {
   final String? nombreDePlacesRestantes;
   final String? place;
   final String? assetImage;
+  final String? emoji;
+  final Color? emojiBackground;
 
   RendezvousCardViewModel({
     required this.id,
     required this.tag,
+    required this.typeCode,
     required this.date,
     required this.hourAndDuration,
     required this.inscriptionStatus,
@@ -36,13 +41,17 @@ class RendezvousCardViewModel extends Equatable {
     required this.place,
     required this.nombreDePlacesRestantes,
     required this.assetImage,
+    required this.emoji,
+    required this.emojiBackground,
   });
 
   factory RendezvousCardViewModel.create(Store<AppState> store, RendezvousStateSource source, String rdvId) {
     final rdv = store.getRendezvous(source, rdvId);
+    final showEmoji = source.isFromEvenements;
     return RendezvousCardViewModel(
       id: rdv.id,
       tag: rdv.type.label,
+      typeCode: rdv.type.code,
       date: rdv.date.toDayWithFullMonthContextualized(),
       hourAndDuration: _hours(rdv),
       inscriptionStatus: _inscription(rdv, source),
@@ -52,6 +61,8 @@ class RendezvousCardViewModel extends Equatable {
       place: _place(rdv),
       nombreDePlacesRestantes: _nombreDePlacesRestantes(rdv, source),
       assetImage: _assetImage(rdv, source),
+      emoji: showEmoji ? rdv.type.code.emoji : null,
+      emojiBackground: showEmoji ? rdv.type.code.emojiBackground : null,
     );
   }
 
@@ -60,6 +71,7 @@ class RendezvousCardViewModel extends Equatable {
     return [
       id,
       tag,
+      typeCode,
       date,
       hourAndDuration,
       inscriptionStatus,
@@ -68,6 +80,8 @@ class RendezvousCardViewModel extends Equatable {
       description,
       place,
       nombreDePlacesRestantes,
+      emoji,
+      emojiBackground,
     ];
   }
 }

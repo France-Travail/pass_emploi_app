@@ -20,7 +20,7 @@
       },
       "type": {
         "code": "ENTRETIEN_INDIVIDUEL_CONSEILLER",
-        "label": "Entretien individuel conseiller"
+        "label": "Entretien individuel"
       },
       "presenceConseiller": true,
       "conseiller": {
@@ -62,7 +62,7 @@
         },
         "type": {
           "code": "ENTRETIEN_INDIVIDUEL_CONSEILLER",
-          "label": "Entretien individuel conseiller"
+          "label": "Entretien individuel"
         },
         "presenceConseiller": true,
         "conseiller": {
@@ -211,6 +211,5 @@
           ]
         }
       ]
-    },
-    "peutVoirLeComptageDesHeures": true
+    }
   }

@@ -29,7 +29,6 @@ import 'package:pass_emploi_app/features/demarche/update/update_demarche_state.d
 import 'package:pass_emploi_app/features/details_jeune/details_jeune_state.dart';
 import 'package:pass_emploi_app/features/developer_option/activation/developer_options_state.dart';
 import 'package:pass_emploi_app/features/developer_option/matomo/matomo_logging_state.dart';
-import 'package:pass_emploi_app/features/diagoriente_preferences_metier/diagoriente_preferences_metier_state.dart';
 import 'package:pass_emploi_app/features/evenement_emploi/details/evenement_emploi_details_state.dart';
 import 'package:pass_emploi_app/features/events/list/event_list_state.dart';
 import 'package:pass_emploi_app/features/favori/ids/favori_ids_state.dart';
@@ -53,6 +52,7 @@ import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_state.dar
 import 'package:pass_emploi_app/features/onboarding/onboarding_state.dart';
 import 'package:pass_emploi_app/features/preferences/preferences_state.dart';
 import 'package:pass_emploi_app/features/preferences/update/preferences_update_state.dart';
+import 'package:pass_emploi_app/features/invite_prenom/invite_prenom_state.dart';
 import 'package:pass_emploi_app/features/preferred_login_mode/preferred_login_mode_state.dart';
 import 'package:pass_emploi_app/features/rating/rating_state.dart';
 import 'package:pass_emploi_app/features/recherche/recherche_state.dart';
@@ -88,6 +88,8 @@ import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription
 import 'package:pass_emploi_app/features/theme/theme_state.dart';
 import 'package:pass_emploi_app/features/soft_update/soft_update_state.dart';
 import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_state.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 /*AUTOGENERATE-REDUX-APP-STATE-IMPORT*/
 
 class AppState extends Equatable {
@@ -143,7 +145,6 @@ class AppState extends Equatable {
   final RechercheImmersionState rechercheImmersionState;
   final RechercheServiceCiviqueState rechercheServiceCiviqueState;
   final RechercheEvenementEmploiState rechercheEvenementEmploiState;
-  final DiagorientePreferencesMetierState diagorientePreferencesMetierState;
   final RecherchesRecentesState recherchesRecentesState;
   final ContactImmersionState contactImmersionState;
   final AccueilState accueilState;
@@ -155,6 +156,7 @@ class AppState extends Equatable {
   final ConnectivityState connectivityState;
   final MonSuiviState monSuiviState;
   final PreferredLoginModeState preferredLoginModeState;
+  final InvitePrenomState invitePrenomState;
   final OnboardingState onboardingState;
   final FirstLaunchOnboardingState firstLaunchOnboardingState;
   final MessageImportantState messageImportantState;
@@ -177,6 +179,8 @@ class AppState extends Equatable {
   final ThemeState themeState;
   final SoftUpdateState softUpdateState;
   final CriteresRecherchePersistState criteresRecherchePersistState;
+  final OnboardingQuestionnaireState onboardingQuestionnaireState;
+  final ActionPlanState actionPlanState;
   /*AUTOGENERATE-REDUX-APP-STATE-PROPERTY*/
 
   AppState({
@@ -232,7 +236,6 @@ class AppState extends Equatable {
     required this.rechercheImmersionState,
     required this.rechercheServiceCiviqueState,
     required this.rechercheEvenementEmploiState,
-    required this.diagorientePreferencesMetierState,
     required this.recherchesRecentesState,
     required this.contactImmersionState,
     required this.accueilState,
@@ -244,6 +247,7 @@ class AppState extends Equatable {
     required this.connectivityState,
     required this.monSuiviState,
     required this.preferredLoginModeState,
+    required this.invitePrenomState,
     required this.onboardingState,
     required this.firstLaunchOnboardingState,
     required this.messageImportantState,
@@ -266,6 +270,8 @@ class AppState extends Equatable {
     required this.themeState,
     required this.softUpdateState,
     required this.criteresRecherchePersistState,
+    required this.onboardingQuestionnaireState,
+    required this.actionPlanState,
     /*AUTOGENERATE-REDUX-APP-STATE-CONSTRUCTOR*/
   });
 
@@ -322,7 +328,6 @@ class AppState extends Equatable {
     final RechercheImmersionState? rechercheImmersionState,
     final RechercheServiceCiviqueState? rechercheServiceCiviqueState,
     final RechercheEvenementEmploiState? rechercheEvenementEmploiState,
-    final DiagorientePreferencesMetierState? diagorientePreferencesMetierState,
     final RecherchesRecentesState? recherchesRecentesState,
     final ContactImmersionState? contactImmersionState,
     final AccueilState? accueilState,
@@ -334,6 +339,7 @@ class AppState extends Equatable {
     final ConnectivityState? connectivityState,
     final MonSuiviState? monSuiviState,
     final PreferredLoginModeState? preferredLoginModeState,
+    final InvitePrenomState? invitePrenomState,
     final OnboardingState? onboardingState,
     final FirstLaunchOnboardingState? firstLaunchOnboardingState,
     final MessageImportantState? messageImportantState,
@@ -356,6 +362,8 @@ class AppState extends Equatable {
     final ThemeState? themeState,
     final SoftUpdateState? softUpdateState,
     final CriteresRecherchePersistState? criteresRecherchePersistState,
+    final OnboardingQuestionnaireState? onboardingQuestionnaireState,
+    final ActionPlanState? actionPlanState,
     /*AUTOGENERATE-REDUX-APP-STATE-COPYPARAM*/
   }) {
     return AppState(
@@ -411,7 +419,6 @@ class AppState extends Equatable {
       rechercheImmersionState: rechercheImmersionState ?? this.rechercheImmersionState,
       rechercheServiceCiviqueState: rechercheServiceCiviqueState ?? this.rechercheServiceCiviqueState,
       rechercheEvenementEmploiState: rechercheEvenementEmploiState ?? this.rechercheEvenementEmploiState,
-      diagorientePreferencesMetierState: diagorientePreferencesMetierState ?? this.diagorientePreferencesMetierState,
       recherchesRecentesState: recherchesRecentesState ?? this.recherchesRecentesState,
       contactImmersionState: contactImmersionState ?? this.contactImmersionState,
       accueilState: accueilState ?? this.accueilState,
@@ -423,6 +430,7 @@ class AppState extends Equatable {
       connectivityState: connectivityState ?? this.connectivityState,
       monSuiviState: monSuiviState ?? this.monSuiviState,
       preferredLoginModeState: preferredLoginModeState ?? this.preferredLoginModeState,
+      invitePrenomState: invitePrenomState ?? this.invitePrenomState,
       onboardingState: onboardingState ?? this.onboardingState,
       firstLaunchOnboardingState: firstLaunchOnboardingState ?? this.firstLaunchOnboardingState,
       messageImportantState: messageImportantState ?? this.messageImportantState,
@@ -446,6 +454,8 @@ class AppState extends Equatable {
       themeState: themeState ?? this.themeState,
       softUpdateState: softUpdateState ?? this.softUpdateState,
       criteresRecherchePersistState: criteresRecherchePersistState ?? this.criteresRecherchePersistState,
+      onboardingQuestionnaireState: onboardingQuestionnaireState ?? this.onboardingQuestionnaireState,
+      actionPlanState: actionPlanState ?? this.actionPlanState,
       /*AUTOGENERATE-REDUX-APP-STATE-COPYBODY*/
     );
   }
@@ -504,7 +514,6 @@ class AppState extends Equatable {
       rechercheImmersionState: RechercheState.initial(),
       rechercheServiceCiviqueState: RechercheState.initial(),
       rechercheEvenementEmploiState: RechercheState.initial(),
-      diagorientePreferencesMetierState: DiagorientePreferencesMetierNotInitializedState(),
       recherchesRecentesState: RecherchesRecentesState([]),
       contactImmersionState: ContactImmersionNotInitializedState(),
       accueilState: AccueilNotInitializedState(),
@@ -516,6 +525,7 @@ class AppState extends Equatable {
       connectivityState: ConnectivityState.notInitialized(),
       monSuiviState: MonSuiviNotInitializedState(),
       preferredLoginModeState: PreferredLoginModeNotInitializedState(),
+      invitePrenomState: InvitePrenomNotInitializedState(),
       onboardingState: OnboardingState(),
       firstLaunchOnboardingState: FirstLaunchOnboardingNotInitializedState(),
       messageImportantState: MessageImportantNotInitializedState(),
@@ -538,6 +548,8 @@ class AppState extends Equatable {
       themeState: ThemeNotInitializedState(),
       softUpdateState: SoftUpdateNotShownState(),
       criteresRecherchePersistState: CriteresRecherchePersistNotInitializedState(),
+      onboardingQuestionnaireState: OnboardingQuestionnaireNotInitializedState(),
+      actionPlanState: ActionPlanNotInitializedState(),
       /*AUTOGENERATE-REDUX-APP-STATE-FACTORY*/
     );
   }
@@ -589,7 +601,6 @@ class AppState extends Equatable {
     rechercheImmersionState,
     rechercheServiceCiviqueState,
     rechercheEvenementEmploiState,
-    diagorientePreferencesMetierState,
     recherchesRecentesState,
     contactImmersionState,
     accueilState,
@@ -623,6 +634,8 @@ class AppState extends Equatable {
     themeState,
     softUpdateState,
     criteresRecherchePersistState,
+    onboardingQuestionnaireState,
+    actionPlanState,
     /*AUTOGENERATE-REDUX-APP-STATE-EQUATABLE*/
   ];
 
@@ -642,6 +655,8 @@ extension AppStateUser on AppState {
   bool isMiloLoginMode() => user()?.loginMode.isMiLo() ?? false;
 
   bool isPeLoginMode() => user()?.loginMode.isPe() ?? false;
+
+  bool isInviteLoginMode() => user()?.loginMode.isInvite() ?? false;
 
   Accompagnement accompagnement() => user()?.accompagnement ?? Accompagnement.cej;
 

@@ -12,9 +12,10 @@ class FavoriListMiddleware extends MiddlewareClass<AppState> {
   @override
   void call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
-    final userId = store.state.userId();
-    if (userId != null && (action is FavoriListRequestAction || action is LoginSuccessAction)) {
-      final result = await _repository.getFavoris(userId);
+    final user = store.state.user();
+    if (user == null) return;
+    if (action is FavoriListRequestAction || action is LoginSuccessAction) {
+      final result = await _repository.getFavoris(user.id);
       store.dispatch(result != null ? FavoriListSuccessAction(result) : FavoriListFailureAction());
     }
   }

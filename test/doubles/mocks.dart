@@ -38,6 +38,7 @@ import 'package:pass_emploi_app/repositories/offres_suivies_repository.dart';
 import 'package:pass_emploi_app/repositories/onboarding_repository.dart';
 import 'package:pass_emploi_app/repositories/piece_jointe_repository.dart';
 import 'package:pass_emploi_app/repositories/preferences_repository.dart';
+import 'package:pass_emploi_app/repositories/invite_prenom_repository.dart';
 import 'package:pass_emploi_app/repositories/preferred_login_mode_repository.dart';
 import 'package:pass_emploi_app/repositories/remote_campagne_accueil_repository.dart';
 import 'package:pass_emploi_app/repositories/remote_config_repository.dart';
@@ -56,6 +57,9 @@ import 'package:pass_emploi_app/wrappers/connectivity_wrapper.dart';
 import 'package:pass_emploi_app/repositories/soft_update_repository.dart';
 import 'package:pass_emploi_app/models/criteres_recherche_utilisateur.dart';
 import 'package:pass_emploi_app/repositories/criteres_recherche_persist_repository.dart';
+import 'package:pass_emploi_app/repositories/onboarding_questionnaire_repository.dart';
+import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
+import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 /*AUTOGENERATE-REDUX-TEST-MOCKS-REPOSITORY-IMPORT*/
 
 import 'dio_mock.dart';
@@ -237,6 +241,13 @@ class MockCampagneRecrutementRepository extends Mock implements CampagneRecrutem
   }
 }
 
+class MockInvitePrenomRepository extends Mock implements InvitePrenomRepository {
+  MockInvitePrenomRepository() {
+    when(() => getPrenom(any())).thenAnswer((_) async => 'Invité');
+    when(() => updatePrenom(any(), any())).thenAnswer((_) async => true);
+  }
+}
+
 class MockPreferredLoginModeRepository extends Mock implements PreferredLoginModeRepository {
   MockPreferredLoginModeRepository() {
     registerFallbackValue(LoginMode.MILO);
@@ -374,6 +385,28 @@ class MockCriteresRecherchePersistRepository extends Mock implements CriteresRec
     registerFallbackValue(CriteresRechercheUtilisateur());
     when(() => get()).thenAnswer((_) async => null);
     when(() => save(any())).thenAnswer((_) async {});
+  }
+}
+
+class MockOnboardingQuestionnaireRepository extends Mock implements OnboardingQuestionnaireRepository {
+  MockOnboardingQuestionnaireRepository() {
+    registerFallbackValue(const OnboardingQuestionnaireAnswers());
+    when(() => getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers());
+    when(() => saveAnswers(any())).thenAnswer((_) async {});
+    when(() => isFinished()).thenAnswer((_) async => false);
+    when(() => setFinished(any())).thenAnswer((_) async {});
+    when(() => clear()).thenAnswer((_) async {});
+  }
+}
+
+class MockActionPlanRepository extends Mock implements ActionPlanRepository {
+  MockActionPlanRepository() {
+    registerFallbackValue(const OnboardingQuestionnaireAnswers());
+    when(() => generate(any(), any())).thenAnswer((_) async => null);
+    when(() => getStoredPlan()).thenAnswer((_) async => null);
+    when(() => toggleDone(any())).thenAnswer((_) async => null);
+    when(() => deleteAction(any())).thenAnswer((_) async => null);
+    when(() => clear()).thenAnswer((_) async {});
   }
 }
 

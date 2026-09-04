@@ -57,7 +57,7 @@ void main() {
     final viewModel = ComptageDesHeuresCardViewModel.create(store);
 
     // Then
-    expect(viewModel.title, "C’est le moment de compléter vos actions\u{00A0}!\u{00A0}🚀");
+    expect(viewModel.title, "Bon début, continuez comme ça\u{00A0}!\u{00A0}💪");
     expect(viewModel.pourcentageHeuresValidees, 0.26666666666666666);
     expect(viewModel.pourcentageHeuresDeclarees, 0.26666666666666666);
     expect(viewModel.heuresDeclarees, "4");

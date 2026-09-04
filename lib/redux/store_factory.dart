@@ -36,7 +36,6 @@ import 'package:pass_emploi_app/features/demarche/update/update_demarche_middlew
 import 'package:pass_emploi_app/features/details_jeune/details_jeune_middleware.dart';
 import 'package:pass_emploi_app/features/developer_option/activation/developer_options_middleware.dart';
 import 'package:pass_emploi_app/features/developer_option/matomo/matomo_logging_middleware.dart';
-import 'package:pass_emploi_app/features/diagoriente_preferences_metier/diagoriente_preferences_metier_middleware.dart';
 import 'package:pass_emploi_app/features/evenement_emploi/details/evenement_emploi_details_middleware.dart';
 import 'package:pass_emploi_app/features/events/list/event_list_middleware.dart';
 import 'package:pass_emploi_app/features/favori/ids/favori_ids_middleware.dart';
@@ -64,6 +63,7 @@ import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_middlewar
 import 'package:pass_emploi_app/features/onboarding/onboarding_middleware.dart';
 import 'package:pass_emploi_app/features/preferences/preferences_middleware.dart';
 import 'package:pass_emploi_app/features/preferences/update/preferences_update_middleware.dart';
+import 'package:pass_emploi_app/features/invite_prenom/invite_prenom_middleware.dart';
 import 'package:pass_emploi_app/features/preferred_login_mode/preferred_login_mode_middleware.dart';
 import 'package:pass_emploi_app/features/push_notification/register/register_push_notification_token_middleware.dart';
 import 'package:pass_emploi_app/features/rating/rating_middleware.dart';
@@ -97,6 +97,8 @@ import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription
 import 'package:pass_emploi_app/features/theme/theme_middleware.dart';
 import 'package:pass_emploi_app/features/soft_update/soft_update_middleware.dart';
 import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_middleware.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_middleware.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_middleware.dart';
 /*AUTOGENERATE-REDUX-STOREFACTORY-IMPORT-MIDDLEWARE*/
 import 'package:pass_emploi_app/models/immersion.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
@@ -133,8 +135,6 @@ import 'package:pass_emploi_app/repositories/demarche/update_demarche_repository
 import 'package:pass_emploi_app/repositories/derniere_offre_consultee_repository.dart';
 import 'package:pass_emploi_app/repositories/details_jeune/details_jeune_repository.dart';
 import 'package:pass_emploi_app/repositories/developer_option_repository.dart';
-import 'package:pass_emploi_app/repositories/diagoriente_metiers_favoris_repository.dart';
-import 'package:pass_emploi_app/repositories/diagoriente_urls_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_emploi/evenement_emploi_details_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_emploi/evenement_emploi_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_engagement/evenement_engagement_repository.dart';
@@ -158,6 +158,7 @@ import 'package:pass_emploi_app/repositories/offres_suivies_repository.dart';
 import 'package:pass_emploi_app/repositories/onboarding_repository.dart';
 import 'package:pass_emploi_app/repositories/piece_jointe_repository.dart';
 import 'package:pass_emploi_app/repositories/preferences_repository.dart';
+import 'package:pass_emploi_app/repositories/invite_prenom_repository.dart';
 import 'package:pass_emploi_app/repositories/preferred_login_mode_repository.dart';
 import 'package:pass_emploi_app/repositories/rating_repository.dart';
 import 'package:pass_emploi_app/repositories/recherches_recentes_repository.dart';
@@ -183,6 +184,8 @@ import 'package:pass_emploi_app/repositories/auto_desinscription_repository.dart
 import 'package:pass_emploi_app/repositories/theme_repository.dart';
 import 'package:pass_emploi_app/repositories/soft_update_repository.dart';
 import 'package:pass_emploi_app/repositories/criteres_recherche_persist_repository.dart';
+import 'package:pass_emploi_app/repositories/onboarding_questionnaire_repository.dart';
+import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
 /*AUTOGENERATE-REDUX-STOREFACTORY-IMPORT-REPOSITORY*/
 import 'package:redux/redux.dart' as redux;
 
@@ -237,8 +240,6 @@ class StoreFactory {
   final SuggestionsRechercheRepository suggestionsRechercheRepository;
   final AnimationsCollectivesRepository animationsCollectivesRepository;
   final SessionMiloRepository sessionMiloRepository;
-  final DiagorienteUrlsRepository diagorienteUrlsRepository;
-  final DiagorienteMetiersFavorisRepository diagorienteMetiersFavorisRepository;
   final GetFavorisRepository getFavorisRepository;
   final RecherchesRecentesRepository recherchesRecentesRepository;
   final ContactImmersionRepository contactImmersionRepository;
@@ -251,6 +252,7 @@ class StoreFactory {
   final MonSuiviRepository monSuiviRepository;
   final CampagneRecrutementRepository campagneRecrutementRepository;
   final PreferredLoginModeRepository preferredLoginModeRepository;
+  final InvitePrenomRepository invitePrenomRepository;
   final OnboardingRepository onboardingRepository;
   final FirstLaunchOnboardingRepository firstLaunchOnboardingRepository;
   final PieceJointeUseCase pieceJointeUseCase;
@@ -272,6 +274,8 @@ class StoreFactory {
   final ThemeRepository themeRepository;
   final SoftUpdateRepository softUpdateRepository;
   final CriteresRecherchePersistRepository criteresRecherchePersistRepository;
+  final OnboardingQuestionnaireRepository onboardingQuestionnaireRepository;
+  final ActionPlanRepository actionPlanRepository;
   /*AUTOGENERATE-REDUX-STOREFACTORY-PROPERTY-REPOSITORY*/
 
   StoreFactory(
@@ -325,8 +329,6 @@ class StoreFactory {
     this.suggestionsRechercheRepository,
     this.animationsCollectivesRepository,
     this.sessionMiloRepository,
-    this.diagorienteUrlsRepository,
-    this.diagorienteMetiersFavorisRepository,
     this.getFavorisRepository,
     this.recherchesRecentesRepository,
     this.contactImmersionRepository,
@@ -339,6 +341,7 @@ class StoreFactory {
     this.monSuiviRepository,
     this.campagneRecrutementRepository,
     this.preferredLoginModeRepository,
+    this.invitePrenomRepository,
     this.onboardingRepository,
     this.firstLaunchOnboardingRepository,
     this.pieceJointeUseCase,
@@ -360,6 +363,8 @@ class StoreFactory {
     this.themeRepository,
     this.softUpdateRepository,
     this.criteresRecherchePersistRepository,
+    this.onboardingQuestionnaireRepository,
+    this.actionPlanRepository,
     /*AUTOGENERATE-REDUX-STOREFACTORY-CONSTRUCTOR-REPOSITORY*/
   );
 
@@ -432,7 +437,6 @@ class StoreFactory {
         RechercheImmersionMiddleware(immersionRepository).call,
         RechercheServiceCiviqueMiddleware(serviceCiviqueRepository).call,
         RechercheEvenementEmploiMiddleware(evenementEmploiRepository).call,
-        DiagorientePreferencesMetierMiddleware(diagorienteUrlsRepository, diagorienteMetiersFavorisRepository).call,
         FavoriListMiddleware(getFavorisRepository).call,
         RecherchesRecentesMiddleware(recherchesRecentesRepository).call,
         ContactImmersionMiddleware(contactImmersionRepository).call,
@@ -446,6 +450,7 @@ class StoreFactory {
         MonSuiviMiddleware(monSuiviRepository, remoteConfigRepository).call,
         CampagneRecrutementMiddleware(campagneRecrutementRepository).call,
         PreferredLoginModeMiddleware(preferredLoginModeRepository).call,
+        InvitePrenomMiddleware(invitePrenomRepository).call,
         OnboardingMiddleware(onboardingRepository, pushNotificationManager).call,
         FirstLaunchOnboardingMiddleware(firstLaunchOnboardingRepository).call,
         MessageImportantMiddleware(chatRepository, detailsJeuneRepository).call,
@@ -470,6 +475,8 @@ class StoreFactory {
         ThemeMiddleware(themeRepository).call,
         SoftUpdateMiddleware(softUpdateRepository, remoteConfigRepository).call,
         CriteresRecherchePersistMiddleware(criteresRecherchePersistRepository).call,
+        OnboardingQuestionnaireMiddleware(onboardingQuestionnaireRepository, actionPlanRepository).call,
+        ActionPlanMiddleware(actionPlanRepository).call,
         /*AUTOGENERATE-REDUX-STOREFACTORY-ADD-MIDDLEWARE*/
         ..._debugMiddlewares(),
         ..._stagingMiddlewares(initialState.configurationState.getFlavor()),

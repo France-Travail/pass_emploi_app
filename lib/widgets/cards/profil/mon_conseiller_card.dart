@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/profil/conseiller_profil_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
-import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_profil_tile.dart';
 
 class MonConseillerCard extends StatelessWidget {
   @override
@@ -23,50 +21,18 @@ class MonConseillerCard extends StatelessWidget {
   Widget _build(BuildContext context, ConseillerProfilePageViewModel vm) {
     final displayState = vm.displayState;
     if (displayState == DisplayState.CONTENT) {
-      return _contentCard(vm, context);
+      return DsfrProfilTile(
+        icon: DsfrIcons.userUserLine,
+        iconBackgroundColor: DsfrColors.blueCumulus950,
+        title: vm.name,
+        description: A11yUtils.withScreenReader(context) ? vm.subtitleA11y : vm.subtitle,
+      );
     } else if (displayState == DisplayState.LOADING) {
-      return _loading();
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: Margins.spacing_m),
+        child: Center(child: CircularProgressIndicator()),
+      );
     }
-    return Container();
-  }
-
-  Widget _loading() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Center(child: CircularProgressIndicator()),
-        SizedBox(height: Margins.spacing_m),
-      ],
-    );
-  }
-
-  Widget _contentCard(ConseillerProfilePageViewModel vm, BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        CardContainer(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Semantics(
-                header: true,
-                child: Text(Strings.yourConseiller, style: TextStyles.textMBold.copyWith(color: context.content)),
-              ),
-              SizedBox(height: Margins.spacing_m),
-              Text(
-                A11yUtils.withScreenReader(context) ? vm.sinceDateA11y : vm.sinceDate,
-                style: TextStyles.textBaseRegular.copyWith(color: context.content),
-              ),
-              SizedBox(height: Margins.spacing_s),
-              Text(
-                vm.name,
-                style: TextStyles.textBaseBold.copyWith(color: AppColorsSpecifics.primaryToLighten(context)),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: Margins.spacing_m),
-      ],
-    );
+    return const SizedBox.shrink();
   }
 }

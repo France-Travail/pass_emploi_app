@@ -1,21 +1,21 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/pages/demarche/duplicate_demarche_page.dart';
 import 'package:pass_emploi_app/presentation/demarche/demarche_detail_bottom_sheet_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheet_button.dart';
-import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
 
 class DemarcheDetailsBottomSheet extends StatelessWidget {
   const DemarcheDetailsBottomSheet({required this.demarcheId});
   final String demarcheId;
 
   static Future<void> show(BuildContext context, String demarcheId) {
-    return showPassEmploiBottomSheet(
+    return showDsfrBottomSheet(
       context: context,
+      name: AnalyticsScreenNames.userActionDetails,
       builder: (context) => DemarcheDetailsBottomSheet(demarcheId: demarcheId),
     );
   }
@@ -23,62 +23,45 @@ class DemarcheDetailsBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, DemarcheDetailBottomSheetViewModel>(
-      converter: (store) => DemarcheDetailBottomSheetViewModel.create(store, demarcheId),
-      builder: (context, viewModel) => BottomSheetWrapper(
-        title: Strings.demarcheBottomSheetTitle,
-        maxHeightFactor: 0.6,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: Margins.spacing_base),
-              _DuplicateButton(demarcheId),
-              if (viewModel.withDemarcheCancelButton) _CancelButon(viewModel.onDemarcheCancel),
-            ],
-          ),
+      converter: (store) =>
+          DemarcheDetailBottomSheetViewModel.create(store, demarcheId),
+      builder: (context, viewModel) => DsfrBottomSheet(
+        shrinkWrap: true,
+        leading: DsfrBottomSheetMoreActionsButton(
+          onPressed: () => Navigator.pop(context),
         ),
+        actions: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            DsfrButton(
+              label: Strings.duplicate,
+              icon: DsfrIcons.documentFileAddLine,
+              variant: DsfrButtonVariant.primary,
+              size: DsfrComponentSize.md,
+              onPressed: () {
+                final navigator = Navigator.of(context);
+                navigator.pop();
+                navigator.push(DuplicateDemarchePage.route(demarcheId));
+              },
+            ),
+            if (viewModel.withDemarcheCancelButton) ...[
+              const SizedBox(height: DsfrSpacings.s2w),
+              DsfrButton(
+                label: Strings.cancelDemarche,
+                icon: DsfrIcons.systemDeleteBinLine,
+                variant: DsfrButtonVariant.secondary,
+                size: DsfrComponentSize.md,
+                foregroundColor: DsfrColorDecisions.textDefaultError(context),
+                onPressed: () {
+                  viewModel.onDemarcheCancel();
+                  if (context.mounted) Navigator.pop(context);
+                },
+              ),
+            ],
+          ],
+        ),
+        child: const SizedBox.shrink(),
       ),
-    );
-  }
-}
-
-class _DuplicateButton extends StatelessWidget {
-  const _DuplicateButton(this.demarcheId);
-
-  final String demarcheId;
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomSheetButton(
-      icon: AppIcons.content_copy_rounded,
-      text: Strings.duplicate,
-      onPressed: () {
-        if (context.mounted) {
-          Navigator.pop(context);
-          Navigator.push(context, DuplicateDemarchePage.route(demarcheId));
-        }
-      },
-      withNavigationSuffix: true,
-    );
-  }
-}
-
-class _CancelButon extends StatelessWidget {
-  const _CancelButon(this.onDemarcheCancel);
-
-  final void Function() onDemarcheCancel;
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomSheetButton(
-      icon: AppIcons.delete,
-      text: Strings.cancelDemarche,
-      onPressed: () {
-        if (context.mounted) {
-          onDemarcheCancel();
-          Navigator.pop(context);
-        }
-      },
-      withNavigationSuffix: true,
     );
   }
 }

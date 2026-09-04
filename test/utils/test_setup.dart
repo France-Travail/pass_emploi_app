@@ -37,8 +37,6 @@ import 'package:pass_emploi_app/repositories/demarche/update_demarche_repository
 import 'package:pass_emploi_app/repositories/derniere_offre_consultee_repository.dart';
 import 'package:pass_emploi_app/repositories/details_jeune/details_jeune_repository.dart';
 import 'package:pass_emploi_app/repositories/developer_option_repository.dart';
-import 'package:pass_emploi_app/repositories/diagoriente_metiers_favoris_repository.dart';
-import 'package:pass_emploi_app/repositories/diagoriente_urls_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_emploi/evenement_emploi_details_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_emploi/evenement_emploi_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_engagement/evenement_engagement_repository.dart';
@@ -62,6 +60,7 @@ import 'package:pass_emploi_app/repositories/offres_suivies_repository.dart';
 import 'package:pass_emploi_app/repositories/onboarding_repository.dart';
 import 'package:pass_emploi_app/repositories/piece_jointe_repository.dart';
 import 'package:pass_emploi_app/repositories/preferences_repository.dart';
+import 'package:pass_emploi_app/repositories/invite_prenom_repository.dart';
 import 'package:pass_emploi_app/repositories/preferred_login_mode_repository.dart';
 import 'package:pass_emploi_app/repositories/rating_repository.dart';
 import 'package:pass_emploi_app/repositories/recherches_recentes_repository.dart';
@@ -85,6 +84,8 @@ import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/wrappers/connectivity_wrapper.dart';
 import 'package:pass_emploi_app/repositories/soft_update_repository.dart';
 import 'package:pass_emploi_app/repositories/criteres_recherche_persist_repository.dart';
+import 'package:pass_emploi_app/repositories/onboarding_questionnaire_repository.dart';
+import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
 /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-IMPORT*/
 import 'package:redux/redux.dart';
 
@@ -143,8 +144,6 @@ class TestStoreFactory {
   SuggestionsRechercheRepository suggestionsRechercheRepository = DummySuggestionsRechercheRepository();
   AnimationsCollectivesRepository animationsCollectivesRepository = DummyAnimationsCollectivesRepository();
   SessionMiloRepository sessionMiloRepository = DummySessionMiloRepository();
-  DiagorienteUrlsRepository diagorienteUrlsRepository = DummyDiagorienteUrlsRepository();
-  DiagorienteMetiersFavorisRepository diagorienteMetiersFavorisRepository = DummyDiagorienteMetiersFavorisRepository();
   GetFavorisRepository getFavorisRepository = MockGetFavorisRepository();
   RecherchesRecentesRepository recherchesRecentesRepository = DummyRecherchesRecentesRepository();
   ContactImmersionRepository contactImmersionRepository = DummyContactImmersionRepository();
@@ -157,6 +156,7 @@ class TestStoreFactory {
   MonSuiviRepository monSuiviRepository = DummyMonSuiviRepository();
   CampagneRecrutementRepository campagneRecrutementRepository = MockCampagneRecrutementRepository();
   PreferredLoginModeRepository preferredLoginModeRepository = MockPreferredLoginModeRepository();
+  InvitePrenomRepository invitePrenomRepository = MockInvitePrenomRepository();
   OnboardingRepository onboardingRepository = MockOnboardingRepository();
   FirstLaunchOnboardingRepository firstLaunchOnboardingRepository = MockFirstLaunchOnboardingRepository();
   PieceJointeUseCase pieceJointeUseCase = MockPieceJointeUseCase();
@@ -180,6 +180,8 @@ class TestStoreFactory {
   ThemeRepository themeRepository = MockThemeRepository();
   SoftUpdateRepository softUpdateRepository = MockSoftUpdateRepository();
   CriteresRecherchePersistRepository criteresRecherchePersistRepository = MockCriteresRecherchePersistRepository();
+  OnboardingQuestionnaireRepository onboardingQuestionnaireRepository = MockOnboardingQuestionnaireRepository();
+  ActionPlanRepository actionPlanRepository = MockActionPlanRepository();
   /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-PROPERTY*/
 
   Store<AppState> initializeReduxStore({required AppState initialState}) {
@@ -234,8 +236,6 @@ class TestStoreFactory {
       suggestionsRechercheRepository,
       animationsCollectivesRepository,
       sessionMiloRepository,
-      diagorienteUrlsRepository,
-      diagorienteMetiersFavorisRepository,
       getFavorisRepository,
       recherchesRecentesRepository,
       contactImmersionRepository,
@@ -248,6 +248,7 @@ class TestStoreFactory {
       monSuiviRepository,
       campagneRecrutementRepository,
       preferredLoginModeRepository,
+      invitePrenomRepository,
       onboardingRepository,
       firstLaunchOnboardingRepository,
       pieceJointeUseCase,
@@ -269,6 +270,8 @@ class TestStoreFactory {
       themeRepository,
       softUpdateRepository,
       criteresRecherchePersistRepository,
+      onboardingQuestionnaireRepository,
+      actionPlanRepository,
       /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-CONSTRUCTOR*/
     ).initializeReduxStore(initialState: initialState);
   }

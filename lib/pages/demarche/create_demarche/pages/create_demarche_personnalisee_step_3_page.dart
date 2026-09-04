@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/date_pickers/date_picker_suggestions.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_date_input_suggestions.dart';
 
 class CreateDemarchePersonnaliseeStep3Page extends StatelessWidget {
   const CreateDemarchePersonnaliseeStep3Page(this.viewModel);
@@ -14,34 +11,31 @@ class CreateDemarchePersonnaliseeStep3Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+      padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(height: Margins.spacing_base),
-          Text(Strings.createDemarchePersonnaliseeTitle, style: TextStyles.textMBold.copyWith(color: context.content)),
-          const SizedBox(height: Margins.spacing_base),
-          Text(Strings.dateShortMandatory, style: TextStyles.textBaseMedium.copyWith(color: context.content)),
-          const SizedBox(height: Margins.spacing_s),
-          DatePickerSuggestions(
-            title: Strings.datePickerTitle,
+          const SizedBox(height: DsfrSpacings.s2w),
+          DsfrDateInputSuggestions(
+            label: Strings.thematiquesDemarcheDateShort,
             dateSource: viewModel.personnaliseeStep3ViewModel.dateSource,
             onDateChanged: (date) {
               viewModel.dateDemarchePersonnaliseeChanged(date);
               if (!date.isNone) {
-                // a11y : wait ui to be updated before moving focus
-                Future.delayed(Duration(milliseconds: 50), () {
+                Future.delayed(const Duration(milliseconds: 50), () {
                   if (context.mounted) FocusScope.of(context).nextFocus();
                 });
               }
             },
           ),
-          const SizedBox(height: Margins.spacing_base),
-          PrimaryActionButton(
+          const SizedBox(height: DsfrSpacings.s3w),
+          DsfrButton(
             label: Strings.addALaDemarche,
+            variant: DsfrButtonVariant.primary,
+            size: DsfrComponentSize.md,
             onPressed: viewModel.isDemarchePersonnaliseeDateValid ? viewModel.submitDemarchePersonnalisee : null,
           ),
-          SizedBox(height: Margins.spacing_xl),
+          const SizedBox(height: DsfrSpacings.s5w),
         ],
       ),
     );

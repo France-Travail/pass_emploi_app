@@ -23,6 +23,7 @@ class MonSuiviViewModel extends Equatable {
   final String? monSuiviDemarchesKoMessage;
   final int pendingActionCreations;
   final bool withPagination;
+  final bool withComptageDesHeures;
   final Function() onLoadPreviousPeriod;
   final Function() onLoadNextPeriod;
   final Function() onRetry;
@@ -38,6 +39,7 @@ class MonSuiviViewModel extends Equatable {
     required this.monSuiviDemarchesKoMessage,
     required this.pendingActionCreations,
     required this.withPagination,
+    required this.withComptageDesHeures,
     required this.onLoadPreviousPeriod,
     required this.onLoadNextPeriod,
     required this.onRetry,
@@ -58,6 +60,7 @@ class MonSuiviViewModel extends Equatable {
       monSuiviDemarchesKoMessage: featureFlip.withMonSuiviDemarchesKoMessage,
       pendingActionCreations: store.state.userActionCreatePendingState.getPendingCreationsCount(),
       withPagination: store.state.isMiloLoginMode(),
+      withComptageDesHeures: _withComptageDesHeures(state),
       onLoadPreviousPeriod: () => store.dispatch(MonSuiviRequestAction(MonSuiviPeriod.previous)),
       onLoadNextPeriod: () => store.dispatch(MonSuiviRequestAction(MonSuiviPeriod.next)),
       onRetry: () {
@@ -78,6 +81,7 @@ class MonSuiviViewModel extends Equatable {
         withWarningOnWrongPoleEmploiDataRetrieval,
         pendingActionCreations,
         withPagination,
+        withComptageDesHeures,
       ];
 }
 
@@ -92,6 +96,10 @@ DisplayState _displayState(MonSuiviState state) {
 
 bool _withWarningOnWrongSessionMiloRetrieval(MonSuiviState state) {
   return state is MonSuiviSuccessState && state.monSuivi.errorOnSessionMiloRetrieval;
+}
+
+bool _withComptageDesHeures(MonSuiviState state) {
+  return state is MonSuiviSuccessState && state.monSuivi.peutVoirLeComptageDesHeures;
 }
 
 bool _withWarningOnWrongPoleEmploiDataRetrieval(MonSuiviState state, FeatureFlip featureFlip) {
@@ -139,8 +147,8 @@ String _semaineInterval(DateTime monday) {
   final sunday = monday.add(Duration(days: 6));
   final periodOnSameMonth = monday.month == sunday.month;
   return periodOnSameMonth
-      ? "${monday.day} - ${sunday.day} ${sunday.toMonth()} ${sunday.year}"
-      : "${monday.day} ${monday.toMonth()} - ${sunday.day} ${sunday.toMonth()} ${sunday.year}";
+      ? Strings.monSuiviSemaineIntervalSameMonth(monday.day, sunday.day, sunday.toMonth())
+      : Strings.monSuiviSemaineIntervalDifferentMonths(monday.day, monday.toMonth(), sunday.day, sunday.toMonth());
 }
 
 Map<String, List<MonSuiviEntry>> _entriesByDay(MonSuiviState state) {
@@ -224,20 +232,20 @@ class EmptyDayMonSuiviItem extends DayMonSuiviItem {
 }
 
 class MonSuiviDay extends Equatable {
-  final String shortened;
+  final String name;
   final String number;
   final String month;
 
-  MonSuiviDay(this.shortened, this.number, this.month);
+  MonSuiviDay(this.name, this.number, this.month);
 
   factory MonSuiviDay.fromDateTime(DateTime dateTime) => MonSuiviDay(
-        dateTime.toDayShortened(),
+        dateTime.toDayName(),
         dateTime.day.toString(),
-        dateTime.toMonth(),
+        dateTime.toAbbreviatedMonth(),
       );
 
   @override
-  List<Object?> get props => [shortened, number];
+  List<Object?> get props => [name, number];
 }
 
 sealed class MonSuiviEntry extends Equatable {}

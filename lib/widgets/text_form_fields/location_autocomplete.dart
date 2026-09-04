@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/ignore_tracking_context_provider.dart';
 import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_actions.dart';
@@ -7,18 +8,12 @@ import 'package:pass_emploi_app/models/location.dart';
 import 'package:pass_emploi_app/presentation/autocomplete/location_displayable_extension.dart';
 import 'package:pass_emploi_app/presentation/autocomplete/location_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
+import 'package:pass_emploi_app/widgets/text_form_fields/utils/autocomplete_suggestions_group.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/utils/debounce_text_form_field.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/utils/full_screen_text_form_field_scaffold.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/utils/multiline_app_bar.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/utils/read_only_text_form_field.dart';
-import 'package:pass_emploi_app/widgets/text_form_fields/utils/text_form_field_sep_line.dart';
-import 'package:pass_emploi_app/widgets/text_form_fields/utils/title_tile.dart';
 
 const _heroTag = 'location';
 
@@ -81,11 +76,17 @@ class _LocationAutocompleteState extends State<LocationAutocomplete> {
 }
 
 class _LocationAutocompletePage extends StatefulWidget {
+  final String title;
   final String? hint;
   final bool villesOnly;
   final Location? selectedLocation;
 
-  _LocationAutocompletePage({required this.hint, required this.villesOnly, this.selectedLocation});
+  _LocationAutocompletePage({
+    required this.title,
+    required this.hint,
+    required this.villesOnly,
+    this.selectedLocation,
+  });
 
   static MaterialPageRoute<Location?> materialPageRoute({
     required String title,
@@ -95,8 +96,12 @@ class _LocationAutocompletePage extends StatefulWidget {
   }) {
     return MaterialPageRoute(
       fullscreenDialog: true,
-      builder: (context) =>
-          _LocationAutocompletePage(hint: hint, villesOnly: villesOnly, selectedLocation: selectedLocation),
+      builder: (context) => _LocationAutocompletePage(
+        title: title,
+        hint: hint,
+        villesOnly: villesOnly,
+        selectedLocation: selectedLocation,
+      ),
     );
   }
 
@@ -126,86 +131,83 @@ class _LocationAutocompletePageState extends State<_LocationAutocompletePage> {
     final autocompleteItems = viewModel.getAutocompleteItems(emptyInput);
     return FullScreenTextFormFieldScaffold(
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           MultilineAppBar(
-            title: Strings.locationTitle,
-            hint: widget.hint,
             onCloseButtonPressed: () => Navigator.pop(context, widget.selectedLocation),
           ),
-          Semantics(
-            label:
-                '${Strings.locationTitle} ${widget.villesOnly ? //
-                      Strings.a11YLocationWithoutDepartmentExplanationLabel : //
-                      Strings.a11YLocationWithDepartmentsExplanationLabel}',
-            child: DebounceTextFormField(
-              heroTag: _heroTag,
-              initialValue: widget.selectedLocation?.displayableLabel(),
-              onChanged: (text) {
-                if (text.isEmpty != emptyInput) setState(() => emptyInput = text.isEmpty);
-                viewModel.onInputLocation(text);
-              },
+          Padding(
+            padding: const EdgeInsets.fromLTRB(DsfrSpacings.s2w, DsfrSpacings.s2w, DsfrSpacings.s2w, 0),
+            child: Semantics(
+              label:
+                  '${widget.title} ${widget.villesOnly ? //
+                        Strings.a11YLocationWithoutDepartmentExplanationLabel : //
+                        Strings.a11YLocationWithDepartmentsExplanationLabel}',
+              child: DebounceTextFormField(
+                heroTag: _heroTag,
+                label: widget.title,
+                hintText: widget.hint,
+                initialValue: widget.selectedLocation?.displayableLabel(),
+                onChanged: (text) {
+                  if (text.isEmpty != emptyInput) setState(() => emptyInput = text.isEmpty);
+                  viewModel.onInputLocation(text);
+                },
+              ),
             ),
           ),
-          TextFormFieldSepLine(),
           Expanded(
-            child: ListView.separated(
-              itemCount: autocompleteItems.length,
-              separatorBuilder: (context, index) => TextFormFieldSepLine(),
-              itemBuilder: (context, index) {
-                final item = autocompleteItems[index];
-                if (item is LocationTitleItem) return TitleTile(title: item.title);
-                if (item is LocationSuggestionItem) {
-                  return _LocationListTile(
-                    location: item.location,
-                    source: item.source,
-                    onLocationTap: (location) => Navigator.pop(context, location),
-                  );
-                }
-                return SizedBox.shrink();
-              },
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(
+                DsfrSpacings.s2w,
+                DsfrSpacings.s1w,
+                DsfrSpacings.s2w,
+                DsfrSpacings.s3w,
+              ),
+              children: _buildSuggestionGroups(context, autocompleteItems),
             ),
           ),
         ],
       ),
     );
   }
-}
 
-class _LocationListTile extends StatelessWidget {
-  final Location location;
-  final LocationSource source;
-  final Function(Location) onLocationTap;
+  List<Widget> _buildSuggestionGroups(BuildContext context, List<LocationItem> items) {
+    final groups = <Widget>[];
+    String? currentTitle;
+    IconData? currentIcon;
+    final currentChildren = <Widget>[];
 
-  const _LocationListTile({required this.location, required this.source, required this.onLocationTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: Margins.spacing_l),
-        title: Row(
-          children: [
-            if (source == LocationSource.dernieresRecherches) ...[
-              Icon(AppIcons.schedule_rounded, size: Dimens.icon_size_base, color: context.grey800),
-              SizedBox(width: Margins.spacing_s),
-            ],
-            Text.rich(
-              TextSpan(
-                text: location.libelle,
-                style: TextStyles.textBaseBold.copyWith(color: context.content),
-                children: [
-                  TextSpan(text: ' '),
-                  TextSpan(text: location.displayableCode(), style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-                ],
-              ),
-            ),
-          ],
+    void flushGroup() {
+      if (currentChildren.isEmpty) return;
+      groups.add(
+        AutocompleteSuggestionsGroup(
+          title: currentTitle,
+          titleIcon: currentIcon,
+          children: List.of(currentChildren),
         ),
-        onTap: () {
-          onLocationTap(location);
-        },
-      ),
-    );
+      );
+      currentChildren.clear();
+      currentTitle = null;
+      currentIcon = null;
+    }
+
+    for (final item in items) {
+      if (item is LocationTitleItem) {
+        flushGroup();
+        currentTitle = item.title;
+        currentIcon = DsfrIcons.systemTimeLine;
+      } else if (item is LocationSuggestionItem) {
+        final code = item.location.displayableCode();
+        currentChildren.add(
+          AutocompleteSuggestionTile(
+            text: item.location.libelle,
+            secondaryText: code.isEmpty ? null : code,
+            onTap: () => Navigator.pop(context, item.location),
+          ),
+        );
+      }
+    }
+    flushGroup();
+    return groups;
   }
 }

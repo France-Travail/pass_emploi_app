@@ -27,7 +27,6 @@ import 'package:pass_emploi_app/features/demarche/update/update_demarche_reducer
 import 'package:pass_emploi_app/features/details_jeune/details_jeune_reducer.dart';
 import 'package:pass_emploi_app/features/developer_option/activation/developer_options_reducer.dart';
 import 'package:pass_emploi_app/features/developer_option/matomo/matomo_logging_reducer.dart';
-import 'package:pass_emploi_app/features/diagoriente_preferences_metier/diagoriente_preferences_metier_reducer.dart';
 import 'package:pass_emploi_app/features/evenement_emploi/details/evenement_emploi_details_reducer.dart';
 import 'package:pass_emploi_app/features/events/list/event_list_reducer.dart';
 import 'package:pass_emploi_app/features/favori/ids/favori_ids_reducer.dart';
@@ -53,6 +52,7 @@ import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_reducer.d
 import 'package:pass_emploi_app/features/onboarding/onboarding_reducer.dart';
 import 'package:pass_emploi_app/features/preferences/preferences_reducer.dart';
 import 'package:pass_emploi_app/features/preferences/update/preferences_update_reducer.dart';
+import 'package:pass_emploi_app/features/invite_prenom/invite_prenom_reducer.dart';
 import 'package:pass_emploi_app/features/preferred_login_mode/preferred_login_mode_reducer.dart';
 import 'package:pass_emploi_app/features/rating/rating_reducer.dart';
 import 'package:pass_emploi_app/features/recherche/emploi/emploi_criteres_recherche.dart';
@@ -93,6 +93,8 @@ import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription
 import 'package:pass_emploi_app/features/theme/theme_reducer.dart';
 import 'package:pass_emploi_app/features/soft_update/soft_update_reducer.dart';
 import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_reducer.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_reducer.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_reducer.dart';
 /*AUTOGENERATE-REDUX-APP-REDUCER-IMPORT*/
 
 AppState reducer(AppState current, dynamic action) {
@@ -184,10 +186,6 @@ AppState reducer(AppState current, dynamic action) {
           current.rechercheEvenementEmploiState,
           action,
         ),
-    diagorientePreferencesMetierState: diagorientePreferencesMetierReducer(
-      current.diagorientePreferencesMetierState,
-      action,
-    ),
     recherchesRecentesState: recherchesRecentesReducer(current.recherchesRecentesState, action),
     contactImmersionState: contactImmersionReducer(current.contactImmersionState, action),
     accueilState: accueilReducer(current.accueilState, action),
@@ -199,6 +197,7 @@ AppState reducer(AppState current, dynamic action) {
     connectivityState: connectivityReducer(current.connectivityState, action),
     monSuiviState: monSuiviReducer(current.monSuiviState, action),
     preferredLoginModeState: preferredLoginModeReducer(current.preferredLoginModeState, action),
+    invitePrenomState: invitePrenomReducer(current.invitePrenomState, action),
     onboardingState: onboardingReducer(current.onboardingState, action),
     firstLaunchOnboardingState: firstLaunchOnboardingReducer(current.firstLaunchOnboardingState, action),
     messageImportantState: messageImportantReducer(current.messageImportantState, action),
@@ -227,6 +226,8 @@ AppState reducer(AppState current, dynamic action) {
     themeState: themeReducer(current.themeState, action),
     softUpdateState: softUpdateReducer(current.softUpdateState, action),
     criteresRecherchePersistState: criteresRecherchePersistReducer(current.criteresRecherchePersistState, action),
+    onboardingQuestionnaireState: onboardingQuestionnaireReducer(current.onboardingQuestionnaireState, action),
+    actionPlanState: actionPlanReducer(current.actionPlanState, action),
     /*AUTOGENERATE-REDUX-APP-REDUCER-STATE*/
   );
 }

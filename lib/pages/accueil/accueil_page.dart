@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/accueil/accueil_actions.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
 import 'package:pass_emploi_app/features/date_consultation_notification/date_consultation_notification_actions.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_actions.dart';
@@ -18,6 +20,7 @@ import 'package:pass_emploi_app/pages/accueil/accueil_onboarding_tile.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_prochain_rendezvous.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_rating_app.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_suivi_des_offres.dart';
+import 'package:pass_emploi_app/pages/accueil/invite/invite_accueil_body.dart';
 import 'package:pass_emploi_app/pages/accueil/remote_campagne_accueil_card.dart';
 import 'package:pass_emploi_app/pages/benevolat_page.dart';
 import 'package:pass_emploi_app/pages/boite_a_outils_page.dart';
@@ -34,19 +37,14 @@ import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_state_source.
 import 'package:pass_emploi_app/presentation/user_action/user_action_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
+import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/notifications_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/soft_update_bottom_sheet.dart';
-import 'package:pass_emploi_app/widgets/cards/campagne_card.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
-import 'package:pass_emploi_app/widgets/information_bandeau.dart';
-import 'package:pass_emploi_app/widgets/login_page_remote_message.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_tuile_card.dart';
 import 'package:pass_emploi_app/widgets/offre_suivie_form.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 
@@ -65,6 +63,10 @@ class _AccueilPageState extends State<AccueilPage> {
       tracking: AnalyticsScreenNames.accueil,
       child: StoreConnector<AppState, AccueilViewModel>(
         onInit: (store) {
+          if (store.state.isInviteLoginMode()) {
+            store.dispatch(ActionPlanRequestAction());
+            return;
+          }
           store.dispatch(AccueilRequestAction());
           store.dispatch(InAppNotificationsRequestAction());
           store.dispatch(DateConsultationNotificationRequestAction());
@@ -73,6 +75,9 @@ class _AccueilPageState extends State<AccueilPage> {
         converter: (store) => AccueilViewModel.create(store),
         builder: _builder,
         onDidChange: (previousViewModel, viewModel) {
+          if (StoreProvider.of<AppState>(context).state.isInviteLoginMode()) {
+            return;
+          }
           _handleSoftUpdateBottomSheet(viewModel);
           _handleNotificationsBottomSheet(viewModel);
           _handleDeeplink(previousViewModel, viewModel);
@@ -83,13 +88,30 @@ class _AccueilPageState extends State<AccueilPage> {
   }
 
   Widget _builder(BuildContext context, AccueilViewModel viewModel) {
-    return Scaffold(
-      backgroundColor: AppColorsSpecifics.acceuilBgColor(context),
-      body: ConnectivityContainer(child: _Body(viewModel)),
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return Theme(
+      data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+      child: Builder(
+        builder: (context) {
+          if (StoreProvider.of<AppState>(context).state.isInviteLoginMode()) {
+            return Scaffold(
+              backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+              body: ConnectivityContainer(child: InviteAccueilBody()),
+            );
+          }
+          return Scaffold(
+            backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+            body: ConnectivityContainer(child: _Body(viewModel)),
+          );
+        },
+      ),
     );
   }
 
-  Future<void> _handleDeeplink(AccueilViewModel? oldViewModel, AccueilViewModel newViewModel) async {
+  Future<void> _handleDeeplink(
+    AccueilViewModel? oldViewModel,
+    AccueilViewModel newViewModel,
+  ) async {
     if (newViewModel.deepLink is CreationDemarcheDeepLink) {
       await _handleRappelCreationDemarcheDeeplink();
     } else if (newViewModel.deepLink is CreationActionDeepLink) {
@@ -99,25 +121,35 @@ class _AccueilPageState extends State<AccueilPage> {
     } else if (newViewModel.deepLink is LaBonneAlternanceDeepLink) {
       await _handleLaBonneAlternanceDeeplink();
     } else {
-      final route = switch (newViewModel.deepLink) {
-        final RendezvousDeepLink deeplink => RendezvousDetailsPage.materialPageRoute(
-          RendezvousStateSource.noSource,
-          deeplink.idRendezvous,
-        ),
-        final SessionMiloDeepLink deeplink => RendezvousDetailsPage.materialPageRoute(
-          RendezvousStateSource.sessionMiloDetails,
-          deeplink.idSessionMilo,
-        ),
-        final ActionDeepLink deeplink => UserActionDetailPage.materialPageRoute(
-          deeplink.idAction,
-          UserActionStateSource.noSource,
-        ),
-        OutilsDeepLink() => BoiteAOutilsPage.materialPageRoute(),
-        CampagneDeepLink() => CampagneQuestionPage.materialPageRoute(0),
-        _ => null,
-      };
-
-      if (route != null) Navigator.push(context, route);
+      switch (newViewModel.deepLink) {
+        case final RendezvousDeepLink deeplink:
+          await RendezvousDetailsPage.show(
+            context,
+            RendezvousStateSource.noSource,
+            deeplink.idRendezvous,
+          );
+        case final SessionMiloDeepLink deeplink:
+          await RendezvousDetailsPage.show(
+            context,
+            RendezvousStateSource.sessionMiloDetails,
+            deeplink.idSessionMilo,
+          );
+        case final ActionDeepLink deeplink:
+          await UserActionDetailPage.show(
+            context,
+            deeplink.idAction,
+            UserActionStateSource.noSource,
+          );
+        case OutilsDeepLink():
+          await Navigator.push(context, BoiteAOutilsPage.materialPageRoute());
+        case CampagneDeepLink():
+          await Navigator.push(
+            context,
+            CampagneQuestionPage.materialPageRoute(0),
+          );
+        default:
+          break;
+      }
       if (newViewModel.shouldResetDeeplink) newViewModel.resetDeeplink();
     }
   }
@@ -161,14 +193,20 @@ class _AccueilPageState extends State<AccueilPage> {
     await _displayMonSuiviPage();
     if (mounted) {
       final store = StoreProvider.of<AppState>(context);
-      CreateUserActionFormPage.pushUserActionCreationTunnel(store, navigator, UserActionStateSource.monSuivi);
+      CreateUserActionFormPage.pushUserActionCreationTunnel(
+        store,
+        navigator,
+        UserActionStateSource.monSuivi,
+      );
     }
   }
 
   dynamic _displayMonSuiviPage() {
     StoreProvider.of<AppState>(
       context,
-    ).dispatch(HandleDeepLinkAction(MonSuiviDeepLink(), DeepLinkOrigin.inAppNavigation));
+    ).dispatch(
+      HandleDeepLinkAction(MonSuiviDeepLink(), DeepLinkOrigin.inAppNavigation),
+    );
   }
 
   void _handleSoftUpdateBottomSheet(AccueilViewModel viewModel) {
@@ -194,20 +232,30 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        PrimarySliverAppbar(title: Strings.accueilAppBarTitle, withNewNotifications: viewModel.withNewNotifications),
-        SliverToBoxAdapter(
-          child: AnimatedSwitcher(
-            duration: AnimationDurations.fast,
-            child: switch (viewModel.displayState) {
-              DisplayState.LOADING => AccueilLoading(),
-              DisplayState.CONTENT => _Blocs(viewModel),
-              DisplayState.EMPTY || DisplayState.FAILURE => Retry(Strings.accueilError, () => viewModel.retry()),
-            },
+    return RefreshIndicator.adaptive(
+      onRefresh: () async => viewModel.retry(),
+      child: CustomScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        slivers: [
+          PrimarySliverAppbar(
+            title: Strings.accueilAppBarTitle,
+            withNewNotifications: viewModel.withNewNotifications,
           ),
-        ),
-      ],
+          SliverToBoxAdapter(
+            child: AnimatedSwitcher(
+              duration: AnimationDurations.fast,
+              child: switch (viewModel.displayState) {
+                DisplayState.LOADING => AccueilLoading(),
+                DisplayState.CONTENT => _Blocs(viewModel),
+                DisplayState.EMPTY || DisplayState.FAILURE => Retry(
+                  Strings.accueilError,
+                  () => viewModel.retry(),
+                ),
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -219,85 +267,35 @@ class _Blocs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator.adaptive(
-      onRefresh: () async => viewModel.retry(),
-      child: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(Margins.spacing_base),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: AppColorsSpecifics.acceuilBgGradient(context),
-                ),
-              ),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: _buildItemsWithGradient()),
-            ),
-            ColoredBox(
-              color: context.grey100,
-              child: Padding(
-                padding: const EdgeInsets.all(Margins.spacing_base),
-                child: Column(children: _buildItemsWithoutGradient()),
-              ),
-            ),
+    final visibleItems = viewModel.items.where((item) => item is! AccueilColorSeparatorItem).toList();
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(DsfrSpacings.s2w, DsfrSpacings.s2w, DsfrSpacings.s2w, DsfrSpacings.s4w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (int i = 0; i < visibleItems.length; i++) ...[
+            _buildItem(visibleItems[i]),
+            if (i < visibleItems.length - 1) const SizedBox(height: DsfrSpacings.s2w),
           ],
-        ),
+        ],
       ),
     );
   }
 
-  List<Widget> _buildItemsWithGradient() {
-    final items = <Widget>[];
-
-    for (int i = 0; i < viewModel.items.length; i++) {
-      final item = viewModel.items[i];
-
-      if (item is AccueilColorSeparatorItem) {
-        items.add(_buildItem(item));
-        break;
-      }
-
-      items.add(_buildItem(item));
-      if (i < viewModel.items.length - 1) {
-        items.add(SizedBox(height: Margins.spacing_m));
-      }
-    }
-    return items;
-  }
-
-  List<Widget> _buildItemsWithoutGradient() {
-    final items = <Widget>[];
-    bool foundSeparator = false;
-
-    for (int i = 0; i < viewModel.items.length; i++) {
-      final item = viewModel.items[i];
-
-      if (item is AccueilColorSeparatorItem) {
-        foundSeparator = true;
-        continue;
-      }
-
-      if (foundSeparator) {
-        items.add(_buildItem(item));
-        if (i < viewModel.items.length - 1) {
-          items.add(SizedBox(height: Margins.spacing_m));
-        }
-      }
-    }
-
-    return items;
-  }
-
   Widget _buildItem(AccueilItem item) {
     return switch (item) {
-      final AccueilDateDeMigrationItem item => AccueilDateDeMigration(dateDeMigration: item.dateDeMigration),
-      final AccueilZenithMessageItem item => CardContainer(
-        child: RemoteMessageWidget(remoteMessage: item.accueilZenithMessage),
+      final AccueilDateDeMigrationItem item => AccueilDateDeMigration(
+        dateDeMigration: item.dateDeMigration,
       ),
-      final ErrorDegradeeItem item => InformationBandeau(icon: AppIcons.error_rounded, text: item.message),
+      final AccueilZenithMessageItem item => DsfrAlert(
+        type: DsfrAlertType.info,
+        title: item.accueilZenithMessage.title,
+        description: DsfrAlertDescriptionText(item.accueilZenithMessage.description),
+      ),
+      final ErrorDegradeeItem item => DsfrAlert(
+        type: DsfrAlertType.warning,
+        description: DsfrAlertDescriptionText(item.message),
+      ),
       final OnboardingItem item => AccueilOnboardingTile(item),
       final OffreSuivieAccueilItem item => OffreSuivieForm(
         offreId: item.offreId,
@@ -307,14 +305,17 @@ class _Blocs extends StatelessWidget {
       ),
       final RemoteCampagneAccueilItem item => RemoteCampagneAccueilCard(item),
       final CampagneRecrutementItem item => CampagneRecrutementCard(item),
-      final CampagneEvaluationItem item => _CampagneCard(title: item.titre, description: item.description),
+      final CampagneEvaluationItem item => _CampagneCard(
+        title: item.titre,
+        description: item.description,
+      ),
       final AccueilCetteSemaineItem item => AccueilCetteSemaine(item),
       final AccueilProchainRendezvousItem item => AccueilProchainRendezVous.fromRendezVous(item.rendezvousId),
       final AccueilProchaineSessionMiloItem item => AccueilProchainRendezVous.fromSession(item.sessionId),
       final AccueilEvenementsItem item => AccueilEvenements(item),
       final AccueilAlertesItem item => AccueilAlertes(item),
       final AccueilSuiviDesOffresItem item => AccueilSuiviDesOffres(item),
-      AccueilColorSeparatorItem() => SizedBox.shrink(),
+      AccueilColorSeparatorItem() => const SizedBox.shrink(),
       RatingAppItem() => AccueilRatingAppCard(),
     };
   }
@@ -324,14 +325,15 @@ class _CampagneCard extends StatelessWidget {
   final String title;
   final String description;
 
-  _CampagneCard({required this.title, required this.description});
+  const _CampagneCard({required this.title, required this.description});
 
   @override
   Widget build(BuildContext context) {
-    return CampagneCard(
-      onTap: () => Navigator.push(context, CampagneQuestionPage.materialPageRoute(0)),
-      titre: title,
+    return DsfrTuileCard(
+      leading: DsfrTuileCardImage(imageAsset: Drawables.evalImage),
+      title: title,
       description: description,
+      onTap: () => Navigator.push(context, CampagneQuestionPage.materialPageRoute(0)),
     );
   }
 }

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/favori/ids/favori_ids_state.dart';
 import 'package:pass_emploi_app/presentation/recherche/bloc_resultat_recherche_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/favori_state_selector.dart';
 
 class ResultatRechercheContenu<Result> extends StatefulWidget {
@@ -16,6 +15,7 @@ class ResultatRechercheContenu<Result> extends StatefulWidget {
   final BlocResultatRechercheViewModel<Result> viewModel;
   final FavoriIdsState<Result> Function(AppState) favorisState;
   final Widget Function(BuildContext, Result, int, BlocResultatRechercheViewModel<Result>) buildResultItem;
+  final String Function(int count) resultsCountLabel;
 
   const ResultatRechercheContenu({
     super.key,
@@ -23,6 +23,7 @@ class ResultatRechercheContenu<Result> extends StatefulWidget {
     required this.viewModel,
     required this.favorisState,
     required this.buildResultItem,
+    required this.resultsCountLabel,
   });
 
   @override
@@ -51,14 +52,25 @@ class ResultatRechercheContenuState<Result> extends State<ResultatRechercheConte
       child: AnimationLimiter(
         child: ListView.separated(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          padding: const EdgeInsets.only(top: Margins.spacing_base, bottom: 200),
+          physics: const NeverScrollableScrollPhysics(),
+          padding: const EdgeInsets.only(top: DsfrSpacings.s3v, bottom: 200),
           controller: _scrollController,
-          itemCount: widget.viewModel.items.length,
+          itemCount: widget.viewModel.items.length + 1,
           itemBuilder: (context, index) {
-            final isLastItem = index == widget.viewModel.items.length - 1;
+            if (index == 0) {
+              return Semantics(
+                header: true,
+                child: Text(
+                  widget.resultsCountLabel(widget.viewModel.items.length),
+                  style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+                ),
+              );
+            }
+
+            final itemIndex = index - 1;
+            final isLastItem = itemIndex == widget.viewModel.items.length - 1;
             return AnimationConfiguration.staggeredList(
-              position: index,
+              position: itemIndex,
               duration: AnimationDurations.fast,
               delay: AnimationDurations.veryFast,
               child: SlideAnimation(
@@ -68,22 +80,25 @@ class ResultatRechercheContenuState<Result> extends State<ResultatRechercheConte
                     children: [
                       widget.buildResultItem(
                         context,
-                        widget.viewModel.items[index],
-                        index,
+                        widget.viewModel.items[itemIndex],
+                        itemIndex,
                         widget.viewModel,
                       ),
                       if (widget.viewModel.withLoadMore && isLastItem) ...[
-                        SizedBox(height: Margins.spacing_base),
+                        const SizedBox(height: DsfrSpacings.s2w),
                         _LoadMoreButton(onPressed: () => _onLoadMorePressed(context)),
-                        SizedBox(height: Margins.spacing_huge),
-                      ]
+                        const SizedBox(height: DsfrSpacings.s8w),
+                      ],
                     ],
                   ),
                 ),
               ),
             );
           },
-          separatorBuilder: (context, index) => const SizedBox(height: Margins.spacing_base),
+          separatorBuilder: (context, index) {
+            if (index == 0) return const SizedBox(height: DsfrSpacings.s3v);
+            return const SizedBox(height: DsfrSpacings.s2w);
+          },
         ),
       ),
     );
@@ -118,20 +133,22 @@ class _LoadMoreButtonState extends State<_LoadMoreButton> {
     return AnimatedCrossFade(
       crossFadeState: crossFadeState,
       sizeCurve: Curves.ease,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
       firstChild: SizedBox(
         width: double.infinity,
-        child: SecondaryButton(
+        child: DsfrButton(
           label: Strings.rechercheAfficherPlus,
+          variant: DsfrButtonVariant.secondary,
+          size: DsfrComponentSize.lg,
           onPressed: () {
             widget.onPressed();
             setState(() => crossFadeState = CrossFadeState.showSecond);
           },
         ),
       ),
-      secondChild: Center(
+      secondChild: const Center(
         child: Padding(
-          padding: const EdgeInsets.all(Margins.spacing_base),
+          padding: EdgeInsets.all(DsfrSpacings.s2w),
           child: CircularProgressIndicator(),
         ),
       ),

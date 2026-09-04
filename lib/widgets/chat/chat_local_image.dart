@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/presentation/chat/chat_item.dart';
 import 'package:pass_emploi_app/widgets/chat/chat_message_container.dart';
 
@@ -21,8 +22,10 @@ class ChatLocalImage extends StatelessWidget {
         children: [
           Expanded(child: Image.file(File(message.imagePath))),
           SizedBox.square(
-            dimension: 40,
-            child: CircularProgressIndicator(),
+            dimension: DsfrSpacings.s5w,
+            child: CircularProgressIndicator(
+              color: DsfrColorDecisions.textInvertedGrey(context),
+            ),
           ),
         ],
       ),

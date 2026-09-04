@@ -20,7 +20,6 @@ class Accueil extends Equatable {
   final List<Favori>? favoris;
   final Campagne? campagne;
   final String? accueilErreur;
-  final bool? peutVoirLeComptageDesHeures;
   final DateTime? dateDeMigration;
 
   Accueil({
@@ -34,7 +33,6 @@ class Accueil extends Equatable {
     this.favoris,
     this.campagne,
     this.accueilErreur,
-    this.peutVoirLeComptageDesHeures,
     this.dateDeMigration,
   });
 
@@ -49,7 +47,6 @@ class Accueil extends Equatable {
     final favoris = _favoris(json);
     final campagne = json["campagne"] != null ? Campagne.fromJson(json["campagne"]) : null;
     final accueilErreur = json["messageDonneesManquantes"] as String?;
-    final peutVoirLeComptageDesHeures = json["peutVoirLeComptageDesHeures"] as bool?;
     final dateDeMigration = _dateDeMigration(json);
 
     return Accueil(
@@ -63,8 +60,6 @@ class Accueil extends Equatable {
       favoris: favoris,
       campagne: campagne,
       accueilErreur: accueilErreur,
-      peutVoirLeComptageDesHeures: peutVoirLeComptageDesHeures,
-
       dateDeMigration: dateDeMigration,
     );
   }
@@ -79,8 +74,6 @@ class Accueil extends Equatable {
     final List<Alerte>? alertes,
     final List<Favori>? favoris,
     final String? accueilErreur,
-    final bool? peutVoirLeComptageDesHeures,
-
     final DateTime? dateDeMigration,
   }) {
     return Accueil(
@@ -93,8 +86,6 @@ class Accueil extends Equatable {
       alertes: alertes ?? this.alertes,
       favoris: favoris ?? this.favoris,
       accueilErreur: accueilErreur ?? this.accueilErreur,
-      peutVoirLeComptageDesHeures: peutVoirLeComptageDesHeures ?? this.peutVoirLeComptageDesHeures,
-
       dateDeMigration: dateDeMigration ?? this.dateDeMigration,
     );
   }
@@ -110,7 +101,6 @@ class Accueil extends Equatable {
     alertes,
     favoris,
     accueilErreur,
-    peutVoirLeComptageDesHeures,
     dateDeMigration,
   ];
 }

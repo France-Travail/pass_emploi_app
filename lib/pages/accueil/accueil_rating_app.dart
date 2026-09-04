@@ -3,16 +3,12 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/presentation/rating_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
+import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/utils/platform.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
-import 'package:pass_emploi_app/widgets/pressed_tip.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_dismissible_tile.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_tuile_card.dart';
 import 'package:pass_emploi_app/widgets/rating_page.dart';
 
 class AccueilRatingAppCard extends StatelessWidget {
@@ -32,60 +28,16 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      child: CardContainer(
-        padding: EdgeInsets.zero,
-        onTap: () => Navigator.push(context, RatingPage.materialPageRoute()),
-        child: Stack(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: Margins.spacing_base, horizontal: Margins.spacing_m),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    AppIcons.hotel_class,
-                    color: context.content,
-                    size: Dimens.icon_size_l,
-                  ),
-                  SizedBox(width: Margins.spacing_m),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          Strings.ratingAppLabel,
-                          style: TextStyles.textBaseBold.copyWith(color: context.content),
-                        ),
-                        SizedBox(height: Margins.spacing_base),
-                        PressedTip(
-                          Strings.ratingButton,
-                          textColor: context.content,
-                          icon: AppIcons.chevron_right_rounded,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              top: 0,
-              right: 0,
-              child: IconButton(
-                tooltip: "${Strings.closeDialog} ${Strings.ratingAppLabel}",
-                onPressed: () {
-                  viewModel.onDone();
-                  PassEmploiMatomoTracker.instance.trackScreen(AnalyticsActionNames.skipRating);
-                },
-                icon: Icon(AppIcons.close_rounded, color: context.content),
-              ),
-            ),
-          ],
-        ),
-      ),
+    return DsfrDismissibleTile(
+      title: Strings.ratingLabel,
+      description: Strings.ratingButton,
+      leading: DsfrTuileCardSvg(asset: Drawables.ratingStar),
+      onTap: () => Navigator.push(context, RatingPage.materialPageRoute()),
+      onDismiss: () {
+        viewModel.onDone();
+        PassEmploiMatomoTracker.instance.trackScreen(AnalyticsActionNames.skipRating);
+      },
+      dismissSemanticLabel: '${Strings.closeDialog} ${Strings.ratingLabel}',
     );
   }
 }

@@ -10,8 +10,9 @@ class UserActionCreateLoadingAction {}
 
 class UserActionCreateSuccessAction {
   final String userActionCreatedId;
+  final String actionContent;
 
-  UserActionCreateSuccessAction(this.userActionCreatedId);
+  UserActionCreateSuccessAction(this.userActionCreatedId, {this.actionContent = ''});
 }
 
 class UserActionCreateFailureAction {

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/utils/debouncer.dart';
-import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
 
 class DebounceTextFormField extends StatelessWidget {
   final String heroTag;
   final String? initialValue;
+  final String? label;
+  final String? hintText;
   final Function(String value)? onChanged;
   final Function(String value)? onFieldSubmitted;
   final Debouncer _debouncer = Debouncer(duration: Duration(milliseconds: 200));
@@ -13,31 +14,54 @@ class DebounceTextFormField extends StatelessWidget {
   DebounceTextFormField({
     required this.heroTag,
     required this.initialValue,
+    this.label,
+    this.hintText,
     this.onChanged,
     this.onFieldSubmitted,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(Margins.spacing_base),
-      child: Hero(
-        tag: heroTag,
-        child: Material(
-          type: MaterialType.transparency,
-          child: BaseTextField(
-            keyboardType: TextInputType.name,
-            textCapitalization: TextCapitalization.words,
-            textInputAction: TextInputAction.done,
-            onFieldSubmitted: onFieldSubmitted,
-            initialValue: initialValue,
-            autofocus: true,
-            onChanged: (value) {
-              if (onChanged != null) _debouncer.run(() => onChanged!(value));
-            },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (label != null) ...[
+          Semantics(
+            header: true,
+            child: Text(
+              label!,
+              style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
+            ),
+          ),
+          if (hintText != null) ...[
+            const SizedBox(height: DsfrSpacings.s1v),
+            ExcludeSemantics(
+              child: Text(
+                hintText!,
+                style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textMentionGrey(context)),
+              ),
+            ),
+          ],
+          const SizedBox(height: DsfrSpacings.s1w),
+        ],
+        Hero(
+          tag: heroTag,
+          child: Material(
+            type: MaterialType.transparency,
+            child: DsfrInputHeadless(
+              initialValue: initialValue,
+              autofocus: true,
+              keyboardType: TextInputType.name,
+              textCapitalization: TextCapitalization.words,
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: onFieldSubmitted,
+              onChanged: (value) {
+                if (onChanged != null) _debouncer.run(() => onChanged!(value));
+              },
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
-import 'package:pass_emploi_app/pages/accueil/accueil_comptage_des_heures.dart';
 import 'package:pass_emploi_app/presentation/accueil/accueil_item.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/textes.dart';
 
 class AccueilCetteSemaine extends StatelessWidget {
@@ -27,59 +21,46 @@ class AccueilCetteSemaine extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        LargeSectionTitle(Strings.accueilCetteSemaineSection, color: AppColors.contentOnPrimary),
-        SizedBox(height: Margins.spacing_base),
-        if (item.withComptageDesHeures) ...[
-          AccueilComptageDesHeures(),
-          SizedBox(height: Margins.spacing_base),
-        ],
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        LargeSectionTitle(Strings.accueilCetteSemaineSection),
+        const SizedBox(height: DsfrSpacings.s2w),
+        Row(
           children: [
-            Row(
-              children: [
-                if (rendezvousCount != null) ...[
-                  Expanded(
-                    child: _BlocInfo(
-                      icon: AppIcons.event,
-                      label: Strings.accueilRendezvous,
-                      count: rendezvousCount,
-                      backgroundColor: context.bg,
-                      contentColor: context.content,
-                    ),
-                  ),
-                  SizedBox(width: Margins.spacing_base),
-                ],
-                Expanded(
+            if (rendezvousCount != null) ...[
+              Expanded(
                 child: _BlocInfo(
-                  icon: AppIcons.bolt_outlined,
-                  label: item.actionsOuDemarchesLabel,
-                  count: item.actionsOuDemarchesCount,
-                  backgroundColor: context.bg,
-                  contentColor: context.content,
+                  icon: DsfrIcons.businessCalendarEventLine,
+                  label: Strings.accueilRendezvous,
+                  count: rendezvousCount,
                 ),
-                ),
-              ],
-            ),
-            SizedBox(height: Margins.spacing_base),
-            SecondaryButton(
-              backgroundColor: AppColors.transparent,
-              foregroundColor: AppColors.contentOnPrimary,
-              label: Strings.accueilVoirDetailsCetteSemaine,
-              onPressed: () {
-                PassEmploiMatomoTracker.instance.trackEvent(
-                  eventCategory: AnalyticsEventNames.accueilCategory,
-                  action: AnalyticsEventNames.accueilDetailSemainePressed,
-                );
-                StoreProvider.of<AppState>(context).dispatch(
-                  HandleDeepLinkAction(
-                    MonSuiviDeepLink(),
-                    DeepLinkOrigin.inAppNavigation,
-                  ),
-                );
-              },
+              ),
+              const SizedBox(width: DsfrSpacings.s2w),
+            ],
+            Expanded(
+              child: _BlocInfo(
+                icon: DsfrIcons.systemCheckboxCircleLine,
+                label: item.actionsOuDemarchesLabel,
+                count: item.actionsOuDemarchesCount,
+              ),
             ),
           ],
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        DsfrButton(
+          label: Strings.accueilVoirDetailsCetteSemaine,
+          variant: DsfrButtonVariant.secondary,
+          size: DsfrComponentSize.md,
+          onPressed: () {
+            PassEmploiMatomoTracker.instance.trackEvent(
+              eventCategory: AnalyticsEventNames.accueilCategory,
+              action: AnalyticsEventNames.accueilDetailSemainePressed,
+            );
+            StoreProvider.of<AppState>(context).dispatch(
+              HandleDeepLinkAction(
+                MonSuiviDeepLink(),
+                DeepLinkOrigin.inAppNavigation,
+              ),
+            );
+          },
         ),
       ],
     );
@@ -90,15 +71,11 @@ class _BlocInfo extends StatelessWidget {
   final IconData icon;
   final String label;
   final String count;
-  final Color backgroundColor;
-  final Color contentColor;
 
   const _BlocInfo({
     required this.icon,
     required this.label,
     required this.count,
-    required this.backgroundColor,
-    required this.contentColor,
   });
 
   @override
@@ -107,23 +84,33 @@ class _BlocInfo extends StatelessWidget {
       container: true,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(Dimens.radius_base),
+          color: DsfrColorDecisions.backgroundContrastBlueFrance(context),
+          borderRadius: const BorderRadius.all(Radius.circular(4)),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(Margins.spacing_s),
+          padding: const EdgeInsets.all(DsfrSpacings.s2w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Icon(icon, color: contentColor, size: Dimens.icon_size_m),
-                  SizedBox(width: Margins.spacing_s),
-                  Text(count, style: TextStyles.textMBold.copyWith(color: contentColor)),
+                  Icon(
+                    icon,
+                    color: DsfrColorDecisions.textTitleBlueFrance(context),
+                    size: DsfrSpacings.s3w,
+                  ),
+                  const SizedBox(width: DsfrSpacings.s1w),
+                  Text(
+                    count,
+                    style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textTitleGrey(context)),
+                  ),
                 ],
               ),
-              SizedBox(height: Margins.spacing_xs),
-              Text(label, style: TextStyles.textXsBold(color: contentColor)),
+              const SizedBox(height: DsfrSpacings.s1v),
+              Text(
+                label,
+                style: DsfrTextStyle.bodyXsBold(color: DsfrColorDecisions.textTitleGrey(context)),
+              ),
             ],
           ),
         ),

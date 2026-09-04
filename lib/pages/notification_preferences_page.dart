@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
@@ -6,13 +7,9 @@ import 'package:pass_emploi_app/features/preferences/preferences_actions.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/preferences/notification_preferences_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_profil_tile.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
 
@@ -54,17 +51,30 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.grey100,
-      appBar: PrimaryAppBar(
-        title: Strings.notificationsSettingsAppbarTitle,
-        withProfileButton: false,
-        canPop: true,
-      ),
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+      appBar: const BackAppBar(),
       body: switch (viewModel.displayState) {
         DisplayState.CONTENT => _Content(viewModel),
         DisplayState.FAILURE => Retry(Strings.miscellaneousErrorRetry, () => viewModel.retry()),
-        _ => Center(child: CircularProgressIndicator()),
+        _ => const _Loading(),
       },
+    );
+  }
+}
+
+class _Loading extends StatelessWidget {
+  const _Loading();
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: Strings.loadingAnnouncement,
+      liveRegion: true,
+      child: Center(
+        child: CircularProgressIndicator(
+          color: DsfrColorDecisions.backgroundActionHighBlueFrance(context),
+        ),
+      ),
     );
   }
 }
@@ -79,154 +89,93 @@ class _Content extends StatelessWidget {
     return Semantics(
       container: true,
       child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(
-          horizontal: Margins.spacing_base,
-          vertical: Margins.spacing_m,
+        padding: const EdgeInsets.fromLTRB(
+          DsfrSpacings.s2w,
+          0,
+          DsfrSpacings.s2w,
+          DsfrSpacings.s4w,
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              Strings.notificationsSettingsSubtitle,
-              style: TextStyles.textBaseRegular.copyWith(color: context.content),
-            ),
-            SizedBox(height: Margins.spacing_base),
-            _NotificationSwitch(
-              title: Strings.notificationsSettingsAlertesTitle,
-              description: Strings.notificationsSettingsAlertesSubtitle,
-              enabled: viewModel.withAlertesOffres,
-              onChanged: viewModel.onAlertesOffresChanged,
-            ),
-            SizedBox(height: Margins.spacing_base),
-            _NotificationSwitch(
-              title: Strings.notificationsSettingsMonSuiviTitle,
-              description: Strings.notificationsSettingsMonSuiviSubtitle(viewModel.withMiloWording),
-              enabled: viewModel.withCreationAction,
-              onChanged: viewModel.onCreationActionChanged,
-            ),
-            SizedBox(height: Margins.spacing_base),
-            _NotificationSwitch(
-              title: Strings.notificationsSettingsRendezVoussTitle(viewModel.withMiloWording),
-              description: Strings.notificationsSettingsRendezVousSubtitle,
-              enabled: viewModel.withRendezvousSessions,
-              onChanged: viewModel.onRendezvousSessionsChanged,
-            ),
-            SizedBox(height: Margins.spacing_base),
-            _NotificationSwitch(
-              title: Strings.notificationsSettingsRappelsTitle,
-              description: Strings.notificationsSettingsRappelsSubtitle(viewModel.withMiloWording),
-              enabled: viewModel.withRappelActions,
-              onChanged: viewModel.onRappelActionsChanged,
-            ),
-            if (viewModel.withActuMiloPreference) ...[
-              SizedBox(height: Margins.spacing_base),
-              _NotificationSwitch(
-                title: Strings.notificationsSettingsActuMiloTitle,
-                description: Strings.notificationsSettingsActuMiloSubtitle,
-                enabled: viewModel.withActuMilo,
-                onChanged: viewModel.onActuMiloChanged,
-              ),
-            ],
-            SizedBox(height: Margins.spacing_l),
-            Text(Strings.notificationsSettingsTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-            SizedBox(height: Margins.spacing_s),
-            SizedBox(
-              width: double.infinity,
-              child: Semantics(
-                link: true,
-                child: CardContainer(
-                  onTap: viewModel.onOpenAppSettings,
-                  child: Row(
-                    children: [
-                      Icon(AppIcons.open_in_new_rounded, color: context.content),
-                      SizedBox(width: Margins.spacing_base),
-                      Expanded(
-                        child: Text(
-                          Strings.openNotificationsSettings,
-                          style: TextStyles.textSRegular(color: context.content),
-                        ),
-                      ),
-                    ],
-                  ),
+            PageTitle(Strings.notificationsLabel),
+            const SizedBox(height: DsfrSpacings.s2w),
+            DsfrToggleSwitchGroup(
+              label: Strings.notificationsSettingsSubtitle,
+              children: [
+                _notificationSwitch(
+                  title: Strings.notificationsSettingsAlertesTitle,
+                  description: Strings.notificationsSettingsAlertesSubtitle,
+                  value: viewModel.withAlertesOffres,
+                  onChanged: viewModel.onAlertesOffresChanged,
                 ),
+                _notificationSwitch(
+                  title: Strings.notificationsSettingsMonSuiviTitle,
+                  description: Strings.notificationsSettingsMonSuiviSubtitle(viewModel.withMiloWording),
+                  value: viewModel.withCreationAction,
+                  onChanged: viewModel.onCreationActionChanged,
+                ),
+                _notificationSwitch(
+                  title: Strings.notificationsSettingsRendezVoussTitle(viewModel.withMiloWording),
+                  description: Strings.notificationsSettingsRendezVousSubtitle,
+                  value: viewModel.withRendezvousSessions,
+                  onChanged: viewModel.onRendezvousSessionsChanged,
+                ),
+                _notificationSwitch(
+                  title: Strings.notificationsSettingsRappelsTitle,
+                  description: Strings.notificationsSettingsRappelsSubtitle(viewModel.withMiloWording),
+                  value: viewModel.withRappelActions,
+                  onChanged: viewModel.onRappelActionsChanged,
+                ),
+                if (viewModel.withActuMiloPreference)
+                  _notificationSwitch(
+                    title: Strings.notificationsSettingsActuMiloTitle,
+                    description: Strings.notificationsSettingsActuMiloSubtitle,
+                    value: viewModel.withActuMilo,
+                    onChanged: viewModel.onActuMiloChanged,
+                  ),
+              ],
+            ),
+            const SizedBox(height: DsfrSpacings.s2w),
+            Semantics(
+              header: true,
+              child: Text(
+                Strings.settingsLabel,
+                style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
               ),
+            ),
+            const SizedBox(height: DsfrSpacings.s4w),
+            Text(
+              Strings.notificationsSettingsTitle,
+              style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+            ),
+            const SizedBox(height: DsfrSpacings.s1w),
+            DsfrProfilTile(
+              icon: DsfrIcons.systemExternalLinkLine,
+              iconBackgroundColor: DsfrColors.greenEmeraude950,
+              title: Strings.openNotificationsSettings,
+              semanticsLink: true,
+              onTap: viewModel.onOpenAppSettings,
             ),
           ],
         ),
       ),
     );
   }
-}
 
-class _NotificationSwitch extends StatelessWidget {
-  final String title;
-  final String description;
-  final bool enabled;
-  final ValueChanged<bool> onChanged;
-
-  const _NotificationSwitch({
-    required this.title,
-    required this.description,
-    required this.enabled,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Semantics(
-            excludeSemantics: true,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: Margins.spacing_s),
-                Text(
-                  title,
-                  style: TextStyles.textBaseBold.copyWith(color: context.content),
-                ),
-                SizedBox(height: Margins.spacing_s),
-                Text(
-                  description,
-                  style: TextStyles.textSRegular(color: context.content),
-                ),
-              ],
-            ),
-          ),
-        ),
-        SizedBox(width: Margins.spacing_m),
-        Row(
-          children: [
-            Semantics(
-              label: enabled
-                  ? Strings.notificationsA11yDisable + description
-                  : Strings.notificationsA11yEnable + description,
-              child: Switch(
-                value: enabled,
-                onChanged: (value) => onChanged(value),
-              ),
-            ),
-            SizedBox(width: Margins.spacing_xs),
-            Semantics(
-              excludeSemantics: true,
-              // Stack is added with transparent text to force widget to keep the same width.
-              // It avoids "jumping" of text when its value is changed from "Oui" to "Non".
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Text(Strings.no, style: TextStyles.textBaseRegularWithColor(AppColors.transparent)),
-                  Text(
-                    enabled ? Strings.yes : Strings.no,
-                    style: TextStyles.textBaseRegularWithColor(context.content),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ],
+  DsfrToggleSwitch _notificationSwitch({
+    required String title,
+    required String description,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
+    return DsfrToggleSwitch(
+      label: title,
+      description: description,
+      labelLocation: DsfrToggleSwitchLabelLocation.left,
+      value: value,
+      status: value ? Strings.notificationsToggleEnabled : Strings.notificationsToggleDisabled,
+      onChanged: onChanged,
     );
   }
 }

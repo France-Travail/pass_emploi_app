@@ -186,10 +186,6 @@ class TextStyles {
     fontWeight: FontWeight.bold,
   );
 
-  static TextStyle secondaryAppBar(BuildContext context) => TextStyles.textMBoldWithColor(
-    color: context.isDarkTheme ? context.content : AppColors.primary,
-  );
-
   static final accueilSection = TextStyles.textLBold(color: AppColors.primary);
 
   static TextStyle textBaseMediumWithColor(Color color) {

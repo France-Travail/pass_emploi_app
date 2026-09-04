@@ -285,6 +285,48 @@ void main() {
       });
     });
 
+    group('with mode POLE_EMPLOI in ftDemandeurDEmploi accompagnement', () {
+      sut.whenDispatchingAction(() => RequestLoginAction(LoginMode.POLE_EMPLOI));
+
+      test('user is properly logged in with POLE_EMPLOI authentication mode', () async {
+        when(() => authenticator.login(AuthenticationMode.POLE_EMPLOI))
+            .thenAnswer((_) async => SuccessAuthenticatorResponse());
+        when(() => authenticator.idToken()).thenAnswer((_) async => authIdToken('FT_DEMANDEUR_D_EMPLOI'));
+        sut.givenStore = givenState().store((f) {
+          f.authenticator = authenticator;
+          f.matomoTracker = matomoTracker;
+          f.preferredLoginModeRepository = preferredLoginModeRepository;
+        });
+
+        sut.thenExpectChangingStatesThroughOrder([
+          _shouldLoad(),
+          _shouldBeLoggedInWith(mode: LoginMode.POLE_EMPLOI, accompagnement: Accompagnement.ftDemandeurDEmploi),
+        ]);
+        preferredLoginModeRepository.verifySaveCalled();
+      });
+    });
+
+    group('with mode POLE_EMPLOI in ftEspaceCandidat accompagnement', () {
+      sut.whenDispatchingAction(() => RequestLoginAction(LoginMode.POLE_EMPLOI));
+
+      test('user is properly logged in with POLE_EMPLOI authentication mode', () async {
+        when(() => authenticator.login(AuthenticationMode.POLE_EMPLOI))
+            .thenAnswer((_) async => SuccessAuthenticatorResponse());
+        when(() => authenticator.idToken()).thenAnswer((_) async => authIdToken('FT_ESPACE_CANDIDAT'));
+        sut.givenStore = givenState().store((f) {
+          f.authenticator = authenticator;
+          f.matomoTracker = matomoTracker;
+          f.preferredLoginModeRepository = preferredLoginModeRepository;
+        });
+
+        sut.thenExpectChangingStatesThroughOrder([
+          _shouldLoad(),
+          _shouldBeLoggedInWith(mode: LoginMode.POLE_EMPLOI, accompagnement: Accompagnement.ftEspaceCandidat),
+        ]);
+        preferredLoginModeRepository.verifySaveCalled();
+      });
+    });
+
     group('when login fails for a generic reason', () {
       sut.whenDispatchingAction(() => RequestLoginAction(LoginMode.MILO));
 

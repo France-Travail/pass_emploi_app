@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/rendezvous/details/rendezvous_details_actions.dart';
@@ -11,25 +12,14 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_details_view_model.dart';
 import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/utils/platform.dart';
-import 'package:pass_emploi_app/widgets/buttons/lien_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_pillule.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
-import 'package:pass_emploi_app/widgets/default_app_bar.dart';
-import 'package:pass_emploi_app/widgets/info_card.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
-import 'package:pass_emploi_app/widgets/sepline.dart';
 import 'package:pass_emploi_app/widgets/text_with_clickable_links.dart';
 import 'package:redux/redux.dart';
 
@@ -39,18 +29,27 @@ class RendezvousDetailsPage extends StatefulWidget {
   final RendezvousDetailsViewModel Function(Store<AppState>) _converter;
   static final _platform = PlatformUtils.getPlatform;
 
-  RendezvousDetailsPage._(this._rendezvousId, this._source, this._converter) : super();
+  RendezvousDetailsPage._(this._rendezvousId, this._source, this._converter)
+    : super();
 
-  static MaterialPageRoute<void> materialPageRoute(RendezvousStateSource source, String rendezvousId) {
-    return MaterialPageRoute(
-      builder: (context) {
-        return RendezvousDetailsPage._(
-          rendezvousId,
-          source,
-          (store) =>
-              RendezvousDetailsViewModel.create(store: store, source: source, rdvId: rendezvousId, platform: _platform),
-        );
-      },
+  static Future<void> show(
+    BuildContext context,
+    RendezvousStateSource source,
+    String rendezvousId,
+  ) {
+    return showDsfrBottomSheet(
+      context: context,
+      name: AnalyticsScreenNames.rendezvousDetails,
+      builder: (context) => RendezvousDetailsPage._(
+        rendezvousId,
+        source,
+        (store) => RendezvousDetailsViewModel.create(
+          store: store,
+          source: source,
+          rdvId: rendezvousId,
+          platform: _platform,
+        ),
+      ),
     );
   }
 
@@ -66,9 +65,11 @@ class _RendezvousDetailsPageState extends State<RendezvousDetailsPage> {
     return StoreConnector<AppState, RendezvousDetailsViewModel>(
       onInit: _onInit,
       converter: widget._converter,
-      builder: _scaffold,
+      builder: _sheet,
       onDispose: (store) {
-        widget._source == RendezvousStateSource.noSource ? store.dispatch(RendezvousDetailsResetAction()) : {};
+        widget._source == RendezvousStateSource.noSource
+            ? store.dispatch(RendezvousDetailsResetAction())
+            : {};
         widget._source == RendezvousStateSource.sessionMiloDetails
             ? store.dispatch(SessionMiloDetailsResetAction())
             : {};
@@ -79,91 +80,107 @@ class _RendezvousDetailsPageState extends State<RendezvousDetailsPage> {
 
   dynamic _onInit(Store<AppState> store) {
     return switch (widget._source) {
-      RendezvousStateSource.sessionMiloDetails => store.dispatch(SessionMiloDetailsRequestAction(widget._rendezvousId)),
-      RendezvousStateSource.noSource => store.dispatch(RendezvousDetailsRequestAction(widget._rendezvousId)),
+      RendezvousStateSource.sessionMiloDetails => store.dispatch(
+        SessionMiloDetailsRequestAction(widget._rendezvousId),
+      ),
+      RendezvousStateSource.noSource => store.dispatch(
+        RendezvousDetailsRequestAction(widget._rendezvousId),
+      ),
       _ => {},
     };
   }
 
-  Widget _scaffold(BuildContext context, RendezvousDetailsViewModel viewModel) {
+  Widget _sheet(BuildContext context, RendezvousDetailsViewModel viewModel) {
     _trackPageOnRendezvousRetrievalFromState(viewModel);
-    final backgroundColor = context.bg;
-    return Scaffold(
-      floatingActionButton: switch (viewModel.rdvCta) {
-        null => SizedBox.shrink(),
-        final RendezVousAutoInscription rendezvousCta => _AutoInscriptionButton(rendezvousCta),
-        final RendezVousAnnulerInscription rendezvousCta => _AnnulerInscriptionButton(
+    return DsfrBottomSheet(
+      actions: _actions(context, viewModel),
+      child: _body(context, viewModel),
+    );
+  }
+
+  Widget? _actions(BuildContext context, RendezvousDetailsViewModel viewModel) {
+    if (viewModel.displayState != DisplayState.CONTENT) return null;
+    return switch (viewModel.rdvCta) {
+      null => null,
+      final RendezVousAutoInscription rendezvousCta => _AutoInscriptionButton(
+        rendezvousCta,
+      ),
+      final RendezVousAnnulerInscription rendezvousCta =>
+        _AnnulerInscriptionButton(
           rendezvousCta,
           widget._source,
           widget._rendezvousId,
         ),
-        final RendezVousShareToConseillerDemandeInscription rendezvousCta => _DemandeInscriptionButton(rendezvousCta),
-        final RendezVousShareToConseiller rendezvousCta => _ShareButton(rendezvousCta),
-      },
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      backgroundColor: backgroundColor,
-      appBar: SecondaryAppBar(title: viewModel.navbarTitle, backgroundColor: backgroundColor),
-      body: _body(context, viewModel),
-    );
+      final RendezVousShareToConseillerDemandeInscription rendezvousCta =>
+        _DemandeInscriptionButton(rendezvousCta),
+      final RendezVousShareToConseiller rendezvousCta => _ShareButton(
+        rendezvousCta,
+      ),
+    };
   }
 
   Widget _body(BuildContext context, RendezvousDetailsViewModel viewModel) {
     return switch (viewModel.displayState) {
       DisplayState.CONTENT => _content(context, viewModel),
-      DisplayState.LOADING => Center(child: CircularProgressIndicator()),
+      DisplayState.LOADING => const Center(child: CircularProgressIndicator()),
       _ => Retry(Strings.rendezVousDetailsError, () => viewModel.onRetry()),
     };
   }
 
   Widget _content(BuildContext context, RendezvousDetailsViewModel viewModel) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(Margins.spacing_base),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (viewModel.assetImage != null) ...[
-              ExcludeSemantics(child: _CardIllustration(imagePath: viewModel.assetImage)),
-              SizedBox(height: Margins.spacing_base),
-            ],
-            if (viewModel.withDateDerniereMiseAJour != null) ...[
-              InfoCard(message: viewModel.withDateDerniereMiseAJour!),
-              SizedBox(height: Margins.spacing_base),
-            ],
-            Wrap(
-              spacing: Margins.spacing_base,
-              runSpacing: Margins.spacing_base,
-              children: [
-                CardTag.evenement(text: viewModel.tag),
-                if (viewModel.isInscrit) ...[
-                  CardTag.secondary(
-                    text: Strings.eventVousEtesDejaInscrit,
-                    icon: AppIcons.check_circle_outline_rounded,
-                  ),
-                ],
-                if (viewModel.isComplet) ...[CardTag.warning(text: Strings.eventComplet)],
-                if (viewModel.isAnnule) CardPillule.evenementCanceled(),
-              ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (viewModel.assetImage != null) ...[
+          ExcludeSemantics(
+            child: _CardIllustration(imagePath: viewModel.assetImage),
+          ),
+          const SizedBox(height: DsfrSpacings.s2w),
+        ],
+        if (viewModel.withDateDerniereMiseAJour != null) ...[
+          DsfrAlert(
+            type: DsfrAlertType.info,
+            description: DsfrAlertDescriptionText(
+              viewModel.withDateDerniereMiseAJour!,
             ),
-            SizedBox(height: Margins.spacing_base),
-            _Header(viewModel),
-            if (viewModel.withModalityPart) _Modality(viewModel),
-            if (viewModel.withDescriptionPart) _DescriptionPart(viewModel),
-            SepLine(Margins.spacing_m, Margins.spacing_m),
-            if (viewModel.withAnimateur != null) ...[
-              _AnimateurPart(viewModel.withAnimateur!),
-              SepLine(Margins.spacing_m, Margins.spacing_m),
-            ],
-            _ConseillerPart(viewModel),
-            if (viewModel.withIfAbsentPart) _InformIfAbsent(),
-            SizedBox(height: Margins.spacing_huge),
+          ),
+          const SizedBox(height: DsfrSpacings.s2w),
+        ],
+        Wrap(
+          spacing: DsfrSpacings.s1w,
+          runSpacing: DsfrSpacings.s1w,
+          children: [
+            DsfrCategoryTag.evenement(
+              label: viewModel.tag,
+              typeCode: viewModel.typeCode,
+            ),
+            if (viewModel.isInscrit)
+              DsfrCategoryTag.secondary(
+                label: Strings.eventVousEtesDejaInscrit,
+                icon: DsfrIcons.systemCheckboxCircleFill,
+              ),
+            if (viewModel.isComplet) DsfrStatusBadge.complet(),
+            if (viewModel.isAnnule) DsfrStatusBadge.canceled(),
           ],
         ),
-      ),
+        const SizedBox(height: DsfrSpacings.s1w),
+        _Header(viewModel),
+        if (viewModel.withModalityPart) _Modality(viewModel),
+        if (viewModel.withDescriptionPart) _DescriptionPart(viewModel),
+        _Separator(),
+        if (viewModel.withAnimateur != null) ...[
+          _AnimateurPart(viewModel.withAnimateur!),
+          _Separator(),
+        ],
+        _ConseillerPart(viewModel),
+        if (viewModel.withIfAbsentPart) _InformIfAbsent(),
+      ],
     );
   }
 
-  void _trackPageOnRendezvousRetrievalFromState(RendezvousDetailsViewModel viewModel) {
+  void _trackPageOnRendezvousRetrievalFromState(
+    RendezvousDetailsViewModel viewModel,
+  ) {
     if (!_hasBeenTracked && viewModel.trackingPageName != null) {
       PassEmploiMatomoTracker.instance.trackScreen(viewModel.trackingPageName!);
       _hasBeenTracked = true;
@@ -181,18 +198,42 @@ class _Header extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (viewModel.title != null) Text(viewModel.title!, style: TextStyles.textLBold(color: context.content)),
-        SizedBox(height: Margins.spacing_m),
-        Wrap(
-          spacing: Margins.spacing_base,
-          children: [
-            CardComplement.date(text: viewModel.date),
-            CardComplement.hour(text: viewModel.hourAndDuration),
-            if (viewModel.nombreDePlacesRestantes != null)
-              CardComplement.person(text: viewModel.nombreDePlacesRestantes!),
-            if (viewModel.address != null) CardComplement.place(text: viewModel.address!),
-          ],
+        if (viewModel.title != null)
+          Semantics(
+            header: true,
+            child: Text(
+              viewModel.title!,
+              style: DsfrTextStyle.headline5(
+                color: DsfrColorDecisions.textTitleGrey(context),
+              ),
+            ),
+          ),
+        const SizedBox(height: DsfrSpacings.s1w),
+        DsfrDetailIconLine(
+          icon: DsfrIcons.businessCalendarEventLine,
+          text: viewModel.date,
         ),
+        const SizedBox(height: DsfrSpacings.s1w),
+        DsfrDetailIconLine(
+          icon: DsfrIcons.systemTimeLine,
+          text: viewModel.hourAndDuration,
+          semanticsLabel: viewModel.hourAndDuration
+              .toTimeAndDurationForScreenReaders(),
+        ),
+        if (viewModel.nombreDePlacesRestantes != null) ...[
+          const SizedBox(height: DsfrSpacings.s1w),
+          DsfrDetailIconLine(
+            icon: DsfrIcons.userUserLine,
+            text: viewModel.nombreDePlacesRestantes!,
+          ),
+        ],
+        if (viewModel.address != null) ...[
+          const SizedBox(height: DsfrSpacings.s1w),
+          DsfrDetailIconLine(
+            icon: DsfrIcons.mapMapPin2Line,
+            text: viewModel.address!,
+          ),
+        ],
       ],
     );
   }
@@ -213,22 +254,31 @@ class _Modality extends StatelessWidget {
         children: [
           if (viewModel.modality != null)
             Padding(
-              padding: const EdgeInsets.only(bottom: Margins.spacing_xs),
+              padding: const EdgeInsets.only(
+                top: DsfrSpacings.s1w,
+                bottom: DsfrSpacings.s1v,
+              ),
               child: Text.rich(
                 TextSpan(
                   children: [
                     TextSpan(
                       text: viewModel.modality!,
-                      style: TextStyles.textBaseBold.copyWith(color: context.content),
+                      style: DsfrTextStyle.bodyMdBold(
+                        color: DsfrColorDecisions.textTitleGrey(context),
+                      ),
                     ),
                     if (viewModel.conseiller != null) ...[
                       TextSpan(
                         text: Strings.withConseiller,
-                        style: TextStyles.textBaseRegular.copyWith(color: context.content),
+                        style: DsfrTextStyle.bodyMd(
+                          color: DsfrColorDecisions.textTitleGrey(context),
+                        ),
                       ),
                       TextSpan(
                         text: viewModel.conseiller!,
-                        style: TextStyles.textBaseBold.copyWith(color: context.content),
+                        style: DsfrTextStyle.bodyMdBold(
+                          color: DsfrColorDecisions.textTitleGrey(context),
+                        ),
                       ),
                     ],
                   ],
@@ -237,59 +287,71 @@ class _Modality extends StatelessWidget {
             ),
           if (viewModel.createur != null)
             Padding(
-              padding: const EdgeInsets.only(top: Margins.spacing_s),
+              padding: const EdgeInsets.only(top: DsfrSpacings.s1w),
               child: _Createur(viewModel.createur!),
             ),
           if (_withInactiveVisioButton())
             Padding(
-              padding: const EdgeInsets.only(top: Margins.spacing_s),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [PrimaryActionButton(label: Strings.seeVisio)],
+              padding: const EdgeInsets.only(top: DsfrSpacings.s1w),
+              child: DsfrButton(
+                label: Strings.seeVisio,
+                variant: DsfrButtonVariant.primary,
+                size: DsfrComponentSize.md,
               ),
             ),
           if (_withActiveVisioButton())
             Padding(
-              padding: const EdgeInsets.only(top: Margins.spacing_s),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  PrimaryActionButton(
-                    label: Strings.seeVisio,
-                    onPressed: () {
-                      _trackVisioButtonClick();
-                      launchExternalUrl(viewModel.visioRedirectUrl!);
-                    },
-                  ),
-                ],
+              padding: const EdgeInsets.only(top: DsfrSpacings.s1w),
+              child: DsfrButton(
+                label: Strings.seeVisio,
+                variant: DsfrButtonVariant.primary,
+                size: DsfrComponentSize.md,
+                onPressed: () {
+                  _trackVisioButtonClick();
+                  launchExternalUrl(viewModel.visioRedirectUrl!);
+                },
               ),
             ),
           if (viewModel.organism != null)
             Padding(
-              padding: const EdgeInsets.only(top: Margins.spacing_base),
-              child: Text(viewModel.organism!, style: TextStyles.textMBold.copyWith(color: context.content)),
+              padding: const EdgeInsets.only(top: DsfrSpacings.s2w),
+              child: Text(
+                viewModel.organism!,
+                style: DsfrTextStyle.bodyMdBold(
+                  color: DsfrColorDecisions.textTitleGrey(context),
+                ),
+              ),
             ),
           if (viewModel.addressRedirectUri != null)
             Padding(
-              padding: const EdgeInsets.only(top: Margins.spacing_base),
-              child: LienButton(
+              padding: const EdgeInsets.only(top: DsfrSpacings.s2w),
+              child: DsfrLink(
                 label: Strings.seeItinerary,
-                onPressed: () => launchExternalUrl(viewModel.addressRedirectUri!.toString()),
+                icon: DsfrIcons.systemExternalLinkLine,
+                onTap: () =>
+                    launchExternalUrl(viewModel.addressRedirectUri!.toString()),
               ),
             ),
           if (viewModel.phone != null)
             Padding(
-              padding: const EdgeInsets.only(top: Margins.spacing_m),
-              child: Text(viewModel.phone!, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
+              padding: const EdgeInsets.only(top: DsfrSpacings.s2w),
+              child: Text(
+                viewModel.phone!,
+                style: DsfrTextStyle.bodyMd(
+                  color: DsfrColorDecisions.textDefaultGrey(context),
+                ),
+              ),
             ),
         ],
       ),
     );
   }
 
-  bool _withActiveVisioButton() => viewModel.visioButtonState == VisioButtonState.ACTIVE;
+  bool _withActiveVisioButton() =>
+      viewModel.visioButtonState == VisioButtonState.ACTIVE;
 
-  bool _withInactiveVisioButton() => viewModel.visioButtonState == VisioButtonState.INACTIVE;
+  bool _withInactiveVisioButton() =>
+      viewModel.visioButtonState == VisioButtonState.INACTIVE;
 
   void _trackVisioButtonDisplay() {
     if (_withActiveVisioButton()) {
@@ -318,13 +380,23 @@ class _DescriptionPart extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SepLine(Margins.spacing_m, Margins.spacing_m),
+        _Separator(),
         if (viewModel.theme != null)
-          Text(viewModel.theme!, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+          Text(
+            viewModel.theme!,
+            style: DsfrTextStyle.bodyMdBold(
+              color: DsfrColorDecisions.textTitleGrey(context),
+            ),
+          ),
         if (viewModel.description != null)
           Padding(
-            padding: const EdgeInsets.only(top: Margins.spacing_s),
-            child: TextWithClickableLinks(viewModel.description!, style: TextStyles.textBaseRegular),
+            padding: const EdgeInsets.only(top: DsfrSpacings.s1w),
+            child: TextWithClickableLinks(
+              viewModel.description!,
+              style: DsfrTextStyle.bodyMd(
+                color: DsfrColorDecisions.textDefaultGrey(context),
+              ),
+            ),
           ),
       ],
     );
@@ -343,30 +415,23 @@ class _AnimateurPart extends StatelessWidget {
       children: [
         Semantics(
           header: true,
-          child: Text(Strings.withAnimateurTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+          child: Text(
+            Strings.withAnimateurTitle,
+            style: DsfrTextStyle.bodyMdBold(
+              color: DsfrColorDecisions.textTitleGrey(context),
+            ),
+          ),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: Margins.spacing_s),
+          padding: const EdgeInsets.only(top: DsfrSpacings.s1w),
           child: TextWithClickableLinks(
             withAnimateur,
-            style: TextStyles.textBaseRegular,
+            style: DsfrTextStyle.bodyMd(
+              color: DsfrColorDecisions.textDefaultGrey(context),
+            ),
           ),
         ),
       ],
-    );
-  }
-}
-
-class _DateLimiteAnnulationPart extends StatelessWidget {
-  final String dateLimiteAnnulation;
-
-  const _DateLimiteAnnulationPart(this.dateLimiteAnnulation);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      dateLimiteAnnulation,
-      style: TextStyles.textBaseMedium.copyWith(color: context.grey700),
     );
   }
 }
@@ -384,30 +449,50 @@ class _ConseillerPart extends StatelessWidget {
         if (viewModel.withConseillerPresencePart)
           Text(
             viewModel.conseillerPresenceLabel,
-            style: TextStyles.textBaseBoldWithColor(viewModel.conseillerPresenceColor),
+            style: DsfrTextStyle.bodyMdBold(
+              color: viewModel.conseillerPresenceColor,
+            ),
           ),
         if (viewModel.dateLimiteAnnulation != null) ...[
-          if (viewModel.withConseillerPresencePart) SizedBox(height: Margins.spacing_base),
-          _DateLimiteAnnulationPart(viewModel.dateLimiteAnnulation!),
+          if (viewModel.withConseillerPresencePart)
+            const SizedBox(height: DsfrSpacings.s2w),
+          Text(
+            viewModel.dateLimiteAnnulation!,
+            style: DsfrTextStyle.bodyMd(
+              color: DsfrColorDecisions.textMentionGrey(context),
+            ),
+          ),
         ],
-        if (_withSepLine()) SepLine(Margins.spacing_m, Margins.spacing_m),
+        if (_withSepLine()) _Separator(),
         if (viewModel.commentTitle != null)
           Semantics(
             header: true,
-            child: Text(viewModel.commentTitle!, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+            child: Text(
+              viewModel.commentTitle!,
+              style: DsfrTextStyle.bodyMdBold(
+                color: DsfrColorDecisions.textTitleGrey(context),
+              ),
+            ),
           ),
         if (viewModel.comment != null)
           Padding(
-            padding: const EdgeInsets.only(top: Margins.spacing_s),
-            child: TextWithClickableLinks(viewModel.comment!, style: TextStyles.textBaseRegular),
+            padding: const EdgeInsets.only(top: DsfrSpacings.s1w),
+            child: TextWithClickableLinks(
+              viewModel.comment!,
+              style: DsfrTextStyle.bodyMd(
+                color: DsfrColorDecisions.textDefaultGrey(context),
+              ),
+            ),
           ),
-        if (_withEndSepLine()) SepLine(Margins.spacing_m, Margins.spacing_m),
+        if (_withEndSepLine()) _Separator(),
       ],
     );
   }
 
   bool _withSepLine() =>
-      (viewModel.withConseillerPresencePart || viewModel.dateLimiteAnnulation != null) && viewModel.comment != null;
+      (viewModel.withConseillerPresencePart ||
+          viewModel.dateLimiteAnnulation != null) &&
+      viewModel.comment != null;
 
   bool _withEndSepLine() =>
       viewModel.withConseillerPresencePart ||
@@ -424,10 +509,20 @@ class _InformIfAbsent extends StatelessWidget {
       children: [
         Semantics(
           header: true,
-          child: Text(Strings.cannotGoToRendezvous, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+          child: Text(
+            Strings.cannotGoToRendezvous,
+            style: DsfrTextStyle.headline6(
+              color: DsfrColorDecisions.textTitleGrey(context),
+            ),
+          ),
         ),
-        SizedBox(height: Margins.spacing_s),
-        Text(Strings.shouldInformConseiller, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
+        const SizedBox(height: DsfrSpacings.s1w),
+        Text(
+          Strings.shouldInformConseiller,
+          style: DsfrTextStyle.bodyMd(
+            color: DsfrColorDecisions.textDefaultGrey(context),
+          ),
+        ),
       ],
     );
   }
@@ -440,26 +535,9 @@ class _Createur extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: Margins.spacing_s),
-      decoration: BoxDecoration(
-        color: AppColors.primaryLighten,
-        borderRadius: BorderRadius.circular(Dimens.radius_base),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(Margins.spacing_m),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(Margins.spacing_xs),
-              child: Icon(AppIcons.info_rounded, color: AppColors.primary),
-            ),
-            SizedBox(width: Margins.spacing_s),
-            Flexible(child: Text(label, style: TextStyles.textBaseRegularWithColor(AppColors.primary))),
-          ],
-        ),
-      ),
+    return DsfrAlert(
+      type: DsfrAlertType.info,
+      description: DsfrAlertDescriptionText(label),
     );
   }
 }
@@ -467,19 +545,16 @@ class _Createur extends StatelessWidget {
 class _ShareButton extends StatelessWidget {
   final RendezVousShareToConseiller share;
 
-  _ShareButton(this.share);
+  const _ShareButton(this.share);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-      child: SizedBox(
-        width: double.infinity,
-        child: PrimaryActionButton(
-          label: share.label,
-          onPressed: () => ChatPartageBottomSheet.show(context, share.chatPartageSource),
-        ),
-      ),
+    return DsfrButton(
+      label: share.label,
+      variant: DsfrButtonVariant.primary,
+      size: DsfrComponentSize.md,
+      onPressed: () =>
+          ChatPartageBottomSheet.show(context, share.chatPartageSource),
     );
   }
 }
@@ -487,26 +562,22 @@ class _ShareButton extends StatelessWidget {
 class _DemandeInscriptionButton extends StatelessWidget {
   final RendezVousShareToConseillerDemandeInscription share;
 
-  _DemandeInscriptionButton(this.share);
+  const _DemandeInscriptionButton(this.share);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-      child: SizedBox(
-        width: double.infinity,
-        child: PrimaryActionButton(
-          label: share.label,
-          onPressed: () {
-            share.onPressed?.call();
-            Navigator.of(context).push(ChatPartageEventPage.route()).then((value) {
-              if (value == true && context.mounted) {
-                Navigator.of(context).pop();
-              }
-            });
-          },
-        ),
-      ),
+    return DsfrButton(
+      label: share.label,
+      variant: DsfrButtonVariant.primary,
+      size: DsfrComponentSize.md,
+      onPressed: () {
+        share.onPressed?.call();
+        Navigator.of(context).push(ChatPartageEventPage.route()).then((value) {
+          if (value == true && context.mounted) {
+            Navigator.of(context).pop();
+          }
+        });
+      },
     );
   }
 }
@@ -514,26 +585,22 @@ class _DemandeInscriptionButton extends StatelessWidget {
 class _AutoInscriptionButton extends StatelessWidget {
   final RendezVousAutoInscription share;
 
-  _AutoInscriptionButton(this.share);
+  const _AutoInscriptionButton(this.share);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-      child: SizedBox(
-        width: double.infinity,
-        child: PrimaryActionButton(
-          label: share.label,
-          onPressed: () {
-            share.onPressed?.call();
-            Navigator.of(context).push(AutoInscriptionPage.route()).then((value) {
-              if (value == true && context.mounted) {
-                Navigator.of(context).pop();
-              }
-            });
-          },
-        ),
-      ),
+    return DsfrButton(
+      label: share.label,
+      variant: DsfrButtonVariant.primary,
+      size: DsfrComponentSize.md,
+      onPressed: () {
+        share.onPressed?.call();
+        Navigator.of(context).push(AutoInscriptionPage.route()).then((value) {
+          if (value == true && context.mounted) {
+            Navigator.of(context).pop();
+          }
+        });
+      },
     );
   }
 }
@@ -543,33 +610,29 @@ class _AnnulerInscriptionButton extends StatelessWidget {
   final RendezvousStateSource source;
   final String rdvId;
 
-  _AnnulerInscriptionButton(this.rendezvousCta, this.source, this.rdvId);
+  const _AnnulerInscriptionButton(this.rendezvousCta, this.source, this.rdvId);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-      child: SizedBox(
-        width: double.infinity,
-        child: SecondaryButton(
-          label: rendezvousCta.label,
-          onPressed: () {
-            rendezvousCta.onPressed?.call();
-            Navigator.of(context)
-                .push(
-                  DesinscriptionPage.route(
-                    source: source,
-                    rdvId: rdvId,
-                  ),
-                )
-                .then((value) {
-                  if (value == true && context.mounted) {
-                    Navigator.of(context).pop();
-                  }
-                });
-          },
-        ),
-      ),
+    return DsfrButton(
+      label: rendezvousCta.label,
+      variant: DsfrButtonVariant.secondary,
+      size: DsfrComponentSize.md,
+      onPressed: () {
+        rendezvousCta.onPressed?.call();
+        Navigator.of(context)
+            .push(
+              DesinscriptionPage.route(
+                source: source,
+                rdvId: rdvId,
+              ),
+            )
+            .then((value) {
+              if (value == true && context.mounted) {
+                Navigator.of(context).pop();
+              }
+            });
+      },
     );
   }
 }
@@ -584,8 +647,21 @@ class _CardIllustration extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(Dimens.radius_base),
+        borderRadius: const BorderRadius.all(Radius.circular(DsfrSpacings.s1v)),
         child: Image.asset("assets/${imagePath!}", fit: BoxFit.fitWidth),
+      ),
+    );
+  }
+}
+
+class _Separator extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s2w),
+      child: Divider(
+        height: 1,
+        color: DsfrColorDecisions.borderDefaultGrey(context),
       ),
     );
   }
