@@ -234,6 +234,22 @@ class DsfrCategoryTag extends StatelessWidget {
     );
   }
 
+  factory DsfrCategoryTag.demarcheDone({String? semanticsLabel}) {
+    return DsfrCategoryTag(
+      label: Strings.demarcheConfirmationDoneTag,
+      style: DsfrCategoryStyle.success(),
+      semanticsLabel: semanticsLabel,
+    );
+  }
+
+  factory DsfrCategoryTag.demarchesDone({String? semanticsLabel}) {
+    return DsfrCategoryTag(
+      label: Strings.demarcheConfirmationDoneTagPlural,
+      style: DsfrCategoryStyle.success(),
+      semanticsLabel: semanticsLabel,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final displayLabel = uppercase ? label.toUpperCase() : label;

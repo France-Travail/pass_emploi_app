@@ -7,26 +7,29 @@ import 'package:redux/redux.dart';
 class CreateActionSuccessViewModel extends Equatable {
   final String actionId;
   final DisplayState displayState;
+  final String firstName;
+  final String actionContent;
 
   CreateActionSuccessViewModel({
     required this.actionId,
     required this.displayState,
+    required this.firstName,
+    required this.actionContent,
   });
 
   factory CreateActionSuccessViewModel.create(Store<AppState> store) {
+    final createState = store.state.userActionCreateState;
+    final successState = createState is UserActionCreateSuccessState ? createState : null;
     return CreateActionSuccessViewModel(
-      actionId: _actionId(store),
+      actionId: successState?.userActionCreatedId ?? "",
       displayState: _displayState(store),
+      firstName: store.state.user()?.firstName ?? "",
+      actionContent: successState?.actionContent ?? "",
     );
   }
 
   @override
-  List<Object?> get props => [actionId, displayState];
-}
-
-String _actionId(Store<AppState> store) {
-  final createState = store.state.userActionCreateState;
-  return createState is UserActionCreateSuccessState ? createState.userActionCreatedId : "";
+  List<Object?> get props => [actionId, displayState, firstName, actionContent];
 }
 
 DisplayState _displayState(Store<AppState> store) {

@@ -335,7 +335,7 @@ Widget _suggestionsSection(BuildContext context, SuggestionsRechercheListViewMod
         color: DsfrColorDecisions.backgroundActionHighBlueFrance(context),
       ),
     ),
-    DisplayState.FAILURE => Retry(Strings.vosSuggestionsAlertesError, () => viewModel.retryFetchSuggestions()),
+    DisplayState.FAILURE => Retry(Strings.tesSuggestionsAlertesError, () => viewModel.retryFetchSuggestions()),
   };
   return Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
