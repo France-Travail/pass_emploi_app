@@ -6,9 +6,11 @@ import 'package:pass_emploi_app/auth/auth_token_request.dart';
 import 'package:pass_emploi_app/auth/auth_token_response.dart';
 import 'package:pass_emploi_app/auth/auth_wrapper.dart';
 import 'package:pass_emploi_app/auth/authenticator.dart';
+import 'package:pass_emploi_app/crashlytics/crashlytics.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/repositories/auth/logout_repository.dart';
+import 'package:pass_emploi_app/repositories/installation_id_repository.dart';
 
 import '../doubles/dummies.dart';
 import '../doubles/fixtures.dart';
@@ -140,6 +142,159 @@ void main() {
 
       // Then
       expect(await authenticator.isLoggedIn(), false);
+    });
+  });
+
+  group('App auth flow interruption', () {
+    late MockCrashlytics crashlytics;
+
+    setUpAll(() {
+      registerFallbackValue(StackTrace.empty);
+    });
+
+    setUp(() {
+      crashlytics = MockCrashlytics();
+      authenticator = Authenticator(wrapper, logoutRepository, configuration(), secureStorage, crashlytics);
+    });
+
+    test('app auth flow marker is present while AppAuth flow is running', () async {
+      // Given
+      String? markerDuringFlow;
+      when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async {
+        markerDuringFlow = await secureStorage.read(key: 'loginInProgress');
+        return authTokenResponse();
+      });
+
+      // When
+      await authenticator.login(AuthenticationMode.GENERIC);
+
+      // Then
+      expect(markerDuringFlow, startsWith('GENERIC|'));
+    });
+
+    test('app auth flow marker is cleared when login completes successfully', () async {
+      // Given
+      when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async => authTokenResponse());
+
+      // When
+      await authenticator.login(AuthenticationMode.GENERIC);
+
+      // Then
+      expect(await secureStorage.read(key: 'loginInProgress'), isNull);
+    });
+
+    test('app auth flow marker is cleared when login fails', () async {
+      // Given
+      when(() => wrapper.login(_tokenRequest())).thenThrow(Exception());
+
+      // When
+      await authenticator.login(AuthenticationMode.GENERIC);
+
+      // Then
+      expect(await secureStorage.read(key: 'loginInProgress'), isNull);
+    });
+
+    test('persisted app auth flow marker is reported to crashlytics and cleared', () async {
+      // Given
+      final startedAt = DateTime.now().millisecondsSinceEpoch - 90000;
+      await secureStorage.write(key: 'loginInProgress', value: 'SIMILO|$startedAt');
+
+      // When
+      await authenticator.reportInterruptedAppAuthFlowIfPresent();
+
+      // Then
+      verify(() => crashlytics.setCustomKey('interrupted_login_mode', 'SIMILO')).called(1);
+      final elapsed = verify(() => crashlytics.setCustomKey('interrupted_login_elapsed_seconds', captureAny()))
+          .captured
+          .single as String;
+      expect(int.parse(elapsed), inInclusiveRange(90, 92));
+      verify(() => crashlytics.recordNonNetworkException(any(), any())).called(1);
+      expect(await secureStorage.read(key: 'loginInProgress'), isNull);
+    });
+
+    test('malformed app auth flow marker is reported with unknown elapsed time', () async {
+      // Given
+      await secureStorage.write(key: 'loginInProgress', value: 'SIMILO');
+
+      // When
+      await authenticator.reportInterruptedAppAuthFlowIfPresent();
+
+      // Then
+      verify(() => crashlytics.setCustomKey('interrupted_login_mode', 'SIMILO')).called(1);
+      verify(() => crashlytics.setCustomKey('interrupted_login_elapsed_seconds', 'unknown')).called(1);
+      verify(() => crashlytics.recordNonNetworkException(any(), any())).called(1);
+    });
+
+    test('nothing is reported when no app auth flow marker is persisted', () async {
+      // When
+      await authenticator.reportInterruptedAppAuthFlowIfPresent();
+
+      // Then
+      verifyZeroInteractions(crashlytics);
+    });
+  });
+
+  group('Installation id forwarding', () {
+    setUp(() {
+      authenticator = Authenticator(
+        wrapper,
+        logoutRepository,
+        configuration(),
+        secureStorage,
+        null,
+        InstallationIdRepository(secureStorage),
+      );
+    });
+
+    test('login forwards installation id to Connect alongside idp hint', () async {
+      // Given
+      await secureStorage.write(key: '_installationId', value: 'installation-uuid');
+      when(
+        () => wrapper.login(
+          _tokenRequest(additionalParameters: {'kc_idp_hint': 'similo-jeune', 'installation_id': 'installation-uuid'}),
+        ),
+      ).thenAnswer((_) async => authTokenResponse());
+
+      // When
+      final result = await authenticator.login(AuthenticationMode.SIMILO);
+
+      // Then
+      expect(result, isA<SuccessAuthenticatorResponse>());
+    });
+
+    test('login forwards installation id to Connect without idp hint in GENERIC mode', () async {
+      // Given
+      await secureStorage.write(key: '_installationId', value: 'installation-uuid');
+      when(
+        () => wrapper.login(_tokenRequest(additionalParameters: {'installation_id': 'installation-uuid'})),
+      ).thenAnswer((_) async => authTokenResponse());
+
+      // When
+      final result = await authenticator.login(AuthenticationMode.GENERIC);
+
+      // Then
+      expect(result, isA<SuccessAuthenticatorResponse>());
+    });
+
+    test('login proceeds without installation id when secure storage read fails', () async {
+      // Given
+      final throwingStorage = MockFlutterSecureStorage();
+      when(() => throwingStorage.read(key: any(named: 'key'))).thenThrow(Exception('KeyStore error'));
+      final authenticator = Authenticator(
+        wrapper,
+        logoutRepository,
+        configuration(),
+        secureStorage,
+        null,
+        InstallationIdRepository(throwingStorage),
+      );
+      when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async => authTokenResponse());
+
+      // When
+      final result = await authenticator.login(AuthenticationMode.GENERIC);
+
+      // Then
+      expect(result, isA<SuccessAuthenticatorResponse>());
     });
   });
 
@@ -374,6 +529,8 @@ void main() {
     expect(token, isNull);
   });
 }
+
+class MockCrashlytics extends Mock implements Crashlytics {}
 
 AuthTokenRequest _tokenRequest({Map<String, String>? additionalParameters}) {
   return AuthTokenRequest(

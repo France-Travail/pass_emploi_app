@@ -8,10 +8,12 @@ import 'package:pass_emploi_app/configuration/configuration.dart';
 import 'package:pass_emploi_app/crashlytics/crashlytics.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/repositories/auth/logout_repository.dart';
+import 'package:pass_emploi_app/repositories/installation_id_repository.dart';
 
 const String _idTokenKey = "idToken";
 const String _accessTokenKey = "accessToken";
 const String _refreshTokenKey = "refreshToken";
+const String _appAuthFlowMarkerStorageKey = "loginInProgress";
 
 enum RefreshTokenStatus { SUCCESSFUL, GENERIC_ERROR, USER_NOT_LOGGED_IN, NETWORK_UNREACHABLE, EXPIRED_REFRESH_TOKEN }
 
@@ -40,10 +42,19 @@ class Authenticator {
   final Configuration _configuration;
   final FlutterSecureStorage _preferences;
   final Crashlytics? _crashlytics;
+  final InstallationIdRepository? _installationIdRepository;
 
-  Authenticator(this._authWrapper, this._logoutRepository, this._configuration, this._preferences, [this._crashlytics]);
+  Authenticator(
+    this._authWrapper,
+    this._logoutRepository,
+    this._configuration,
+    this._preferences, [
+    this._crashlytics,
+    this._installationIdRepository,
+  ]);
 
   Future<AuthenticatorResponse> login(AuthenticationMode mode) async {
+    await _persistAppAuthFlowMarker(mode);
     try {
       final response = await _authWrapper.login(
         AuthTokenRequest(
@@ -52,7 +63,7 @@ class Authenticator {
           _configuration.authIssuer,
           _configuration.authScopes,
           _configuration.authClientSecret,
-          _additionalParams(mode),
+          await _buildLoginAdditionalParameters(mode),
         ),
       );
       await _saveToken(response);
@@ -61,7 +72,38 @@ class Authenticator {
       if (e is UserCanceledLoginException) return CancelledAuthenticatorResponse();
       if (e is AuthWrapperWrongDeviceClockException) return WrongDeviceClockAuthenticatorResponse();
       return FailureAuthenticatorResponse(e.toString());
+    } finally {
+      await _deleteAppAuthFlowMarker();
     }
+  }
+
+  Future<void> reportInterruptedAppAuthFlowIfPresent() async {
+    final String? persistedMarker = await _preferences.read(key: _appAuthFlowMarkerStorageKey);
+    if (persistedMarker == null) return;
+    await _deleteAppAuthFlowMarker();
+    final markerParts = persistedMarker.split('|');
+    final authenticationMode = markerParts.first;
+    final flowStartedAtMillis = markerParts.length > 1 ? int.tryParse(markerParts[1]) : null;
+    final elapsedSecondsSinceFlowStart = _elapsedSecondsSince(flowStartedAtMillis);
+    _crashlytics?.setCustomKey('interrupted_login_mode', authenticationMode);
+    _crashlytics?.setCustomKey('interrupted_login_elapsed_seconds', elapsedSecondsSinceFlowStart);
+    _crashlytics?.recordNonNetworkException(
+      'AppAuth flow marker persisted across app restart',
+      StackTrace.current,
+    );
+  }
+
+  Future<void> _persistAppAuthFlowMarker(AuthenticationMode mode) async {
+    await _runIgnoringSecureStorageFailure(
+      () => _preferences.write(
+        key: _appAuthFlowMarkerStorageKey,
+        value: _appAuthFlowMarkerValue(mode),
+      ),
+    );
+  }
+
+  Future<void> _deleteAppAuthFlowMarker() async {
+    await _runIgnoringSecureStorageFailure(() => _preferences.delete(key: _appAuthFlowMarkerStorageKey));
   }
 
   Future<bool> isLoggedIn() async => await idToken() != null;
@@ -133,9 +175,36 @@ class Authenticator {
     await _preferences.delete(key: _refreshTokenKey);
   }
 
-  Map<String, String>? _additionalParams(AuthenticationMode mode) {
-    if (mode == AuthenticationMode.SIMILO) return similoParams;
-    if (mode == AuthenticationMode.POLE_EMPLOI) return poleEmploiParams;
-    return null;
+  Future<Map<String, String>?> _buildLoginAdditionalParameters(AuthenticationMode mode) async {
+    Map<String, String>? idpHintParameters;
+    if (mode == AuthenticationMode.SIMILO) idpHintParameters = similoParams;
+    if (mode == AuthenticationMode.POLE_EMPLOI) idpHintParameters = poleEmploiParams;
+
+    final installationId = await _readInstallationIdForLogin();
+    if (installationId == null) return idpHintParameters;
+    return {...?idpHintParameters, 'installation_id': installationId};
+  }
+
+  Future<String?> _readInstallationIdForLogin() async {
+    try {
+      return await _installationIdRepository?.getInstallationId();
+    } on Object {
+      return null;
+    }
+  }
+
+  String _appAuthFlowMarkerValue(AuthenticationMode mode) {
+    return '${mode.name}|${DateTime.now().millisecondsSinceEpoch}';
+  }
+
+  String _elapsedSecondsSince(int? startedAtMillis) {
+    if (startedAtMillis == null) return 'unknown';
+    return ((DateTime.now().millisecondsSinceEpoch - startedAtMillis) ~/ 1000).toString();
+  }
+
+  Future<void> _runIgnoringSecureStorageFailure(Future<void> Function() action) async {
+    try {
+      await action();
+    } on Object {}
   }
 }

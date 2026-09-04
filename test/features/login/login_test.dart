@@ -49,6 +49,18 @@ void main() {
       sut.thenExpectChangingStatesThroughOrder([_shouldNotBeLoggedIn()]);
     });
 
+    test('previous app auth flow interruption is reported to crashlytics on bootstrap', () async {
+      // Given
+      final authenticator = MockAuthenticator();
+      when(() => authenticator.isLoggedIn()).thenAnswer((_) async => false);
+      sut.givenStore = givenState().store((f) => f.authenticator = authenticator);
+
+      // Then
+      sut.thenExpectChangingStatesThroughOrder([_shouldNotBeLoggedIn()]);
+      await untilCalled(() => authenticator.reportInterruptedAppAuthFlowIfPresent());
+      verify(() => authenticator.reportInterruptedAppAuthFlowIfPresent()).called(1);
+    });
+
     test('user is not logged in if she was previously logged in with a corrupted ID token & token should be deleted',
         () async {
       // Given
