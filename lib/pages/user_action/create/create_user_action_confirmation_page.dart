@@ -142,9 +142,7 @@ class _Body extends StatelessWidget {
                     const SizedBox(height: DsfrSpacings.s3v),
                   ],
                   Text(
-                    multipleActions
-                        ? Strings.userActionConfirmationTitlePlural
-                        : Strings.userActionConfirmationTitleSingular,
+                    Strings.userActionConfirmationTitle(viewModel.firstName),
                     textAlign: TextAlign.center,
                     style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context)),
                   ),
@@ -152,7 +150,7 @@ class _Body extends StatelessWidget {
                   Text(
                     multipleActions
                         ? Strings.userActionConfirmationSubtitlePlural
-                        : Strings.userActionConfirmationSubtitle,
+                        : Strings.userActionConfirmationSubtitle(viewModel.actionContent),
                     textAlign: TextAlign.center,
                     style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
                   ),

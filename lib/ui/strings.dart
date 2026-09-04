@@ -654,8 +654,16 @@ class Strings {
 
   static const String userActionConfirmationTitleSingular = "Action créée";
   static const String userActionConfirmationTitlePlural = "Action(s) créée(s)";
+  static String userActionConfirmationTitle(String firstName) {
+    final name = firstName.trim();
+    if (name.isEmpty) return "Bravo ! 🎉";
+    return "Bravo, $name ! 🎉";
+  }
+
   static const String userActionConfirmationDoneTag = "Action terminée";
-  static const String userActionConfirmationSubtitle =
+  static String userActionConfirmationSubtitle(String actionContent) =>
+      "L’action « $actionContent », est enregistrée.\n\nTon conseiller en est informé. Vous pourrez en discuter ensemble lors de votre prochain rendez-vous\u{00A0}!";
+  static const String userActionConfirmationSubtitleLegacy =
       "L’action est en route vers ton conseiller. Tu pourras en discuter ensemble lors de ton prochain rendez-vous\u{00A0}!";
   static const String userActionConfirmationSubtitlePlural =
       "La ou les actions sont en route vers ton conseiller. Tu pourras en discuter ensemble lors de ton prochain rendez-vous\u{00A0}!";
@@ -939,9 +947,10 @@ class Strings {
   static const String comment = "Comment";
   static const String selectComment = "Sélectionner un des moyens";
   static const String selectQuand = "Sélectionner une date d’échéance";
-  static String demarcheSuccessTitlePlural = 'Démarches enregistrées ! Retrouve-les dans "Mon suivi"';
+  static const String demarcheConfirmationDoneTag = "Démarche terminée";
+  static const String demarcheConfirmationDoneTagPlural = "Démarches terminées";
   static String demarcheSuccessSubtitlePlural =
-      "Tes démarches sont en route vers ton conseiller. Tu pourras en discuter ensemble lors de ton prochain rendez-vous ! ";
+      "Les démarches sont enregistrées. Retrouve-les dans mon agenda.\n\nTon conseiller en est informé. Vous pourrez en discuter ensemble lors de votre prochain rendez-vous\u{00A0}!";
 
   static String demarcheActiveLabel = "À réaliser pour le ";
 
@@ -967,9 +976,8 @@ class Strings {
 
   static String demarcheBottomSheetTitle = "Éditer la démarche";
 
-  static String demarcheSuccessTitle = "Démarche enregistrée";
   static String demarcheSuccessSubtitle =
-      "La démarche est en route vers ton conseiller. Tu pourras en discuter ensemble lors de ton prochain rendez-vous ! ";
+      "La démarche est enregistrée. Retrouve-la dans mon agenda.\n\nTon conseiller en est informé. Vous pourrez en discuter ensemble lors de votre prochain rendez-vous\u{00A0}!";
   static String demarcheSuccessConsulter = "Consulter ma démarche";
   static String demarcheSuccessCreerUneAutre = "Créer une autre démarche";
   static String createDemarcheErreur = "Erreur lors de la création de la démarche. Réessaie plus tard";

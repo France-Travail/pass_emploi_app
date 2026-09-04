@@ -17,7 +17,7 @@ class UserActionCreateMiddleware extends MiddlewareClass<AppState> {
       store.dispatch(UserActionCreateLoadingAction());
       final userActionCreatedId = await _repository.createUserAction(loginState.user.id, action.request);
       store.dispatch(userActionCreatedId != null
-          ? UserActionCreateSuccessAction(userActionCreatedId)
+          ? UserActionCreateSuccessAction(userActionCreatedId, actionContent: action.request.content)
           : UserActionCreateFailureAction(action.request));
     }
   }
