@@ -203,7 +203,7 @@ Widget _buildServiceCiviqueCard(ServiceCiviqueAlerte alerte, AlerteCardViewModel
   );
 }
 
-String _buildAlerteTitle(String tagLabel) => "Alerte $tagLabel";
+String _buildAlerteTitle(String tagLabel) => tagLabel;
 
 String _buildAlerteSubtitle(String title) {
   return title;
