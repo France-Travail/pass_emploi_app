@@ -102,7 +102,7 @@ class _Body extends StatelessWidget {
             ),
             SizedBox(height: Margins.spacing_s),
             Text(
-              Strings.userActionConfirmationSubtitle,
+              Strings.userActionConfirmationSubtitleLegacy,
               style: TextStyles.textSRegular(color: context.content),
             ),
             SizedBox(height: Margins.spacing_xx_huge),

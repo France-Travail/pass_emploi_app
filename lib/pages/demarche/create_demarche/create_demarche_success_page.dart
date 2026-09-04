@@ -17,6 +17,7 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/confetti_wrapper.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/errors/error_text.dart';
 import 'package:pass_emploi_app/widgets/in_app_feedback.dart';
 
@@ -94,71 +95,69 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = switch (source) {
-      CreateDemarcheSource.iaFt => Strings.demarcheSuccessTitlePlural,
-      _ => Strings.demarcheSuccessTitle,
-    };
-    final content = switch (source) {
-      CreateDemarcheSource.iaFt => Strings.demarcheSuccessSubtitlePlural,
-      _ => Strings.demarcheSuccessSubtitle,
-    };
     final feedbackFeature = _feedbackFeatureForSource(source);
 
     return _Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
-          child: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (feedbackFeature != null) ...[
-                    InAppFeedback(
-                      feature: feedbackFeature,
-                      label: Strings.feedbackCreateDemarche,
-                    ),
-                    const SizedBox(height: DsfrSpacings.s3w),
-                  ],
-                  Center(
-                    child: SvgPicture.asset(
-                      Drawables.illustrationSuccess,
-                      width: 160,
-                      height: 160,
-                      excludeFromSemantics: true,
-                    ),
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      if (feedbackFeature != null) ...[
+                        const SizedBox(height: DsfrSpacings.s3w),
+                        InAppFeedback(
+                          feature: feedbackFeature,
+                          label: Strings.feedbackCreateDemarche,
+                        ),
+                        const SizedBox(height: DsfrSpacings.s3w),
+                      ],
+                      const SizedBox(height: DsfrSpacings.s3w),
+                      Center(
+                        child: SvgPicture.asset(
+                          Drawables.illustrationSuccess,
+                          width: 56,
+                          height: 56,
+                          excludeFromSemantics: true,
+                        ),
+                      ),
+                      const SizedBox(height: DsfrSpacings.s3v),
+                      viewModel.isPlural ? DsfrCategoryTag.demarchesDone() : DsfrCategoryTag.demarcheDone(),
+                      const SizedBox(height: DsfrSpacings.s3v),
+                      Text(
+                        Strings.userActionConfirmationTitle(viewModel.firstName),
+                        textAlign: TextAlign.center,
+                        style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context)),
+                      ),
+                      const SizedBox(height: DsfrSpacings.s1w),
+                      Text(
+                        viewModel.isPlural
+                            ? Strings.demarcheSuccessSubtitlePlural
+                            : Strings.demarcheSuccessSubtitle,
+                        textAlign: TextAlign.center,
+                        style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: DsfrSpacings.s3w),
-                  Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
-                  ),
-                  const SizedBox(height: DsfrSpacings.s1w),
-                  Text(
-                    content,
-                    textAlign: TextAlign.center,
-                    style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
-                  ),
-                  const SizedBox(height: DsfrSpacings.s3w),
-                  _Buttons(
-                    onGoActionDetail: viewModel.demarcheId != null
-                        ? () {
-                            Navigator.pop(context);
-                            DemarcheDetailPage.show(context, viewModel.demarcheId!);
-                          }
-                        : null,
-                    onCreateMore: () {
-                      Navigator.pop(context);
-                      Navigator.of(context).push(CreateDemarcheFormPage.route());
-                    },
-                    source: source,
-                  ),
-                  const SizedBox(height: DsfrSpacings.s4w),
-                ],
+                ),
               ),
-            ),
+              _Buttons(
+                onGoActionDetail: viewModel.demarcheId != null
+                    ? () {
+                        Navigator.pop(context);
+                        DemarcheDetailPage.show(context, viewModel.demarcheId!);
+                      }
+                    : null,
+                onCreateMore: () {
+                  Navigator.pop(context);
+                  Navigator.of(context).push(CreateDemarcheFormPage.route());
+                },
+                source: source,
+              ),
+            ],
           ),
         ),
       ),
@@ -180,46 +179,52 @@ class _Buttons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (source == CreateDemarcheSource.iaFt) {
-      return AutoFocusA11y(
-        child: DsfrButton(
-          label: Strings.consulterMesDemarches,
-          variant: DsfrButtonVariant.primary,
-          size: DsfrComponentSize.lg,
-          onPressed: () {
-            Navigator.pop(context);
-            StoreProvider.of<AppState>(context).dispatch(
-              HandleDeepLinkAction(
-                MonSuiviDeepLink(),
-                DeepLinkOrigin.inAppNavigation,
-              ),
-            );
-          },
+      return Padding(
+        padding: const EdgeInsets.only(bottom: DsfrSpacings.s2w, top: DsfrSpacings.s4w),
+        child: AutoFocusA11y(
+          child: DsfrButton(
+            label: Strings.consulterMesDemarches,
+            variant: DsfrButtonVariant.primary,
+            size: DsfrComponentSize.lg,
+            onPressed: () {
+              Navigator.pop(context);
+              StoreProvider.of<AppState>(context).dispatch(
+                HandleDeepLinkAction(
+                  MonSuiviDeepLink(),
+                  DeepLinkOrigin.inAppNavigation,
+                ),
+              );
+            },
+          ),
         ),
       );
     }
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (onGoActionDetail != null) ...[
-          AutoFocusA11y(
-            child: DsfrButton(
-              label: Strings.demarcheSuccessConsulter,
-              variant: DsfrButtonVariant.primary,
-              size: DsfrComponentSize.lg,
-              onPressed: onGoActionDetail,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: DsfrSpacings.s2w, top: DsfrSpacings.s4w),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (onGoActionDetail != null) ...[
+            AutoFocusA11y(
+              child: DsfrButton(
+                label: Strings.demarcheSuccessConsulter,
+                variant: DsfrButtonVariant.primary,
+                size: DsfrComponentSize.lg,
+                onPressed: onGoActionDetail,
+              ),
             ),
+            const SizedBox(height: DsfrSpacings.s2w),
+          ],
+          DsfrButton(
+            label: Strings.demarcheSuccessCreerUneAutre,
+            variant: DsfrButtonVariant.secondary,
+            size: DsfrComponentSize.lg,
+            onPressed: onCreateMore,
           ),
-          const SizedBox(height: DsfrSpacings.s2w),
         ],
-        DsfrButton(
-          label: Strings.demarcheSuccessCreerUneAutre,
-          variant: DsfrButtonVariant.secondary,
-          size: DsfrComponentSize.lg,
-          onPressed: onCreateMore,
-        ),
-      ],
+      ),
     );
   }
 }

@@ -116,7 +116,7 @@ class _Body extends StatelessWidget {
           DisplayState.EMPTY => _Empty(viewModel: viewModel),
           DisplayState.CONTENT => _Content(viewModel: viewModel),
           DisplayState.LOADING => Center(child: CircularProgressIndicator()),
-          DisplayState.FAILURE => Retry(Strings.vosSuggestionsAlertesError, () => viewModel.retryFetchSuggestions()),
+          DisplayState.FAILURE => Retry(Strings.tesSuggestionsAlertesError, () => viewModel.retryFetchSuggestions()),
         },
         if (viewModel.traiterDisplayState == DisplayState.LOADING) LoadingOverlay(),
       ],
