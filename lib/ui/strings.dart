@@ -5,13 +5,13 @@ class _PassEmploiStrings {
   static String appName = "pass emploi";
   static String logoDescription = "Pass emploi";
   static String shouldInformConseiller =
-      "En cas d’imprévu, il est important de prévenir votre conseiller. Vous pouvez le contacter via la messagerie de l’application";
+      "En cas d’imprévu, il est important de prévenir ton conseiller. Tu peux le contacter via la messagerie de l’application";
   static String suppressionAccountLabel = "Supprimer mon compte de l’application pass emploi";
   static String warningInformationParagraph1 =
-      "En supprimant votre compte de l’application pass emploi, vous perdrez définitivement toutes les données présentes sur l’application :";
+      "En supprimant ton compte de l’application pass emploi, tu perdras définitivement toutes les données présentes sur l’application :";
   static String warningInformationParagraph2 =
-      "La suppression de votre compte sur l’application pass emploi n'entraîne pas la suppression de votre accompagnement.";
-  static String accountDeletionSuccess = "Votre compte a bien été supprimé de l’application pass emploi";
+      "La suppression de ton compte sur l’application pass emploi n'entraîne pas la suppression de ton accompagnement.";
+  static String accountDeletionSuccess = "Ton compte a bien été supprimé de l’application pass emploi";
   static String modeDemoExplicationPremierPoint3 = " l’application pass emploi utilisée par vos bénéficiaires.";
   static String legalNoticeUrl = "https://doc.pass-emploi.beta.gouv.fr/legal/pass_emploi_mentions_legales";
   static String privacyPolicyUrl =
@@ -26,14 +26,14 @@ class _CejStrings {
   static String appName = "CEJ";
   static String logoDescription = "Contrat d'Engagement Jeune";
   static String shouldInformConseiller =
-      "En cas d’imprévu, il est important de prévenir votre conseiller. Vous pouvez le contacter via la messagerie de l’application";
+      "En cas d’imprévu, il est important de prévenir ton conseiller. Tu peux le contacter via la messagerie de l’application";
   static String suppressionAccountLabel = "Supprimer mon compte de l’application CEJ";
   static String warningInformationParagraph1 =
-      "En supprimant votre compte de l’application CEJ, vous perdrez définitivement toutes les données présentes sur l’application :";
+      "En supprimant ton compte de l’application CEJ, tu perdras définitivement toutes les données présentes sur l’application :";
   static String warningInformationParagraph2 =
-      "La suppression de votre compte sur l’application CEJ n'entraîne pas la suppression de votre accompagnement.";
-  static String accountDeletionSuccess = "Votre compte a bien été supprimé de l’application CEJ";
-  static String modeDemoExplicationPremierPoint3 = " l’application CEJ utilisée par vos bénéficiaires.";
+      "La suppression de ton compte sur l’application CEJ n'entraîne pas la suppression de ton accompagnement.";
+  static String accountDeletionSuccess = "Ton compte a bien été supprimé de l’application CEJ";
+  static String modeDemoExplicationPremierPoint3 = " l’application CEJ utilisée par tes bénéficiaires.";
   static String legalNoticeUrl = "https://doc.pass-emploi.beta.gouv.fr/legal/mobile_mentions_legales";
   static String privacyPolicyUrl =
       "https://travail-emploi.gouv.fr/application-contrat-dengagement-jeune-cej-traitement-des-donnees-personnelles";
@@ -61,7 +61,7 @@ class Strings {
   static String refuserLabel = "Refuser";
   static String consulter = "Consulter";
   static String copie = "Copié";
-  static String notConnected = "Vous êtes hors connexion";
+  static String notConnected = "Tu es hors connexion";
   static const String mandatoryFields = "Les champs marqués d’une * sont obligatoires.";
   static const String allMandatoryFields = "Tous les champs sont obligatoires.";
   static String duplicate = "Dupliquer";
@@ -92,8 +92,8 @@ class Strings {
   static String menuEvenements = "Événements";
 
   // Chat
-  static String yourMessage = "Votre message…";
-  static String yourConseiller = "Votre conseiller";
+  static String yourMessage = "Ton message…";
+  static String yourConseiller = "Ton conseiller";
   static String today = "Aujourd'hui";
   static String edited = "Modifié";
   static String read = "Lu";
@@ -102,17 +102,17 @@ class Strings {
   static String sendingFailed = "L'envoi a échoué";
   static String sendMessageTooltip = "Envoyer le message";
   static String sendAttachmentTooltip = "Envoyer une pièce jointe";
-  static String chatError = "Erreur lors de la récupération de votre messagerie";
+  static String chatError = "Erreur lors de la récupération de ta messagerie";
   static String chatTabMonConseiller = "Mon conseiller";
   static String chatTabMaMissionLocale = "Ma mission locale";
-  static String actualiteMissionLocaleEmptyTitle = "Retrouvez ici les actualités de votre mission locale";
+  static String actualiteMissionLocaleEmptyTitle = "Retrouve ici les actualités de ta mission locale";
   static String actualiteMissionLocaleEmptySubtitle = "Pas d'actualités publiées pour le moment";
   static String actualiteMissionLocaleError = "Erreur lors de la récupération des actualités";
-  static String newConseillerTitle = "Vous échangez avec votre nouveau conseiller.";
-  static String newConseillerTemporaireTitle = "Vous échangez temporairement avec un nouveau conseiller.";
-  static String newConseillerDescription = "Il a accès à l’historique de vos échanges.";
+  static String newConseillerTitle = "Tu échanges avec ton nouveau conseiller.";
+  static String newConseillerTemporaireTitle = "Tu échanges temporairement avec un nouveau conseiller.";
+  static String newConseillerDescription = "Il a accès à l’historique de tes échanges.";
   static String unknownTypeTitle = "Le message est inaccessible";
-  static String unknownTypeDescription = "Pour avoir l'accès au contenu, veuillez mettre à jour l'application.";
+  static String unknownTypeDescription = "Pour avoir l'accès au contenu, mets à jour l'application.";
   static String voirOffre = "Voir l'offre";
   static String voirEvent = "Voir l'événement";
 
@@ -122,9 +122,9 @@ class Strings {
   static String open = "Ouvrir";
   static String fileNotAvailableError = "ERROR: 410";
   static String fileNotAvailableTitle = "Le fichier n'est plus disponible";
-  static String chatEmpty = "Commencez une conversation avec votre conseiller";
+  static String chatEmpty = "Commence une conversation avec ton conseiller";
   static String chatEmptySubtitle =
-      "Obtenez les informations que vous recherchez en contactant directement votre conseiller";
+      "Obtiens les informations que tu recherches en contactant directement ton conseiller";
   static String hourAndPostOwner(String hour, String owner) => "$hour · Posté par $owner";
 
   static String chatMessageBottomSheetTitle = "Paramètres du message";
@@ -142,18 +142,18 @@ class Strings {
   static String chatOpenPieceJointe = "Ouvrir la pièce jointe";
   static String chatPieceJointeBottomSheetTitle = "Ajouter une pièce jointe";
   static String chatPieceJointeBottomSheetSubtitle =
-      "Attention à ne pas partager vos données personnelles ou d’informations sensibles notamment votre numéro de Sécurité Sociale (ex : Carte Vitale, etc.)";
+      "Attention à ne pas partager tes données personnelles ou d’informations sensibles notamment ton numéro de Sécurité Sociale (ex : Carte Vitale, etc.)";
   static String chatPieceJointeBottomSheetTakeImageButton = "Prendre une photo";
   static String chatPieceJointeBottomSheetSelectImageButton = "Sélectionner une photo";
   static String chatPieceJointeBottomSheetSelectFileButton = "Sélectionner un fichier";
   static String chatPieceJointeBottomSheetFileTooLarge =
-      "Le fichier est trop volumineux. Veuillez sélectionner un fichier de moins de 5 Mo.";
+      "Le fichier est trop volumineux. Merci de sélectionner un fichier de moins de 5 Mo.";
   static String chatPieceJointeGalleryPermissionError =
-      "Autorisez l’accès à la galerie pour pouvoir sélectionner une image.";
+      "Autorise l’accès à la galerie pour pouvoir sélectionner une image.";
   static String chatPieceJointeCameraPermissionError =
-      "Autorisez l’accès à l'appareil photo pour pouvoir prendre une photo.";
+      "Autorise l’accès à l'appareil photo pour pouvoir prendre une photo.";
   static String chatPieceJointeFilePermissionError =
-      "Autorisez l’accès aux fichiers pour pouvoir sélectionner un fichier.";
+      "Autorise l’accès aux fichiers pour pouvoir sélectionner un fichier.";
   static String chatPieceJointeOpenAppSettings = "Accéder aux paramètres";
   static String chatA11yMessageFromMe = "Mon message : ";
   static String chatA11yMessageFromMyConseiller = "Message de mon conseiller : ";
@@ -162,12 +162,12 @@ class Strings {
   // Force Update
   static String updateTitle = "Mise à jour";
   static String updateButton = "Mettre à jour";
-  static String forceUpdateOnStoreLabel = "Votre application nécessite d'être mise à jour pour son bon fonctionnement";
+  static String forceUpdateOnStoreLabel = "Ton application nécessite d'être mise à jour pour son bon fonctionnement";
   static String forceUpdateOnFirebaseLabel =
-      "Votre application nécessite d'être mise à jour sur Firebase pour son bon fonctionnement";
+      "Ton application nécessite d'être mise à jour sur Firebase pour son bon fonctionnement";
 
   // Soft Update
-  static String softUpdateBottomSheetTitle = "Votre application n'est pas à jour";
+  static String softUpdateBottomSheetTitle = "Ton application n'est pas à jour";
   static String softUpdateBottomSheetSubtitle =
       "Une version plus récente est disponible. La mise à jour ne prend que quelques secondes.";
   static String softUpdateBottomSheetDownload = "Télécharger";
@@ -185,17 +185,17 @@ class Strings {
   // Entree
   static String republiqueFrancaise = "République Française";
   static String askAccount = "Demander un compte";
-  static String loginChooseAccountTitle = "Choisissez un compte";
+  static String loginChooseAccountTitle = "Choisis un compte";
   static String loginChooseAccountDescription =
-      "Si vous disposez de plusieurs accès, sélectionnez l'organisme qui vous accompagne actuellement.";
+      "Si tu disposes de plusieurs accès, sélectionne l'organisme qui t'accompagne actuellement.";
   static String loginNoAccountLabel = "Je n'ai pas de compte France Travail ou Mission Locale";
   static String loginInviteActionCta = "C’est parti, sans compte";
   static String suiviParConseillerCej =
       "Dans le cadre de mon Contrat d'Engagement Jeune, je suis suivi par un conseiller :";
   static String suiviParConseillerPassEmploi = "Je suis suivi par un conseiller :";
-  static String dontHaveAccount = "Vous n’avez pas de compte sur cette application ?";
+  static String dontHaveAccount = "Tu n’as pas de compte sur cette application ?";
 
-  static String alreadyHaveAccount = "Vous avez déjà un compte\n sur cette application ?";
+  static String alreadyHaveAccount = "Tu as déjà un compte\n sur cette application ?";
   static String accessibilityPartiallyConform = "Accessibilité : partiellement conforme";
   static String accessibilityNotConform = "Accessibilité : non conforme";
 
@@ -205,28 +205,28 @@ class Strings {
   static String gotIt = "C'est compris";
   static String discover = "Découvrir";
 
-  static String onboardingMonSuiviTitle = "Pas à pas, trouvez un emploi stable";
-  static String onboardingChatTitle = "Gardez contact avec votre conseiller à tout moment";
-  static String onboardingRechercheTitle = "Trouvez des offres qui vous intéressent";
-  static String onboardingEvenementsTitle = "Participez à des événements en lien avec votre recherche";
+  static String onboardingMonSuiviTitle = "Pas à pas, trouve un emploi stable";
+  static String onboardingChatTitle = "Garde le contact avec ton conseiller à tout moment";
+  static String onboardingRechercheTitle = "Trouve des offres qui t'intéressent";
+  static String onboardingEvenementsTitle = "Participe à des événements en lien avec ta recherche";
   static String onboardingOffreEnregistreeTitle = "Nouveau\u{00A0}!";
 
   static String onboardingMonSuiviBodyCej =
-      "Mon suivi vous permet de créer et visualiser les différentes actions ou rendez-vous à réaliser. Votre conseiller peut aussi ajouter des actions dans cette section !";
+      "Mon suivi te permet de créer et visualiser les différentes actions ou rendez-vous à réaliser. Ton conseiller peut aussi ajouter des actions dans cette section !";
   static String onboardingMonSuiviBodyPe =
-      "Mon suivi vous permet de créer et visualiser les différentes démarches ou rendez-vous à réaliser. Votre conseiller peut aussi ajouter des démarches dans cette section !";
+      "Mon suivi te permet de créer et visualiser les différentes démarches ou rendez-vous à réaliser. Ton conseiller peut aussi ajouter des démarches dans cette section !";
   static String onboardingChatBody =
-      "Échangez sur la messagerie instantanée avec votre conseiller pour construire votre projet, partager des offres, vous inscrire à des évènements, etc.";
+      "Échange sur la messagerie instantanée avec ton conseiller pour construire ton projet, partager des offres, t'inscrire à des évènements, etc.";
   static String onboardingRechercheBodyCej =
-      "L’espace recherche vous permet de retrouver les offres d’emploi d’alternance, d’immersion et de service civique, et de les ajouter à vos offres suivies.";
+      "L’espace recherche te permet de retrouver les offres d’emploi d’alternance, d’immersion et de service civique, et de les ajouter à tes offres suivies.";
   static String onboardingRechercheBodyPe =
-      "L’espace recherche vous permet de retrouver les offres d’emploi qui vous intéressent et de les ajouter à vos offres suivies.";
+      "L’espace recherche te permet de retrouver les offres d’emploi qui t'intéressent et de les ajouter à tes offres suivies.";
   static String onboardingEvenementsBody =
-      "Découvrez les événements à ne pas manquer en lien avec votre recherche et inscrivez-vous pour y participer.";
-  static String onboardingOffreEnregistreeBody = "Retrouvez maintenant vos favoris dans l’onglet “Suivi des offres”";
+      "Découvre les événements à ne pas manquer en lien avec ta recherche et inscris-toi pour y participer.";
+  static String onboardingOffreEnregistreeBody = "Retrouve maintenant tes favoris dans l’onglet “Suivi des offres”";
 
   static String takeRdvWithConseiller =
-      "Prenez rendez-vous avec votre conseiller qui procédera à la création de votre compte.";
+      "Prends rendez-vous avec ton conseiller qui procédera à la création de ton compte.";
   static String whoIsConcerned = "Qui est éligible ?";
   static List<String> whoIsConcernedFirstRichText = [
     "→ Les personnes entre ",
@@ -241,36 +241,35 @@ class Strings {
     " (CDI ou CDD de longue durée)",
   ];
 
-  static String installOnboardingSection = "Installez l’application";
+  static String installOnboardingSection = "Installe l’application";
   static String messageOnboardingSection = "Envoie un message à ton conseiller";
-  static String actionOnboardingSection = "Créez une action";
-  static String demarcheOnboardingSection = "Créez une démarche";
-  static String offreOnboardingSection = "Recherchez une offre";
-  static String evenementOnboardingSection = "Recherchez un événement";
-  static String outilsOnboardingSection = "Consultez les outils";
+  static String actionOnboardingSection = "Crée une action";
+  static String demarcheOnboardingSection = "Crée une démarche";
+  static String offreOnboardingSection = "Recherche une offre";
+  static String evenementOnboardingSection = "Recherche un événement";
+  static String outilsOnboardingSection = "Consulte les outils";
 
   static String skipOnboarding = "Passer le tutoriel";
-  static String skipOnboardingContent = "Êtes-vous sûr de vouloir passer le tutoriel ?";
+  static String skipOnboardingContent = "Es-tu sûr de vouloir passer le tutoriel ?";
 
-  static String onboardingShowcaseMessageTitle = "Saluez votre conseiller.";
-  static String onboardingShowcaseActionTitle = "Lancez-vous !";
+  static String onboardingShowcaseMessageTitle = "Salue ton conseiller.";
+  static String onboardingShowcaseActionTitle = "Lance-toi !";
   static String onboardingShowcaseOffreTitle = "Un emploi en tête?";
-  static String onboardingShowcaseEvenementTitle = "Explorez les événements en lien avec votre projet pro";
+  static String onboardingShowcaseEvenementTitle = "Explore les événements en lien avec ton projet pro";
   static String onboardingShowcaseOutilsTitle = "Besoin d’un coup de pouce?";
   static String onboardingShowcaseMessageDescription =
-      "Envoyez lui un premier message “Bonjour ! j’ai bien téléchargé l’application, j’ai hâte de commencer !”";
-  static String onboardingShowcaseActionDescription =
-      "Créez une première action pour vous rapprocher de votre objectif ";
+      "Envoie-lui un premier message “Bonjour ! j’ai bien téléchargé l’application, j’ai hâte de commencer !”";
+  static String onboardingShowcaseActionDescription = "Crée une première action pour te rapprocher de ton objectif ";
   static String onboardingShowcaseOffreDescription =
-      "Lancez votre recherche pour découvrir des opportunités qui correspondent à vos critères";
+      "Lance ta recherche pour découvrir des opportunités qui correspondent à tes critères";
   static String onboardingShowcaseEvenementDescription =
-      "Participez à des salons, forums, ateliers pour faire avancer votre projet pro";
-  static String onboardingShowcaseOutilsDescription = "Retrouvez les bons outils pour vous guider à chaque étapes";
+      "Participe à des salons, forums, ateliers pour faire avancer ton projet pro";
+  static String onboardingShowcaseOutilsDescription = "Retrouve les bons outils pour te guider à chaque étapes";
 
-  static String onboardingStepFinished = "🎉 Bravo vous avez validé une étape du tutoriel !";
+  static String onboardingStepFinished = "🎉 Bravo, tu as validé une étape du tutoriel !";
 
   static String mesOutils = "Mes outils";
-  static String mesOutilsDescription = "Trouver l’aide adaptée à votre projet professionel";
+  static String mesOutilsDescription = "Trouver l’aide adaptée à ton projet professionel";
   static String decouvrirLeService = "Découvrir le service";
 
   // Login organisms
@@ -278,23 +277,23 @@ class Strings {
   static const String loginBottomSeetMissionLocaleButton = "Mission Locale";
 
   // Login
-  static String loginWrongDeviceClockError = "L'heure de votre téléphone semble erronée, impossible de vous connecter.";
+  static String loginWrongDeviceClockError = "L'heure de ton téléphone semble erronée, impossible de te connecter.";
   static String loginWrongDeviceClockErrorDescription =
-      "Accédez aux réglages de votre téléphone pour vérifier que l’heure et le fuseau horaire affichés sont corrects.";
+      "Accède aux réglages de ton téléphone pour vérifier que l’heure et le fuseau horaire affichés sont corrects.";
   static String loginGenericError = "Erreur lors de la connexion";
   static String loginGenericErrorDescription =
-      "Réessayer plus tard. Si le problème persiste, vous pouvez contacter votre conseiller.";
+      "Réessaie plus tard. Si le problème persiste, tu peux contacter ton conseiller.";
   static String loginPoleEmploi = "France Travail";
   static String loginMissionLocale = "Mission Locale";
   static String loginAction = "Se connecter";
 
   // Mode invité
-  static String invitePrenomTitle = "Votre prénom";
-  static String invitePrenomSubtitle = "Choisissez le prénom qui sera affiché dans l'application.";
-  static String invitePrenomHint = "Votre prénom";
+  static String invitePrenomTitle = "Ton prénom";
+  static String invitePrenomSubtitle = "Choisis le prénom qui sera affiché dans l'application.";
+  static String invitePrenomHint = "Ton prénom";
   static String invitePrenomValidate = "Valider";
-  static String invitePrenomLoadError = "Impossible de récupérer votre prénom.";
-  static String invitePrenomUpdateError = "La mise à jour a échoué. Réessayez.";
+  static String invitePrenomLoadError = "Impossible de récupérer ton prénom.";
+  static String invitePrenomUpdateError = "La mise à jour a échoué. Réessaie.";
   static String invitePrenomUpdated(String prenom) => "Enregistré. Bonjour $prenom !";
   static String invitePrenomNextSteps = "La suite du parcours invité reste à développer.";
   static String logoutAction = "Me déconnecter";
@@ -458,8 +457,8 @@ class Strings {
   static const String newPillule = "Nouveau";
 
   // Onboarding
-  static String onboardingTitle = "Terminez la découverte de l’application";
-  static String onboardingSubtitle = "Touchez une fonctionnalité pour l’essayer, elle se coche automatiquement.";
+  static String onboardingTitle = "Termine la découverte de l’application";
+  static String onboardingSubtitle = "Touche une fonctionnalité pour l’essayer, elle se coche automatiquement.";
   static String onboardingStepCompleted = "Étape terminée";
 
   // notifications bottom sheet
@@ -471,52 +470,52 @@ class Strings {
 
   // Accueil
   static String accueilAppBarTitle = "Bonjour";
-  static String onboardingAccueilTitle = "Découvrez l’application en quelques étapes";
-  static String onboardingAccueilTitleCompleted = "🎉 Vous avez terminé le tutoriel !";
+  static String onboardingAccueilTitle = "Découvre l’application en quelques étapes";
+  static String onboardingAccueilTitleCompleted = "🎉 Tu as terminé le tutoriel !";
   static String accueilCetteSemaineSection = "Cette semaine";
   static String accueilVoirDetailsCetteSemaine = "Voir le détail de ma semaine";
-  static String accueilRendezvousSection = "Votre prochain rendez-vous";
+  static String accueilRendezvousSection = "Ton prochain rendez-vous";
   static String accueilActionSingular = "Action";
   static String accueilActionPlural = "Actions";
-  static String accueilError = "Erreur lors de la récupération de votre page d’accueil";
+  static String accueilError = "Erreur lors de la récupération de ta page d’accueil";
   static String accueilDemarcheSingular = "Démarche";
   static String accueilDemarchePlural = "Démarches";
   static String accueilRendezvous = "Rendez-vous";
-  static String accueilEvenementsSection = "Événements pouvant vous intéresser";
+  static String accueilEvenementsSection = "Événements pouvant t'intéresser";
   static String accueilVoirLesEvenements = "Voir plus d’événements";
   static String accueilMesAlertesSection = "Mes alertes";
   static String accueilVoirMesAlertes = "Voir toutes mes alertes";
   static String accueilPasDalerteDescription =
-      "Créez des alertes lors de vos recherches et recevez les offres qui vous correspondent";
+      "Crée des alertes lors de tes recherches et reçois les offres qui te correspondent";
   static String accueilPasDalerteBouton = "Commencer une recherche";
   static String accueilOffresEnregistreesSection = "Mon suivi des offres";
   static String accueilOutilsSection = "Outils";
-  static String accueilOutilsSectionDescription = "Découvrez des outils pour vous aider dans vos projets";
+  static String accueilOutilsSectionDescription = "Découvre des outils pour t'aider dans tes projets";
   static String accueilVoirLesOutils = "Voir tous les outils";
-  static String accueilCampagneRecrutementLabelCej = "Aidez-nous à améliorer l’application du CEJ\u{00A0}!";
-  static String accueilCampagneRecrutementLabelPassEmploi = "Aidez-nous à améliorer l’application pass emploi\u{00A0}!";
+  static String accueilCampagneRecrutementLabelCej = "Aide-nous à améliorer l’application du CEJ\u{00A0}!";
+  static String accueilCampagneRecrutementLabelPassEmploi = "Aide-nous à améliorer l’application pass emploi\u{00A0}!";
   static String accueilCampagneRecrutementLabel = Brand.isCej()
       ? accueilCampagneRecrutementLabelCej
       : accueilCampagneRecrutementLabelPassEmploi;
   static String accueilCampagneRecrutementPressedTip = "Participer";
 
-  static String vosOutilsEvoluent = "Vos outils évoluent";
+  static String vosOutilsEvoluent = "Tes outils évoluent";
   static String vosOutilsEvoluentDescription(String dateDeMigration) =>
-      "Le $dateDeMigration, l’application du CEJ ne sera plus disponible. Vos services seront accessibles sur l’application Parcours Emploi.";
+      "Le $dateDeMigration, l’application du CEJ ne sera plus disponible. Tes services seront accessibles sur l’application Parcours Emploi.";
   static String downloadParcoursEmploi = "Télécharger l'application";
 
   // Comptage des heures
-  static String comptageDesHeures0To5 = "Bon début, continuez comme ça\u{00A0}!\u{00A0}💪";
-  static String comptageDesHeures5To10 = "Bon début, continuez comme ça\u{00A0}!\u{00A0}💪";
+  static String comptageDesHeures0To5 = "Bon début, continue comme ça\u{00A0}!\u{00A0}💪";
+  static String comptageDesHeures5To10 = "Bon début, continue comme ça\u{00A0}!\u{00A0}💪";
   static String comptageDesHeures10To15 =
-      "Vous vous rapprochez de votre objectif : encore un petit effort\u{00A0}!\u{00A0}🌟";
-  static String comptageDesHeures15 = "🎉 Félicitations pour vos 15h d’activités \u{00A0}!";
+      "Tu te rapproches de ton objectif : encore un petit effort\u{00A0}!\u{00A0}🌟";
+  static String comptageDesHeures15 = "🎉 Félicitations pour tes 15h d’activités \u{00A0}!";
   static String comptageDesHeures15Plus = "Objectif dépassé ! Bravo\u{00A0}👏";
   static String updatedAgo(String timeAgo) => "Actualisé $timeAgo";
   static String realizedHours = "validée";
   static String declaredHours = "réalisée";
 
-  static String comptageDesHeuresError = "Il y a eu une erreur lors de la récupération de vos heures\u{00A0}😕";
+  static String comptageDesHeuresError = "Il y a eu une erreur lors de la récupération de tes heures\u{00A0}😕";
 
   static String comptageDesHeuresEnCoursDeCalcul(int heuresEnCoursDeCalcul) => heuresEnCoursDeCalcul == 1
       ? "1 activité en cours de calcul.\nProchaine actualisation dans moins d’une heure"
@@ -540,7 +539,7 @@ class Strings {
   static String monSuiviEmptyPastMilo = "Aucun événement ni action";
   static String monSuiviEmptyPastPoleEmploi = "Aucun rendez-vous ni démarche";
   static String monSuiviEmptyFuture = "Rien de prévu";
-  static String monSuiviError = "Erreur lors de la récupération de votre suivi";
+  static String monSuiviError = "Erreur lors de la récupération de ton suivi";
   static String monSuiviSessionMiloError = "Des événements n’ont peut-être pas pu être récupérés.";
   static String monSuiviTooltip = "Aller à aujourd'hui";
   static String monSuiviPePastLimitReached = "Les démarches et les rendez-vous plus anciens ne sont pas disponibles";
@@ -551,7 +550,7 @@ class Strings {
 
   // Actualisation PE
   static String actualisationPePopUpTitle = "La période d’actualisation France Travail a commencé";
-  static String actualisationPePopUpSubtitle = "Pensez à vous actualiser avant le 15 du mois";
+  static String actualisationPePopUpSubtitle = "Pense à t'actualiser avant le 15 du mois";
   static String actualisationPePopUpPrimaryButton = "S'actualiser";
   static String actualisationPePopUpSecondaryButton = "Fermer";
 
@@ -561,14 +560,14 @@ class Strings {
   static String rendezvousCardAnnule = "Annulé";
   static String rendezvousDetailsAnnule = "Rendez-vous annulé";
   static String rendezVousConseillerCommentLabel = "Commentaire de mon conseiller";
-  static String cannotGoToRendezvous = "Vous ne pouvez pas vous rendre au rendez-vous ?";
+  static String cannotGoToRendezvous = "Tu ne peux pas te rendre au rendez-vous ?";
   static String shouldInformConseiller = Brand.isCej()
       ? _CejStrings.shouldInformConseiller
       : _PassEmploiStrings.shouldInformConseiller;
 
   static String rendezVousDetailsError = "Erreur lors de la récupération de l'événement";
-  static String conseillerIsPresent = "Votre conseiller sera présent";
-  static String conseillerIsNotPresent = "Votre conseiller ne sera pas présent";
+  static String conseillerIsPresent = "Ton conseiller sera présent";
+  static String conseillerIsNotPresent = "Ton conseiller ne sera pas présent";
   static String commentWithoutConseiller = "Description";
   static String rendezVousDetails = "Détails";
   static String seeItinerary = 'Voir l\'itinéraire';
@@ -584,10 +583,10 @@ class Strings {
   static String annulerInscription = "Annuler mon inscription";
   static String withAnimateurTitle = "Animateur de la session";
 
-  static String rendezvousWithConseiller(String conseiller) => "votre conseiller $conseiller";
+  static String rendezvousWithConseiller(String conseiller) => "ton conseiller $conseiller";
 
   static String rendezvousCreateur(String createur) {
-    return "Le rendez-vous a été programmé par votre conseiller précédent $createur";
+    return "Le rendez-vous a été programmé par ton conseiller précédent $createur";
   }
 
   static String rendezvousModalityDetailsMessage(String modality) => "Le rendez-vous se fera $modality";
@@ -607,9 +606,9 @@ class Strings {
   static String nextButtonTitle = "Suivant";
   static String validateButtonTitle = "Valider";
   static String mandatory = "Les questions marquées d'une * sont obligatoires";
-  static String pourquoiTitle = "Pouvez-vous nous en dire plus ?";
-  static String evaluationSuccessfullySent = "Merci pour vos précieux retours\u{00A0}!";
-  static String pourquoiHintText = "Dites-nous pourquoi...";
+  static String pourquoiTitle = "Peux-tu nous en dire plus ?";
+  static String evaluationSuccessfullySent = "Merci pour tes précieux retours\u{00A0}!";
+  static String pourquoiHintText = "Dis-nous pourquoi...";
 
   // User action form
   static const String createActionAppBarTitle = 'Créer une action';
@@ -619,13 +618,13 @@ class Strings {
 
   static const String userActionTitleStep3 = 'Date et description';
 
-  static const String userActionSubtitleStep1 = 'Choisissez une catégorie';
+  static const String userActionSubtitleStep1 = 'Choisis une catégorie';
 
-  static const String userActionSubtitleStep2 = 'Sélectionnez une action (obligatoire)';
+  static const String userActionSubtitleStep2 = 'Sélectionne une action (obligatoire)';
   static const String userActionTitleTextfieldStep2 = '*Nommer mon action';
   static const String userActionDescriptionTextfieldStep2 = 'Décrire mon action';
   static const String userActionDescriptionDescriptionfieldStep2 =
-      'Ajouter des détails pour que votre conseiller puisse valider votre action.';
+      'Ajouter des détails pour que ton conseiller puisse valider ton action.';
 
   static const String userActionStatusRadioStep3 = 'L’action est :';
   static const String userActionStatusRadioCompletedStep3 = 'Terminée';
@@ -657,9 +656,9 @@ class Strings {
   static const String userActionConfirmationTitlePlural = "Action(s) créée(s)";
   static const String userActionConfirmationDoneTag = "Action terminée";
   static const String userActionConfirmationSubtitle =
-      "L’action est en route vers votre conseiller. Vous pourrez en discuter ensemble lors de votre prochain rendez-vous\u{00A0}!";
+      "L’action est en route vers ton conseiller. Tu pourras en discuter ensemble lors de ton prochain rendez-vous\u{00A0}!";
   static const String userActionConfirmationSubtitlePlural =
-      "La ou les actions sont en route vers votre conseiller. Vous pourrez en discuter ensemble lors de votre prochain rendez-vous\u{00A0}!";
+      "La ou les actions sont en route vers ton conseiller. Tu pourras en discuter ensemble lors de ton prochain rendez-vous\u{00A0}!";
   static const String goToMonSuivi = "Consuter Mon suivi";
 
   static const String userActionConfirmationSeeDetailButton = "Consulter mon action";
@@ -667,7 +666,7 @@ class Strings {
 
   static const String userActionDescriptionConfirmationTitle = "Cette action ne contient aucune description.";
   static const String userActionDescriptionConfirmationSubtitle =
-      "Votre conseiller risque de ne pas pouvoir valider cette action.";
+      "Ton conseiller risque de ne pas pouvoir valider cette action.";
   static const String userActionDescriptionConfirmationConfirmButton = "Ajouter une description";
   static const String userActionDescriptionConfirmationGoToDescriptionButton = "Créer l’action sans description";
   static const String userActionDescriptionConfirmationTerminer = "Terminer l'action sans description";
@@ -813,7 +812,7 @@ class Strings {
   static String updateStatus = "Modifier le statut";
   static String refreshActionStatus = "Valider le statut";
   static String addAnAction = "Créer une action";
-  static String addAMessageError = "Vous avez dépassé le nombre de caractères autorisés";
+  static String addAMessageError = "Tu as dépassé le nombre de caractères autorisés";
   static String create = "Créer";
   static String actionLabel = "*Intitulé de l'action";
   static String actionDescription = "Description de l'action";
@@ -823,25 +822,25 @@ class Strings {
   static String actionCreatedBy = "Créée par";
   static String duplicateAction = "Ajouter une date";
   static String deleteDuplicatedAction = "Supprimer cette action";
-  static String fillAllFields = "Veuillez remplir tous les champs";
+  static String fillAllFields = "Merci de remplir tous les champs";
   static String dateMandatory = "La date est obligatoire";
   static String descriptionMandatory = "La description est obligatoire";
-  static String selectMultipleActions = "Sélectionnez une ou plusieurs dates et renseignez la description";
-  static String selectOneAction = "Sélectionnez une date et renseignez la description";
+  static String selectMultipleActions = "Sélectionne une ou plusieurs dates et renseigne la description";
+  static String selectOneAction = "Sélectionne une date et renseigne la description";
 
   static String actionCreationInfos(String creator, String date) => "Ajouté par $creator le $date";
-  static String youLowercase = "vous";
-  static String you = "Vous";
-  static String yourConseillerLowercase = "votre conseiller";
+  static String youLowercase = "tu";
+  static String you = "Tu";
+  static String yourConseillerLowercase = "ton conseiller";
   static String congratulationsActionUpdated =
-      "Félicitations !\n\nLa mise à jour de votre action a bien été prise en compte";
+      "Félicitations !\n\nLa mise à jour de ton action a bien été prise en compte";
   static String understood = "J'ai compris";
-  static String deleteActionError = "Erreur lors de la suppression de l'action. Veuillez réessayer";
+  static String deleteActionError = "Erreur lors de la suppression de l'action. Réessaie";
   static String deleteActionSuccessTitle = "Action supprimée";
   static String deleteActionSuccess = "L’action a bien été supprimée";
-  static String createActionSuccess = "Votre action a bien été créée.";
+  static String createActionSuccess = "Ton action a bien été créée.";
   static String createActionPostponed =
-      " Votre action a bien été créée. Le détail sera disponible au rétablissement du réseau.";
+      " Ton action a bien été créée. Le détail sera disponible au rétablissement du réseau.";
   static String createDemarcheSuccess = "La démarche a bien été créée";
   static String linkDetailsRendezVous = "Voir les détails du rendez-vous";
 
@@ -871,22 +870,22 @@ class Strings {
   static String cannotFinishActionInFuture = "On ne peut pas terminer une action dans le futur.";
 
   // User action done bottom sheet
-  static String userActionDoneBottomSheetTitle = "Quand avez-vous terminé l'action ?";
-  static String updateActionConfirmation = "La mise à jour de votre action a bien été prise en compte";
+  static String userActionDoneBottomSheetTitle = "Quand as-tu terminé l'action ?";
+  static String updateActionConfirmation = "La mise à jour de ton action a bien été prise en compte";
 
   // Update user action
   static String updateUserActionPageTitle = "Modifier l'action";
   static String updateUserAction = "Modifier l'action";
   static String updateUserActionTitle = "*Titre de l'action";
   static String updateUserActionDescriptionTitle = "Décrire mon action";
-  static String updateUserActionDescriptionSubtitle = "Des précisions à partager à votre conseiller ?";
+  static String updateUserActionDescriptionSubtitle = "Des précisions à partager à ton conseiller ?";
   static String updateUserActionCategory = "Catégorie";
   static String updateUserActionCategoryPressedTip = "Modifier";
   static String updateUserActionSaveButton = "Enregistrer les modifications";
   static String updateUserActionConfirmationTitle = "Modification enregistrée";
-  static String updateUserActionConfirmation = "Vos modifications ont été enregistrées.";
+  static String updateUserActionConfirmation = "Tes modifications ont été enregistrées.";
   static String deleteAction = "Supprimer l'action";
-  static String deleteActionDescription = "Vous ne pourrez plus consulter ni modifier l'action.";
+  static String deleteActionDescription = "Tu ne pourras plus consulter ni modifier l'action.";
 
   // Duplicate user action
   static String duplicateUserAction = "Dupliquer l'action";
@@ -895,9 +894,9 @@ class Strings {
   // Commentaires d'action
   static String actionCommentsTitle = "Commentaire de l’action";
   static String lastComment = "Dernier commentaire";
-  static String noComments = "Vous n’avez pas encore de commentaire";
+  static String noComments = "Tu n’as pas encore de commentaire";
 
-  static String createdByAdvisor(String advisor) => "Votre conseiller $advisor";
+  static String createdByAdvisor(String advisor) => "Ton conseiller $advisor";
   static String addComment = "Ajouter un commentaire";
 
   static String seeNComments(String n) => "Voir les $n commentaires";
@@ -910,39 +909,39 @@ class Strings {
   static String modifiedBy = "Modifiée le ";
   static String createdBy = "Créée le ";
   static String par = " par ";
-  static String votreConseiller = "votre conseiller";
+  static String votreConseiller = "ton conseiller";
   static const String late = "En retard : ";
-  static const String createDemarcheAppBarTitle = "Créer vos démarches";
+  static const String createDemarcheAppBarTitle = "Créer tes démarches";
   static const String commentaire = "Commentaire";
   static const String descriptionDemarche = "Décrire la démarche";
   static const String caracteres255 = "255 caractères maximum";
   static const String quand = "Quand";
   static const String selectEcheance = "Sélectionner une date d'échéance";
-  static const String addADemarche = "Créer vos démarches";
+  static const String addADemarche = "Créer tes démarches";
   static const String createDemarcheTitle = "Création d'une démarche";
-  static const String createDemarcheStep2EmptyTitle = "Aucune démarche ne correspond à votre recherche";
+  static const String createDemarcheStep2EmptyTitle = "Aucune démarche ne correspond à ta recherche";
 
   static String createDemarcheStep2EmptyTitleWithQuery(String query) =>
-      "Aucune démarche ne correspond à votre recherche “$query”";
-  static const String createDemarcheStep2EmptySubtitle = "Essayez de reformuler ou lancez une nouvelle recherche";
+      "Aucune démarche ne correspond à ta recherche “$query”";
+  static const String createDemarcheStep2EmptySubtitle = "Essaie de reformuler ou lance une nouvelle recherche";
   static const String noDemarcheFound = "Aucune démarche pre-renseignée n’a été trouvée";
   static const String selectDemarcheOrCreatePersonnalisee =
-      "Sélectionnez une démarche ou créez une démarche personnalisée";
+      "Sélectionne une démarche ou crée une démarche personnalisée";
   static const String createDemarchePersonnaliseeTitle = "Créer une démarche personnalisée";
   static const String descriptionDemarchePersonnaliseeLabel = "Description de la démarche (obligatoire)";
-  static const String selectDemarche = "Sélectionnez la démarche";
-  static const String selectMoyen = "Sélectionnez le moyen";
+  static const String selectDemarche = "Sélectionne la démarche";
+  static const String selectMoyen = "Sélectionne le moyen";
   static const String addALaDemarche = "Créer la démarche";
   static const String validateLaDemarche = "Valider ma démarche";
-  static const String searchDemarcheHint = "Renseigner un mot clé pour rechercher une démarche à créer";
+  static const String searchDemarcheHint = "Renseigne un mot clé pour rechercher une démarche à créer";
   static const String searchDemarcheButton = "Rechercher une démarche";
   static const String mandatoryField = "Le champ est obligatoire";
   static const String comment = "Comment";
   static const String selectComment = "Sélectionner un des moyens";
   static const String selectQuand = "Sélectionner une date d’échéance";
-  static String demarcheSuccessTitlePlural = 'Démarches enregistrées ! Retrouvez-les dans "Mon suivi"';
+  static String demarcheSuccessTitlePlural = 'Démarches enregistrées ! Retrouve-les dans "Mon suivi"';
   static String demarcheSuccessSubtitlePlural =
-      "Vos démarches sont en route vers votre conseiller. Vous pourrez en discuter ensemble lors de votre prochain rendez-vous ! ";
+      "Tes démarches sont en route vers ton conseiller. Tu pourras en discuter ensemble lors de ton prochain rendez-vous ! ";
 
   static String demarcheActiveLabel = "À réaliser pour le ";
 
@@ -956,30 +955,30 @@ class Strings {
 
   static String demarcheCancelledDateFormat(String formattedDate) => demarcheCancelledLabel + formattedDate;
 
-  static String updateStatusError = "Erreur lors de la modification de l'action. Veuillez réessayer";
+  static String updateStatusError = "Erreur lors de la modification de l'action. Réessaie";
 
   static String withoutDate = "Date indéterminée";
   static String withoutContent = "Démarche indéterminée";
-  static String createByAdvisor = "Créé par votre conseiller";
+  static String createByAdvisor = "Créé par ton conseiller";
   static String demarcheRechercheSubtitle = "Rechercher par mot-clé";
   static String demarcheCategoriesSubtitle = "Rechercher par catégories";
-  static String customDemarcheTitle = "Vous ne trouvez pas ce que vous cherchez ?";
-  static String customDemarcheSubtitle = "Créez une démarche personnalisée qui correspond à votre situation.";
+  static String customDemarcheTitle = "Tu ne trouves pas ce que tu cherches ?";
+  static String customDemarcheSubtitle = "Crée une démarche personnalisée qui correspond à ta situation.";
 
   static String demarcheBottomSheetTitle = "Éditer la démarche";
 
   static String demarcheSuccessTitle = "Démarche enregistrée";
   static String demarcheSuccessSubtitle =
-      "La démarche est en route vers votre conseiller. Vous pourrez en discuter ensemble lors de votre prochain rendez-vous ! ";
+      "La démarche est en route vers ton conseiller. Tu pourras en discuter ensemble lors de ton prochain rendez-vous ! ";
   static String demarcheSuccessConsulter = "Consulter ma démarche";
   static String demarcheSuccessCreerUneAutre = "Créer une autre démarche";
-  static String createDemarcheErreur = "Erreur lors de la création de la démarche. Veuillez réessayer plus tard";
+  static String createDemarcheErreur = "Erreur lors de la création de la démarche. Réessaie plus tard";
 
-  static String demarcheDoneBottomSheetTitle = "Quand avez-vous terminé la démarche ?";
+  static String demarcheDoneBottomSheetTitle = "Quand as-tu terminé la démarche ?";
 
   static String jeValide = "Je valide";
   static String felicitations = "Félicitations !";
-  static String updateDemarcheConfirmation = "La mise à jour de votre démarche a bien été prise en compte";
+  static String updateDemarcheConfirmation = "La mise à jour de ta démarche a bien été prise en compte";
   static String cancelDemarche = "Annuler la demarche";
 
   // Duplicate demarche
@@ -990,15 +989,15 @@ class Strings {
   static String demarcheThematiqueTitle = "Thématiques";
   static String demarchesCategoriesPressedTip = "Découvrir la liste";
   static String demarchesCategoriesDescription =
-      "Recherchez parmi les thématiques d’emploi : candidatures, entretiens, création d’entreprise…";
-  static String thematiquesDemarcheDescription = "Choisissez une thématique parmi les thématiques suivantes :";
-  static String thematiquesDemarcheDescriptionShort = "Choisissez une thématique";
-  static String dateShortMandatory = "Choisissez une date (obligatoire)";
-  static String thematiquesDemarcheDateShort = "Choisissez une date";
+      "Recherche parmi les thématiques d’emploi : candidatures, entretiens, création d’entreprise…";
+  static String thematiquesDemarcheDescription = "Choisis une thématique parmi les thématiques suivantes :";
+  static String thematiquesDemarcheDescriptionShort = "Choisis une thématique";
+  static String dateShortMandatory = "Choisis une date (obligatoire)";
+  static String thematiquesDemarcheDateShort = "Choisis une date";
   static String thematiquesDemarchePressedTip = "Parcourir les démarches";
   static String thematiquesErrorTitle = "Il y a un problème de notre côté\u{00A0}!";
   static String thematiquesErrorSubtitle =
-      "Nous sommes en train de régler le problème. Réessayez plus tard ou créez une démarche personnalisée.";
+      "Nous sommes en train de régler le problème. Réessaie plus tard ou crée une démarche personnalisée.";
   static String otherDemarche = "Autre démarche";
 
   // IA FT
@@ -1007,7 +1006,7 @@ class Strings {
   static String iaFtStep2Warning = "Ne renseigne aucune donnée sensible";
   static String iaFtStep2FieldHint = "Ajoute des détails pour que ton conseiller puisse valider l'action.";
   static String iaFtStep2FieldPlaceholder =
-      "Exemple : candidatures, entretiens, formations... L’IA va vous suggérer des démarches";
+      "Exemple : candidatures, entretiens, formations... L’IA va te suggérer des démarches";
   static String iaFtStep2ButtonDicter = "Dicter";
   static String iaFtStep2ButtonStop = "Arrêter";
   static String iaFtStep2Listening = "Dictée en cours";
@@ -1017,7 +1016,7 @@ class Strings {
   static String dictationStart = "Dicter";
   static String dictationStop = "Arrêter";
 
-  static String iaFtSuggestionsLoading = "Nous générons vos démarches, cela peut prendre quelques instants";
+  static String iaFtSuggestionsLoading = "Nous générons tes démarches, cela peut prendre quelques instants";
   static String iaFtSuggestionsLoadingWait = "Merci de patienter";
   static String iaFtSuggestionsFailure = "Oups, quelque chose s’est mal passé lors de la création des démarches.";
   static String iaFtSuggestionsEmpty = "Aucune démarche n’a pu être créée automatiquement.";
@@ -1028,17 +1027,17 @@ class Strings {
       ? "$count démarche n’a pas de date renseignée. Merci de la compléter pour valider"
       : "$count démarches n’ont pas de dates renseignées. Merci de les compléter pour valider";
   static String consulterMesDemarches = "Consulter mes démarches";
-  static String iaFtShowcaseTitle = "Nouveau ! Créez vos démarches avec l'IA";
+  static String iaFtShowcaseTitle = "Nouveau ! Crée tes démarches avec l'IA";
 
-  static String topDemarchesTitle = "Vos démarches en 1 minute avec l'IA";
-  static String topDemarchesHint = "Écrivez ou dictez vos démarches...";
+  static String topDemarchesTitle = "Tes démarches en 1 minute avec l'IA";
+  static String topDemarchesHint = "Écris ou dicte tes démarches...";
 
-  static String iaDemarchesAccueilTitle = "Vos démarches en 1 minute";
-  static String iaDemarchesAccueilSubtitle = "L’IA détecte vos démarches et les organise en un clic";
-  static String iaDemarchesAccueilHint = "Créer vos démarches avec l’IA";
+  static String iaDemarchesAccueilTitle = "Tes démarches en 1 minute";
+  static String iaDemarchesAccueilSubtitle = "L’IA détecte tes démarches et les organise en un clic";
+  static String iaDemarchesAccueilHint = "Créer tes démarches avec l’IA";
 
   static String thematiquesDemarcheButton = "Accéder aux thématiques";
-  static String iaFtEmptyError = "Décrivez vos démarches";
+  static String iaFtEmptyError = "Décris tes démarches";
 
   // Recherche
   static String derniereRecherche = "Recherches récentes";
@@ -1065,8 +1064,8 @@ class Strings {
   static String rechercheOffresImmersionTitle = "Offres d’immersion";
   static String rechercheOffresServiceCiviqueTitle = "Offres de service civique";
   static String rechercheAfficherPlus = "Afficher plus d'offres";
-  static String recherchePlaceholderTitle = "Effectuez votre recherche pour afficher des résultats";
-  static String rechercheLancerUneRechercheHint = "Lancez une recherche pour afficher les offres vous correspondant";
+  static String recherchePlaceholderTitle = "Effectue ta recherche pour afficher des résultats";
+  static String rechercheLancerUneRechercheHint = "Lance une recherche pour afficher les offres te correspondant";
   static String rechercheEditButton = "Modifier ma recherche";
   static String filtrerLesResultats = "Filtrer les résultats";
   static String modifierMesCriteres = "Modifier mes critères";
@@ -1105,7 +1104,7 @@ class Strings {
   // Solutions
   static String offreNotFoundTitle = "Offre expirée";
   static String offreNotFoundBodyTitle = "Cette offre n'est plus disponible";
-  static String offreNotFoundBodySubtitle = "Consultez les dernières offres ou demandez de l'aide à votre conseiller";
+  static String offreNotFoundBodySubtitle = "Consulte les dernières offres ou demande de l'aide à ton conseiller";
   static String keywordTitle = "Mot clé";
   static String metierLabel = "Métier";
   static String locationTitle = "Lieu";
@@ -1121,25 +1120,25 @@ class Strings {
   static String solutionsAppBarTitle = "Offres";
   static String partagerOffreConseiller = "Partager l’offre à mon conseiller";
   static String partageOffreNavTitle = "Partage de l’offre d’emploi";
-  static String souhaitDePartagerOffre = "L’offre que vous souhaitez partager";
-  static String partageOffreDefaultMessage = "Bonjour, je vous partage une offre d’emploi afin d’avoir votre avis";
+  static String souhaitDePartagerOffre = "L’offre que tu souhaites partager";
+  static String partageOffreDefaultMessage = "Bonjour, je te partage une offre d’emploi afin d’avoir ton avis";
   static String partageOffreSuccessTitle = "Partage offre d’emploi";
   static String partageOffreSuccessContent =
-      "L’offre d’emploi a été partagée à votre conseiller sur la messagerie de l’application";
-  static String messagePourConseiller = "Message destiné à votre conseiller";
-  static String infoOffrePartageChat = "L’offre d’emploi sera partagée à votre conseiller dans la messagerie";
+      "L’offre d’emploi a été partagée à ton conseiller sur la messagerie de l’application";
+  static String messagePourConseiller = "Message destiné à ton conseiller";
+  static String infoOffrePartageChat = "L’offre d’emploi sera partagée à ton conseiller dans la messagerie";
   static String partagerOffreEmploi = "Partager l’offre d’emploi";
   static String a11YLocationSuppressionLabel = "Supprimer la localisation";
   static String a11YKeywordSuppressionLabel = "Supprimer le mot clé";
   static String a11YMetierSuppressionLabel = "Supprimer le métier";
   static String a11YLocationWithDepartmentsExplanationLabel =
-      "Commencez à saisir un nom de ville ou de département. Une liste de choix s'affiche directement sous le champ et se met à jour au fur et à mesure. Puis sélectionnez une ville ou un département dans lequel vous cherchez un emploi";
+      "Commence à saisir un nom de ville ou de département. Une liste de choix s'affiche directement sous le champ et se met à jour au fur et à mesure. Puis sélectionne une ville ou un département dans lequel tu cherches un emploi";
   static String a11YLocationWithoutDepartmentExplanationLabel =
-      "Commencez à saisir un nom de ville. Une liste de choix s'affiche directement sous le champ et se met à jour au fur et à mesure. Puis sélectionnez une ville dans laquelle vous cherchez un emploi";
+      "Commence à saisir un nom de ville. Une liste de choix s'affiche directement sous le champ et se met à jour au fur et à mesure. Puis sélectionne une ville dans laquelle tu cherches un emploi";
   static String a11YKeywordExplanationLabel =
-      "Saisissez un mot clé correspondant à votre recherche d'emploi. Puis validez votre choix.";
+      "Saisis un mot clé correspondant à ta recherche d'emploi. Puis valide ton choix.";
   static String a11YMetiersExplanationLabel =
-      "Commencez à saisir un métier. Une liste de choix s'affiche directement sous le champ et se met à jour au fur et à mesure. Puis sélectionnez un métier dans lequel vous cherchez une immersion";
+      "Commence à saisir un métier. Une liste de choix s'affiche directement sous le champ et se met à jour au fur et à mesure. Puis sélectionne un métier dans lequel tu cherches une immersion";
 
   static String a11yPartagerOffreLabel = "Partager l’offre";
   static String a11yPartagerEvenementLabel = "Partager l’événement";
@@ -1149,30 +1148,30 @@ class Strings {
   static String partageOffreAlternanceNavTitle = "Partage de l’offre d’alternance";
 
   // Event partage
-  static String infoEventPartageChat = "L’événement sera partagé à votre conseiller dans la messagerie";
-  static String souhaitDePartagerEvent = "Ce que vous souhaitez partager";
-  static String partageEventDefaultMessage = "Bonjour, je vous partage un événement afin d’avoir votre avis";
+  static String infoEventPartageChat = "L’événement sera partagé à ton conseiller dans la messagerie";
+  static String souhaitDePartagerEvent = "Ce que tu souhaites partager";
+  static String partageEventDefaultMessage = "Bonjour, je te partage un événement afin d’avoir ton avis";
   static String partagerAuConseiller = "Partager à mon conseiller";
   static String partageEventNavTitle = "Partage d’événement";
-  static String partageEventSuccess = "L’événement a été partagé à votre conseiller sur la messagerie de l’application";
+  static String partageEventSuccess = "L’événement a été partagé à ton conseiller sur la messagerie de l’application";
 
   // Evenement partage
   static String partageEvenementEmploiNavTitle = "Partage de l’événement";
-  static String souhaitDePartagerEvenementEmploi = "L’événement que vous souhaitez partager";
-  static String partageEvenementEmploiDefaultMessage = "Bonjour, je vous partage un événement afin d’avoir votre avis";
+  static String souhaitDePartagerEvenementEmploi = "L’événement que tu souhaites partager";
+  static String partageEvenementEmploiDefaultMessage = "Bonjour, je te partage un événement afin d’avoir ton avis";
   static String partageEvenementEmploiSuccess =
-      "L’événement a été partagé à votre conseiller sur la messagerie de l’application";
-  static String infoEvenementEmploiPartageChat = "L’événement sera partagé à votre conseiller dans la messagerie";
+      "L’événement a été partagé à ton conseiller sur la messagerie de l’application";
+  static String infoEvenementEmploiPartageChat = "L’événement sera partagé à ton conseiller dans la messagerie";
   static String partagerEvenementEmploiAuConseiller = "Partager l’événement";
 
   // Session milo partage
   static String partageSessionMiloNavTitle = "Partage d’événement";
-  static String souhaitDePartagerSessionMilo = "Ce que vous souhaitez partager";
-  static String partageSessionMiloDefaultMessage = "Bonjour, pouvez-vous m'inscrire à cet événement ?";
+  static String souhaitDePartagerSessionMilo = "Ce que tu souhaites partager";
+  static String partageSessionMiloDefaultMessage = "Bonjour, peux-tu m'inscrire à cet événement ?";
   static String partageSessionMiloCompletMessage = "Bonjour, cet événement est complet mais je suis intéressé";
   static String partageSessionMiloSuccess =
-      "L’événement a été partagé à votre conseiller sur la messagerie de l’application";
-  static String infoSessionMiloPartageChat = "L’événement sera partagé à votre conseiller dans la messagerie";
+      "L’événement a été partagé à ton conseiller sur la messagerie de l’application";
+  static String infoSessionMiloPartageChat = "L’événement sera partagé à ton conseiller dans la messagerie";
   static String partagerSessionMiloAuConseiller = "Partager à mon conseiller";
 
   // Immersion
@@ -1183,26 +1182,26 @@ class Strings {
   static String modeDistancielOnSite = 'Présentiel';
   static String immersionExpansionTileTitle = "En savoir plus sur l’immersion";
   static String immersionAccueillanteExplanation =
-      "Cette entreprise recherche activement des candidats à l’immersion. Contactez-la en expliquant votre projet professionnel et vos motivations.";
+      "Cette entreprise recherche activement des candidats à l’immersion. Contacte-la en expliquant ton projet professionnel et tes motivations.";
   static String immersionDescriptionLabel =
-      "Si l’entreprise est d’accord pour vous accueillir :\n\n"
-      "· Prévenez votre conseiller\n"
-      "· Remplissez une convention d’immersion avec lui";
+      "Si l’entreprise est d’accord pour t'accueillir :\n\n"
+      "· Préviens ton conseiller\n"
+      "· Remplis une convention d’immersion avec lui";
   static String immersionContactBlocTitle = "Contact";
   static String immersionLocationButton = "Localiser l'entreprise";
   static String immersionEmailButton = "Envoyer un e-mail";
   static String immersionEmailSubject = "Candidature pour une période d'immersion";
   static String immersionContactSucceedMail =
-      "L’entreprise a bien reçu votre demande. Laissez-lui un peu de temps pour vous répondre. En cas de réponse positive, vous recevrez un e-mail avec la suite des démarches. Pensez à vérifier vos spams.";
+      "L’entreprise a bien reçu ta demande. Laisse-lui un peu de temps pour te répondre. En cas de réponse positive, tu recevras un e-mail avec la suite des démarches. Pense à vérifier tes spams.";
   static String immersionContactSucceedPhone =
-      "Merci pour votre intérêt. Cette entreprise souhaite être contactée par téléphone. Ses coordonnées vous ont été envoyées par email.";
+      "Merci pour ton intérêt. Cette entreprise souhaite être contactée par téléphone. Ses coordonnées t'ont été envoyées par email.";
   static String immersionContactSucceedInPerson =
-      "Merci pour votre intérêt. Cette entreprise souhaite que vous vous rendiez sur place. Ses coordonnées vous ont été envoyées par email.";
+      "Merci pour ton intérêt. Cette entreprise souhaite que tu te rendes sur place. Ses coordonnées t'ont été envoyées par email.";
   static String contactImmersionAlreadyDone =
-      "Vous avez déjà postulé à cette offre d'immersion, il faut un minimum de 7 jours pour pouvoir postuler à nouveau";
+      "Tu as déjà postulé à cette offre d'immersion, il faut un minimum de 7 jours pour pouvoir postuler à nouveau";
   static String immersitionContactFormTitle = "Contacter l’entreprise";
   static String immersitionContactFormSubtitle =
-      "Cette entreprise a choisi d’être contactée par mail. Veuillez compléter ce formulaire qui sera transmis à l’entreprise.";
+      "Cette entreprise a choisi d’être contactée par mail. Merci de compléter ce formulaire qui sera transmis à l’entreprise.";
   static String immersitionContactFormHint = "Tous les champs avec * sont obligatoires";
   static String immersitionContactFormEmailHint = "Email";
   static String immersitionContactFormSurnameHint = "Prénom";
@@ -1211,25 +1210,24 @@ class Strings {
   static String immersitionContactFormStartDateHint = "Date de début d’immersion souhaitée";
   static String immersitionContactFormExperienceLabel = "Expérience";
   static String immersitionContactFormExperiencePlaceholder =
-      "Détaillez en quelques lignes vos expériences et compétences";
+      "Détaille en quelques lignes tes expériences et compétences";
   static String immersitionContactFormLinkedinLabel = "Page LinkedIn ou CV en ligne";
   static String immersitionContactFormOptionalSuffix = "(optionnel)";
   static String immersionContactFormButton = "Envoyer";
-  static String immersionContactFormEmailEmpty = "Renseignez votre adresse email";
+  static String immersionContactFormEmailEmpty = "Renseigne ton adresse email";
   static String immersionContactFormEmailInvalid =
-      "Veuillez renseigner une adresse email valide au format exemple@email.com";
-  static String immersionContactFormPhoneEmpty = "Renseignez votre numéro de téléphone";
-  static String immersionContactFormPhoneInvalid = "Veuillez renseigner un numéro de téléphone valide";
+      "Merci de renseigner une adresse email valide au format exemple@email.com";
+  static String immersionContactFormPhoneEmpty = "Renseigne ton numéro de téléphone";
+  static String immersionContactFormPhoneInvalid = "Merci de renseigner un numéro de téléphone valide";
   static String immersionContactFormLinkedinInvalid =
-      "Veuillez renseigner une URL valide (ex: https://linkedin.com/in/votre-profil)";
+      "Merci de renseigner une URL valide (ex: https://linkedin.com/in/ton-profil)";
   static String contactByMail = "Mise en relation par mail";
   static String contactByPhone = "Mise en relation par téléphone";
   static String contactByPresen = "Rendez-vous sur place";
   static String adresse = "Adresse";
   static String informationComplementaire = "Informations complémentaires";
   static String siteWeb = "Site web";
-  static String contactWarning =
-      "Veuillez utiliser les coordonnées de l'entreprise uniquement pour votre usage personnel";
+  static String contactWarning = "Merci d'utiliser les coordonnées de l'entreprise uniquement pour ton usage personnel";
   static String immersionContactTitle = "Entreprise contactée";
   static String desQuePossible = "Dès que possible";
 
@@ -1248,11 +1246,10 @@ class Strings {
   static String serviceCiviqueOrganisationTitle = "Organisation";
 
   // Solutions Errors
-  static String noContentErrorTitle = "Pour le moment, aucune offre ne correspond à vos critères.";
-  static String noContentErrorSubtitle =
-      "Essayez d’élargir votre recherche en modifiant vos critères ou créez une alerte.";
-  static String genericError = "Une erreur est survenue. Veuillez réessayer";
-  static String genericCreationError = "Erreur lors de la création. Veuillez réessayer";
+  static String noContentErrorTitle = "Pour le moment, aucune offre ne correspond à tes critères.";
+  static String noContentErrorSubtitle = "Essaie d’élargir ta recherche en modifiant tes critères ou crée une alerte.";
+  static String genericError = "Une erreur est survenue. Réessaie";
+  static String genericCreationError = "Erreur lors de la création. Réessaie";
 
   // Offre emploi filtres
   static String filtrer = "Filtrer";
@@ -1304,7 +1301,7 @@ class Strings {
   static String requiredIcon = "Obligatoire";
   static String offreNotFoundError = "Cette offre n’existe plus ou est momentanément suspendue";
   static String offreNotFoundExplaination =
-      "Vous pouvez décider de la supprimer ou bien de la conserver dans vos offres suivies.";
+      "Tu peux décider de la supprimer ou bien de la conserver dans tes offres suivies.";
   static String deleteOffreFromFavori = "Supprimer des offres suivies";
   static String interim = "Intérim";
 
@@ -1312,25 +1309,25 @@ class Strings {
 
   // Favoris
   static String mesFavorisPageTitle = "Mon suivis des offres";
-  static String miscellaneousErrorRetry = "Une erreur est survenue. Veuillez réessayer";
-  static String favoriUpdateError = "La mise à jour de l’offre suivie a échoué. Veuillez réessayer.";
+  static String miscellaneousErrorRetry = "Une erreur est survenue. Réessaie";
+  static String favoriUpdateError = "La mise à jour de l’offre suivie a échoué. Réessaie.";
 
   static String offreNumberAndLastUpdate(String offreId, String lastUpdate) =>
       "Offre n°$offreId, actualisée $lastUpdate";
   static String offreDetailNumber(String offreId) => "Offre n°$offreId";
   static String offreDetailLastUpdate(String lastUpdate) => "Actualisée $lastUpdate";
 
-  static String offresEnregistreesEmptyTitle = "Suivez vos offres d’emploi ici";
+  static String offresEnregistreesEmptyTitle = "Suis tes offres d’emploi ici";
 
   static String offresEnregistreesEmptySubtitle =
-      "Retrouvez ici les offres qui vous intéressent et celles où vous avez postulé.";
+      "Retrouve ici les offres qui t'intéressent et celles où tu as postulé.";
   static String offresEnregistreesEmptyButton = "Lancer une recherche";
   static String suiviPostuleesCount(int count) => count <= 1 ? "$count postulée" : "$count postulées";
   static String suiviFavorisCount(int count) => count <= 1 ? "$count favori" : "$count favoris";
   static String suiviFavorisEmptyHint = "Sauvegarde une offre depuis les résultats pour la retrouver ici.";
   static String candidatureEnvoyee = "Candidature envoyée";
   static String offreTypeEmploiLabel = "Emploi";
-  static String offresEnregistreesError = "Erreur lors de la récupération de vos offres suivies";
+  static String offresEnregistreesError = "Erreur lors de la récupération de tes offres suivies";
   static String favorisUnknownContractType = 'Type de contrat inconnu';
   static String favorisUnknownSecteur = 'Secteur d\'activité inconnu';
 
@@ -1346,12 +1343,12 @@ class Strings {
   static String poleEmploiUrlButton = "Accéder à mon espace France Travail";
   static String espacePoleEmploiUrl = "https://candidat.pole-emploi.fr/espacepersonnel/";
 
-  static String emptyContentTitle(String content) => "Vous n’avez pas encore de $content";
+  static String emptyContentTitle(String content) => "Tu n’as pas encore de $content";
 
-  static String emptyContentSubtitle(String content) => "Commencez en créant une nouvelle $content\u{00A0}!";
+  static String emptyContentSubtitle(String content) => "Commence en créant une nouvelle $content\u{00A0}!";
 
   static String emptyContentDescription(String content) =>
-      "Vous pouvez créer vos $content en autonomie depuis votre espace France Travail.";
+      "Tu peux créer tes $content en autonomie depuis ton espace France Travail.";
 
   // Profil
   static String personalInformation = "Informations personnelles";
@@ -1360,7 +1357,7 @@ class Strings {
   static String modifyMyInformation = "Modifier mes informations";
   static String emailAddressAccountLabel = "Adresse mail du compte";
   static String conseillerTileSubtitle(String date) => "Ton conseiller depuis le $date";
-  static String cvTileSubtitle = "Télécharger vos CV France Travail";
+  static String cvTileSubtitle = "Télécharger tes CV France Travail";
   static String privacyAndDataLabel = "Confidentialités et données";
   static String privacyAndDataSubtitle = "RGAA, RGPD, données stockées";
 
@@ -1394,7 +1391,7 @@ class Strings {
   static String suppressionAccountLabel = Brand.isCej()
       ? _CejStrings.suppressionAccountLabel
       : _PassEmploiStrings.suppressionAccountLabel;
-  static String activityShareLabel = "Partager votre activité";
+  static String activityShareLabel = "Partager ton activité";
   static String activitySharePageTitle = "Partage de ton activité";
   static String notificationsLabel = "Gérer les notifications";
 
@@ -1411,20 +1408,20 @@ class Strings {
       ? _CejStrings.warningInformationParagraph2
       : _PassEmploiStrings.warningInformationParagraph2;
   static String warningInformationPoleEmploi =
-      "Vos démarches et rendez-vous seront toujours disponibles dans votre portail France Travail.";
+      "Tes démarches et rendez-vous seront toujours disponibles dans ton portail France Travail.";
   static List<String> warningPointsMilo = [
-    "vos actions",
-    "vos messages avec votre conseiller",
-    "vos rendez-vous",
-    "vos recherches et offres sauvegardées",
+    "tes actions",
+    "tes messages avec ton conseiller",
+    "tes rendez-vous",
+    "tes recherches et offres sauvegardées",
   ];
 
   static List<String> warningPointsPoleEmploi = [
-    "vos messages avec votre conseiller",
-    "vos recherches et offres sauvegardées",
+    "tes messages avec ton conseiller",
+    "tes recherches et offres sauvegardées",
   ];
-  static String lastWarningBeforeSuppression = "Tapez “supprimer” pour confirmer la suppression de votre compte.";
-  static String mandatorySuppressionLabelError = "Champs invalide. Vérifiez que vous avez bien tapé “supprimer”";
+  static String lastWarningBeforeSuppression = "Tape “supprimer” pour confirmer la suppression de ton compte.";
+  static String mandatorySuppressionLabelError = "Champs invalide. Vérifie que tu as bien tapé “supprimer”";
   static String accountDeletionSuccess = Brand.isCej()
       ? _CejStrings.accountDeletionSuccess
       : _PassEmploiStrings.accountDeletionSuccess;
@@ -1444,15 +1441,15 @@ class Strings {
 
   static const String notificationsSettingsAlertesTitle = "Alertes";
   static const String notificationsSettingsAlertesSubtitle =
-      "De nouvelles offres correspondant à vos alertes enregistrées";
+      "De nouvelles offres correspondant à tes alertes enregistrées";
 
   static const String notificationsSettingsMonSuiviTitle = "Mon suivi";
 
   static String notificationsSettingsMonSuiviSubtitle(bool isMilo) =>
       isMilo ? notificationsSettingsMonSuiviSubtitleMilo : notificationsSettingsMonSuiviSubtitleFT;
 
-  static const String notificationsSettingsMonSuiviSubtitleMilo = "Création d’une action par votre conseiller";
-  static const String notificationsSettingsMonSuiviSubtitleFT = "Création d’une démarche par votre conseiller";
+  static const String notificationsSettingsMonSuiviSubtitleMilo = "Création d’une action par ton conseiller";
+  static const String notificationsSettingsMonSuiviSubtitleFT = "Création d’une démarche par ton conseiller";
 
   static String notificationsSettingsRendezVoussTitle(bool isMilo) =>
       isMilo ? notificationsSettingsRendezVoussTitleMilo : notificationsSettingsRendezVoussTitleFT;
@@ -1460,7 +1457,7 @@ class Strings {
   static const String notificationsSettingsRendezVoussTitleMilo = "Rendez-vous et sessions";
   static const String notificationsSettingsRendezVoussTitleFT = "Rendez-vous";
   static const String notificationsSettingsRendezVousSubtitle =
-      "Inscription, modification ou suppression par votre conseiller";
+      "Inscription, modification ou suppression par ton conseiller";
 
   static const String notificationsSettingsRappelsTitle = "Rappels";
 
@@ -1473,7 +1470,7 @@ class Strings {
 
   static const String notificationsSettingsActuMiloTitle = "Ma mission locale";
   static const String notificationsSettingsActuMiloSubtitle =
-      "Publication d’une nouvelle actualité dans votre Mission Locale";
+      "Publication d’une nouvelle actualité dans ta Mission Locale";
 
   static const String notificationsSettingsTitle = "Paramètres système";
   static const String openNotificationsSettings = "Ouvrir les paramètres de notifications";
@@ -1486,10 +1483,10 @@ class Strings {
   static String contactPageBody1 = Brand.isCej()
       ? "L’équipe technique de l’application CEJ est en charge du développement de l’application."
       : "L’équipe technique de l’application pass emploi est en charge du développement de l’application.";
-  static String contactPageBody2 = "Contactez-nous pour :";
+  static String contactPageBody2 = "Contacte-nous pour :";
   static String contactPageBody3 = Brand.isCej()
-      ? "Pour toutes les informations et les problèmes liés au Contrat d’Engagement Jeune, veuillez contacter votre conseiller."
-      : "Pour toutes les informations et les problèmes liés votre dispositif d'accompagnement, veuillez contacter votre conseiller.";
+      ? "Pour toutes les informations et les problèmes liés au Contrat d’Engagement Jeune, contacte ton conseiller."
+      : "Pour toutes les informations et les problèmes liés à ton dispositif d'accompagnement, contacte ton conseiller.";
   static String contactPageBodyBullet1 = "Un problème sur l’application";
   static String contactPageBodyBullet2 = "Une suggestion d’évolution";
   static String contactPageBodyBullet3 = "Toute autre remarque";
@@ -1498,7 +1495,7 @@ class Strings {
   static String objetPriseDeContact(Brand brand) => brand.isCej
       ? "Prise de contact avec l’équipe de l’application du CEJ"
       : "Prise de contact avec l’équipe de l’application pass emploi";
-  static String corpsPriseDeContact = "Décrivez nous votre problème ou vos suggestions d’évolution : ";
+  static String corpsPriseDeContact = "Décris-nous ton problème ou tes suggestions d’évolution : ";
 
   // alertes
   static String alerte = "Alerte";
@@ -1506,45 +1503,45 @@ class Strings {
   static String createAlertSuccessTitle = "Recherche enregistrée";
   static String createAlerteTitle = "Créer une alerte pour la recherche";
   static String alerteTitle = "Nom de la recherche";
-  static String mandatoryAlerteTitleError = "Renseigner un nom pour votre recherche";
+  static String mandatoryAlerteTitleError = "Renseigne un nom pour ta recherche";
   static String alerteFilters = "Critères de la recherche";
   static String alerteInfo = "Les filtres appliqués seront aussi enregistrés.";
   static String searchNotificationInfo =
-      "Vous recevrez des notifications pour être alerté des nouvelles offres liées aux critères de votre recherche.";
+      "Tu recevras des notifications pour être alerté des nouvelles offres liées aux critères de ta recherche.";
 
   static String alerteTitleField(metier, localisation) => "$metier - $localisation";
   static String alerteSuccessfullyCreated =
-      "Votre recherche a bien été enregistrée. Retrouvez-la dans la section Mes Alertes sur votre page d'accueil.";
-  static String creationAlerteError = "Erreur lors de la création de l'alerte. Veuillez réessayer";
+      "Ta recherche a bien été enregistrée. Retrouve-la dans la section Mes Alertes sur ta page d'accueil.";
+  static String creationAlerteError = "Erreur lors de la création de l'alerte. Réessaie";
   static String alerteGetError = "Erreur lors de la récupération des recherches sauvegardées.";
   static String alerteTabName = "Mes alertes";
-  static String alertesListEmptyTitle = "Vous n’avez pas encore d’alerte sauvegardée";
+  static String alertesListEmptyTitle = "Tu n’as pas encore d’alerte sauvegardée";
   static String alertesListEmptySubtitle =
-      "Créez des alertes lors de vos recherches et recevez les offres qui vous correspondent";
+      "Crée des alertes lors de tes recherches et reçois les offres qui te correspondent";
   static String alertesListEmptyButton = "Rechercher une offre";
-  static String alertesFilteredListEmptyTitle = "Aucune alerte ne correspond à vos critères";
-  static String alertesFilteredListEmptySubtitle = "Essayez de modifier vos filtres";
+  static String alertesFilteredListEmptyTitle = "Aucune alerte ne correspond à tes critères";
+  static String alertesFilteredListEmptySubtitle = "Essaie de modifier tes filtres";
   static String favorisTabName = "Mes offres";
   static String alerteSeeResults = "Voir les résultats";
 
-  static String alerteDeleteMessageTitle = "Souhaitez-vous supprimer l’alerte ?";
+  static String alerteDeleteMessageTitle = "Souhaites-tu supprimer l’alerte ?";
   static String alertesCountTitle(int count) => count <= 1 ? "$count alerte" : "$count alertes";
   static String alertesCreationHint =
       "💡 Les alertes se créent depuis les résultats d’offres d’emploi ou d’alternance.";
   static String supprimerLesAlertesConfirmTitle = "Supprimer toutes les alertes ?";
   static String supprimerLesAlertesConfirmSubtitle = "Cette action supprimera définitivement les alertes affichées.";
 
-  static String alerteDeleteMessageSubtitle = "Vous n’aurez plus accès à la page de résultats ni aux notifications.";
+  static String alerteDeleteMessageSubtitle = "Tu n’auras plus accès à la page de résultats ni aux notifications.";
   static String alerteDeleteError = "Erreur lors de la suppression de la recherche.";
 
-  static String alerteDeleteSuccessTitle = "Votre alerte a été supprimée avec succès.";
-  static String alerteDeleteSuccessContent = "Votre alerte a été supprimée avec succès.";
+  static String alerteDeleteSuccessTitle = "Ton alerte a été supprimée avec succès.";
+  static String alerteDeleteSuccessContent = "Ton alerte a été supprimée avec succès.";
 
   // Mode démo
   static String passerEnDemo = "Passer en mode démo";
   static String modeDemoAppBarLabel = "Version démo conseiller";
   static String modeDemoExplicationTitre = "Espace démo conseiller";
-  static String modeDemoExplicationPremierPoint1 = "→ Cette version vous ";
+  static String modeDemoExplicationPremierPoint1 = "→ Cette version te ";
   static String modeDemoExplicationPremierPoint2 = "permet d’explorer";
   static String modeDemoExplicationPremierPoint3 = Brand.isCej()
       ? _CejStrings.modeDemoExplicationPremierPoint3
@@ -1552,13 +1549,13 @@ class Strings {
   static String modeDemoExplicationSecondPoint1 = "→ Les données présentées ";
   static String modeDemoExplicationSecondPoint2 = "sont factices.";
   static String modeDemoExplicationTroisiemePoint1 =
-      "→ Vous pourrez naviguer dans l'application, rédiger des messages (sans les envoyer) et effectuer des recherches. Les résultats alors affichés sont ";
+      "→ Tu pourras naviguer dans l'application, rédiger des messages (sans les envoyer) et effectuer des recherches. Les résultats alors affichés sont ";
   static String modeDemoExplicationTroisiemePoint2 =
       "donnés à titre d’exemples et ne correspondent pas aux recherches effectuées.";
   static String modeDemoExplicationChoix = "Accéder au mode démo";
 
   // Campagne
-  static String campagneTitle(int page, int count) => "Votre expérience $page/$count";
+  static String campagneTitle(int page, int count) => "Ton expérience $page/$count";
 
   // Developer options
   static String developerOptions = 'Options développeurs';
@@ -1573,7 +1570,7 @@ class Strings {
   static String finish = "Terminer";
 
   //Appstore rating
-  static String ratingLabel = 'Êtes-vous satisfait de l’application\u{00A0}?';
+  static String ratingLabel = 'Es-tu satisfait de l’application\u{00A0}?';
   static String ratingButton = 'Je donne mon avis';
   static String rateAppOnStoresLabel = 'Noter l’application sur les stores';
   static String proposeIdeaLabel = 'Proposer une idée';
@@ -1588,35 +1585,35 @@ class Strings {
   static String ratingEmailObject(Brand brand) =>
       brand.isCej ? "Mon avis sur l’application du CEJ" : "Mon avis sur l’application pass emploi";
 
-  static String contentSupportMail = "Aidez-nous à améliorer l’application en nous donnant votre avis :\n";
+  static String contentSupportMail = "Aide-nous à améliorer l’application en nous donnant ton avis :\n";
 
   // Suggestions de recherche
-  static String vosSuggestionsAlertesError = "Erreur lors de la récupération de vos suggestions d'alertes";
+  static String tesSuggestionsAlertesError = "Erreur lors de la récupération de tes suggestions d'alertes";
   static String mesSuggestionsAlertes = "Mes suggestions d'alertes";
-  static String nouvellesSuggestionsDeRechercheTitre = "Vous avez des suggestions d’alertes";
+  static String nouvellesSuggestionsDeRechercheTitre = "Tu as des suggestions d’alertes";
   static String nouvellesSuggestionsDeRechercheDescription =
-      "Sur la base de votre profil France Travail, voici des suggestions d'alertes à sauvegarder";
+      "Sur la base de ton profil France Travail, voici des suggestions d'alertes à sauvegarder";
   static String voirSuggestionsDeRecherche = "Voir les suggestions";
   static String suggestionsDeRechercheTitle = "Suggestions d'alertes";
   static String suggestionsDeRechercheHeader =
-      "Vos suggestions peuvent venir de différentes sources. Après l’ajout, vous serez notifié si une nouvelle offre est disponible.";
+      "Tes suggestions peuvent venir de différentes sources. Après l’ajout, tu seras notifié si une nouvelle offre est disponible.";
   static String suggestionSourcePoleEmploi = "Profil France Travail";
   static String suggestionSourceConseiller = "Conseiller";
   static String suggestionSourceDiagoriente = "Métiers favoris";
   static String suggestionRechercheAjoutee = "Recherche ajoutée";
-  static String suggestionRechercheAjouteeDescription = "La recherche a été ajoutée à vos offres suivies";
+  static String suggestionRechercheAjouteeDescription = "La recherche a été ajoutée à tes offres suivies";
   static String voirResultatsSuggestion = "Voir les résultats";
-  static String emptySuggestionAlerteListTitre = "Vous n’avez pas encore de suggestions d’alerte";
+  static String emptySuggestionAlerteListTitre = "Tu n’as pas encore de suggestions d’alerte";
   static String emptySuggestionAlerteListDescriptionMilo =
-      "De nouvelles suggestions pourront vous être proposées plus tard.";
+      "De nouvelles suggestions pourront t'être proposées plus tard.";
   static String emptySuggestionAlerteListDescriptionPoleEmploi =
-      "Vous pouvez remplir votre profil France Travail pour avoir des suggestions qui vous correspondent";
+      "Tu peux remplir ton profil France Travail pour avoir des suggestions qui te correspondent";
 
   // Événements
   static String eventListError = "Erreur lors de la récupération des événements";
-  static String eventListEmpty = "Il n’y a pas encore d’événement dans votre Mission Locale";
-  static String eventListEmptySubtitle = "Vous retrouverez ici tous les événements programmés de votre mission locale.";
-  static String eventListHeaderText = "Retrouvez ici l’ensemble des événements organisés par votre Mission locale";
+  static String eventListEmpty = "Il n’y a pas encore d’événement dans ta Mission Locale";
+  static String eventListEmptySubtitle = "Tu retrouvereras ici tous les événements programmés de ta mission locale.";
+  static String eventListHeaderText = "Retrouve ici l’ensemble des événements organisés par ta Mission locale";
   static String eventVousEtesDejaInscrit = "Je suis déjà inscrit";
   static String eventAnnulerMonInscription = "Annulation possible";
   static String eventInscrivezVousPourParticiper = "Faire une demande d'inscription";
@@ -1628,23 +1625,23 @@ class Strings {
   static String eventEmploiDetailsAppBarTitle = "Détails de l’événement";
   static String eventEmploiDetailsPartagerConseiller = "Partager l'événement à mon conseiller";
   static String eventEmploiDetailsInscription = "Je m'inscris";
-  static String eventPlaceholderTitle = "Trouvez un événement";
-  static String eventPlaceholderSubtitle = "Commencez votre recherche en remplissant les champs ci-dessus.";
+  static String eventPlaceholderTitle = "Trouve un événement";
+  static String eventPlaceholderSubtitle = "Commence ta recherche en remplissant les champs ci-dessus.";
 
   // auto desinscription
   static String dateLimiteAnnulation = "Date limite d'annulation";
-  static String autoDesinscriptionFormConfirmation = "Confirmez-vous l’annulation à cet événement ?";
-  static String autoDesinscriptionFormFieldTitle = "* Précisez le motif de votre annulation";
+  static String autoDesinscriptionFormConfirmation = "Confirmes-tu l’annulation à cet événement ?";
+  static String autoDesinscriptionFormFieldTitle = "* Précise le motif de ton annulation";
   static String autoDesinscriptionConfirm = "Confirmer l’annulation";
   static String autoDesinscriptionCancel = "Garder mon inscription";
   static String autoDesinscriptionVoirAutresEvenements = "Voir d'autres événements";
   static String autoDesinscriptionSuccessTitle(String eventTitle) =>
-      "Votre inscription à l'événement $eventTitle a été annulée";
+      "Ton inscription à l'événement $eventTitle a été annulée";
   static String autoDesinscriptionSuccessAppBarTitle = "Annulation confirmée";
 
   // Événements Emploi
   static const String secteurActiviteLabel = "Secteur d'activité";
-  static const String secteurActiviteHint = "Sélectionnez un secteur d'activité";
+  static const String secteurActiviteHint = "Sélectionne un secteur d'activité";
   static const String secteurActiviteAll = "Tous les secteurs d'activité";
   static const String secteurActiviteAgriculture =
       "Agriculture et Pêche, Espaces naturels et Espaces verts, Soins aux animaux";
@@ -1683,38 +1680,37 @@ class Strings {
   // Mode dégradé France Travail
   static String reloadPage = "Recharger la page";
 
-  static String dateDerniereMiseAJourRendezvous(String date) => "Dernière actualisation de vos rendez-vous le $date";
+  static String dateDerniereMiseAJourRendezvous(String date) => "Dernière actualisation de tes rendez-vous le $date";
 
-  static String dateDerniereMiseAJourDemarches(String date) => "Dernière actualisation de vos démarches le $date";
+  static String dateDerniereMiseAJourDemarches(String date) => "Dernière actualisation de tes démarches le $date";
 
   // CV
   static String cvCardTitle = "CV";
   static String cvCardSubtitle =
-      "Préparez vos prochaines candidatures en téléchargeant vos CV France Travail directement sur votre téléphone.";
+      "Prépare tes prochaines candidatures en téléchargeant tes CV France Travail directement sur ton téléphone.";
   static String cvCadCaption = "Voir";
   static String cvListPageTitle = "CV";
-  static String cvListPageSubtitle =
-      "Téléchargez vos CV France Travail sur votre téléphone pour préparer votre candidature";
+  static String cvListPageSubtitle = "Télécharge tes CV France Travail sur ton téléphone pour préparer ta candidature";
   static String cvError = "Erreur lors de la récupération des CVs France Travail";
-  static String cvListEmptyTitle = "Vous n’avez pas de CV dans votre espace France Travail";
+  static String cvListEmptyTitle = "Tu n’as pas de CV dans ton espace France Travail";
   static String cvListEmptySubitle =
-      "Déposez votre CV dans votre espace France Travail pour le récupérer automatiquement quand vous postulerez à des offres";
+      "Dépose ton CV dans ton espace France Travail pour le récupérer automatiquement quand tu postuleras à des offres";
   static String cvEmptyButton = "Mon espace France Travail";
   static String cvDownload = "Télécharger";
-  static String cvErrorApiPeKoMessage = "Impossible de se synchroniser avec votre espace France Travail";
+  static String cvErrorApiPeKoMessage = "Impossible de se synchroniser avec ton espace France Travail";
   static String cvErrorApiPeKoButton = "Recharger la page";
 
   // Postuler
   static String postulerOffreTitle = "Postuler";
-  static String postulerTitle = "Récupérez votre CV sur votre téléphone";
-  static String postulerContinueButton = "Continuez vers l’offre";
+  static String postulerTitle = "Récupère ton CV sur ton téléphone";
+  static String postulerContinueButton = "Continue vers l’offre";
 
   // Suggestions alertes location form
-  static String suggestionLocalisationAppBarTitle = "Paramétrer votre alerte";
+  static String suggestionLocalisationAppBarTitle = "Paramétrer ton alerte";
   static String suggestionLocalisationFormEmploiSubtitle =
-      "Sélectionnez une ville ou un département dans lequel vous cherchez un emploi.";
+      "Sélectionne une ville ou un département dans lequel tu cherches un emploi.";
   static String suggestionLocalisationFormImmersionSubtitle =
-      "Sélectionnez une ville dans laquelle vous cherchez une immersion.";
+      "Sélectionne une ville dans laquelle tu cherches une immersion.";
   static String suggestionLocalisationAddAlerteButton = "Ajouter l’alerte";
 
   // CGU
@@ -1726,7 +1722,7 @@ class Strings {
     "L’utilisation de notre service est soumise à l’acception préalable de nos ",
     "↗ Conditions Générales d’Utilisation",
     ". Ces conditions définissent ",
-    "vos droits et obligations en tant qu'utilisateur ",
+    "tes droits et obligations en tant qu'utilisateur ",
     "de notre application.",
   ];
   static List<String> cguUpdateRequiredDescription = [
@@ -1743,7 +1739,7 @@ class Strings {
     "J’ai lu et j’accepte les nouvelles",
     " ↗ CGU",
   ];
-  static String cguSwitchError = "Acceptez les Conditions Générales d’Utilisation pour utiliser l’application.";
+  static String cguSwitchError = "Accepte les Conditions Générales d’Utilisation pour utiliser l’application.";
   static String cguAccept = "Valider";
   static String cguRefuse = "Refuser et se déconnecter";
 
@@ -1753,17 +1749,17 @@ class Strings {
   static String feedbackBad = "Pas d’accord";
   static String feedbackNeutral = "Neutre";
   static String feedbackGood = "D’accord";
-  static String feedbackThanks = "Merci pour votre retour !";
+  static String feedbackThanks = "Merci pour ton retour !";
 
   static String feedbackProvenanceOffre(String provenance) =>
       "Connaître la source d’une offre ($provenance, etc) m’intéresse.";
-  static String feedbackCreateDemarche = "Qu’avez-vous pensé de la nouvelle saisie des démarches ?";
+  static String feedbackCreateDemarche = "Qu’as-tu pensé de la nouvelle saisie des démarches ?";
 
   // centre de notifications
   static String notificationsCenterTooltip = "Centre de notifications";
   static String notificationsCenterTitle = "Notifications";
   static String notificationsCenterError = "Erreur lors de la récupération des notifications";
-  static String notificationsCenterEmptyTitle = "Vous n’avez pas de nouvelle notification.";
+  static String notificationsCenterEmptyTitle = "Tu n’as pas de nouvelle notification.";
 
   // a11y
   static String selectedRadioButton = "Sélectionné";
@@ -1825,8 +1821,8 @@ class Strings {
   static const String sentimentSatisfied = "Emoticone plutôt d’accord";
   static const String mood = "Emoticone d’accord";
   static const String emptyDate = "Aucune date sélectionnée";
-  static const String feedbackCommentaire = "Dites nous pourquoi vous avez attribué cette note\u{00A0}?";
-  static const String submitFeedback = "Soumettre votre réponse";
+  static const String feedbackCommentaire = "Dis-nous pourquoi tu as attribué cette note\u{00A0}?";
+  static const String submitFeedback = "Soumettre ta réponse";
 
   static String removeDistance(int value) => 'Diminuer la distance de $value km';
 
@@ -1840,28 +1836,27 @@ class Strings {
   static String demandeInscriptionConfirmationTitle = "Demande d'inscription";
   static String demandeInscriptionError = "Erreur lors de la demande d'inscription";
   static String demandeInscriptionErrorButton = "Revenir au détail";
-  static String demandeInscriptionDescription =
-      "Votre demande d’inscription à l’événement a été envoyée à votre conseiller";
+  static String demandeInscriptionDescription = "Ta demande d’inscription à l’événement a été envoyée à ton conseiller";
   static String consulterAutresEvennements = "Consulter d’autres événements";
   static String nombreDePlacesInssufisantesError =
       "Cet événement est victime de son succès. Il n'y a plus de place disponible.";
-  static String conseillerInactifError = "Votre conseiller est inactif";
+  static String conseillerInactifError = "Ton conseiller est inactif";
   static String autoInscriptionConfirmation(String eventTitle) =>
-      "Votre inscription à l’événement $eventTitle est confirmée";
-  static String autoInscriptionContent = "Bravo pour votre engagement !";
+      "Ton inscription à l’événement $eventTitle est confirmée";
+  static String autoInscriptionContent = "Bravo pour ton engagement !";
 
   // Suivi des offres
-  static String offreSuivieBottomSheetTitle = "Avez-vous postulé à cette offre ?";
+  static String offreSuivieBottomSheetTitle = "As-tu postulé à cette offre ?";
   static String offreSuivieOuiPostule = "Oui, j’ai postulé";
   static String offreSuiviePasEncore = "Pas encore, mais ça m’intéresse";
   static String offreSuivieNonPasInteresse = "Non, ça ne m’intéresse plus";
 
   static String offrePostuleeConfirmationAppBar = "Offre postulée";
   static String offreFavorisConfirmationAppBar = "Offre enregistrée";
-  static String offreSuivieConfirmationPageTitle = "Retrouvez cette offre dans votre suivi des offres";
-  static String offreSuivieConfirmationPageDescription = "👏 Bravo pour votre engagement !";
-  static String youConsultedThisOfferAt(String timeAgo) => "Vous avez consulté cette offre $timeAgo";
-  static String youSavedThisOfferAt(String timeAgo) => "Vous avez enregistré cette offre $timeAgo";
+  static String offreSuivieConfirmationPageTitle = "Retrouve cette offre dans ton suivi des offres";
+  static String offreSuivieConfirmationPageDescription = "👏 Bravo pour ton engagement !";
+  static String youConsultedThisOfferAt(String timeAgo) => "Tu as consulté cette offre $timeAgo";
+  static String youSavedThisOfferAt(String timeAgo) => "Tu as enregistré cette offre $timeAgo";
   static String ouEnEtesVous = "Où en es-tu ?";
 
   static String jaiPostule = "J’ai postulé";
@@ -1869,19 +1864,19 @@ class Strings {
   static String notYetPostuled = "Je n'ai pas encore postulé";
   static String caNeMinteressePas = "Ça ne m’intéresse plus";
   static String seeNextOffer = "Voir l’offre suivante";
-  static String merciPourVotreReponse = "Merci pour votre réponse";
-  static String suivezVosOffres = "Suivez vos offres";
-  static String suivezVosOffresDescription = "Retrouvez ici les offres auxquelles vous avez postulé";
+  static String merciPourVotreReponse = "Merci pour ta réponse";
+  static String suivezVosOffres = "Suis tes offres";
+  static String suivezVosOffresDescription = "Retrouve ici les offres auxquelles tu as postulé";
   static String addAction = "Créer l'action";
   static String addDemarche = "Créer la démarche";
-  static String wishToCreateAction = "Souhaitez-vous créer l’action ? ";
-  static String wishToCreateDemarche = "Souhaitez-vous créer la démarche ? ";
+  static String wishToCreateAction = "Souhaites-tu créer l’action ? ";
+  static String wishToCreateDemarche = "Souhaites-tu créer la démarche ? ";
   static String jaiPostuleAOffre = "J’ai postulé à une offre";
   static String jaiPostuleA(String offre, String societe) => "J’ai postulé à l’offre $offre de la société $societe";
   static String unknown = "Inconnu";
 
   static String boulangerCampagneTitle = "1000 immersions dans les métiers de la vente et de la logistique";
-  static String boulangerCampagneDescription = "Découvrez les métiers de la vente et de la logistique.";
+  static String boulangerCampagneDescription = "Découvre les métiers de la vente et de la logistique.";
 
   // Actualite Mission Locale
   static String externalUrlAlertTitle = "Ce lien redirige vers un site externe";
