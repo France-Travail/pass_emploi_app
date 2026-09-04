@@ -145,7 +145,7 @@ void main() {
     });
   });
 
-  group('Interrupted login detection', () {
+  group('App auth flow interruption', () {
     late MockCrashlytics crashlytics;
 
     setUpAll(() {
@@ -157,7 +157,7 @@ void main() {
       authenticator = Authenticator(wrapper, logoutRepository, configuration(), secureStorage, crashlytics);
     });
 
-    test('marker is present while AppAuth flow is running', () async {
+    test('app auth flow marker is present while AppAuth flow is running', () async {
       // Given
       String? markerDuringFlow;
       when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async {
@@ -172,7 +172,7 @@ void main() {
       expect(markerDuringFlow, startsWith('GENERIC|'));
     });
 
-    test('marker is cleared when login completes successfully', () async {
+    test('app auth flow marker is cleared when login completes successfully', () async {
       // Given
       when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async => authTokenResponse());
 
@@ -183,7 +183,7 @@ void main() {
       expect(await secureStorage.read(key: 'loginInProgress'), isNull);
     });
 
-    test('marker is cleared when login fails', () async {
+    test('app auth flow marker is cleared when login fails', () async {
       // Given
       when(() => wrapper.login(_tokenRequest())).thenThrow(Exception());
 
@@ -194,13 +194,13 @@ void main() {
       expect(await secureStorage.read(key: 'loginInProgress'), isNull);
     });
 
-    test('interrupted login from a previous session is reported to crashlytics and marker is cleared', () async {
-      // Given : marqueur laissé par une session morte pendant le flow AppAuth
+    test('persisted app auth flow marker is reported to crashlytics and cleared', () async {
+      // Given
       final startedAt = DateTime.now().millisecondsSinceEpoch - 90000;
       await secureStorage.write(key: 'loginInProgress', value: 'SIMILO|$startedAt');
 
       // When
-      await authenticator.checkForInterruptedLogin();
+      await authenticator.reportInterruptedAppAuthFlowIfPresent();
 
       // Then
       verify(() => crashlytics.setCustomKey('interrupted_login_mode', 'SIMILO')).called(1);
@@ -212,12 +212,12 @@ void main() {
       expect(await secureStorage.read(key: 'loginInProgress'), isNull);
     });
 
-    test('interrupted login with malformed marker is reported with unknown elapsed time', () async {
+    test('malformed app auth flow marker is reported with unknown elapsed time', () async {
       // Given
       await secureStorage.write(key: 'loginInProgress', value: 'SIMILO');
 
       // When
-      await authenticator.checkForInterruptedLogin();
+      await authenticator.reportInterruptedAppAuthFlowIfPresent();
 
       // Then
       verify(() => crashlytics.setCustomKey('interrupted_login_mode', 'SIMILO')).called(1);
@@ -225,9 +225,9 @@ void main() {
       verify(() => crashlytics.recordNonNetworkException(any(), any())).called(1);
     });
 
-    test('nothing is reported when no login was interrupted', () async {
+    test('nothing is reported when no app auth flow marker is persisted', () async {
       // When
-      await authenticator.checkForInterruptedLogin();
+      await authenticator.reportInterruptedAppAuthFlowIfPresent();
 
       // Then
       verifyZeroInteractions(crashlytics);
@@ -276,8 +276,8 @@ void main() {
       expect(result, isA<SuccessAuthenticatorResponse>());
     });
 
-    test('login is not blocked when installation id cannot be read', () async {
-      // Given : le stockage du repository jette, le login doit partir sans le paramètre
+    test('login proceeds without installation id when secure storage read fails', () async {
+      // Given
       final throwingStorage = MockFlutterSecureStorage();
       when(() => throwingStorage.read(key: any(named: 'key'))).thenThrow(Exception('KeyStore error'));
       final authenticator = Authenticator(

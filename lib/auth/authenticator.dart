@@ -13,7 +13,7 @@ import 'package:pass_emploi_app/repositories/installation_id_repository.dart';
 const String _idTokenKey = "idToken";
 const String _accessTokenKey = "accessToken";
 const String _refreshTokenKey = "refreshToken";
-const String _loginInProgressKey = "loginInProgress";
+const String _appAuthFlowMarkerStorageKey = "loginInProgress";
 
 enum RefreshTokenStatus { SUCCESSFUL, GENERIC_ERROR, USER_NOT_LOGGED_IN, NETWORK_UNREACHABLE, EXPIRED_REFRESH_TOKEN }
 
@@ -54,7 +54,7 @@ class Authenticator {
   ]);
 
   Future<AuthenticatorResponse> login(AuthenticationMode mode) async {
-    await _markLoginInProgress(mode);
+    await _persistAppAuthFlowMarker(mode);
     try {
       final response = await _authWrapper.login(
         AuthTokenRequest(
@@ -63,7 +63,7 @@ class Authenticator {
           _configuration.authIssuer,
           _configuration.authScopes,
           _configuration.authClientSecret,
-          await _additionalParams(mode),
+          await _buildLoginAdditionalParameters(mode),
         ),
       );
       await _saveToken(response);
@@ -73,49 +73,37 @@ class Authenticator {
       if (e is AuthWrapperWrongDeviceClockException) return WrongDeviceClockAuthenticatorResponse();
       return FailureAuthenticatorResponse(e.toString());
     } finally {
-      await _clearLoginInProgress();
+      await _deleteAppAuthFlowMarker();
     }
   }
 
-  /// Le marqueur n'est nettoyé que quand le flow AppAuth rend la main (succès,
-  /// échec ou annulation). S'il est encore présent au bootstrap suivant, le
-  /// process est mort pendant l'auth (navigateur ouvert, redirect jamais
-  /// délivré à l'app) : l'utilisateur a été renvoyé à l'écran de connexion
-  /// sans qu'aucune erreur ne soit visible nulle part.
-  Future<void> checkForInterruptedLogin() async {
-    final String? marker = await _preferences.read(key: _loginInProgressKey);
-    if (marker == null) return;
-    await _clearLoginInProgress();
-    final parts = marker.split('|');
-    final startedAt = parts.length > 1 ? int.tryParse(parts[1]) : null;
-    final elapsedSeconds = startedAt != null
-        ? ((DateTime.now().millisecondsSinceEpoch - startedAt) ~/ 1000).toString()
-        : 'unknown';
-    _crashlytics?.setCustomKey('interrupted_login_mode', parts.first);
-    _crashlytics?.setCustomKey('interrupted_login_elapsed_seconds', elapsedSeconds);
+  Future<void> reportInterruptedAppAuthFlowIfPresent() async {
+    final String? persistedMarker = await _preferences.read(key: _appAuthFlowMarkerStorageKey);
+    if (persistedMarker == null) return;
+    await _deleteAppAuthFlowMarker();
+    final markerParts = persistedMarker.split('|');
+    final authenticationMode = markerParts.first;
+    final flowStartedAtMillis = markerParts.length > 1 ? int.tryParse(markerParts[1]) : null;
+    final elapsedSecondsSinceFlowStart = _elapsedSecondsSince(flowStartedAtMillis);
+    _crashlytics?.setCustomKey('interrupted_login_mode', authenticationMode);
+    _crashlytics?.setCustomKey('interrupted_login_elapsed_seconds', elapsedSecondsSinceFlowStart);
     _crashlytics?.recordNonNetworkException(
-      "Login interrompu : le flow AppAuth n'a jamais rendu la main (process tué pendant l'auth ?)",
+      'AppAuth flow marker persisted across app restart',
       StackTrace.current,
     );
   }
 
-  Future<void> _markLoginInProgress(AuthenticationMode mode) async {
-    try {
-      await _preferences.write(
-        key: _loginInProgressKey,
-        value: "${mode.name}|${DateTime.now().millisecondsSinceEpoch}",
-      );
-    } catch (_) {
-      // Un stockage défaillant ne doit pas empêcher le login pour un simple marqueur de diagnostic.
-    }
+  Future<void> _persistAppAuthFlowMarker(AuthenticationMode mode) async {
+    await _runIgnoringSecureStorageFailure(
+      () => _preferences.write(
+        key: _appAuthFlowMarkerStorageKey,
+        value: _appAuthFlowMarkerValue(mode),
+      ),
+    );
   }
 
-  Future<void> _clearLoginInProgress() async {
-    try {
-      await _preferences.delete(key: _loginInProgressKey);
-    } catch (_) {
-      // Un stockage défaillant ne doit pas empêcher le login pour un simple marqueur de diagnostic.
-    }
+  Future<void> _deleteAppAuthFlowMarker() async {
+    await _runIgnoringSecureStorageFailure(() => _preferences.delete(key: _appAuthFlowMarkerStorageKey));
   }
 
   Future<bool> isLoggedIn() async => await idToken() != null;
@@ -187,25 +175,36 @@ class Authenticator {
     await _preferences.delete(key: _refreshTokenKey);
   }
 
-  Future<Map<String, String>?> _additionalParams(AuthenticationMode mode) async {
-    Map<String, String>? modeParams;
-    if (mode == AuthenticationMode.SIMILO) modeParams = similoParams;
-    if (mode == AuthenticationMode.POLE_EMPLOI) modeParams = poleEmploiParams;
+  Future<Map<String, String>?> _buildLoginAdditionalParameters(AuthenticationMode mode) async {
+    Map<String, String>? idpHintParameters;
+    if (mode == AuthenticationMode.SIMILO) idpHintParameters = similoParams;
+    if (mode == AuthenticationMode.POLE_EMPLOI) idpHintParameters = poleEmploiParams;
 
-    // Transmis en query du /auth pour que Connect logge l'installation id sur
-    // tout le parcours de login : les échecs y sont sinon anonymes tant que
-    // l'app n'a pas atteint l'API (qui reçoit X-InstallationId en header).
-    final installationId = await _installationId();
-    if (installationId == null) return modeParams;
-    return {...?modeParams, 'installation_id': installationId};
+    final installationId = await _readInstallationIdForLogin();
+    if (installationId == null) return idpHintParameters;
+    return {...?idpHintParameters, 'installation_id': installationId};
   }
 
-  Future<String?> _installationId() async {
+  Future<String?> _readInstallationIdForLogin() async {
     try {
       return await _installationIdRepository?.getInstallationId();
-    } catch (_) {
-      // Un stockage défaillant ne doit pas empêcher le login pour un identifiant de diagnostic.
+    } on Object {
       return null;
     }
+  }
+
+  String _appAuthFlowMarkerValue(AuthenticationMode mode) {
+    return '${mode.name}|${DateTime.now().millisecondsSinceEpoch}';
+  }
+
+  String _elapsedSecondsSince(int? startedAtMillis) {
+    if (startedAtMillis == null) return 'unknown';
+    return ((DateTime.now().millisecondsSinceEpoch - startedAtMillis) ~/ 1000).toString();
+  }
+
+  Future<void> _runIgnoringSecureStorageFailure(Future<void> Function() action) async {
+    try {
+      await action();
+    } on Object {}
   }
 }
