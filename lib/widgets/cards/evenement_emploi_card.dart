@@ -39,6 +39,11 @@ class EvenementEmploiCard extends StatelessWidget {
           ),
           const SizedBox(height: DsfrSpacings.s1v),
           DsfrEventCardComplement(
+            icon: DsfrIcons.businessCalendarEventLine,
+            text: _viewModel.dateLabel,
+          ),
+          const SizedBox(height: DsfrSpacings.s1v),
+          DsfrEventCardComplement(
             icon: DsfrIcons.systemTimeLine,
             text: _viewModel.heureLabel,
             semanticsLabel: _viewModel.heureLabel.toTimeAndDurationForScreenReaders(),
