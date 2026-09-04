@@ -96,7 +96,7 @@ class _BlocInfo extends StatelessWidget {
                 children: [
                   Icon(
                     icon,
-                    color: DsfrColorDecisions.textTitleBlueFrance(context),
+                    color: DsfrColorDecisions.textTitleGrey(context),
                     size: DsfrSpacings.s3w,
                   ),
                   const SizedBox(width: DsfrSpacings.s1w),
