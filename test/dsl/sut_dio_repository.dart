@@ -226,23 +226,17 @@ class DioRepositorySut<REPO> {
         capturedOptions = captured[2];
         break;
       case HttpMethod.delete:
-        capturedUrl = mocktail
-            .verify(() => _client.delete(mocktail.captureAny()))
-            .captured
-            .last;
+        capturedUrl = mocktail.verify(() => _client.delete(mocktail.captureAny())).captured.last;
         break;
     }
 
     expect(capturedUrl, url);
     if (jsonBody != null) expect(jsonDecode(capturedData as String), jsonBody);
     if (rawBody != null) expect(capturedData, rawBody);
-    if (capturedQueryParameters != null)
-      expect(capturedQueryParameters, queryParameters);
+    if (capturedQueryParameters != null) expect(capturedQueryParameters, queryParameters);
     if (capturedOptions != null) {
-      if (options?.contentType != null)
-        expect(capturedOptions.contentType, options?.contentType);
-      if (options?.listFormat != null)
-        expect(capturedOptions.listFormat, options?.listFormat);
+      if (options?.contentType != null) expect(capturedOptions.contentType, options?.contentType);
+      if (options?.listFormat != null) expect(capturedOptions.listFormat, options?.listFormat);
     }
     throwModeDemoExceptionIfNecessary(method == HttpMethod.get, Uri.parse(url));
   }

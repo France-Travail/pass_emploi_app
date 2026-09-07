@@ -205,6 +205,8 @@ class Authenticator {
   Future<void> _runIgnoringSecureStorageFailure(Future<void> Function() action) async {
     try {
       await action();
-    } on Object {}
+    } on Object {
+      // Ignore secure storage failure
+    }
   }
 }
