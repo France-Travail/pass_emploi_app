@@ -160,7 +160,7 @@ void main() {
         );
 
         // Then
-        expect(viewModel.conseillerPresenceLabel, 'Votre conseiller sera présent');
+        expect(viewModel.conseillerPresenceLabel, 'Ton conseiller sera présent');
         expect(viewModel.conseillerPresenceColor, AppColors.success);
         expect(viewModel.withConseillerPresencePart, isTrue);
       });
@@ -178,7 +178,7 @@ void main() {
         );
 
         // Then
-        expect(viewModel.conseillerPresenceLabel, 'Votre conseiller ne sera pas présent');
+        expect(viewModel.conseillerPresenceLabel, 'Ton conseiller ne sera pas présent');
         expect(viewModel.conseillerPresenceColor, AppColors.warning);
         expect(viewModel.withConseillerPresencePart, isTrue);
       });
@@ -196,7 +196,7 @@ void main() {
         );
 
         // Then
-        expect(viewModel.withDateDerniereMiseAJour, "Dernière actualisation de vos rendez-vous le 25/12/2022 à 12h30");
+        expect(viewModel.withDateDerniereMiseAJour, "Dernière actualisation de tes rendez-vous le 25/12/2022 à 12h30");
       });
 
       group('should hide conseiller presence', () {
@@ -384,7 +384,7 @@ void main() {
 
         // Then
         expect(viewModel.modality, "Le rendez-vous se fera en visio");
-        expect(viewModel.conseiller, "votre conseiller Nils Tavernier");
+        expect(viewModel.conseiller, "ton conseiller Nils Tavernier");
       });
 
       test('should hide conseiller in modality when source is milo', () {
@@ -432,7 +432,7 @@ void main() {
           );
 
           // Then
-          expect(viewModel.createur, "Le rendez-vous a été programmé par votre conseiller précédent Nils Tavernier");
+          expect(viewModel.createur, "Le rendez-vous a été programmé par ton conseiller précédent Nils Tavernier");
         });
 
         test('should hide createur if source is milo', () {
@@ -1075,7 +1075,7 @@ void main() {
             typeCode: RendezvousTypeCode.ENTRETIEN_PARTENAIRE,
             date: '01 mars 2022',
             hourAndDuration: '00h - 00h30',
-            conseillerPresenceLabel: 'Votre conseiller sera présent',
+            conseillerPresenceLabel: 'Ton conseiller sera présent',
             conseillerPresenceColor: AppColors.success,
             isInscrit: false,
             isComplet: false,
@@ -1088,7 +1088,7 @@ void main() {
             onRetry: () => {},
             trackingPageName: 'rdv/detail',
             modality: 'Le rendez-vous se fera sur place : Mission Locale',
-            conseiller: 'votre conseiller Nils Tavernier',
+            conseiller: 'ton conseiller Nils Tavernier',
             commentTitle: 'Commentaire de mon conseiller',
             title: 'Super atelier',
             comment: 'comment',
@@ -1147,7 +1147,7 @@ void main() {
             typeCode: RendezvousTypeCode.ATELIER,
             date: '01 mars 2022',
             hourAndDuration: '00h',
-            conseillerPresenceLabel: 'Votre conseiller ne sera pas présent',
+            conseillerPresenceLabel: 'Ton conseiller ne sera pas présent',
             conseillerPresenceColor: AppColors.warning,
             isInscrit: true,
             isComplet: false,

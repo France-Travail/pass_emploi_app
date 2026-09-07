@@ -101,7 +101,7 @@ void main() {
       final viewModel = DemarcheDetailViewModel.create(store, "8802034");
 
       // Then
-      expect(viewModel.withDateDerniereMiseAJour, "Dernière actualisation de vos démarches le 25/12/2022 à 12h30");
+      expect(viewModel.withDateDerniereMiseAJour, "Dernière actualisation de tes démarches le 25/12/2022 à 12h30");
     });
   });
 

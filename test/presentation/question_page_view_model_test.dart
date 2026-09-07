@@ -29,7 +29,7 @@ void main() {
     final viewModel = QuestionPageViewModel.create(store, 0);
 
     // Then
-    expect(viewModel.titre, "Votre expérience 1/2");
+    expect(viewModel.titre, "Ton expérience 1/2");
     expect(viewModel.question, "Aimez-vous Perceval ?");
     expect(viewModel.options, [Option(id: 1, libelle: "Ouais c'est pas faux")]);
   });
@@ -42,7 +42,7 @@ void main() {
     final viewModel = QuestionPageViewModel.create(store, 1);
 
     // Then
-    expect(viewModel.titre, "Votre expérience 2/2");
+    expect(viewModel.titre, "Ton expérience 2/2");
     expect(viewModel.question, "Aimez-vous Arthur ?");
     expect(viewModel.options, [
       Option(id: 1, libelle: "Oui"),
