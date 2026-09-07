@@ -42,7 +42,7 @@ void main() {
           final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
 
           // Then
-          expect(viewModel.dateConsultation, "Vous avez consulté cette offre il y a 409 jours");
+          expect(viewModel.dateConsultation, "Tu as consulté cette offre il y a 409 jours");
           expect(viewModel.offreLien, "Technicien / Technicienne d'installation de réseaux câblés  (H/F)");
           expect(viewModel.showConfirmation, false);
           expect(viewModel.confirmationMessage, null);
@@ -73,7 +73,7 @@ void main() {
           final viewModel = OffreSuivieFormViewmodel.create(store, offreId, true);
 
           // Then
-          expect(viewModel.dateConsultation, "Vous avez consulté cette offre il y a 409 jours");
+          expect(viewModel.dateConsultation, "Tu as consulté cette offre il y a 409 jours");
           expect(viewModel.offreLien, "Technicien / Technicienne d'installation de réseaux câblés  (H/F)");
           expect(viewModel.showConfirmation, true);
           expect(viewModel.confirmationMessage, null);
@@ -110,7 +110,7 @@ void main() {
           // Then
           expect(viewModel.offreLien, "Technicien / Technicienne d'installation de réseaux câblés  (H/F)");
           expect(viewModel.showConfirmation, true);
-          expect(viewModel.confirmationMessage, 'Souhaitez-vous créer la démarche ? ');
+          expect(viewModel.confirmationMessage, 'Souhaites-tu créer la démarche ? ');
           expect(viewModel.confirmationButton, 'Voir l’offre suivante');
         });
       });

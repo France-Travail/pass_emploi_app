@@ -5,8 +5,8 @@ import 'package:pass_emploi_app/presentation/force_update_view_model.dart';
 import 'package:pass_emploi_app/utils/platform.dart';
 
 void main() {
-  const stagingLabel = 'Votre application nécessite d\'être mise à jour sur Firebase pour son bon fonctionnement';
-  const prodLabel = 'Votre application nécessite d\'être mise à jour pour son bon fonctionnement';
+  const stagingLabel = 'Ton application nécessite d\'être mise à jour sur Firebase pour son bon fonctionnement';
+  const prodLabel = 'Ton application nécessite d\'être mise à jour pour son bon fonctionnement';
 
   const cejPlayStoreUrl = 'market://details?id=fr.fabrique.social.gouv.passemploi';
   const cejAppleStoreUrl = 'itms-apps://itunes.apple.com/app/apple-store/id1581603519';

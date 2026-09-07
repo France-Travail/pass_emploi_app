@@ -220,7 +220,7 @@ void main() {
       expect(viewModel.items[0], isA<CreateDemarcheStep2TitleItem>());
       expect(
         (viewModel.items[0] as CreateDemarcheStep2TitleItem).title,
-        'Sélectionnez une démarche ou créez une démarche personnalisée',
+        'Sélectionne une démarche ou crée une démarche personnalisée',
       );
 
       expect(viewModel.items[1], isA<CreateDemarcheStep2DemarcheFoundItem>());
@@ -249,7 +249,7 @@ void main() {
       expect(viewModel.items[0], isA<CreateDemarcheStep2TitleItem>());
       expect(
         (viewModel.items[0] as CreateDemarcheStep2TitleItem).title,
-        'Sélectionnez une démarche ou créez une démarche personnalisée',
+        'Sélectionne une démarche ou crée une démarche personnalisée',
       );
 
       expect(viewModel.items[1], isA<CreateDemarcheStep2DemarcheFoundItem>());
