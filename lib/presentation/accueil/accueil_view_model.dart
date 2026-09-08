@@ -44,7 +44,7 @@ class AccueilViewModel extends Equatable {
   });
 
   factory AccueilViewModel.create(Store<AppState> store) {
-    if (store.state.isInviteLoginMode()) {
+    if (store.state.hasPlanAction()) {
       return AccueilViewModel(
         displayState: DisplayState.CONTENT,
         items: const [],

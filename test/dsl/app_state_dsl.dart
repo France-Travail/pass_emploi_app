@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:pass_emploi_app/configuration/configuration.dart';
 import 'package:pass_emploi_app/features/accueil/accueil_state.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 import 'package:pass_emploi_app/features/campagne/campagne_state.dart';
 import 'package:pass_emploi_app/features/cgu/cgu_state.dart';
 import 'package:pass_emploi_app/features/chat/brouillon/chat_brouillon_state.dart';
@@ -19,8 +20,7 @@ import 'package:pass_emploi_app/features/events/list/event_list_state.dart';
 import 'package:pass_emploi_app/features/favori/list/favori_list_state.dart';
 import 'package:pass_emploi_app/features/feature_flip/feature_flip_state.dart';
 import 'package:pass_emploi_app/features/first_launch_onboarding/first_launch_onboarding_state.dart';
-import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
-import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
+import 'package:pass_emploi_app/features/fonctionnalites/fonctionnalites_state.dart';
 import 'package:pass_emploi_app/features/immersion/details/immersion_details_state.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_state.dart';
 import 'package:pass_emploi_app/features/matching_demarche/matching_demarche_state.dart';
@@ -28,6 +28,7 @@ import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_state.dart';
 import 'package:pass_emploi_app/features/offre_emploi/details/offre_emploi_details_state.dart';
 import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_state.dart';
 import 'package:pass_emploi_app/features/onboarding/onboarding_state.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
 import 'package:pass_emploi_app/features/preferences/preferences_state.dart';
 import 'package:pass_emploi_app/features/preferences/update/preferences_update_state.dart';
 import 'package:pass_emploi_app/features/rating/rating_state.dart';
@@ -56,6 +57,7 @@ import 'package:pass_emploi_app/features/user_action/details/user_action_details
 import 'package:pass_emploi_app/features/user_action/update/user_action_update_state.dart';
 import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/accueil/accueil.dart';
+import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/alerte/alerte.dart';
 import 'package:pass_emploi_app/models/campagne.dart';
 import 'package:pass_emploi_app/models/cgu.dart';
@@ -68,6 +70,7 @@ import 'package:pass_emploi_app/models/demarche_du_referentiel.dart';
 import 'package:pass_emploi_app/models/evenement_emploi/evenement_emploi.dart';
 import 'package:pass_emploi_app/models/favori.dart';
 import 'package:pass_emploi_app/models/feature_flip.dart';
+import 'package:pass_emploi_app/models/fonctionnalite.dart';
 import 'package:pass_emploi_app/models/immersion.dart';
 import 'package:pass_emploi_app/models/immersion_details.dart';
 import 'package:pass_emploi_app/models/in_app_notification.dart';
@@ -79,7 +82,6 @@ import 'package:pass_emploi_app/models/offre_emploi_details.dart';
 import 'package:pass_emploi_app/models/offre_suivie.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
-import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/preferences.dart';
 import 'package:pass_emploi_app/models/recherche/recherche_request.dart';
 import 'package:pass_emploi_app/models/remote_campagne_accueil.dart';
@@ -111,18 +113,17 @@ extension AppStateDSL on AppState {
   }
 
   StoreSpy spyStore() => StoreSpy.withState(this);
-
-  AppState loggedIn() => copyWith(loginState: successMiloUserState());
+  AppState loggedIn() => copyWith(loginState: successMiloUserState()).withoutFonctionnalites();
 
   AppState loggedInUser({LoginMode loginMode = LoginMode.MILO, Accompagnement accompagnement = Accompagnement.cej}) {
     return copyWith(
       loginState: successUserState(loginMode: loginMode, accompagnement: accompagnement),
-    );
+    ).withoutFonctionnalites();
   }
 
-  AppState loggedInMiloUser() => copyWith(loginState: successMiloUserState());
+  AppState loggedInMiloUser() => copyWith(loginState: successMiloUserState()).withoutFonctionnalites();
 
-  AppState loggedInPoleEmploiUser() => copyWith(loginState: successPoleEmploiCejUserState());
+  AppState loggedInPoleEmploiUser() => copyWith(loginState: successPoleEmploiCejUserState()).withoutFonctionnalites();
 
   AppState withDeepLink(DeepLinkState deepLinkState) => copyWith(deepLinkState: deepLinkState);
 
@@ -795,7 +796,10 @@ extension AppStateDSL on AppState {
     return copyWith(firstLaunchOnboardingState: FirstLaunchOnboardingSuccessState(isFirstLaunch));
   }
 
-  AppState withOnboardingQuestionnaire({required bool finished, OnboardingQuestionnaireAnswers answers = const OnboardingQuestionnaireAnswers()}) {
+  AppState withOnboardingQuestionnaire({
+    required bool finished,
+    OnboardingQuestionnaireAnswers answers = const OnboardingQuestionnaireAnswers(),
+  }) {
     return copyWith(
       onboardingQuestionnaireState: OnboardingQuestionnaireSuccessState(finished: finished, answers: answers),
     );
@@ -807,6 +811,22 @@ extension AppStateDSL on AppState {
 
   AppState withActionPlanEmpty() {
     return copyWith(actionPlanState: ActionPlanEmptyState());
+  }
+
+  AppState withPlanActionFonctionnalite() {
+    return copyWith(fonctionnalitesState: FonctionnalitesSuccessState({Fonctionnalite.planAction}));
+  }
+
+  AppState withoutFonctionnalites() {
+    return copyWith(fonctionnalitesState: FonctionnalitesSuccessState(const {}));
+  }
+
+  AppState withFonctionnalitesFailure() {
+    return copyWith(fonctionnalitesState: FonctionnalitesFailureState());
+  }
+
+  AppState withFonctionnalitesNotInitialized() {
+    return copyWith(fonctionnalitesState: FonctionnalitesNotInitializedState());
   }
 
   AppState withFirstLaunchNotInitializedState() {

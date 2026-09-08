@@ -1,8 +1,11 @@
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
 import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_actions.dart';
+import 'package:pass_emploi_app/features/fonctionnalites/fonctionnalites_actions.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
 import 'package:pass_emploi_app/models/criteres_recherche_utilisateur.dart';
+import 'package:pass_emploi_app/models/fonctionnalite.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -22,6 +25,12 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
 
     if (action is LoginSuccessAction && action.user.loginMode.isInvite()) {
       await _load(store);
+    } else if (action is FonctionnalitesSuccessAction && action.actives.contains(Fonctionnalite.planAction)) {
+      if (store.state.onboardingQuestionnaireState is OnboardingQuestionnaireNotInitializedState) {
+        await _load(store);
+      }
+    } else if (action is RequestLogoutAction) {
+      await _clear();
     } else if (action is OnboardingQuestionnaireRequestAction) {
       await _load(store);
     } else if (action is OnboardingQuestionnaireCompleteAction) {
@@ -33,6 +42,11 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
     } else if (action is OnboardingQuestionnaireAnswersUpdatedAction) {
       await _repository.saveAnswers(action.answers);
     }
+  }
+
+  Future<void> _clear() async {
+    await _repository.clear();
+    await _actionPlanRepository.clear();
   }
 
   Future<void> _load(Store<AppState> store) async {

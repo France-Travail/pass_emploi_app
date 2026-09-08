@@ -99,6 +99,7 @@ import 'package:pass_emploi_app/features/soft_update/soft_update_middleware.dart
 import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_middleware.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_middleware.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_middleware.dart';
+import 'package:pass_emploi_app/features/fonctionnalites/fonctionnalites_middleware.dart';
 /*AUTOGENERATE-REDUX-STOREFACTORY-IMPORT-MIDDLEWARE*/
 import 'package:pass_emploi_app/models/immersion.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
@@ -186,6 +187,7 @@ import 'package:pass_emploi_app/repositories/soft_update_repository.dart';
 import 'package:pass_emploi_app/repositories/criteres_recherche_persist_repository.dart';
 import 'package:pass_emploi_app/repositories/onboarding_questionnaire_repository.dart';
 import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
+import 'package:pass_emploi_app/repositories/fonctionnalites_repository.dart';
 /*AUTOGENERATE-REDUX-STOREFACTORY-IMPORT-REPOSITORY*/
 import 'package:redux/redux.dart' as redux;
 
@@ -276,6 +278,7 @@ class StoreFactory {
   final CriteresRecherchePersistRepository criteresRecherchePersistRepository;
   final OnboardingQuestionnaireRepository onboardingQuestionnaireRepository;
   final ActionPlanRepository actionPlanRepository;
+  final FonctionnalitesRepository fonctionnalitesRepository;
   /*AUTOGENERATE-REDUX-STOREFACTORY-PROPERTY-REPOSITORY*/
 
   StoreFactory(
@@ -365,6 +368,7 @@ class StoreFactory {
     this.criteresRecherchePersistRepository,
     this.onboardingQuestionnaireRepository,
     this.actionPlanRepository,
+    this.fonctionnalitesRepository,
     /*AUTOGENERATE-REDUX-STOREFACTORY-CONSTRUCTOR-REPOSITORY*/
   );
 
@@ -477,6 +481,7 @@ class StoreFactory {
         CriteresRecherchePersistMiddleware(criteresRecherchePersistRepository).call,
         OnboardingQuestionnaireMiddleware(onboardingQuestionnaireRepository, actionPlanRepository).call,
         ActionPlanMiddleware(actionPlanRepository).call,
+        FonctionnalitesMiddleware(fonctionnalitesRepository).call,
         /*AUTOGENERATE-REDUX-STOREFACTORY-ADD-MIDDLEWARE*/
         ..._debugMiddlewares(),
         ..._stagingMiddlewares(initialState.configurationState.getFlavor()),

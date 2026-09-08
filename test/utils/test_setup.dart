@@ -86,6 +86,7 @@ import 'package:pass_emploi_app/repositories/soft_update_repository.dart';
 import 'package:pass_emploi_app/repositories/criteres_recherche_persist_repository.dart';
 import 'package:pass_emploi_app/repositories/onboarding_questionnaire_repository.dart';
 import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
+import 'package:pass_emploi_app/repositories/fonctionnalites_repository.dart';
 /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-IMPORT*/
 import 'package:redux/redux.dart';
 
@@ -182,6 +183,7 @@ class TestStoreFactory {
   CriteresRecherchePersistRepository criteresRecherchePersistRepository = MockCriteresRecherchePersistRepository();
   OnboardingQuestionnaireRepository onboardingQuestionnaireRepository = MockOnboardingQuestionnaireRepository();
   ActionPlanRepository actionPlanRepository = MockActionPlanRepository();
+  FonctionnalitesRepository fonctionnalitesRepository = MockFonctionnalitesRepository();
   /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-PROPERTY*/
 
   Store<AppState> initializeReduxStore({required AppState initialState}) {
@@ -272,6 +274,7 @@ class TestStoreFactory {
       criteresRecherchePersistRepository,
       onboardingQuestionnaireRepository,
       actionPlanRepository,
+      fonctionnalitesRepository,
       /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-CONSTRUCTOR*/
     ).initializeReduxStore(initialState: initialState);
   }

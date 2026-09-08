@@ -106,6 +106,46 @@ void main() {
     expect(viewModel.showPlanEmptyState, isFalse);
   });
 
+  test('complet mode hides conseiller CTA for a jeune of the pilot region, who already has one', () {
+    final answers = OnboardingQuestionnaireAnswers(
+      prenom: 'Léa',
+      dateNaissance: DateTime(2005, 5, 5),
+      habitation: const QuestionnaireCommune(code: '75056', nom: 'Paris'),
+      situation: QuestionnaireSituation.lycee,
+      objectifs: {QuestionnaireObjectif.emploi},
+      domaineInconnu: true,
+      villeRecherche: const QuestionnaireCommune(code: '75056', nom: 'Paris'),
+      freins: {QuestionnaireFrein.rienNeMeBloque},
+    );
+    final store = givenState()
+        .loggedInMiloUser()
+        .withPlanActionFonctionnalite()
+        .withOnboardingQuestionnaire(finished: true, answers: answers)
+        .withActionPlanSuccess(
+          ActionPlan(
+            id: 'plan-1',
+            greeting: 'Salut',
+            objectives: [
+              ActionPlanObjective(
+                id: 'obj-1',
+                title: 'Trouver un emploi',
+                theme: 'job',
+                actions: [
+                  ActionPlanAction(id: 'a-1', label: 'Je cherche', kind: ActionPlanActionKind.advice),
+                ],
+              ),
+            ],
+          ),
+        )
+        .store();
+
+    final viewModel = InviteAccueilViewModel.create(store);
+
+    expect(viewModel.mode, InviteAccueilMode.complet);
+    expect(viewModel.showConseillerCta, isFalse);
+    expect(viewModel.showModifierButton, isTrue);
+  });
+
   test('complet with empty objectives shows empty state with modifier only', () {
     final answers = OnboardingQuestionnaireAnswers(
       prenom: 'Léa',
