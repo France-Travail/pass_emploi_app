@@ -18,6 +18,10 @@ class SecureStorageExceptionHandlerDecorator extends FlutterSecureStorage {
         message.contains('resetOnError');
   }
 
+  // Filet de sécurité uniquement : sur Android, une erreur de migration remonte
+  // depuis initialize(), qui est rejoué avant chaque appel — deleteAll() échouera
+  // donc de la même façon. C'est `resetOnError: true` (cf. AppInitializer) qui
+  // assure la vraie récupération côté plugin.
   Future<bool> _resetUnrecoverableStore(Object exception, StackTrace stack) async {
     if (_storeReset || !_isUnrecoverableMigrationError(exception)) return false;
     _storeReset = true;

@@ -178,9 +178,17 @@ class AppInitializer {
       SecureStorageExceptionHandlerDecorator(
         FlutterSecureStorage(
           aOptions: AndroidOptions(
-            // Avoid silently wiping all tokens on OEM KeyStore / decrypt errors
-            // (Samsung, Honor/MagicOS, Android 16…). Prefer surfacing the error.
-            resetOnError: false,
+            // Quand la migration v9 (ESP / RSA-PKCS1 + AES-CBC) vers les ciphers v10
+            // (RSA-OAEP + AES-GCM) échoue parce que la clé AndroidKeyStore est
+            // invalidée (restauration d'appareil, bug OEM…), les données sont déjà
+            // définitivement indéchiffrables. Avec resetOnError=false le plugin
+            // remonte l'erreur depuis initialize() et n'affecte jamais `preferences`,
+            // donc TOUS les appels suivants échouent — y compris deleteAll(). Le
+            // storage est alors bloqué définitivement pour l'utilisateur.
+            // resetOnError=true fait purger les données illisibles + la clé KeyStore
+            // et réinitialise le cipher : l'utilisateur est déconnecté une fois, mais
+            // l'app redevient utilisable.
+            resetOnError: true,
             migrateWithBackup: true,
           ),
         ),
