@@ -63,7 +63,7 @@ class _AccueilPageState extends State<AccueilPage> {
       tracking: AnalyticsScreenNames.accueil,
       child: StoreConnector<AppState, AccueilViewModel>(
         onInit: (store) {
-          if (store.state.isInviteLoginMode()) {
+          if (store.state.hasPlanAction()) {
             store.dispatch(ActionPlanRequestAction());
             return;
           }
@@ -75,7 +75,7 @@ class _AccueilPageState extends State<AccueilPage> {
         converter: (store) => AccueilViewModel.create(store),
         builder: _builder,
         onDidChange: (previousViewModel, viewModel) {
-          if (StoreProvider.of<AppState>(context).state.isInviteLoginMode()) {
+          if (StoreProvider.of<AppState>(context).state.hasPlanAction()) {
             return;
           }
           _handleSoftUpdateBottomSheet(viewModel);
@@ -93,7 +93,7 @@ class _AccueilPageState extends State<AccueilPage> {
       data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
       child: Builder(
         builder: (context) {
-          if (StoreProvider.of<AppState>(context).state.isInviteLoginMode()) {
+          if (StoreProvider.of<AppState>(context).state.hasPlanAction()) {
             return Scaffold(
               backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
               body: ConnectivityContainer(child: InviteAccueilBody()),

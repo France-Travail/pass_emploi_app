@@ -128,8 +128,8 @@ class InviteAccueilViewModel extends Equatable {
       showPlanSection: showPlanSection,
       showPlanEmptyState: showPlanEmptyState,
       planEmptyKind: planEmptyKind,
-      showConseillerCta: mode == InviteAccueilMode.complet,
-      // Un seul CTA dans l'empty state : Modifier si plan vide, Réessayer si échec.
+
+      showConseillerCta: mode == InviteAccueilMode.complet && store.state.isInviteLoginMode(),
       showModifierButton: mode == InviteAccueilMode.complet && planEmptyKind != InvitePlanEmptyKind.failure,
       showExplorerTip: mode == InviteAccueilMode.incomplet,
       showRetryGenerate:

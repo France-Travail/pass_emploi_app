@@ -377,6 +377,133 @@ void main() {
 
       expect(viewModel.routerPageDisplayState, RouterPageDisplayState.splash);
     });
+
+    test('should not wait for the back when user is invite, so an offline invite still gets the questionnaire', () {
+      final store =
+          givenState() //
+              .copyWith(loginState: successUserState(loginMode: LoginMode.INVITE, accompagnement: Accompagnement.cej))
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withFonctionnalitesNotInitialized()
+              .withOnboardingQuestionnaire(finished: false)
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.onboardingQuestionnaire);
+    });
+  });
+
+  group("RouterPageViewModel.create when user is in the pilot region…", () {
+    test('…should show splash while fonctionnalites are not resolved yet', () {
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withFonctionnalitesNotInitialized()
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.splash);
+    });
+
+    test('…should show cgu before waiting for fonctionnalites', () {
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withFonctionnalitesNotInitialized()
+              .withCguNeverAccepted()
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.cgu);
+    });
+
+    test('…should show onboarding questionnaire when PLAN_ACTION is active and questionnaire unfinished', () {
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withPlanActionFonctionnalite()
+              .withOnboardingQuestionnaire(finished: false)
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.onboardingQuestionnaire);
+    });
+
+    test('…should show splash when PLAN_ACTION is active but questionnaire is not initialized yet', () {
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withPlanActionFonctionnalite()
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.splash);
+    });
+
+    test('…should show main when PLAN_ACTION is active and questionnaire is finished', () {
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withPlanActionFonctionnalite()
+              .withOnboardingQuestionnaire(finished: true)
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.main);
+    });
+
+    test('…should show tutorial after the questionnaire when it is pending', () {
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withPlanActionFonctionnalite()
+              .withOnboardingQuestionnaire(finished: true)
+              .copyWith(tutorialState: ShowTutorialState(Tutorial.milo))
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.tutorial);
+    });
+  });
+
+  group("RouterPageViewModel.create when user is outside the pilot region…", () {
+    test('…should show main without any questionnaire', () {
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withoutFonctionnalites()
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.main);
+    });
+
+    test('…should show main when the fonctionnalites call failed, closed by default', () {
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withFonctionnalitesFailure()
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.main);
+    });
   });
 
   group("RouterPageViewModel.create when user comes from deep link", () {

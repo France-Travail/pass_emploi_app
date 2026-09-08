@@ -81,7 +81,15 @@ RouterPageDisplayState _routerPageDisplayState(Store<AppState> store) {
   }
 
   if (loginState is LoginSuccessState) {
-    if (loginState.user.loginMode.isInvite()) {
+    if (!loginState.user.loginMode.isInvite()) {
+      if (cguState is CguNeverAcceptedState || cguState is CguUpdateRequiredState) {
+        return RouterPageDisplayState.cgu;
+      }
+      if (!store.state.isFonctionnalitesResolved()) {
+        return RouterPageDisplayState.splash;
+      }
+    }
+    if (store.state.hasPlanAction()) {
       if (onboardingQuestionnaireState is OnboardingQuestionnaireNotInitializedState) {
         return RouterPageDisplayState.splash;
       }
@@ -89,8 +97,6 @@ RouterPageDisplayState _routerPageDisplayState(Store<AppState> store) {
           !onboardingQuestionnaireState.finished) {
         return RouterPageDisplayState.onboardingQuestionnaire;
       }
-    } else if (cguState is CguNeverAcceptedState || cguState is CguUpdateRequiredState) {
-      return RouterPageDisplayState.cgu;
     }
     if (tutoState is ShowTutorialState) {
       return RouterPageDisplayState.tutorial;

@@ -96,6 +96,7 @@ import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_rec
 import 'package:pass_emploi_app/features/communications/communications_reducer.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_reducer.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_reducer.dart';
+import 'package:pass_emploi_app/features/fonctionnalites/fonctionnalites_reducer.dart';
 /*AUTOGENERATE-REDUX-APP-REDUCER-IMPORT*/
 
 AppState reducer(AppState current, dynamic action) {
@@ -230,6 +231,7 @@ AppState reducer(AppState current, dynamic action) {
     communicationsState: communicationsReducer(current.communicationsState, action),
     onboardingQuestionnaireState: onboardingQuestionnaireReducer(current.onboardingQuestionnaireState, action),
     actionPlanState: actionPlanReducer(current.actionPlanState, action),
+    fonctionnalitesState: fonctionnalitesReducer(current.fonctionnalitesState, action),
     /*AUTOGENERATE-REDUX-APP-REDUCER-STATE*/
   );
 }

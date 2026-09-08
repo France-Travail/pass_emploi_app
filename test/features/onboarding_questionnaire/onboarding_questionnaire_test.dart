@@ -2,11 +2,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_state.dart';
+import 'package:pass_emploi_app/features/fonctionnalites/fonctionnalites_actions.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/criteres_recherche_utilisateur.dart';
+import 'package:pass_emploi_app/models/fonctionnalite.dart';
 import 'package:pass_emploi_app/models/location.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
@@ -50,6 +52,79 @@ void main() {
     final questionnaireState = state.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState;
     expect(questionnaireState.finished, isTrue);
     expect(questionnaireState.answers.prenom, 'Léa');
+  });
+
+  test('after PLAN_ACTION is activated for a non invite jeune, loads finished flag and answers', () async {
+    when(() => repository.getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers(prenom: 'Léa'));
+    when(() => repository.isFinished()).thenAnswer((_) async => false);
+
+    final factory = TestStoreFactory()
+      ..onboardingQuestionnaireRepository = repository
+      ..actionPlanRepository = actionPlanRepository;
+    final store = factory.initializeReduxStore(initialState: givenState().loggedInMiloUser());
+    final success = store.onChange.firstWhere((s) => s.onboardingQuestionnaireState is OnboardingQuestionnaireSuccessState);
+
+    store.dispatch(FonctionnalitesSuccessAction({Fonctionnalite.planAction}));
+
+    final state = await success;
+    final questionnaireState = state.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState;
+    expect(questionnaireState.finished, isFalse);
+    expect(questionnaireState.answers.prenom, 'Léa');
+  });
+
+  test('does not reload answers when questionnaire is already loaded, so an ongoing form is not overwritten', () async {
+    when(() => repository.getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers());
+    when(() => repository.isFinished()).thenAnswer((_) async => false);
+
+    final factory = TestStoreFactory()
+      ..onboardingQuestionnaireRepository = repository
+      ..actionPlanRepository = actionPlanRepository;
+    final store = factory.initializeReduxStore(
+      initialState: givenState().loggedInMiloUser().withOnboardingQuestionnaire(
+        finished: false,
+        answers: const OnboardingQuestionnaireAnswers(prenom: 'Léa'),
+      ),
+    );
+
+    store.dispatch(FonctionnalitesSuccessAction({Fonctionnalite.planAction}));
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+
+    verifyNever(() => repository.getAnswers());
+    final questionnaireState = store.state.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState;
+    expect(questionnaireState.answers.prenom, 'Léa');
+  });
+
+  test('does not load anything when PLAN_ACTION is not among the active fonctionnalites', () async {
+    when(() => repository.getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers());
+    when(() => repository.isFinished()).thenAnswer((_) async => false);
+
+    final factory = TestStoreFactory()
+      ..onboardingQuestionnaireRepository = repository
+      ..actionPlanRepository = actionPlanRepository;
+    final store = factory.initializeReduxStore(initialState: givenState().loggedInMiloUser());
+
+    store.dispatch(FonctionnalitesSuccessAction(const {}));
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+
+    verifyNever(() => repository.getAnswers());
+    expect(store.state.onboardingQuestionnaireState, isA<OnboardingQuestionnaireNotInitializedState>());
+  });
+
+  test('logout clears questionnaire answers and action plan', () async {
+    when(() => repository.clear()).thenAnswer((_) async {});
+    when(() => actionPlanRepository.clear()).thenAnswer((_) async {});
+
+    final factory = TestStoreFactory()
+      ..onboardingQuestionnaireRepository = repository
+      ..actionPlanRepository = actionPlanRepository;
+    final store = factory.initializeReduxStore(initialState: givenState().loggedInMiloUser());
+
+    store.dispatch(RequestLogoutAction(LogoutReason.userLogout));
+
+    await untilCalled(() => repository.clear());
+    verify(() => repository.clear()).called(1);
+    await untilCalled(() => actionPlanRepository.clear());
+    verify(() => actionPlanRepository.clear()).called(1);
   });
 
   test('complete without enough answers empties plan and persists finished flag', () async {

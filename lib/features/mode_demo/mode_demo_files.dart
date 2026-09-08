@@ -43,6 +43,7 @@ String? getDemoFileName(String url, String query) {
   if (url.endsWith('/communications')) return 'communications';
   if (url.endsWith('/actualites')) return 'actualites_mission_locale';
   if (url.endsWith('/comptage')) return 'comptage';
+  if (url.endsWith('/fonctionnalites')) return 'fonctionnalites';
 
   return null;
 }
