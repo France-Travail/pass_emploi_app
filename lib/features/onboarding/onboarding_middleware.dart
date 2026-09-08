@@ -54,9 +54,15 @@ class OnboardingMiddleware extends MiddlewareClass<AppState> {
     if (onboardingState.onboarding != null) {
       final onboarding = onboardingState.onboarding;
       final updatedOnboarding = onboarding!.copyWith(showNotificationsOnboarding: false);
-      await _repository.save(updatedOnboarding);
+      await _save(updatedOnboarding);
       store.dispatch(OnboardingSuccessAction(updatedOnboarding));
     }
+  }
+
+  Future<void> _save(Onboarding onboarding) async {
+    try {
+      await _repository.save(onboarding);
+    } catch (_) {}
   }
 
   Future<void> _updateOnboarding(Store<AppState> store, Onboarding? Function(Onboarding?) update) async {
@@ -64,14 +70,14 @@ class OnboardingMiddleware extends MiddlewareClass<AppState> {
     final onboarding = onboardingState.onboarding;
     final updatedOnboarding = update(onboarding);
     if (updatedOnboarding != null) {
-      await _repository.save(updatedOnboarding);
+      await _save(updatedOnboarding);
       store.dispatch(OnboardingSuccessAction(updatedOnboarding));
       if (updatedOnboarding.isCompleted(store.state.accompagnement())) {
         PassEmploiMatomoTracker.instance.trackEvent(
           eventCategory: AnalyticsEventNames.onboardingCategory,
           action: AnalyticsEventNames.onboardingCompletedOnboardingAction,
         );
-        await _repository.save(updatedOnboarding.copyWith(showOnboarding: false));
+        await _save(updatedOnboarding.copyWith(showOnboarding: false));
       }
     }
   }

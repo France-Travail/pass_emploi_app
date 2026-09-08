@@ -26,7 +26,9 @@ class TutorialMiddleware extends MiddlewareClass<AppState> {
       }
     }
     if (action is TutorialDoneAction) {
-      await _repository.setTutorialRead();
+      try {
+        await _repository.setTutorialRead();
+      } catch (_) {}
     }
   }
 

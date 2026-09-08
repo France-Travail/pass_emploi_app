@@ -16,7 +16,9 @@ class FirstLaunchOnboardingMiddleware extends MiddlewareClass<AppState> {
       final showOnboarding = await _repository.showFirstLaunchOnboarding();
       store.dispatch(FirstLaunchOnboardingSuccessAction(showOnboarding));
     } else if (action is FirstLaunchOnboardingFinishAction) {
-      await _repository.seen();
+      try {
+        await _repository.seen();
+      } catch (_) {}
       store.dispatch(FirstLaunchOnboardingSuccessAction(false));
     }
   }

@@ -101,6 +101,19 @@ class FlutterSecureStorageSpy extends FlutterSecureStorage {
     return _storedValues;
   }
 
+  @override
+  Future<void> deleteAll({
+    AppleOptions? iOptions,
+    AndroidOptions? aOptions,
+    LinuxOptions? lOptions,
+    WebOptions? webOptions,
+    AppleOptions? mOptions,
+    WindowsOptions? wOptions,
+  }) async {
+    if (delay != Duration.zero) await simulateIoOperation();
+    _storedValues.clear();
+  }
+
   Future<void> simulateIoOperation() async => await Future.delayed(delay);
 }
 
