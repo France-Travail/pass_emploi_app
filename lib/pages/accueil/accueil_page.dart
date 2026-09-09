@@ -11,9 +11,9 @@ import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_alertes.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_campagne_recrutement.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_cette_semaine.dart';
-import 'package:pass_emploi_app/pages/accueil/accueil_date_de_migration.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_evenements.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_loading.dart';
+import 'package:pass_emploi_app/pages/accueil/accueil_message_informatif.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_onboarding_tile.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_prochain_rendezvous.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_rating_app.dart';
@@ -293,7 +293,7 @@ class _Blocs extends StatelessWidget {
 
   Widget _buildItem(AccueilItem item) {
     return switch (item) {
-      final AccueilDateDeMigrationItem item => AccueilDateDeMigration(dateDeMigration: item.dateDeMigration),
+      final AccueilMessageInformatifItem item => AccueilMessageInformatif(messageInformatif: item.messageInformatif),
       final AccueilZenithMessageItem item => CardContainer(
         child: RemoteMessageWidget(remoteMessage: item.accueilZenithMessage),
       ),

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:pass_emploi_app/models/accueil/message_informatif.dart';
 import 'package:pass_emploi_app/models/accueil_zenith_message.dart';
 import 'package:pass_emploi_app/models/alerte/alerte.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
@@ -153,13 +154,13 @@ class AccueilZenithMessageItem extends AccueilItem {
   AccueilZenithMessageItem(this.accueilZenithMessage);
 }
 
-class AccueilDateDeMigrationItem extends AccueilItem {
-  final DateTime dateDeMigration;
+class AccueilMessageInformatifItem extends AccueilItem {
+  final MessageInformatif messageInformatif;
 
-  AccueilDateDeMigrationItem(this.dateDeMigration);
+  AccueilMessageInformatifItem(this.messageInformatif);
 
   @override
-  List<Object?> get props => [dateDeMigration];
+  List<Object?> get props => [messageInformatif];
 }
 
 String _actionsOuDemarchesLabel(LoginMode loginMode, int actionsOuDemarches) {
