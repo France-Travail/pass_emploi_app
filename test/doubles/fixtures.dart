@@ -12,6 +12,7 @@ import 'package:pass_emploi_app/features/recherche/service_civique/service_civiq
 import 'package:pass_emploi_app/features/recherche/service_civique/service_civique_filtres_recherche.dart';
 import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/accueil/accueil.dart';
+import 'package:pass_emploi_app/models/accueil/message_informatif.dart';
 import 'package:pass_emploi_app/models/actualite_mission_locale.dart';
 import 'package:pass_emploi_app/models/alerte/alerte.dart';
 import 'package:pass_emploi_app/models/alerte/evenement_emploi_alerte.dart';
@@ -1170,6 +1171,22 @@ List<Alerte> getMockedAlerte() {
     ),
   ];
 }
+
+MessageInformatif mockMessageInformatif({MessageInformatifCta? cta = _defaultMessageInformatifCta}) {
+  return MessageInformatif(
+    id: "migration-parcours-emploi",
+    titre: "Votre application évolue",
+    contenu:
+        "Le 15 octobre 2026, l’application pass emploi ne sera plus disponible. Vos services seront accessibles sur l’application Parcours Emploi.",
+    cta: cta,
+  );
+}
+
+const _defaultMessageInformatifCta = MessageInformatifCta(
+  label: "Télécharger l’application",
+  urlAndroid: "https://play.google.com/store/apps/details?id=com.poleemploi.pemobile",
+  urlIos: "https://apps.apple.com/app/apple-store/id563863597",
+);
 
 Accueil mockAccueilMilo({List<Rendezvous>? evenements}) {
   return Accueil(

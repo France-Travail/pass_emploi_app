@@ -805,4 +805,32 @@ void main() {
       expect(viewModel.items.first, OnboardingItem(completedSteps: 1, totalSteps: 6));
     });
   });
+
+  group('messageInformatif', () {
+    test('should not display item when accueil has no messageInformatif', () {
+      // Given
+      final store = givenState().loggedInMiloUser().withAccueilMiloSuccess().store();
+
+      // When
+      final viewModel = AccueilViewModel.create(store);
+
+      // Then
+      expect(viewModel.items.firstWhereOrNull((item) => item is AccueilMessageInformatifItem), isNull);
+    });
+
+    test('should display item as first item when accueil has a messageInformatif', () {
+      // Given
+      final messageInformatif = mockMessageInformatif();
+      final store = givenState()
+          .loggedInMiloUser()
+          .withAccueilMiloSuccess(mockAccueilMilo().copyWith(messageInformatif: messageInformatif))
+          .store();
+
+      // When
+      final viewModel = AccueilViewModel.create(store);
+
+      // Then
+      expect(viewModel.items.first, AccueilMessageInformatifItem(messageInformatif));
+    });
+  });
 }

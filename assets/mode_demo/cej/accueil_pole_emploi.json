@@ -1,4 +1,14 @@
 {
+    "messageInformatif": {
+      "id": "message-informatif-demo",
+      "titre": "Votre application évolue",
+      "contenu": "Le 15 octobre 2026, l’application pass emploi ne sera plus disponible. Vos services seront accessibles sur l’application Parcours Emploi.",
+      "cta": {
+        "label": "Télécharger l’application",
+        "urlAndroid": "https://play.google.com/store/apps/details?id=com.poleemploi.pemobile&referrer=utm_source%3Dcej%26utm_medium%3Dcta%26utm_campaign%3Dmigration_cej",
+        "urlIos": "https://apps.apple.com/app/apple-store/id563863597?pt=1432235&ct=migration-cej&mt=8"
+      }
+    },
     "cetteSemaine": {
       "nombreRendezVous": 3,
       "nombreActionsDemarchesAFaireSemaineCalendaire": 1
