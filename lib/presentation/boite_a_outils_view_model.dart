@@ -70,7 +70,9 @@ List<Outil> _getOutils(Accompagnement accompagnement) {
     Accompagnement.rsaConseilsDepartementaux ||
     Accompagnement.accompagnementIntensif ||
     Accompagnement.accompagnementGlobal ||
-    Accompagnement.equipEmploiRecrut => [
+    Accompagnement.equipEmploiRecrut ||
+    Accompagnement.ftDemandeurDEmploi ||
+    Accompagnement.ftEspaceCandidat => [
       Outil.metierScope,
       Outil.ressourceFormation,
       Outil.mesAidesFt,

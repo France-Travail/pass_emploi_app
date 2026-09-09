@@ -4,18 +4,22 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pass_emploi_app/auth/auth_wrapper.dart';
 import 'package:pass_emploi_app/auth/authenticator.dart';
+import 'package:pass_emploi_app/models/criteres_recherche_utilisateur.dart';
 import 'package:pass_emploi_app/models/demarche_ia_dto.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/matching_demarche_du_referentiel.dart';
 import 'package:pass_emploi_app/models/offre_dto.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
+import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/push/push_notification_manager.dart';
+import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
 import 'package:pass_emploi_app/repositories/actualite_mission_locale_repository.dart';
 import 'package:pass_emploi_app/repositories/auto_desinscription_repository.dart';
 import 'package:pass_emploi_app/repositories/auto_inscription_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_recrutement_repository.dart';
 import 'package:pass_emploi_app/repositories/comptage_des_heures_repository.dart';
 import 'package:pass_emploi_app/repositories/configuration_application_repository.dart';
+import 'package:pass_emploi_app/repositories/criteres_recherche_persist_repository.dart';
 import 'package:pass_emploi_app/repositories/date_consultation_actualite_mission_locale_repository.dart';
 import 'package:pass_emploi_app/repositories/date_consultation_notification_repository.dart';
 import 'package:pass_emploi_app/repositories/date_consultation_offre_repository.dart';
@@ -26,15 +30,18 @@ import 'package:pass_emploi_app/repositories/evenement_emploi/evenement_emploi_r
 import 'package:pass_emploi_app/repositories/evenement_engagement/evenement_engagement_repository.dart';
 import 'package:pass_emploi_app/repositories/favoris/get_favoris_repository.dart';
 import 'package:pass_emploi_app/repositories/first_launch_onboarding_repository.dart';
+import 'package:pass_emploi_app/repositories/fonctionnalites_repository.dart';
 import 'package:pass_emploi_app/repositories/ia_ft_suggestions_repository.dart';
 import 'package:pass_emploi_app/repositories/immersion/immersion_details_repository.dart';
 import 'package:pass_emploi_app/repositories/in_app_feedback_repository.dart';
 import 'package:pass_emploi_app/repositories/in_app_notifications_repository.dart';
+import 'package:pass_emploi_app/repositories/invite_prenom_repository.dart';
 import 'package:pass_emploi_app/repositories/matching_demarche_repository.dart';
 import 'package:pass_emploi_app/repositories/module_feedback_repository.dart';
 import 'package:pass_emploi_app/repositories/mon_suivi_repository.dart';
 import 'package:pass_emploi_app/repositories/offre_emploi/offre_emploi_details_repository.dart';
 import 'package:pass_emploi_app/repositories/offres_suivies_repository.dart';
+import 'package:pass_emploi_app/repositories/onboarding_questionnaire_repository.dart';
 import 'package:pass_emploi_app/repositories/onboarding_repository.dart';
 import 'package:pass_emploi_app/repositories/piece_jointe_repository.dart';
 import 'package:pass_emploi_app/repositories/preferences_repository.dart';
@@ -44,6 +51,7 @@ import 'package:pass_emploi_app/repositories/remote_config_repository.dart';
 import 'package:pass_emploi_app/repositories/rendezvous/rendezvous_repository.dart';
 import 'package:pass_emploi_app/repositories/service_civique/service_civique_details_repository.dart';
 import 'package:pass_emploi_app/repositories/session_milo_repository.dart';
+import 'package:pass_emploi_app/repositories/soft_update_repository.dart';
 import 'package:pass_emploi_app/repositories/theme_repository.dart';
 import 'package:pass_emploi_app/repositories/tutorial_repository.dart';
 import 'package:pass_emploi_app/repositories/user_action_pending_creation_repository.dart';
@@ -53,9 +61,6 @@ import 'package:pass_emploi_app/utils/compress_image.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/wrappers/connectivity_wrapper.dart';
 
-import 'package:pass_emploi_app/repositories/soft_update_repository.dart';
-import 'package:pass_emploi_app/models/criteres_recherche_utilisateur.dart';
-import 'package:pass_emploi_app/repositories/criteres_recherche_persist_repository.dart';
 /*AUTOGENERATE-REDUX-TEST-MOCKS-REPOSITORY-IMPORT*/
 
 import 'dio_mock.dart';
@@ -237,6 +242,13 @@ class MockCampagneRecrutementRepository extends Mock implements CampagneRecrutem
   }
 }
 
+class MockInvitePrenomRepository extends Mock implements InvitePrenomRepository {
+  MockInvitePrenomRepository() {
+    when(() => getPrenom(any())).thenAnswer((_) async => 'Invité');
+    when(() => updatePrenom(any(), any())).thenAnswer((_) async => true);
+  }
+}
+
 class MockPreferredLoginModeRepository extends Mock implements PreferredLoginModeRepository {
   MockPreferredLoginModeRepository() {
     registerFallbackValue(LoginMode.MILO);
@@ -374,6 +386,34 @@ class MockCriteresRecherchePersistRepository extends Mock implements CriteresRec
     registerFallbackValue(CriteresRechercheUtilisateur());
     when(() => get()).thenAnswer((_) async => null);
     when(() => save(any())).thenAnswer((_) async {});
+  }
+}
+
+class MockOnboardingQuestionnaireRepository extends Mock implements OnboardingQuestionnaireRepository {
+  MockOnboardingQuestionnaireRepository() {
+    registerFallbackValue(const OnboardingQuestionnaireAnswers());
+    when(() => getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers());
+    when(() => saveAnswers(any())).thenAnswer((_) async {});
+    when(() => isFinished()).thenAnswer((_) async => false);
+    when(() => setFinished(any())).thenAnswer((_) async {});
+    when(() => clear()).thenAnswer((_) async {});
+  }
+}
+
+class MockActionPlanRepository extends Mock implements ActionPlanRepository {
+  MockActionPlanRepository() {
+    registerFallbackValue(const OnboardingQuestionnaireAnswers());
+    when(() => generate(any(), any())).thenAnswer((_) async => null);
+    when(() => getStoredPlan()).thenAnswer((_) async => null);
+    when(() => toggleDone(any())).thenAnswer((_) async => null);
+    when(() => deleteAction(any())).thenAnswer((_) async => null);
+    when(() => clear()).thenAnswer((_) async {});
+  }
+}
+
+class MockFonctionnalitesRepository extends Mock implements FonctionnalitesRepository {
+  MockFonctionnalitesRepository() {
+    when(() => get(any())).thenAnswer((_) async => null);
   }
 }
 

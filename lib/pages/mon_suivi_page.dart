@@ -1,40 +1,36 @@
-import 'package:collection/collection.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_actions.dart';
 import 'package:pass_emploi_app/network/post_evenement_engagement.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche_form_page.dart';
+import 'package:pass_emploi_app/pages/demarche/demarche_detail_bottom_sheet.dart';
 import 'package:pass_emploi_app/pages/demarche/demarche_detail_page.dart';
+import 'package:pass_emploi_app/pages/rendezvous/rendezvous_details_page.dart';
 import 'package:pass_emploi_app/pages/user_action/create/create_user_action_form_page.dart';
+import 'package:pass_emploi_app/pages/user_action/user_action_detail_bottom_sheet.dart';
 import 'package:pass_emploi_app/pages/user_action/user_action_detail_page.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/mon_suivi/mon_suivi_view_model.dart';
+import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_card_view_model.dart';
 import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_state_source.dart';
 import 'package:pass_emploi_app/presentation/user_action/user_action_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
-import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/animated_list_loader.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/cards/demarche_card.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/cards/rendezvous_card.dart';
 import 'package:pass_emploi_app/widgets/cards/user_action_card.dart';
+import 'package:pass_emploi_app/widgets/comptage_des_heures_card.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
-import 'package:pass_emploi_app/widgets/dashed_box.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
-import 'package:pass_emploi_app/widgets/info_card.dart';
 import 'package:pass_emploi_app/widgets/onboarding/ft_ia_showcase.dart';
 import 'package:pass_emploi_app/widgets/onboarding/onboarding_showcase.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
@@ -53,7 +49,8 @@ class _MonSuiviPageState extends State<MonSuiviPage> {
         tracking: AnalyticsScreenNames.monSuivi,
         child: _StateProvider(
           child: StoreConnector<AppState, MonSuiviViewModel>(
-            onInit: (store) => store.dispatch(MonSuiviRequestAction(MonSuiviPeriod.current)),
+            onInit: (store) =>
+                store.dispatch(MonSuiviRequestAction(MonSuiviPeriod.current)),
             converter: (store) => MonSuiviViewModel.create(store),
             builder: (_, viewModel) => _Scaffold(
               body: _Body(viewModel),
@@ -72,17 +69,14 @@ class _MonSuiviPageState extends State<MonSuiviPage> {
 //ignore: must_be_immutable
 class _StateProvider extends InheritedWidget {
   final GlobalKey centerKey = GlobalKey();
-  final GlobalKey contentKey = GlobalKey();
   final ScrollController scrollController = ScrollController();
-  final Map<GlobalKey, MonSuiviDay> filledDayItemKeys = {};
-  GlobalKey? randomDayKey;
-  double? dayOverlayHeight;
   int previousPeriodCount = 0;
   int nextPeriodCount = 0;
 
   _StateProvider({required super.child});
 
-  static _StateProvider? maybeOf(BuildContext context) => context.dependOnInheritedWidgetOfExactType<_StateProvider>();
+  static _StateProvider? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<_StateProvider>();
 
   @override
   bool updateShouldNotify(_StateProvider old) => false;
@@ -93,17 +87,24 @@ class _Scaffold extends StatelessWidget {
   final bool withCreateButton;
   final MonSuiviCtaType ctaType;
 
-  const _Scaffold({required this.body, required this.withCreateButton, required this.ctaType});
+  const _Scaffold({
+    required this.body,
+    required this.withCreateButton,
+    required this.ctaType,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.grey100,
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
       appBar: _ScrollAwareAppBar(),
       body: ConnectivityContainer(child: body),
       floatingActionButton: Visibility(
         visible: withCreateButton,
-        child: CreateDemarcheButton(ctaType: ctaType),
+        child: SizedBox(
+          width: MediaQuery.sizeOf(context).width - (DsfrSpacings.s2w * 2),
+          child: CreateDemarcheButton(ctaType: ctaType),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
@@ -123,7 +124,9 @@ class _ScrollAwareAppBarState extends State<_ScrollAwareAppBar> {
 
   @override
   void didChangeDependencies() {
-    _StateProvider.maybeOf(context)?.scrollController.addListener(_scrollListener);
+    _StateProvider.maybeOf(
+      context,
+    )?.scrollController.addListener(_scrollListener);
     super.didChangeDependencies();
   }
 
@@ -131,17 +134,22 @@ class _ScrollAwareAppBarState extends State<_ScrollAwareAppBar> {
   Widget build(BuildContext context) {
     final bool isScreenReader = A11yUtils.withScreenReader(context);
     return PrimaryAppBar(
-      title: Strings.monSuiviTitle,
+      title: Strings.agendaTitle,
       actionButton: withActionButton || isScreenReader
           ? IconButton(
-              onPressed: () => _StateProvider.maybeOf(context)?.scrollController.animateTo(
-                0,
-                duration: AnimationDurations.fast,
-                curve: Curves.fastEaseInToSlowEaseOut,
-              ),
+              onPressed: () =>
+                  _StateProvider.maybeOf(context)?.scrollController.animateTo(
+                    0,
+                    duration: AnimationDurations.fast,
+                    curve: Curves.fastEaseInToSlowEaseOut,
+                  ),
               icon: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(AppIcons.event, color: AppColorsSpecifics.primaryToLighten(context), size: 24),
+                padding: const EdgeInsets.all(DsfrSpacings.s1w),
+                child: Icon(
+                  DsfrIcons.businessCalendarEventLine,
+                  color: DsfrColorDecisions.textActionHighBlueFrance(context),
+                  size: DsfrSpacings.s3w,
+                ),
               ),
               tooltip: Strings.monSuiviTooltip,
             )
@@ -168,7 +176,10 @@ class _Body extends StatelessWidget {
     return AnimatedSwitcher(
       duration: AnimationDurations.fast,
       child: switch (viewModel.displayState) {
-        DisplayState.FAILURE => Retry(Strings.monSuiviError, () => viewModel.onRetry()),
+        DisplayState.FAILURE => Retry(
+          Strings.monSuiviError,
+          () => viewModel.onRetry(),
+        ),
         DisplayState.CONTENT => _Content(viewModel),
         _ => _MonSuiviLoader(),
       },
@@ -186,35 +197,94 @@ class _Content extends StatelessWidget {
     return Column(
       children: [
         if (viewModel.withWarningOnWrongPoleEmploiDataRetrieval) ...[
-          SizedBox(height: Margins.spacing_s),
-          _WarningCard(label: Strings.monSuiviPoleEmploiDataError, onPressed: () => viewModel.onRetry()),
+          const SizedBox(height: DsfrSpacings.s1w),
+          _WarningCard(
+            label: Strings.monSuiviPoleEmploiDataError,
+            onPressed: () => viewModel.onRetry(),
+          ),
         ],
         if (viewModel.monSuiviDemarchesKoMessage != null) ...[
-          SizedBox(height: Margins.spacing_s),
+          const SizedBox(height: DsfrSpacings.s1w),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-            child: InfoCard(
-              message: viewModel.monSuiviDemarchesKoMessage!,
-              backgroundColor: AppColors.disabled,
-              textColor: AppColors.contentOnPrimary,
+            padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
+            child: DsfrAlert(
+              type: DsfrAlertType.info,
+              description: DsfrAlertDescriptionText(
+                viewModel.monSuiviDemarchesKoMessage!,
+              ),
             ),
           ),
         ],
         if (viewModel.withWarningOnWrongSessionMiloRetrieval) ...[
-          SizedBox(height: Margins.spacing_s),
-          _WarningCard(label: Strings.monSuiviSessionMiloError, onPressed: () => viewModel.onRetry()),
+          const SizedBox(height: DsfrSpacings.s1w),
+          _WarningCard(
+            label: Strings.monSuiviSessionMiloError,
+            onPressed: () => viewModel.onRetry(),
+          ),
         ],
         if (viewModel.pendingActionCreations > 0) ...[
-          SizedBox(height: Margins.spacing_s),
+          const SizedBox(height: DsfrSpacings.s1w),
           _UserActionsPendingCard(viewModel.pendingActionCreations),
         ],
-        Expanded(
-          child: Stack(
-            key: _StateProvider.maybeOf(context)?.contentKey,
-            children: [_TodayCenteredMonSuiviList(viewModel), _DayOverlay()],
+        if (viewModel.withComptageDesHeures) const _ScrollAwareComptageDesHeures(),
+        Expanded(child: _TodayCenteredMonSuiviList(viewModel)),
+      ],
+    );
+  }
+}
+
+class _ScrollAwareComptageDesHeures extends StatefulWidget {
+  const _ScrollAwareComptageDesHeures();
+
+  @override
+  State<_ScrollAwareComptageDesHeures> createState() => _ScrollAwareComptageDesHeuresState();
+}
+
+class _ScrollAwareComptageDesHeuresState extends State<_ScrollAwareComptageDesHeures> {
+  bool _visible = true;
+  ScrollController? _controller;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final controller = _StateProvider.maybeOf(context)?.scrollController;
+    if (_controller == controller) return;
+    _controller?.removeListener(_onScroll);
+    _controller = controller;
+    _controller?.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _controller?.removeListener(_onScroll);
+    super.dispose();
+  }
+
+  void _onScroll() {
+    final shouldShow = (_controller?.offset ?? 0) == 0;
+    if (shouldShow != _visible) setState(() => _visible = shouldShow);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final visible = _visible || A11yUtils.withScreenReader(context);
+    return ClipRect(
+      child: AnimatedAlign(
+        duration: AnimationDurations.fast,
+        curve: Curves.fastEaseInToSlowEaseOut,
+        alignment: Alignment.topCenter,
+        heightFactor: visible ? 1 : 0,
+        child: IgnorePointer(
+          ignoring: !visible,
+          child: ExcludeSemantics(
+            excluding: !visible,
+            child: const Padding(
+              padding: EdgeInsets.fromLTRB(DsfrSpacings.s2w, DsfrSpacings.s1w, DsfrSpacings.s2w, 0),
+              child: ComptageDesHeuresCard(),
+            ),
           ),
         ),
-      ],
+      ),
     );
   }
 }
@@ -236,46 +306,42 @@ class _WarningCardState extends State<_WarningCard> {
   Widget build(BuildContext context) {
     return AnimatedCrossFade(
       duration: AnimationDurations.fast,
-      firstChild: SizedBox.shrink(),
-      crossFadeState: _visible ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+      firstChild: const SizedBox.shrink(),
+      crossFadeState: _visible
+          ? CrossFadeState.showSecond
+          : CrossFadeState.showFirst,
       secondChild: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-        child: CardContainer(
-          backgroundColor: AppColors.disabled,
-          padding: EdgeInsets.zero, // Padding is set in row children because of inner padding of OutlinedButton
-          child: Column(
-            children: [
-              SizedBox(height: Margins.spacing_base),
-              Row(
-                children: [
-                  SizedBox(width: Margins.spacing_base),
-                  IconButton(
-                    icon: Icon(
-                      AppIcons.highlight_off,
-                      color: AppColors.contentOnPrimary,
-                      semanticLabel: Strings.closeDialog,
-                    ),
-                    onPressed: () => setState(() => _visible = false),
-                  ),
-                  SizedBox(width: Margins.spacing_s),
-                  Flexible(
-                    child: Semantics(
-                      focusable: true,
-                      child: Text(widget.label, style: TextStyles.textSMedium(color: AppColors.contentOnPrimary)),
+        padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
+        child: DsfrAlert(
+          type: DsfrAlertType.warning,
+          description: DsfrAlertDescriptionWidget(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Semantics(
+                  focusable: true,
+                  child: Text(
+                    widget.label,
+                    style: DsfrTextStyle.bodyMd(
+                      color: DsfrColorDecisions.textDefaultGrey(context),
                     ),
                   ),
-                  SizedBox(width: Margins.spacing_base),
-                ],
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: OutlinedButton(
-                  onPressed: widget.onPressed,
-                  child: Text(Strings.retry, style: TextStyles.textSBoldWithColor(AppColors.contentOnPrimary)),
                 ),
-              ),
-            ],
+                const SizedBox(height: DsfrSpacings.s2w),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: DsfrButton(
+                    label: Strings.retry,
+                    variant: DsfrButtonVariant.secondary,
+                    size: DsfrComponentSize.sm,
+                    onPressed: widget.onPressed,
+                  ),
+                ),
+              ],
+            ),
           ),
+          onClose: () => setState(() => _visible = false),
+          semanticCloseLabel: Strings.closeDialog,
         ),
       ),
     );
@@ -293,18 +359,10 @@ class _UserActionsPendingCard extends StatelessWidget {
         ? Strings.pendingActionCreationPlural(userActionsPostponedCount)
         : Strings.pendingActionCreationSingular;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-      child: CardContainer(
-        backgroundColor: AppColors.disabled,
-        child: Row(
-          children: [
-            Icon(AppIcons.error_rounded, color: AppColors.contentOnPrimary),
-            SizedBox(width: Margins.spacing_s),
-            Flexible(
-              child: Text(message, style: TextStyles.textXsRegular(color: AppColors.contentOnPrimary)),
-            ),
-          ],
-        ),
+      padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
+      child: DsfrAlert(
+        type: DsfrAlertType.info,
+        description: DsfrAlertDescriptionText(message),
       ),
     );
   }
@@ -316,8 +374,13 @@ class _TodayCenteredMonSuiviList extends StatelessWidget {
   final List<MonSuiviItem> presentAndFutureItems;
 
   _TodayCenteredMonSuiviList(this.viewModel)
-    : pastItems = viewModel.items.sublist(0, viewModel.indexOfTodayItem).reversed.toList(),
-      presentAndFutureItems = viewModel.items.sublist(viewModel.indexOfTodayItem);
+    : pastItems = viewModel.items
+          .sublist(0, viewModel.indexOfTodayItem)
+          .reversed
+          .toList(),
+      presentAndFutureItems = viewModel.items.sublist(
+        viewModel.indexOfTodayItem,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -326,25 +389,30 @@ class _TodayCenteredMonSuiviList extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.only(
-        left: Margins.spacing_base,
-        right: Margins.spacing_base,
-        bottom: A11yUtils.withScreenReader(context) ? Margins.spacing_x_huge : 0,
+        left: DsfrSpacings.s2w,
+        right: DsfrSpacings.s2w,
+        bottom: A11yUtils.withScreenReader(context) ? DsfrSpacings.s15w : 0,
       ),
       child: CustomScrollView(
         center: _StateProvider.maybeOf(context)?.centerKey,
         controller: _StateProvider.maybeOf(context)?.scrollController,
         slivers: [
           SliverList.separated(
-            separatorBuilder: (context, index) => const SizedBox(height: Margins.spacing_base),
+            separatorBuilder: (context, index) =>
+                const SizedBox(height: DsfrSpacings.s3v),
             itemCount: pastItems.length + 1,
             itemBuilder: (context, index) {
-              if (_shouldAutomaticallyLoadPreviousPeriod(context, index, loadingPreviousPeriod)) {
+              if (_shouldAutomaticallyLoadPreviousPeriod(
+                context,
+                index,
+                loadingPreviousPeriod,
+              )) {
                 loadingPreviousPeriod = true;
                 _loadPreviousPeriod(context);
               }
               if (index == pastItems.length) {
                 return Padding(
-                  padding: const EdgeInsets.only(top: Margins.spacing_base),
+                  padding: const EdgeInsets.only(top: DsfrSpacings.s2w),
                   child: viewModel.withPagination
                       ? _Pagination(
                           label: Strings.monSuiviA11yPreviousPeriodButton,
@@ -361,17 +429,24 @@ class _TodayCenteredMonSuiviList extends StatelessWidget {
           ),
           SliverList.separated(
             key: _StateProvider.maybeOf(context)?.centerKey,
-            separatorBuilder: (context, index) => const SizedBox(height: Margins.spacing_base),
+            separatorBuilder: (context, index) =>
+                const SizedBox(height: DsfrSpacings.s3v),
             itemCount: presentAndFutureItems.length + 1,
             itemBuilder: (context, index) {
-              if (_shouldAutomaticallyLoadNextPeriod(context, index, loadingNextPeriod)) {
+              if (_shouldAutomaticallyLoadNextPeriod(
+                context,
+                index,
+                loadingNextPeriod,
+              )) {
                 loadingNextPeriod = true;
                 _loadNextPeriod(context);
               }
               if (index == presentAndFutureItems.length) {
                 return Padding(
                   padding: EdgeInsets.only(
-                    bottom: viewModel.withPagination ? Margins.spacing_base : Margins.spacing_huge,
+                    bottom: viewModel.withPagination
+                        ? DsfrSpacings.s2w
+                        : DsfrSpacings.s8w,
                   ),
                   child: viewModel.withPagination
                       ? _Pagination(
@@ -381,11 +456,15 @@ class _TodayCenteredMonSuiviList extends StatelessWidget {
                             _loadNextPeriod(context);
                           },
                         )
-                      : _LimitReachedBanner(Strings.monSuiviPeFutureLimitReached),
+                      : _LimitReachedBanner(
+                          Strings.monSuiviPeFutureLimitReached,
+                        ),
                 );
               }
               return Padding(
-                padding: EdgeInsets.only(top: index == 0 ? Margins.spacing_base : 0),
+                padding: EdgeInsets.only(
+                  top: index == 0 ? DsfrSpacings.s2w : 0,
+                ),
                 child: index == 0
                     // A11y - 10.2: required to focus on today item when app bar button is clicked
                     ? AutoFocusA11y(child: presentAndFutureItems[0].toWidget())
@@ -398,14 +477,26 @@ class _TodayCenteredMonSuiviList extends StatelessWidget {
     );
   }
 
-  bool _shouldAutomaticallyLoadNextPeriod(BuildContext context, int index, bool loadingNextPeriod) {
+  bool _shouldAutomaticallyLoadNextPeriod(
+    BuildContext context,
+    int index,
+    bool loadingNextPeriod,
+  ) {
     if (A11yUtils.withScreenReader(context)) return false;
-    return viewModel.withPagination && index > presentAndFutureItems.length - 2 && !loadingNextPeriod;
+    return viewModel.withPagination &&
+        index > presentAndFutureItems.length - 2 &&
+        !loadingNextPeriod;
   }
 
-  bool _shouldAutomaticallyLoadPreviousPeriod(BuildContext context, int index, bool loadingPreviousPeriod) {
+  bool _shouldAutomaticallyLoadPreviousPeriod(
+    BuildContext context,
+    int index,
+    bool loadingPreviousPeriod,
+  ) {
     if (A11yUtils.withScreenReader(context)) return false;
-    return viewModel.withPagination && index > pastItems.length - 2 && !loadingPreviousPeriod;
+    return viewModel.withPagination &&
+        index > pastItems.length - 2 &&
+        !loadingPreviousPeriod;
   }
 
   void _loadNextPeriod(BuildContext context) {
@@ -431,15 +522,25 @@ class _SemaineSectionItem extends StatelessWidget {
       child: Semantics(
         header: true,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: Margins.spacing_s),
+          padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s1w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                boldTitle ?? interval,
+                style: DsfrTextStyle.headline6(
+                  color: DsfrColorDecisions.textTitleGrey(context),
+                ),
+              ),
               if (boldTitle != null) ...[
-                Text(boldTitle!, style: TextStyles.textMBold.copyWith(color: context.content)),
-                const SizedBox(height: Margins.spacing_xs),
+                const SizedBox(height: DsfrSpacings.s1v),
+                Text(
+                  interval,
+                  style: DsfrTextStyle.bodyXs(
+                    color: DsfrColorDecisions.textMentionGrey(context),
+                  ),
+                ),
               ],
-              Text(interval, style: TextStyles.textXsRegular(color: context.grey800)),
             ],
           ),
         ),
@@ -456,30 +557,21 @@ class _FilledDayItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey key = GlobalKey();
-    _StateProvider.maybeOf(context)?.filledDayItemKeys[key] = day;
-    return _DayRow(
-      day: day,
-      child: Column(
-        key: key,
-        children:
-            entries //
-                .map(
-                  (entry) => [
-                    entries.length > 1
-                        ? Semantics(
-                            // A11y : to repeat day information for each entry
-                            label: day.shortened.toFullDayForScreenReaders() + day.number + day.month,
-                            child: entry.toWidget(),
-                          )
-                        : entry.toWidget(),
-                    SizedBox(height: Margins.spacing_s),
-                  ],
-                )
-                .flattened
-                .toList()
-              ..removeLast(),
-      ),
+    return Column(
+      children: [
+        for (var i = 0; i < entries.length; i++) ...[
+          if (i > 0) const SizedBox(height: DsfrSpacings.s3v),
+          _AgendaTile(
+            dashed: false,
+            onTap: () => entries[i].onTap(context),
+            onLongPress: entries[i].onLongPress(context),
+            child: _DayRow(
+              day: day,
+              child: entries[i].toWidget(),
+            ),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -495,30 +587,115 @@ class _EmptyDayItem extends StatefulWidget {
 }
 
 class _EmptyDayItemState extends State<_EmptyDayItem> {
-  late Color _color;
+  late Color _textColor;
+  late Color _borderColor;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _color = context.grey800;
+    _textColor = DsfrColorDecisions.textDefaultGrey(context);
+    _borderColor = DsfrColorDecisions.borderDefaultGrey(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return _DayRow(
-      day: widget.day,
-      child: Focus(
-        onFocusChange: (focused) {
-          setState(() {
-            _color = focused ? AppColors.primaryDarken : _color;
-          });
-        },
-        child: DashedBox(
-          padding: const EdgeInsets.all(Margins.spacing_base),
-          color: _color,
-          child: Text(widget.text, style: TextStyles.textXsMedium(color: _color)),
+    return Focus(
+      onFocusChange: (focused) {
+        setState(() {
+          _textColor = focused
+              ? DsfrColorDecisions.textActionHighBlueFrance(context)
+              : DsfrColorDecisions.textDefaultGrey(context);
+          _borderColor = focused
+              ? DsfrColorDecisions.borderPlainBlueFrance(context)
+              : DsfrColorDecisions.borderDefaultGrey(context);
+        });
+      },
+      child: _AgendaTile(
+        dashed: true,
+        borderColor: _borderColor,
+        backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
+        child: _DayRow(
+          day: widget.day,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          child: Text(
+            widget.text,
+            style: DsfrTextStyle.bodySm(color: _textColor),
+          ),
         ),
       ),
+    );
+  }
+}
+
+class _AgendaTile extends StatelessWidget {
+  final Widget child;
+  final bool dashed;
+  final Color? borderColor;
+  final Color? backgroundColor;
+  final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
+
+  const _AgendaTile({
+    required this.child,
+    required this.dashed,
+    this.borderColor,
+    this.backgroundColor,
+    this.onTap,
+    this.onLongPress,
+  });
+
+  static const _radius = Radius.circular(4);
+
+  @override
+  Widget build(BuildContext context) {
+    final resolvedBorder =
+        borderColor ?? DsfrColorDecisions.borderDefaultGrey(context);
+    final resolvedBackground =
+        backgroundColor ?? DsfrColorDecisions.backgroundDefaultGrey(context);
+    final borderRadius = const BorderRadius.all(_radius);
+    final shape = RoundedRectangleBorder(
+      borderRadius: borderRadius,
+      side: BorderSide(color: resolvedBorder),
+    );
+
+    final paddedChild = Padding(
+      padding: const EdgeInsets.all(DsfrSpacings.s2w),
+      child: child,
+    );
+
+    final interactiveChild = (onTap == null && onLongPress == null)
+        ? paddedChild
+        : InkWell(
+            onTap: onTap,
+            onLongPress: onLongPress,
+            customBorder: shape,
+            child: paddedChild,
+          );
+
+    if (dashed) {
+      return DottedBorder(
+        options: RoundedRectDottedBorderOptions(
+          dashPattern: const [4, 4],
+          radius: _radius,
+          color: resolvedBorder,
+          strokeWidth: 1,
+          padding: EdgeInsets.symmetric(horizontal: 1),
+        ),
+        child: ClipRRect(
+          borderRadius: borderRadius,
+          child: ColoredBox(
+            color: resolvedBackground,
+            child: interactiveChild,
+          ),
+        ),
+      );
+    }
+
+    return Material(
+      color: resolvedBackground,
+      shape: shape,
+      clipBehavior: Clip.antiAlias,
+      child: interactiveChild,
     );
   }
 }
@@ -526,17 +703,22 @@ class _EmptyDayItemState extends State<_EmptyDayItem> {
 class _DayRow extends StatelessWidget {
   final MonSuiviDay day;
   final Widget child;
+  final CrossAxisAlignment crossAxisAlignment;
 
-  const _DayRow({required this.day, required this.child});
+  const _DayRow({
+    required this.day,
+    required this.child,
+    this.crossAxisAlignment = CrossAxisAlignment.start,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: crossAxisAlignment,
       children: [
-        Expanded(child: _Day(day)),
-        const SizedBox(width: Margins.spacing_base),
-        Expanded(flex: 9, child: child),
+        _Day(day),
+        const SizedBox(width: DsfrSpacings.s2w),
+        Expanded(child: child),
       ],
     );
   }
@@ -549,22 +731,32 @@ class _Day extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool addKey = _StateProvider.maybeOf(context)?.randomDayKey == null;
-    if (addKey) _StateProvider.maybeOf(context)?.randomDayKey = GlobalKey();
+    final textColor = DsfrColorDecisions.textTitleGrey(context);
 
-    return ColoredBox(
-      key: addKey ? _StateProvider.maybeOf(context)?.randomDayKey : null,
-      color: context.grey100,
+    return SizedBox(
+      width: DsfrSpacings.s8w,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            day.shortened,
-            style: TextStyles.textXsMedium(color: context.content),
-            semanticsLabel: day.shortened.toFullDayForScreenReaders(),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              day.name,
+              style: DsfrTextStyle.bodyXs(color: textColor),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+            ),
           ),
-          Text(day.number, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-          Semantics(label: day.month),
+          Text(
+            day.number,
+            style: DsfrTextStyle.bodyLgBold(color: textColor),
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            day.month,
+            style: DsfrTextStyle.bodyXs(color: textColor),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );
@@ -581,10 +773,6 @@ class _UserActionMonSuiviItem extends StatelessWidget {
     return UserActionCard(
       userActionId: entry.id,
       source: UserActionStateSource.monSuivi,
-      onTap: () {
-        context.trackEvenementEngagement(EvenementEngagement.ACTION_DETAIL);
-        Navigator.push(context, UserActionDetailPage.materialPageRoute(entry.id, UserActionStateSource.monSuivi));
-      },
     );
   }
 }
@@ -596,13 +784,7 @@ class _DemarcheMonSuiviItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DemarcheCard(
-      demarcheId: entry.id,
-      onTap: () {
-        context.trackEvenementEngagement(EvenementEngagement.ACTION_DETAIL);
-        Navigator.push(context, DemarcheDetailPage.materialPageRoute(entry.id));
-      },
-    );
+    return DemarcheCard(demarcheId: entry.id);
   }
 }
 
@@ -613,10 +795,13 @@ class _RendezvousMonSuiviItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return entry.id.rendezvousCard(
-      context: context,
-      stateSource: RendezvousStateSource.monSuivi,
-      evenementEngagement: EvenementEngagement.RDV_DETAIL,
+    return RendezvousCard(
+      converter: (store) => RendezvousCardViewModel.create(
+        store,
+        RendezvousStateSource.monSuivi,
+        entry.id,
+      ),
+      withChrome: false,
     );
   }
 }
@@ -628,10 +813,13 @@ class _SessionMiloMonSuiviItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return entry.id.rendezvousCard(
-      context: context,
-      stateSource: RendezvousStateSource.monSuiviSessionMilo,
-      evenementEngagement: EvenementEngagement.RDV_DETAIL_SESSION,
+    return RendezvousCard(
+      converter: (store) => RendezvousCardViewModel.create(
+        store,
+        RendezvousStateSource.monSuiviSessionMilo,
+        entry.id,
+      ),
+      withChrome: false,
     );
   }
 }
@@ -642,31 +830,37 @@ class _MonSuiviLoader extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     return AnimatedListLoader(
       placeholders: [
-        ..._dayItems((7 - DateTime.now().weekday) + 1),
+        ..._dayItems(screenWidth, (7 - DateTime.now().weekday) + 1),
         ..._semaineSection(screenWidth),
-        ..._dayItems(7),
+        ..._dayItems(screenWidth, 7),
         ..._semaineSection(screenWidth),
       ],
     );
   }
 
-  List<Widget> _dayItems(int count) {
+  List<Widget> _dayItems(double screenWidth, int count) {
     return [
       for (var i = 0; i < count; ++i)
         Padding(
-          padding: EdgeInsets.only(top: Margins.spacing_base),
-          child: _MonSuiviItemLoader(),
+          padding: const EdgeInsets.only(top: DsfrSpacings.s3v),
+          child: _MonSuiviItemLoader(screenWidth: screenWidth),
         ),
     ];
   }
 
   List<Widget> _semaineSection(double screenWidth) {
     return [
-      SizedBox(height: Margins.spacing_m),
-      AnimatedListLoader.placeholderBuilder(width: screenWidth * 0.5, height: 24),
-      SizedBox(height: Margins.spacing_s),
-      AnimatedListLoader.placeholderBuilder(width: screenWidth * 0.3, height: 16),
-      SizedBox(height: Margins.spacing_s),
+      const SizedBox(height: DsfrSpacings.s3w),
+      AnimatedListLoader.placeholderBuilder(
+        width: screenWidth * 0.5,
+        height: 24,
+      ),
+      const SizedBox(height: DsfrSpacings.s1w),
+      AnimatedListLoader.placeholderBuilder(
+        width: screenWidth * 0.3,
+        height: 16,
+      ),
+      const SizedBox(height: DsfrSpacings.s1w),
     ];
   }
 }
@@ -689,9 +883,11 @@ class _PaginationLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: context.grey100,
-      highlightColor: AppColors.contentOnPrimary,
-      child: _MonSuiviItemLoader(),
+      baseColor: DsfrColorDecisions.backgroundContrastGrey(context),
+      highlightColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+      child: _MonSuiviItemLoader(
+        screenWidth: MediaQuery.of(context).size.width,
+      ),
     );
   }
 }
@@ -706,7 +902,12 @@ class _LoadPeriodButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: SecondaryButton(label: label, onPressed: () => onPressed()),
+      child: DsfrButton(
+        label: label,
+        variant: DsfrButtonVariant.secondary,
+        size: DsfrComponentSize.md,
+        onPressed: onPressed,
+      ),
     );
   }
 }
@@ -720,105 +921,40 @@ class _LimitReachedBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: TextStyles.textXsMedium(color: AppColors.disabled),
+      style: DsfrTextStyle.bodyXsMedium(
+        color: DsfrColorDecisions.textMentionGrey(context),
+      ),
       textAlign: TextAlign.center,
     );
   }
 }
 
 class _MonSuiviItemLoader extends StatelessWidget {
+  final double screenWidth;
+
+  const _MonSuiviItemLoader({required this.screenWidth});
+
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(child: AnimatedListLoader.placeholderBuilder(width: screenWidth, height: 40)),
-        const SizedBox(width: Margins.spacing_base),
-        Expanded(flex: 9, child: AnimatedListLoader.placeholderBuilder(width: screenWidth, height: 56)),
-      ],
+    return AnimatedListLoader.placeholderBuilder(
+      width: screenWidth,
+      height: 80,
     );
-  }
-}
-
-class _DayOverlay extends StatefulWidget {
-  @override
-  State<_DayOverlay> createState() => _DayOverlayState();
-}
-
-class _DayOverlayState extends State<_DayOverlay> {
-  MonSuiviDay? _day;
-
-  @override
-  void didChangeDependencies() {
-    _StateProvider.maybeOf(context)?.scrollController.addListener(_scrollListener);
-    super.didChangeDependencies();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _day != null
-        ? Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-            child: _DayRow(day: _day!, child: const SizedBox()),
-          )
-        : SizedBox();
-  }
-
-  void _scrollListener() {
-    if (_StateProvider.maybeOf(context)?.scrollController.offset == 0 && _day != null) setState(() => _day = null);
-
-    final MonSuiviDay? day = _overlayDay();
-    if (day != _day) setState(() => _day = day);
-  }
-
-  MonSuiviDay? _overlayDay() {
-    MonSuiviDay? overlayDay;
-    final filledDayItemKeys = _StateProvider.maybeOf(context)?.filledDayItemKeys ?? {};
-    for (var key in filledDayItemKeys.keys) {
-      final RenderBox? renderBox = key.currentContext?.findRenderObject() as RenderBox?;
-      if (renderBox == null) continue;
-
-      final MonSuiviDay? boxDay = filledDayItemKeys[key];
-      if (boxDay == null) continue;
-
-      final overlayShouldBeVisible = _overlayShouldBeVisible(renderBox);
-      if (overlayShouldBeVisible) {
-        overlayDay = boxDay;
-        break;
-      }
-    }
-    return overlayDay;
-  }
-
-  bool _overlayShouldBeVisible(RenderBox renderBox) {
-    final overlayHeight = _getOverlayHeight();
-    if (overlayHeight == null) return false;
-
-    final ancestor = _StateProvider.maybeOf(context)?.contentKey.currentContext?.findRenderObject();
-    final double renderBoxY = renderBox.localToGlobal(Offset.zero, ancestor: ancestor).dy;
-    final isRenderBoxTopVisible = renderBoxY >= 0;
-    final isRenderBoxOnScreen = renderBoxY > -renderBox.size.height + overlayHeight;
-    return !isRenderBoxTopVisible && isRenderBoxOnScreen;
-  }
-
-  double? _getOverlayHeight() {
-    if (_StateProvider.maybeOf(context)?.dayOverlayHeight == null) {
-      final RenderBox? randomDayBox =
-          _StateProvider.maybeOf(context)?.randomDayKey?.currentContext?.findRenderObject() as RenderBox?;
-      if (randomDayBox == null) return null;
-      _StateProvider.maybeOf(context)?.dayOverlayHeight = randomDayBox.size.height;
-    }
-    return _StateProvider.maybeOf(context)?.dayOverlayHeight;
   }
 }
 
 extension on MonSuiviItem {
   Widget toWidget() {
     return switch (this) {
-      final SemaineSectionMonSuiviItem item => _SemaineSectionItem(item.interval, item.boldTitle),
+      final SemaineSectionMonSuiviItem item => _SemaineSectionItem(
+        item.interval,
+        item.boldTitle,
+      ),
       final EmptyDayMonSuiviItem item => _EmptyDayItem(item.day, item.text),
-      final FilledDayMonSuiviItem item => _FilledDayItem(item.day, item.entries),
+      final FilledDayMonSuiviItem item => _FilledDayItem(
+        item.day,
+        item.entries,
+      ),
     };
   }
 }
@@ -832,6 +968,45 @@ extension on MonSuiviEntry {
       final SessionMiloMonSuiviEntry entry => _SessionMiloMonSuiviItem(entry),
     };
   }
+
+  void onTap(BuildContext context) {
+    switch (this) {
+      case UserActionMonSuiviEntry(:final id):
+        context.trackEvenementEngagement(EvenementEngagement.ACTION_DETAIL);
+        UserActionDetailPage.show(context, id, UserActionStateSource.monSuivi);
+      case DemarcheMonSuiviEntry(:final id):
+        context.trackEvenementEngagement(EvenementEngagement.ACTION_DETAIL);
+        DemarcheDetailPage.show(context, id);
+      case RendezvousMonSuiviEntry(:final id):
+        context.trackEvenementEngagement(EvenementEngagement.RDV_DETAIL);
+        RendezvousDetailsPage.show(context, RendezvousStateSource.monSuivi, id);
+      case SessionMiloMonSuiviEntry(:final id):
+        context.trackEvenementEngagement(
+          EvenementEngagement.RDV_DETAIL_SESSION,
+        );
+        RendezvousDetailsPage.show(
+          context,
+          RendezvousStateSource.sessionMiloDetails,
+          id,
+        );
+    }
+  }
+
+  VoidCallback? onLongPress(BuildContext context) {
+    return switch (this) {
+      UserActionMonSuiviEntry(:final id) =>
+        () => UserActionDetailsBottomSheet.show(
+          context,
+          UserActionStateSource.monSuivi,
+          id,
+        ),
+      DemarcheMonSuiviEntry(:final id) => () => DemarcheDetailsBottomSheet.show(
+        context,
+        id,
+      ),
+      _ => null,
+    };
+  }
 }
 
 class CreateDemarcheButton extends StatefulWidget {
@@ -842,7 +1017,8 @@ class CreateDemarcheButton extends StatefulWidget {
   State<CreateDemarcheButton> createState() => _CreateDemarcheButtonState();
 }
 
-class _CreateDemarcheButtonState extends State<CreateDemarcheButton> with SingleTickerProviderStateMixin {
+class _CreateDemarcheButtonState extends State<CreateDemarcheButton>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _scaleAnimation;
   late final Animation<double> _fadeAnimation;
@@ -854,7 +1030,10 @@ class _CreateDemarcheButtonState extends State<CreateDemarcheButton> with Single
   void initState() {
     super.initState();
 
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1000));
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
 
     _scaleAnimation = Tween<double>(
       begin: 0.8,
@@ -889,9 +1068,13 @@ class _CreateDemarcheButtonState extends State<CreateDemarcheButton> with Single
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) {
-        final button = PrimaryActionButton(
-          label: widget.ctaType == MonSuiviCtaType.createAction ? Strings.addAnAction : Strings.addADemarche,
-          icon: AppIcons.add_rounded,
+        final label = widget.ctaType == MonSuiviCtaType.createAction
+            ? Strings.addAnAction
+            : Strings.addADemarche;
+        final button = DsfrButton(
+          label: label,
+          variant: DsfrButtonVariant.primary,
+          size: DsfrComponentSize.lg,
           onPressed: () {
             switch (widget.ctaType) {
               case MonSuiviCtaType.createDemarche:
@@ -907,27 +1090,35 @@ class _CreateDemarcheButtonState extends State<CreateDemarcheButton> with Single
             }
           },
         );
-        return Stack(
-          alignment: Alignment.center,
-          children: [
-            FadeTransition(
-              opacity: _fadeAnimation,
-              child: ScaleTransition(
-                scale: _scaleAnimation,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(360),
-                    color: AppColors.primary.withValues(alpha: 0.5),
+        return SizedBox(
+          width: double.infinity,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              FadeTransition(
+                opacity: _fadeAnimation,
+                child: ScaleTransition(
+                  scale: _scaleAnimation,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: DsfrColorDecisions.backgroundActionHighBlueFrance(
+                        context,
+                      ).withValues(alpha: 0.5),
+                    ),
+                    child: IgnorePointer(
+                      child: SizedBox(width: double.infinity, child: button),
+                    ),
                   ),
-                  child: IgnorePointer(child: button),
                 ),
               ),
-            ),
-            OnboardingShowcase(
-              source: ShowcaseSource.action,
-              child: FtIaShowcase(child: button),
-            ),
-          ],
+              OnboardingShowcase(
+                source: ShowcaseSource.action,
+                child: FtIaShowcase(
+                  child: SizedBox(width: double.infinity, child: button),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );

@@ -4,7 +4,7 @@ import 'package:pass_emploi_app/presentation/demarche/demarche_du_referentiel_ca
 import 'package:pass_emploi_app/presentation/demarche/demarche_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/base_card.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 
 class DemarcheDuReferentielCard extends StatelessWidget {
   final String idDemarche;
@@ -24,7 +24,7 @@ class DemarcheDuReferentielCard extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, DemarcheDuReferentielCardViewModel viewModel) {
     return BaseCard(
-      tag: CardTag.secondary(text: viewModel.pourquoi),
+      tag: DsfrCategoryTag.secondary(label: viewModel.pourquoi),
       title: viewModel.quoi,
       onTap: onTap,
     );

@@ -180,6 +180,7 @@ void main() {
         RendezvousCardViewModel(
           id: '1',
           tag: 'Atelier',
+          typeCode: RendezvousTypeCode.ATELIER,
           date: "23 décembre 2021",
           hourAndDuration: "10h20 - 11h20",
           inscriptionStatus: InscriptionStatus.hidden,
@@ -189,6 +190,8 @@ void main() {
           place: 'Par téléphone',
           nombreDePlacesRestantes: null,
           assetImage: null,
+          emoji: null,
+          emojiBackground: null,
         ),
       );
     });
@@ -360,6 +363,44 @@ void main() {
         // Then
         expect(viewModel.date, "23 décembre 2021");
         expect(viewModel.hourAndDuration, "10h20 - 11h20");
+      });
+    });
+
+    group('emoji', () {
+      test('should display emoji when source is from evenements', () {
+        // Given
+        final rdv = mockRendezvous(
+          id: '1',
+          source: RendezvousSource.milo,
+          type: RendezvousType(RendezvousTypeCode.ATELIER, 'Atelier'),
+        );
+        final store = givenState().loggedIn().succeedEventList(animationsCollectives: [rdv]).store();
+
+        // When
+        final viewModel = RendezvousCardViewModel.create(
+          store,
+          RendezvousStateSource.eventListAnimationsCollectives,
+          '1',
+        );
+
+        // Then
+        expect(viewModel.emoji, RendezvousTypeCode.ATELIER.emoji);
+        expect(viewModel.emojiBackground, RendezvousTypeCode.ATELIER.emojiBackground);
+      });
+
+      test('should not display emoji when source is from mon suivi', () {
+        // Given
+        final store = givenRendezvous(mockRendezvous(
+          id: '1',
+          type: RendezvousType(RendezvousTypeCode.ATELIER, 'Atelier'),
+        )).store();
+
+        // When
+        final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.monSuivi, '1');
+
+        // Then
+        expect(viewModel.emoji, isNull);
+        expect(viewModel.emojiBackground, isNull);
       });
     });
 

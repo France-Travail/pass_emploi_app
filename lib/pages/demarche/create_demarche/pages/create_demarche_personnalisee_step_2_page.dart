@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
 
 class CreateDemarchePersonnaliseeStep2Page extends StatefulWidget {
   const CreateDemarchePersonnaliseeStep2Page(this.viewModel);
@@ -25,32 +22,37 @@ class _CreateDemarchePersonnaliseeStep2PageState extends State<CreateDemarchePer
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+      padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(height: Margins.spacing_base),
-          Text(Strings.createDemarchePersonnaliseeTitle, style: TextStyles.textMBold.copyWith(color: context.content)),
-          const SizedBox(height: Margins.spacing_base),
-          Text(Strings.descriptionDemarchePersonnaliseeLabel, style: TextStyles.textBaseMedium.copyWith(color: context.content)),
-          const SizedBox(height: Margins.spacing_s),
-          BaseTextField(
+          const SizedBox(height: DsfrSpacings.s2w),
+          DsfrInput(
+            label: Strings.descriptionDemarchePersonnaliseeLabel,
             controller: _controller,
-            maxLength: CreateDemarchePersonnaliseeStep2ViewModel.maxLength,
             minLines: 4,
+            maxLines: 8,
+            inputFormatters: [LengthLimitingTextInputFormatter(CreateDemarchePersonnaliseeStep2ViewModel.maxLength)],
             onChanged: (value) => widget.viewModel.descriptionChanged(value),
           ),
-          const SizedBox(height: Margins.spacing_base),
-          PrimaryActionButton(
+          const SizedBox(height: DsfrSpacings.s3w),
+          DsfrButton(
             label: Strings.continueLabel,
+            variant: DsfrButtonVariant.primary,
+            size: DsfrComponentSize.md,
             onPressed: widget.viewModel.isDescriptionValid
                 ? widget.viewModel.navigateToCreateDemarchePersonnaliseeStep3
                 : null,
           ),
-          // To ensure scrolling is available, and hence closing of keyboard
-          SizedBox(height: 600),
+          const SizedBox(height: 200),
         ],
       ),
     );

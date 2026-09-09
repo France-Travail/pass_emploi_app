@@ -26,9 +26,9 @@ void main() {
 
       // Then
       expect(viewModel.pageTitle, "Partage d’événement");
-      expect(viewModel.willShareTitle, "Ce que vous souhaitez partager");
-      expect(viewModel.defaultMessage, "Bonjour, je vous partage un événement afin d’avoir votre avis");
-      expect(viewModel.information, "L’événement sera partagé à votre conseiller dans la messagerie");
+      expect(viewModel.willShareTitle, "Ce que tu souhaites partager");
+      expect(viewModel.defaultMessage, "Bonjour, je te partage un événement afin d’avoir ton avis");
+      expect(viewModel.information, "L’événement sera partagé à ton conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager à mon conseiller");
       expect(viewModel.shareSuccessTitle, "Partage d’événement");
       expect(viewModel.snackbarSuccessTracking, "animation_collective/detail?partage-conseiller=true");
@@ -90,9 +90,9 @@ void main() {
 
       // Then
       expect(viewModel.pageTitle, "Partage de l’événement");
-      expect(viewModel.willShareTitle, "L’événement que vous souhaitez partager");
-      expect(viewModel.defaultMessage, "Bonjour, je vous partage un événement afin d’avoir votre avis");
-      expect(viewModel.information, "L’événement sera partagé à votre conseiller dans la messagerie");
+      expect(viewModel.willShareTitle, "L’événement que tu souhaites partager");
+      expect(viewModel.defaultMessage, "Bonjour, je te partage un événement afin d’avoir ton avis");
+      expect(viewModel.information, "L’événement sera partagé à ton conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager à mon conseiller");
       expect(viewModel.shareSuccessTitle, "Partage de l’événement");
       expect(viewModel.snackbarSuccessTracking, "evenement_emploi/detail?partage-conseiller=true");
@@ -144,9 +144,9 @@ void main() {
 
       // Then
       expect(viewModel.pageTitle, "Partage de l’offre d’alternance");
-      expect(viewModel.willShareTitle, "L’offre que vous souhaitez partager");
-      expect(viewModel.defaultMessage, "Bonjour, je vous partage une offre d’emploi afin d’avoir votre avis");
-      expect(viewModel.information, "L’offre d’emploi sera partagée à votre conseiller dans la messagerie");
+      expect(viewModel.willShareTitle, "L’offre que tu souhaites partager");
+      expect(viewModel.defaultMessage, "Bonjour, je te partage une offre d’emploi afin d’avoir ton avis");
+      expect(viewModel.information, "L’offre d’emploi sera partagée à ton conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager l’offre d’alternance");
       expect(viewModel.shareSuccessTitle, "Partage offre d’emploi");
       expect(viewModel.snackbarSuccessTracking, "/recherche/emploi/detail?partage-conseiller=true");
@@ -164,9 +164,9 @@ void main() {
 
       // Then
       expect(viewModel.pageTitle, "Partage de l’offre d’emploi");
-      expect(viewModel.willShareTitle, "L’offre que vous souhaitez partager");
-      expect(viewModel.defaultMessage, "Bonjour, je vous partage une offre d’emploi afin d’avoir votre avis");
-      expect(viewModel.information, "L’offre d’emploi sera partagée à votre conseiller dans la messagerie");
+      expect(viewModel.willShareTitle, "L’offre que tu souhaites partager");
+      expect(viewModel.defaultMessage, "Bonjour, je te partage une offre d’emploi afin d’avoir ton avis");
+      expect(viewModel.information, "L’offre d’emploi sera partagée à ton conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager l’offre d’emploi");
       expect(viewModel.shareSuccessTitle, "Partage offre d’emploi");
       expect(viewModel.snackbarSuccessTracking, "/recherche/emploi/detail?partage-conseiller=true");
@@ -230,10 +230,10 @@ void main() {
 
       // Then
       expect(viewModel.pageTitle, "Partage d’événement");
-      expect(viewModel.willShareTitle, "Ce que vous souhaitez partager");
+      expect(viewModel.willShareTitle, "Ce que tu souhaites partager");
       expect(viewModel.defaultMessage, "Bonjour, cet événement est complet mais je suis intéressé");
       expect(viewModel.shareableTitle, "ANIMATION COLLECTIVE POUR TEST - SESSION TEST");
-      expect(viewModel.information, "L’événement sera partagé à votre conseiller dans la messagerie");
+      expect(viewModel.information, "L’événement sera partagé à ton conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager à mon conseiller");
       expect(viewModel.shareSuccessTitle, "Partage d’événement");
       expect(viewModel.snackbarSuccessTracking, "session_milo/detail?partage-conseiller=true");

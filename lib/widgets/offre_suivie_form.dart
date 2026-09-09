@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/create_demarche_success_page.dart';
@@ -6,18 +7,9 @@ import 'package:pass_emploi_app/pages/offre_emploi/offre_emploi_details_page.dar
 import 'package:pass_emploi_app/presentation/offre_suivie_form_viewmodel.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/buttons/colored_action_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/create_user_action_confirmation_offre_suivi_page.dart';
-import 'package:pass_emploi_app/widgets/pass_emploi_radio_buttons.dart';
 
 class OffreSuivieForm extends StatelessWidget {
   const OffreSuivieForm({
@@ -43,13 +35,24 @@ class OffreSuivieForm extends StatelessWidget {
       ),
       distinct: true,
       builder: (context, viewModel) {
-        return CardContainer(
-          backgroundColor: showPrimaryBackground ? AppColors.primary : context.bg,
-          child: AnimatedSwitcher(
-            duration: AnimationDurations.fast,
-            child: viewModel.showConfirmation
-                ? _Confirmation(viewModel, showPrimaryBackground)
-                : _Content(viewModel, offreId, trackingSource, showPrimaryBackground),
+        return SizedBox(
+          width: double.infinity,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: showPrimaryBackground
+                  ? DsfrColorDecisions.borderOpenBlueFrance(context)
+                  : DsfrColorDecisions.backgroundContrastGrey(context),
+              borderRadius: BorderRadius.circular(DsfrSpacings.s1v),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(DsfrSpacings.s2w),
+              child: AnimatedSwitcher(
+                duration: AnimationDurations.fast,
+                child: viewModel.showConfirmation
+                    ? _Confirmation(viewModel)
+                    : _Content(viewModel, offreId, trackingSource),
+              ),
+            ),
           ),
         );
       },
@@ -58,9 +61,8 @@ class OffreSuivieForm extends StatelessWidget {
 }
 
 class _Confirmation extends StatelessWidget {
-  const _Confirmation(this.viewModel, this.showPrimaryBackground);
+  const _Confirmation(this.viewModel);
   final OffreSuivieFormViewmodel viewModel;
-  final bool showPrimaryBackground;
 
   @override
   Widget build(BuildContext context) {
@@ -70,67 +72,74 @@ class _Confirmation extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Icon(
-              AppIcons.check_circle_outline_rounded,
-              color: showPrimaryBackground ? AppColors.contentOnPrimary : context.content,
+              DsfrIcons.systemCheckboxCircleLine,
+              color: DsfrColorDecisions.textTitleGrey(context),
             ),
-            SizedBox(height: Margins.spacing_s),
+            const SizedBox(height: DsfrSpacings.s1w),
             Text(
               Strings.merciPourVotreReponse,
               textAlign: TextAlign.center,
-              style: TextStyles.textBaseRegular.copyWith(
-                color: showPrimaryBackground ? AppColors.contentOnPrimary : context.content,
-              ),
+              style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
             ),
             if (viewModel.onCreateActionOrDemarche != null) ...[
               if (viewModel.confirmationMessage != null) ...[
-                SizedBox(height: Margins.spacing_s),
+                const SizedBox(height: DsfrSpacings.s1w),
                 Text(
                   viewModel.confirmationMessage!,
                   textAlign: TextAlign.center,
-                  style: TextStyles.textSRegular().copyWith(
-                    color: showPrimaryBackground ? AppColors.contentOnPrimary : context.content,
-                  ),
+                  style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context)),
                 ),
               ],
-              SizedBox(height: Margins.spacing_base),
-              ColoredActionButton(
-                label: viewModel.onCreateActionOrDemarcheLabel,
-                textColor: showPrimaryBackground ? AppColors.primary : AppColors.contentOnPrimary,
-                backgroundColor: showPrimaryBackground ? context.bg : AppColors.primary,
-                onPressed: () {
-                  viewModel.onCreateActionOrDemarche?.call();
-                  viewModel.onHideForever();
-                  if (viewModel.useDemarche) {
-                    PassEmploiMatomoTracker.instance.trackEvent(
-                      eventCategory: AnalyticsEventNames.createDemarcheEventCategory,
-                      action: AnalyticsEventNames.createDemarcheFromOffreSuiviAction,
-                    );
-                    Navigator.of(context).push(CreateDemarcheSuccessPage.route(CreateDemarcheSource.fromReferentiel));
-                  } else {
-                    PassEmploiMatomoTracker.instance.trackEvent(
-                      eventCategory: AnalyticsEventNames.createActionEventCategory,
-                      action: AnalyticsEventNames.createActionResultFromOffreSuiviAction,
-                    );
-                    Navigator.of(context).push(CreateUserActionConfirmationOffreSuiviPage.route());
-                  }
-                },
+              const SizedBox(height: DsfrSpacings.s2w),
+              SizedBox(
+                width: double.infinity,
+                child: DsfrButton(
+                  label: viewModel.onCreateActionOrDemarcheLabel,
+                  variant: DsfrButtonVariant.primary,
+                  size: DsfrComponentSize.md,
+                  onPressed: () {
+                    viewModel.onCreateActionOrDemarche?.call();
+                    viewModel.onHideForever();
+                    if (viewModel.useDemarche) {
+                      PassEmploiMatomoTracker.instance.trackEvent(
+                        eventCategory: AnalyticsEventNames.createDemarcheEventCategory,
+                        action: AnalyticsEventNames.createDemarcheFromOffreSuiviAction,
+                      );
+                      Navigator.of(context).push(CreateDemarcheSuccessPage.route(CreateDemarcheSource.fromReferentiel));
+                    } else {
+                      PassEmploiMatomoTracker.instance.trackEvent(
+                        eventCategory: AnalyticsEventNames.createActionEventCategory,
+                        action: AnalyticsEventNames.createActionResultFromOffreSuiviAction,
+                      );
+                      Navigator.of(context).push(CreateUserActionConfirmationOffreSuiviPage.route());
+                    }
+                  },
+                ),
               ),
             ],
             if (viewModel.onNextOffer != null) ...[
-              SizedBox(height: Margins.spacing_base),
-              SecondaryButton(label: Strings.seeNextOffer, onPressed: viewModel.onNextOffer),
+              const SizedBox(height: DsfrSpacings.s2w),
+              SizedBox(
+                width: double.infinity,
+                child: DsfrButton(
+                  label: Strings.seeNextOffer,
+                  variant: DsfrButtonVariant.secondary,
+                  size: DsfrComponentSize.md,
+                  onPressed: viewModel.onNextOffer,
+                ),
+              ),
             ],
           ],
         ),
         Positioned(
-          top: -Margins.spacing_base,
-          right: -Margins.spacing_base,
-          child: IconButton(
-            onPressed: () => viewModel.onHideForever(),
-            icon: Icon(
-              AppIcons.close_rounded,
-              color: showPrimaryBackground ? AppColors.contentOnPrimary : context.content,
-            ),
+          top: -DsfrSpacings.s1w,
+          right: -DsfrSpacings.s1w,
+          child: DsfrButton(
+            icon: DsfrIcons.systemCloseLine,
+            iconSemanticLabel: Strings.close,
+            variant: DsfrButtonVariant.tertiaryWithoutBorder,
+            size: DsfrComponentSize.sm,
+            onPressed: viewModel.onHideForever,
           ),
         ),
       ],
@@ -139,36 +148,32 @@ class _Confirmation extends StatelessWidget {
 }
 
 class _Content extends StatelessWidget {
-  const _Content(this.viewModel, this.offreId, this.trackingSource, this.showPrimaryBackground);
+  const _Content(this.viewModel, this.offreId, this.trackingSource);
   final OffreSuivieFormViewmodel viewModel;
   final String offreId;
   final OffreSuiviTrackingSource trackingSource;
-  final bool showPrimaryBackground;
+
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (viewModel.dateConsultation != null) ...[
           Text(
             viewModel.dateConsultation!,
-            style: TextStyles.textSRegular().copyWith(
-              color: showPrimaryBackground ? AppColors.contentOnPrimary : context.content,
-            ),
+            style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context)),
           ),
-          SizedBox(height: Margins.spacing_s),
+          const SizedBox(height: DsfrSpacings.s1w),
         ],
         if (viewModel.offreLien != null) ...[
           _OffreLien(offreId: offreId, fromAlternance: viewModel.fromAlternance, offreLien: viewModel.offreLien!),
-          SizedBox(height: Margins.spacing_s),
+          const SizedBox(height: DsfrSpacings.s1w),
         ],
         Text(
           Strings.ouEnEtesVous,
-          style: TextStyles.textBaseBold.copyWith(
-            color: showPrimaryBackground ? AppColors.contentOnPrimary : context.content,
-          ),
+          style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
         ),
-        SizedBox(height: Margins.spacing_s),
+        const SizedBox(height: DsfrSpacings.s1w),
         _Options(viewModel, trackingSource),
       ],
     );
@@ -185,18 +190,10 @@ class _OffreLien extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       link: true,
-      child: TextButton(
-        style: TextButton.styleFrom(padding: EdgeInsets.zero),
-        onPressed: () => Navigator.of(
-          context,
-        ).push(OffreEmploiDetailsPage.materialPageRoute(offreId, fromAlternance: fromAlternance)),
-        child: Text(
-          offreLien,
-          style: TextStyles.textBaseMedium.copyWith(
-            color: context.content,
-            decoration: TextDecoration.underline,
-            decorationColor: context.content,
-          ),
+      child: DsfrLink(
+        label: offreLien,
+        onTap: () => Navigator.of(context).push(
+          OffreEmploiDetailsPage.materialPageRoute(offreId, fromAlternance: fromAlternance),
         ),
       ),
     );
@@ -219,64 +216,84 @@ class _OptionsState extends State<_Options> {
       PassEmploiMatomoTracker.instance.trackCandidature(source: widget.trackingSource, event: event);
 
   _OffreSuivieStatus? _selectedValue;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(Margins.spacing_s),
-      decoration: BoxDecoration(
-        color: context.grey100,
-        borderRadius: BorderRadius.circular(Dimens.radius_base),
-      ),
-      child: Column(
-        children: [
-          PassEmploiRadio<_OffreSuivieStatus?>(
-            title: Strings.jaiPostule,
-            value: _OffreSuivieStatus.applied,
-            groupValue: _selectedValue,
-            onPressed: (status) {
-              trackEvent(OffreSuiviTrackingOption.postule);
-              selectValue(status);
-              widget.viewModel.onPostule();
-            },
+    return SizedBox(
+      width: double.infinity,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: DsfrColorDecisions.backgroundDefaultGrey(context),
+          borderRadius: BorderRadius.circular(DsfrSpacings.s1v),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(DsfrSpacings.s2w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              DsfrRadioButton<_OffreSuivieStatus>(
+                label: Strings.jaiPostule,
+                value: _OffreSuivieStatus.applied,
+                groupValue: _selectedValue,
+                size: DsfrComponentSize.md,
+                onChanged: (status) {
+                  if (status == null) return;
+                  trackEvent(OffreSuiviTrackingOption.postule);
+                  selectValue(status);
+                  widget.viewModel.onPostule();
+                },
+              ),
+              if (widget.viewModel.onInteresse != null) ...[
+                const SizedBox(height: DsfrSpacings.s1w),
+                DsfrRadioButton<_OffreSuivieStatus>(
+                  label: Strings.caMinteresse,
+                  value: _OffreSuivieStatus.interested,
+                  groupValue: _selectedValue,
+                  size: DsfrComponentSize.md,
+                  onChanged: (status) {
+                    if (status == null) return;
+                    trackEvent(OffreSuiviTrackingOption.interesse);
+                    selectValue(status);
+                    widget.viewModel.onInteresse?.call();
+                  },
+                ),
+              ],
+              if (widget.viewModel.onNotYetPostuled != null) ...[
+                const SizedBox(height: DsfrSpacings.s1w),
+                DsfrRadioButton<_OffreSuivieStatus>(
+                  label: Strings.notYetPostuled,
+                  value: _OffreSuivieStatus.notYetPostuled,
+                  groupValue: _selectedValue,
+                  size: DsfrComponentSize.md,
+                  onChanged: (status) {
+                    if (status == null) return;
+                    trackEvent(OffreSuiviTrackingOption.interesse);
+                    selectValue(status);
+                    widget.viewModel.onNotYetPostuled?.call();
+                  },
+                ),
+              ],
+              const SizedBox(height: DsfrSpacings.s1w),
+              DsfrRadioButton<_OffreSuivieStatus>(
+                label: Strings.caNeMinteressePas,
+                value: _OffreSuivieStatus.notInterested,
+                groupValue: _selectedValue,
+                size: DsfrComponentSize.md,
+                onChanged: (status) {
+                  if (status == null) return;
+                  trackEvent(OffreSuiviTrackingOption.notInterrested);
+                  selectValue(status);
+                  widget.viewModel.onNotInterested();
+                },
+              ),
+            ],
           ),
-          if (widget.viewModel.onInteresse != null)
-            PassEmploiRadio<_OffreSuivieStatus?>(
-              title: Strings.caMinteresse,
-              value: _OffreSuivieStatus.interested,
-              groupValue: _selectedValue,
-              onPressed: (status) {
-                trackEvent(OffreSuiviTrackingOption.interesse);
-                selectValue(status);
-                widget.viewModel.onInteresse?.call();
-              },
-            ),
-          if (widget.viewModel.onNotYetPostuled != null)
-            PassEmploiRadio<_OffreSuivieStatus?>(
-              title: Strings.notYetPostuled,
-              value: _OffreSuivieStatus.notYetPostuled,
-              groupValue: _selectedValue,
-              onPressed: (status) {
-                trackEvent(OffreSuiviTrackingOption.interesse);
-                selectValue(status);
-                widget.viewModel.onNotYetPostuled?.call();
-              },
-            ),
-          PassEmploiRadio<_OffreSuivieStatus?>(
-            title: Strings.caNeMinteressePas,
-            value: _OffreSuivieStatus.notInterested,
-            groupValue: _selectedValue,
-            onPressed: (status) {
-              trackEvent(OffreSuiviTrackingOption.notInterrested);
-              selectValue(status);
-              widget.viewModel.onNotInterested();
-            },
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  void selectValue(_OffreSuivieStatus? value) {
+  void selectValue(_OffreSuivieStatus value) {
     setState(() {
       _selectedValue = value;
     });

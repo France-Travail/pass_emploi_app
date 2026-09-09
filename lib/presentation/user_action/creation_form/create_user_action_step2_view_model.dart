@@ -67,11 +67,14 @@ class CreateActionTitleFromUserInput extends CreateActionTitleSource {
 class CreateUserActionStep2ViewModel extends CreateUserActionPageViewModel {
   final CreateActionTitleSource titleSource;
   final String? description;
+  final GlobalKey titleInputKey;
 
-  final GlobalKey titleInputKey = GlobalKey();
-
-  CreateUserActionStep2ViewModel({this.description, CreateActionTitleSource? titleSource})
-      : titleSource = titleSource ?? CreateActionTitleNotInitialized();
+  CreateUserActionStep2ViewModel({
+    this.description,
+    CreateActionTitleSource? titleSource,
+    GlobalKey? titleInputKey,
+  })  : titleSource = titleSource ?? CreateActionTitleNotInitialized(),
+        titleInputKey = titleInputKey ?? GlobalKey();
 
   @override
   bool get isValid => titleSource.isValid;
@@ -87,6 +90,7 @@ class CreateUserActionStep2ViewModel extends CreateUserActionPageViewModel {
     return CreateUserActionStep2ViewModel(
       description: description ?? this.description,
       titleSource: titleSource ?? this.titleSource,
+      titleInputKey: titleInputKey,
     );
   }
 }

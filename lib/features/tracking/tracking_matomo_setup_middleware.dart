@@ -53,6 +53,7 @@ extension on User {
     return switch (loginMode) {
       LoginMode.MILO => "Mission Locale",
       LoginMode.POLE_EMPLOI => "Pôle emploi",
+      LoginMode.INVITE => "Invité",
       LoginMode.DEMO_PE => "Mode demo",
       LoginMode.DEMO_MILO => "Mode demo",
     };
@@ -68,6 +69,8 @@ extension on User {
       Accompagnement.accompagnementIntensif => 'Accompagnement intensif',
       Accompagnement.accompagnementGlobal => 'Accompagnement global',
       Accompagnement.equipEmploiRecrut => 'Equip emploi recrut',
+      Accompagnement.ftDemandeurDEmploi => 'Demandeur d\'emploi FT',
+      Accompagnement.ftEspaceCandidat => 'Espace candidat FT',
     };
   }
 }

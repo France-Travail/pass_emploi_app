@@ -717,7 +717,7 @@ void main() {
     expect(viewModel.displayState, DisplayState.CONTENT);
     expect(viewModel.items, [
       DayItem("Le 01/01/2021"),
-      InformationItem("Vous échangez avec votre nouveau conseiller.", "Il a accès à l’historique de vos échanges."),
+      InformationItem("Tu échanges avec ton nouveau conseiller.", "Il a accès à l’historique de tes échanges."),
     ]);
   });
 
@@ -749,7 +749,7 @@ void main() {
     expect(viewModel.items, [
       DayItem("Le 01/01/2021"),
       InformationItem(
-          "Vous échangez temporairement avec un nouveau conseiller.", "Il a accès à l’historique de vos échanges."),
+          "Tu échanges temporairement avec un nouveau conseiller.", "Il a accès à l’historique de tes échanges."),
     ]);
   });
 
@@ -782,7 +782,7 @@ void main() {
       DayItem("Le 01/01/2021"),
       InformationItem(
         "Le message est inaccessible",
-        "Pour avoir l'accès au contenu, veuillez mettre à jour l'application.",
+        "Pour avoir l'accès au contenu, mets à jour l'application.",
       ),
     ]);
   });

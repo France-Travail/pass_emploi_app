@@ -35,6 +35,8 @@ void main() {
     expect(viewModel.displayState, DisplayState.CONTENT);
     expect(viewModel.sinceDate, "Depuis le 03/01/2005");
     expect(viewModel.sinceDateA11y, "Depuis le 3 janvier 2005");
+    expect(viewModel.subtitle, "Ton conseiller depuis le 03/01/2005");
+    expect(viewModel.subtitleA11y, "Ton conseiller depuis le 3 janvier 2005");
     expect(viewModel.name, "Perceval de Galles");
   });
 

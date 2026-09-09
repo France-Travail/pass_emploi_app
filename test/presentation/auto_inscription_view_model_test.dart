@@ -51,7 +51,7 @@ void main() {
     );
     assertErrorMessage(
       AutoInscriptionFailureState(error: AutoInscriptionConseillerInactif()),
-      "Votre conseiller est inactif",
+      "Ton conseiller est inactif",
     );
     assertErrorMessage(
       AutoInscriptionSuccessState(),

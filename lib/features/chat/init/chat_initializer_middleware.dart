@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/features/login/login_state.dart';
 import 'package:pass_emploi_app/features/mode_demo/is_mode_demo_repository.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/auth/chat_security_repository.dart';
 import 'package:pass_emploi_app/repositories/crypto/chat_crypto.dart';
@@ -31,6 +32,10 @@ class ChatInitializerMiddleware extends MiddlewareClass<AppState> {
 
   @override
   void call(Store<AppState> store, action, NextDispatcher next) async {
+    if (action is LoginSuccessAction && action.user.loginMode.isInvite()) {
+      next(action);
+      return;
+    }
     final loginState = store.state.loginState;
     if (!_demoRepository.isModeDemo()) {
       await _handleChatInitialization(action, loginState, store, next);

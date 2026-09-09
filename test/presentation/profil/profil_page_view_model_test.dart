@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/features/developer_option/activation/developer_o
 import 'package:pass_emploi_app/features/login/login_state.dart';
 import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
+import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/models/user.dart';
 import 'package:pass_emploi_app/presentation/profil/profil_page_view_model.dart';
 
@@ -104,6 +105,30 @@ void main() {
     expect(viewModel.withDownloadCv, isTrue);
   });
 
+  test("create when user is invite MUST NOT display mon compte nor partage activite", () {
+    // Given
+    final store = givenState().loggedInUser(loginMode: LoginMode.INVITE).store();
+
+    // When
+    final viewModel = ProfilPageViewModel.create(store);
+
+    // Then
+    expect(viewModel.displayMonCompte, isFalse);
+    expect(viewModel.displayPartageActivite, isFalse);
+  });
+
+  test("create when user is not invite should display mon compte and partage activite", () {
+    // Given
+    final store = givenState().loggedIn().store();
+
+    // When
+    final viewModel = ProfilPageViewModel.create(store);
+
+    // Then
+    expect(viewModel.displayMonCompte, isTrue);
+    expect(viewModel.displayPartageActivite, isTrue);
+  });
+
   test("create when user is from Milo should not display download CV card", () {
     // Given
     final store = givenState() //
@@ -148,5 +173,47 @@ void main() {
     assertMonConseillerIsDisplayed(true, DetailsJeuneSuccessState(detailsJeune: detailsJeune()));
     assertMonConseillerIsDisplayed(true, DetailsJeuneFailureState());
     assertMonConseillerIsDisplayed(false, DetailsJeuneNotInitializedState());
+  });
+
+  test("create without questionnaire answers MUST NOT display highlight details", () {
+    // Given
+    final store = givenState().loggedIn().store();
+
+    // When
+    final viewModel = ProfilPageViewModel.create(store);
+
+    // Then
+    expect(viewModel.withQuestionnaireHighlight, isFalse);
+    expect(viewModel.situationLabel, isNull);
+    expect(viewModel.domaineLabel, isNull);
+    expect(viewModel.zoneLabel, isNull);
+    expect(viewModel.objectifsCount, 0);
+  });
+
+  test("create with questionnaire answers should expose highlight details", () {
+    // Given
+    final store = givenState()
+        .loggedIn()
+        .withOnboardingQuestionnaire(
+          finished: true,
+          answers: OnboardingQuestionnaireAnswers(
+            situation: QuestionnaireSituation.lycee,
+            domaine: "Commerce",
+            villeRecherche: const QuestionnaireCommune(code: "59350", nom: "Lille"),
+            rayonKm: 30,
+            objectifs: {QuestionnaireObjectif.emploi, QuestionnaireObjectif.former},
+          ),
+        )
+        .store();
+
+    // When
+    final viewModel = ProfilPageViewModel.create(store);
+
+    // Then
+    expect(viewModel.withQuestionnaireHighlight, isTrue);
+    expect(viewModel.situationLabel, "Au lycée");
+    expect(viewModel.domaineLabel, "Commerce");
+    expect(viewModel.zoneLabel, "Lille · 30 km");
+    expect(viewModel.objectifsCount, 2);
   });
 }

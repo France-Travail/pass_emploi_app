@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 
 class FullScreenTextFormFieldScaffold extends StatelessWidget {
   const FullScreenTextFormFieldScaffold({super.key, required this.body});
@@ -9,10 +9,14 @@ class FullScreenTextFormFieldScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.bg,
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
       resizeToAvoidBottomInset: true,
       // Required to delegate top padding to system
-      appBar: AppBar(toolbarHeight: 0, scrolledUnderElevation: 0),
+      appBar: AppBar(
+        toolbarHeight: 0,
+        scrolledUnderElevation: 0,
+        backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+      ),
       body: body,
     );
   }

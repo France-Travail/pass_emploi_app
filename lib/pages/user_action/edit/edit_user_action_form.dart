@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/models/user_action_type.dart';
 import 'package:pass_emploi_app/pages/user_action/create/create_user_action_form_step1.dart';
 import 'package:pass_emploi_app/pages/user_action/edit/edit_user_action_form_change_notifier.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/widgets/a11y/mandatory_fields_label.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
-import 'package:pass_emploi_app/widgets/date_pickers/date_picker_suggestions.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
-import 'package:pass_emploi_app/widgets/pressed_tip.dart';
-import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_date_input_suggestions.dart';
 
 class EditUserActionFormDto {
   final DateTime date;
@@ -66,64 +60,92 @@ class EditUserActionForm extends StatefulWidget {
 
 class _EditUserActionFormState extends State<EditUserActionForm> {
   late final EditUserActionFormChangeNotifier _changeNotifier;
+  late final VoidCallback _listener;
 
   @override
   void initState() {
     super.initState();
     _changeNotifier = widget.actionDto.toChangeNotifier(widget.requireUpdate);
-    _changeNotifier.addListener(() {
-      setState(() {});
-    });
+    _listener = () {
+      if (mounted) setState(() {});
+    };
+    _changeNotifier.addListener(_listener);
+  }
+
+  @override
+  void dispose() {
+    _changeNotifier.removeListener(_listener);
+    _changeNotifier.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          MandatoryFieldsLabel.some(),
-          SizedBox(height: Margins.spacing_m),
-          DatePickerSuggestions(
-            title: Strings.datePickerTitleMandatory,
-            onDateChanged: (dateSource) => _changeNotifier.updateDate(dateSource),
-            dateSource: _changeNotifier.dateInputSource,
-          ),
-          const SizedBox(height: Margins.spacing_m),
-          Text(Strings.updateUserActionTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-          const SizedBox(height: Margins.spacing_s),
-          BaseTextField(
-            initialValue: _changeNotifier.title,
-            onChanged: _changeNotifier.updateTitle,
-          ),
-          const SizedBox(height: Margins.spacing_m),
-          Text(Strings.updateUserActionDescriptionTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-          Text(Strings.updateUserActionDescriptionSubtitle, style: TextStyles.textXsRegular(color: context.content)),
-          const SizedBox(height: Margins.spacing_s),
-          BaseTextField(
-            initialValue: _changeNotifier.description,
-            onChanged: _changeNotifier.updateDescription,
-            maxLines: 5,
-          ),
-          const SizedBox(height: Margins.spacing_m),
-          Text(Strings.updateUserActionCategory, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-          const SizedBox(height: Margins.spacing_s),
-          _CategorySelector(_changeNotifier),
-          const SizedBox(height: Margins.spacing_m),
-          Divider(height: 1, color: AppColors.primaryLighten),
-          const SizedBox(height: Margins.spacing_base),
-          SizedBox(
-            width: double.infinity,
-            child: _SaveButton(
-              label: widget.confirmationLabel,
-              isActive: _changeNotifier.canSave(),
-              onSave: () => widget.onSaved(EditUserActionFormDto.fromChangeNotifier(_changeNotifier)),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: const EdgeInsets.all(DsfrSpacings.s2w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  Strings.mandatoryFields,
+                  style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textMentionGrey(context)),
+                ),
+                const SizedBox(height: DsfrSpacings.s2w),
+                DsfrDateInputSuggestions(
+                  label: Strings.datePickerTitleMandatory,
+                  dateSource: _changeNotifier.dateInputSource,
+                  onDateChanged: _changeNotifier.updateDate,
+                ),
+                const SizedBox(height: DsfrSpacings.s3w),
+                DsfrInput(
+                  label: Strings.updateUserActionTitle,
+                  initialValue: _changeNotifier.title,
+                  // Avoid maxLength: broken DSFR UI, see https://github.com/Octo-Open-Source/flutter-dsfr/issues/150
+                  inputFormatters: [LengthLimitingTextInputFormatter(60)],
+                  onChanged: _changeNotifier.updateTitle,
+                ),
+                const SizedBox(height: DsfrSpacings.s3w),
+                DsfrInput(
+                  label: Strings.updateUserActionDescriptionTitle,
+                  hintText: Strings.updateUserActionDescriptionSubtitle,
+                  initialValue: _changeNotifier.description,
+                  minLines: 3,
+                  maxLines: 5,
+                  // Avoid maxLength: broken DSFR UI, see https://github.com/Octo-Open-Source/flutter-dsfr/issues/150
+                  inputFormatters: [LengthLimitingTextInputFormatter(1024)],
+                  onChanged: _changeNotifier.updateDescription,
+                ),
+                const SizedBox(height: DsfrSpacings.s3w),
+                _CategorySelector(_changeNotifier),
+              ],
             ),
           ),
-          const SizedBox(height: Margins.spacing_huge * 4),
-        ],
-      ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+            DsfrSpacings.s2w,
+            DsfrSpacings.s1w,
+            DsfrSpacings.s2w,
+            DsfrSpacings.s2w,
+          ),
+          child: SizedBox(
+            width: double.infinity,
+            child: DsfrButton(
+              label: widget.confirmationLabel,
+              variant: DsfrButtonVariant.primary,
+              size: DsfrComponentSize.md,
+              onPressed: _changeNotifier.canSave()
+                  ? () => widget.onSaved(EditUserActionFormDto.fromChangeNotifier(_changeNotifier))
+                  : null,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -135,14 +157,26 @@ class _CategorySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CardContainer(
-      child: Row(
-        children: [
-          Text(changeNotifier.type?.label ?? Strings.userActionNoCategory, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-          Expanded(child: PressedTip(Strings.updateUserActionCategoryPressedTip)),
-        ],
-      ),
-      onTap: () => Navigator.of(context).push(_CategorySelectionPage.route()).then(changeNotifier.updateType),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          Strings.updateUserActionCategory,
+          style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
+        ),
+        const SizedBox(height: DsfrSpacings.s1v),
+        SizedBox(
+          width: double.infinity,
+          child: DsfrButton(
+            label: changeNotifier.type?.label ?? Strings.userActionNoCategory,
+            icon: DsfrIcons.systemArrowRightSLine,
+            iconLocation: DsfrButtonIconLocation.right,
+            variant: DsfrButtonVariant.secondary,
+            size: DsfrComponentSize.md,
+            onPressed: () => Navigator.of(context).push(_CategorySelectionPage.route()).then(changeNotifier.updateType),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -155,36 +189,16 @@ class _CategorySelectionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.bg,
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
       appBar: SecondaryAppBar(title: Strings.updateUserActionCategory),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(DsfrSpacings.s2w),
           child: ActionCategorySelector(
             onActionSelected: (type) => Navigator.of(context).pop(type),
           ),
         ),
       ),
-    );
-  }
-}
-
-class _SaveButton extends StatelessWidget {
-  const _SaveButton({
-    required this.isActive,
-    required this.onSave,
-    required this.label,
-  });
-
-  final bool isActive;
-  final String label;
-  final void Function() onSave;
-
-  @override
-  Widget build(BuildContext context) {
-    return PrimaryActionButton(
-      label: label,
-      onPressed: isActive ? onSave : null,
     );
   }
 }

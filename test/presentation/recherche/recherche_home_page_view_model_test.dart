@@ -96,6 +96,27 @@ void main() {
       expect(viewModel.lieuLabel, 'Paris');
     });
 
+    test('should append rayon to commune lieu label', () {
+      // Given
+      final store = givenState()
+          .copyWith(
+            criteresRecherchePersistState: CriteresRecherchePersistSuccessState(
+              CriteresRechercheUtilisateur(
+                metier: MetierTexteLibreCritere('Boulanger'),
+                location: mockCommuneLocation(label: 'Lille'),
+                rayon: 30,
+              ),
+            ),
+          )
+          .store();
+
+      // When
+      final viewModel = RechercheHomePageViewModel.create(store);
+
+      // Then
+      expect(viewModel.lieuLabel, 'Lille 30 km');
+    });
+
     test('should expose null labels when no persisted criteres', () {
       // Given
       final store = givenState().store();

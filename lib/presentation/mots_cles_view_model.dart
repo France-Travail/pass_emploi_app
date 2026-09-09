@@ -1,37 +1,30 @@
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
-import 'package:pass_emploi_app/features/diagoriente_preferences_metier/diagoriente_preferences_metier_state.dart';
 import 'package:pass_emploi_app/models/alerte/offre_emploi_alerte.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/iterable_extensions.dart';
-import 'package:pass_emploi_app/utils/string_extensions.dart';
 import 'package:redux/redux.dart';
 
 class MotsClesViewModel extends Equatable {
   final List<MotsClesItem> motsCles;
-  final bool containsDiagorienteFavoris;
   final bool containsMotsClesRecents;
 
   MotsClesViewModel({
     required this.motsCles,
-    required this.containsDiagorienteFavoris,
     required this.containsMotsClesRecents,
   });
 
   factory MotsClesViewModel.create(Store<AppState> store) {
-    final motsClesFromDiagoriente = _motsClesFromDiagoriente(store);
     final motsClesFromRechercheRecentes = _motsClesFromRechercheRecentes(store);
-    final motsCles = motsClesFromRechercheRecentes + motsClesFromDiagoriente;
     return MotsClesViewModel(
-      motsCles: motsCles,
-      containsDiagorienteFavoris: motsClesFromDiagoriente.isNotEmpty,
+      motsCles: motsClesFromRechercheRecentes,
       containsMotsClesRecents: motsClesFromRechercheRecentes.isNotEmpty,
     );
   }
 
   @override
-  List<Object?> get props => [motsCles, containsDiagorienteFavoris, containsMotsClesRecents];
+  List<Object?> get props => [motsCles, containsMotsClesRecents];
 }
 
 abstract class MotsClesItem extends Equatable {}
@@ -55,21 +48,7 @@ class MotsClesSuggestionItem extends MotsClesItem {
   List<Object?> get props => [text, source];
 }
 
-enum MotCleSource { dernieresRecherches, diagorienteMetiersFavoris }
-
-List<MotsClesItem> _motsClesFromDiagoriente(Store<AppState> store) {
-  final state = store.state.diagorientePreferencesMetierState;
-  if (state is! DiagorientePreferencesMetierSuccessState || state.metiersFavoris.isEmpty) return [];
-  return [
-    MotsClesTitleItem(Strings.vosPreferencesMetiers),
-    ...state
-        .metiersFavoris //
-        .map((e) => e.libelle)
-        .toList()
-        .sortedAlphabetically()
-        .map((e) => MotsClesSuggestionItem(e, MotCleSource.diagorienteMetiersFavoris)),
-  ];
-}
+enum MotCleSource { dernieresRecherches }
 
 List<MotsClesItem> _motsClesFromRechercheRecentes(Store<AppState> store) {
   final motCles = _derniersMotsCles(store);

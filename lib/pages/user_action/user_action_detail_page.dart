@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_actions.dart';
@@ -12,27 +15,24 @@ import 'package:pass_emploi_app/models/user_action.dart';
 import 'package:pass_emploi_app/pages/generic_success_page.dart';
 import 'package:pass_emploi_app/pages/user_action/action_commentaires_page.dart';
 import 'package:pass_emploi_app/pages/user_action/user_action_detail_bottom_sheet.dart';
-import 'package:pass_emploi_app/pages/user_action/user_action_done_bottom_sheet.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
+import 'package:pass_emploi_app/presentation/model/date_input_source.dart';
+import 'package:pass_emploi_app/presentation/model/date_suggestions_view_model.dart';
 import 'package:pass_emploi_app/presentation/user_action/commentaires/action_commentaire_view_model.dart';
 import 'package:pass_emploi_app/presentation/user_action/user_action_details_view_model.dart';
+import 'package:pass_emploi_app/presentation/user_action/user_action_done_bottom_sheet_view_model.dart';
 import 'package:pass_emploi_app/presentation/user_action/user_action_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
+import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/utils/context_extensions.dart';
+import 'package:pass_emploi_app/utils/date_extensions.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/comment.dart';
 import 'package:pass_emploi_app/widgets/confetti_wrapper.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
-import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/loading_overlay.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
@@ -44,8 +44,16 @@ class UserActionDetailPage extends StatefulWidget {
 
   UserActionDetailPage._(this.userActionId, this.source);
 
-  static MaterialPageRoute<void> materialPageRoute(String userActionId, UserActionStateSource source) {
-    return MaterialPageRoute(builder: (context) => UserActionDetailPage._(userActionId, source));
+  static Future<void> show(
+    BuildContext context,
+    String userActionId,
+    UserActionStateSource source,
+  ) {
+    return showDsfrBottomSheet(
+      context: context,
+      name: AnalyticsScreenNames.userActionDetails,
+      builder: (context) => UserActionDetailPage._(userActionId, source),
+    );
   }
 
   @override
@@ -66,21 +74,41 @@ class _ActionDetailPageState extends State<UserActionDetailPage> {
                 store.dispatch(MonSuiviRequestAction(MonSuiviPeriod.current));
               }
               if (widget.source == UserActionStateSource.noSource) {
-                store.dispatch(UserActionDetailsRequestAction(widget.userActionId));
+                store.dispatch(
+                  UserActionDetailsRequestAction(widget.userActionId),
+                );
               }
 
               store.dispatch(UserActionUpdateResetAction());
               store.dispatch(UserActionDeleteResetAction());
             },
-            converter: (store) => UserActionDetailsViewModel.create(store, widget.source, widget.userActionId),
-            builder: (context, viewModel) => _Scaffold(
-              body: _Body(viewModel),
-              viewModel: viewModel,
-              source: widget.source,
-              onActionDone: () => confettiController.play(),
+            converter: (store) => UserActionDetailsViewModel.create(
+              store,
+              widget.source,
+              widget.userActionId,
+            ),
+            builder: (context, viewModel) => StoreConnector<AppState, UserActionDoneBottomSheetViewModel>(
+              converter: (store) => UserActionDoneBottomSheetViewModel.create(
+                store,
+                widget.source,
+                widget.userActionId,
+              ),
+              builder: (context, doneViewModel) => _Sheet(
+                viewModel: viewModel,
+                doneViewModel: doneViewModel,
+                source: widget.source,
+              ),
+              onDidChange: (previous, next) {
+                if (previous?.displayState != DisplayState.CONTENT && next.displayState == DisplayState.CONTENT) {
+                  confettiController.play();
+                }
+              },
+              distinct: true,
             ),
             onDispose: (store) {
-              if (widget.source == UserActionStateSource.noSource) store.dispatch(UserActionDetailsResetAction());
+              if (widget.source == UserActionStateSource.noSource) {
+                store.dispatch(UserActionDetailsResetAction());
+              }
             },
             onDidChange: (previousVm, newVm) => _pageNavigationHandling(newVm),
             distinct: true,
@@ -98,134 +126,85 @@ class _ActionDetailPageState extends State<UserActionDetailPage> {
     } else if (viewModel.updateDisplayState == UpdateDisplayState.TO_DISMISS_AFTER_UPDATE) {
       _trackSuccessfulUpdate();
     } else if (viewModel.deleteDisplayState == DeleteDisplayState.TO_DISMISS_AFTER_DELETION) {
-      _popBothUpdateAndDetailsPages();
-      Navigator.push(
-        context,
-        GenericSuccessPage.route(title: Strings.deleteActionSuccessTitle, content: Strings.deleteActionSuccess),
+      final navigator = Navigator.of(context);
+      navigator.pop();
+      navigator.push(
+        GenericSuccessPage.route(
+          title: Strings.deleteActionSuccessTitle,
+          content: Strings.deleteActionSuccess,
+        ),
       );
     } else if (viewModel.deleteDisplayState == DeleteDisplayState.SHOW_DELETE_ERROR) {
       showSnackBarWithSystemError(context, Strings.deleteActionError);
     }
   }
 
-  void _popBothUpdateAndDetailsPages() {
-    Navigator.of(context).popAll();
-  }
-
   void _trackSuccessfulUpdate() {
-    PassEmploiMatomoTracker.instance.trackScreen(AnalyticsScreenNames.updateUserAction);
-  }
-}
-
-class _Scaffold extends StatelessWidget {
-  final Widget body;
-  final UserActionDetailsViewModel viewModel;
-  final UserActionStateSource source;
-  final void Function() onActionDone;
-
-  const _Scaffold({required this.body, required this.viewModel, required this.source, required this.onActionDone});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.bg,
-      appBar: SecondaryAppBar(
-        title: Strings.actionDetails,
-        backgroundColor: context.bg,
-        actions: [_MoreButton(source: source, actionId: viewModel.id)],
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (viewModel.withUnfinishedButton) _UnfinishedActionButton(viewModel),
-            if (viewModel.withFinishedButton) _FinishActionButton(viewModel, onActionDone, source),
-          ],
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: body,
+    PassEmploiMatomoTracker.instance.trackScreen(
+      AnalyticsScreenNames.updateUserAction,
     );
   }
 }
 
-class _Body extends StatelessWidget {
+class _Sheet extends StatelessWidget {
   final UserActionDetailsViewModel viewModel;
+  final UserActionDoneBottomSheetViewModel doneViewModel;
+  final UserActionStateSource source;
 
-  const _Body(this.viewModel);
+  const _Sheet({
+    required this.viewModel,
+    required this.doneViewModel,
+    required this.source,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return switch (viewModel.displayState) {
-      DisplayState.CONTENT => _Content(viewModel),
-      DisplayState.LOADING => Center(child: CircularProgressIndicator()),
-      _ => Retry(Strings.userActionDetailsError, () => viewModel.onRetry()),
-    };
-  }
-}
-
-class _Content extends StatelessWidget {
-  final UserActionDetailsViewModel viewModel;
-
-  const _Content(this.viewModel);
-
-  @override
-  Widget build(BuildContext context) {
+    final isSuccess = doneViewModel.displayState == DisplayState.CONTENT;
     return Stack(
       children: [
-        Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (viewModel.withOfflineBehavior) ConnectivityBandeau(),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: Margins.spacing_m),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      viewModel.pillule.toActionCardPillule(),
-                      SizedBox(height: Margins.spacing_base),
-                      _Title(title: viewModel.title),
-                      SizedBox(height: Margins.spacing_m),
-                      _Separator(),
-                      SizedBox(height: Margins.spacing_m),
-                        Semantics(
-                          header: true,
-                          child: Text(Strings.userActionDetailsSection, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-                        ),
-                      if (viewModel.withSubtitle) ...[
-                        SizedBox(height: Margins.spacing_base),
-                        _Description(withSubtitle: viewModel.withSubtitle, subtitle: viewModel.subtitle),
-                      ],
-                      SizedBox(height: Margins.spacing_l),
-                      _DateAndCategory(viewModel),
-                      SizedBox(height: Margins.spacing_l),
-                      Text(
-                        viewModel.creationDetails,
-                        semanticsLabel: viewModel.creationDetails.toDateForScreenReaders(),
-                        style: TextStyles.textSRegular(color: context.grey800),
-                      ),
-                      SizedBox(height: Margins.spacing_m),
-                      _Separator(),
-                      if (viewModel.withComments) ...[
-                        SizedBox(height: Margins.spacing_base),
-                        _CommentSection(viewModel),
-                      ],
-                      SizedBox(height: Margins.spacing_x_huge * 2),
-                    ],
+        DsfrBottomSheet(
+          leading: viewModel.displayState == DisplayState.CONTENT && !isSuccess
+              ? DsfrBottomSheetMoreActionsButton(
+                  onPressed: () => UserActionDetailsBottomSheet.show(
+                    context,
+                    source,
+                    viewModel.id,
                   ),
-                ),
-              ),
-            ),
-          ],
+                )
+              : null,
+          actions: _actions(context, isSuccess),
+          child: _Body(
+            viewModel: viewModel,
+            doneViewModel: doneViewModel,
+            isSuccess: isSuccess,
+          ),
         ),
-        if (_isLoading(viewModel)) LoadingOverlay(),
+        if (_isLoading(viewModel) || doneViewModel.displayState == DisplayState.LOADING)
+          Positioned.fill(child: LoadingOverlay()),
       ],
     );
+  }
+
+  Widget? _actions(BuildContext context, bool isSuccess) {
+    if (isSuccess) {
+      return DsfrButton(
+        label: Strings.understood,
+        variant: DsfrButtonVariant.primary,
+        size: DsfrComponentSize.md,
+        onPressed: () => Navigator.of(context).pop(),
+      );
+    }
+    if (viewModel.displayState != DisplayState.CONTENT) return null;
+    if (viewModel.withUnfinishedButton) {
+      return DsfrButton(
+        label: Strings.unCompleteAction,
+        icon: DsfrIcons.systemTimeLine,
+        variant: DsfrButtonVariant.primary,
+        size: DsfrComponentSize.md,
+        onPressed: () => viewModel.updateStatus(UserActionStatus.IN_PROGRESS),
+      );
+    }
+    return null;
   }
 
   bool _isLoading(UserActionDetailsViewModel viewModel) {
@@ -234,81 +213,267 @@ class _Content extends StatelessWidget {
   }
 }
 
-class _FinishActionButton extends StatelessWidget {
-  const _FinishActionButton(this.viewModel, this.onActionDone, this.source);
-
+class _Body extends StatelessWidget {
   final UserActionDetailsViewModel viewModel;
-  final VoidCallback onActionDone;
-  final UserActionStateSource source;
+  final UserActionDoneBottomSheetViewModel doneViewModel;
+  final bool isSuccess;
+
+  const _Body({
+    required this.viewModel,
+    required this.doneViewModel,
+    required this.isSuccess,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: PrimaryActionButton(
-        label: Strings.completeAction,
-        suffix: Icon(AppIcons.arrow_forward_rounded, color: AppColors.contentOnPrimary),
-        onPressed: () async {
-          if (!context.mounted) return;
-          final result = await UserActionDoneBottomSheet.show(context, source, viewModel.id);
-          if (result == true) {
-            onActionDone();
-          }
-        },
-      ),
+    if (isSuccess) return const _SuccessContent();
+    return switch (viewModel.displayState) {
+      DisplayState.CONTENT => _Content(viewModel, doneViewModel),
+      DisplayState.LOADING => const Center(child: CircularProgressIndicator()),
+      _ => Retry(Strings.userActionDetailsError, () => viewModel.onRetry()),
+    };
+  }
+}
+
+class _SuccessContent extends StatelessWidget {
+  const _SuccessContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: DsfrSpacings.s4w),
+        Center(
+          child: SvgPicture.asset(
+            Drawables.illustrationSuccess,
+            width: 160,
+            height: 160,
+            excludeFromSemantics: true,
+          ),
+        ),
+        const SizedBox(height: DsfrSpacings.s3w),
+        Text(
+          Strings.felicitations,
+          textAlign: TextAlign.center,
+          style: DsfrTextStyle.headline4(
+            color: DsfrColorDecisions.textTitleGrey(context),
+          ),
+        ),
+        const SizedBox(height: DsfrSpacings.s1w),
+        Text(
+          Strings.updateActionConfirmation,
+          textAlign: TextAlign.center,
+          style: DsfrTextStyle.bodyMd(
+            color: DsfrColorDecisions.textDefaultGrey(context),
+          ),
+        ),
+      ],
     );
   }
 }
 
-class _UnfinishedActionButton extends StatelessWidget {
-  const _UnfinishedActionButton(this.viewModel);
-
+class _Content extends StatelessWidget {
   final UserActionDetailsViewModel viewModel;
+  final UserActionDoneBottomSheetViewModel doneViewModel;
+
+  const _Content(this.viewModel, this.doneViewModel);
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: PrimaryActionButton(
-        label: Strings.unCompleteAction,
-        icon: AppIcons.schedule,
-        onPressed: () => viewModel.updateStatus(UserActionStatus.IN_PROGRESS),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (viewModel.withOfflineBehavior) ConnectivityBandeau(),
+        Wrap(
+          spacing: DsfrSpacings.s1w,
+          runSpacing: DsfrSpacings.s1w,
+          children: [
+            DsfrCategoryTag.emploiCategory(label: viewModel.category),
+            DsfrStatusBadge.fromPillule(
+              pillule: viewModel.pillule,
+              forDemarche: false,
+            ),
+          ],
+        ),
+        const SizedBox(height: DsfrSpacings.s1w),
+        Semantics(
+          header: true,
+          child: Text(
+            viewModel.title,
+            style: DsfrTextStyle.headline5(
+              color: DsfrColorDecisions.textTitleGrey(context),
+            ),
+          ),
+        ),
+        const SizedBox(height: DsfrSpacings.s1w),
+        DsfrDetailIconLine(
+          icon: DsfrIcons.businessCalendarEventLine,
+          text: viewModel.date,
+          semanticsLabel: viewModel.date.toDateForScreenReaders(),
+        ),
+        if (viewModel.withSubtitle) ...[
+          const SizedBox(height: DsfrSpacings.s1w),
+          TextWithClickableLinks(
+            viewModel.subtitle,
+            style: DsfrTextStyle.bodyMd(
+              color: DsfrColorDecisions.textDefaultGrey(context),
+            ),
+          ),
+        ],
+        const SizedBox(height: DsfrSpacings.s1w),
+        Text(
+          viewModel.creationDetails,
+          semanticsLabel: viewModel.creationDetails.toDateForScreenReaders(),
+          style: DsfrTextStyle.bodyXs(
+            color: DsfrColorDecisions.textMentionGrey(context),
+          ),
+        ),
+        if (viewModel.withComments) ...[
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s2w),
+            child: Divider(
+              height: 1,
+              color: DsfrColorDecisions.borderDefaultGrey(context),
+            ),
+          ),
+          _CommentSection(viewModel),
+        ],
+        if (viewModel.withFinishedButton) ...[
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s2w),
+            child: Divider(
+              height: 1,
+              color: DsfrColorDecisions.borderDefaultGrey(context),
+            ),
+          ),
+          _FinishActionSection(doneViewModel: doneViewModel),
+        ],
+      ],
     );
   }
 }
 
-class _Separator extends StatelessWidget {
+class _FinishActionSection extends StatefulWidget {
+  const _FinishActionSection({required this.doneViewModel});
+
+  final UserActionDoneBottomSheetViewModel doneViewModel;
+
   @override
-  Widget build(BuildContext context) {
-    return Divider(height: 1, color: AppColors.primaryLighten);
-  }
+  State<_FinishActionSection> createState() => _FinishActionSectionState();
 }
 
-class _Title extends StatelessWidget {
-  final String title;
-
-  _Title({required this.title});
+class _FinishActionSectionState extends State<_FinishActionSection> {
+  DateInputSource _date = DateNotInitialized();
+  late final TextEditingController _dateController;
 
   @override
-  Widget build(BuildContext context) {
-    return Text(title, style: TextStyles.textMBold.copyWith(color: context.content));
+  void initState() {
+    super.initState();
+    _dateController = TextEditingController();
   }
-}
 
-class _Description extends StatelessWidget {
-  final bool withSubtitle;
-  final String subtitle;
-
-  _Description({required this.withSubtitle, required this.subtitle});
+  @override
+  void dispose() {
+    _dateController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (withSubtitle) {
-      return TextWithClickableLinks(subtitle, style: TextStyles.textSRegular(color: context.content));
-    } else {
-      return SizedBox(height: Margins.spacing_s);
+    if (widget.doneViewModel.displayState == DisplayState.FAILURE) {
+      return Retry(
+        Strings.miscellaneousErrorRetry,
+        () => Navigator.pop(context),
+        buttonLabel: Strings.close,
+      );
     }
+
+    final suggestions = DateSuggestionListViewModel.createPast(
+      DateTime.now(),
+      null,
+    ).suggestions;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Semantics(
+          header: true,
+          child: Text(
+            Strings.actionDoneWhen,
+            style: DsfrTextStyle.bodyMdBold(
+              color: DsfrColorDecisions.textTitleGrey(context),
+            ),
+          ),
+        ),
+        const SizedBox(height: DsfrSpacings.s1w),
+        Wrap(
+          spacing: DsfrSpacings.s1w,
+          runSpacing: DsfrSpacings.s1w,
+          children: [
+            for (final suggestion in suggestions)
+              DsfrButton(
+                label: suggestion.date.isToday() ? Strings.dateSuggestionAujourdhui : Strings.dateSuggestionHier,
+                variant: _isSuggestionSelected(suggestion) ? DsfrButtonVariant.primary : DsfrButtonVariant.secondary,
+                size: DsfrComponentSize.sm,
+                onPressed: () => _selectSuggestion(suggestion),
+              ),
+          ],
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        Text(
+          Strings.otherDate,
+          style: DsfrTextStyle.bodyMd(
+            color: DsfrColorDecisions.textLabelGrey(context),
+          ),
+        ),
+        const SizedBox(height: DsfrSpacings.s1v),
+        Text(
+          Strings.cannotFinishActionInFuture,
+          style: DsfrTextStyle.bodyXs(
+            color: DsfrColorDecisions.textMentionGrey(context),
+          ),
+        ),
+        const SizedBox(height: DsfrSpacings.s1w),
+        DsfrInputHeadless(
+          controller: _dateController,
+          isDatePicker: true,
+          lastDate: DateTime.now(),
+          locale: const Locale('fr', 'FR'),
+          onDateChanged: (date) {
+            setState(() => _date = DateFromPicker(date));
+          },
+        ),
+        const SizedBox(height: DsfrSpacings.s3w),
+        DsfrButton(
+          label: Strings.markActionAsDone,
+          icon: DsfrIcons.systemCheckLine,
+          variant: DsfrButtonVariant.primary,
+          size: DsfrComponentSize.md,
+          onPressed: _date.isValid ? () => widget.doneViewModel.onActionDone(_date.selectedDate) : null,
+        ),
+        const SizedBox(height: DsfrSpacings.s1w),
+        DsfrButton(
+          label: Strings.completeActionNotYet,
+          variant: DsfrButtonVariant.secondary,
+          size: DsfrComponentSize.md,
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ],
+    );
+  }
+
+  bool _isSuggestionSelected(DateSuggestionViewModel suggestion) {
+    return switch (_date) {
+      DateFromSuggestion(:final date) => DateUtils.dateOnly(date) == DateUtils.dateOnly(suggestion.date),
+      _ => false,
+    };
+  }
+
+  void _selectSuggestion(DateSuggestionViewModel suggestion) {
+    setState(() {
+      _date = DateFromSuggestion(suggestion.date, suggestion.label);
+      _dateController.text = DateFormat('dd/MM/yyyy').format(suggestion.date);
+    });
   }
 }
 
@@ -320,7 +485,7 @@ class _CommentSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (viewModel.withOfflineBehavior) {
-      return _UnavailableCommentsOffline();
+      return const _UnavailableCommentsOffline();
     } else {
       return _CommentCard(actionId: viewModel.id, actionTitle: viewModel.title);
     }
@@ -331,7 +496,7 @@ class _CommentCard extends StatelessWidget {
   final String actionId;
   final String actionTitle;
 
-  _CommentCard({required this.actionId, required this.actionTitle});
+  const _CommentCard({required this.actionId, required this.actionTitle});
 
   @override
   Widget build(BuildContext context) {
@@ -345,115 +510,98 @@ class _CommentCard extends StatelessWidget {
 
   Widget _build(BuildContext context, ActionCommentaireViewModel viewModel) {
     return switch (viewModel.displayState) {
-      DisplayState.CONTENT => _content(context, viewModel, actionId, actionTitle),
-      DisplayState.FAILURE => Retry(Strings.miscellaneousErrorRetry, () => viewModel.onRetry()),
-      _ => Center(child: CircularProgressIndicator()),
+      DisplayState.CONTENT => _content(
+        context,
+        viewModel,
+        actionId,
+        actionTitle,
+      ),
+      DisplayState.FAILURE => Retry(
+        Strings.miscellaneousErrorRetry,
+        () => viewModel.onRetry(),
+      ),
+      _ => const Center(child: CircularProgressIndicator()),
     };
   }
 
-  Widget _content(BuildContext context, ActionCommentaireViewModel viewModel, String actionId, String actionTitle) {
+  Widget _content(
+    BuildContext context,
+    ActionCommentaireViewModel viewModel,
+    String actionId,
+    String actionTitle,
+  ) {
     final commentsNumber = viewModel.comments.length;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(Strings.lastComment, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-        SizedBox(height: Margins.spacing_base),
+        Text(
+          Strings.lastComment,
+          style: DsfrTextStyle.bodyMdBold(
+            color: DsfrColorDecisions.textTitleGrey(context),
+          ),
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
         if (viewModel.lastComment != null) Comment(comment: viewModel.lastComment!),
-        if (viewModel.lastComment == null) Text(Strings.noComments, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-        SizedBox(height: Margins.spacing_xl),
-        SecondaryButton(
+        if (viewModel.lastComment == null)
+          Text(
+            Strings.noComments,
+            style: DsfrTextStyle.bodyMd(
+              color: DsfrColorDecisions.textDefaultGrey(context),
+            ),
+          ),
+        const SizedBox(height: DsfrSpacings.s3w),
+        DsfrButton(
           onPressed: () => _onCommentClick(context, actionId, actionTitle),
           label: commentsNumber < 1 ? Strings.addComment : Strings.seeNComments(commentsNumber.toString()),
+          variant: DsfrButtonVariant.secondary,
+          size: DsfrComponentSize.md,
         ),
       ],
     );
   }
 
-  void _onCommentClick(BuildContext context, String actionId, String actionTitle) {
-    PassEmploiMatomoTracker.instance.trackScreen(AnalyticsActionNames.accessToActionComments);
+  void _onCommentClick(
+    BuildContext context,
+    String actionId,
+    String actionTitle,
+  ) {
+    PassEmploiMatomoTracker.instance.trackScreen(
+      AnalyticsActionNames.accessToActionComments,
+    );
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ActionCommentairesPage(actionId: actionId, actionTitle: actionTitle),
+        builder: (context) => ActionCommentairesPage(
+          actionId: actionId,
+          actionTitle: actionTitle,
+        ),
       ),
     );
   }
 }
 
 class _UnavailableCommentsOffline extends StatelessWidget {
+  const _UnavailableCommentsOffline();
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(Strings.lastComment, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-        SizedBox(height: Margins.spacing_base),
-        Text(Strings.commentsUnavailableOffline, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
-      ],
-    );
-  }
-}
-
-class _DateAndCategory extends StatelessWidget {
-  const _DateAndCategory(this.viewModel);
-
-  final UserActionDetailsViewModel viewModel;
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      container: true,
-      child: Wrap(
-        spacing: Margins.spacing_m,
-        runSpacing: Margins.spacing_s,
-        children: [
-          _section(context, sectionIcon: AppIcons.event, sectionTitle: Strings.userActionDate, value: viewModel.date),
-          _section(
-            context,
-            sectionIcon: Icons.account_tree_rounded,
-            sectionTitle: Strings.userActionCategory,
-            value: viewModel.category,
+        Text(
+          Strings.lastComment,
+          style: DsfrTextStyle.bodyMdBold(
+            color: DsfrColorDecisions.textTitleGrey(context),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _section(BuildContext context, {required IconData sectionIcon, required String sectionTitle, required String value}) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: Margins.spacing_xs / 2),
-          child: Icon(sectionIcon, color: context.grey500, size: Dimens.icon_size_base),
         ),
-        SizedBox(width: Margins.spacing_xs),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(sectionTitle, style: TextStyles.textSRegular(color: context.grey700)),
-            SizedBox(height: Margins.spacing_xs),
-            Text(value, style: TextStyles.textSBold.copyWith(color: context.content)),
-          ],
+        const SizedBox(height: DsfrSpacings.s2w),
+        Text(
+          Strings.commentsUnavailableOffline,
+          style: DsfrTextStyle.bodyMd(
+            color: DsfrColorDecisions.textDefaultGrey(context),
+          ),
         ),
       ],
-    );
-  }
-}
-
-class _MoreButton extends StatelessWidget {
-  const _MoreButton({required this.source, required this.actionId});
-
-  final UserActionStateSource source;
-  final String actionId;
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(AppIcons.more_vert_rounded, color: context.content),
-      onPressed: () => UserActionDetailsBottomSheet.show(context, source, actionId),
     );
   }
 }

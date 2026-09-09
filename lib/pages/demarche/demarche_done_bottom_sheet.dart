@@ -1,46 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/demarche/update/update_demarche_actions.dart';
 import 'package:pass_emploi_app/presentation/demarche/demarche_done_bottom_sheet_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/model/date_input_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/date_pickers/date_picker_suggestions.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 
 class DemarcheDoneBottomSheet extends StatelessWidget {
   const DemarcheDoneBottomSheet({super.key, required this.demarcheId});
   final String demarcheId;
 
-  static Future<bool?> show(
-    BuildContext context,
-    String demarcheId,
-  ) {
-    return showPassEmploiBottomSheet<bool?>(
+  static Future<bool?> show(BuildContext context, String demarcheId) {
+    return showDsfrBottomSheet<bool?>(
       context: context,
-      builder: (context) => DemarcheDoneBottomSheet(
-        demarcheId: demarcheId,
-      ),
+      name: AnalyticsScreenNames.userActionDetails,
+      builder: (context) => DemarcheDoneBottomSheet(demarcheId: demarcheId),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, DemarcheDoneBottomSheetViewModel>(
-      converter: (store) => DemarcheDoneBottomSheetViewModel.create(store, demarcheId),
+      converter: (store) =>
+          DemarcheDoneBottomSheetViewModel.create(store, demarcheId),
       onDispose: (store) => store.dispatch(UpdateDemarcheResetAction()),
       builder: (context, viewModel) {
-        return BottomSheetWrapper(
-          title: viewModel.displayState == DisplayState.EMPTY ? Strings.demarcheDoneBottomSheetTitle : "",
-          body: SingleChildScrollView(
+        return DsfrBottomSheet(
+          child: AnimatedSwitcher(
+            duration: AnimationDurations.fast,
             child: _Body(viewModel),
           ),
         );
@@ -55,25 +51,29 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-      duration: AnimationDurations.fast,
-      child: switch (viewModel.displayState) {
-        DisplayState.CONTENT => _Success(),
-        DisplayState.FAILURE => _Error(),
-        DisplayState.LOADING || DisplayState.EMPTY => Stack(
-          children: [
-            Opacity(
-              opacity: viewModel.displayState == DisplayState.LOADING ? 0.5 : 1,
-              child: IgnorePointer(
-                ignoring: viewModel.displayState == DisplayState.LOADING,
-                child: _Form(viewModel),
+    return switch (viewModel.displayState) {
+      DisplayState.CONTENT => const _Success(),
+      DisplayState.FAILURE => _Error(),
+      DisplayState.LOADING || DisplayState.EMPTY => Stack(
+        children: [
+          Opacity(
+            opacity: viewModel.displayState == DisplayState.LOADING ? 0.5 : 1,
+            child: IgnorePointer(
+              ignoring: viewModel.displayState == DisplayState.LOADING,
+              child: _Form(viewModel),
+            ),
+          ),
+          if (viewModel.displayState == DisplayState.LOADING)
+            Center(
+              child: CircularProgressIndicator(
+                color: DsfrColorDecisions.backgroundActionHighBlueFrance(
+                  context,
+                ),
               ),
             ),
-            if (viewModel.displayState == DisplayState.LOADING) const Center(child: CircularProgressIndicator()),
-          ],
-        ),
-      },
-    );
+        ],
+      ),
+    };
   }
 }
 
@@ -92,9 +92,14 @@ class _FormState extends State<_Form> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
       children: [
-        const SizedBox(height: Margins.spacing_base),
+        Text(
+          Strings.demarcheDoneBottomSheetTitle,
+          style: DsfrTextStyle.headline5(
+            color: DsfrColorDecisions.textTitleGrey(context),
+          ),
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
         DatePickerSuggestions(
           title: Strings.dateShortMandatory,
           firstDate: widget.viewModel.firstDate,
@@ -106,40 +111,60 @@ class _FormState extends State<_Form> {
           },
           dateSource: date,
         ),
-        SizedBox(height: Margins.spacing_base),
-        PrimaryActionButton(
+        const SizedBox(height: DsfrSpacings.s2w),
+        DsfrButton(
           label: Strings.jeValide,
-          onPressed: date.isValid ? () => widget.viewModel.onDemarcheDone(date.selectedDate) : null,
+          variant: DsfrButtonVariant.primary,
+          size: DsfrComponentSize.md,
+          onPressed: date.isValid
+              ? () => widget.viewModel.onDemarcheDone(date.selectedDate)
+              : null,
         ),
-        const SizedBox(height: Margins.spacing_base),
       ],
     );
   }
 }
 
 class _Success extends StatelessWidget {
+  const _Success();
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        SizedBox(height: Margins.spacing_xl),
-        Center(child: SizedBox(height: 130, width: 130, child: Image.asset(Drawables.success))),
-        SizedBox(height: Margins.spacing_xl),
+        const SizedBox(height: DsfrSpacings.s4w),
+        Center(
+          child: SvgPicture.asset(
+            Drawables.illustrationSuccess,
+            width: 160,
+            height: 160,
+            excludeFromSemantics: true,
+          ),
+        ),
+        const SizedBox(height: DsfrSpacings.s3w),
         Text(
           Strings.felicitations,
           textAlign: TextAlign.center,
-          style: TextStyles.textMBold.copyWith(color: context.content),
+          style: DsfrTextStyle.headline4(
+            color: DsfrColorDecisions.textTitleGrey(context),
+          ),
         ),
-        SizedBox(height: Margins.spacing_base),
+        const SizedBox(height: DsfrSpacings.s1w),
         Text(
           Strings.updateDemarcheConfirmation,
           textAlign: TextAlign.center,
-          style: TextStyles.textBaseRegular.copyWith(color: context.content),
+          style: DsfrTextStyle.bodyMd(
+            color: DsfrColorDecisions.textDefaultGrey(context),
+          ),
         ),
-        SizedBox(height: Margins.spacing_l),
-        PrimaryActionButton(label: Strings.understood, onPressed: () => Navigator.pop(context, true)),
-        const SizedBox(height: Margins.spacing_base),
+        const SizedBox(height: DsfrSpacings.s3w),
+        DsfrButton(
+          label: Strings.understood,
+          variant: DsfrButtonVariant.primary,
+          size: DsfrComponentSize.md,
+          onPressed: () => Navigator.pop(context, true),
+        ),
       ],
     );
   }

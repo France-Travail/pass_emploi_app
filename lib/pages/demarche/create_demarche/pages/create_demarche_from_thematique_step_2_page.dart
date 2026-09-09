@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/features/thematiques_demarche/thematiques_demarche_actions.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_change_notifier.dart';
 import 'package:pass_emploi_app/presentation/demarche/demarche_du_referentiel_card_view_model.dart';
 import 'package:pass_emploi_app/presentation/demarche/demarche_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_selectable_card.dart';
 
 class CreateDemarcheFromThematiqueStep2Page extends StatelessWidget {
   const CreateDemarcheFromThematiqueStep2Page(this.viewModel);
@@ -24,20 +22,21 @@ class CreateDemarcheFromThematiqueStep2Page extends StatelessWidget {
     }
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+      padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(height: Margins.spacing_base),
-          Text(selectedThematique.title, style: TextStyles.textMBold.copyWith(color: context.content)),
-          const SizedBox(height: Margins.spacing_base),
-          Text(Strings.selectDemarche, style: TextStyles.textBaseMedium.copyWith(color: context.content)),
-          const SizedBox(height: Margins.spacing_base),
+          const SizedBox(height: DsfrSpacings.s2w),
+          Text(
+            Strings.selectDemarche,
+            style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textDefaultGrey(context)),
+          ),
+          const SizedBox(height: DsfrSpacings.s2w),
           _ThematiqueDemarcheList(
             thematiqueCode: selectedThematique.id,
             viewModel: viewModel,
           ),
-          SizedBox(height: Margins.spacing_xl),
+          const SizedBox(height: DsfrSpacings.s5w),
         ],
       ),
     );
@@ -59,7 +58,7 @@ class _ThematiqueDemarcheList extends StatelessWidget {
         itemCount: demarchesIds.length,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        separatorBuilder: (context, index) => SizedBox(height: Margins.spacing_s),
+        separatorBuilder: (context, index) => const SizedBox(height: DsfrSpacings.s2w),
         itemBuilder: (context, index) {
           final id = demarchesIds[index];
           return _DemarcheDuReferentielCard(
@@ -91,22 +90,9 @@ class _DemarcheDuReferentielCard extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context, DemarcheDuReferentielCardViewModel viewModel) {
-    return Semantics(
-      button: true,
-      child: CardContainer(
-        backgroundColor: context.bg,
-        onTap: () => onSelected(viewModel),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 40),
-          child: Center(
-            child: Text(
-              viewModel.quoi,
-              textAlign: TextAlign.center,
-              style: TextStyles.textSMedium(color: context.content),
-            ),
-          ),
-        ),
-      ),
+    return DsfrSelectableCard(
+      label: viewModel.quoi,
+      onTap: () => onSelected(viewModel),
     );
   }
 }

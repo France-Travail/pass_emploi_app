@@ -1,15 +1,12 @@
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/file_picker_wrapper.dart';
 import 'package:pass_emploi_app/utils/image_picker_wrapper.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
-import 'package:pass_emploi_app/widgets/alert_message.dart';
-import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
 
 sealed class ChatPieceJointeBottomSheetResult {
   final String path;
@@ -17,33 +14,36 @@ sealed class ChatPieceJointeBottomSheetResult {
   ChatPieceJointeBottomSheetResult({required this.path});
 }
 
-class ChatPieceJointeBottomSheetImageResult extends ChatPieceJointeBottomSheetResult {
+class ChatPieceJointeBottomSheetImageResult
+    extends ChatPieceJointeBottomSheetResult {
   ChatPieceJointeBottomSheetImageResult(String path) : super(path: path);
 }
 
-class ChatPieceJointeBottomSheetFileResult extends ChatPieceJointeBottomSheetResult {
+class ChatPieceJointeBottomSheetFileResult
+    extends ChatPieceJointeBottomSheetResult {
   ChatPieceJointeBottomSheetFileResult(String path) : super(path: path);
 }
 
 class ChatPieceJointeBottomSheet extends StatefulWidget {
   const ChatPieceJointeBottomSheet({super.key});
 
-  static Future<ChatPieceJointeBottomSheetResult?> show(BuildContext context) async {
-    return await showModalBottomSheet<ChatPieceJointeBottomSheetResult>(
+  static Future<ChatPieceJointeBottomSheetResult?> show(BuildContext context) {
+    return showDsfrBottomSheet<ChatPieceJointeBottomSheetResult>(
       context: context,
-      isScrollControlled: true,
-      barrierLabel: Strings.bottomSheetBarrierLabel,
+      name: AnalyticsScreenNames.chat,
       builder: (context) => ChatPieceJointeBottomSheet(),
     );
   }
 
   @override
-  State<ChatPieceJointeBottomSheet> createState() => _ChatPieceJointeBottomSheetState();
+  State<ChatPieceJointeBottomSheet> createState() =>
+      _ChatPieceJointeBottomSheetState();
 }
 
 enum PermissionErrorType { none, gallery, camera, file }
 
-class _ChatPieceJointeBottomSheetState extends State<ChatPieceJointeBottomSheet> {
+class _ChatPieceJointeBottomSheetState
+    extends State<ChatPieceJointeBottomSheet> {
   bool showFileTooLargeMessage = false;
   bool showLoading = false;
   PermissionErrorType permissionErrorType = PermissionErrorType.none;
@@ -64,7 +64,8 @@ class _ChatPieceJointeBottomSheetState extends State<ChatPieceJointeBottomSheet>
 
   void _pickFileEnded() => setState(() => showLoading = false);
 
-  void _onPermissionError(PermissionErrorType type) => setState(() => permissionErrorType = type);
+  void _onPermissionError(PermissionErrorType type) =>
+      setState(() => permissionErrorType = type);
 
   void _resetErrorMessages() {
     setState(() {
@@ -75,45 +76,76 @@ class _ChatPieceJointeBottomSheetState extends State<ChatPieceJointeBottomSheet>
 
   @override
   Widget build(BuildContext context) {
-    return BottomSheetWrapper(
-      title: Strings.chatPieceJointeBottomSheetTitle,
-      maxHeightFactor: 0.7,
-      body: SingleChildScrollView(
+    return DsfrBottomSheet(
+      shrinkWrap: true,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          DsfrSpacings.s2w,
+          DsfrSpacings.s2w,
+          DsfrSpacings.s2w,
+          DsfrSpacings.s2w,
+        ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            _Title(),
+            const SizedBox(height: DsfrSpacings.s2w),
             switch (permissionErrorType) {
               PermissionErrorType.none => SizedBox.shrink(),
               PermissionErrorType.camera => _CameraPermissionWarning(),
               PermissionErrorType.file => _FilePermissionWarning(),
               PermissionErrorType.gallery => _GalleryPermissionWarning(),
             },
+            if (permissionErrorType != PermissionErrorType.none)
+              const SizedBox(height: DsfrSpacings.s2w),
             if (showFileTooLargeMessage) ...[
-              SizedBox(height: Margins.spacing_m),
               _FileTooLargeWarning(),
+              const SizedBox(height: DsfrSpacings.s2w),
             ],
             if (showLoading) ...[
-              SizedBox(height: Margins.spacing_m),
               _Loading(),
+              const SizedBox(height: DsfrSpacings.s2w),
             ],
-            SizedBox(height: Margins.spacing_m),
             _PieceJointeWarning(),
-            SizedBox(height: Margins.spacing_base),
+            const SizedBox(height: DsfrSpacings.s3v),
             _TakePictureButton(
               onPressed: () => _resetErrorMessages(),
-              onPickImagePermissionError: () => _onPermissionError(PermissionErrorType.camera),
+              onPickImagePermissionError: () =>
+                  _onPermissionError(PermissionErrorType.camera),
             ),
+            const SizedBox(height: DsfrSpacings.s1w),
+            _SelectPictureButton(
+              onPressed: () => _resetErrorMessages(),
+              onPickImagePermissionError: () =>
+                  _onPermissionError(PermissionErrorType.gallery),
+            ),
+            const SizedBox(height: DsfrSpacings.s1w),
             _SelectFileButton(
               onPressed: () => _resetErrorMessages(),
               isFileTooLarge: _isFileTooLarge,
-              onPermissionError: () => _onPermissionError(PermissionErrorType.file),
+              onPermissionError: () =>
+                  _onPermissionError(PermissionErrorType.file),
               pickFileSarted: _pickFileSarted,
               pickFileEnded: _pickFileEnded,
             ),
-            _SelectPictureButton(
-              onPressed: () => _resetErrorMessages(),
-              onPickImagePermissionError: () => _onPermissionError(PermissionErrorType.gallery),
-            ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Title extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return AutoFocusA11y(
+      child: Semantics(
+        header: true,
+        child: Text(
+          Strings.chatPieceJointeBottomSheetTitle,
+          style: DsfrTextStyle.headline4(
+            color: DsfrColorDecisions.textTitleGrey(context),
+          ),
         ),
       ),
     );
@@ -123,9 +155,17 @@ class _ChatPieceJointeBottomSheetState extends State<ChatPieceJointeBottomSheet>
 class _Loading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SizedBox.square(
-      dimension: 40,
-      child: CircularProgressIndicator(),
+    return Semantics(
+      label: Strings.loadingAnnouncement,
+      liveRegion: true,
+      child: Center(
+        child: SizedBox.square(
+          dimension: 40,
+          child: CircularProgressIndicator(
+            color: DsfrColorDecisions.backgroundActionHighBlueFrance(context),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -133,7 +173,12 @@ class _Loading extends StatelessWidget {
 class _PieceJointeWarning extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Text(Strings.chatPieceJointeBottomSheetSubtitle, style: TextStyles.textSRegular(color: context.content));
+    return DsfrAlert(
+      type: DsfrAlertType.info,
+      description: DsfrAlertDescriptionText(
+        Strings.chatPieceJointeBottomSheetSubtitle,
+      ),
+    );
   }
 }
 
@@ -141,17 +186,23 @@ class _SelectPictureButton extends StatelessWidget {
   final VoidCallback onPressed;
   final VoidCallback onPickImagePermissionError;
 
-  const _SelectPictureButton({required this.onPressed, required this.onPickImagePermissionError});
+  const _SelectPictureButton({
+    required this.onPressed,
+    required this.onPickImagePermissionError,
+  });
+
   @override
   Widget build(BuildContext context) {
-    return _PieceJointeListTile(
-      icon: AppIcons.image_outlined,
+    return _PieceJointeButton(
+      icon: DsfrIcons.mediaImageLine,
       text: Strings.chatPieceJointeBottomSheetSelectImageButton,
       onPressed: () async {
         onPressed();
         final result = await ImagePickerWrapper.pickSingleImage();
         if (context.mounted && result is ImagePickerSuccessResult) {
-          Navigator.of(context).pop(ChatPieceJointeBottomSheetImageResult(result.path));
+          Navigator.of(
+            context,
+          ).pop(ChatPieceJointeBottomSheetImageResult(result.path));
         } else if (result is ImagePickerPermissionErrorResult) {
           onPickImagePermissionError();
         }
@@ -164,17 +215,23 @@ class _TakePictureButton extends StatelessWidget {
   final VoidCallback onPressed;
   final VoidCallback onPickImagePermissionError;
 
-  const _TakePictureButton({required this.onPressed, required this.onPickImagePermissionError});
+  const _TakePictureButton({
+    required this.onPressed,
+    required this.onPickImagePermissionError,
+  });
+
   @override
   Widget build(BuildContext context) {
-    return _PieceJointeListTile(
-      icon: AppIcons.camera_alt_outlined,
+    return _PieceJointeButton(
+      icon: DsfrIcons.mediaCameraLine,
       text: Strings.chatPieceJointeBottomSheetTakeImageButton,
       onPressed: () async {
         onPressed();
         final result = await ImagePickerWrapper.takeSinglePicture();
         if (context.mounted && result is ImagePickerSuccessResult) {
-          Navigator.of(context).pop(ChatPieceJointeBottomSheetImageResult(result.path));
+          Navigator.of(
+            context,
+          ).pop(ChatPieceJointeBottomSheetImageResult(result.path));
         } else if (result is ImagePickerPermissionErrorResult) {
           onPickImagePermissionError();
         }
@@ -189,6 +246,7 @@ class _SelectFileButton extends StatelessWidget {
   final VoidCallback onPermissionError;
   final VoidCallback pickFileSarted;
   final VoidCallback pickFileEnded;
+
   const _SelectFileButton({
     required this.onPressed,
     required this.isFileTooLarge,
@@ -199,8 +257,8 @@ class _SelectFileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _PieceJointeListTile(
-      icon: AppIcons.description_outlined,
+    return _PieceJointeButton(
+      icon: DsfrIcons.documentFileTextLine,
       text: Strings.chatPieceJointeBottomSheetSelectFileButton,
       onPressed: () async {
         onPressed();
@@ -220,7 +278,9 @@ class _SelectFileButton extends StatelessWidget {
     final isTooLarge = result.isTooLarge;
     isFileTooLarge(isTooLarge);
     if (context.mounted && !isTooLarge) {
-      Navigator.of(context).pop(ChatPieceJointeBottomSheetFileResult(result.path));
+      Navigator.of(
+        context,
+      ).pop(ChatPieceJointeBottomSheetFileResult(result.path));
     }
   }
 }
@@ -228,8 +288,11 @@ class _SelectFileButton extends StatelessWidget {
 class _FileTooLargeWarning extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return AlertMessage(
-      message: Strings.chatPieceJointeBottomSheetFileTooLarge,
+    return DsfrAlert(
+      type: DsfrAlertType.error,
+      description: DsfrAlertDescriptionText(
+        Strings.chatPieceJointeBottomSheetFileTooLarge,
+      ),
     );
   }
 }
@@ -237,14 +300,18 @@ class _FileTooLargeWarning extends StatelessWidget {
 class _GalleryPermissionWarning extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return _PermissionDeniedWarning(Strings.chatPieceJointeGalleryPermissionError);
+    return _PermissionDeniedWarning(
+      Strings.chatPieceJointeGalleryPermissionError,
+    );
   }
 }
 
 class _CameraPermissionWarning extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return _PermissionDeniedWarning(Strings.chatPieceJointeCameraPermissionError);
+    return _PermissionDeniedWarning(
+      Strings.chatPieceJointeCameraPermissionError,
+    );
   }
 }
 
@@ -262,17 +329,29 @@ class _PermissionDeniedWarning extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: Margins.spacing_m),
-      child: Semantics(
-        focusable: true,
-        child: AutoFocusA11y(
-          child: AlertMessage(
-            message: message,
-            retryMessage: AlertMessageRetry(
-              message: Strings.chatPieceJointeOpenAppSettings,
-              onRetry: () => AppSettings.openAppSettings(),
-              link: true,
+    return Semantics(
+      focusable: true,
+      child: AutoFocusA11y(
+        child: DsfrAlert(
+          type: DsfrAlertType.warning,
+          description: DsfrAlertDescriptionWidget(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  message,
+                  style: DsfrTextStyle.bodyMd(
+                    color: DsfrColorDecisions.textDefaultGrey(context),
+                  ),
+                ),
+                const SizedBox(height: DsfrSpacings.s1w),
+                DsfrLink(
+                  label: Strings.chatPieceJointeOpenAppSettings,
+                  icon: DsfrIcons.systemExternalLinkLine,
+                  iconPosition: DsfrLinkIconPosition.end,
+                  onTap: () => AppSettings.openAppSettings(),
+                ),
+              ],
             ),
           ),
         ),
@@ -281,8 +360,8 @@ class _PermissionDeniedWarning extends StatelessWidget {
   }
 }
 
-class _PieceJointeListTile extends StatelessWidget {
-  const _PieceJointeListTile({
+class _PieceJointeButton extends StatelessWidget {
+  const _PieceJointeButton({
     required this.icon,
     required this.text,
     required this.onPressed,
@@ -290,19 +369,16 @@ class _PieceJointeListTile extends StatelessWidget {
 
   final IconData icon;
   final String text;
-  final void Function() onPressed;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      child: ListTile(
-        leading: Icon(icon, color: context.content),
-        contentPadding: EdgeInsets.zero,
-        visualDensity: VisualDensity(vertical: -2),
-        title: Text(text, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-        onTap: onPressed,
-      ),
+    return DsfrButton(
+      label: text,
+      icon: icon,
+      variant: DsfrButtonVariant.tertiary,
+      size: DsfrComponentSize.lg,
+      onPressed: onPressed,
     );
   }
 }

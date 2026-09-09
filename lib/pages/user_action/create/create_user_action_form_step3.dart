@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/models/user_action_type.dart';
 import 'package:pass_emploi_app/pages/user_action/create/create_user_action_form_step2.dart';
-import 'package:pass_emploi_app/pages/user_action/create/widgets/user_action_stepper.dart';
 import 'package:pass_emploi_app/presentation/model/date_input_source.dart';
 import 'package:pass_emploi_app/presentation/user_action/creation_form/create_user_action_form_view_model.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
+import 'package:pass_emploi_app/utils/date_extensions.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/a11y/mandatory_fields_label.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
-import 'package:pass_emploi_app/widgets/date_pickers/date_picker_suggestions.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_date_input_suggestions.dart';
 
-class CreateUserActionFormStep3 extends StatefulWidget {
+class CreateUserActionFormStep3 extends StatelessWidget {
   const CreateUserActionFormStep3({
     required this.actionType,
     required this.titleSource,
@@ -38,94 +32,69 @@ class CreateUserActionFormStep3 extends StatefulWidget {
   final void Function() onAddDuplicatedUserAction;
 
   @override
-  State<CreateUserActionFormStep3> createState() => _CreateUserActionFormStep3State();
-}
-
-class _CreateUserActionFormStep3State extends State<CreateUserActionFormStep3> {
-  late final ScrollController _scrollController;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController = ScrollController();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      controller: _scrollController,
       child: Tracker(
         tracking: AnalyticsScreenNames.createUserActionStep3,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+          padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: Margins.spacing_s),
-              Semantics(
-                container: true,
-                header: true,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    UserActionStepperTexts(index: 2),
-                    const SizedBox(height: Margins.spacing_s),
-                    Text(
-                      widget.actionType.label,
-                      style: TextStyles.textMBold.copyWith(color: context.content),
-                    ),
-                    Text(
-                      widget.titleSource.title,
-                      style: TextStyles.textBaseMedium.copyWith(color: context.content),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: Margins.spacing_m),
-              MandatoryFieldsLabel.all(),
-              const SizedBox(height: Margins.spacing_m),
+              const SizedBox(height: DsfrSpacings.s2w),
               Text(
-                widget.titleSource.allowBatchCreate ? Strings.selectMultipleActions : Strings.selectOneAction,
-                style: TextStyles.textBaseBold.copyWith(color: context.content),
+                actionType.label,
+                style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
               ),
-              if (widget.viewModel.errorsVisible && !widget.viewModel.isValid) ...[
-                const SizedBox(height: Margins.spacing_base),
-                _ErrorItem(
-                  icon: AppIcons.error_rounded,
-                  text: Strings.fillAllFields,
+              Text(
+                titleSource.title,
+                style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
+              ),
+              const SizedBox(height: DsfrSpacings.s2w),
+              Text(
+                Strings.allMandatoryFields,
+                style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textMentionGrey(context)),
+              ),
+              const SizedBox(height: DsfrSpacings.s2w),
+              Text(
+                titleSource.allowBatchCreate ? Strings.selectMultipleActions : Strings.selectOneAction,
+                style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+              ),
+              if (viewModel.errorsVisible && !viewModel.isValid) ...[
+                const SizedBox(height: DsfrSpacings.s2w),
+                DsfrAlert(
+                  type: DsfrAlertType.error,
+                  description: DsfrAlertDescriptionText(Strings.fillAllFields),
                 ),
               ],
-              const SizedBox(height: Margins.spacing_m),
+              const SizedBox(height: DsfrSpacings.s3w),
               _DuplicateUserActionList(
-                viewModel: widget.viewModel,
-                onDateChanged: widget.onDateChanged,
-                onDescriptionChanged: widget.onDescriptionChanged,
-                onDelete: widget.onDelete,
-                titleSource: widget.titleSource,
-                scrollController: _scrollController,
+                viewModel: viewModel,
+                onDateChanged: onDateChanged,
+                onDescriptionChanged: onDescriptionChanged,
+                onDelete: onDelete,
+                titleSource: titleSource,
               ),
-              if (widget.titleSource.allowBatchCreate)
-                SecondaryButton(
-                  icon: AppIcons.add,
-                  label: Strings.duplicateAction,
-                  onPressed: () {
-                    widget.viewModel.canCreateMoreDuplicatedUserActions
-                        ? widget.onAddDuplicatedUserAction.call()
-                        : null;
-                    PassEmploiMatomoTracker.instance.trackEvent(
-                      eventCategory: AnalyticsEventNames.createActionv2EventCategory,
-                      action: AnalyticsEventNames.createActionResultMultipleAction,
-                    );
-                  },
-                  isEnabled: widget.viewModel.canCreateMoreDuplicatedUserActions,
+              if (titleSource.allowBatchCreate)
+                SizedBox(
+                  width: double.infinity,
+                  child: DsfrButton(
+                    icon: DsfrIcons.systemAddLine,
+                    label: Strings.duplicateAction,
+                    variant: DsfrButtonVariant.secondary,
+                    size: DsfrComponentSize.md,
+                    onPressed: viewModel.canCreateMoreDuplicatedUserActions
+                        ? () {
+                            onAddDuplicatedUserAction.call();
+                            PassEmploiMatomoTracker.instance.trackEvent(
+                              eventCategory: AnalyticsEventNames.createActionv2EventCategory,
+                              action: AnalyticsEventNames.createActionResultMultipleAction,
+                            );
+                          }
+                        : null,
+                  ),
                 ),
-              const SizedBox(height: Margins.spacing_xx_huge * 2),
+              const SizedBox(height: 200),
             ],
           ),
         ),
@@ -141,7 +110,6 @@ class _DuplicateUserActionList extends StatelessWidget {
     required this.onDescriptionChanged,
     required this.onDelete,
     required this.titleSource,
-    required this.scrollController,
   });
 
   final CreateUserActionStep3ViewModel viewModel;
@@ -149,32 +117,27 @@ class _DuplicateUserActionList extends StatelessWidget {
   final void Function(String id, String description) onDescriptionChanged;
   final void Function(String id) onDelete;
   final CreateActionTitleSource titleSource;
-  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: EdgeInsets.zero,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: viewModel.duplicatedUserActions.length,
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: Margins.spacing_m),
-          child: _DuplicateUserActionItem(
-            key: ValueKey(viewModel.duplicatedUserActions[index].id),
-            duplicatedUserAction: viewModel.duplicatedUserActions[index],
-            onDateChanged: (dateSource) => onDateChanged(viewModel.duplicatedUserActions[index].id, dateSource),
-            onDescriptionChanged: (description) =>
-                onDescriptionChanged(viewModel.duplicatedUserActions[index].id, description),
-            onDelete: () => onDelete(viewModel.duplicatedUserActions[index].id),
-            index: index,
-            titleSource: titleSource,
-            errorsVisible: viewModel.errorsVisible,
-            scrollController: scrollController,
+    return Column(
+      children: [
+        for (var index = 0; index < viewModel.duplicatedUserActions.length; index++)
+          Padding(
+            padding: const EdgeInsets.only(bottom: DsfrSpacings.s3w),
+            child: _DuplicateUserActionItem(
+              key: ValueKey(viewModel.duplicatedUserActions[index].id),
+              duplicatedUserAction: viewModel.duplicatedUserActions[index],
+              onDateChanged: (dateSource) => onDateChanged(viewModel.duplicatedUserActions[index].id, dateSource),
+              onDescriptionChanged: (description) =>
+                  onDescriptionChanged(viewModel.duplicatedUserActions[index].id, description),
+              onDelete: () => onDelete(viewModel.duplicatedUserActions[index].id),
+              index: index,
+              titleSource: titleSource,
+              errorsVisible: viewModel.errorsVisible,
+            ),
           ),
-        );
-      },
+      ],
     );
   }
 }
@@ -189,7 +152,6 @@ class _DuplicateUserActionItem extends StatefulWidget {
     required this.index,
     required this.titleSource,
     required this.errorsVisible,
-    required this.scrollController,
   });
 
   final DuplicatedUserAction duplicatedUserAction;
@@ -199,7 +161,6 @@ class _DuplicateUserActionItem extends StatefulWidget {
   final int index;
   final CreateActionTitleSource titleSource;
   final bool errorsVisible;
-  final ScrollController scrollController;
 
   @override
   State<_DuplicateUserActionItem> createState() => _DuplicateUserActionItemState();
@@ -207,6 +168,7 @@ class _DuplicateUserActionItem extends StatefulWidget {
 
 class _DuplicateUserActionItemState extends State<_DuplicateUserActionItem> {
   late final TextEditingController descriptionController;
+  late final TextEditingController dateController;
   late final FocusNode descriptionFocusNode;
   final GlobalKey _descriptionFieldKey = GlobalKey();
 
@@ -214,16 +176,31 @@ class _DuplicateUserActionItemState extends State<_DuplicateUserActionItem> {
   void initState() {
     super.initState();
     descriptionController = TextEditingController(text: widget.duplicatedUserAction.description);
+    dateController = TextEditingController(text: _dateText(widget.duplicatedUserAction.dateSource));
     descriptionFocusNode = FocusNode();
     descriptionFocusNode.addListener(_onFocusChange);
+  }
+
+  @override
+  void didUpdateWidget(covariant _DuplicateUserActionItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final nextDateText = _dateText(widget.duplicatedUserAction.dateSource);
+    if (dateController.text != nextDateText) {
+      dateController.text = nextDateText;
+    }
   }
 
   @override
   void dispose() {
     descriptionFocusNode.removeListener(_onFocusChange);
     descriptionController.dispose();
+    dateController.dispose();
     descriptionFocusNode.dispose();
     super.dispose();
+  }
+
+  String _dateText(DateInputSource dateSource) {
+    return dateSource.isValid ? dateSource.selectedDate.toDay() : '';
   }
 
   void _onFocusChange() {
@@ -233,23 +210,15 @@ class _DuplicateUserActionItemState extends State<_DuplicateUserActionItem> {
   }
 
   void _scrollToDescriptionField() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final context = _descriptionFieldKey.currentContext;
-      if (context != null && widget.scrollController.hasClients) {
-        final RenderBox renderBox = context.findRenderObject() as RenderBox;
-        final position = renderBox.localToGlobal(Offset.zero);
-        final scrollOffset = widget.scrollController.offset;
-        final screenHeight = MediaQuery.of(context).size.height;
-
-        // Calculer la position cible pour centrer le champ à l'écran
-        final targetOffset = position.dy + scrollOffset - (screenHeight / 2) + (renderBox.size.height);
-
-        widget.scrollController.animateTo(
-          targetOffset.clamp(0.0, widget.scrollController.position.maxScrollExtent),
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
+    Future<void>.delayed(const Duration(milliseconds: 300), () {
+      if (!mounted) return;
+      final fieldContext = _descriptionFieldKey.currentContext;
+      if (fieldContext == null || !fieldContext.mounted) return;
+      Scrollable.ensureVisible(
+        fieldContext,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
     });
   }
 
@@ -258,89 +227,77 @@ class _DuplicateUserActionItemState extends State<_DuplicateUserActionItem> {
     final showDescriptionError = widget.errorsVisible && !widget.duplicatedUserAction.isDescriptionValid;
     final showDateError = widget.errorsVisible && !widget.duplicatedUserAction.isDateValid;
     return Stack(
+      clipBehavior: Clip.none,
       children: [
-        CardContainer(
-          child: Column(
-            children: [
-              DatePickerSuggestions(
-                title: Strings.datePickerTitle,
-                dateSource: widget.duplicatedUserAction.dateSource,
-                onDateChanged: widget.onDateChanged,
-                isInvalid: showDateError,
-              ),
-              if (showDateError) ...[
-                const SizedBox(height: Margins.spacing_s),
-                _ErrorItem(
-                  icon: AppIcons.error_rounded,
-                  text: Strings.dateMandatory,
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: DsfrColorDecisions.backgroundDefaultGrey(context),
+            borderRadius: const BorderRadius.all(Radius.circular(4)),
+            border: Border.all(color: DsfrColorDecisions.artworkDecorativeBlueFrance(context)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(DsfrSpacings.s1w, DsfrSpacings.s2w, DsfrSpacings.s1w, DsfrSpacings.s2w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                DsfrDateInput(
+                  label: Strings.datePickerTitle,
+                  controller: dateController,
+                  firstDate: DateTime(2020),
+                  lastDate: DateTime(2101),
+                  initialDate: widget.duplicatedUserAction.dateSource.isValid
+                      ? widget.duplicatedUserAction.dateSource.selectedDate
+                      : DateTime.now(),
+                  locale: const Locale('fr', 'FR'),
+                  composantState: showDateError
+                      ? DsfrComponentState.error(errorMessage: Strings.dateMandatory)
+                      : const DsfrComponentState.none(),
+                  onChanged: (date) => widget.onDateChanged(DateFromPicker(date)),
+                ),
+                const SizedBox(height: DsfrSpacings.s1w),
+                DsfrDateSuggestions(
+                  dateSource: widget.duplicatedUserAction.dateSource,
+                  onSelected: widget.onDateChanged,
+                ),
+                AnimatedSize(
+                  duration: AnimationDurations.fast,
+                  alignment: Alignment.topCenter,
+                  clipBehavior: Clip.none,
+                  child: widget.duplicatedUserAction.dateSource.isNone
+                      ? const SizedBox.shrink()
+                      : Column(
+                          children: [
+                            const SizedBox(height: DsfrSpacings.s2w),
+                            UserActionDescriptionField(
+                              key: _descriptionFieldKey,
+                              descriptionController: descriptionController,
+                              onDescriptionChanged: (value) => widget.onDescriptionChanged(value),
+                              onClear: () {
+                                descriptionController.clear();
+                                widget.onDescriptionChanged("");
+                              },
+                              hintText: Strings.exampleHint + widget.titleSource.descriptionHint,
+                              descriptionFocusNode: descriptionFocusNode,
+                              isInvalid: showDescriptionError,
+                            ),
+                          ],
+                        ),
                 ),
               ],
-              AnimatedCrossFade(
-                crossFadeState: widget.duplicatedUserAction.dateSource.isNone
-                    ? CrossFadeState.showFirst
-                    : CrossFadeState.showSecond,
-                duration: AnimationDurations.fast,
-                firstChild: const SizedBox.shrink(),
-                secondChild: Column(
-                  children: [
-                    const SizedBox(height: Margins.spacing_base),
-                    UserActionDescriptionField(
-                      key: _descriptionFieldKey,
-                      descriptionController: descriptionController,
-                      onDescriptionChanged: (value) => widget.onDescriptionChanged(value),
-                      onClear: () {
-                        descriptionController.clear();
-                        widget.onDescriptionChanged("");
-                      },
-                      hintText: Strings.exampleHint + widget.titleSource.descriptionHint,
-                      descriptionFocusNode: descriptionFocusNode,
-                      isInvalid: showDescriptionError,
-                    ),
-                    if (showDescriptionError) ...[
-                      const SizedBox(height: Margins.spacing_s),
-                      _ErrorItem(
-                        icon: AppIcons.error_rounded,
-                        text: Strings.descriptionMandatory,
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
         ),
         if (widget.index > 0)
           Align(
             alignment: Alignment.topRight,
-            child: IconButton(
-              tooltip: Strings.clear,
-              icon: Icon(Icons.clear, color: context.content),
+            child: DsfrButton(
+              icon: DsfrIcons.systemCloseLine,
+              iconSemanticLabel: Strings.deleteDuplicatedAction,
+              variant: DsfrButtonVariant.tertiaryWithoutBorder,
+              size: DsfrComponentSize.sm,
               onPressed: widget.onDelete,
             ),
           ),
-      ],
-    );
-  }
-}
-
-class _ErrorItem extends StatelessWidget {
-  const _ErrorItem({
-    required this.icon,
-    required this.text,
-  });
-
-  final IconData icon;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(icon, color: AppColors.warning),
-        const SizedBox(width: Margins.spacing_s),
-        Flexible(
-          child: Text(text, style: TextStyles.textBaseRegular.copyWith(color: AppColors.warning)),
-        ),
       ],
     );
   }

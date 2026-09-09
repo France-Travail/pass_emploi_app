@@ -44,6 +44,9 @@ class RechercheOffreServiceCiviquePage extends RechercheOffrePage<ServiceCivique
   String placeHolderSubtitle() => Strings.rechercheLancerUneRechercheHint;
 
   @override
+  String emptyTitle() => Strings.rechercheEmptyTitleServiceCivique;
+
+  @override
   RechercheState rechercheState(AppState appState) => appState.rechercheServiceCiviqueState;
 
   @override
@@ -53,7 +56,7 @@ class RechercheOffreServiceCiviquePage extends RechercheOffrePage<ServiceCivique
   FavoriIdsState<ServiceCivique> favorisState(AppState appState) => appState.serviceCiviqueFavorisIdsState;
 
   @override
-  Widget buildAlertBottomSheet() => ServiceCiviqueAlerteBottomSheet();
+  Widget? buildAlertBottomSheet() => ServiceCiviqueAlerteBottomSheet();
 
   @override
   Future<bool?>? buildFiltresBottomSheet(BuildContext context) => ServiceCiviqueFiltresPage.show(context);

@@ -30,8 +30,6 @@ import 'package:pass_emploi_app/repositories/cv_repository.dart';
 import 'package:pass_emploi_app/repositories/demarche/create_demarche_repository.dart';
 import 'package:pass_emploi_app/repositories/demarche/search_demarche_repository.dart';
 import 'package:pass_emploi_app/repositories/demarche/update_demarche_repository.dart';
-import 'package:pass_emploi_app/repositories/diagoriente_metiers_favoris_repository.dart';
-import 'package:pass_emploi_app/repositories/diagoriente_urls_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_emploi/evenement_emploi_details_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_emploi/evenement_emploi_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_engagement/evenement_engagement_repository.dart';
@@ -343,14 +341,6 @@ class DummySessionMiloRepository extends SessionMiloRepository {
 
 class DummyMetierRepository extends MetierRepository {
   DummyMetierRepository() : super(DioMock());
-}
-
-class DummyDiagorienteUrlsRepository extends DiagorienteUrlsRepository {
-  DummyDiagorienteUrlsRepository() : super(DioMock());
-}
-
-class DummyDiagorienteMetiersFavorisRepository extends DiagorienteMetiersFavorisRepository {
-  DummyDiagorienteMetiersFavorisRepository() : super(DioMock(), DummyPassEmploiCacheManager());
 }
 
 class DummyRecherchesRecentesRepository extends RecherchesRecentesRepository {

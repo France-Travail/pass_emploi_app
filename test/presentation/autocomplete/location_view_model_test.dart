@@ -42,7 +42,7 @@ void main() {
       final viewModel = LocationViewModel.create(store, villesOnly: false);
       // Then
       expect(viewModel.dernieresLocations, [
-        LocationTitleItem("Dernière recherche"),
+        LocationTitleItem("Recherches récentes"),
         LocationSuggestionItem(mockLocation(), LocationSource.dernieresRecherches),
       ]);
     });
@@ -67,7 +67,7 @@ void main() {
       final viewModel = LocationViewModel.create(store, villesOnly: false);
       // Then
       expect(viewModel.dernieresLocations, [
-        LocationTitleItem("Dernières recherches"),
+        LocationTitleItem("Recherches récentes"),
         LocationSuggestionItem(
           Location(libelle: '1', code: '1', codePostal: '1', type: LocationType.COMMUNE),
           LocationSource.dernieresRecherches,
@@ -98,7 +98,7 @@ void main() {
       final viewModel = LocationViewModel.create(store, villesOnly: false);
       // Then
       expect(viewModel.dernieresLocations, [
-        LocationTitleItem("Dernières recherches"),
+        LocationTitleItem("Recherches récentes"),
         LocationSuggestionItem(
           Location(libelle: '1', code: '1', codePostal: '1', type: LocationType.COMMUNE),
           LocationSource.dernieresRecherches,
@@ -127,7 +127,7 @@ void main() {
       final viewModel = LocationViewModel.create(store, villesOnly: false);
       // Then
       expect(viewModel.dernieresLocations, [
-        LocationTitleItem("Dernière recherche"),
+        LocationTitleItem("Recherches récentes"),
         LocationSuggestionItem(
           Location(libelle: '3', code: '3', codePostal: '3', type: LocationType.COMMUNE),
           LocationSource.dernieresRecherches,
@@ -152,7 +152,7 @@ void main() {
       final viewModel = LocationViewModel.create(store, villesOnly: false);
       // Then
       expect(viewModel.dernieresLocations, [
-        LocationTitleItem("Dernières recherches"),
+        LocationTitleItem("Recherches récentes"),
         LocationSuggestionItem(
           Location(libelle: '1', code: '1', codePostal: '1', type: LocationType.COMMUNE),
           LocationSource.dernieresRecherches,
@@ -181,7 +181,7 @@ void main() {
       final viewModel = LocationViewModel.create(store, villesOnly: true);
       // Then
       expect(viewModel.dernieresLocations, [
-        LocationTitleItem("Dernières recherches"),
+        LocationTitleItem("Recherches récentes"),
         LocationSuggestionItem(
           Location(libelle: '1', code: '1', codePostal: '1', type: LocationType.COMMUNE),
           LocationSource.dernieresRecherches,

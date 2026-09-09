@@ -79,8 +79,11 @@ extension on User {
         Accompagnement.accompagnementIntensif => 'FT_ACCOMPAGNEMENT_INTENSIF',
         Accompagnement.accompagnementGlobal => 'FT_ACCOMPAGNEMENT_GLOBAL',
         Accompagnement.equipEmploiRecrut => 'FT_EQUIP_EMPLOI_RECRUT',
+        Accompagnement.ftDemandeurDEmploi => 'FT_DEMANDEUR_D_EMPLOI',
+        Accompagnement.ftEspaceCandidat => 'FT_ESPACE_CANDIDAT',
       },
       LoginMode.MILO => 'MILO',
+      LoginMode.INVITE => 'INVITE',
       LoginMode.DEMO_PE => 'DEMO',
       LoginMode.DEMO_MILO => 'DEMO',
     };

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/models/immersion_details.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/widgets/tags/data_tag.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 
 class ImmersionTags extends StatelessWidget {
   final String secteurActivite;
@@ -17,9 +18,12 @@ class ImmersionTags extends StatelessWidget {
       spacing: Margins.spacing_s,
       runSpacing: Margins.spacing_s,
       children: [
-        DataTag.location(ville),
-        DataTag(label: secteurActivite),
-        if (modeDistanciel != null) DataTag(label: _modeDistancielLabel(modeDistanciel!)),
+        DsfrCategoryTag.meta(
+          label: ville,
+          icon: DsfrIcons.mapMapPin2Fill,
+        ),
+        DsfrCategoryTag.meta(label: secteurActivite),
+        if (modeDistanciel != null) DsfrCategoryTag.meta(label: _modeDistancielLabel(modeDistanciel!)),
       ],
     );
   }

@@ -11,21 +11,29 @@ class ConseillerProfilePageViewModel extends Equatable {
   final String sinceDate;
   final String name;
   final String sinceDateA11y;
+  final String subtitle;
+  final String subtitleA11y;
 
   ConseillerProfilePageViewModel({
     required this.displayState,
     this.sinceDate = "",
     this.name = "",
     this.sinceDateA11y = "",
+    this.subtitle = "",
+    this.subtitleA11y = "",
   });
 
   factory ConseillerProfilePageViewModel.create(Store<AppState> store) {
     final state = store.state.detailsJeuneState;
     if (state is DetailsJeuneSuccessState) {
+      final date = state.detailsJeune.conseiller.sinceDate.toDay();
+      final dateA11y = state.detailsJeune.conseiller.sinceDate.formatDateToFrench();
       return ConseillerProfilePageViewModel(
         displayState: DisplayState.CONTENT,
-        sinceDate: Strings.sinceDate(state.detailsJeune.conseiller.sinceDate.toDay()),
-        sinceDateA11y: Strings.sinceDate(state.detailsJeune.conseiller.sinceDate.formatDateToFrench()),
+        sinceDate: Strings.sinceDate(date),
+        sinceDateA11y: Strings.sinceDate(dateA11y),
+        subtitle: Strings.conseillerTileSubtitle(date),
+        subtitleA11y: Strings.conseillerTileSubtitle(dateA11y),
         name: "${state.detailsJeune.conseiller.firstname} ${state.detailsJeune.conseiller.lastname}",
       );
     } else if (state is DetailsJeuneLoadingState) {
@@ -35,5 +43,5 @@ class ConseillerProfilePageViewModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [displayState, sinceDate, name];
+  List<Object?> get props => [displayState, sinceDate, name, subtitle];
 }

@@ -44,6 +44,7 @@ void main() {
                   sessionsMilo: [mockSessionMiloAtelierCv()],
                   errorOnSessionMiloRetrieval: false,
                   dateDerniereMiseAJourPoleEmploi: null,
+                  peutVoirLeComptageDesHeures: true,
                 ),
               );
             });
@@ -77,6 +78,7 @@ void main() {
                   sessionsMilo: [],
                   errorOnSessionMiloRetrieval: true,
                   dateDerniereMiseAJourPoleEmploi: null,
+                  peutVoirLeComptageDesHeures: false,
                 ),
               );
             });

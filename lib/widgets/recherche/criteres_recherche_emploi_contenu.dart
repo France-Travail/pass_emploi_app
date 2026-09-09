@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/models/location.dart';
 import 'package:pass_emploi_app/presentation/recherche/emploi/criteres_recherche_emploi_contenu_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/errors/error_text.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/keyword_text_form_field.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/location_autocomplete.dart';
@@ -49,39 +48,40 @@ class _CriteresRechercheEmploiContenuState extends State<CriteresRechercheEmploi
       _selectedLocation = viewModel.initialLocation;
       _keyword = viewModel.initialKeyword;
     }
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          KeywordTextFormField(
-            title: Strings.keywordTitle,
-            initialValue: _keyword,
-            hint: Strings.metierHint,
-            onKeywordSelected: (keyword) {
-              _keyword = keyword;
-              _updateCriteresActifsCount();
-            },
-          ),
-          const SizedBox(height: Margins.spacing_m),
-          LocationAutocomplete(
-            title: Strings.locationTitle,
-            hint: Strings.locationHint,
-            initialValue: _selectedLocation,
-            onLocationSelected: (location) {
-              _selectedLocation = location;
-              _updateCriteresActifsCount();
-            },
-          ),
-          const SizedBox(height: Margins.spacing_m),
-          if (viewModel.displayState.isFailure()) ErrorText(Strings.genericError),
-          PrimaryActionButton(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        KeywordTextFormField(
+          title: Strings.metierLabel,
+          initialValue: _keyword,
+          hint: Strings.metierHint,
+          onKeywordSelected: (keyword) {
+            _keyword = keyword;
+            _updateCriteresActifsCount();
+          },
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        LocationAutocomplete(
+          title: Strings.locationTitle,
+          hint: Strings.locationHint,
+          initialValue: _selectedLocation,
+          onLocationSelected: (location) {
+            _selectedLocation = location;
+            _updateCriteresActifsCount();
+          },
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        if (viewModel.displayState.isFailure()) ErrorText(Strings.genericError),
+        SizedBox(
+          width: double.infinity,
+          child: DsfrButton(
             label: Strings.searchButton,
+            variant: DsfrButtonVariant.primary,
+            size: DsfrComponentSize.lg,
             onPressed: viewModel.displayState.isLoading() ? null : () => _search(viewModel),
           ),
-          const SizedBox(height: Margins.spacing_m),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

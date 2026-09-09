@@ -45,6 +45,9 @@ Matcher _shouldFailState() => StateIs<UserActionCreateFailureState>((state) => s
 Matcher _shouldSucceedState() {
   return StateIs<UserActionCreateSuccessState>(
     (state) => state.userActionCreateState,
-    (state) => expect(state.userActionCreatedId, 'created'),
+    (state) {
+      expect(state.userActionCreatedId, 'created');
+      expect(state.actionContent, 'content');
+    },
   );
 }

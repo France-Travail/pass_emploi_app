@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
@@ -7,16 +8,13 @@ import 'package:pass_emploi_app/presentation/checkbox_value_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/offre_emploi/offre_emploi_filtres_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
+import 'package:pass_emploi_app/widgets/bottom_sheets/filtres_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/buttons/filter_button.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
-import 'package:pass_emploi_app/widgets/checkbox_group.dart';
 import 'package:pass_emploi_app/widgets/errors/error_text.dart';
 import 'package:pass_emploi_app/widgets/slider/distance_slider.dart';
+import 'package:pass_emploi_app/widgets/tag_group.dart';
 
 class OffreEmploiFiltresPage extends StatefulWidget {
   final bool fromAlternance;
@@ -37,24 +35,27 @@ class OffreEmploiFiltresPage extends StatefulWidget {
 class _OffreEmploiFiltresPageState extends State<OffreEmploiFiltresPage> {
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Tracker(
       tracking: widget.fromAlternance ? AnalyticsScreenNames.alternanceFiltres : AnalyticsScreenNames.emploiFiltres,
-      child: StoreConnector<AppState, OffreEmploiFiltresViewModel>(
-        converter: (store) => OffreEmploiFiltresViewModel.create(store),
-        builder: (context, viewModel) => _scaffold(viewModel),
-        distinct: true,
-        onWillChange: (previousVM, newVM) {
-          if (previousVM?.displayState == DisplayState.LOADING && newVM.displayState == DisplayState.CONTENT) {
-            Navigator.pop(context, true);
-          }
-        },
+      child: Theme(
+        data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        child: StoreConnector<AppState, OffreEmploiFiltresViewModel>(
+          converter: (store) => OffreEmploiFiltresViewModel.create(store),
+          builder: (context, viewModel) => _scaffold(viewModel),
+          distinct: true,
+          onWillChange: (previousVM, newVM) {
+            if (previousVM?.displayState == DisplayState.LOADING && newVM.displayState == DisplayState.CONTENT) {
+              Navigator.pop(context, true);
+            }
+          },
+        ),
       ),
     );
   }
 
   Widget _scaffold(OffreEmploiFiltresViewModel viewModel) {
-    return BottomSheetWrapper(
-      backgroundColor: context.grey100,
+    return FiltresBottomSheet(
       title: Strings.offresEmploiFiltresTitle,
       body: _Content(viewModel: viewModel),
     );
@@ -71,17 +72,57 @@ class _Content extends StatefulWidget {
 }
 
 class _ContentState extends State<_Content> {
-  double? _currentSliderValue;
-  bool? _currentDebutantOnlyFiltre;
-  List<CheckboxValueViewModel<ContratFiltre>>? _currentContratFiltres;
-  List<CheckboxValueViewModel<DureeFiltre>>? _currentDureeFiltres;
+  late double _currentSliderValue;
+  late bool _currentDebutantOnlyFiltre;
+  late List<CheckboxValueViewModel<ContratFiltre>> _currentContratFiltres;
+  late List<CheckboxValueViewModel<DureeFiltre>> _currentDureeFiltres;
+  late List<CheckboxValueViewModel<ContratFiltre>> _contratOptions;
+  late List<CheckboxValueViewModel<DureeFiltre>> _dureeOptions;
+  int _filtersKey = 0;
 
   @override
   void initState() {
     super.initState();
-    _currentDebutantOnlyFiltre = widget.viewModel.initialDebutantOnlyFiltre;
-    _currentContratFiltres = widget.viewModel.contratFiltres.where((element) => element.isInitiallyChecked).toList();
-    _currentDureeFiltres = widget.viewModel.dureeFiltres.where((element) => element.isInitiallyChecked).toList();
+    _initFromViewModel();
+  }
+
+  void _initFromViewModel() {
+    _currentSliderValue = widget.viewModel.initialDistanceValue.toDouble();
+    _currentDebutantOnlyFiltre = widget.viewModel.initialDebutantOnlyFiltre ?? false;
+    _contratOptions = widget.viewModel.contratFiltres;
+    _dureeOptions = widget.viewModel.dureeFiltres;
+    _currentContratFiltres = _contratOptions.where((element) => element.isInitiallyChecked).toList();
+    _currentDureeFiltres = _dureeOptions.where((element) => element.isInitiallyChecked).toList();
+  }
+
+  void _resetFiltres() {
+    setState(() {
+      _currentSliderValue = EmploiFiltresRecherche.defaultDistanceValue.toDouble();
+      _currentDebutantOnlyFiltre = false;
+      _contratOptions = widget.viewModel.contratFiltres
+          .map(
+            (e) => CheckboxValueViewModel(
+              label: e.label,
+              value: e.value,
+              helpText: e.helpText,
+              isInitiallyChecked: false,
+            ),
+          )
+          .toList();
+      _dureeOptions = widget.viewModel.dureeFiltres
+          .map(
+            (e) => CheckboxValueViewModel(
+              label: e.label,
+              value: e.value,
+              helpText: e.helpText,
+              isInitiallyChecked: false,
+            ),
+          )
+          .toList();
+      _currentContratFiltres = [];
+      _currentDureeFiltres = [];
+      _filtersKey++;
+    });
   }
 
   @override
@@ -89,7 +130,12 @@ class _ContentState extends State<_Content> {
     return Stack(
       children: [
         _Filters(
+          key: ValueKey(_filtersKey),
           viewModel: widget.viewModel,
+          initialDistanceValue: _currentSliderValue,
+          debutantOnlyEnabled: _currentDebutantOnlyFiltre,
+          contratOptions: _contratOptions,
+          dureeOptions: _dureeOptions,
           onDistanceValueChange: (value) => _setDistanceFilterState(value),
           onDebutantOnlyValueChange: (value) => _setDebutantOnlyFilterState(value),
           onContractValueChange: (selectedOptions) => _setContractFilterState(selectedOptions),
@@ -97,12 +143,10 @@ class _ContentState extends State<_Content> {
         ),
         Align(
           alignment: Alignment.bottomCenter,
-          child: SizedBox(
-            width: double.infinity,
-            child: FilterButton(
-              isEnabled: _isButtonEnabled(widget.viewModel.displayState),
-              onPressed: () => _onButtonClick(widget.viewModel),
-            ),
+          child: FilterButton(
+            isEnabled: _isButtonEnabled(widget.viewModel.displayState),
+            onPressed: () => _onButtonClick(widget.viewModel),
+            onReset: _resetFiltres,
           ),
         ),
       ],
@@ -125,30 +169,36 @@ class _ContentState extends State<_Content> {
     setState(() => _currentDureeFiltres = selectedOptions);
   }
 
-  double _sliderValueToDisplay(double initialDistanceValue) =>
-      _currentSliderValue != null ? _currentSliderValue! : initialDistanceValue;
-
   bool _isButtonEnabled(DisplayState displayState) => displayState != DisplayState.LOADING;
 
   void _onButtonClick(OffreEmploiFiltresViewModel viewModel) {
     viewModel.updateFiltres(
-      _sliderValueToDisplay(viewModel.initialDistanceValue.toDouble()).toInt(),
-      _currentDebutantOnlyFiltre ?? false,
-      _currentContratFiltres ?? [],
-      _currentDureeFiltres ?? [],
+      _currentSliderValue.toInt(),
+      _currentDebutantOnlyFiltre,
+      _currentContratFiltres,
+      _currentDureeFiltres,
     );
   }
 }
 
-class _Filters extends StatefulWidget {
+class _Filters extends StatelessWidget {
   final OffreEmploiFiltresViewModel viewModel;
+  final double initialDistanceValue;
+  final bool debutantOnlyEnabled;
+  final List<CheckboxValueViewModel<ContratFiltre>> contratOptions;
+  final List<CheckboxValueViewModel<DureeFiltre>> dureeOptions;
   final Function(double) onDistanceValueChange;
   final Function(bool) onDebutantOnlyValueChange;
   final Function(List<CheckboxValueViewModel<ContratFiltre>>) onContractValueChange;
   final Function(List<CheckboxValueViewModel<DureeFiltre>>) onDurationValueChange;
 
-  _Filters({
+  const _Filters({
+    super.key,
     required this.viewModel,
+    required this.initialDistanceValue,
+    required this.debutantOnlyEnabled,
+    required this.contratOptions,
+    required this.dureeOptions,
     required this.onDistanceValueChange,
     required this.onDebutantOnlyValueChange,
     required this.onContractValueChange,
@@ -156,47 +206,42 @@ class _Filters extends StatefulWidget {
   });
 
   @override
-  State<_Filters> createState() => _FiltersState();
-}
-
-class _FiltersState extends State<_Filters> {
-  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(height: Margins.spacing_l),
-          if (widget.viewModel.shouldDisplayDistanceFiltre) ...[
+          if (viewModel.shouldDisplayDistanceFiltre) ...[
             DistanceSlider(
-              initialDistanceValue: widget.viewModel.initialDistanceValue.toDouble(),
-              onValueChange: (value) => widget.onDistanceValueChange(value),
+              initialDistanceValue: initialDistanceValue,
+              onValueChange: onDistanceValueChange,
             ),
-            SizedBox(height: Margins.spacing_m),
+            const SizedBox(height: DsfrSpacings.s2w),
           ],
-          if (widget.viewModel.shouldDisplayNonDistanceFiltres) ...[
+          if (viewModel.shouldDisplayNonDistanceFiltres) ...[
             _FiltreDebutant(
-              onDebutantOnlyValueChange: widget.onDebutantOnlyValueChange,
-              debutantOnlyEnabled: widget.viewModel.initialDebutantOnlyFiltre ?? false,
+              onDebutantOnlyValueChange: onDebutantOnlyValueChange,
+              debutantOnlyEnabled: debutantOnlyEnabled,
             ),
-            SizedBox(height: Margins.spacing_m),
-            CheckBoxGroup<ContratFiltre>(
+            const SizedBox(height: DsfrSpacings.s2w),
+            TagGroup<ContratFiltre>(
               title: Strings.contratSectionTitle,
-              options: widget.viewModel.contratFiltres,
+              options: contratOptions,
               onSelectedOptionsUpdated: (selectedOptions) {
-                widget.onContractValueChange(selectedOptions as List<CheckboxValueViewModel<ContratFiltre>>);
+                onContractValueChange(selectedOptions as List<CheckboxValueViewModel<ContratFiltre>>);
               },
             ),
-            SizedBox(height: Margins.spacing_m),
-            CheckBoxGroup<DureeFiltre>(
+            const SizedBox(height: DsfrSpacings.s2w),
+            TagGroup<DureeFiltre>(
               title: Strings.dureeSectionTitle,
-              options: widget.viewModel.dureeFiltres,
+              options: dureeOptions,
               onSelectedOptionsUpdated: (selectedOptions) {
-                widget.onDurationValueChange(selectedOptions as List<CheckboxValueViewModel<DureeFiltre>>);
+                onDurationValueChange(selectedOptions as List<CheckboxValueViewModel<DureeFiltre>>);
               },
             ),
           ],
-          if (widget.viewModel.displayState.isFailure()) ErrorText(Strings.genericError),
-          SizedBox(height: 200),
+          if (viewModel.displayState.isFailure()) ErrorText(Strings.genericError),
+          const SizedBox(height: 200),
         ],
       ),
     );
@@ -225,6 +270,14 @@ class _FiltreDebutantState extends State<_FiltreDebutant> {
     _debutantOnlyEnabled = widget.debutantOnlyEnabled;
   }
 
+  @override
+  void didUpdateWidget(covariant _FiltreDebutant oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.debutantOnlyEnabled != widget.debutantOnlyEnabled) {
+      _debutantOnlyEnabled = widget.debutantOnlyEnabled;
+    }
+  }
+
   void _onDebutantOnlyValueChange(bool value) {
     setState(() {
       _debutantOnlyEnabled = value;
@@ -235,39 +288,36 @@ class _FiltreDebutantState extends State<_FiltreDebutant> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Semantics(
           header: true,
-          child: Text(Strings.experienceSectionTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+          child: Text(
+            Strings.experienceSectionTitle,
+            style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context)),
+          ),
         ),
-        SizedBox(height: Margins.spacing_base),
-        CardContainer(
-          child: Row(
-            children: [
-              Expanded(
-                child: ExcludeSemantics(
-                  child: Text(
-                    Strings.experienceSectionDescription,
-                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
-                  ),
-                ),
+        const SizedBox(height: DsfrSpacings.s1w),
+        DecoratedBox(
+          decoration: BoxDecoration(
+            border: Border.all(color: DsfrColorDecisions.artworkDecorativeBlueFrance(context)),
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: DsfrSpacings.s3v,
+              vertical: DsfrSpacings.s1w,
+            ),
+            child: Semantics(
+              label: Strings.experienceSectionEnabled(_debutantOnlyEnabled),
+              child: DsfrToggleSwitch(
+                label: Strings.experienceSectionDescription,
+                labelLocation: DsfrToggleSwitchLabelLocation.left,
+                value: _debutantOnlyEnabled,
+                status: _debutantOnlyEnabled ? Strings.yes : Strings.no,
+                onChanged: _onDebutantOnlyValueChange,
               ),
-              Semantics(
-                label: Strings.experienceSectionEnabled(_debutantOnlyEnabled),
-                child: Switch(
-                  value: _debutantOnlyEnabled,
-                  onChanged: _onDebutantOnlyValueChange,
-                ),
-              ),
-              SizedBox(width: Margins.spacing_xs),
-              ExcludeSemantics(
-                child: Text(
-                  _debutantOnlyEnabled ? Strings.yes : Strings.no,
-                  style: TextStyles.textBaseRegular.copyWith(color: context.content),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ],

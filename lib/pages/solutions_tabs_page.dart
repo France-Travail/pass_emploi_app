@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/pages/alerte_page.dart';
 import 'package:pass_emploi_app/pages/offre_favoris_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_home_page.dart';
 import 'package:pass_emploi_app/presentation/solutions_tabs_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
-import 'package:pass_emploi_app/widgets/pass_emploi_tab_bar.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_tertiary_navigation.dart';
 
 class SolutionsTabPage extends StatelessWidget {
   final SolutionsTab? initialTab;
@@ -38,7 +38,7 @@ class _Body extends StatelessWidget {
       initialIndex: viewModel.tabs._index(initialTab),
       length: viewModel.tabs.length,
       child: Scaffold(
-        backgroundColor: context.grey100,
+        backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
         appBar: PrimaryAppBar(
           title: Strings.solutionsAppBarTitle,
           withAutofocusA11y: true,
@@ -46,7 +46,9 @@ class _Body extends StatelessWidget {
         body: ConnectivityContainer(
           child: Column(
             children: [
-              PassEmploiTabBar(tabLabels: viewModel.tabs.titles()),
+              DsfrTertiaryNavigation(
+                labels: viewModel.tabs.titles(),
+              ),
               Expanded(
                 child: TabBarView(
                   children: viewModel.tabs._pages(),

@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
-import 'package:pass_emploi_app/models/alerte/alerte.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/presentation/accueil/accueil_item.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/alerte_card.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
-import 'package:pass_emploi_app/widgets/dashed_box.dart';
 import 'package:pass_emploi_app/widgets/textes.dart';
 
 class AccueilAlertes extends StatelessWidget {
@@ -31,9 +24,9 @@ class AccueilAlertes extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           LargeSectionTitle(Strings.accueilMesAlertesSection),
-          SizedBox(height: Margins.spacing_base),
+          const SizedBox(height: DsfrSpacings.s2w),
           if (hasContent) _AvecAlertes(item),
-          if (!hasContent) _SansAlerte(),
+          if (!hasContent) const _SansAlerte(),
         ],
       ),
     );
@@ -50,11 +43,14 @@ class _AvecAlertes extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Column(children: item.alertes.map((search) => _AlerteCard(search)).toList()),
-        SizedBox(height: Margins.spacing_s),
-        SecondaryButton(
-          backgroundColor: context.grey100,
+        for (final search in item.alertes) ...[
+          AlerteCard(search),
+          const SizedBox(height: DsfrSpacings.s2w),
+        ],
+        DsfrButton(
           label: Strings.accueilVoirMesAlertes,
+          variant: DsfrButtonVariant.secondary,
+          size: DsfrComponentSize.md,
           onPressed: () => goToAlerte(context),
         ),
       ],
@@ -70,34 +66,25 @@ class _AvecAlertes extends StatelessWidget {
 }
 
 class _SansAlerte extends StatelessWidget {
+  const _SansAlerte();
+
   @override
   Widget build(BuildContext context) {
-    return DashedBox(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Center(
-            child: Icon(
-              AppIcons.notifications_rounded,
-              color: AppColors.accent2,
-              size: 40,
-            ),
-          ),
-          SizedBox(height: Margins.spacing_base),
-          Center(
-            child: Text(
-              Strings.accueilPasDalerteDescription,
-              style: TextStyles.textBaseMedium.copyWith(color: context.content),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          SizedBox(height: Margins.spacing_base),
-          PrimaryActionButton(
-            label: Strings.accueilPasDalerteBouton,
-            onPressed: () => goToRecherche(context),
-          ),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        DsfrAlert(
+          type: DsfrAlertType.info,
+          description: DsfrAlertDescriptionText(Strings.accueilPasDalerteDescription),
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        DsfrButton(
+          label: Strings.accueilPasDalerteBouton,
+          variant: DsfrButtonVariant.primary,
+          size: DsfrComponentSize.md,
+          onPressed: () => goToRecherche(context),
+        ),
+      ],
     );
   }
 
@@ -107,22 +94,6 @@ class _SansAlerte extends StatelessWidget {
         RechercheDeepLink(),
         DeepLinkOrigin.inAppNavigation,
       ),
-    );
-  }
-}
-
-class _AlerteCard extends StatelessWidget {
-  final Alerte alerte;
-
-  _AlerteCard(this.alerte);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        AlerteCard(alerte),
-        SizedBox(height: Margins.spacing_base),
-      ],
     );
   }
 }
