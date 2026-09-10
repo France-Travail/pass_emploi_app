@@ -112,10 +112,6 @@ class AnalyticsScreenNames {
   static const alerteSuggestionsList = "saved_searches/suggested_list";
   static const alerteList = "saved_searches/list";
   static const alerteListFromAccueil = "saved_searches/list/from-accueil";
-  static const alerteListFilterEmploi = "saved_searches/list?filtre=emploi";
-  static const alerteListFilterAlternance = "saved_searches/list?filtre=alternance";
-  static const alerteListFilterImmersion = "saved_searches/list?filtre=immersion";
-  static const alerteListFilterServiceCivique = "saved_searches/list?filtre=service_civique";
 
   static const alerteEmploiDelete = "/saved_searches/emploi/delete";
   static const alerteAlternanceDelete = "/saved_searches/alternance/delete";

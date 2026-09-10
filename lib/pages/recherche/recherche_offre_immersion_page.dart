@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/favori/ids/favori_ids_state.dart';
 import 'package:pass_emploi_app/features/recherche/recherche_state.dart';
@@ -16,7 +15,6 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/immersion_alerte_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/cards/data_card.dart';
-import 'package:pass_emploi_app/widgets/dsfr/dsfr_event_card.dart';
 import 'package:pass_emploi_app/widgets/recherche/criteres_recherche_immersion_contenu.dart';
 import 'package:redux/redux.dart';
 
@@ -72,21 +70,14 @@ class RechercheOffreImmersionPage extends RechercheOffrePage<Immersion> {
     int index,
     BlocResultatRechercheViewModel<Immersion> resultViewModel,
   ) {
-    final card = DataCard<Immersion>(
+    return DataCard<Immersion>(
       titre: item.metier,
       sousTitre: item.nomEtablissement,
       lieu: item.ville,
       onTap: () => _showOffreDetailsPage(context, item.id),
       from: OffrePage.immersionResults,
       id: item.id,
-      leading: item.fitForDisabledWorkers
-          ? DsfrEventCardComplement(
-              icon: DsfrIcons.userUserLine,
-              text: Strings.disabledWorkersWelcome,
-            )
-          : null,
     );
-    return card;
   }
 
   void _showOffreDetailsPage(BuildContext context, String offreId) {

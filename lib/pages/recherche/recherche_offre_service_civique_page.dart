@@ -3,7 +3,6 @@ import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/favori/ids/favori_ids_state.dart';
 import 'package:pass_emploi_app/features/recherche/recherche_state.dart';
 import 'package:pass_emploi_app/models/service_civique.dart';
-import 'package:pass_emploi_app/models/service_civique/domain.dart';
 import 'package:pass_emploi_app/pages/offre_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_page.dart';
 import 'package:pass_emploi_app/widgets/recherche/recherche_criteres_full_screen.dart';
@@ -75,7 +74,6 @@ class RechercheOffreServiceCiviquePage extends RechercheOffrePage<ServiceCivique
   ) {
     return DataCard<ServiceCivique>(
       titre: item.title,
-      category: Domaine.fromTag(item.domain)?.titre,
       sousTitre: item.companyName,
       lieu: item.location,
       id: item.id,

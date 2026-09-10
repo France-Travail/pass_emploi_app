@@ -6,7 +6,6 @@ import 'package:pass_emploi_app/models/alerte/alerte.dart';
 import 'package:pass_emploi_app/models/alerte/immersion_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/offre_emploi_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/service_civique_alerte.dart';
-import 'package:pass_emploi_app/pages/offre_filters_bottom_sheet.dart';
 import 'package:pass_emploi_app/presentation/alerte/alerte_navigation_state.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -59,15 +58,4 @@ class AlerteListViewModel extends Equatable {
 
   @override
   List<Object?> get props => [displayState, alertes, searchNavigationState];
-
-  List<Alerte> getAlertesFiltered(OffreFilter filter) {
-    final alertesFiltered = switch (filter) {
-      OffreFilter.emploi => alertes.whereType<OffreEmploiAlerte>().where((e) => e.onlyAlternance == false).toList(),
-      OffreFilter.alternance => alertes.whereType<OffreEmploiAlerte>().where((e) => e.onlyAlternance == true).toList(),
-      OffreFilter.immersion => alertes.whereType<ImmersionAlerte>().toList(),
-      OffreFilter.serviceCivique => alertes.whereType<ServiceCiviqueAlerte>().toList(),
-      OffreFilter.tous => alertes,
-    };
-    return alertesFiltered as List<Alerte>;
-  }
 }
