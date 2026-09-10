@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/models/rendezvous.dart';
-import 'package:pass_emploi_app/ui/drawables.dart';
+import 'package:pass_emploi_app/models/user_action_type.dart';
 import 'package:pass_emploi_app/utils/string_extensions.dart';
 
 class SessionMilo extends Equatable {
@@ -88,15 +89,19 @@ class SessionMilo extends Equatable {
     return "$nomOffre - $nomSession";
   }
 
-  static String? themeIllustrationPath(String? theme) {
+  static String? themeEmoji(String? theme) => _themeType(theme)?.emoji;
+
+  static Color? themeEmojiBackground(String? theme) => _themeType(theme)?.emojiBackground;
+
+  static UserActionReferentielType? _themeType(String? theme) {
     return switch (theme) {
-      "Accès à l'emploi" => Drawables.sessionEmploiIllustration,
-      "Formation" => Drawables.sessionFormationIllustration,
-      "Projet professionnel" => Drawables.sessionProjetProIllustration,
-      "Logement" => Drawables.sessionLogementIllustration,
-      "Santé" => Drawables.sessionSanteIllustration,
-      "Citoyenneté" => Drawables.sessionCitoyenneteIllustration,
-      "Loisirs, sport, culture" => Drawables.sessionLoisirIllustration,
+      "Accès à l'emploi" => UserActionReferentielType.emploi,
+      "Formation" => UserActionReferentielType.formation,
+      "Projet professionnel" => UserActionReferentielType.projetProfessionnel,
+      "Logement" => UserActionReferentielType.logement,
+      "Santé" => UserActionReferentielType.sante,
+      "Citoyenneté" => UserActionReferentielType.citoyennete,
+      "Loisirs, sport, culture" => UserActionReferentielType.cultureSportLoisirs,
       _ => null,
     };
   }
