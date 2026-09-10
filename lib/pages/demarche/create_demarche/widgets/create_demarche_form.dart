@@ -91,7 +91,10 @@ class _CreateDemarcheFormState extends State<CreateDemarcheForm> {
       child: Scaffold(
         backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
         resizeToAvoidBottomInset: false,
-        appBar: _CreateDemarcheAppBar(onBackPressed: _onBack),
+        appBar: _CreateDemarcheAppBar(
+          onBackPressed: _onBack,
+          displayState: _changeNotifier.displayState,
+        ),
         body: _Body(_changeNotifier),
       ),
     );
@@ -99,9 +102,13 @@ class _CreateDemarcheFormState extends State<CreateDemarcheForm> {
 }
 
 class _CreateDemarcheAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _CreateDemarcheAppBar({required this.onBackPressed});
+  const _CreateDemarcheAppBar({
+    required this.onBackPressed,
+    required this.displayState,
+  });
 
   final VoidCallback onBackPressed;
+  final CreateDemarcheDisplayState displayState;
 
   @override
   Size get preferredSize => const Size.fromHeight(76);
@@ -147,7 +154,7 @@ class _CreateDemarcheAppBar extends StatelessWidget implements PreferredSizeWidg
             child: Semantics(
               header: true,
               child: Text(
-                Strings.createDemarcheAppBarTitle,
+                _appBarTitle,
                 style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
               ),
             ),
@@ -156,6 +163,13 @@ class _CreateDemarcheAppBar extends StatelessWidget implements PreferredSizeWidg
       ),
     );
   }
+
+  String get _appBarTitle => switch (displayState) {
+    CreateDemarcheIaFtStep1() ||
+    CreateDemarcheIaFtStep2() ||
+    CreateDemarcheIaFtSubmitted() => Strings.createDemarcheAppBarTitle,
+    _ => Strings.createOneDemarcheAppBarTitle,
+  };
 }
 
 class _Body extends StatelessWidget {

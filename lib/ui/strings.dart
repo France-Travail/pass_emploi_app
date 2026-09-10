@@ -548,7 +548,7 @@ class Strings {
   static String monSuiviA11yPreviousPeriodButton = "Afficher la période précédente";
   static String monSuiviA11yNextPeriodButton = "Afficher la période suivante";
 
-  // Actualisation PE
+  // Actualisation  PE
   static String actualisationPePopUpTitle = "La période d’actualisation France Travail a commencé";
   static String actualisationPePopUpSubtitle = "Pense à t'actualiser avant le 15 du mois";
   static String actualisationPePopUpPrimaryButton = "S'actualiser";
@@ -920,6 +920,7 @@ class Strings {
   static String votreConseiller = "ton conseiller";
   static const String late = "En retard : ";
   static const String createDemarcheAppBarTitle = "Créer tes démarches";
+  static const String createOneDemarcheAppBarTitle = "Créer une démarche";
   static const String commentaire = "Commentaire";
   static const String descriptionDemarche = "Décrire la démarche";
   static const String caracteres255 = "255 caractères maximum";
@@ -950,7 +951,7 @@ class Strings {
   static const String demarcheConfirmationDoneTag = "Démarche terminée";
   static const String demarcheConfirmationDoneTagPlural = "Démarches terminées";
   static String demarcheSuccessSubtitlePlural =
-      "Les démarches sont enregistrées. Retrouve-les dans mon agenda.\n\nTon conseiller en est informé. Vous pourrez en discuter ensemble lors de votre prochain rendez-vous\u{00A0}!";
+      "Les démarches sont enregistrées. Retrouve-les dans ton agenda.\n\nTon conseiller en est informé. Tu pourras en discuter avec lui lors de ton prochain rendez-vous\u{00A0}!";
 
   static String demarcheActiveLabel = "À réaliser pour le ";
 
