@@ -1528,8 +1528,6 @@ class Strings {
   static String alertesListEmptySubtitle =
       "Crée des alertes lors de tes recherches et reçois les offres qui te correspondent";
   static String alertesListEmptyButton = "Rechercher une offre";
-  static String alertesFilteredListEmptyTitle = "Aucune alerte ne correspond à tes critères";
-  static String alertesFilteredListEmptySubtitle = "Essaie de modifier tes filtres";
   static String favorisTabName = "Mes offres";
   static String alerteSeeResults = "Voir les résultats";
 

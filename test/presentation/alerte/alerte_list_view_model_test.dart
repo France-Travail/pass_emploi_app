@@ -8,7 +8,6 @@ import 'package:pass_emploi_app/models/alerte/immersion_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/offre_emploi_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/service_civique_alerte.dart';
 import 'package:pass_emploi_app/models/service_civique_filtres_pameters.dart';
-import 'package:pass_emploi_app/pages/offre_filters_bottom_sheet.dart';
 import 'package:pass_emploi_app/presentation/alerte/alerte_list_view_model.dart';
 import 'package:pass_emploi_app/presentation/alerte/alerte_navigation_state.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
@@ -99,118 +98,6 @@ void main() {
 
     // Then
     expect(viewModel.displayState, DisplayState.FAILURE);
-  });
-
-  group('getAlertesFiltered', () {
-    late AlerteListViewModel viewModel;
-
-    setUp(() {
-      final store = givenState().copyWith(alerteListState: AlerteListSuccessState(alertes)).store();
-      viewModel = AlerteListViewModel.createFromStore(store);
-    });
-
-    test('with filtre OffreFilter.tous', () {
-      // When
-      final result = viewModel.getAlertesFiltered(OffreFilter.tous);
-
-      // Then
-      expect(result, alertes);
-    });
-
-    test('with filtre OffreFilter.emploi', () {
-      // When
-      final result = viewModel.getAlertesFiltered(OffreFilter.emploi);
-
-      // Then
-      expect(result, [
-        OffreEmploiAlerte(
-          id: "id",
-          title: "titreOffreEmploi1",
-          metier: "metierOffreEmploi1",
-          location: mockLocation(),
-          keyword: "keywords",
-          onlyAlternance: false,
-          filters: EmploiFiltresRecherche.noFiltre(),
-        ),
-        OffreEmploiAlerte(
-          id: "id",
-          title: "titreOffreEmploi2",
-          metier: "metierOffreEmploi2",
-          location: mockLocation(),
-          keyword: "keywords",
-          onlyAlternance: false,
-          filters: EmploiFiltresRecherche.noFiltre(),
-        ),
-      ]);
-    });
-
-    test('with filtre OffreFilter.alternance', () {
-      // When
-      final result = viewModel.getAlertesFiltered(OffreFilter.alternance);
-
-      // Then
-      expect(result, [
-        OffreEmploiAlerte(
-          id: "id",
-          title: "titreAlternance1",
-          metier: "metierAlternance1",
-          location: mockLocation(),
-          keyword: "keywords",
-          onlyAlternance: true,
-          filters: EmploiFiltresRecherche.noFiltre(),
-        ),
-        OffreEmploiAlerte(
-          id: "id",
-          title: "titreAlternance2",
-          metier: "metierAlternance2",
-          location: mockLocation(),
-          keyword: "keywords",
-          onlyAlternance: true,
-          filters: EmploiFiltresRecherche.noFiltre(),
-        ),
-      ]);
-    });
-
-    test('with filtre OffreFilter.serviceCivique', () {
-      // When
-      final result = viewModel.getAlertesFiltered(OffreFilter.serviceCivique);
-
-      // Then
-      expect(result, [
-        ServiceCiviqueAlerte(
-          id: 'id',
-          titre: 'titreServiceCivique',
-          filtres: ServiceCiviqueFiltresParameters.noFiltres(),
-        ),
-      ]);
-    });
-
-    test('with filtre OffreFilter.immersion', () {
-      // When
-      final result = viewModel.getAlertesFiltered(OffreFilter.immersion);
-
-      // Then
-      expect(result, [
-        ImmersionAlerte(
-          id: "id",
-          title: "titreImmersion1",
-          metier: "metierImmersion1",
-          codeRome: "rome",
-          location: mockLocation(),
-          ville: "ville",
-          filtres: ImmersionFiltresRecherche.noFiltre(),
-        ),
-        ImmersionAlerte(
-          id: "id",
-          title: "titreImmersion2",
-          metier: "metierImmersion2",
-          codeRome: "rome",
-          location: mockLocation(),
-          ville: "ville",
-          filtres: ImmersionFiltresRecherche.noFiltre(),
-        ),
-      ]);
-    });
   });
 
   test("ViewModel with same content should be equals", () {

@@ -16,7 +16,6 @@ import 'package:pass_emploi_app/models/location.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/offre_type.dart';
 import 'package:pass_emploi_app/pages/generic_success_page.dart';
-import 'package:pass_emploi_app/pages/offre_filters_bottom_sheet.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_emploi_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_immersion_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_service_civique_page.dart';
@@ -31,11 +30,9 @@ import 'package:pass_emploi_app/redux/store_connector_aware.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/utils/store_extensions.dart';
 import 'package:pass_emploi_app/widgets/alerte_card.dart';
 import 'package:pass_emploi_app/widgets/animated_list_loader.dart';
-import 'package:pass_emploi_app/widgets/buttons/filtre_button.dart';
 import 'package:pass_emploi_app/widgets/cards/alerte_deletable_card.dart';
 import 'package:pass_emploi_app/widgets/dialogs/alerte_delete_dialog.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_empty_state.dart';
@@ -49,7 +46,6 @@ class AlertePage extends StatefulWidget {
 }
 
 class _AlertePageState extends State<AlertePage> {
-  OffreFilter _selectedFilter = OffreFilter.tous;
   bool _shouldNavigate = true;
   final _scrollController = ScrollController();
 
@@ -95,24 +91,6 @@ class _AlertePageState extends State<AlertePage> {
     return Scaffold(
       backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
       body: _content(viewModel),
-      floatingActionButton: _floatingActionButton(context, viewModel),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
-  }
-
-  Widget _floatingActionButton(BuildContext context, AlerteListViewModel viewModel) {
-    if (viewModel.displayState != DisplayState.CONTENT) return SizedBox();
-
-    if (_selectedFilter == OffreFilter.tous && viewModel.alertes.isEmpty) {
-      return SizedBox();
-    }
-
-    return FiltreButton(
-      onPressed: () async {
-        OffreFiltersBottomSheet.show(context, _selectedFilter).then((result) {
-          if (result != null) _filterSelected(result);
-        });
-      },
     );
   }
 
@@ -144,7 +122,7 @@ class _AlertePageState extends State<AlertePage> {
     AlerteListViewModel viewModel,
     SuggestionsRechercheListViewModel suggestionsViewModel,
   ) {
-    final List<Alerte> alertes = viewModel.getAlertesFiltered(_selectedFilter);
+    final List<Alerte> alertes = viewModel.alertes;
     return CustomScrollView(
       controller: _scrollController,
       slivers: [
@@ -216,17 +194,11 @@ class _AlertePageState extends State<AlertePage> {
   }
 
   Widget _noAlerte() {
-    if (_selectedFilter == OffreFilter.tous) {
-      return DsfrEmptyState(
-        title: Strings.alertesListEmptyTitle,
-        subtitle: Strings.alertesListEmptySubtitle,
-        buttonLabel: Strings.alertesListEmptyButton,
-        onButtonPressed: () => _goToRecherche(context),
-      );
-    }
     return DsfrEmptyState(
-      title: Strings.alertesFilteredListEmptyTitle,
-      subtitle: Strings.alertesFilteredListEmptySubtitle,
+      title: Strings.alertesListEmptyTitle,
+      subtitle: Strings.alertesListEmptySubtitle,
+      buttonLabel: Strings.alertesListEmptyButton,
+      onButtonPressed: () => _goToRecherche(context),
     );
   }
 
@@ -290,17 +262,6 @@ class _AlertePageState extends State<AlertePage> {
     });
   }
 
-  void _filterSelected(OffreFilter filter) {
-    setState(() => _selectedFilter = filter);
-    _scrollController.jumpTo(0);
-    PassEmploiMatomoTracker.instance.trackScreen(switch (filter) {
-      OffreFilter.tous => AnalyticsScreenNames.alerteList,
-      OffreFilter.emploi => AnalyticsScreenNames.alerteListFilterEmploi,
-      OffreFilter.alternance => AnalyticsScreenNames.alerteListFilterAlternance,
-      OffreFilter.immersion => AnalyticsScreenNames.alerteListFilterImmersion,
-      OffreFilter.serviceCivique => AnalyticsScreenNames.alerteListFilterServiceCivique,
-    });
-  }
 }
 
 class _AlerteLoading extends StatelessWidget {

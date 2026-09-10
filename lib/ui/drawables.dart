@@ -12,42 +12,18 @@ class Drawables {
 
   static String badge = "${_assets}ic_badge$_svg";
 
-  static String missionLocaleLogo = "${_assets}logo-mission-locale.webp";
   static String franceTravailLogo = "${_assets}logo-france-travail.webp";
   static String missionLocaleLogoTitle =
       "${_assets}logo_mission_locale_title.webp";
   static String franceTravailLogoTitle =
       "${_assets}logo_france_travail_title.webp";
 
-  static String accueilOnboardingIllustration1 =
-      "${_assets}onboarding/illustration_onboarding_1.webp";
-  static String accueilOnboardingIllustration2 =
-      "${_assets}onboarding/illustration_onboarding_2.webp";
-  static String illustrationNavigationBottomSheet =
-      "${_assets}onboarding/illustration_navigation_bottom_sheet.webp";
-
-  static String onboardingMonSuiviIllustration =
-      "${_assets}onboarding/illustration_onboarding_mon_suivi.webp";
-  static String onboardingChatIllustration =
-      "${_assets}onboarding/illustration_onboarding_chat.webp";
-  static String onboardingRechercheIllustration =
-      "${_assets}onboarding/illustration_onboarding_recherche.webp";
-  static String onboardingEvenementsIllustration =
-      "${_assets}onboarding/illustration_onboarding_evenements.webp";
-  static String onboardingOffreEnregistreeIllustration =
-      "${_assets}onboarding/illustration_onboarding_offre_enregistree.webp";
-
   static String campagneRecrutementBg =
       "${_assets}campagne_recrutement_bg.webp";
 
   static String logoInProgress = Brand.isCej()
-      ? cejLogoInProgress
-      : passEmploiLogoInProgress;
-  static String cejLogoInProgress = "${_assets}cej_in_progress.webp";
-  static String passEmploiLogoInProgress = "${_assets}brsa_in_progress.webp";
-
-  static String notificationsIllustration =
-      "${_assets}onboarding/notfications_illustration.webp";
+      ? "${_assets}cej_in_progress.webp"
+      : "${_assets}brsa_in_progress.webp";
 
   static String blocMarqueLight = "${_assets}dsfr/bloc_marque_light.svg";
   static String blocMarqueDark = "${_assets}dsfr/bloc_marque_dark.svg";
@@ -64,20 +40,9 @@ class Drawables {
   static String illustrationThemeMoon = "${_assets}dsfr/moon.svg";
   static String illustrationSystem = "${_assets}dsfr/illustration_system.svg";
 
-  static String iaFtIllustration = "${_assets}IA.svg";
-
-  static String iaFtSuggestionsLoading =
-      "${_assets}ia_ft_suggestions_loading.webp";
-  static String iaFtSuggestionsEmpty = "${_assets}ia_ft_suggestions_empty.webp";
-  static String iaFtSuggestionsFailure =
-      "${_assets}ia_ft_suggestions_failure.webp";
-
   static String evalImage = "${_assets}evalluation_illustration.webp";
   static String presseCard = "${_assets}dsfr/presse_card.webp";
   static String ratingStar = "${_assets}dsfr/star_line.svg";
 
   static String success = "${_assets}success.webp";
-  static String notFound = "${_assets}not_found.webp";
-
-  static String megaphone = "${_assets}megaphone.svg";
 }
