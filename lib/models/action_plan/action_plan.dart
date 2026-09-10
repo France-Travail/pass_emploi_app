@@ -70,18 +70,27 @@ class ActionPlanAction extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'label': label,
-        'kind': kind.name,
-        if (url != null) 'url': url,
-        if (deepLink != null) 'deepLink': deepLink,
-        if (serviceName != null) 'serviceName': serviceName,
-        if (serviceDescription != null) 'serviceDescription': serviceDescription,
-        'done': done,
-      };
+    'id': id,
+    'label': label,
+    'kind': kind.name,
+    if (url != null) 'url': url,
+    if (deepLink != null) 'deepLink': deepLink,
+    if (serviceName != null) 'serviceName': serviceName,
+    if (serviceDescription != null) 'serviceDescription': serviceDescription,
+    'done': done,
+  };
 
   @override
-  List<Object?> get props => [id, label, kind, url, deepLink, serviceName, serviceDescription, done];
+  List<Object?> get props => [
+    id,
+    label,
+    kind,
+    url,
+    deepLink,
+    serviceName,
+    serviceDescription,
+    done,
+  ];
 }
 
 class ActionPlanObjective extends Equatable {
@@ -119,7 +128,10 @@ class ActionPlanObjective extends Equatable {
       title: json['title'] as String,
       theme: json['theme'] as String? ?? '',
       actions: actionsJson is List
-          ? actionsJson.whereType<Map<String, dynamic>>().map(ActionPlanAction.fromJson).toList()
+          ? actionsJson
+                .whereType<Map<String, dynamic>>()
+                .map(ActionPlanAction.fromJson)
+                .toList()
           : const [],
     );
   }
@@ -131,17 +143,20 @@ class ActionPlanObjective extends Equatable {
       title: json['titre'] as String,
       theme: json['theme'] as String? ?? '',
       actions: actionsJson is List
-          ? actionsJson.whereType<Map<String, dynamic>>().map(ActionPlanAction.fromApiJson).toList()
+          ? actionsJson
+                .whereType<Map<String, dynamic>>()
+                .map(ActionPlanAction.fromApiJson)
+                .toList()
           : const [],
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'theme': theme,
-        'actions': actions.map((e) => e.toJson()).toList(),
-      };
+    'id': id,
+    'title': title,
+    'theme': theme,
+    'actions': actions.map((e) => e.toJson()).toList(),
+  };
 
   @override
   List<Object?> get props => [id, title, theme, actions];
@@ -164,17 +179,33 @@ class ActionPlan extends Equatable {
     this.model,
   });
 
-  ActionPlan applyProgress({required Set<String> doneIds, required Set<String> deletedIds}) {
+  String? objectiveIdOf(String actionId) {
+    for (final objective in objectives) {
+      if (objective.actions.any((action) => action.id == actionId))
+        return objective.id;
+    }
+    return null;
+  }
+
+  ActionPlan applyProgress(ActionPlanProgress progress) {
     return copyWith(
       objectives: objectives
-          .map(
-            (objective) => objective.copyWith(
+          .map((objective) {
+            final objectiveProgress = progress.forObjective(objective.id);
+            return objective.copyWith(
               actions: objective.actions
-                  .where((action) => !deletedIds.contains(action.id))
-                  .map((action) => action.copyWith(done: doneIds.contains(action.id)))
+                  .where(
+                    (action) =>
+                        !objectiveProgress.deletedActionIds.contains(action.id),
+                  )
+                  .map(
+                    (action) => action.copyWith(
+                      done: objectiveProgress.doneActionIds.contains(action.id),
+                    ),
+                  )
                   .toList(),
-            ),
-          )
+            );
+          })
           .where((objective) => objective.actions.isNotEmpty)
           .toList(),
     );
@@ -186,7 +217,11 @@ class ActionPlan extends Equatable {
           .map(
             (objective) => objective.copyWith(
               actions: objective.actions
-                  .map((action) => action.id == actionId ? action.copyWith(done: !action.done) : action)
+                  .map(
+                    (action) => action.id == actionId
+                        ? action.copyWith(done: !action.done)
+                        : action,
+                  )
                   .toList(),
             ),
           )
@@ -199,7 +234,9 @@ class ActionPlan extends Equatable {
       objectives: objectives
           .map(
             (objective) => objective.copyWith(
-              actions: objective.actions.where((action) => action.id != actionId).toList(),
+              actions: objective.actions
+                  .where((action) => action.id != actionId)
+                  .toList(),
             ),
           )
           .where((objective) => objective.actions.isNotEmpty)
@@ -233,9 +270,14 @@ class ActionPlan extends Equatable {
       id: json['id'] as String,
       greeting: json['greeting'] as String? ?? '',
       objectives: objectivesJson is List
-          ? objectivesJson.whereType<Map<String, dynamic>>().map(ActionPlanObjective.fromJson).toList()
+          ? objectivesJson
+                .whereType<Map<String, dynamic>>()
+                .map(ActionPlanObjective.fromJson)
+                .toList()
           : const [],
-      generatedAt: json['generatedAt'] != null ? DateTime.tryParse(json['generatedAt'] as String) : null,
+      generatedAt: json['generatedAt'] != null
+          ? DateTime.tryParse(json['generatedAt'] as String)
+          : null,
       generator: json['generator'] as String?,
       model: json['model'] as String?,
     );
@@ -247,74 +289,204 @@ class ActionPlan extends Equatable {
       id: json['id'] as String,
       greeting: json['accroche'] as String? ?? '',
       objectives: objectivesJson is List
-          ? objectivesJson.whereType<Map<String, dynamic>>().map(ActionPlanObjective.fromApiJson).toList()
+          ? objectivesJson
+                .whereType<Map<String, dynamic>>()
+                .map(ActionPlanObjective.fromApiJson)
+                .toList()
           : const [],
-      generatedAt: json['genereLe'] != null ? DateTime.tryParse(json['genereLe'] as String) : null,
+      generatedAt: json['genereLe'] != null
+          ? DateTime.tryParse(json['genereLe'] as String)
+          : null,
       generator: json['generateur'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'greeting': greeting,
-        'objectives': objectives.map((e) => e.toJson()).toList(),
-        if (generatedAt != null) 'generatedAt': generatedAt!.toIso8601String(),
-        if (generator != null) 'generator': generator,
-        if (model != null) 'model': model,
-      };
+    'id': id,
+    'greeting': greeting,
+    'objectives': objectives.map((e) => e.toJson()).toList(),
+    if (generatedAt != null) 'generatedAt': generatedAt!.toIso8601String(),
+    if (generator != null) 'generator': generator,
+    if (model != null) 'model': model,
+  };
 
   @override
-  List<Object?> get props => [id, greeting, objectives, generatedAt, generator, model];
+  List<Object?> get props => [
+    id,
+    greeting,
+    objectives,
+    generatedAt,
+    generator,
+    model,
+  ];
 }
 
-class ActionPlanProgress extends Equatable {
+class ActionPlanObjectiveProgress extends Equatable {
   final Set<String> doneActionIds;
   final Set<String> deletedActionIds;
 
-  const ActionPlanProgress({
+  const ActionPlanObjectiveProgress({
     this.doneActionIds = const {},
     this.deletedActionIds = const {},
   });
 
-  ActionPlanProgress toggleDone(String actionId) {
+  bool get isEmpty => doneActionIds.isEmpty && deletedActionIds.isEmpty;
+
+  ActionPlanObjectiveProgress toggleDone(String actionId) {
     final next = Set<String>.of(doneActionIds);
     if (next.contains(actionId)) {
       next.remove(actionId);
     } else {
       next.add(actionId);
     }
-    return ActionPlanProgress(doneActionIds: next, deletedActionIds: deletedActionIds);
+    return ActionPlanObjectiveProgress(
+      doneActionIds: next,
+      deletedActionIds: deletedActionIds,
+    );
   }
 
-  ActionPlanProgress deleteAction(String actionId) {
-    return ActionPlanProgress(
+  ActionPlanObjectiveProgress deleteAction(String actionId) {
+    return ActionPlanObjectiveProgress(
       doneActionIds: Set.of(doneActionIds)..remove(actionId),
       deletedActionIds: Set.of(deletedActionIds)..add(actionId),
     );
   }
 
-  ActionPlanProgress retainForPlan(ActionPlan plan) {
-    final validIds = plan.objectives.expand((o) => o.actions.map((a) => a.id)).toSet();
-    return ActionPlanProgress(
-      doneActionIds: doneActionIds.intersection(validIds),
-      deletedActionIds: deletedActionIds.intersection(validIds),
+  ActionPlanObjectiveProgress merge(ActionPlanObjectiveProgress other) {
+    return ActionPlanObjectiveProgress(
+      doneActionIds: {...doneActionIds, ...other.doneActionIds},
+      deletedActionIds: {...deletedActionIds, ...other.deletedActionIds},
     );
   }
 
-  factory ActionPlanProgress.fromJson(Map<String, dynamic> json) {
+  factory ActionPlanObjectiveProgress.fromJson(Map<String, dynamic> json) {
     final done = json['doneActionIds'];
     final deleted = json['deletedActionIds'];
-    return ActionPlanProgress(
+    return ActionPlanObjectiveProgress(
       doneActionIds: done is List ? done.map((e) => e.toString()).toSet() : {},
-      deletedActionIds: deleted is List ? deleted.map((e) => e.toString()).toSet() : {},
+      deletedActionIds: deleted is List
+          ? deleted.map((e) => e.toString()).toSet()
+          : {},
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'doneActionIds': doneActionIds.toList(),
-        'deletedActionIds': deletedActionIds.toList(),
-      };
+    'doneActionIds': doneActionIds.toList(),
+    'deletedActionIds': deletedActionIds.toList(),
+  };
 
   @override
   List<Object?> get props => [doneActionIds, deletedActionIds];
+}
+
+class ActionPlanProgress extends Equatable {
+  static const _legacyKey = '_legacy';
+
+  final Map<String, ActionPlanObjectiveProgress> byObjectiveId;
+
+  const ActionPlanProgress({this.byObjectiveId = const {}});
+
+  bool get hasLegacy => byObjectiveId.containsKey(_legacyKey);
+
+  ActionPlanObjectiveProgress forObjective(String objectiveId) {
+    return byObjectiveId[objectiveId] ?? const ActionPlanObjectiveProgress();
+  }
+
+  ActionPlanProgress toggleDone(String objectiveId, String actionId) {
+    return _setObjective(
+      objectiveId,
+      forObjective(objectiveId).toggleDone(actionId),
+    );
+  }
+
+  ActionPlanProgress deleteAction(String objectiveId, String actionId) {
+    return _setObjective(
+      objectiveId,
+      forObjective(objectiveId).deleteAction(actionId),
+    );
+  }
+
+  ActionPlanProgress retainForObjectives(ActionPlan plan) {
+    final current = hasLegacy ? migrateLegacy(plan) : this;
+    return ActionPlanProgress(
+      byObjectiveId: {
+        for (final objective in plan.objectives)
+          if (current.byObjectiveId.containsKey(objective.id))
+            objective.id: current.byObjectiveId[objective.id]!,
+      },
+    );
+  }
+
+  ActionPlanProgress migrateLegacy(ActionPlan plan) {
+    final legacy = byObjectiveId[_legacyKey];
+    if (legacy == null) return this;
+    final next = Map<String, ActionPlanObjectiveProgress>.of(byObjectiveId)
+      ..remove(_legacyKey);
+    for (final objective in plan.objectives) {
+      final actionIds = objective.actions.map((action) => action.id).toSet();
+      final migrated = ActionPlanObjectiveProgress(
+        doneActionIds: legacy.doneActionIds.intersection(actionIds),
+        deletedActionIds: legacy.deletedActionIds.intersection(actionIds),
+      );
+      if (migrated.isEmpty) continue;
+      next[objective.id] =
+          (next[objective.id] ?? const ActionPlanObjectiveProgress()).merge(
+            migrated,
+          );
+    }
+    return ActionPlanProgress(byObjectiveId: next);
+  }
+
+  ActionPlanProgress _setObjective(
+    String objectiveId,
+    ActionPlanObjectiveProgress progress,
+  ) {
+    final next = Map<String, ActionPlanObjectiveProgress>.of(byObjectiveId);
+    if (progress.isEmpty) {
+      next.remove(objectiveId);
+    } else {
+      next[objectiveId] = progress;
+    }
+    return ActionPlanProgress(byObjectiveId: next);
+  }
+
+  factory ActionPlanProgress.fromJson(Map<String, dynamic> json) {
+    final byObjective = json['byObjectiveId'];
+    if (byObjective is Map) {
+      return ActionPlanProgress(
+        byObjectiveId: {
+          for (final entry in byObjective.entries)
+            if (entry.value is Map<String, dynamic>)
+              entry.key.toString(): ActionPlanObjectiveProgress.fromJson(
+                entry.value as Map<String, dynamic>,
+              ),
+        },
+      );
+    }
+    final done = json['doneActionIds'];
+    final deleted = json['deletedActionIds'];
+    final legacy = ActionPlanObjectiveProgress(
+      doneActionIds: done is List ? done.map((e) => e.toString()).toSet() : {},
+      deletedActionIds: deleted is List
+          ? deleted.map((e) => e.toString()).toSet()
+          : {},
+    );
+    if (legacy.isEmpty) return const ActionPlanProgress();
+    return ActionPlanProgress(byObjectiveId: {_legacyKey: legacy});
+  }
+
+  Map<String, dynamic> toJson() => {
+    'byObjectiveId': {
+      for (final entry in byObjectiveId.entries)
+        entry.key: entry.value.toJson(),
+    },
+  };
+
+  @override
+  List<Object?> get props {
+    final keys = byObjectiveId.keys.toList()..sort();
+    return [
+      for (final key in keys) ...[key, byObjectiveId[key]],
+    ];
+  }
 }
