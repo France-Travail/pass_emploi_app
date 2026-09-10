@@ -238,7 +238,7 @@ class _Body extends StatelessWidget {
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           PrimarySliverAppbar(
-            title: Strings.accueilAppBarTitle,
+            title: viewModel.greeting,
             withNewNotifications: viewModel.withNewNotifications,
           ),
           SliverToBoxAdapter(
