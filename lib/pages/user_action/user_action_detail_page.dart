@@ -329,6 +329,7 @@ class _Content extends StatelessWidget {
             color: DsfrColorDecisions.textMentionGrey(context),
           ),
         ),
+        // TODO: Remove this section
         if (viewModel.withComments) ...[
           Padding(
             padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s2w),

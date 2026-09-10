@@ -7,8 +7,8 @@ import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_state.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_state.dart';
 import 'package:pass_emploi_app/features/rating/rating_state.dart';
-import 'package:pass_emploi_app/features/soft_update/soft_update_state.dart';
 import 'package:pass_emploi_app/features/remote_campagne_accueil/remote_campagne_accueil_actions.dart';
+import 'package:pass_emploi_app/features/soft_update/soft_update_state.dart';
 import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
@@ -16,6 +16,7 @@ import 'package:pass_emploi_app/models/user.dart';
 import 'package:pass_emploi_app/presentation/accueil/accueil_item.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/iterable_extensions.dart';
 import 'package:pass_emploi_app/utils/store_extensions.dart';
 import 'package:redux/redux.dart';
@@ -23,6 +24,7 @@ import 'package:redux/redux.dart';
 class AccueilViewModel extends Equatable {
   final DisplayState displayState;
   final List<AccueilItem> items;
+  final String greeting;
   final DeepLink? deepLink;
   final bool shouldResetDeeplink;
   final bool withNewNotifications;
@@ -34,6 +36,7 @@ class AccueilViewModel extends Equatable {
   AccueilViewModel({
     required this.displayState,
     required this.items,
+    required this.greeting,
     required this.deepLink,
     required this.shouldResetDeeplink,
     required this.withNewNotifications,
@@ -48,6 +51,7 @@ class AccueilViewModel extends Equatable {
       return AccueilViewModel(
         displayState: DisplayState.CONTENT,
         items: const [],
+        greeting: Strings.inviteAccueilGreeting(store.state.user()?.firstName),
         deepLink: null,
         shouldResetDeeplink: false,
         withNewNotifications: false,
@@ -60,6 +64,7 @@ class AccueilViewModel extends Equatable {
     return AccueilViewModel(
       displayState: _displayState(store),
       items: _items(store),
+      greeting: Strings.inviteAccueilGreeting(store.state.user()?.firstName),
       deepLink: store.getDeepLink(),
       shouldResetDeeplink: _shouldResetDeeplink(store),
       withNewNotifications: _withNewNotifications(store),
@@ -71,7 +76,7 @@ class AccueilViewModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [displayState, items, deepLink, withNewNotifications, shouldShowSoftUpdate];
+  List<Object?> get props => [displayState, items, greeting, deepLink, withNewNotifications, shouldShowSoftUpdate];
 }
 
 DisplayState _displayState(Store<AppState> store) {
