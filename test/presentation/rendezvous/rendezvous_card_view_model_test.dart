@@ -2,6 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_state.dart';
 import 'package:pass_emploi_app/models/conseiller.dart';
 import 'package:pass_emploi_app/models/rendezvous.dart';
+import 'package:pass_emploi_app/models/session_milo.dart';
+import 'package:pass_emploi_app/models/user_action_type.dart';
 import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_card_view_model.dart';
 import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -12,58 +14,102 @@ import '../../dsl/app_state_dsl.dart';
 void main() {
   test('create when mon suivi state is not successful throws exception', () {
     // Given
-    final store = givenState().loggedIn().copyWith(monSuiviState: MonSuiviFailureState()).store();
+    final store = givenState()
+        .loggedIn()
+        .copyWith(monSuiviState: MonSuiviFailureState())
+        .store();
 
     // Then
-    expect(() => RendezvousCardViewModel.create(store, RendezvousStateSource.monSuivi, '1'), throwsException);
+    expect(
+      () => RendezvousCardViewModel.create(
+        store,
+        RendezvousStateSource.monSuivi,
+        '1',
+      ),
+      throwsException,
+    );
   });
 
-  test('create when rendezvous state is successful but no rendezvous is matching ID throws exception', () {
-    // Given
-    final store = givenRendezvous(mockRendezvous(id: '1')).store();
+  test(
+    'create when rendezvous state is successful but no rendezvous is matching ID throws exception',
+    () {
+      // Given
+      final store = givenRendezvous(mockRendezvous(id: '1')).store();
 
-    // Then
-    expect(() => RendezvousCardViewModel.create(store, RendezvousStateSource.monSuivi, '2'), throwsException);
-  });
+      // Then
+      expect(
+        () => RendezvousCardViewModel.create(
+          store,
+          RendezvousStateSource.monSuivi,
+          '2',
+        ),
+        throwsException,
+      );
+    },
+  );
 
   group('create when rendezvous state is successful and Rendezvous not empty…', () {
-    test('should display precision in description if type is "Autre" and precision is set', () {
-      // Given
-      final store = givenRendezvous(mockRendezvous(
-        id: '1',
-        precision: 'Precision',
-        type: RendezvousType(RendezvousTypeCode.AUTRE, 'Autre'),
-      )).store();
+    test(
+      'should display precision in description if type is "Autre" and precision is set',
+      () {
+        // Given
+        final store = givenRendezvous(
+          mockRendezvous(
+            id: '1',
+            precision: 'Precision',
+            type: RendezvousType(RendezvousTypeCode.AUTRE, 'Autre'),
+          ),
+        ).store();
 
-      // When
-      final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.monSuivi, '1');
+        // When
+        final viewModel = RendezvousCardViewModel.create(
+          store,
+          RendezvousStateSource.monSuivi,
+          '1',
+        );
 
-      // Then
-      expect(viewModel.tag, "Autre");
-      expect(viewModel.description, "Precision");
-    });
+        // Then
+        expect(viewModel.tag, "Autre");
+        expect(viewModel.description, "Precision");
+      },
+    );
 
-    test('should display type label in tag if type is "Autre" and precision is not set', () {
-      // Given
-      final store = givenRendezvous(mockRendezvous(
-        id: '1',
-        precision: null,
-        type: RendezvousType(RendezvousTypeCode.AUTRE, 'Autre'),
-      )).store();
+    test(
+      'should display type label in tag if type is "Autre" and precision is not set',
+      () {
+        // Given
+        final store = givenRendezvous(
+          mockRendezvous(
+            id: '1',
+            precision: null,
+            type: RendezvousType(RendezvousTypeCode.AUTRE, 'Autre'),
+          ),
+        ).store();
 
-      // When
-      final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.monSuivi, '1');
+        // When
+        final viewModel = RendezvousCardViewModel.create(
+          store,
+          RendezvousStateSource.monSuivi,
+          '1',
+        );
 
-      // Then
-      expect(viewModel.tag, "Autre");
-    });
+        // Then
+        expect(viewModel.tag, "Autre");
+      },
+    );
 
     test('should display date without day', () {
       // Given
-      final store = givenRendezvous(mockRendezvous(id: '1', date: DateTime(2022, 3, 1, 10, 20))).store();
+      final store = givenRendezvous(
+        mockRendezvous(id: '1', date: DateTime(2022, 3, 1, 10, 20)),
+      ).store();
 
       // When
-      final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.monSuivi, '1');
+      final viewModel = RendezvousCardViewModel.create(
+        store,
+        RendezvousStateSource.monSuivi,
+        '1',
+      );
 
       // Then
       expect(viewModel.date, "01 mars 2022");
@@ -71,34 +117,53 @@ void main() {
     });
 
     group("place", () {
-      test('should display modality with conseiller when source is pass emploi', () {
-        // Given
-        final store = givenRendezvous(mockRendezvous(
-          id: '1',
-          source: RendezvousSource.passEmploi,
-          modality: "en visio",
-          withConseiller: true,
-          conseiller: Conseiller(id: 'id', firstName: 'Nils', lastName: 'Tavernier'),
-        )).store();
+      test(
+        'should display modality with conseiller when source is pass emploi',
+        () {
+          // Given
+          final store = givenRendezvous(
+            mockRendezvous(
+              id: '1',
+              source: RendezvousSource.passEmploi,
+              modality: "en visio",
+              withConseiller: true,
+              conseiller: Conseiller(
+                id: 'id',
+                firstName: 'Nils',
+                lastName: 'Tavernier',
+              ),
+            ),
+          ).store();
 
-        // When
-        final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.monSuivi, '1');
+          // When
+          final viewModel = RendezvousCardViewModel.create(
+            store,
+            RendezvousStateSource.monSuivi,
+            '1',
+          );
 
-        // Then
-        expect(viewModel.place, "En visio avec Nils Tavernier");
-      });
+          // Then
+          expect(viewModel.place, "En visio avec Nils Tavernier");
+        },
+      );
 
       test('should display modality without conseiller', () {
         // Given
-        final store = givenRendezvous(mockRendezvous(
-          id: '1',
-          source: RendezvousSource.passEmploi,
-          modality: "en visio",
-          withConseiller: false,
-        )).store();
+        final store = givenRendezvous(
+          mockRendezvous(
+            id: '1',
+            source: RendezvousSource.passEmploi,
+            modality: "en visio",
+            withConseiller: false,
+          ),
+        ).store();
 
         // When
-        final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.monSuivi, '1');
+        final viewModel = RendezvousCardViewModel.create(
+          store,
+          RendezvousStateSource.monSuivi,
+          '1',
+        );
 
         // Then
         expect(viewModel.place, "En visio");
@@ -106,39 +171,64 @@ void main() {
 
       test('should not display empty modality', () {
         // Given
-        final store = givenRendezvous(mockRendezvous(id: '1', modality: null, withConseiller: false)).store();
+        final store = givenRendezvous(
+          mockRendezvous(id: '1', modality: null, withConseiller: false),
+        ).store();
 
         // When
-        final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.monSuivi, '1');
+        final viewModel = RendezvousCardViewModel.create(
+          store,
+          RendezvousStateSource.monSuivi,
+          '1',
+        );
 
         // Then
         expect(viewModel.place, isNull);
       });
 
-      test('should display modality without conseiller when source is milo', () {
-        // Given
-        final store = givenRendezvous(mockRendezvous(
-          id: '1',
-          source: RendezvousSource.milo,
-          modality: "en visio",
-          withConseiller: true,
-          conseiller: Conseiller(id: 'id', firstName: 'Nils', lastName: 'Tavernier'),
-        )).store();
+      test(
+        'should display modality without conseiller when source is milo',
+        () {
+          // Given
+          final store = givenRendezvous(
+            mockRendezvous(
+              id: '1',
+              source: RendezvousSource.milo,
+              modality: "en visio",
+              withConseiller: true,
+              conseiller: Conseiller(
+                id: 'id',
+                firstName: 'Nils',
+                lastName: 'Tavernier',
+              ),
+            ),
+          ).store();
 
-        // When
-        final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.monSuivi, '1');
+          // When
+          final viewModel = RendezvousCardViewModel.create(
+            store,
+            RendezvousStateSource.monSuivi,
+            '1',
+          );
 
-        // Then
-        expect(viewModel.place, "En visio");
-      });
+          // Then
+          expect(viewModel.place, "En visio");
+        },
+      );
     });
 
     test('should display whether rdv is annule or not', () {
       // Given
-      final store = givenRendezvous(mockRendezvous(id: '1', isAnnule: true)).store();
+      final store = givenRendezvous(
+        mockRendezvous(id: '1', isAnnule: true),
+      ).store();
 
       // When
-      final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.monSuivi, '1');
+      final viewModel = RendezvousCardViewModel.create(
+        store,
+        RendezvousStateSource.monSuivi,
+        '1',
+      );
 
       // Then
       expect(viewModel.isAnnule, isTrue);
@@ -146,10 +236,16 @@ void main() {
 
     test('should display empty title when rdv title is null', () {
       // Given
-      final store = givenRendezvous(mockRendezvous(id: '1', title: null)).store();
+      final store = givenRendezvous(
+        mockRendezvous(id: '1', title: null),
+      ).store();
 
       // When
-      final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.monSuivi, '1');
+      final viewModel = RendezvousCardViewModel.create(
+        store,
+        RendezvousStateSource.monSuivi,
+        '1',
+      );
 
       // Then
       expect(viewModel.title, "");
@@ -157,22 +253,28 @@ void main() {
 
     test('full view model test', () {
       // Given
-      final store = givenRendezvous(Rendezvous(
-        id: '1',
-        source: RendezvousSource.passEmploi,
-        date: DateTime(2021, 12, 23, 10, 20),
-        title: "Super bio",
-        duration: 60,
-        modality: 'par téléphone',
-        isInVisio: false,
-        withConseiller: false,
-        isAnnule: false,
-        organism: 'Entreprise Bio Carburant',
-        type: RendezvousType(RendezvousTypeCode.ATELIER, 'Atelier'),
-      )).store();
+      final store = givenRendezvous(
+        Rendezvous(
+          id: '1',
+          source: RendezvousSource.passEmploi,
+          date: DateTime(2021, 12, 23, 10, 20),
+          title: "Super bio",
+          duration: 60,
+          modality: 'par téléphone',
+          isInVisio: false,
+          withConseiller: false,
+          isAnnule: false,
+          organism: 'Entreprise Bio Carburant',
+          type: RendezvousType(RendezvousTypeCode.ATELIER, 'Atelier'),
+        ),
+      ).store();
 
       // When
-      final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.monSuivi, '1');
+      final viewModel = RendezvousCardViewModel.create(
+        store,
+        RendezvousStateSource.monSuivi,
+        '1',
+      );
 
       // Then
       expect(
@@ -189,7 +291,6 @@ void main() {
           description: null,
           place: 'Par téléphone',
           nombreDePlacesRestantes: null,
-          assetImage: null,
           emoji: null,
           emojiBackground: null,
         ),
@@ -197,154 +298,202 @@ void main() {
     });
 
     group('inscription status', () {
-      test('should display isInscrit when source is from event list and rdv is inscrit', () {
-        // Given
-        final rdv = mockRendezvous(
-          id: '1',
-          source: RendezvousSource.passEmploi,
-          estInscrit: true,
-        );
-        final store = givenState().loggedIn().succeedEventList(animationsCollectives: [rdv]).store();
+      test(
+        'should display isInscrit when source is from event list and rdv is inscrit',
+        () {
+          // Given
+          final rdv = mockRendezvous(
+            id: '1',
+            source: RendezvousSource.passEmploi,
+            estInscrit: true,
+          );
+          final store = givenState()
+              .loggedIn()
+              .succeedEventList(animationsCollectives: [rdv])
+              .store();
 
-        // When
-        final viewModel = RendezvousCardViewModel.create(
-          store,
-          RendezvousStateSource.eventListAnimationsCollectives,
-          '1',
-        );
+          // When
+          final viewModel = RendezvousCardViewModel.create(
+            store,
+            RendezvousStateSource.eventListAnimationsCollectives,
+            '1',
+          );
 
-        // Then
-        expect(viewModel.inscriptionStatus, InscriptionStatus.inscrit);
-      });
+          // Then
+          expect(viewModel.inscriptionStatus, InscriptionStatus.inscrit);
+        },
+      );
 
-      test('should display autodesinscription when source is from event list and rdv is inscrit with autodesinscription', () {
-        // Given
-        final rdv = mockRendezvous(
-          id: '1',
-          source: RendezvousSource.passEmploi,
-          estInscrit: true,
-          autodesinscription: true,
-        );
-        final store = givenState().loggedIn().succeedEventList(animationsCollectives: [rdv]).store();
+      test(
+        'should display autodesinscription when source is from event list and rdv is inscrit with autodesinscription',
+        () {
+          // Given
+          final rdv = mockRendezvous(
+            id: '1',
+            source: RendezvousSource.passEmploi,
+            estInscrit: true,
+            autodesinscription: true,
+          );
+          final store = givenState()
+              .loggedIn()
+              .succeedEventList(animationsCollectives: [rdv])
+              .store();
 
-        // When
-        final viewModel = RendezvousCardViewModel.create(
-          store,
-          RendezvousStateSource.eventListAnimationsCollectives,
-          '1',
-        );
+          // When
+          final viewModel = RendezvousCardViewModel.create(
+            store,
+            RendezvousStateSource.eventListAnimationsCollectives,
+            '1',
+          );
 
-        // Then
-        expect(viewModel.inscriptionStatus, InscriptionStatus.autodesinscription);
-      });
+          // Then
+          expect(
+            viewModel.inscriptionStatus,
+            InscriptionStatus.autodesinscription,
+          );
+        },
+      );
 
-      test('should display notInscrit when source is from event list and rdv is not inscrit', () {
-        // Given
-        final rdv = mockRendezvous(
-          id: '1',
-          source: RendezvousSource.passEmploi,
-          estInscrit: false,
-        );
-        final store = givenState().loggedIn().succeedEventList(animationsCollectives: [rdv]).store();
+      test(
+        'should display notInscrit when source is from event list and rdv is not inscrit',
+        () {
+          // Given
+          final rdv = mockRendezvous(
+            id: '1',
+            source: RendezvousSource.passEmploi,
+            estInscrit: false,
+          );
+          final store = givenState()
+              .loggedIn()
+              .succeedEventList(animationsCollectives: [rdv])
+              .store();
 
-        // When
-        final viewModel = RendezvousCardViewModel.create(
-          store,
-          RendezvousStateSource.eventListAnimationsCollectives,
-          '1',
-        );
+          // When
+          final viewModel = RendezvousCardViewModel.create(
+            store,
+            RendezvousStateSource.eventListAnimationsCollectives,
+            '1',
+          );
 
-        // Then
-        expect(viewModel.inscriptionStatus, InscriptionStatus.notInscrit);
-      });
+          // Then
+          expect(viewModel.inscriptionStatus, InscriptionStatus.notInscrit);
+        },
+      );
 
-      test('should display autoinscription when source is from event list and rdv has autoinscription', () {
-        // Given
-        final rdv = mockRendezvous(
-          id: '1',
-          source: RendezvousSource.passEmploi,
-          estInscrit: false,
-          autoinscription: true,
-          nombreDePlacesRestantes: 1,
-        );
-        final store = givenState().loggedIn().succeedEventList(animationsCollectives: [rdv]).store();
+      test(
+        'should display autoinscription when source is from event list and rdv has autoinscription',
+        () {
+          // Given
+          final rdv = mockRendezvous(
+            id: '1',
+            source: RendezvousSource.passEmploi,
+            estInscrit: false,
+            autoinscription: true,
+            nombreDePlacesRestantes: 1,
+          );
+          final store = givenState()
+              .loggedIn()
+              .succeedEventList(animationsCollectives: [rdv])
+              .store();
 
-        // When
-        final viewModel = RendezvousCardViewModel.create(
-          store,
-          RendezvousStateSource.eventListAnimationsCollectives,
-          '1',
-        );
+          // When
+          final viewModel = RendezvousCardViewModel.create(
+            store,
+            RendezvousStateSource.eventListAnimationsCollectives,
+            '1',
+          );
 
-        // Then
-        expect(viewModel.inscriptionStatus, InscriptionStatus.autoinscription);
-      });
+          // Then
+          expect(
+            viewModel.inscriptionStatus,
+            InscriptionStatus.autoinscription,
+          );
+        },
+      );
 
-      test('should hide inscription status when source is from event list and rdv is not inscrit', () {
-        // Given
-        final rdv = mockRendezvous(
-          id: '1',
-          source: RendezvousSource.passEmploi,
-          estInscrit: false,
-        );
-        final store = givenState().loggedIn().succeedEventList(animationsCollectives: [rdv]).store();
+      test(
+        'should hide inscription status when source is from event list and rdv is not inscrit',
+        () {
+          // Given
+          final rdv = mockRendezvous(
+            id: '1',
+            source: RendezvousSource.passEmploi,
+            estInscrit: false,
+          );
+          final store = givenState()
+              .loggedIn()
+              .succeedEventList(animationsCollectives: [rdv])
+              .store();
 
-        // When
-        final viewModel = RendezvousCardViewModel.create(
-          store,
-          RendezvousStateSource.eventListAnimationsCollectives,
-          '1',
-        );
+          // When
+          final viewModel = RendezvousCardViewModel.create(
+            store,
+            RendezvousStateSource.eventListAnimationsCollectives,
+            '1',
+          );
 
-        // Then
-        expect(viewModel.inscriptionStatus, InscriptionStatus.notInscrit);
-      });
+          // Then
+          expect(viewModel.inscriptionStatus, InscriptionStatus.notInscrit);
+        },
+      );
 
-      test('should display full status when nombreDePlacesRestantes is 0 and rdv is not inscrit', () {
-        // Given
-        final rdv = mockRendezvous(
-          id: '1',
-          source: RendezvousSource.passEmploi,
-          estInscrit: false,
-          nombreDePlacesRestantes: 0,
-        );
-        final store = givenState().loggedIn().succeedEventList(animationsCollectives: [rdv]).store();
+      test(
+        'should display full status when nombreDePlacesRestantes is 0 and rdv is not inscrit',
+        () {
+          // Given
+          final rdv = mockRendezvous(
+            id: '1',
+            source: RendezvousSource.passEmploi,
+            estInscrit: false,
+            nombreDePlacesRestantes: 0,
+          );
+          final store = givenState()
+              .loggedIn()
+              .succeedEventList(animationsCollectives: [rdv])
+              .store();
 
-        // When
-        final viewModel = RendezvousCardViewModel.create(
-          store,
-          RendezvousStateSource.eventListAnimationsCollectives,
-          '1',
-        );
+          // When
+          final viewModel = RendezvousCardViewModel.create(
+            store,
+            RendezvousStateSource.eventListAnimationsCollectives,
+            '1',
+          );
 
-        // Then
-        expect(viewModel.inscriptionStatus, InscriptionStatus.full);
-      });
+          // Then
+          expect(viewModel.inscriptionStatus, InscriptionStatus.full);
+        },
+      );
     });
 
     group('date and time', () {
-      test('should return a full date and period when source is from evenements', () {
-        // Given
-        final rdv = mockRendezvous(
-          id: '1',
-          source: RendezvousSource.passEmploi,
-          estInscrit: false,
-          date: DateTime(2021, 12, 23, 10, 20),
-          duration: 60,
-        );
-        final store = givenState().loggedIn().succeedEventList(animationsCollectives: [rdv]).store();
+      test(
+        'should return a full date and period when source is from evenements',
+        () {
+          // Given
+          final rdv = mockRendezvous(
+            id: '1',
+            source: RendezvousSource.passEmploi,
+            estInscrit: false,
+            date: DateTime(2021, 12, 23, 10, 20),
+            duration: 60,
+          );
+          final store = givenState()
+              .loggedIn()
+              .succeedEventList(animationsCollectives: [rdv])
+              .store();
 
-        // When
-        final viewModel = RendezvousCardViewModel.create(
-          store,
-          RendezvousStateSource.eventListAnimationsCollectives,
-          '1',
-        );
+          // When
+          final viewModel = RendezvousCardViewModel.create(
+            store,
+            RendezvousStateSource.eventListAnimationsCollectives,
+            '1',
+          );
 
-        // Then
-        expect(viewModel.date, "23 décembre 2021");
-        expect(viewModel.hourAndDuration, "10h20 - 11h20");
-      });
+          // Then
+          expect(viewModel.date, "23 décembre 2021");
+          expect(viewModel.hourAndDuration, "10h20 - 11h20");
+        },
+      );
 
       test('should return a hour when source is from mon suivi', () {
         // Given
@@ -355,10 +504,17 @@ void main() {
           date: DateTime(2021, 12, 23, 10, 20),
           duration: 60,
         );
-        final store = givenState().loggedIn().monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv])).store();
+        final store = givenState()
+            .loggedIn()
+            .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
+            .store();
 
         // When
-        final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.monSuivi, '1');
+        final viewModel = RendezvousCardViewModel.create(
+          store,
+          RendezvousStateSource.monSuivi,
+          '1',
+        );
 
         // Then
         expect(viewModel.date, "23 décembre 2021");
@@ -367,14 +523,17 @@ void main() {
     });
 
     group('emoji', () {
-      test('should display emoji when source is from evenements', () {
+      test('should not display emoji for animations collectives', () {
         // Given
         final rdv = mockRendezvous(
           id: '1',
           source: RendezvousSource.milo,
           type: RendezvousType(RendezvousTypeCode.ATELIER, 'Atelier'),
         );
-        final store = givenState().loggedIn().succeedEventList(animationsCollectives: [rdv]).store();
+        final store = givenState()
+            .loggedIn()
+            .succeedEventList(animationsCollectives: [rdv])
+            .store();
 
         // When
         final viewModel = RendezvousCardViewModel.create(
@@ -384,19 +543,48 @@ void main() {
         );
 
         // Then
-        expect(viewModel.emoji, RendezvousTypeCode.ATELIER.emoji);
-        expect(viewModel.emojiBackground, RendezvousTypeCode.ATELIER.emojiBackground);
+        expect(viewModel.emoji, isNull);
+        expect(viewModel.emojiBackground, isNull);
+      });
+
+      test('should display theme emoji for session from evenements', () {
+        // Given
+        final rdv = mockSessionMilo(id: '1', theme: "Accès à l'emploi");
+        final store = givenState()
+            .loggedIn()
+            .succeedEventList(sessionsMilo: [rdv])
+            .store();
+
+        // When
+        final viewModel = RendezvousCardViewModel.create(
+          store,
+          RendezvousStateSource.eventListSessionsMilo,
+          '1',
+        );
+
+        // Then
+        expect(viewModel.emoji, UserActionReferentielType.emploi.emoji);
+        expect(
+          viewModel.emojiBackground,
+          UserActionReferentielType.emploi.emojiBackground,
+        );
       });
 
       test('should not display emoji when source is from mon suivi', () {
         // Given
-        final store = givenRendezvous(mockRendezvous(
-          id: '1',
-          type: RendezvousType(RendezvousTypeCode.ATELIER, 'Atelier'),
-        )).store();
+        final store = givenRendezvous(
+          mockRendezvous(
+            id: '1',
+            type: RendezvousType(RendezvousTypeCode.ATELIER, 'Atelier'),
+          ),
+        ).store();
 
         // When
-        final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.monSuivi, '1');
+        final viewModel = RendezvousCardViewModel.create(
+          store,
+          RendezvousStateSource.monSuivi,
+          '1',
+        );
 
         // Then
         expect(viewModel.emoji, isNull);
@@ -415,13 +603,18 @@ void main() {
           duration: 60,
           nombreDePlacesRestantes: 2,
         );
-        final store = givenState() //
-            .loggedIn()
-            .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
-            .store();
+        final store =
+            givenState() //
+                .loggedIn()
+                .monSuivi(monSuivi: mockMonSuivi(rendezvous: [rdv]))
+                .store();
 
         // When
-        final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.monSuivi, '1');
+        final viewModel = RendezvousCardViewModel.create(
+          store,
+          RendezvousStateSource.monSuivi,
+          '1',
+        );
 
         // Then
         expect(viewModel.nombreDePlacesRestantes, null);
@@ -434,13 +627,18 @@ void main() {
           nombreDePlacesRestantes: null,
         );
 
-        final store = givenState() //
-            .loggedIn()
-            .succeedEventList(sessionsMilo: [rdv]) //
-            .store();
+        final store =
+            givenState() //
+                .loggedIn()
+                .succeedEventList(sessionsMilo: [rdv]) //
+                .store();
 
         // When
-        final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.eventListSessionsMilo, '1');
+        final viewModel = RendezvousCardViewModel.create(
+          store,
+          RendezvousStateSource.eventListSessionsMilo,
+          '1',
+        );
 
         // Then
         expect(viewModel.nombreDePlacesRestantes, null);
@@ -453,73 +651,99 @@ void main() {
           nombreDePlacesRestantes: 0,
         );
 
-        final store = givenState() //
-            .loggedIn()
-            .succeedEventList(sessionsMilo: [rdv]) //
-            .store();
+        final store =
+            givenState() //
+                .loggedIn()
+                .succeedEventList(sessionsMilo: [rdv]) //
+                .store();
 
         // When
-        final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.eventListSessionsMilo, '1');
+        final viewModel = RendezvousCardViewModel.create(
+          store,
+          RendezvousStateSource.eventListSessionsMilo,
+          '1',
+        );
 
         // Then
         expect(viewModel.nombreDePlacesRestantes, null);
       });
 
-      test('should display singular string when nombreDePlacesRestantes is 1', () {
-        // Given
-        final rdv = mockSessionMilo(
-          id: '1',
-          nombreDePlacesRestantes: 1,
-        );
+      test(
+        'should display singular string when nombreDePlacesRestantes is 1',
+        () {
+          // Given
+          final rdv = mockSessionMilo(
+            id: '1',
+            nombreDePlacesRestantes: 1,
+          );
 
-        final store = givenState() //
-            .loggedIn()
-            .succeedEventList(sessionsMilo: [rdv]) //
-            .store();
+          final store =
+              givenState() //
+                  .loggedIn()
+                  .succeedEventList(sessionsMilo: [rdv]) //
+                  .store();
 
-        // When
-        final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.eventListSessionsMilo, '1');
+          // When
+          final viewModel = RendezvousCardViewModel.create(
+            store,
+            RendezvousStateSource.eventListSessionsMilo,
+            '1',
+          );
 
-        // Then
-        expect(viewModel.nombreDePlacesRestantes, "1 place restante");
-      });
+          // Then
+          expect(viewModel.nombreDePlacesRestantes, "1 place restante");
+        },
+      );
 
-      test('should display plural string when nombreDePlacesRestantes is more than 1', () {
-        // Given
-        final rdv = mockSessionMilo(
-          id: '1',
-          nombreDePlacesRestantes: 10,
-        );
+      test(
+        'should display plural string when nombreDePlacesRestantes is more than 1',
+        () {
+          // Given
+          final rdv = mockSessionMilo(
+            id: '1',
+            nombreDePlacesRestantes: 10,
+          );
 
-        final store = givenState() //
-            .loggedIn()
-            .succeedEventList(sessionsMilo: [rdv]) //
-            .store();
+          final store =
+              givenState() //
+                  .loggedIn()
+                  .succeedEventList(sessionsMilo: [rdv]) //
+                  .store();
 
-        // When
-        final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.eventListSessionsMilo, '1');
+          // When
+          final viewModel = RendezvousCardViewModel.create(
+            store,
+            RendezvousStateSource.eventListSessionsMilo,
+            '1',
+          );
 
-        // Then
-        expect(viewModel.nombreDePlacesRestantes, "10 places restantes");
-      });
+          // Then
+          expect(viewModel.nombreDePlacesRestantes, "10 places restantes");
+        },
+      );
     });
 
-    group('theme asset', () {
-      test('should display illustration according to theme for session', () {
-        // Given
-        final rdv = mockSessionMilo(id: '1', nombreDePlacesRestantes: 10, theme: "Accès à l'emploi");
+    group('theme emoji', () {
+      final cases = {
+        "Accès à l'emploi": UserActionReferentielType.emploi,
+        "Formation": UserActionReferentielType.formation,
+        "Projet professionnel": UserActionReferentielType.projetProfessionnel,
+        "Logement": UserActionReferentielType.logement,
+        "Santé": UserActionReferentielType.sante,
+        "Citoyenneté": UserActionReferentielType.citoyennete,
+        "Loisirs, sport, culture":
+            UserActionReferentielType.cultureSportLoisirs,
+      };
 
-        final store = givenState() //
-            .loggedIn()
-            .succeedEventList(sessionsMilo: [rdv]) //
-            .store();
-
-        // When
-        final viewModel = RendezvousCardViewModel.create(store, RendezvousStateSource.eventListSessionsMilo, '1');
-
-        // Then
-        expect(viewModel.assetImage, "session_emploi_illustration.webp");
-      });
+      for (final entry in cases.entries) {
+        test('maps ${entry.key} to ${entry.value.name}', () {
+          expect(SessionMilo.themeEmoji(entry.key), entry.value.emoji);
+          expect(
+            SessionMilo.themeEmojiBackground(entry.key),
+            entry.value.emojiBackground,
+          );
+        });
+      }
     });
   });
 }

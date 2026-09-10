@@ -43,8 +43,10 @@ class DsfrEventCard extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _buildLeading(),
-                const SizedBox(width: DsfrSpacings.s2w),
+                if (emoji != null && emojiBackgroundColor != null) ...[
+                  _buildLeading(emoji: emoji!, emojiBackgroundColor: emojiBackgroundColor!),
+                  const SizedBox(width: DsfrSpacings.s2w),
+                ],
                 Expanded(
                   child: semanticsLabel != null ? ExcludeSemantics(child: child) : child,
                 ),
@@ -56,17 +58,14 @@ class DsfrEventCard extends StatelessWidget {
     );
   }
 
-  Widget _buildLeading() {
-    if (emoji != null && emojiBackgroundColor != null) {
-      return EmojiTile(
-        emoji: emoji!,
-        backgroundColor: emojiBackgroundColor!,
-        size: DsfrSpacings.s6w,
-        borderRadius: 8,
-        emojiSize: DsfrSpacings.s3w,
-      );
-    }
-    return const _AgendaIcon();
+  Widget _buildLeading({required String emoji, required Color emojiBackgroundColor}) {
+    return EmojiTile(
+      emoji: emoji,
+      backgroundColor: emojiBackgroundColor,
+      size: DsfrSpacings.s6w,
+      borderRadius: 8,
+      emojiSize: DsfrSpacings.s3w,
+    );
   }
 }
 
@@ -101,29 +100,6 @@ class DsfrEventCardComplement extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _AgendaIcon extends StatelessWidget {
-  const _AgendaIcon();
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(8)),
-        border: Border.all(color: DsfrColorDecisions.backgroundOpenBlueFrance(context)),
-        color: DsfrColorDecisions.backgroundContrastInfo(context),
-      ),
-      child: SizedBox.square(
-        dimension: DsfrSpacings.s6w,
-        child: Icon(
-          DsfrIcons.businessCalendarEventLine,
-          color: DsfrColorDecisions.textTitleBlueFrance(context),
-          size: DsfrSpacings.s3w,
-        ),
       ),
     );
   }

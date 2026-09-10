@@ -131,12 +131,6 @@ class _RendezvousDetailsPageState extends State<RendezvousDetailsPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (viewModel.assetImage != null) ...[
-          ExcludeSemantics(
-            child: _CardIllustration(imagePath: viewModel.assetImage),
-          ),
-          const SizedBox(height: DsfrSpacings.s2w),
-        ],
         if (viewModel.withDateDerniereMiseAJour != null) ...[
           DsfrAlert(
             type: DsfrAlertType.info,
@@ -633,23 +627,6 @@ class _AnnulerInscriptionButton extends StatelessWidget {
               }
             });
       },
-    );
-  }
-}
-
-class _CardIllustration extends StatelessWidget {
-  final String? imagePath;
-
-  const _CardIllustration({required this.imagePath});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(DsfrSpacings.s1v)),
-        child: Image.asset("assets/${imagePath!}", fit: BoxFit.fitWidth),
-      ),
     );
   }
 }

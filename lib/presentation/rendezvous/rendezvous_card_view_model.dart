@@ -10,7 +10,14 @@ import 'package:pass_emploi_app/utils/date_extensions.dart';
 import 'package:pass_emploi_app/utils/string_extensions.dart';
 import 'package:redux/redux.dart';
 
-enum InscriptionStatus { inscrit, notInscrit, autoinscription, autodesinscription, hidden, full }
+enum InscriptionStatus {
+  inscrit,
+  notInscrit,
+  autoinscription,
+  autodesinscription,
+  hidden,
+  full,
+}
 
 class RendezvousCardViewModel extends Equatable {
   final String id;
@@ -24,7 +31,6 @@ class RendezvousCardViewModel extends Equatable {
   final String? description;
   final String? nombreDePlacesRestantes;
   final String? place;
-  final String? assetImage;
   final String? emoji;
   final Color? emojiBackground;
 
@@ -40,12 +46,15 @@ class RendezvousCardViewModel extends Equatable {
     required this.description,
     required this.place,
     required this.nombreDePlacesRestantes,
-    required this.assetImage,
     required this.emoji,
     required this.emojiBackground,
   });
 
-  factory RendezvousCardViewModel.create(Store<AppState> store, RendezvousStateSource source, String rdvId) {
+  factory RendezvousCardViewModel.create(
+    Store<AppState> store,
+    RendezvousStateSource source,
+    String rdvId,
+  ) {
     final rdv = store.getRendezvous(source, rdvId);
     final showEmoji = source.isFromEvenements;
     return RendezvousCardViewModel(
@@ -60,9 +69,8 @@ class RendezvousCardViewModel extends Equatable {
       description: rdv.precision,
       place: _place(rdv),
       nombreDePlacesRestantes: _nombreDePlacesRestantes(rdv, source),
-      assetImage: _assetImage(rdv, source),
-      emoji: showEmoji ? rdv.type.code.emoji : null,
-      emojiBackground: showEmoji ? rdv.type.code.emojiBackground : null,
+      emoji: showEmoji ? SessionMilo.themeEmoji(rdv.theme) : null,
+      emojiBackground: showEmoji ? SessionMilo.themeEmojiBackground(rdv.theme) : null,
     );
   }
 
@@ -115,7 +123,10 @@ String? _place(Rendezvous rdv) {
   final conseiller = rdv.conseiller;
   final withConseiller = rdv.withConseiller;
   if (withConseiller != null && withConseiller && conseiller != null && !rdv.source.isMilo) {
-    return Strings.rendezvousModalityCardMessage(modality, '${conseiller.firstName} ${conseiller.lastName}');
+    return Strings.rendezvousModalityCardMessage(
+      modality,
+      '${conseiller.firstName} ${conseiller.lastName}',
+    );
   }
   return modality;
 }
@@ -124,12 +135,4 @@ String? _nombreDePlacesRestantes(Rendezvous rdv, RendezvousStateSource source) {
   if (!source.isFromEvenements) return null;
   if (rdv.nombreDePlacesRestantes == null || rdv.nombreDePlacesRestantes == 0) return null;
   return Strings.placesRestantes(rdv.nombreDePlacesRestantes!);
-}
-
-String? _assetImage(Rendezvous rdv, RendezvousStateSource source) {
-  final showImage = [
-    RendezvousStateSource.eventListSessionsMilo,
-  ].contains(source);
-  if (!showImage) return null;
-  return SessionMilo.themeIllustrationPath(rdv.theme);
 }

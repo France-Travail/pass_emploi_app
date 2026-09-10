@@ -10,7 +10,6 @@ import 'package:pass_emploi_app/features/session_milo_details/session_milo_detai
 import 'package:pass_emploi_app/features/session_milo_details/session_milo_details_state.dart';
 import 'package:pass_emploi_app/features/tracking/tracking_evenement_engagement_action.dart';
 import 'package:pass_emploi_app/models/rendezvous.dart';
-import 'package:pass_emploi_app/models/session_milo.dart';
 import 'package:pass_emploi_app/models/session_milo_partage.dart';
 import 'package:pass_emploi_app/network/post_evenement_engagement.dart';
 import 'package:pass_emploi_app/presentation/chat/chat_partage_bottom_sheet_view_model.dart';
@@ -64,7 +63,6 @@ class RendezvousDetailsViewModel extends Equatable {
   final String? description;
   final String? nombreDePlacesRestantes;
   final String? dateLimiteAnnulation;
-  final String? assetImage;
 
   RendezvousDetailsViewModel({
     required this.displayState,
@@ -104,7 +102,6 @@ class RendezvousDetailsViewModel extends Equatable {
     this.description,
     this.nombreDePlacesRestantes,
     this.dateLimiteAnnulation,
-    this.assetImage,
   });
 
   factory RendezvousDetailsViewModel.create({
@@ -115,9 +112,16 @@ class RendezvousDetailsViewModel extends Equatable {
   }) {
     final rdv = _getRendezvous(store, source, rdvId);
     final dateDerniereMiseAJour = _getDateDerniereMiseAJour(store, source);
-    if (rdv == null) return RendezvousDetailsViewModel._createBlankRendezvous(store, source, rdvId);
+    if (rdv == null)
+      return RendezvousDetailsViewModel._createBlankRendezvous(
+        store,
+        source,
+        rdvId,
+      );
     final address = _address(rdv);
-    final comment = (rdv.comment != null && rdv.comment!.trim().isNotEmpty) ? rdv.comment : null;
+    final comment = (rdv.comment != null && rdv.comment!.trim().isNotEmpty)
+        ? rdv.comment
+        : null;
     final isConseillerPresent = rdv.withConseiller ?? false;
     final isInscrit = rdv.estInscrit ?? false;
     return RendezvousDetailsViewModel(
@@ -131,8 +135,12 @@ class RendezvousDetailsViewModel extends Equatable {
       modality: _modality(rdv),
       conseiller: _conseiller(rdv),
       createur: _createur(source, rdv),
-      conseillerPresenceLabel: isConseillerPresent ? Strings.conseillerIsPresent : Strings.conseillerIsNotPresent,
-      conseillerPresenceColor: isConseillerPresent ? AppColors.success : AppColors.warning,
+      conseillerPresenceLabel: isConseillerPresent
+          ? Strings.conseillerIsPresent
+          : Strings.conseillerIsNotPresent,
+      conseillerPresenceColor: isConseillerPresent
+          ? AppColors.success
+          : AppColors.warning,
       isInscrit: isInscrit,
       isComplet: _isComplet(rdv, isInscrit),
       isAnnule: rdv.isAnnule,
@@ -141,7 +149,9 @@ class RendezvousDetailsViewModel extends Equatable {
       withModalityPart: _withModalityPart(rdv),
       withIfAbsentPart: _estCeQueMaPresenceEstRequise(source, rdv),
       withAnimateur: _withAnimateur(source, rdv.animateur),
-      withDateDerniereMiseAJour: _withDateDerniereMiseAJour(dateDerniereMiseAJour),
+      withDateDerniereMiseAJour: _withDateDerniereMiseAJour(
+        dateDerniereMiseAJour,
+      ),
       rdvCta: _shareToConseillerButton(store, source, rdv),
       visioButtonState: _visioButtonState(rdv),
       visioRedirectUrl: rdv.visioRedirectUrl,
@@ -153,12 +163,13 @@ class RendezvousDetailsViewModel extends Equatable {
       organism: _shouldHidePresentielInformation(rdv) ? null : rdv.organism,
       address: address,
       phone: rdv.phone != null ? Strings.phone(rdv.phone!) : null,
-      addressRedirectUri: address != null ? UriHandler().mapsUri(address, platform) : null,
+      addressRedirectUri: address != null
+          ? UriHandler().mapsUri(address, platform)
+          : null,
       theme: rdv.theme,
       description: _descriptionFromSource(source, rdv),
       nombreDePlacesRestantes: _nombreDePlacesRestantes(rdv),
       dateLimiteAnnulation: _dateLimiteAnnulation(rdv),
-      assetImage: _assetImage(rdv, source),
     );
   }
 
@@ -239,26 +250,41 @@ class RendezvousDetailsViewModel extends Equatable {
   }
 }
 
-DateTime? _getDateDerniereMiseAJour(Store<AppState> store, RendezvousStateSource source) {
-  if (source == RendezvousStateSource.monSuivi && store.state.monSuiviState is MonSuiviSuccessState) {
-    return (store.state.monSuiviState as MonSuiviSuccessState).monSuivi.dateDerniereMiseAJourPoleEmploi;
+DateTime? _getDateDerniereMiseAJour(
+  Store<AppState> store,
+  RendezvousStateSource source,
+) {
+  if (source == RendezvousStateSource.monSuivi &&
+      store.state.monSuiviState is MonSuiviSuccessState) {
+    return (store.state.monSuiviState as MonSuiviSuccessState)
+        .monSuivi
+        .dateDerniereMiseAJourPoleEmploi;
   }
   return null;
 }
 
 String? _withDateDerniereMiseAJour(DateTime? dateDerniereMiseAJour) {
   if (dateDerniereMiseAJour == null) return null;
-  return Strings.dateDerniereMiseAJourRendezvous(dateDerniereMiseAJour.toDayAndHour());
+  return Strings.dateDerniereMiseAJourRendezvous(
+    dateDerniereMiseAJour.toDayAndHour(),
+  );
 }
 
 enum VisioButtonState { ACTIVE, INACTIVE, HIDDEN }
 
-Rendezvous? _getRendezvous(Store<AppState> store, RendezvousStateSource source, String rdvId) {
-  return _shouldGetRendezvous(source, store) ? store.getRendezvous(source, rdvId) : null;
+Rendezvous? _getRendezvous(
+  Store<AppState> store,
+  RendezvousStateSource source,
+  String rdvId,
+) {
+  return _shouldGetRendezvous(source, store)
+      ? store.getRendezvous(source, rdvId)
+      : null;
 }
 
 String? _nombreDePlacesRestantes(Rendezvous rdv) {
-  if (rdv.nombreDePlacesRestantes == null || rdv.nombreDePlacesRestantes == 0) return null;
+  if (rdv.nombreDePlacesRestantes == null || rdv.nombreDePlacesRestantes == 0)
+    return null;
   return Strings.placesRestantes(rdv.nombreDePlacesRestantes!);
 }
 
@@ -271,19 +297,25 @@ String? _dateLimiteAnnulation(Rendezvous rdv) {
 
 bool _shouldGetRendezvous(RendezvousStateSource source, Store<AppState> store) {
   return switch (source) {
-    RendezvousStateSource.noSource => store.state.rendezvousDetailsState is RendezvousDetailsSuccessState,
-    RendezvousStateSource.sessionMiloDetails => store.state.sessionMiloDetailsState is SessionMiloDetailsSuccessState,
+    RendezvousStateSource.noSource =>
+      store.state.rendezvousDetailsState is RendezvousDetailsSuccessState,
+    RendezvousStateSource.sessionMiloDetails =>
+      store.state.sessionMiloDetailsState is SessionMiloDetailsSuccessState,
     _ => true,
   };
 }
 
 String _navbarTitle(RendezvousStateSource source, Rendezvous rendezvous) {
-  if (!source.isFromEvenements && !source.isFromEvenementMiloDetails) return Strings.myRendezVous;
-  return rendezvous.estInscrit == true ? Strings.myRendezVous : Strings.eventTitle;
+  if (!source.isFromEvenements && !source.isFromEvenementMiloDetails)
+    return Strings.myRendezVous;
+  return rendezvous.estInscrit == true
+      ? Strings.myRendezVous
+      : Strings.eventTitle;
 }
 
 bool _shouldHidePresentielInformation(Rendezvous rdv) {
-  return rdv.isInVisio || rdv.modalityType() == RendezvousModalityType.TELEPHONE;
+  return rdv.isInVisio ||
+      rdv.modalityType() == RendezvousModalityType.TELEPHONE;
 }
 
 bool _shouldDisplayConseillerPresence(Rendezvous rdv) {
@@ -298,7 +330,9 @@ String? _address(Rendezvous rdv) {
 }
 
 String _takeTypeLabelOrPrecision(Rendezvous rdv) {
-  return (rdv.type.code == RendezvousTypeCode.AUTRE && rdv.precision != null) ? rdv.precision! : rdv.type.label;
+  return (rdv.type.code == RendezvousTypeCode.AUTRE && rdv.precision != null)
+      ? rdv.precision!
+      : rdv.type.label;
 }
 
 String _hours(Rendezvous rdv) {
@@ -310,21 +344,28 @@ String _hours(Rendezvous rdv) {
   return period;
 }
 
-String? _commentTitle(RendezvousStateSource source, Rendezvous rdv, String? comment) {
+String? _commentTitle(
+  RendezvousStateSource source,
+  Rendezvous rdv,
+  String? comment,
+) {
   if (source.isFromEvenementMiloDetails) {
     return Strings.rendezVousDetails;
   }
   if (comment != null && rdv.conseiller == null) {
     return Strings.commentWithoutConseiller;
   }
-  if (comment != null && rdv.conseiller != null) return Strings.rendezVousConseillerCommentLabel;
+  if (comment != null && rdv.conseiller != null)
+    return Strings.rendezVousConseillerCommentLabel;
   return null;
 }
 
 String? _modality(Rendezvous rdv) {
   if (rdv.isInVisio) return Strings.rendezvousVisioModalityMessage;
   if (rdv.modality == null) return null;
-  return Strings.rendezvousModalityDetailsMessage(rdv.modality!.firstLetterLowerCased());
+  return Strings.rendezvousModalityDetailsMessage(
+    rdv.modality!.firstLetterLowerCased(),
+  );
 }
 
 String? _conseiller(Rendezvous rdv) {
@@ -333,7 +374,9 @@ String? _conseiller(Rendezvous rdv) {
   final conseiller = rdv.conseiller;
   final withConseiller = rdv.withConseiller;
   if (withConseiller != null && withConseiller && conseiller != null) {
-    return Strings.rendezvousWithConseiller('${conseiller.firstName} ${conseiller.lastName}');
+    return Strings.rendezvousWithConseiller(
+      '${conseiller.firstName} ${conseiller.lastName}',
+    );
   }
   return null;
 }
@@ -342,7 +385,9 @@ String? _createur(RendezvousStateSource source, Rendezvous rdv) {
   if (source.isFromEvenements) return null;
   if (rdv.source.isMilo) return null;
   final createur = rdv.createur;
-  return createur != null ? Strings.rendezvousCreateur('${createur.firstName} ${createur.lastName}') : null;
+  return createur != null
+      ? Strings.rendezvousCreateur('${createur.firstName} ${createur.lastName}')
+      : null;
 }
 
 bool _isComplet(Rendezvous rdv, bool isInscrit) {
@@ -350,18 +395,31 @@ bool _isComplet(Rendezvous rdv, bool isInscrit) {
 }
 
 bool _withModalityPart(Rendezvous rdv) {
-  return rdv.modality != null || rdv.address != null || rdv.organism != null || rdv.phone != null || rdv.isInVisio;
+  return rdv.modality != null ||
+      rdv.address != null ||
+      rdv.organism != null ||
+      rdv.phone != null ||
+      rdv.isInVisio;
 }
 
 VisioButtonState _visioButtonState(Rendezvous rdv) {
-  if (rdv.isInVisio && rdv.visioRedirectUrl != null) return VisioButtonState.ACTIVE;
-  if (rdv.isInVisio && rdv.visioRedirectUrl == null) return VisioButtonState.INACTIVE;
+  if (rdv.isInVisio && rdv.visioRedirectUrl != null)
+    return VisioButtonState.ACTIVE;
+  if (rdv.isInVisio && rdv.visioRedirectUrl == null)
+    return VisioButtonState.INACTIVE;
   return VisioButtonState.HIDDEN;
 }
 
-String? _trackingPageName(RendezvousStateSource source, RendezvousTypeCode type) {
-  if (source.isFromEvenementMiloDetails) return AnalyticsScreenNames.sessionMiloDetails;
-  if ([RendezvousTypeCode.ATELIER, RendezvousTypeCode.INFORMATION_COLLECTIVE].contains(type)) {
+String? _trackingPageName(
+  RendezvousStateSource source,
+  RendezvousTypeCode type,
+) {
+  if (source.isFromEvenementMiloDetails)
+    return AnalyticsScreenNames.sessionMiloDetails;
+  if ([
+    RendezvousTypeCode.ATELIER,
+    RendezvousTypeCode.INFORMATION_COLLECTIVE,
+  ].contains(type)) {
     return AnalyticsScreenNames.animationCollectiveDetails;
   }
   return AnalyticsScreenNames.rendezvousDetails;
@@ -389,18 +447,28 @@ String? _comment(RendezvousStateSource source, String? comment) {
   return comment;
 }
 
-bool _estCeQueMaPresenceEstRequise(RendezvousStateSource source, Rendezvous rdv) {
+bool _estCeQueMaPresenceEstRequise(
+  RendezvousStateSource source,
+  Rendezvous rdv,
+) {
   if (rdv.dateMaxDesinscription != null) return false;
-  return (!source.isFromEvenements && !source.isFromEvenementMiloDetails) || rdv.estInscrit == true;
+  return (!source.isFromEvenements && !source.isFromEvenementMiloDetails) ||
+      rdv.estInscrit == true;
 }
 
-RendezvousCtaVm? _shareToConseillerButton(Store<AppState> store, RendezvousStateSource source, Rendezvous rdv) {
+RendezvousCtaVm? _shareToConseillerButton(
+  Store<AppState> store,
+  RendezvousStateSource source,
+  Rendezvous rdv,
+) {
   if (rdv.estInscrit == true && rdv.autodesinscription == true) {
     return RendezVousAnnulerInscription(onPressed: () {});
   }
   if (rdv.date.isBefore(DateTime.now())) return null;
   if (source.isFromEvenements) {
-    return RendezVousShareToConseiller(chatPartageSource: ChatPartageEventSource(rdv.id));
+    return RendezVousShareToConseiller(
+      chatPartageSource: ChatPartageEventSource(rdv.id),
+    );
   }
   if (source.isFromEvenementMiloDetails) return _miloCta(store, rdv);
   return null;
@@ -419,12 +487,19 @@ RendezvousCtaVm? _miloCta(Store<AppState> store, Rendezvous rdv) {
     return RendezVousAutoInscription(
       onPressed: () {
         store.dispatch(AutoInscriptionRequestAction(eventId: rdv.id));
-        store.dispatch(TrackingEvenementEngagementAction(EvenementEngagement.SESSION_AUTOINSCRIPTION));
+        store.dispatch(
+          TrackingEvenementEngagementAction(
+            EvenementEngagement.SESSION_AUTOINSCRIPTION,
+          ),
+        );
       },
     );
   }
 
-  if (rdv.isComplet) return RendezVousShareToConseiller(chatPartageSource: ChatPartageSessionMiloSource(rdv.id));
+  if (rdv.isComplet)
+    return RendezVousShareToConseiller(
+      chatPartageSource: ChatPartageSessionMiloSource(rdv.id),
+    );
 
   return RendezVousShareToConseillerDemandeInscription(
     onPressed: () => store.dispatch(
@@ -439,11 +514,6 @@ RendezvousCtaVm? _miloCta(Store<AppState> store, Rendezvous rdv) {
   );
 }
 
-String? _assetImage(Rendezvous rdv, RendezvousStateSource source) {
-  if (source != RendezvousStateSource.sessionMiloDetails) return null;
-  return SessionMilo.themeIllustrationPath(rdv.theme);
-}
-
 sealed class RendezvousCtaVm extends Equatable {
   final void Function()? onPressed;
   final String label;
@@ -455,7 +525,8 @@ sealed class RendezvousCtaVm extends Equatable {
 }
 
 class RendezVousAutoInscription extends RendezvousCtaVm {
-  RendezVousAutoInscription({required super.onPressed}) : super(label: Strings.autoInscriptionCta);
+  RendezVousAutoInscription({required super.onPressed})
+    : super(label: Strings.autoInscriptionCta);
 }
 
 class RendezVousShareToConseillerDemandeInscription extends RendezvousCtaVm {
@@ -471,5 +542,6 @@ class RendezVousShareToConseiller extends RendezvousCtaVm {
 }
 
 class RendezVousAnnulerInscription extends RendezvousCtaVm {
-  RendezVousAnnulerInscription({required super.onPressed}) : super(label: Strings.annulerInscription);
+  RendezVousAnnulerInscription({required super.onPressed})
+    : super(label: Strings.annulerInscription);
 }
