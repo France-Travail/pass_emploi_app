@@ -4,6 +4,7 @@ import 'package:pass_emploi_app/features/demarche/create_demarche_batch/create_d
 import 'package:pass_emploi_app/pages/demarche/create_demarche/create_demarche_success_page.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:redux/redux.dart';
 
 class CreateDemarcheSuccessViewModel extends Equatable {
@@ -18,6 +19,12 @@ class CreateDemarcheSuccessViewModel extends Equatable {
     required this.firstName,
     required this.isPlural,
   });
+
+  String get appBarTitle =>
+      isPlural ? Strings.createDemarcheAppBarTitle : Strings.createOneDemarcheAppBarTitle;
+
+  String get subtitle =>
+      isPlural ? Strings.demarcheSuccessSubtitlePlural : Strings.demarcheSuccessSubtitle;
 
   factory CreateDemarcheSuccessViewModel.create(Store<AppState> store, CreateDemarcheSource source) {
     return CreateDemarcheSuccessViewModel(

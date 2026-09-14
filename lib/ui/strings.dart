@@ -979,7 +979,7 @@ class Strings {
   static String demarcheBottomSheetTitle = "Éditer la démarche";
 
   static String demarcheSuccessSubtitle =
-      "La démarche est enregistrée. Retrouve-la dans mon agenda.\n\nTon conseiller en est informé. Vous pourrez en discuter ensemble lors de votre prochain rendez-vous\u{00A0}!";
+      "La démarche est enregistrée. Retrouve-la dans mon agenda.\n\nTon conseiller en est informé. Tu pourras en discuter avec lui lors de ton prochain rendez-vous\u{00A0}!";
   static String demarcheSuccessConsulter = "Consulter ma démarche";
   static String demarcheSuccessCreerUneAutre = "Créer une autre démarche";
   static String createDemarcheErreur = "Erreur lors de la création de la démarche. Réessaie plus tard";

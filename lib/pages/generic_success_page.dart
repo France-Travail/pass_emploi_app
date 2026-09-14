@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/success/success_dialog_app_bar.dart';
+import 'package:pass_emploi_app/widgets/success/success_illustration.dart';
 
 class GenericSuccessPage extends StatelessWidget {
   const GenericSuccessPage({super.key, required this.title, required this.content});
@@ -21,27 +20,7 @@ class GenericSuccessPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
-      appBar: AppBar(
-        toolbarHeight: PrimaryAppBar.toolBarHeight,
-        titleSpacing: DsfrSpacings.s2w,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        surfaceTintColor: Colors.transparent,
-        backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
-        iconTheme: IconThemeData(color: DsfrColorDecisions.textTitleGrey(context)),
-        title: Semantics(
-          header: true,
-          child: Tooltip(
-            message: title,
-            excludeFromSemantics: true,
-            child: Text(
-              title,
-              style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ),
-      ),
+      appBar: SuccessDialogAppBar(title: title),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
@@ -51,14 +30,7 @@ class GenericSuccessPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Center(
-                    child: SvgPicture.asset(
-                      Drawables.illustrationSuccess,
-                      width: 160,
-                      height: 160,
-                      excludeFromSemantics: true,
-                    ),
-                  ),
+                  const SuccessIllustration(size: 160),
                   const SizedBox(height: DsfrSpacings.s3w),
                   Text(
                     title,
