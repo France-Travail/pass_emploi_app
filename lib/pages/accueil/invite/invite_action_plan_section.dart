@@ -21,7 +21,9 @@ class InviteActionPlanSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final objectives = plan?.objectives ?? const <ActionPlanObjective>[];
+    final objectives = (plan?.objectives ?? const <ActionPlanObjective>[])
+        .where((objective) => objective.actions.isNotEmpty)
+        .toList();
     if (objectives.isEmpty) return const SizedBox.shrink();
 
     return Column(
@@ -64,7 +66,9 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
   @override
   Widget build(BuildContext context) {
     final objective = widget.objective;
-    final visibleActions = _showAll ? objective.actions : objective.actions.take(_initialVisible).toList();
+    final visibleActions = _showAll
+        ? objective.actions
+        : objective.actions.take(_initialVisible).toList();
     final hasMore = objective.actions.length > _initialVisible;
 
     return Column(
@@ -79,7 +83,10 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
                 ? DsfrColorDecisions.backgroundActionLowBlueFrance(context)
                 : DsfrColorDecisions.backgroundDefaultGrey(context),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base, vertical: Margins.spacing_s),
+              padding: const EdgeInsets.symmetric(
+                horizontal: Margins.spacing_base,
+                vertical: Margins.spacing_s,
+              ),
               child: Row(
                 children: [
                   _EmojiAvatar(
@@ -90,12 +97,19 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
                   Expanded(
                     child: Text(
                       objective.title,
-                      style: DsfrTextStyle.bodyMdMedium(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+                      style: DsfrTextStyle.bodyMdMedium(
+                        color: DsfrColorDecisions.textTitleBlueFrance(context),
+                      ),
                     ),
                   ),
                   DsfrBadge(
-                    label: Strings.inviteAccueilProgressBadge(objective.doneCount, objective.totalCount),
-                    type: objective.isComplete ? DsfrBadgeType.success : DsfrBadgeType.news,
+                    label: Strings.inviteAccueilProgressBadge(
+                      objective.doneCount,
+                      objective.totalCount,
+                    ),
+                    type: objective.isComplete
+                        ? DsfrBadgeType.success
+                        : DsfrBadgeType.news,
                     size: DsfrComponentSize.sm,
                     withIcon: true,
                   ),
@@ -106,7 +120,9 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
                     curve: _animationCurve,
                     child: Icon(
                       DsfrIcons.systemArrowDownSLine,
-                      color: DsfrColorDecisions.textActionHighBlueFrance(context),
+                      color: DsfrColorDecisions.textActionHighBlueFrance(
+                        context,
+                      ),
                     ),
                   ),
                 ],
@@ -117,7 +133,12 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
         AnimatedCrossFade(
           firstChild: const SizedBox.shrink(),
           secondChild: Padding(
-            padding: const EdgeInsets.fromLTRB(Margins.spacing_s, 0, Margins.spacing_s, Margins.spacing_s),
+            padding: const EdgeInsets.fromLTRB(
+              Margins.spacing_s,
+              0,
+              Margins.spacing_s,
+              Margins.spacing_s,
+            ),
             child: AnimatedSize(
               duration: AnimationDurations.medium,
               curve: _animationCurve,
@@ -145,7 +166,9 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
               ),
             ),
           ),
-          crossFadeState: _expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          crossFadeState: _expanded
+              ? CrossFadeState.showSecond
+              : CrossFadeState.showFirst,
           duration: AnimationDurations.medium,
           sizeCurve: _animationCurve,
         ),
@@ -166,7 +189,10 @@ class InviteActionPlanActionTile extends StatelessWidget {
   final VoidCallback onToggleDone;
   final VoidCallback onDelete;
 
-  bool get _hasLink => action.kind == ActionPlanActionKind.link && action.url != null && action.url!.isNotEmpty;
+  bool get _hasLink =>
+      action.kind == ActionPlanActionKind.link &&
+      action.url != null &&
+      action.url!.isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +200,9 @@ class InviteActionPlanActionTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: DsfrColorDecisions.backgroundDefaultGrey(context),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: DsfrColorDecisions.borderDefaultGrey(context)),
+        border: Border.all(
+          color: DsfrColorDecisions.borderDefaultGrey(context),
+        ),
       ),
       child: Material(
         color: Colors.transparent,
@@ -195,8 +223,13 @@ class InviteActionPlanActionTile extends StatelessWidget {
                     behavior: HitTestBehavior.opaque,
                     onTap: onToggleDone,
                     child: Padding(
-                      padding: const EdgeInsets.only(right: Margins.spacing_base),
-                      child: DsfrCheckboxIcon(value: action.done, size: DsfrComponentSize.md),
+                      padding: const EdgeInsets.only(
+                        right: Margins.spacing_base,
+                      ),
+                      child: DsfrCheckboxIcon(
+                        value: action.done,
+                        size: DsfrComponentSize.md,
+                      ),
                     ),
                   ),
                 ),
@@ -206,7 +239,9 @@ class InviteActionPlanActionTile extends StatelessWidget {
                     children: [
                       Text(
                         action.label,
-                        style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
+                        style: DsfrTextStyle.bodyMd(
+                          color: DsfrColorDecisions.textLabelGrey(context),
+                        ),
                       ),
                       if (action.serviceName != null)
                         Row(
@@ -214,14 +249,22 @@ class InviteActionPlanActionTile extends StatelessWidget {
                             Flexible(
                               child: Text(
                                 action.serviceName!,
-                                style: DsfrTextStyle.bodySm(
-                                  color: DsfrColorDecisions.textActionHighBlueFrance(context),
-                                ).copyWith(
-                                  decoration: _hasLink ? TextDecoration.underline : null,
-                                  decorationColor: _hasLink
-                                      ? DsfrColorDecisions.textActionHighBlueFrance(context)
-                                      : null,
-                                ),
+                                style:
+                                    DsfrTextStyle.bodySm(
+                                      color:
+                                          DsfrColorDecisions.textActionHighBlueFrance(
+                                            context,
+                                          ),
+                                    ).copyWith(
+                                      decoration: _hasLink
+                                          ? TextDecoration.underline
+                                          : null,
+                                      decorationColor: _hasLink
+                                          ? DsfrColorDecisions.textActionHighBlueFrance(
+                                              context,
+                                            )
+                                          : null,
+                                    ),
                               ),
                             ),
                             if (_hasLink) ...[
@@ -232,7 +275,10 @@ class InviteActionPlanActionTile extends StatelessWidget {
                                 child: Icon(
                                   DsfrIcons.systemExternalLinkLine,
                                   size: 12,
-                                  color: DsfrColorDecisions.textActionHighBlueFrance(context),
+                                  color:
+                                      DsfrColorDecisions.textActionHighBlueFrance(
+                                        context,
+                                      ),
                                 ),
                               ),
                             ],
@@ -271,13 +317,18 @@ class _EmojiAvatar extends StatelessWidget {
       width: 48,
       height: 48,
       alignment: Alignment.center,
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(15)),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(15),
+      ),
       child: Text(
         emoji,
         style: TextStyle(
           fontSize: 24,
           // Force color emoji on iOS for dingbats like ✈️ (U+2708).
-          fontFamily: defaultTargetPlatform == TargetPlatform.iOS ? 'Apple Color Emoji' : null,
+          fontFamily: defaultTargetPlatform == TargetPlatform.iOS
+              ? 'Apple Color Emoji'
+              : null,
         ),
       ),
     );

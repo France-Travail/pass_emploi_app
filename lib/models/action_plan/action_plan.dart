@@ -187,27 +187,45 @@ class ActionPlan extends Equatable {
     return null;
   }
 
-  ActionPlan applyProgress(ActionPlanProgress progress) {
+  ActionPlan keepActionsFrom(ActionPlan previous) {
+    final previousByTheme = {
+      for (final objective in previous.objectives) objective.theme: objective,
+    };
+    return copyWith(
+      objectives: objectives.map((objective) {
+        final previousObjective = previousByTheme[objective.theme];
+        if (previousObjective == null) return objective;
+        return objective.copyWith(actions: previousObjective.actions);
+      }).toList(),
+    );
+  }
+
+  ActionPlan withoutEmptyObjectives() {
     return copyWith(
       objectives: objectives
-          .map((objective) {
-            final objectiveProgress = progress.forObjective(objective.id);
-            return objective.copyWith(
-              actions: objective.actions
-                  .where(
-                    (action) =>
-                        !objectiveProgress.deletedActionIds.contains(action.id),
-                  )
-                  .map(
-                    (action) => action.copyWith(
-                      done: objectiveProgress.doneActionIds.contains(action.id),
-                    ),
-                  )
-                  .toList(),
-            );
-          })
           .where((objective) => objective.actions.isNotEmpty)
           .toList(),
+    );
+  }
+
+  ActionPlan applyProgress(ActionPlanProgress progress) {
+    return copyWith(
+      objectives: objectives.map((objective) {
+        final objectiveProgress = progress.forObjective(objective.id);
+        return objective.copyWith(
+          actions: objective.actions
+              .where(
+                (action) =>
+                    !objectiveProgress.deletedActionIds.contains(action.id),
+              )
+              .map(
+                (action) => action.copyWith(
+                  done: objectiveProgress.doneActionIds.contains(action.id),
+                ),
+              )
+              .toList(),
+        );
+      }).toList(),
     );
   }
 
@@ -239,7 +257,6 @@ class ActionPlan extends Equatable {
                   .toList(),
             ),
           )
-          .where((objective) => objective.actions.isNotEmpty)
           .toList(),
     );
   }
@@ -332,26 +349,6 @@ class ActionPlanObjectiveProgress extends Equatable {
 
   bool get isEmpty => doneActionIds.isEmpty && deletedActionIds.isEmpty;
 
-  ActionPlanObjectiveProgress toggleDone(String actionId) {
-    final next = Set<String>.of(doneActionIds);
-    if (next.contains(actionId)) {
-      next.remove(actionId);
-    } else {
-      next.add(actionId);
-    }
-    return ActionPlanObjectiveProgress(
-      doneActionIds: next,
-      deletedActionIds: deletedActionIds,
-    );
-  }
-
-  ActionPlanObjectiveProgress deleteAction(String actionId) {
-    return ActionPlanObjectiveProgress(
-      doneActionIds: Set.of(doneActionIds)..remove(actionId),
-      deletedActionIds: Set.of(deletedActionIds)..add(actionId),
-    );
-  }
-
   ActionPlanObjectiveProgress merge(ActionPlanObjectiveProgress other) {
     return ActionPlanObjectiveProgress(
       doneActionIds: {...doneActionIds, ...other.doneActionIds},
@@ -370,11 +367,6 @@ class ActionPlanObjectiveProgress extends Equatable {
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'doneActionIds': doneActionIds.toList(),
-    'deletedActionIds': deletedActionIds.toList(),
-  };
-
   @override
   List<Object?> get props => [doneActionIds, deletedActionIds];
 }
@@ -388,33 +380,10 @@ class ActionPlanProgress extends Equatable {
 
   bool get hasLegacy => byObjectiveId.containsKey(_legacyKey);
 
+  bool get isEmpty => byObjectiveId.isEmpty;
+
   ActionPlanObjectiveProgress forObjective(String objectiveId) {
     return byObjectiveId[objectiveId] ?? const ActionPlanObjectiveProgress();
-  }
-
-  ActionPlanProgress toggleDone(String objectiveId, String actionId) {
-    return _setObjective(
-      objectiveId,
-      forObjective(objectiveId).toggleDone(actionId),
-    );
-  }
-
-  ActionPlanProgress deleteAction(String objectiveId, String actionId) {
-    return _setObjective(
-      objectiveId,
-      forObjective(objectiveId).deleteAction(actionId),
-    );
-  }
-
-  ActionPlanProgress retainForObjectives(ActionPlan plan) {
-    final current = hasLegacy ? migrateLegacy(plan) : this;
-    return ActionPlanProgress(
-      byObjectiveId: {
-        for (final objective in plan.objectives)
-          if (current.byObjectiveId.containsKey(objective.id))
-            objective.id: current.byObjectiveId[objective.id]!,
-      },
-    );
   }
 
   ActionPlanProgress migrateLegacy(ActionPlan plan) {
@@ -433,19 +402,6 @@ class ActionPlanProgress extends Equatable {
           (next[objective.id] ?? const ActionPlanObjectiveProgress()).merge(
             migrated,
           );
-    }
-    return ActionPlanProgress(byObjectiveId: next);
-  }
-
-  ActionPlanProgress _setObjective(
-    String objectiveId,
-    ActionPlanObjectiveProgress progress,
-  ) {
-    final next = Map<String, ActionPlanObjectiveProgress>.of(byObjectiveId);
-    if (progress.isEmpty) {
-      next.remove(objectiveId);
-    } else {
-      next[objectiveId] = progress;
     }
     return ActionPlanProgress(byObjectiveId: next);
   }
@@ -474,13 +430,6 @@ class ActionPlanProgress extends Equatable {
     if (legacy.isEmpty) return const ActionPlanProgress();
     return ActionPlanProgress(byObjectiveId: {_legacyKey: legacy});
   }
-
-  Map<String, dynamic> toJson() => {
-    'byObjectiveId': {
-      for (final entry in byObjectiveId.entries)
-        entry.key: entry.value.toJson(),
-    },
-  };
 
   @override
   List<Object?> get props {

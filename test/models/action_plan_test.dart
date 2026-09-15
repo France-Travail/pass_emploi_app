@@ -2,79 +2,136 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 
 void main() {
-  group('ActionPlanProgress', () {
+  group('ActionPlan.keepActionsFrom', () {
     test(
-      'keeps checked and deleted actions when the objective is still present',
+      'keeps previous actions when the objective theme is still present',
       () {
-        final progress = ActionPlanProgress(
-          byObjectiveId: {
-            'objective-x': const ActionPlanObjectiveProgress(
-              doneActionIds: {'a', 'b'},
-            ),
-            'objective-y': const ActionPlanObjectiveProgress(
-              deletedActionIds: {'c', 'd'},
-            ),
-          },
-        );
-
-        final retained = progress.retainForObjectives(
-          _plan(
-            objectives: [
-              _objectiveX(),
-              _objectiveY(actions: [_actionC, _actionD, _actionE]),
-            ],
-          ),
-        );
-
-        final nextPlan = _plan(
+        final previous = _plan(
           objectives: [
-            _objectiveX(),
-            _objectiveY(actions: [_actionC, _actionD, _actionE]),
-          ],
-        ).applyProgress(retained);
-
-        expect(nextPlan.findAction('a')?.done, isTrue);
-        expect(nextPlan.findAction('b')?.done, isTrue);
-        expect(nextPlan.findAction('c'), isNull);
-        expect(nextPlan.findAction('d'), isNull);
-        expect(nextPlan.findAction('e')?.done, isFalse);
-      },
-    );
-
-    test(
-      'keeps deleted actions hidden even if they are missing from this generation',
-      () {
-        final progress = ActionPlanProgress(
-          byObjectiveId: {
-            'objective-y': const ActionPlanObjectiveProgress(
-              deletedActionIds: {'c', 'd'},
+            _objectiveX(
+              actions: [_actionA.copyWith(done: true), _actionB],
             ),
-          },
+          ],
+        );
+        final generated = _plan(
+          objectives: [
+            _objectiveX(
+              id: 'objective-x-new',
+              title: 'X updated',
+              actions: [_actionA, _actionB, _actionE],
+            ),
+          ],
         );
 
-        final retained = progress.retainForObjectives(
-          _plan(
-            objectives: [
-              _objectiveY(actions: [_actionE]),
-            ],
-          ),
-        );
-        expect(retained.forObjective('objective-y').deletedActionIds, {
-          'c',
-          'd',
-        });
+        final merged = generated.keepActionsFrom(previous);
 
-        final laterPlan = _plan(
-          objectives: [_objectiveY()],
-        ).applyProgress(retained);
-        expect(laterPlan.findAction('c'), isNull);
-        expect(laterPlan.findAction('d'), isNull);
-        expect(laterPlan.findAction('e')?.done, isFalse);
+        expect(merged.objectives.single.id, 'objective-x-new');
+        expect(merged.objectives.single.title, 'X updated');
+        expect(merged.findAction('a')?.done, isTrue);
+        expect(merged.findAction('b')?.done, isFalse);
+        expect(merged.findAction('e'), isNull);
       },
     );
 
+    test('does not keep actions when only the API id matches', () {
+      final previous = _plan(
+        objectives: [
+          _objectiveX(actions: [_actionA.copyWith(done: true), _actionB]),
+        ],
+      );
+      final generated = _plan(
+        objectives: [
+          _objectiveY(id: 'objective-x'),
+        ],
+      );
+
+      final merged = generated.keepActionsFrom(previous);
+
+      expect(merged.findAction('a'), isNull);
+      expect(merged.findAction('c')?.done, isFalse);
+      expect(merged.findAction('d')?.done, isFalse);
+      expect(merged.findAction('e')?.done, isFalse);
+    });
+
+    test('uses generated actions when the objective is new', () {
+      final previous = _plan(objectives: [_objectiveX()]);
+      final generated = _plan(objectives: [_objectiveX(), _objectiveY()]);
+
+      final merged = generated.keepActionsFrom(previous);
+
+      expect(merged.findAction('a')?.done, isFalse);
+      expect(merged.findAction('c')?.done, isFalse);
+      expect(merged.findAction('d')?.done, isFalse);
+      expect(merged.findAction('e')?.done, isFalse);
+    });
+
+    test('resets actions when an objective is dropped then selected again', () {
+      final previous = _plan(
+        objectives: [
+          _objectiveX(actions: [_actionA.copyWith(done: true)]),
+        ],
+      );
+      final generated = _plan(objectives: [_objectiveX(), _objectiveY()]);
+
+      final merged = generated.keepActionsFrom(previous);
+
+      expect(merged.findAction('a')?.done, isTrue);
+      expect(merged.findAction('c')?.done, isFalse);
+      expect(merged.findAction('d')?.done, isFalse);
+      expect(merged.findAction('e')?.done, isFalse);
+    });
+
+    test('keeps an emptied objective so it is not treated as new', () {
+      final previous = _plan(
+        objectives: [
+          _objectiveY(actions: const []),
+        ],
+      );
+      final generated = _plan(objectives: [_objectiveY()]);
+
+      final merged = generated.keepActionsFrom(previous);
+
+      expect(merged.objectives.single.id, 'objective-y');
+      expect(merged.objectives.single.actions, isEmpty);
+    });
+  });
+
+  group('ActionPlan.deleteAction', () {
+    test('keeps the objective when the last action is deleted', () {
+      final plan = _plan(
+        objectives: [
+          _objectiveX(actions: [_actionA]),
+        ],
+      );
+
+      final next = plan.deleteAction('a');
+
+      expect(next.objectives, hasLength(1));
+      expect(next.objectives.single.actions, isEmpty);
+    });
+  });
+
+  group('ActionPlan.withoutEmptyObjectives', () {
+    test('hides objectives with no remaining actions', () {
+      final plan = _plan(
+        objectives: [
+          _objectiveX(),
+          _objectiveY(actions: const []),
+        ],
+      );
+
+      expect(
+        plan.withoutEmptyObjectives().objectives.map(
+          (objective) => objective.id,
+        ),
+        ['objective-x'],
+      );
+    });
+  });
+
+  group('ActionPlan.applyProgress', () {
     test(
-      'resets checked and deleted actions when the objective is no longer selected',
+      'applies checked and deleted actions without dropping empty objectives',
       () {
         final progress = ActionPlanProgress(
           byObjectiveId: {
@@ -82,29 +139,28 @@ void main() {
               doneActionIds: {'a'},
             ),
             'objective-y': const ActionPlanObjectiveProgress(
-              deletedActionIds: {'c', 'd'},
+              deletedActionIds: {'c', 'd', 'e'},
             ),
           },
         );
 
-        final withoutY = progress.retainForObjectives(
-          _plan(objectives: [_objectiveX()]),
-        );
-        expect(withoutY.byObjectiveId.containsKey('objective-y'), isFalse);
-
-        final withYAgain = withoutY.retainForObjectives(
-          _plan(objectives: [_objectiveX(), _objectiveY()]),
-        );
         final nextPlan = _plan(
           objectives: [_objectiveX(), _objectiveY()],
-        ).applyProgress(withYAgain);
+        ).applyProgress(progress);
 
         expect(nextPlan.findAction('a')?.done, isTrue);
-        expect(nextPlan.findAction('c')?.done, isFalse);
-        expect(nextPlan.findAction('d')?.done, isFalse);
+        expect(nextPlan.findAction('b')?.done, isFalse);
+        expect(
+          nextPlan.objectives
+              .firstWhere((objective) => objective.id == 'objective-y')
+              .actions,
+          isEmpty,
+        );
       },
     );
+  });
 
+  group('ActionPlanProgress', () {
     test('migrates legacy flat progress onto the matching objectives', () {
       final legacy = ActionPlanProgress.fromJson({
         'doneActionIds': ['a'],
@@ -148,18 +204,25 @@ const _actionE = ActionPlanAction(
   kind: ActionPlanActionKind.advice,
 );
 
-ActionPlanObjective _objectiveX() {
-  return const ActionPlanObjective(
-    id: 'objective-x',
-    title: 'X',
+ActionPlanObjective _objectiveX({
+  String id = 'objective-x',
+  String title = 'X',
+  List<ActionPlanAction>? actions,
+}) {
+  return ActionPlanObjective(
+    id: id,
+    title: title,
     theme: 'x',
-    actions: [_actionA, _actionB],
+    actions: actions ?? const [_actionA, _actionB],
   );
 }
 
-ActionPlanObjective _objectiveY({List<ActionPlanAction>? actions}) {
+ActionPlanObjective _objectiveY({
+  String id = 'objective-y',
+  List<ActionPlanAction>? actions,
+}) {
   return ActionPlanObjective(
-    id: 'objective-y',
+    id: id,
     title: 'Y',
     theme: 'y',
     actions: actions ?? const [_actionC, _actionD, _actionE],
