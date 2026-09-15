@@ -96,6 +96,31 @@ void main() {
     });
   });
 
+  group('ActionPlan.applyDone', () {
+    test('restores checked actions even when the objective is new', () {
+      final plan = _plan(objectives: [_objectiveY()]);
+
+      final next = plan.applyDone({'c', 'e'});
+
+      expect(next.findAction('c')?.done, isTrue);
+      expect(next.findAction('d')?.done, isFalse);
+      expect(next.findAction('e')?.done, isTrue);
+    });
+
+    test('unchecks actions that are no longer in the persisted set', () {
+      final plan = _plan(
+        objectives: [
+          _objectiveX(actions: [_actionA.copyWith(done: true), _actionB]),
+        ],
+      );
+
+      final next = plan.applyDone(const {});
+
+      expect(next.findAction('a')?.done, isFalse);
+      expect(next.findAction('b')?.done, isFalse);
+    });
+  });
+
   group('ActionPlan.deleteAction', () {
     test('keeps the objective when the last action is deleted', () {
       final plan = _plan(

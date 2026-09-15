@@ -208,6 +208,30 @@ class ActionPlan extends Equatable {
     );
   }
 
+  Set<String> get doneActionIds => {
+    for (final objective in objectives)
+      for (final action in objective.actions)
+        if (action.done) action.id,
+  };
+
+  ActionPlan applyDone(Set<String> doneActionIds) {
+    return copyWith(
+      objectives: objectives
+          .map(
+            (objective) => objective.copyWith(
+              actions: objective.actions
+                  .map(
+                    (action) => action.copyWith(
+                      done: doneActionIds.contains(action.id),
+                    ),
+                  )
+                  .toList(),
+            ),
+          )
+          .toList(),
+    );
+  }
+
   ActionPlan applyProgress(ActionPlanProgress progress) {
     return copyWith(
       objectives: objectives.map((objective) {
@@ -381,6 +405,10 @@ class ActionPlanProgress extends Equatable {
   bool get hasLegacy => byObjectiveId.containsKey(_legacyKey);
 
   bool get isEmpty => byObjectiveId.isEmpty;
+
+  Set<String> get allDoneActionIds => {
+    for (final progress in byObjectiveId.values) ...progress.doneActionIds,
+  };
 
   ActionPlanObjectiveProgress forObjective(String objectiveId) {
     return byObjectiveId[objectiveId] ?? const ActionPlanObjectiveProgress();

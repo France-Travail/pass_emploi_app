@@ -185,7 +185,32 @@ void main() {
     );
 
     test(
-      'resets deleted and checked actions after an objective is dropped then selected again',
+      'keeps checked actions when an objective is dropped then selected again',
+      () async {
+        await _stubGenerate(
+          client,
+          _plan(objectives: [_objectiveX(), _objectiveY()]),
+        );
+        await repository.generate('userId', answers);
+        await repository.toggleDone('c');
+
+        await _stubGenerate(client, _plan(objectives: [_objectiveX()]));
+        await repository.generate('userId', answers);
+
+        await _stubGenerate(
+          client,
+          _plan(objectives: [_objectiveX(), _objectiveY()]),
+        );
+        final withYAgain = await repository.generate('userId', answers);
+
+        expect(withYAgain!.findAction('c')?.done, isTrue);
+        expect(withYAgain.findAction('d')?.done, isFalse);
+        expect(withYAgain.findAction('e')?.done, isFalse);
+      },
+    );
+
+    test(
+      'restores deleted actions but keeps checks after an objective is dropped then selected again',
       () async {
         await _stubGenerate(
           client,
@@ -193,6 +218,7 @@ void main() {
         );
         await repository.generate('userId', answers);
         await repository.toggleDone('a');
+        await repository.toggleDone('c');
         await repository.deleteAction('c');
         await repository.deleteAction('d');
 
@@ -211,7 +237,7 @@ void main() {
         final withYAgain = await repository.generate('userId', answers);
 
         expect(withYAgain!.findAction('a')?.done, isTrue);
-        expect(withYAgain.findAction('c')?.done, isFalse);
+        expect(withYAgain.findAction('c')?.done, isTrue);
         expect(withYAgain.findAction('d')?.done, isFalse);
         expect(withYAgain.findAction('e')?.done, isFalse);
       },
