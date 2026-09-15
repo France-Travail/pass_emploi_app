@@ -103,7 +103,7 @@ void main() {
     });
   });
 
-  group('ActionPlanRepository progress across generations', () {
+  group('ActionPlanRepository across generations', () {
     const answers = OnboardingQuestionnaireAnswers(
       situation: QuestionnaireSituation.lycee,
       objectifs: {QuestionnaireObjectif.alternance},
@@ -120,7 +120,30 @@ void main() {
     });
 
     test(
-      'keeps checked actions when the same objective is generated again',
+      'keeps previous actions when the same theme is generated with a new id',
+      () async {
+        await _stubGenerate(client, _plan(objectives: [_objectiveX()]));
+        await repository.generate('userId', answers);
+        await repository.toggleDone('a');
+
+        await _stubGenerate(
+          client,
+          _plan(
+            objectives: [
+              _objectiveX(id: 'objective-x-new'),
+            ],
+          ),
+        );
+        final next = await repository.generate('userId', answers);
+
+        expect(next!.objectives.single.id, 'objective-x-new');
+        expect(next.findAction('a')?.done, isTrue);
+        expect(next.findAction('b')?.done, isFalse);
+      },
+    );
+
+    test(
+      'keeps previous actions when the same objective is generated again',
       () async {
         await _stubGenerate(client, _plan(objectives: [_objectiveX()]));
         await repository.generate('userId', answers);
@@ -139,7 +162,7 @@ void main() {
 
         expect(next!.findAction('a')?.done, isTrue);
         expect(next.findAction('b')?.done, isTrue);
-        expect(next.findAction('e')?.done, isFalse);
+        expect(next.findAction('e'), isNull);
       },
     );
 
@@ -193,6 +216,55 @@ void main() {
         expect(withYAgain.findAction('e')?.done, isFalse);
       },
     );
+
+    test('keeps an emptied objective empty after a new generation', () async {
+      await _stubGenerate(client, _plan(objectives: [_objectiveY()]));
+      await repository.generate('userId', answers);
+      await repository.deleteAction('c');
+      await repository.deleteAction('d');
+      await repository.deleteAction('e');
+
+      await _stubGenerate(client, _plan(objectives: [_objectiveY()]));
+      final next = await repository.generate('userId', answers);
+
+      expect(next!.objectives, isEmpty);
+      expect(next.findAction('c'), isNull);
+      expect(next.findAction('e'), isNull);
+    });
+
+    test('applies stored progress once then clears it', () async {
+      await preferences.write(
+        key: 'actionPlan',
+        value: jsonEncode(
+          _plan(objectives: [_objectiveX(), _objectiveY()]).toJson(),
+        ),
+      );
+      await preferences.write(
+        key: 'actionPlanProgress',
+        value: jsonEncode({
+          'byObjectiveId': {
+            'objective-x': {
+              'doneActionIds': ['a'],
+              'deletedActionIds': ['b'],
+            },
+          },
+        }),
+      );
+
+      final plan = await repository.getStoredPlan();
+
+      expect(plan!.findAction('a')?.done, isTrue);
+      expect(plan.findAction('b'), isNull);
+      expect(plan.findAction('c')?.done, isFalse);
+      expect(await preferences.read(key: 'actionPlanProgress'), isNull);
+
+      final stored = ActionPlan.fromJson(
+        jsonDecode((await preferences.read(key: 'actionPlan'))!)
+            as Map<String, dynamic>,
+      );
+      expect(stored.findAction('a')?.done, isTrue);
+      expect(stored.findAction('b'), isNull);
+    });
   });
 }
 
@@ -222,9 +294,12 @@ const _actionE = ActionPlanAction(
   kind: ActionPlanActionKind.advice,
 );
 
-ActionPlanObjective _objectiveX({List<ActionPlanAction>? actions}) {
+ActionPlanObjective _objectiveX({
+  String id = 'objective-x',
+  List<ActionPlanAction>? actions,
+}) {
   return ActionPlanObjective(
-    id: 'objective-x',
+    id: id,
     title: 'X',
     theme: 'x',
     actions: actions ?? const [_actionA, _actionB],

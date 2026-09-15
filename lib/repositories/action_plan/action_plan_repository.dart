@@ -37,11 +37,10 @@ class ActionPlanRepository {
       final data = response.data;
       if (data is! Map<String, dynamic>) return null;
       final plan = ActionPlan.fromApiJson(data);
-      final previousProgress = await getProgress();
-      final retained = previousProgress.retainForObjectives(plan);
-      await savePlan(plan);
-      await saveProgress(retained);
-      return plan.applyProgress(retained);
+      final previous = await _displayedPlan();
+      final merged = previous == null ? plan : plan.keepActionsFrom(previous);
+      await _persistDisplayedPlan(merged);
+      return merged.withoutEmptyObjectives();
     } catch (e, stack) {
       _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
       return null;
@@ -49,64 +48,70 @@ class ActionPlanRepository {
   }
 
   Future<ActionPlan?> getStoredPlan() async {
-    final plan = await _getRawPlan();
+    final plan = await _displayedPlan();
     if (plan == null) return null;
-    final progress = await getProgress();
-    return plan.applyProgress(progress);
+    if (await _hasProgress()) await _persistDisplayedPlan(plan);
+    return plan.withoutEmptyObjectives();
   }
 
   Future<void> savePlan(ActionPlan plan) async {
     await _preferences.write(key: _planKey, value: jsonEncode(plan.toJson()));
   }
 
-  Future<ActionPlanProgress> getProgress() async {
-    final raw = await _preferences.read(key: _progressKey);
-    if (raw == null || raw.isEmpty) return const ActionPlanProgress();
-    try {
-      final progress = ActionPlanProgress.fromJson(
-        jsonDecode(raw) as Map<String, dynamic>,
-      );
-      if (!progress.hasLegacy) return progress;
-      final plan = await _getRawPlan();
-      if (plan == null) return progress;
-      final migrated = progress.migrateLegacy(plan);
-      await saveProgress(migrated);
-      return migrated;
-    } catch (_) {
-      return const ActionPlanProgress();
-    }
-  }
-
-  Future<void> saveProgress(ActionPlanProgress progress) async {
-    await _preferences.write(
-      key: _progressKey,
-      value: jsonEncode(progress.toJson()),
-    );
-  }
-
   Future<ActionPlan?> toggleDone(String actionId) async {
-    final plan = await getStoredPlan();
+    final plan = await _displayedPlan();
     if (plan == null) return null;
-    final objectiveId = plan.objectiveIdOf(actionId);
-    if (objectiveId == null) return null;
-    final progress = (await getProgress()).toggleDone(objectiveId, actionId);
-    await saveProgress(progress);
-    return plan.toggleDone(actionId);
+    if (plan.objectiveIdOf(actionId) == null) return null;
+    final next = plan.toggleDone(actionId);
+    await _persistDisplayedPlan(next);
+    return next.withoutEmptyObjectives();
   }
 
   Future<ActionPlan?> deleteAction(String actionId) async {
-    final plan = await getStoredPlan();
+    final plan = await _displayedPlan();
     if (plan == null) return null;
-    final objectiveId = plan.objectiveIdOf(actionId);
-    if (objectiveId == null) return null;
-    final progress = (await getProgress()).deleteAction(objectiveId, actionId);
-    await saveProgress(progress);
-    return plan.deleteAction(actionId);
+    if (plan.objectiveIdOf(actionId) == null) return null;
+    final next = plan.deleteAction(actionId);
+    await _persistDisplayedPlan(next);
+    return next.withoutEmptyObjectives();
   }
 
   Future<void> clear() async {
     await _preferences.delete(key: _planKey);
     await _preferences.delete(key: _progressKey);
+  }
+
+  Future<ActionPlan?> _displayedPlan() async {
+    final plan = await _getRawPlan();
+    if (plan == null) return null;
+    final progress = await _readProgress();
+    if (progress.isEmpty) return plan;
+    final migrated = progress.hasLegacy
+        ? progress.migrateLegacy(plan)
+        : progress;
+    return plan.applyProgress(migrated);
+  }
+
+  Future<void> _persistDisplayedPlan(ActionPlan plan) async {
+    await savePlan(plan);
+    await _preferences.delete(key: _progressKey);
+  }
+
+  Future<bool> _hasProgress() async {
+    final raw = await _preferences.read(key: _progressKey);
+    return raw != null && raw.isNotEmpty;
+  }
+
+  Future<ActionPlanProgress> _readProgress() async {
+    final raw = await _preferences.read(key: _progressKey);
+    if (raw == null || raw.isEmpty) return const ActionPlanProgress();
+    try {
+      return ActionPlanProgress.fromJson(
+        jsonDecode(raw) as Map<String, dynamic>,
+      );
+    } catch (_) {
+      return const ActionPlanProgress();
+    }
   }
 
   Future<ActionPlan?> _getRawPlan() async {
