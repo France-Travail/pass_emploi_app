@@ -57,7 +57,7 @@ void main() {
             expect(result.generator, 'fallback');
             expect(result.objectives, hasLength(1));
             expect(result.objectives.first.title, 'Trouver une alternance');
-            expect(result.objectives.first.theme, 'apprenticeship');
+            expect(result.objectives.first.theme, 'ALTERNANCE');
             expect(result.objectives.first.actions, [
               const ActionPlanAction(
                 id: 'p-134',

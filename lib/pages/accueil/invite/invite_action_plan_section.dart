@@ -66,9 +66,7 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
   @override
   Widget build(BuildContext context) {
     final objective = widget.objective;
-    final visibleActions = _showAll
-        ? objective.actions
-        : objective.actions.take(_initialVisible).toList();
+    final visibleActions = _showAll ? objective.actions : objective.actions.take(_initialVisible).toList();
     final hasMore = objective.actions.length > _initialVisible;
 
     return Column(
@@ -107,9 +105,7 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
                       objective.doneCount,
                       objective.totalCount,
                     ),
-                    type: objective.isComplete
-                        ? DsfrBadgeType.success
-                        : DsfrBadgeType.news,
+                    type: objective.isComplete ? DsfrBadgeType.success : DsfrBadgeType.news,
                     size: DsfrComponentSize.sm,
                     withIcon: true,
                   ),
@@ -166,9 +162,7 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
               ),
             ),
           ),
-          crossFadeState: _expanded
-              ? CrossFadeState.showSecond
-              : CrossFadeState.showFirst,
+          crossFadeState: _expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
           duration: AnimationDurations.medium,
           sizeCurve: _animationCurve,
         ),
@@ -189,10 +183,7 @@ class InviteActionPlanActionTile extends StatelessWidget {
   final VoidCallback onToggleDone;
   final VoidCallback onDelete;
 
-  bool get _hasLink =>
-      action.kind == ActionPlanActionKind.link &&
-      action.url != null &&
-      action.url!.isNotEmpty;
+  bool get _hasLink => action.kind == ActionPlanActionKind.link && action.url != null && action.url!.isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
@@ -251,14 +242,11 @@ class InviteActionPlanActionTile extends StatelessWidget {
                                 action.serviceName!,
                                 style:
                                     DsfrTextStyle.bodySm(
-                                      color:
-                                          DsfrColorDecisions.textActionHighBlueFrance(
-                                            context,
-                                          ),
+                                      color: DsfrColorDecisions.textActionHighBlueFrance(
+                                        context,
+                                      ),
                                     ).copyWith(
-                                      decoration: _hasLink
-                                          ? TextDecoration.underline
-                                          : null,
+                                      decoration: _hasLink ? TextDecoration.underline : null,
                                       decorationColor: _hasLink
                                           ? DsfrColorDecisions.textActionHighBlueFrance(
                                               context,
@@ -275,10 +263,9 @@ class InviteActionPlanActionTile extends StatelessWidget {
                                 child: Icon(
                                   DsfrIcons.systemExternalLinkLine,
                                   size: 12,
-                                  color:
-                                      DsfrColorDecisions.textActionHighBlueFrance(
-                                        context,
-                                      ),
+                                  color: DsfrColorDecisions.textActionHighBlueFrance(
+                                    context,
+                                  ),
                                 ),
                               ),
                             ],
@@ -326,9 +313,7 @@ class _EmojiAvatar extends StatelessWidget {
         style: TextStyle(
           fontSize: 24,
           // Force color emoji on iOS for dingbats like ✈️ (U+2708).
-          fontFamily: defaultTargetPlatform == TargetPlatform.iOS
-              ? 'Apple Color Emoji'
-              : null,
+          fontFamily: defaultTargetPlatform == TargetPlatform.iOS ? 'Apple Color Emoji' : null,
         ),
       ),
     );
@@ -336,55 +321,63 @@ class _EmojiAvatar extends StatelessWidget {
 }
 
 // Emojis/colors mirror QuestionnaireObjectif / QuestionnaireFrein themes
-// returned by the plan-action API (opaque theme slugs).
+// returned by the plan-action API (GoalDto / ObstacleDto codes).
 String _emojiForTheme(String theme) => switch (theme) {
   // Goals
-  'orientation' => '🧭',
-  'discover-jobs' => '🔎',
-  'training' => '📚',
-  'internship-immersion' => '👀',
-  'apprenticeship' => '🔧',
-  'job' => '💼',
-  'civic-engagement' => '🤝',
-  'international-mobility' => '✈️',
-  'guidance-support' => '🩹',
-  'start-business' => '🚀',
-  'dont-know' => '🍿',
+  'ORIENTER' => '🧭',
+  'DECOUVRIR_METIERS' => '🔎',
+  'FORMER' => '📚',
+  'STAGE_IMMERSION' => '👀',
+  'ALTERNANCE' => '🔧',
+  'EMPLOI' => '💼',
+  'ENGAGER' => '🤝',
+  'MOBILITE_INTERNATIONALE' => '✈️',
+  'ACCOMPAGNE' => '🧰',
+  'CREER_ACTIVITE' => '🚀',
+  'VIE_QUOTIDIENNE' => '🍿',
   // Obstacles
-  'transport' => '🚗',
-  'housing' => '🏠',
-  'confidence' => '😟',
-  'money' => '💶',
-  'no-diploma' => '🎓',
-  'disability' => '♿',
-  'health' => '🩺',
-  'childcare' => '👶',
-  'no-device' => '💻',
+  'PAS_DE_PERMIS' => '🚗',
+  'PAS_DE_TRANSPORT' => '🚌',
+  'PAS_DE_LOGEMENT' => '🏠',
+  'MANQUE_CONFIANCE' => '😟',
+  'FIN_DE_MOIS' => '💶',
+  'PAS_DE_DIPLOME' => '🎓',
+  'PEU_EXPERIENCE' => '💼',
+  'HANDICAP' => '♿',
+  'SANTE' => '🩺',
+  'GARDE_ENFANT' => '👶',
+  'NUMERIQUE' => '💻',
+  'FRANCAIS' => '🗣️',
+  'RIEN_NE_ME_BLOQUE' => '✅',
   _ => '🎯',
 };
 
 Color _colorForTheme(String theme) => switch (theme) {
   // Goals
-  'orientation' => DsfrColors.pinkTuile950,
-  'discover-jobs' => DsfrColors.greenTilleulVerveine950,
-  'training' => DsfrColors.purpleGlycine950,
-  'internship-immersion' => DsfrColors.blueCumulus950,
-  'apprenticeship' => DsfrColors.blueFrance925,
-  'job' => DsfrColors.greenEmeraude950,
-  'civic-engagement' => DsfrColors.greenTilleulVerveine925,
-  'international-mobility' => DsfrColors.purpleGlycine925,
-  'guidance-support' => DsfrColors.pinkTuile925,
-  'start-business' => DsfrColors.greenEmeraude925,
-  'dont-know' => DsfrColors.pinkTuile950,
+  'ORIENTER' => DsfrColors.pinkTuile950,
+  'DECOUVRIR_METIERS' => DsfrColors.greenTilleulVerveine950,
+  'FORMER' => DsfrColors.purpleGlycine950,
+  'STAGE_IMMERSION' => DsfrColors.greenArchipel950,
+  'ALTERNANCE' => DsfrColors.blueEcume950,
+  'EMPLOI' => DsfrColors.greenEmeraude975,
+  'ENGAGER' => DsfrColors.yellowTournesol950,
+  'MOBILITE_INTERNATIONALE' => DsfrColors.purpleGlycine950,
+  'ACCOMPAGNE' => DsfrColors.yellowMoutarde950,
+  'CREER_ACTIVITE' => DsfrColors.greenBourgeon975,
+  'VIE_QUOTIDIENNE' => DsfrColors.pinkTuile950,
   // Obstacles
-  'transport' => DsfrColors.greenTilleulVerveine950,
-  'housing' => DsfrColors.greenEmeraude950,
-  'confidence' => DsfrColors.pinkTuile950,
-  'money' => DsfrColors.greenTilleulVerveine925,
-  'no-diploma' => DsfrColors.blueFrance925,
-  'disability' => DsfrColors.blueCumulus950,
-  'health' => DsfrColors.purpleGlycine950,
-  'childcare' => DsfrColors.pinkTuile925,
-  'no-device' => DsfrColors.greenTilleulVerveine950,
+  'PAS_DE_PERMIS' => DsfrColors.greenTilleulVerveine950,
+  'PAS_DE_TRANSPORT' => DsfrColors.blueFrance950,
+  'PAS_DE_LOGEMENT' => DsfrColors.greenEmeraude950,
+  'MANQUE_CONFIANCE' => DsfrColors.warning950,
+  'FIN_DE_MOIS' => DsfrColors.brownCafeCreme925,
+  'PAS_DE_DIPLOME' => DsfrColors.beigeGrisGaletMain702Active,
+  'PEU_EXPERIENCE' => DsfrColors.success950,
+  'HANDICAP' => DsfrColors.greenMenthe950,
+  'SANTE' => DsfrColors.purpleGlycine925,
+  'GARDE_ENFANT' => DsfrColors.blueEcume925,
+  'NUMERIQUE' => DsfrColors.yellowMoutarde950,
+  'FRANCAIS' => DsfrColors.greenEmeraude925,
+  'RIEN_NE_ME_BLOQUE' => DsfrColors.purpleGlycine950,
   _ => DsfrColors.blueCumulus950,
 };
