@@ -429,6 +429,9 @@ class Strings {
   static String inviteAccueilStepsCount(int current, int total) => "$current/$total étapes";
   static String inviteAccueilResumeQuestionnaire = "Reprendre le questionnaire";
   static String inviteAccueilModifier = "Modifier";
+  static String actionPlanFeedbackTitle = "Avant de continuer";
+  static String actionPlanFeedbackDescription = "Aide nous à comprendre pourquoi ce plan d'action n'est pas adapté.";
+  static String actionPlanFeedbackGiveOpinion = "Donne ton avis";
   static String inviteAccueilExplorerTipTitle = "💡 Pas envie de répondre maintenant?";
   static String inviteAccueilExplorerTipBody = "Tu peux explorer librement les offres et les événements depuis le menu";
   static String inviteAccueilConseillerTitle = "Être accompagné par un conseiller ?";

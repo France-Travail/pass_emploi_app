@@ -11,6 +11,7 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/bottom_sheets/action_plan_feedback_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/notifications_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 
@@ -59,6 +60,12 @@ class _Content extends StatelessWidget {
   const _Content({required this.viewModel});
 
   final InviteAccueilViewModel viewModel;
+
+  Future<void> _onModifierPressed(BuildContext context) async {
+    final shouldResume = await ActionPlanFeedbackBottomSheet.show(context);
+    if (!context.mounted || shouldResume != true) return;
+    viewModel.resumeOnboarding();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +144,7 @@ class _Content extends StatelessWidget {
               icon: DsfrIcons.designEditLine,
               variant: DsfrButtonVariant.secondary,
               size: DsfrComponentSize.lg,
-              onPressed: viewModel.resumeOnboarding,
+              onPressed: () => _onModifierPressed(context),
             ),
           ],
           if (viewModel.showExplorerTip) ...[
