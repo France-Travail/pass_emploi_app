@@ -662,7 +662,7 @@ class Strings {
 
   static const String userActionConfirmationDoneTag = "Action terminée";
   static String userActionConfirmationSubtitle(String actionContent) =>
-      "L’action « $actionContent », est enregistrée.\n\nTon conseiller en est informé. Vous pourrez en discuter ensemble lors de votre prochain rendez-vous\u{00A0}!";
+      "L’action « $actionContent », est enregistrée.\n\nTon conseiller en est informé. Tu pourras en discuter ensemble lors de ton prochain rendez-vous\u{00A0}!";
   static const String userActionConfirmationSubtitleLegacy =
       "L’action est en route vers ton conseiller. Tu pourras en discuter ensemble lors de ton prochain rendez-vous\u{00A0}!";
   static const String userActionConfirmationSubtitlePlural =
