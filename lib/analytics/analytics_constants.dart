@@ -136,6 +136,7 @@ class AnalyticsScreenNames {
 
   static String inAppFeedbackFeature(String feature) => "/feedback/$feature/affichage";
   static String inAppFeedbackFeatureFermeture(String feature) => "/feedback/$feature/fermeture";
+  static const actionPlanFeedback = "/feedback/action-plan/affichage";
 
   static const offreNotFound = "offre_not_found";
 }
@@ -275,6 +276,8 @@ class AnalyticsEventNames {
   static const feedback3Action = "Note 3/5";
   static const feedback4Action = "Note 4/5";
   static const feedback5Action = "Note 5/5";
+  static const actionPlanFeedbackGiveOpinionAction = "Donne ton avis";
+  static const actionPlanFeedbackSkipAction = "Passer cette étape";
 
   static const accueilCategory = "Accueil";
   static const accueilDetailSemainePressed = "Clic sur le détail de la semaine";
