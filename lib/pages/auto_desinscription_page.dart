@@ -1,24 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription_actions.dart';
 import 'package:pass_emploi_app/features/events/list/event_list_actions.dart';
 import 'package:pass_emploi_app/presentation/auto_desinscription_view_model.dart';
 import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
-import 'package:pass_emploi_app/ui/media_sizes.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
-import 'package:pass_emploi_app/widgets/errors/error_text.dart';
-import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
-import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
+import 'package:pass_emploi_app/widgets/success/bottom_actions.dart';
+import 'package:pass_emploi_app/widgets/success/success_illustration.dart';
 
 class DesinscriptionPage extends StatelessWidget {
   const DesinscriptionPage({super.key, required this.source, required this.rdvId});
@@ -41,16 +37,24 @@ class DesinscriptionPage extends StatelessWidget {
         store.dispatch(AutoDesinscriptionResetAction());
         store.dispatch(EventListRequestAction(DateTime.now(), forceRefresh: true));
       },
-      builder: (context, viewModel) => Scaffold(
-        backgroundColor: context.bg,
-        appBar: SecondaryAppBar(
-          title: switch (viewModel.displayState) {
-            AutoDesinscriptionDisplayState.success => Strings.autoDesinscriptionSuccessAppBarTitle,
-            _ => Strings.annulerInscription,
-          },
-        ),
-        body: _Body(viewModel: viewModel, textController: textController),
-      ),
+      builder: (context, viewModel) {
+        final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+        final backgroundColor = DsfrColorDecisions.backgroundDefaultGrey(context);
+        return Theme(
+          data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+          child: Scaffold(
+            backgroundColor: backgroundColor,
+            appBar: SecondaryAppBar(
+              title: switch (viewModel.displayState) {
+                AutoDesinscriptionDisplayState.success => Strings.autoDesinscriptionSuccessAppBarTitle,
+                _ => Strings.annulerInscription,
+              },
+              backgroundColor: backgroundColor,
+            ),
+            body: _Body(viewModel: viewModel, textController: textController),
+          ),
+        );
+      },
     );
   }
 }
@@ -63,11 +67,11 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(Margins.spacing_base),
+      padding: const EdgeInsets.all(DsfrSpacings.s2w),
       child: switch (viewModel.displayState) {
-        AutoDesinscriptionDisplayState.loading => _Loading(),
+        AutoDesinscriptionDisplayState.loading => const _Loading(),
         AutoDesinscriptionDisplayState.success => _Success(viewModel: viewModel),
-        AutoDesinscriptionDisplayState.failure => _Failure(),
+        AutoDesinscriptionDisplayState.failure => const _Failure(),
         AutoDesinscriptionDisplayState.initial => _Form(viewModel: viewModel, textController: textController),
       },
     );
@@ -76,6 +80,7 @@ class _Body extends StatelessWidget {
 
 class _Loading extends StatelessWidget {
   const _Loading();
+
   @override
   Widget build(BuildContext context) {
     return const Center(child: CircularProgressIndicator());
@@ -90,11 +95,29 @@ class _Failure extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox.square(dimension: 150, child: Illustration.red(AppIcons.warning_rounded)),
-        SizedBox(height: Margins.spacing_m),
-        ErrorText(Strings.genericError),
-        SizedBox(height: Margins.spacing_base),
-        _CloseButton(),
+        SvgPicture.asset(
+          Drawables.illustrationWarning,
+          width: 160,
+          height: 160,
+          excludeFromSemantics: true,
+        ),
+        const SizedBox(height: DsfrSpacings.s3w),
+        Semantics(
+          header: true,
+          child: Text(
+            Strings.error,
+            style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        const SizedBox(height: DsfrSpacings.s1w),
+        Text(
+          Strings.genericError,
+          style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: DsfrSpacings.s3w),
+        const _CloseButton(),
       ],
     );
   }
@@ -106,26 +129,43 @@ class _Success extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(height: Margins.spacing_xl),
-        SizedBox.square(
-          dimension: height < MediaSizes.height_xs ? 60 : 130,
-          child: Image.asset(Drawables.success),
-        ),
-        SizedBox(height: Margins.spacing_xl),
-        Text(
-          Strings.autoDesinscriptionSuccessTitle(viewModel.title ?? ""),
-          style: TextStyles.textMBold.copyWith(color: context.content),
-          textAlign: TextAlign.center,
-        ),
-        SizedBox(height: Margins.spacing_xl),
-        _SuccessCloseButton(),
-      ],
+    return SafeArea(
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(height: DsfrSpacings.s3w),
+                  const SuccessIllustration(size: 160),
+                  const SizedBox(height: DsfrSpacings.s3w),
+                  Semantics(
+                    header: true,
+                    child: Text(
+                      Strings.autoDesinscriptionSuccessTitle(viewModel.title ?? ""),
+                      style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          BottomActions(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: DsfrButton(
+                  label: Strings.autoDesinscriptionVoirAutresEvenements,
+                  variant: DsfrButtonVariant.primary,
+                  size: DsfrComponentSize.md,
+                  onPressed: () => Navigator.of(context).pop(true),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -142,36 +182,51 @@ class _Form extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (viewModel.title != null) Text(viewModel.title!, style: TextStyles.textLBold(color: context.content)),
-          SizedBox(height: Margins.spacing_m),
-          Wrap(
-            spacing: Margins.spacing_base,
-            children: [
-              CardComplement.date(text: viewModel.date),
-              CardComplement.hour(text: viewModel.hourAndDuration),
-            ],
+          if (viewModel.title != null)
+            Semantics(
+              header: true,
+              child: Text(
+                viewModel.title!,
+                style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+              ),
+            ),
+          const SizedBox(height: DsfrSpacings.s2w),
+          DsfrDetailIconLine(
+            icon: DsfrIcons.businessCalendarLine,
+            text: viewModel.date,
           ),
-          SizedBox(height: Margins.spacing_m),
-          Text(Strings.autoDesinscriptionFormConfirmation, style: TextStyles.textMBold.copyWith(color: context.content)),
-          SizedBox(height: Margins.spacing_m),
-          Text(Strings.autoDesinscriptionFormFieldTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-          SizedBox(height: Margins.spacing_s),
-          BaseTextField(
+          const SizedBox(height: DsfrSpacings.s1w),
+          DsfrDetailIconLine(
+            icon: DsfrIcons.systemTimeLine,
+            text: viewModel.hourAndDuration,
+            semanticsLabel: viewModel.hourAndDuration.toTimeAndDurationForScreenReaders(),
+          ),
+          const SizedBox(height: DsfrSpacings.s2w),
+          Text(
+            Strings.autoDesinscriptionFormConfirmation,
+            style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+          ),
+          const SizedBox(height: DsfrSpacings.s2w),
+          KeyedSubtree(
             key: _textFieldKey,
-            controller: textController,
-            minLines: 5,
-            maxLength: 250,
-            onChanged: (value) {
-              Scrollable.ensureVisible(_textFieldKey.currentContext!);
-            },
+            child: DsfrInput(
+              label: Strings.autoDesinscriptionFormFieldTitle,
+              controller: textController,
+              minLines: 5,
+              maxLines: 5,
+              inputFormatters: [LengthLimitingTextInputFormatter(250)],
+              onChanged: (value) {
+                Scrollable.ensureVisible(_textFieldKey.currentContext!);
+              },
+            ),
           ),
-          SizedBox(height: Margins.spacing_base),
+          const SizedBox(height: DsfrSpacings.s2w),
           _ConfirmButton(
             onPressed: () => viewModel.desinscribe(textController.text),
             textController: textController,
           ),
-          SizedBox(height: Margins.spacing_base),
-          _CancelButton(),
+          const SizedBox(height: DsfrSpacings.s2w),
+          const _CancelButton(),
         ],
       ),
     );
@@ -196,31 +251,25 @@ class _ConfirmButtonState extends State<_ConfirmButton> {
     widget.textController.addListener(_onTextChanged);
   }
 
+  @override
+  void dispose() {
+    widget.textController.removeListener(_onTextChanged);
+    super.dispose();
+  }
+
   void _onTextChanged() {
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return PrimaryActionButton(
-      label: Strings.autoDesinscriptionConfirm,
-      onPressed: isDisabled ? null : widget.onPressed,
-    );
-  }
-}
-
-class _SuccessCloseButton extends StatelessWidget {
-  const _SuccessCloseButton();
-
-  @override
-  Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: PrimaryActionButton(
-        label: Strings.autoDesinscriptionVoirAutresEvenements,
-        onPressed: () {
-          Navigator.of(context).pop(true);
-        },
+      child: DsfrButton(
+        label: Strings.autoDesinscriptionConfirm,
+        variant: DsfrButtonVariant.primary,
+        size: DsfrComponentSize.md,
+        onPressed: isDisabled ? null : widget.onPressed,
       ),
     );
   }
@@ -231,11 +280,14 @@ class _CancelButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SecondaryButton(
-      label: Strings.autoDesinscriptionCancel,
-      onPressed: () {
-        Navigator.of(context).pop(false);
-      },
+    return SizedBox(
+      width: double.infinity,
+      child: DsfrButton(
+        label: Strings.autoDesinscriptionCancel,
+        variant: DsfrButtonVariant.secondary,
+        size: DsfrComponentSize.md,
+        onPressed: () => Navigator.of(context).pop(false),
+      ),
     );
   }
 }
@@ -247,8 +299,10 @@ class _CloseButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: SecondaryButton(
+      child: DsfrButton(
         label: Strings.close,
+        variant: DsfrButtonVariant.secondary,
+        size: DsfrComponentSize.md,
         onPressed: () => Navigator.of(context).pop(false),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/features/demarche/create/create_demarche_state.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/create_demarche_success_page.dart';
@@ -6,20 +7,13 @@ import 'package:pass_emploi_app/presentation/demarche/create_demarche_step3_view
 import 'package:pass_emploi_app/presentation/demarche/demarche_creation_state.dart';
 import 'package:pass_emploi_app/presentation/demarche/demarche_source.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
+import 'package:pass_emploi_app/presentation/model/date_input_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/font_sizes.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
-import 'package:pass_emploi_app/widgets/a11y/mandatory_fields_label.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/date_pickers/date_picker.dart';
-import 'package:pass_emploi_app/widgets/errors/error_text.dart';
-import 'package:pass_emploi_app/widgets/radio_list_tile.dart';
-import 'package:pass_emploi_app/widgets/sepline.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_date_input_suggestions.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_selectable_card.dart';
 import 'package:redux/redux.dart';
 
 class CreateDemarcheDuReferentielForm extends StatefulWidget {
@@ -99,6 +93,7 @@ class _Form extends StatefulWidget {
 class _FormState extends State<_Form> {
   String? _codeComment;
   DateTime? _endDate;
+  DateInputSource _dateSource = DateNotInitialized();
 
   @override
   void initState() {
@@ -113,42 +108,82 @@ class _FormState extends State<_Form> {
     }
 
     return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(Margins.spacing_m),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.viewModel.quoi, style: TextStyles.textBaseBoldWithColor(AppColors.primary)),
-            if (widget.viewModel.isCommentMandatory) _Mandatory(),
-            if (widget.viewModel.comments.isNotEmpty) _Section(Strings.comment),
-            if (widget.viewModel.isCommentMandatory) _SelectLabel(Strings.selectComment),
+      padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SizedBox(height: DsfrSpacings.s2w),
+          Semantics(
+            header: true,
+            child: Text(
+              widget.viewModel.quoi,
+              style: DsfrTextStyle.bodyLg(color: DsfrColorDecisions.textTitleGrey(context)),
+            ),
+          ),
+          if (widget.viewModel.isCommentMandatory) ...[
+            const SizedBox(height: DsfrSpacings.s1w),
+            Text(
+              Strings.allMandatoryFields,
+              style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textMentionGrey(context)),
+            ),
+          ],
+          if (widget.viewModel.comments.isNotEmpty) ...[
+            const SizedBox(height: DsfrSpacings.s3w),
+            Text(
+              Strings.comment,
+              style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+            ),
+            if (widget.viewModel.isCommentMandatory) ...[
+              const SizedBox(height: DsfrSpacings.s1w),
+              Text(
+                Strings.selectComment,
+                style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+              ),
+            ],
+            const SizedBox(height: DsfrSpacings.s2w),
             _Comments(
               widget.viewModel.comments,
               _codeComment,
               (codeComment) => setState(() => _codeComment = codeComment),
             ),
-            _Section(Strings.quand),
-            _SelectLabel(Strings.selectQuand),
-            DatePicker(
-              onDateSelected: (date) => setState(() => _endDate = date),
-              initialDateValue: _endDate,
-              isActiveDate: true,
-            ),
-            SizedBox(height: Margins.spacing_xl),
-            if (widget.viewModel.displayState == DisplayState.FAILURE) ErrorText(Strings.genericCreationError),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                PrimaryActionButton(
-                  label: widget.createDemarcheButtonLabel,
-                  onPressed: _buttonIsActive(widget.viewModel)
-                      ? () => widget.viewModel.onCreateDemarche(_codeComment, _endDate!)
-                      : null,
-                ),
-              ],
+          ],
+          const SizedBox(height: DsfrSpacings.s3w),
+          Text(
+            Strings.quand,
+            style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+          ),
+          const SizedBox(height: DsfrSpacings.s2w),
+          DsfrDateInputSuggestions(
+            label: Strings.selectQuand,
+            dateSource: _dateSource,
+            onDateChanged: (dateSource) {
+              setState(() {
+                _dateSource = dateSource;
+                _endDate = dateSource.isValid ? dateSource.selectedDate : null;
+              });
+            },
+          ),
+          if (widget.viewModel.displayState == DisplayState.FAILURE) ...[
+            const SizedBox(height: DsfrSpacings.s3w),
+            DsfrAlert(
+              type: DsfrAlertType.error,
+              description: DsfrAlertDescriptionText(Strings.genericCreationError),
             ),
           ],
-        ),
+          const SizedBox(height: DsfrSpacings.s3w),
+          SizedBox(
+            width: double.infinity,
+            child: DsfrButton(
+              label: widget.createDemarcheButtonLabel,
+              variant: DsfrButtonVariant.primary,
+              size: DsfrComponentSize.md,
+              onPressed: _buttonIsActive(widget.viewModel)
+                  ? () => widget.viewModel.onCreateDemarche(_codeComment, _endDate!)
+                  : null,
+            ),
+          ),
+          const SizedBox(height: DsfrSpacings.s2w),
+        ],
       ),
     );
   }
@@ -169,73 +204,25 @@ class _Comments extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: comments.map((comment) {
+    return ListView.separated(
+      itemCount: comments.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      separatorBuilder: (context, index) => const SizedBox(height: DsfrSpacings.s2w),
+      itemBuilder: (context, index) {
+        final comment = comments[index];
         if (comment is CommentTextItem) {
-          return Text(comment.label, style: TextStyles.textBaseBold.copyWith(color: context.content));
+          return Text(
+            comment.label,
+            style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+          );
         }
-        return CustomRadioGroup<String>(
-          title: comment.label,
-          value: comment.code,
-          groupValue: codeComment,
-          onChanged: onCommentSelected,
+        return DsfrSelectableCard(
+          label: comment.label,
+          selected: codeComment == comment.code,
+          onTap: () => onCommentSelected(comment.code),
         );
-      }).toList(),
-    );
-  }
-}
-
-class _Mandatory extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: Margins.spacing_l),
-      child: MandatoryFieldsLabel.all(),
-    );
-  }
-}
-
-class _SelectLabel extends StatelessWidget {
-  final String _label;
-
-  const _SelectLabel(this._label);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: Margins.spacing_l),
-      child: Text(_label, style: TextStyles.textSRegular(color: context.content)),
-    );
-  }
-}
-
-class _Section extends StatelessWidget {
-  final String _section;
-
-  const _Section(this._section);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: Margins.spacing_m),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: '•',
-                  style: TextStyle(color: AppColors.primary, fontSize: FontSizes.huge, fontWeight: FontWeight.w900),
-                ),
-                WidgetSpan(child: SizedBox(width: Margins.spacing_base)),
-                TextSpan(text: _section, style: TextStyles.textMBold.copyWith(color: context.content)),
-              ],
-            ),
-          ),
-          SepLine(Margins.spacing_m, Margins.spacing_m),
-        ],
-      ),
+      },
     );
   }
 }
