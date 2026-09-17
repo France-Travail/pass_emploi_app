@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_form_change_notifier.dart';
@@ -238,6 +239,91 @@ void main() {
       form.updateBirthMonth('06');
 
       expect(form.canContinue, false);
+    });
+  });
+
+  group('minimum age', () {
+    final today = DateTime(2026, 9, 17, 10, 30);
+
+    bool isUnderMinimumAge(DateTime birthDate) {
+      return OnboardingQuestionnaireFormChangeNotifier.isUnderMinimumAge(birthDate, today);
+    }
+
+    test('15th birthday today is not under minimum age', () {
+      expect(isUnderMinimumAge(DateTime(2011, 9, 17)), false);
+    });
+
+    test('15th birthday tomorrow is under minimum age', () {
+      expect(isUnderMinimumAge(DateTime(2011, 9, 18)), true);
+    });
+
+    test('25 years old and more is not under minimum age', () {
+      expect(isUnderMinimumAge(DateTime(2001, 9, 17)), false);
+      expect(isUnderMinimumAge(DateTime(1990, 1, 1)), false);
+    });
+
+    test('future birth date is under minimum age', () {
+      expect(isUnderMinimumAge(DateTime(2030, 3, 12)), true);
+    });
+
+    test('born on February 29 turns 15 on March 1 of a non-leap year', () {
+      final birthDate = DateTime(2012, 2, 29);
+
+      expect(OnboardingQuestionnaireFormChangeNotifier.isUnderMinimumAge(birthDate, DateTime(2027, 2, 28)), true);
+      expect(OnboardingQuestionnaireFormChangeNotifier.isUnderMinimumAge(birthDate, DateTime(2027, 3, 1)), false);
+    });
+
+    group('on birthdate step', () {
+      setUp(() async {
+        await form.init();
+        form.step = OnboardingQuestionnaireStep.dateNaissance;
+      });
+
+      test('under minimum age keeps continue enabled but does not save nor advance', () async {
+        await withClock(Clock.fixed(today), () async {
+          form.updateBirthDay('18');
+          form.updateBirthMonth('09');
+          form.updateBirthYear('2011');
+
+          expect(form.canContinue, true);
+          expect(form.isBirthDateUnderMinimumAge, true);
+
+          await form.continueStep();
+
+          expect(form.step, OnboardingQuestionnaireStep.dateNaissance);
+          expect(form.savedAnswers.dateNaissance, isNull);
+          expect(savedCalls, isEmpty);
+          expect(form.parsedBirthDate, DateTime(2011, 9, 18));
+        });
+      });
+
+      test('another birth date after being blocked continues', () async {
+        await withClock(Clock.fixed(today), () async {
+          form.updateBirthDay('18');
+          form.updateBirthMonth('09');
+          form.updateBirthYear('2011');
+          await form.continueStep();
+
+          form.updateBirthYear('2010');
+          await form.continueStep();
+
+          expect(form.step, OnboardingQuestionnaireStep.habitation);
+          expect(form.savedAnswers.dateNaissance, DateTime(2010, 9, 18));
+        });
+      });
+
+      test('skip is still possible with an under minimum age draft', () async {
+        await withClock(Clock.fixed(today), () async {
+          form.updateBirthDay('18');
+          form.updateBirthMonth('09');
+          form.updateBirthYear('2011');
+
+          await form.skipStep();
+
+          expect(form.step, OnboardingQuestionnaireStep.habitation);
+          expect(form.savedAnswers.dateNaissance, isNull);
+        });
+      });
     });
   });
 
