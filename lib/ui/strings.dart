@@ -176,7 +176,7 @@ class Strings {
   // First Launch Onboarding
   static String firstLaunchOnboardingTagline = "Tes envies,\ntes projets,\ntes solutions.";
   static String firstLaunchOnboardingDescription =
-      "L'app des 14-25 ans qui t'accompagne dans tous tes projets : études, emploi, logement, mobilité, santé, loisirs et bien plus";
+      "L'app des 15-25 ans qui t'accompagne dans tous tes projets : études, emploi, logement, mobilité, santé, loisirs et bien plus";
 
   static String firstLaunchOnboardingCardTitle1 =
       "Des suggestions d’actions personnalisées pour démarrer selon tes objectifs";
@@ -315,8 +315,8 @@ class Strings {
   static String onboardingQuestionnaireBirthdateTitle = "Ta date de naissance";
   static String onboardingQuestionnaireBirthdateGreeting(String? prenom) {
     final trimmed = prenom?.trim() ?? '';
-    if (trimmed.isEmpty) return "Salut ! L'app est réservée aux 14-25 ans.";
-    return "Salut $trimmed ! L'app est réservée aux 14-25 ans.";
+    if (trimmed.isEmpty) return "Salut ! L'app est réservée aux 15-25 ans.";
+    return "Salut $trimmed ! L'app est réservée aux 15-25 ans.";
   }
 
   static String onboardingQuestionnaireBirthdateSubtitle =
@@ -325,6 +325,11 @@ class Strings {
   static String onboardingQuestionnaireBirthdateDayLabel = "Jour";
   static String onboardingQuestionnaireBirthdateMonthLabel = "Mois";
   static String onboardingQuestionnaireBirthdateYearLabel = "Année";
+  static String onboardingQuestionnaireUnderAgeTitle = "Reviens dans quelque temps\u{00A0}!";
+  static String onboardingQuestionnaireUnderAgeDescription = "Cette appli est destinée aux jeunes de 15 à 25 ans.";
+  static String onboardingQuestionnaireUnderAgeNoticeTitle = "Encore un peu de patience";
+  static String onboardingQuestionnaireUnderAgeNoticeDescription =
+      "Tu pourras l’utiliser dès tes 15 ans. À très vite pour explorer tes pistes ensemble\u{00A0}!";
 
   static String onboardingQuestionnaireHabitationTitle = "Où habites-tu ?";
   static String onboardingQuestionnaireHabitationSubtitle =

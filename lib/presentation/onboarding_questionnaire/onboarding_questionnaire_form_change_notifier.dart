@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 
@@ -175,6 +176,22 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     return date;
   }
 
+  static const int minimumAge = 15;
+
+  /// Moins de 15 ans à la date du jour : l'app ne laisse pas continuer (passer l'étape reste possible).
+  bool get isBirthDateUnderMinimumAge {
+    final birthDate = parsedBirthDate;
+    return birthDate != null && isUnderMinimumAge(birthDate, clock.now());
+  }
+
+  /// Une date future compte comme moins de 15 ans. Né un 29 février : 15 ans le 1er mars des années non bissextiles.
+  @visibleForTesting
+  static bool isUnderMinimumAge(DateTime birthDate, DateTime now) {
+    final minimumAgeBirthday = DateTime(birthDate.year + minimumAge, birthDate.month, birthDate.day);
+    final today = DateTime(now.year, now.month, now.day);
+    return today.isBefore(minimumAgeBirthday);
+  }
+
   void updatePrenom(String value) {
     draftPrenom = value.length > 256 ? value.substring(0, 256) : value;
     notifyListeners();
@@ -282,6 +299,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
 
   Future<void> continueStep() async {
     if (!canContinue) return;
+    if (step == OnboardingQuestionnaireStep.dateNaissance && isBirthDateUnderMinimumAge) return;
     await _persistCurrentStep();
     _goNext();
   }

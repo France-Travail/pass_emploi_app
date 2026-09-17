@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_que
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
+import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_app_bar.dart';
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_birthdate_step.dart';
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_domaine_step.dart';
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_freins_step.dart';
@@ -13,6 +14,7 @@ import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questi
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_objectifs_step.dart';
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_prenom_step.dart';
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_situation_step.dart';
+import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_under_age_page.dart';
 import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_form_change_notifier.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/communes_repository.dart';
@@ -94,28 +96,7 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
             },
             child: Scaffold(
               backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
-              appBar: _form.step.isLoader
-                  ? null
-                  : AppBar(
-                      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
-                      surfaceTintColor: Colors.transparent,
-                      elevation: 0,
-                      leading: IconButton(
-                        icon: Icon(
-                          DsfrIcons.systemArrowLeftSLine,
-                          color: DsfrColorDecisions.textActionHighBlueFrance(context),
-                        ),
-                        onPressed: _onBack,
-                      ),
-                      title: Text(
-                        Strings.onboardingQuestionnaireBack,
-                        style: DsfrTextStyle.bodyMdBold(
-                          color: DsfrColorDecisions.textActionHighBlueFrance(context),
-                        ),
-                      ),
-                      titleSpacing: 0,
-                      centerTitle: false,
-                    ),
+              appBar: _form.step.isLoader ? null : OnboardingQuestionnaireAppBar(onBack: _onBack),
               body: SafeArea(
                 child: _form.isLoading
                     ? const Center(child: CircularProgressIndicator())
@@ -245,7 +226,7 @@ class _BottomActions extends StatelessWidget {
               label: Strings.onboardingQuestionnaireContinue,
               variant: DsfrButtonVariant.primary,
               size: DsfrComponentSize.lg,
-              onPressed: form.canContinue ? () => form.continueStep() : null,
+              onPressed: form.canContinue ? () => _onContinue(context) : null,
             ),
           const SizedBox(height: Margins.spacing_s),
           Center(
@@ -259,6 +240,14 @@ class _BottomActions extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _onContinue(BuildContext context) {
+    if (form.step == OnboardingQuestionnaireStep.dateNaissance && form.isBirthDateUnderMinimumAge) {
+      Navigator.of(context).push(OnboardingQuestionnaireUnderAgePage.materialPageRoute());
+      return;
+    }
+    form.continueStep();
   }
 }
 
