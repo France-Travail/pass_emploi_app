@@ -69,7 +69,10 @@ class _DisplayState extends StatelessWidget {
     return switch (viewModel.displayState) {
       DisplayState.CONTENT => _Body(viewModel: viewModel),
       DisplayState.LOADING => const _LoadingIndicator(),
-      DisplayState.FAILURE => Retry(Strings.notificationsCenterError, () => viewModel.retry()),
+      DisplayState.FAILURE => Retry(
+        Strings.notificationsCenterError,
+        () => viewModel.retry(),
+      ),
       DisplayState.EMPTY => const _Empty(),
     };
   }
