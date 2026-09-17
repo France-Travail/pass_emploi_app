@@ -36,20 +36,17 @@ void main() {
       expect(viewModel.onMissionLocaleLogin, isNotNull);
     });
 
-    test('should display invite button only in staging', () {
-      // Given
-      final stagingStore = givenState(configuration(flavor: Flavor.STAGING)).store();
-      final prodStore = givenState(configuration(flavor: Flavor.PROD)).store();
+    group('hidden invite access', () {
+      test('should accept only the invite access password', () {
+        // Given
+        final viewModel = LoginPageViewModel.create(givenState().store());
 
-      // When
-      final stagingVm = LoginPageViewModel.create(stagingStore);
-      final prodVm = LoginPageViewModel.create(prodStore);
-
-      // Then
-      expect(stagingVm.withInviteButton, true);
-      expect(stagingVm.onInviteLogin, isNotNull);
-      expect(prodVm.withInviteButton, false);
-      expect(prodVm.onInviteLogin, isNull);
+        // When & Then
+        expect(viewModel.isInviteAccessPasswordValid("1j1s2026!"), isTrue);
+        expect(viewModel.isInviteAccessPasswordValid(""), isFalse);
+        expect(viewModel.isInviteAccessPasswordValid("1j1s2026"), isFalse);
+        expect(viewModel.isInviteAccessPasswordValid("1J1S2026!"), isFalse);
+      });
     });
 
     test('View model displays loading when login state is loading', () {
@@ -130,18 +127,20 @@ void main() {
       expect((store.dispatchedAction as RequestLoginAction).mode, LoginMode.MILO);
     });
 
-    test('Invite login dispatches RequestLoginAction in staging', () {
-      // Given
-      final store = StoreSpy.withState(givenState(configuration(flavor: Flavor.STAGING, brand: Brand.cej)));
-      final viewModel = LoginPageViewModel.create(store);
+    for (final flavor in [Flavor.STAGING, Flavor.PROD]) {
+      test('Invite login dispatches RequestLoginAction in $flavor', () {
+        // Given
+        final store = StoreSpy.withState(givenState(configuration(flavor: flavor, brand: Brand.cej)));
+        final viewModel = LoginPageViewModel.create(store);
 
-      // When
-      viewModel.onInviteLogin!.call();
+        // When
+        viewModel.onInviteLogin();
 
-      // Then
-      expect(store.dispatchedAction, isA<RequestLoginAction>());
-      expect((store.dispatchedAction as RequestLoginAction).mode, LoginMode.INVITE);
-    });
+        // Then
+        expect(store.dispatchedAction, isA<RequestLoginAction>());
+        expect((store.dispatchedAction as RequestLoginAction).mode, LoginMode.INVITE);
+      });
+    }
 
     group('accessibility level', () {
       test('should display accessibility partially conform when brand is cej', () {
