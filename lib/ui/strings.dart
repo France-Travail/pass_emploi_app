@@ -178,7 +178,8 @@ class Strings {
   static String firstLaunchOnboardingDescription =
       "L'app des 14-25 ans qui t'accompagne dans tous tes projets : études, emploi, logement, mobilité, santé, loisirs et bien plus";
 
-  static String firstLaunchOnboardingCardTitle1 = "Un plan d’action personnalisé pour démarrer selon tes objectifs";
+  static String firstLaunchOnboardingCardTitle1 =
+      "Des suggestions d’actions personnalisées pour démarrer selon tes objectifs";
   static String firstLaunchOnboardingCardTitle2 = "Des offres d’emploi et des événements adaptés à ton projet";
   static String firstLaunchOnboardingCardTitle3 = "Echange avec ton conseiller pour t’aider";
 
@@ -385,7 +386,7 @@ class Strings {
   static String onboardingQuestionnaireFreinFrancais = "Difficulté avec le Français";
   static String onboardingQuestionnaireFreinRienNeMeBloque = "Rien ne me bloque";
 
-  static String onboardingQuestionnaireLoaderTitle = "On construit ton plan d'action";
+  static String onboardingQuestionnaireLoaderTitle = "On construit tes suggestions d'actions";
   static String onboardingQuestionnaireLoaderSubtitle =
       "Quelques secondes le temps de croiser tes réponses avec nos solutions.";
   static String onboardingQuestionnaireLoaderProgression = "Progression";
@@ -402,7 +403,7 @@ class Strings {
       "$count ${count == 1 ? 'contrainte' : 'contraintes'}";
   static String onboardingQuestionnaireLoaderStepRead = "On lit ton profil";
   static String onboardingQuestionnaireLoaderStepSolutions = "On sélectionne les solutions près de chez toi";
-  static String onboardingQuestionnaireLoaderStepBuild = "On construit ton plan d'action";
+  static String onboardingQuestionnaireLoaderStepBuild = "On construit tes suggestions d'actions";
   static String onboardingQuestionnaireLoaderStepOrder = "On ordonne tes prochaines actions";
   static String onboardingQuestionnaireGeolocateError =
       "Impossible de récupérer ta position. Réessaie ou saisis une ville.";
@@ -413,18 +414,18 @@ class Strings {
     return "Bonjour\n$name 👋";
   }
 
-  static String inviteAccueilPlanTitle = "Mon plan d'action";
+  static String inviteAccueilPlanTitle = "Mes pistes à explorer";
   static String inviteAccueilPlanSubtitleComplet =
-      "Voici notre suggestion de plan d'action. Coche les actions au fur et à mesure de ton avancement, et supprime celles qui ne t'intéressent pas.";
+      "Voici nos suggestions d’actions. Coche-les au fur et à mesure de ton avancement, et supprime celles qui ne t'intéressent pas.";
   static String inviteAccueilPlanSubtitlePartiel =
       "Voici tes premières actions. D’autres t’attendent une fois ton questionnaire complété";
   static String inviteAccueilPlanSubtitleIncomplet =
-      "Ton plan d’action apparaîtra ici une fois ton questionnaire terminé.";
+      "Tes suggestions d’actions apparaîtront ici une fois ton questionnaire terminé.";
   static String inviteAccueilQuestionnaireTitle = "Complète ton questionnaire";
   static String inviteAccueilQuestionnaireDescription =
-      "Réponds aux dernières questions pour recevoir un plan d’action plus adapté.";
+      "Réponds aux dernières questions pour recevoir des suggestions d’actions plus adaptées.";
   static String inviteAccueilQuestionnaireDescriptionIncomplet =
-      "Réponds à quelques questions pour recevoir un plan d’action adapté.";
+      "Réponds à quelques questions pour recevoir des suggestions d’actions adaptées.";
   static String inviteAccueilDiscoveryTitle = "Je découvre l’application en quelques clics.";
   static String inviteAccueilDiscoveryProgress(int percent) => "$percent%";
   static String inviteAccueilProfilComplete = "Profil complété";
@@ -432,20 +433,20 @@ class Strings {
   static String inviteAccueilResumeQuestionnaire = "Reprendre le questionnaire";
   static String inviteAccueilModifier = "Modifier";
   static String actionPlanFeedbackTitle = "Avant de continuer";
-  static String actionPlanFeedbackDescription = "Aide nous à comprendre pourquoi ce plan d'action n'est pas adapté.";
+  static String actionPlanFeedbackDescription = "Dis-nous ce que tu as pensé des pistes d’actions suggérées\u{00A0}?";
   static String actionPlanFeedbackGiveOpinion = "Donne ton avis";
   static String inviteAccueilExplorerTipTitle = "💡 Pas envie de répondre maintenant?";
   static String inviteAccueilExplorerTipBody = "Tu peux explorer librement les offres et les événements depuis le menu";
   static String inviteAccueilConseillerTitle = "Être accompagné par un conseiller ?";
   static String inviteAccueilConseillerBody = "Un professionnel près de chez toi peut t'aider à avancer.";
   static String inviteAccueilAfficherPlus = "Afficher plus";
-  static String inviteAccueilRetryPlan = "Réessayer de générer mon plan";
-  static String inviteAccueilPlanFailureTitle = "Ton plan d'action n'a pas pu être généré";
+  static String inviteAccueilRetryPlan = "Réessayer de générer mes suggestions";
+  static String inviteAccueilPlanFailureTitle = "Tes suggestions d'actions n'ont pas pu être générées";
   static String inviteAccueilPlanFailureBody =
-      "Impossible de générer ton plan d'action pour le moment. Réessaie dans un instant.";
-  static String inviteAccueilPlanEmptyTitle = "Ton plan d'action n'est pas disponible";
+      "Impossible de générer tes suggestions d'actions pour le moment. Réessaie dans un instant.";
+  static String inviteAccueilPlanEmptyTitle = "Tes suggestions d'actions ne sont pas disponibles";
   static String inviteAccueilPlanEmptyBody =
-      "Aucune action n'a pu être proposée pour le moment. Modifie tes réponses pour obtenir un nouveau plan.";
+      "Aucune action n'a pu être proposée pour le moment. Modifie tes réponses pour obtenir de nouvelles suggestions.";
   static String inviteAccueilProgressBadge(int done, int total) => "$done/$total";
 
   // Card and subcomponents
