@@ -36,9 +36,10 @@ class CguPageViewModel extends Equatable {
 
   factory CguPageViewModel.create(Store<AppState> store) {
     return CguPageViewModel._(
-        displayState: _displayState(store.state.cguState),
-        onAccept: () => store.dispatch(CguAcceptedAction(clock.now())),
-        onRefuse: () => store.dispatch(CguRefusedAction()));
+      displayState: _displayState(store.state.cguState),
+      onAccept: () => store.dispatch(CguAcceptedAction(clock.now())),
+      onRefuse: () => store.dispatch(CguRefusedAction()),
+    );
   }
 
   @override
@@ -49,9 +50,9 @@ CguDisplayState? _displayState(CguState cguState) {
   return switch (cguState) {
     CguNeverAcceptedState() => CguNeverAcceptedDisplayState(),
     CguUpdateRequiredState() => CguUpdateRequiredDisplayState(
-        lastUpdateLabel: cguState.updatedCgu.lastUpdate.toDayWithFullMonth(),
-        changes: cguState.updatedCgu.changes,
-      ),
+      lastUpdateLabel: cguState.updatedCgu.lastUpdate.toDayWithFullMonth(),
+      changes: cguState.updatedCgu.changes,
+    ),
     _ => null,
   };
 }

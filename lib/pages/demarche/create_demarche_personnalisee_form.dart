@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/features/demarche/create/create_demarche_state.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/create_demarche_success_page.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_personnalisee_view_model.dart';
 import 'package:pass_emploi_app/presentation/demarche/demarche_creation_state.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
+import 'package:pass_emploi_app/presentation/model/date_input_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
-import 'package:pass_emploi_app/widgets/a11y/mandatory_fields_label.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/date_pickers/date_picker.dart';
-import 'package:pass_emploi_app/widgets/errors/error_text.dart';
-import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_date_input_suggestions.dart';
 import 'package:redux/redux.dart';
 
 class DemarchePersonnaliseeForm extends StatefulWidget {
@@ -89,12 +84,15 @@ class _Body extends StatefulWidget {
 }
 
 class _BodyState extends State<_Body> {
+  static const _maxCommentLength = 255;
+
   late String _commentaire;
   DateTime? _dateEcheance;
+  DateInputSource _dateSource = DateNotInitialized();
 
   @override
   void initState() {
-    _commentaire = widget.initialCommentaire ?? "";
+    _commentaire = widget.initialCommentaire ?? '';
     super.initState();
   }
 
@@ -106,51 +104,71 @@ class _BodyState extends State<_Body> {
 
     return SingleChildScrollView(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _PremierTitre(),
-          _SecondTitre(),
-          _Separateur(),
-          _CommentaireTitre(),
-          _DescriptionTitre(),
-          _ChampCommentaire(
-            onChanged: (query) {
-              setState(() {
-                _commentaire = query;
-              });
-            },
-            isCommentaireValid: _isCommentaireValid(),
-            initialCommentaire: widget.initialCommentaire,
-          ),
-          _NombreCaracteresCompteur(_commentaire.length, _isCommentaireValid()),
-          if (!_isCommentaireValid()) _MessageError(),
-          _Separateur2(),
-          _QuandTitre(),
-          _EcheanceTitre(),
-          Padding(
-            padding: const EdgeInsets.only(right: 24, left: 24, top: 12),
-            child: DatePicker(
-              onDateSelected: (date) {
-                setState(() {
-                  _dateEcheance = date;
-                });
-              },
-              initialDateValue: _dateEcheance,
-              isActiveDate: true,
+          const SizedBox(height: DsfrSpacings.s2w),
+          Semantics(
+            header: true,
+            child: Text(
+              Strings.createDemarcheAppBarTitle,
+              style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
             ),
           ),
-          if (widget.viewModel.displayState == DisplayState.FAILURE) ErrorText(Strings.genericCreationError),
-          Padding(
-            padding: const EdgeInsets.only(right: 24, left: 24, top: 32),
-            child: PrimaryActionButton(
+          const SizedBox(height: DsfrSpacings.s1w),
+          Text(
+            Strings.allMandatoryFields,
+            style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textMentionGrey(context)),
+          ),
+          const SizedBox(height: DsfrSpacings.s3w),
+          DsfrInput(
+            label: Strings.descriptionDemarche,
+            initialValue: widget.initialCommentaire,
+            minLines: 4,
+            maxLines: 8,
+            inputFormatters: [LengthLimitingTextInputFormatter(_maxCommentLength)],
+            componentState: !_isCommentaireValid()
+                ? DsfrComponentState.error(errorMessage: Strings.addAMessageError)
+                : const DsfrComponentState.none(),
+            onChanged: (query) => setState(() => _commentaire = query),
+          ),
+          const SizedBox(height: DsfrSpacings.s3w),
+          Text(
+            Strings.quand,
+            style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+          ),
+          const SizedBox(height: DsfrSpacings.s2w),
+          DsfrDateInputSuggestions(
+            label: Strings.selectEcheance,
+            dateSource: _dateSource,
+            onDateChanged: (dateSource) {
+              setState(() {
+                _dateSource = dateSource;
+                _dateEcheance = dateSource.isValid ? dateSource.selectedDate : null;
+              });
+            },
+          ),
+          if (widget.viewModel.displayState == DisplayState.FAILURE) ...[
+            const SizedBox(height: DsfrSpacings.s3w),
+            DsfrAlert(
+              type: DsfrAlertType.error,
+              description: DsfrAlertDescriptionText(Strings.genericCreationError),
+            ),
+          ],
+          const SizedBox(height: DsfrSpacings.s3w),
+          SizedBox(
+            width: double.infinity,
+            child: DsfrButton(
               label: widget.createDemarcheLabel,
+              variant: DsfrButtonVariant.primary,
+              size: DsfrComponentSize.md,
               onPressed: _buttonShouldBeActive(widget.viewModel)
                   ? () => widget.viewModel.onCreateDemarche(_commentaire, _dateEcheance!)
                   : null,
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: DsfrSpacings.s2w),
         ],
       ),
     );
@@ -161,149 +179,10 @@ class _BodyState extends State<_Body> {
   }
 
   bool _isCommentaireValid() {
-    return _commentaire.length <= 255;
+    return _commentaire.length <= _maxCommentLength;
   }
 
   bool _isFormValid() {
     return _isCommentaireValid() && _commentaire.isNotEmpty && _dateEcheance != null;
-  }
-}
-
-class _PremierTitre extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 24, right: 24, top: 16),
-      child: Text(Strings.createDemarcheAppBarTitle, style: TextStyles.textBaseBoldWithColor(AppColors.primary)),
-    );
-  }
-}
-
-class _SecondTitre extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(padding: const EdgeInsets.only(left: 24, right: 24, top: 12), child: MandatoryFieldsLabel.all());
-  }
-}
-
-class _Separateur extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 24, right: 24, top: 32),
-      child: Container(color: AppColors.primaryLighten, height: 2),
-    );
-  }
-}
-
-class _CommentaireTitre extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
-      child: Text(Strings.commentaire, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-    );
-  }
-}
-
-class _DescriptionTitre extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
-      child: Text(Strings.descriptionDemarche, style: TextStyles.textBaseMedium.copyWith(color: context.content)),
-    );
-  }
-}
-
-class _Separateur2 extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 24, right: 24, top: 32),
-      child: Container(color: AppColors.primaryLighten, height: 2),
-    );
-  }
-}
-
-class _QuandTitre extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
-      child: Text(Strings.quand, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-    );
-  }
-}
-
-class _EcheanceTitre extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
-      child: Text(Strings.selectEcheance, style: TextStyles.textBaseMedium.copyWith(color: context.content)),
-    );
-  }
-}
-
-class _NombreCaracteresCompteur extends StatelessWidget {
-  final int _nombreCarateres;
-  final bool _isCommentaireValid;
-
-  _NombreCaracteresCompteur(this._nombreCarateres, this._isCommentaireValid);
-
-  @override
-  Widget build(BuildContext context) {
-    final textColor = _isCommentaireValid ? context.content : AppColors.warning;
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Padding(
-        padding: const EdgeInsets.only(right: 24, top: 8),
-        child: Text("$_nombreCarateres/255", style: TextStyles.textXsRegular(color: textColor)),
-      ),
-    );
-  }
-}
-
-class _ChampCommentaire extends StatelessWidget {
-  final Function(String) onChanged;
-  final bool isCommentaireValid;
-  final String? initialCommentaire;
-
-  _ChampCommentaire({required this.onChanged, required this.isCommentaireValid, this.initialCommentaire});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 24, left: 24, top: 8),
-      child: BaseTextField(
-        onChanged: onChanged,
-        initialValue: initialCommentaire,
-        minLines: null,
-        maxLines: null,
-        isInvalid: !isCommentaireValid,
-      ),
-    );
-  }
-}
-
-class _MessageError extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Icon(AppIcons.error_rounded, size: Dimens.icon_size_m, color: AppColors.warning),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 13),
-              child: Text(Strings.addAMessageError, style: TextStyles.textBaseMediumWithColor(AppColors.warning)),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

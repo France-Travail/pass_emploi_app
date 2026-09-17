@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
-import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
 
 class ChatEditMessagePage extends StatelessWidget {
   const ChatEditMessagePage(this.content);
@@ -18,36 +15,49 @@ class ChatEditMessagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = TextEditingController(text: content);
-    return Scaffold(
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: Margins.spacing_base,
-        ),
-        child: SizedBox(
-          width: double.infinity,
-          child: PrimaryActionButton(
-            label: Strings.editMessageSave,
-            onPressed: () => Navigator.of(context).pop(controller.text),
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      backgroundColor: context.bg,
-      appBar: SecondaryAppBar(title: Strings.chatEditMessageAppBar),
-      body: Padding(
-        padding: const EdgeInsets.all(Margins.spacing_base),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              BaseTextField(
-                autofocus: true,
-                minLines: 5,
-                controller: controller,
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = DsfrColorDecisions.backgroundDefaultGrey(context);
+    return Theme(
+      data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+      child: Scaffold(
+        backgroundColor: backgroundColor,
+        appBar: SecondaryAppBar(title: Strings.chatEditMessageAppBar),
+        body: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                padding: const EdgeInsets.all(DsfrSpacings.s2w),
+                child: DsfrInput(
+                  label: Strings.chatEditMessageAppBar,
+                  controller: controller,
+                  autofocus: true,
+                  minLines: 5,
+                  maxLines: 8,
+                ),
               ),
-              SizedBox(height: Margins.spacing_huge),
-            ],
-          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                DsfrSpacings.s2w,
+                DsfrSpacings.s1w,
+                DsfrSpacings.s2w,
+                DsfrSpacings.s2w,
+              ),
+              child: SafeArea(
+                top: false,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: DsfrButton(
+                    label: Strings.editMessageSave,
+                    variant: DsfrButtonVariant.primary,
+                    size: DsfrComponentSize.md,
+                    onPressed: () => Navigator.of(context).pop(controller.text),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
