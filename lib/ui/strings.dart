@@ -188,8 +188,10 @@ class Strings {
   static String loginChooseAccountTitle = "Choisis un compte";
   static String loginChooseAccountDescription =
       "Si tu disposes de plusieurs accès, sélectionne l'organisme qui t'accompagne actuellement.";
-  static String loginNoAccountLabel = "Je n'ai pas de compte France Travail ou Mission Locale";
-  static String loginInviteActionCta = "C’est parti, sans compte";
+  static String loginInviteAccessTitle = "Accès invité";
+  static String loginInviteAccessPasswordLabel = "Mot de passe";
+  static String loginInviteAccessWrongPassword = "Mot de passe incorrect";
+  static String loginInviteAccessValidate = "Valider";
   static String suiviParConseillerCej =
       "Dans le cadre de mon Contrat d'Engagement Jeune, je suis suivi par un conseiller :";
   static String suiviParConseillerPassEmploi = "Je suis suivi par un conseiller :";
