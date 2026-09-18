@@ -1,5 +1,16 @@
 import 'package:equatable/equatable.dart';
-import 'package:pass_emploi_app/models/accompagnement.dart';
+
+class OnboardingStepsVisibility {
+  final bool withMessageStep;
+  final bool withPlanActionStep;
+  final bool withActionStep;
+
+  const OnboardingStepsVisibility({
+    required this.withMessageStep,
+    required this.withPlanActionStep,
+    required this.withActionStep,
+  });
+}
 
 class Onboarding extends Equatable {
   final bool _showAccueilOnboardingLegacy;
@@ -8,6 +19,7 @@ class Onboarding extends Equatable {
   final bool showOnboarding;
 
   final bool messageCompleted;
+  final bool planActionCompleted;
   final bool actionCompleted;
   final bool offreCompleted;
   final bool evenementCompleted;
@@ -18,6 +30,7 @@ class Onboarding extends Equatable {
     bool? showNotificationsOnboarding,
     bool? showOnboarding,
     this.messageCompleted = false,
+    this.planActionCompleted = false,
     this.actionCompleted = false,
     this.offreCompleted = false,
     this.evenementCompleted = false,
@@ -36,6 +49,7 @@ class Onboarding extends Equatable {
         showNotificationsOnboarding,
         showOnboarding,
         messageCompleted,
+        planActionCompleted,
         actionCompleted,
         offreCompleted,
         evenementCompleted,
@@ -50,6 +64,7 @@ class Onboarding extends Equatable {
       showNotificationsOnboarding: json['showNotificationsOnboarding'] as bool?,
       showOnboarding: json['showOnboarding'] as bool?,
       messageCompleted: json['messageCompleted'] as bool? ?? false,
+      planActionCompleted: json['planActionCompleted'] as bool? ?? false,
       actionCompleted: json['actionCompleted'] as bool? ?? false,
       offreCompleted: json['offreCompleted'] as bool? ?? false,
       evenementCompleted: json['evenementCompleted'] as bool? ?? false,
@@ -63,6 +78,7 @@ class Onboarding extends Equatable {
       'showNotificationsOnboarding': showNotificationsOnboarding,
       'showOnboarding': showOnboarding,
       'messageCompleted': messageCompleted,
+      'planActionCompleted': planActionCompleted,
       'actionCompleted': actionCompleted,
       'offreCompleted': offreCompleted,
       'evenementCompleted': evenementCompleted,
@@ -74,6 +90,7 @@ class Onboarding extends Equatable {
     bool? showNotificationsOnboarding,
     bool? showOnboarding,
     bool? messageCompleted,
+    bool? planActionCompleted,
     bool? actionCompleted,
     bool? offreCompleted,
     bool? evenementCompleted,
@@ -84,6 +101,7 @@ class Onboarding extends Equatable {
       showNotificationsOnboarding: showNotificationsOnboarding ?? this.showNotificationsOnboarding,
       showOnboarding: showOnboarding ?? this.showOnboarding,
       messageCompleted: messageCompleted ?? this.messageCompleted,
+      planActionCompleted: planActionCompleted ?? this.planActionCompleted,
       actionCompleted: actionCompleted ?? this.actionCompleted,
       offreCompleted: offreCompleted ?? this.offreCompleted,
       evenementCompleted: evenementCompleted ?? this.evenementCompleted,
@@ -91,26 +109,29 @@ class Onboarding extends Equatable {
     );
   }
 
-  bool isCompleted(Accompagnement accompagnement) {
-    final bool shouldCheckAction = accompagnement != Accompagnement.avenirPro;
-    return messageCompleted &&
-        (shouldCheckAction ? actionCompleted : true) &&
+  bool isCompleted(OnboardingStepsVisibility visibility) {
+    return (!visibility.withMessageStep || messageCompleted) &&
+        (!visibility.withPlanActionStep || planActionCompleted) &&
+        (!visibility.withActionStep || actionCompleted) &&
         offreCompleted &&
-        evenementCompleted &&
-        outilsCompleted;
+        evenementCompleted;
   }
 }
 
 extension OnboardingExtension on Onboarding {
-  int completedSteps(Accompagnement accompagnement) =>
+  int completedSteps(OnboardingStepsVisibility visibility) =>
       [
-        messageCompleted,
-        if (accompagnement != Accompagnement.avenirPro) actionCompleted,
+        if (visibility.withMessageStep) messageCompleted,
+        if (visibility.withPlanActionStep) planActionCompleted,
+        if (visibility.withActionStep) actionCompleted,
         offreCompleted,
         evenementCompleted,
-        outilsCompleted,
       ].where((step) => step).length +
       1;
 
-  int totalSteps(Accompagnement accompagnement) => accompagnement == Accompagnement.avenirPro ? 5 : 6;
+  int totalSteps(OnboardingStepsVisibility visibility) =>
+      3 +
+      (visibility.withMessageStep ? 1 : 0) +
+      (visibility.withPlanActionStep ? 1 : 0) +
+      (visibility.withActionStep ? 1 : 0);
 }

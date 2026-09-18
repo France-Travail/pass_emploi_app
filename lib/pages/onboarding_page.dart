@@ -89,8 +89,7 @@ class OnboardingPage extends StatelessWidget {
                         label: Strings.skipOnboarding,
                         variant: DsfrButtonVariant.secondary,
                         size: DsfrComponentSize.md,
-                        onPressed: () =>
-                            _showSkipOnboardingDialog(context, viewModel),
+                        onPressed: () => _showSkipOnboardingDialog(context, viewModel),
                       ),
                       const SizedBox(height: DsfrSpacings.s2w),
                     ],
@@ -111,15 +110,26 @@ class OnboardingPage extends StatelessWidget {
         icon: DsfrIcons.deviceSmartphoneLine,
         isCompleted: true,
       ),
-      _OnboardingStepTile(
-        title: Strings.messageOnboardingSection,
-        icon: DsfrIcons.communicationChat3Line,
-        isCompleted: viewModel.messageCompleted,
-        onTap: () {
-          Navigator.of(context).pop();
-          viewModel.onMessageOnboarding.call();
-        },
-      ),
+      if (viewModel.withMessageStep)
+        _OnboardingStepTile(
+          title: Strings.messageOnboardingSection,
+          icon: DsfrIcons.communicationChat3Line,
+          isCompleted: viewModel.messageCompleted,
+          onTap: () {
+            Navigator.of(context).pop();
+            viewModel.onMessageOnboarding.call();
+          },
+        ),
+      if (viewModel.withPlanActionStep)
+        _OnboardingStepTile(
+          title: Strings.planActionOnboardingSection,
+          icon: DsfrIcons.editorListOrdered,
+          isCompleted: viewModel.planActionCompleted,
+          onTap: () {
+            Navigator.of(context).pop();
+            viewModel.onPlanActionOnboarding.call();
+          },
+        ),
       if (viewModel.withActionStep)
         _OnboardingStepTile(
           title: viewModel.actionStepLabel,
@@ -132,7 +142,7 @@ class OnboardingPage extends StatelessWidget {
         ),
       _OnboardingStepTile(
         title: Strings.offreOnboardingSection,
-        icon: DsfrIcons.systemSearchLine,
+        icon: DsfrIcons.businessBriefcaseLine,
         isCompleted: viewModel.offreCompleted,
         onTap: () {
           Navigator.of(context).pop();
@@ -146,15 +156,6 @@ class OnboardingPage extends StatelessWidget {
         onTap: () {
           Navigator.of(context).pop();
           viewModel.onEvenementOnboarding.call();
-        },
-      ),
-      _OnboardingStepTile(
-        title: Strings.outilsOnboardingSection,
-        icon: DsfrIcons.othersLightbulbLine,
-        isCompleted: viewModel.outilsCompleted,
-        onTap: () {
-          Navigator.of(context).pop();
-          viewModel.onOutilsOnboarding.call();
         },
       ),
     ];
@@ -224,9 +225,7 @@ class _OnboardingStepTile extends StatelessWidget {
           : DsfrColorDecisions.backgroundOpenBlueFrance(context),
       title: title,
       onTap: isCompleted ? null : onTap,
-      semanticsLabel: isCompleted
-          ? '$title. ${Strings.onboardingStepCompleted}'
-          : title,
+      semanticsLabel: isCompleted ? '$title. ${Strings.onboardingStepCompleted}' : title,
     );
   }
 }

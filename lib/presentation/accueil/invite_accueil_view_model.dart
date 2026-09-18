@@ -40,6 +40,7 @@ class InviteAccueilViewModel extends Equatable {
   final VoidCallback resumeOnboarding;
   final VoidCallback retryGenerate;
   final VoidCallback hideDiscovery;
+  final VoidCallback onPlanActionExpanded;
   final void Function(String actionId) toggleDone;
   final void Function(String actionId) deleteAction;
 
@@ -66,6 +67,7 @@ class InviteAccueilViewModel extends Equatable {
     required this.resumeOnboarding,
     required this.retryGenerate,
     required this.hideDiscovery,
+    required this.onPlanActionExpanded,
     required this.toggleDone,
     required this.deleteAction,
   });
@@ -104,11 +106,11 @@ class InviteAccueilViewModel extends Equatable {
 
     final onboarding = store.state.onboardingState.onboarding;
     final showDiscoveryTile = onboarding?.showOnboarding ?? false;
-    final accompagnement = store.state.accompagnement();
-    final completedSteps = onboarding != null ? onboarding.completedSteps(accompagnement) : 0;
-    final totalSteps = onboarding != null ? onboarding.totalSteps(accompagnement) : 1;
+    final visibility = store.state.onboardingStepsVisibility();
+    final completedSteps = onboarding != null ? onboarding.completedSteps(visibility) : 0;
+    final totalSteps = onboarding != null ? onboarding.totalSteps(visibility) : 1;
     final discoveryProgressPercent = totalSteps == 0 ? 0 : (100 * completedSteps) ~/ totalSteps;
-    final discoveryCompleted = onboarding?.isCompleted(accompagnement) ?? false;
+    final discoveryCompleted = onboarding?.isCompleted(visibility) ?? false;
 
     return InviteAccueilViewModel(
       displayState: displayState,
@@ -139,6 +141,7 @@ class InviteAccueilViewModel extends Equatable {
       resumeOnboarding: () => store.dispatch(OnboardingQuestionnaireResumeAction()),
       retryGenerate: () => store.dispatch(ActionPlanGenerateAction(answers)),
       hideDiscovery: () => store.dispatch(OnboardingHideAction()),
+      onPlanActionExpanded: () => store.dispatch(PlanActionOnboardingCompletedAction()),
       toggleDone: (id) => store.dispatch(ActionPlanToggleDoneAction(id)),
       deleteAction: (id) => store.dispatch(ActionPlanDeleteAction(id)),
     );

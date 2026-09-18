@@ -3,9 +3,6 @@ import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_miss
 import 'package:pass_emploi_app/features/chat/status/chat_status_state.dart';
 import 'package:pass_emploi_app/features/date_consultation_actualite_mission_locale/date_consultation_actualite_mission_locale_state.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
-import 'package:pass_emploi_app/models/accompagnement.dart';
-import 'package:pass_emploi_app/models/login_mode.dart';
-import 'package:pass_emploi_app/models/user.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:redux/redux.dart';
 
@@ -39,7 +36,6 @@ class MainPageViewModel extends Equatable {
 
   factory MainPageViewModel.create(Store<AppState> store) {
     final chatStatusState = store.state.chatStatusState;
-    final user = store.state.user();
 
     final hasUnreadChat = (chatStatusState is ChatStatusSuccessState) && (chatStatusState.hasUnreadMessages);
     final hasNewActualite = _hasNewActualite(
@@ -50,12 +46,12 @@ class MainPageViewModel extends Equatable {
     return MainPageViewModel(
       tabs: [
         MainTab.accueil,
-        if (_showAgenda(user)) MainTab.monSuivi,
+        if (store.state.hasMonSuivi()) MainTab.monSuivi,
         MainTab.solutions,
         MainTab.evenements,
-        if (_showMessages(user)) MainTab.chat,
+        if (store.state.hasChat()) MainTab.chat,
       ],
-      withChatBadge: _showMessages(user) && (hasUnreadChat || hasNewActualite),
+      withChatBadge: store.state.hasChat() && (hasUnreadChat || hasNewActualite),
       resetDeeplink: () => store.dispatch(ResetDeeplinkAction()),
       actualisationPoleEmploiUrl: store.state.configurationState.configuration?.actualisationPoleEmploiUrl ?? "",
     );
@@ -63,19 +59,6 @@ class MainPageViewModel extends Equatable {
 
   @override
   List<Object?> get props => [tabs, withChatBadge];
-}
-
-bool _showAgenda(User? user) {
-  if (user == null || user.loginMode.isInvite()) return false;
-  if (user.accompagnement == Accompagnement.ftEspaceCandidat) return false;
-  return true;
-}
-
-bool _showMessages(User? user) {
-  if (user == null || user.loginMode.isInvite()) return false;
-  if (user.accompagnement == Accompagnement.ftDemandeurDEmploi) return false;
-  if (user.accompagnement == Accompagnement.ftEspaceCandidat) return false;
-  return true;
 }
 
 bool _hasNewActualite(

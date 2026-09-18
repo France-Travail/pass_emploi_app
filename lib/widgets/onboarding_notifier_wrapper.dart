@@ -30,13 +30,13 @@ class _OnboardingNotifierWrapperState extends State<OnboardingNotifierWrapper> {
         if (previousOnboarding != null && onboarding != null && onboarding.showOnboarding) {
           if (!previousOnboarding.messageCompleted && onboarding.messageCompleted) {
             _showOnboardingSnackbar(Strings.onboardingStepFinished);
+          } else if (!previousOnboarding.planActionCompleted && onboarding.planActionCompleted) {
+            _showOnboardingSnackbar(Strings.onboardingStepFinished);
           } else if (!previousOnboarding.actionCompleted && onboarding.actionCompleted) {
             _showOnboardingSnackbar(Strings.onboardingStepFinished);
           } else if (!previousOnboarding.offreCompleted && onboarding.offreCompleted) {
             _showOnboardingSnackbar(Strings.onboardingStepFinished);
           } else if (!previousOnboarding.evenementCompleted && onboarding.evenementCompleted) {
-            _showOnboardingSnackbar(Strings.onboardingStepFinished);
-          } else if (!previousOnboarding.outilsCompleted && onboarding.outilsCompleted) {
             _showOnboardingSnackbar(Strings.onboardingStepFinished);
           }
         }

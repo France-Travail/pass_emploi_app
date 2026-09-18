@@ -127,6 +127,7 @@ class _Content extends StatelessWidget {
                 plan: viewModel.plan,
                 onToggleDone: viewModel.toggleDone,
                 onDelete: viewModel.deleteAction,
+                onObjectiveExpanded: viewModel.onPlanActionExpanded,
               ),
           ],
           if (viewModel.showQuestionnaireCard && viewModel.mode == InviteAccueilMode.partiel) ...[

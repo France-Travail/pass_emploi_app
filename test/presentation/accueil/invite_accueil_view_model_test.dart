@@ -25,7 +25,7 @@ void main() {
     expect(viewModel.showPlanSection, isFalse);
     expect(viewModel.showExplorerTip, isTrue);
     expect(viewModel.showDiscoveryTile, isTrue);
-    expect(viewModel.discoveryProgressPercent, 16);
+    expect(viewModel.discoveryProgressPercent, 25);
     expect(viewModel.showConseillerCta, isFalse);
     expect(viewModel.shouldShowAllowNotifications, isTrue);
     expect(viewModel.displayState, DisplayState.CONTENT);

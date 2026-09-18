@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
+import 'package:pass_emploi_app/widgets/onboarding/onboarding_showcase.dart';
 
 class InviteActionPlanSection extends StatelessWidget {
   const InviteActionPlanSection({
@@ -13,11 +14,13 @@ class InviteActionPlanSection extends StatelessWidget {
     required this.plan,
     required this.onToggleDone,
     required this.onDelete,
+    this.onObjectiveExpanded,
   });
 
   final ActionPlan? plan;
   final void Function(String actionId) onToggleDone;
   final void Function(String actionId) onDelete;
+  final VoidCallback? onObjectiveExpanded;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +37,8 @@ class InviteActionPlanSection extends StatelessWidget {
             objective: objectives[i],
             onToggleDone: onToggleDone,
             onDelete: onDelete,
+            onExpanded: onObjectiveExpanded,
+            withShowcase: i == 0,
           ),
         ],
         const DsfrDivider(),
@@ -47,11 +52,15 @@ class _ObjectiveAccordion extends StatefulWidget {
     required this.objective,
     required this.onToggleDone,
     required this.onDelete,
+    this.onExpanded,
+    this.withShowcase = false,
   });
 
   final ActionPlanObjective objective;
   final void Function(String actionId) onToggleDone;
   final void Function(String actionId) onDelete;
+  final VoidCallback? onExpanded;
+  final bool withShowcase;
 
   @override
   State<_ObjectiveAccordion> createState() => _ObjectiveAccordionState();
@@ -69,63 +78,75 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
     final visibleActions = _showAll ? objective.actions : objective.actions.take(_initialVisible).toList();
     final hasMore = objective.actions.length > _initialVisible;
 
+    final header = InkWell(
+      onTap: () {
+        final willExpand = !_expanded;
+        setState(() => _expanded = willExpand);
+        if (willExpand) widget.onExpanded?.call();
+      },
+      child: AnimatedContainer(
+        duration: AnimationDurations.medium,
+        curve: _animationCurve,
+        color: _expanded
+            ? DsfrColorDecisions.backgroundActionLowBlueFrance(context)
+            : DsfrColorDecisions.backgroundDefaultGrey(context),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Margins.spacing_base,
+            vertical: Margins.spacing_s,
+          ),
+          child: Row(
+            children: [
+              _EmojiAvatar(
+                emoji: _emojiForTheme(objective.theme),
+                color: _colorForTheme(objective.theme),
+              ),
+              const SizedBox(width: Margins.spacing_base),
+              Expanded(
+                child: Text(
+                  objective.title,
+                  style: DsfrTextStyle.bodyMdMedium(
+                    color: DsfrColorDecisions.textTitleBlueFrance(context),
+                  ),
+                ),
+              ),
+              DsfrBadge(
+                label: Strings.inviteAccueilProgressBadge(
+                  objective.doneCount,
+                  objective.totalCount,
+                ),
+                type: objective.isComplete ? DsfrBadgeType.success : DsfrBadgeType.news,
+                size: DsfrComponentSize.sm,
+                withIcon: true,
+              ),
+              const SizedBox(width: Margins.spacing_base),
+              AnimatedRotation(
+                turns: _expanded ? 0.5 : 0,
+                duration: AnimationDurations.medium,
+                curve: _animationCurve,
+                child: Icon(
+                  DsfrIcons.systemArrowDownSLine,
+                  color: DsfrColorDecisions.textActionHighBlueFrance(
+                    context,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        InkWell(
-          onTap: () => setState(() => _expanded = !_expanded),
-          child: AnimatedContainer(
-            duration: AnimationDurations.medium,
-            curve: _animationCurve,
-            color: _expanded
-                ? DsfrColorDecisions.backgroundActionLowBlueFrance(context)
-                : DsfrColorDecisions.backgroundDefaultGrey(context),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Margins.spacing_base,
-                vertical: Margins.spacing_s,
-              ),
-              child: Row(
-                children: [
-                  _EmojiAvatar(
-                    emoji: _emojiForTheme(objective.theme),
-                    color: _colorForTheme(objective.theme),
-                  ),
-                  const SizedBox(width: Margins.spacing_base),
-                  Expanded(
-                    child: Text(
-                      objective.title,
-                      style: DsfrTextStyle.bodyMdMedium(
-                        color: DsfrColorDecisions.textTitleBlueFrance(context),
-                      ),
-                    ),
-                  ),
-                  DsfrBadge(
-                    label: Strings.inviteAccueilProgressBadge(
-                      objective.doneCount,
-                      objective.totalCount,
-                    ),
-                    type: objective.isComplete ? DsfrBadgeType.success : DsfrBadgeType.news,
-                    size: DsfrComponentSize.sm,
-                    withIcon: true,
-                  ),
-                  const SizedBox(width: Margins.spacing_base),
-                  AnimatedRotation(
-                    turns: _expanded ? 0.5 : 0,
-                    duration: AnimationDurations.medium,
-                    curve: _animationCurve,
-                    child: Icon(
-                      DsfrIcons.systemArrowDownSLine,
-                      color: DsfrColorDecisions.textActionHighBlueFrance(
-                        context,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+        widget.withShowcase
+            ? OnboardingShowcase(
+                source: ShowcaseSource.planAction,
+                bottom: true,
+                child: header,
+              )
+            : header,
         AnimatedCrossFade(
           firstChild: const SizedBox.shrink(),
           secondChild: Padding(

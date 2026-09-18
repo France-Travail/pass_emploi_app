@@ -9,7 +9,7 @@ OnboardingState onboardingReducer(OnboardingState current, dynamic action) {
       ActionOnboardingStartedAction() => current.copyWith(showActionOnboarding: true),
       OffreOnboardingStartedAction() => current.copyWith(showOffreOnboarding: true),
       EvenementOnboardingStartedAction() => current.copyWith(showEvenementOnboarding: true),
-      OutilsOnboardingStartedAction() => current.copyWith(showOutilsOnboarding: true),
+      PlanActionOnboardingStartedAction() => current.copyWith(showPlanActionOnboarding: true),
     };
   }
   if (action is ResetOnboardingShowcaseAction) {
@@ -18,7 +18,7 @@ OnboardingState onboardingReducer(OnboardingState current, dynamic action) {
       showActionOnboarding: false,
       showOffreOnboarding: false,
       showEvenementOnboarding: false,
-      showOutilsOnboarding: false,
+      showPlanActionOnboarding: false,
     );
   }
   return current;
@@ -31,6 +31,6 @@ OnboardingState _updateOnboarding(OnboardingState current, OnboardingSuccessActi
     showActionOnboarding: current.showActionOnboarding && !action.onboarding.actionCompleted,
     showOffreOnboarding: current.showOffreOnboarding && !action.onboarding.offreCompleted,
     showEvenementOnboarding: current.showEvenementOnboarding && !action.onboarding.evenementCompleted,
-    showOutilsOnboarding: current.showOutilsOnboarding && !action.onboarding.outilsCompleted,
+    showPlanActionOnboarding: current.showPlanActionOnboarding && !action.onboarding.planActionCompleted,
   );
 }

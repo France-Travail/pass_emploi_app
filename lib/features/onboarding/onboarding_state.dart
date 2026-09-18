@@ -8,7 +8,7 @@ class OnboardingState extends Equatable {
   final bool showActionOnboarding;
   final bool showOffreOnboarding;
   final bool showEvenementOnboarding;
-  final bool showOutilsOnboarding;
+  final bool showPlanActionOnboarding;
 
   OnboardingState({
     this.onboarding,
@@ -16,7 +16,7 @@ class OnboardingState extends Equatable {
     this.showActionOnboarding = false,
     this.showOffreOnboarding = false,
     this.showEvenementOnboarding = false,
-    this.showOutilsOnboarding = false,
+    this.showPlanActionOnboarding = false,
   });
 
   @override
@@ -26,7 +26,7 @@ class OnboardingState extends Equatable {
         showActionOnboarding,
         showOffreOnboarding,
         showEvenementOnboarding,
-        showOutilsOnboarding,
+        showPlanActionOnboarding,
       ];
 
   OnboardingState copyWith({
@@ -35,7 +35,7 @@ class OnboardingState extends Equatable {
     bool? showActionOnboarding,
     bool? showOffreOnboarding,
     bool? showEvenementOnboarding,
-    bool? showOutilsOnboarding,
+    bool? showPlanActionOnboarding,
   }) {
     return OnboardingState(
       onboarding: onboarding ?? this.onboarding,
@@ -43,7 +43,7 @@ class OnboardingState extends Equatable {
       showActionOnboarding: showActionOnboarding ?? this.showActionOnboarding,
       showOffreOnboarding: showOffreOnboarding ?? this.showOffreOnboarding,
       showEvenementOnboarding: showEvenementOnboarding ?? this.showEvenementOnboarding,
-      showOutilsOnboarding: showOutilsOnboarding ?? this.showOutilsOnboarding,
+      showPlanActionOnboarding: showPlanActionOnboarding ?? this.showPlanActionOnboarding,
     );
   }
 }

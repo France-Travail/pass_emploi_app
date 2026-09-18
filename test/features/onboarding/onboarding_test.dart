@@ -108,6 +108,24 @@ void main() {
         });
       });
 
+      group('when exploring an action plan suggestion', () {
+        sut.whenDispatchingAction(() => PlanActionOnboardingCompletedAction());
+
+        test('should update onboarding state', () {
+          final givenOnboarding = Onboarding();
+
+          when(() => repository.get()).thenAnswer((_) async => givenOnboarding);
+          when(() => repository.save(any())).thenAnswer((_) async {});
+
+          sut.givenStore =
+              givenState() //
+                  .copyWith(onboardingState: OnboardingState(onboarding: givenOnboarding))
+                  .store((f) => {f.onboardingRepository = repository});
+
+          sut.thenExpectAtSomePoint(_shouldSucceed(givenOnboarding.copyWith(planActionCompleted: true)));
+        });
+      });
+
       group('when creating a user action', () {
         sut.whenDispatchingAction(() => UserActionCreateSuccessAction('any'));
 
@@ -264,10 +282,10 @@ void main() {
           );
         });
       });
-      group("OutilsOnboardingStartedAction", () {
-        sut.whenDispatchingAction(() => OutilsOnboardingStartedAction());
+      group("PlanActionOnboardingStartedAction", () {
+        sut.whenDispatchingAction(() => PlanActionOnboardingStartedAction());
 
-        test('should showOutilsOnboarding', () {
+        test('should showPlanActionOnboarding', () {
           sut.givenStore =
               givenState() //
                   .copyWith(onboardingState: OnboardingState(onboarding: givenOnboarding))
@@ -275,7 +293,7 @@ void main() {
 
           sut.thenExpectAtSomePoint(
             StateIs<OnboardingState>((state) => state.onboardingState, (state) {
-              expect(state.showOutilsOnboarding, true);
+              expect(state.showPlanActionOnboarding, true);
             }),
           );
         });
@@ -378,6 +396,24 @@ void main() {
         });
       });
 
+      group('when plan action is completed', () {
+        sut.whenDispatchingAction(() => OnboardingSuccessAction(Onboarding(planActionCompleted: true)));
+
+        test('should hide plan action showcase', () {
+          sut.givenStore =
+              givenState() //
+                  .copyWith(onboardingState: OnboardingState(showPlanActionOnboarding: true))
+                  .store((f) => {f.onboardingRepository = repository});
+
+          sut.thenExpectAtSomePoint(
+            StateIs<OnboardingState>((state) => state.onboardingState, (state) {
+              expect(state.showPlanActionOnboarding, false);
+              expect(state.onboarding?.planActionCompleted, true);
+            }),
+          );
+        });
+      });
+
       group('when evenement is completed', () {
         sut.whenDispatchingAction(() => OnboardingSuccessAction(Onboarding(evenementCompleted: true)));
 
@@ -391,24 +427,6 @@ void main() {
             StateIs<OnboardingState>((state) => state.onboardingState, (state) {
               expect(state.showEvenementOnboarding, false);
               expect(state.onboarding?.evenementCompleted, true);
-            }),
-          );
-        });
-      });
-
-      group('when outils is completed', () {
-        sut.whenDispatchingAction(() => OnboardingSuccessAction(Onboarding(outilsCompleted: true)));
-
-        test('should hide outils showcase', () {
-          sut.givenStore =
-              givenState() //
-                  .copyWith(onboardingState: OnboardingState(showOutilsOnboarding: true))
-                  .store((f) => {f.onboardingRepository = repository});
-
-          sut.thenExpectAtSomePoint(
-            StateIs<OnboardingState>((state) => state.onboardingState, (state) {
-              expect(state.showOutilsOnboarding, false);
-              expect(state.onboarding?.outilsCompleted, true);
             }),
           );
         });
@@ -451,7 +469,6 @@ void main() {
           actionCompleted: true,
           offreCompleted: true,
           evenementCompleted: true,
-          outilsCompleted: true,
         );
 
         sut.whenDispatchingAction(() => OnboardingSuccessAction(newOnboarding));

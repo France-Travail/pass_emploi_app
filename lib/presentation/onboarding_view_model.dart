@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/onboarding/onboarding_actions.dart';
-import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -12,37 +11,41 @@ class OnboardingViewModel extends Equatable {
   final int completedSteps;
   final int totalSteps;
 
+  final bool withMessageStep;
   final bool messageCompleted;
+  final bool withPlanActionStep;
+  final bool planActionCompleted;
   final bool withActionStep;
   final bool actionCompleted;
   final bool offreCompleted;
   final bool evenementCompleted;
-  final bool outilsCompleted;
 
   final String actionStepLabel;
 
   final void Function() onMessageOnboarding;
+  final void Function() onPlanActionOnboarding;
   final void Function() onActionOnboarding;
   final void Function() onOffreOnboarding;
   final void Function() onEvenementOnboarding;
-  final void Function() onOutilsOnboarding;
   final void Function() onSkipOnboarding;
 
   const OnboardingViewModel({
     required this.completedSteps,
     required this.totalSteps,
+    required this.withMessageStep,
     required this.messageCompleted,
+    required this.withPlanActionStep,
+    required this.planActionCompleted,
     required this.withActionStep,
     required this.actionCompleted,
     required this.offreCompleted,
     required this.evenementCompleted,
-    required this.outilsCompleted,
     required this.actionStepLabel,
     required this.onMessageOnboarding,
+    required this.onPlanActionOnboarding,
     required this.onActionOnboarding,
     required this.onOffreOnboarding,
     required this.onEvenementOnboarding,
-    required this.onOutilsOnboarding,
     required this.onSkipOnboarding,
   });
 
@@ -54,20 +57,26 @@ class OnboardingViewModel extends Equatable {
     }
 
     final onboarding = onboardingState.onboarding!;
+    final visibility = store.state.onboardingStepsVisibility();
 
     return OnboardingViewModel(
-      completedSteps: onboarding.completedSteps(store.state.accompagnement()),
-      totalSteps: onboarding.totalSteps(store.state.accompagnement()),
-      withActionStep: store.state.accompagnement() != Accompagnement.avenirPro,
+      completedSteps: onboarding.completedSteps(visibility),
+      totalSteps: onboarding.totalSteps(visibility),
+      withMessageStep: visibility.withMessageStep,
+      withPlanActionStep: visibility.withPlanActionStep,
+      withActionStep: visibility.withActionStep,
       messageCompleted: onboarding.messageCompleted,
+      planActionCompleted: onboarding.planActionCompleted,
       actionCompleted: onboarding.actionCompleted,
       offreCompleted: onboarding.offreCompleted,
       evenementCompleted: onboarding.evenementCompleted,
-      outilsCompleted: onboarding.outilsCompleted,
       actionStepLabel: _actionStepLabel(store),
       onMessageOnboarding: () {
         store.dispatch(HandleDeepLinkAction(NouveauMessageDeepLink(), DeepLinkOrigin.inAppNavigation));
         store.dispatch(MessageOnboardingStartedAction());
+      },
+      onPlanActionOnboarding: () {
+        store.dispatch(PlanActionOnboardingStartedAction());
       },
       onActionOnboarding: () {
         store.dispatch(HandleDeepLinkAction(MonSuiviDeepLink(), DeepLinkOrigin.inAppNavigation));
@@ -81,10 +90,6 @@ class OnboardingViewModel extends Equatable {
         store.dispatch(HandleDeepLinkAction(EventSearchDeepLink(), DeepLinkOrigin.inAppNavigation));
         store.dispatch(EvenementOnboardingStartedAction());
       },
-      onOutilsOnboarding: () {
-        store.dispatch(HandleDeepLinkAction(OutilsDeepLink(), DeepLinkOrigin.inAppNavigation));
-        store.dispatch(OutilsOnboardingStartedAction());
-      },
       onSkipOnboarding: () {
         store.dispatch(OnboardingHideAction());
       },
@@ -95,18 +100,20 @@ class OnboardingViewModel extends Equatable {
     return OnboardingViewModel(
       completedSteps: 0,
       totalSteps: 0,
+      withMessageStep: false,
       messageCompleted: false,
+      withPlanActionStep: false,
+      planActionCompleted: false,
       withActionStep: false,
       actionCompleted: false,
       offreCompleted: false,
       evenementCompleted: false,
-      outilsCompleted: false,
       actionStepLabel: Strings.actionOnboardingSection,
       onMessageOnboarding: () {},
+      onPlanActionOnboarding: () {},
       onActionOnboarding: () {},
       onOffreOnboarding: () {},
       onEvenementOnboarding: () {},
-      onOutilsOnboarding: () {},
       onSkipOnboarding: () {},
     );
   }
@@ -115,12 +122,14 @@ class OnboardingViewModel extends Equatable {
   List<Object?> get props => [
         completedSteps,
         totalSteps,
+        withMessageStep,
         messageCompleted,
+        withPlanActionStep,
+        planActionCompleted,
         withActionStep,
         actionCompleted,
         offreCompleted,
         evenementCompleted,
-        outilsCompleted,
         actionStepLabel,
       ];
 }

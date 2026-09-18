@@ -91,6 +91,7 @@ import 'package:pass_emploi_app/models/fonctionnalite.dart';
 import 'package:pass_emploi_app/models/immersion.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
+import 'package:pass_emploi_app/models/onboarding.dart';
 import 'package:pass_emploi_app/models/service_civique.dart';
 import 'package:pass_emploi_app/models/user.dart';
 /*AUTOGENERATE-REDUX-APP-STATE-IMPORT*/
@@ -680,4 +681,27 @@ extension AppStateUser on AppState {
   bool hasPlanAction() => isInviteLoginMode() || fonctionnalitesState.actives.contains(Fonctionnalite.planAction);
 
   bool isFonctionnalitesResolved() => isInviteLoginMode() || fonctionnalitesState.isResolved;
+
+  bool hasMonSuivi() {
+    final user = this.user();
+    if (user == null || user.loginMode.isInvite()) return false;
+    if (user.accompagnement == Accompagnement.ftEspaceCandidat) return false;
+    return true;
+  }
+
+  bool hasChat() {
+    final user = this.user();
+    if (user == null || user.loginMode.isInvite()) return false;
+    if (user.accompagnement == Accompagnement.ftDemandeurDEmploi) return false;
+    if (user.accompagnement == Accompagnement.ftEspaceCandidat) return false;
+    return true;
+  }
+
+  OnboardingStepsVisibility onboardingStepsVisibility() {
+    return OnboardingStepsVisibility(
+      withMessageStep: hasChat(),
+      withPlanActionStep: hasPlanAction(),
+      withActionStep: hasMonSuivi() && accompagnement() != Accompagnement.avenirPro,
+    );
+  }
 }

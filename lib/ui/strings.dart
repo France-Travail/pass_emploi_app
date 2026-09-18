@@ -246,8 +246,9 @@ class Strings {
 
   static String installOnboardingSection = "Installe l’application";
   static String messageOnboardingSection = "Envoie un message à ton conseiller";
-  static String actionOnboardingSection = "Crée une action";
-  static String demarcheOnboardingSection = "Crée une démarche";
+  static String planActionOnboardingSection = "Explore les suggestions d’action";
+  static String actionOnboardingSection = "Crée une action dans l’agenda";
+  static String demarcheOnboardingSection = "Crée une démarche dans l’agenda";
   static String offreOnboardingSection = "Recherche une offre";
   static String evenementOnboardingSection = "Recherche un événement";
   static String outilsOnboardingSection = "Consulte les outils";
@@ -259,6 +260,7 @@ class Strings {
   static String onboardingShowcaseActionTitle = "Lance-toi !";
   static String onboardingShowcaseOffreTitle = "Un emploi en tête?";
   static String onboardingShowcaseEvenementTitle = "Explore les événements en lien avec ton projet pro";
+  static String onboardingShowcasePlanActionTitle = "Tes suggestions t’attendent";
   static String onboardingShowcaseOutilsTitle = "Besoin d’un coup de pouce?";
   static String onboardingShowcaseMessageDescription =
       "Envoie-lui un premier message “Bonjour ! j’ai bien téléchargé l’application, j’ai hâte de commencer !”";
@@ -267,6 +269,8 @@ class Strings {
       "Lance ta recherche pour découvrir des opportunités qui correspondent à tes critères";
   static String onboardingShowcaseEvenementDescription =
       "Participe à des salons, forums, ateliers pour faire avancer ton projet pro";
+  static String onboardingShowcasePlanActionDescription =
+      "Ouvre une catégorie pour découvrir les suggestions d’action.";
   static String onboardingShowcaseOutilsDescription = "Retrouve les bons outils pour te guider à chaque étapes";
 
   static String onboardingStepFinished = "🎉 Bravo, tu as validé une étape du tutoriel !";
