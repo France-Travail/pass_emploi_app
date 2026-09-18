@@ -16,7 +16,6 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/offre_emploi_alerte_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/cards/data_card.dart';
-import 'package:pass_emploi_app/widgets/offre_emploi_origin.dart';
 import 'package:pass_emploi_app/widgets/recherche/criteres_recherche_emploi_contenu.dart';
 import 'package:redux/redux.dart';
 
@@ -55,6 +54,10 @@ class RechercheOffreEmploiPage extends RechercheOffrePage<OffreEmploi> {
   String placeHolderSubtitle() => Strings.rechercheLancerUneRechercheHint;
 
   @override
+  String emptyTitle() =>
+      onlyAlternance ? Strings.rechercheEmptyTitleAlternance : Strings.rechercheEmptyTitleEmploi;
+
+  @override
   RechercheState rechercheState(AppState appState) => appState.rechercheEmploiState;
 
   @override
@@ -64,7 +67,7 @@ class RechercheOffreEmploiPage extends RechercheOffrePage<OffreEmploi> {
   FavoriIdsState<OffreEmploi> favorisState(AppState appState) => appState.offreEmploiFavorisIdsState;
 
   @override
-  Widget buildAlertBottomSheet() => OffreEmploiAlerteBottomSheet(onlyAlternance: onlyAlternance);
+  Widget? buildAlertBottomSheet() => OffreEmploiAlerteBottomSheet(onlyAlternance: onlyAlternance);
 
   @override
   Future<bool?>? buildFiltresBottomSheet(BuildContext context) => OffreEmploiFiltresPage.show(context, onlyAlternance);
@@ -86,7 +89,7 @@ class RechercheOffreEmploiPage extends RechercheOffrePage<OffreEmploi> {
   ) {
     final viewModel = OffreEmploiItemViewModel.create(item);
     return DataCard<OffreEmploi>(
-      tag: viewModel.originViewModel?.toWidget(OffreEmploiOriginSize.small),
+      origin: item.origin,
       titre: viewModel.title,
       sousTitre: viewModel.companyName,
       lieu: viewModel.location,

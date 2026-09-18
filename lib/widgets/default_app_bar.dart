@@ -1,104 +1,89 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/pages/notifications_center/notifications_center_page.dart';
+import 'package:pass_emploi_app/pages/profil/profil_page.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/font_sizes.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
-import 'package:pass_emploi_app/widgets/buttons/tertiary_icon_button.dart';
-import 'package:pass_emploi_app/widgets/profile_button.dart';
 
 class PrimarySliverAppbar extends StatelessWidget {
   final String title;
   final bool withNewNotifications;
   const PrimarySliverAppbar({required this.title, required this.withNewNotifications});
 
-  static double expandedHeight = 90.0;
+  static const double toolbarHeight = 64.0;
 
   @override
   Widget build(BuildContext context) {
-    return SliverLayoutBuilder(
-      builder: (context, constraints) {
-        return SliverAppBar(
-          surfaceTintColor: AppColors.transparent,
-          expandedHeight: expandedHeight,
-          floating: false,
-          pinned: true,
-          automaticallyImplyLeading: false,
-          elevation: 0.2,
-          backgroundColor: AppColorsSpecifics.acceuilBgColor(context),
-          flexibleSpace: AutoFocusA11y(
-            child: ClipRRect(
-              child: FlexibleSpaceBar(
-                titlePadding: EdgeInsetsDirectional.only(
-                  start: 0,
-                  bottom: Margins.spacing_base,
-                ),
-                expandedTitleScale: FontSizes.xl / FontSizes.huge,
-                title: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Tooltip(
-                          message: title,
-                          excludeFromSemantics: true,
-                          child: AutoFocusA11y(
-                            child: Text(
-                              title,
-                              style: TextStyles.primaryAppBar(context)
-                                  .copyWith(
-                                    fontSize: A11yUtils.withTextScale(context) ? FontSizes.semi : FontSizes.huge,
-                                  )
-                                  .copyWith(color: AppColors.contentOnPrimary),
-                            ),
-                          ),
-                        ),
-                      ),
-                      _CentreNotif(withNewNotifications),
-                      SizedBox(width: Margins.spacing_s),
-                      ProfileButton(),
-                    ],
-                  ),
-                ),
-              ),
+    return SliverAppBar(
+      surfaceTintColor: Colors.transparent,
+      toolbarHeight: toolbarHeight,
+      floating: false,
+      pinned: true,
+      automaticallyImplyLeading: false,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+      titleSpacing: DsfrSpacings.s2w,
+      title: AutoFocusA11y(
+        child: Semantics(
+          header: true,
+          child: Tooltip(
+            message: title,
+            excludeFromSemantics: true,
+            child: Text(
+              title,
+              style: DsfrTextStyle.headline6(color: DsfrColorDecisions.textTitleGrey(context)),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-        );
-      },
+        ),
+      ),
+      actionsPadding: const EdgeInsets.only(right: DsfrSpacings.s2w),
+      actions: [
+        _CentreNotif(withNewNotifications),
+        DsfrButton(
+          icon: DsfrIcons.userAccountCircleLine,
+          iconSemanticLabel: Strings.profilButtonSemanticsLabel,
+          variant: DsfrButtonVariant.tertiaryWithoutBorder,
+          size: DsfrComponentSize.md,
+          onPressed: () => Navigator.of(context).push(ProfilPage.materialPageRoute()),
+        ),
+      ],
     );
   }
 }
 
 class _CentreNotif extends StatelessWidget {
-  const _CentreNotif(
-    this.withNewNotifications,
-  );
+  const _CentreNotif(this.withNewNotifications);
 
   final bool withNewNotifications;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
+      clipBehavior: Clip.none,
       children: [
-        TertiaryIconButton(
-          icon: AppIcons.notifications_outlined,
-          tooltip: Strings.notificationsCenterTooltip,
-          iconColor: AppColors.contentOnPrimary,
-          onTap: () => Navigator.of(context).push(NotificationCenter.route()),
+        DsfrButton(
+          icon: DsfrIcons.mediaNotification3Line,
+          iconSemanticLabel: Strings.notificationsCenterTooltip,
+          variant: DsfrButtonVariant.tertiaryWithoutBorder,
+          size: DsfrComponentSize.md,
+          onPressed: () => Navigator.of(context).push(NotificationCenter.route()),
         ),
         if (withNewNotifications)
           Positioned(
-            right: Margins.spacing_s,
-            top: Margins.spacing_s,
+            right: DsfrSpacings.s1w,
+            top: DsfrSpacings.s1w,
             child: Container(
-              width: 8,
-              height: 8,
+              width: DsfrSpacings.s1w,
+              height: DsfrSpacings.s1w,
               decoration: BoxDecoration(
-                color: AppColors.warning,
+                color: DsfrColorDecisions.backgroundFlatWarning(context),
                 shape: BoxShape.circle,
               ),
             ),
@@ -112,7 +97,6 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool canPop;
   final IconButton? actionButton;
-  final bool withProfileButton;
   final bool withAutofocusA11y;
 
   const PrimaryAppBar({
@@ -120,7 +104,6 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.title,
     this.canPop = false,
     this.actionButton,
-    this.withProfileButton = true,
     this.withAutofocusA11y = false,
   });
 
@@ -128,9 +111,12 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       toolbarHeight: toolBarHeight,
-      leading: canPop ? BackButton(color: AppColorsSpecifics.primaryAppBarFgColor(context)) : null,
+      automaticallyImplyLeading: canPop,
+      leading: canPop ? BackButton(color: DsfrColorDecisions.textTitleGrey(context)) : null,
       scrolledUnderElevation: 0,
-      backgroundColor: AppColorsSpecifics.primaryAppBarBackgroundColor(context),
+      surfaceTintColor: Colors.transparent,
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+      titleSpacing: DsfrSpacings.s2w,
       title: Semantics(
         header: true,
         focusable: withAutofocusA11y,
@@ -141,31 +127,120 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
             enabled: withAutofocusA11y,
             child: Text(
               title,
-              style: TextStyles.primaryAppBar(context),
-              overflow: TextOverflow.fade,
+              style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ),
         ),
       ),
       elevation: 0,
       centerTitle: false,
+      actionsPadding: actionButton != null ? const EdgeInsets.only(right: DsfrSpacings.s2w) : EdgeInsets.zero,
       actions: [
-        if (actionButton != null) ...[
-          actionButton!,
-          SizedBox(width: Margins.spacing_base),
-        ],
-        if (withProfileButton) ...[
-          ProfileButton(),
-          SizedBox(width: Margins.spacing_base),
-        ],
+        if (actionButton != null) actionButton!,
       ],
     );
   }
 
-  static const toolBarHeight = 64.0;
+  static const toolBarHeight = 56.0;
 
   @override
   Size get preferredSize => Size.fromHeight(toolBarHeight);
+}
+
+class BackLabelButton extends StatelessWidget {
+  const BackLabelButton({super.key, required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = DsfrColorDecisions.textTitleGrey(context);
+    return TextButton(
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        foregroundColor: color,
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        minimumSize: const Size(0, DsfrSpacings.s5w),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        shape: const RoundedRectangleBorder(),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(DsfrIcons.systemArrowLeftSLine, size: 16, color: color),
+          const SizedBox(width: DsfrSpacings.s1w),
+          Flexible(
+            child: Text(
+              Strings.back,
+              style: DsfrTextStyle.bodyMdMedium(color: color),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const BackAppBar({
+    super.key,
+    this.actions = const [],
+  });
+
+  final List<Widget> actions;
+
+  static const double _toolbarHeight = 48;
+
+  @override
+  Size get preferredSize => const Size.fromHeight(_toolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      primary: true,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      surfaceTintColor: Colors.transparent,
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+      toolbarHeight: _toolbarHeight,
+      centerTitle: false,
+      automaticallyImplyLeading: false,
+      titleSpacing: DsfrSpacings.s1w,
+      leadingWidth: 140,
+      leading: Align(
+        alignment: Alignment.centerLeft,
+        child: BackLabelButton(onPressed: () => Navigator.of(context).maybePop()),
+      ),
+      actions: [
+        for (final action in actions)
+          Padding(
+            padding: const EdgeInsets.only(right: DsfrSpacings.s1w),
+            child: Center(child: action),
+          ),
+      ],
+    );
+  }
+}
+
+class PageTitle extends StatelessWidget {
+  const PageTitle(this.title, {super.key});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return AutoFocusA11y(
+      child: Semantics(
+        header: true,
+        child: Text(
+          title,
+          style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+        ),
+      ),
+    );
+  }
 }
 
 class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -178,17 +253,25 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final parentRoute = ModalRoute.of(context);
+    final canPop = parentRoute?.canPop ?? Navigator.of(context).canPop();
+    final isFullscreenDialog = parentRoute?.fullscreenDialog ?? false;
+    final hasActions = actions != null && actions!.isNotEmpty;
+
     return AppBar(
       toolbarHeight: toolBarHeight,
-      titleSpacing: 0,
-      iconTheme: IconThemeData(color: context.content),
+      automaticallyImplyLeading: false,
+      titleSpacing: DsfrSpacings.s1w,
+      leadingWidth: DsfrSpacings.s8w,
+      iconTheme: IconThemeData(color: DsfrColorDecisions.textActionHighBlueFrance(context)),
       elevation: 0,
       centerTitle: false,
       scrolledUnderElevation: 0,
-      surfaceTintColor: AppColors.transparent,
-      leading: leading,
+      surfaceTintColor: Colors.transparent,
+      leading: leading ?? (canPop ? _SecondaryAppBarLeadingButton(isClose: isFullscreenDialog) : null),
       actions: actions,
-      backgroundColor: backgroundColor ?? context.bg,
+      actionsPadding: hasActions ? const EdgeInsets.only(right: DsfrSpacings.s2w) : EdgeInsets.zero,
+      backgroundColor: backgroundColor ?? DsfrColorDecisions.backgroundDefaultGrey(context),
       title: Semantics(
         header: true,
         child: Tooltip(
@@ -196,8 +279,9 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
           excludeFromSemantics: true,
           child: Text(
             title,
-            style: TextStyles.secondaryAppBar(context),
+            style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textTitleGrey(context)),
             overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
         ),
       ),
@@ -208,6 +292,26 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => Size.fromHeight(toolBarHeight);
+}
+
+class _SecondaryAppBarLeadingButton extends StatelessWidget {
+  const _SecondaryAppBarLeadingButton({required this.isClose});
+
+  final bool isClose;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      child: DsfrButton(
+        icon: isClose ? DsfrIcons.systemCloseLine : DsfrIcons.systemArrowLeftSLine,
+        iconSemanticLabel: isClose ? Strings.close : Strings.back,
+        variant: DsfrButtonVariant.tertiaryWithoutBorder,
+        size: DsfrComponentSize.md,
+        iconColor: DsfrColorDecisions.textTitleGrey(context),
+        onPressed: () => Navigator.of(context).maybePop(),
+      ),
+    );
+  }
 }
 
 class ModeDemoAppBar extends StatelessWidget implements PreferredSizeWidget {

@@ -42,7 +42,7 @@ void main() {
 
       // Then
       expect(viewModel.displayState, DisplayState.FAILURE);
-      expect(viewModel.errorMessage, "Une erreur est survenue. Veuillez réessayer");
+      expect(viewModel.errorMessage, "Une erreur est survenue. Réessaie");
     });
   });
 

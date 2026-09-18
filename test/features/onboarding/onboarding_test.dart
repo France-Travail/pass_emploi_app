@@ -68,6 +68,27 @@ void main() {
       });
     });
 
+    group("when dismissing notifications onboarding", () {
+      sut.whenDispatchingAction(() => OnboardingNotificationsDismissedAction());
+
+      test('should update onboarding state without requesting permission', () {
+        final givenOnboarding = Onboarding(showNotificationsOnboarding: true);
+
+        when(() => repository.get()).thenAnswer((_) async => givenOnboarding);
+        when(() => repository.save(any())).thenAnswer((_) async {});
+
+        sut.givenStore =
+            givenState() //
+                .copyWith(onboardingState: OnboardingState(onboarding: givenOnboarding))
+                .store(
+                  (f) => {f.onboardingRepository = repository, f.pushNotificationManager = pushNotificationManager},
+                );
+
+        sut.thenExpectAtSomePoint(_shouldSucceed(givenOnboarding.copyWith(showNotificationsOnboarding: false)));
+        verifyNever(() => pushNotificationManager.requestPermission());
+      });
+    });
+
     group('on completed', () {
       group('when sending a message', () {
         sut.whenDispatchingAction(() => SendMessageAction('any'));
@@ -84,6 +105,24 @@ void main() {
                   .store((f) => {f.onboardingRepository = repository});
 
           sut.thenExpectAtSomePoint(_shouldSucceed(givenOnboarding.copyWith(messageCompleted: true)));
+        });
+      });
+
+      group('when exploring an action plan suggestion', () {
+        sut.whenDispatchingAction(() => PlanActionOnboardingCompletedAction());
+
+        test('should update onboarding state', () {
+          final givenOnboarding = Onboarding();
+
+          when(() => repository.get()).thenAnswer((_) async => givenOnboarding);
+          when(() => repository.save(any())).thenAnswer((_) async {});
+
+          sut.givenStore =
+              givenState() //
+                  .copyWith(onboardingState: OnboardingState(onboarding: givenOnboarding))
+                  .store((f) => {f.onboardingRepository = repository});
+
+          sut.thenExpectAtSomePoint(_shouldSucceed(givenOnboarding.copyWith(planActionCompleted: true)));
         });
       });
 
@@ -243,10 +282,10 @@ void main() {
           );
         });
       });
-      group("OutilsOnboardingStartedAction", () {
-        sut.whenDispatchingAction(() => OutilsOnboardingStartedAction());
+      group("PlanActionOnboardingStartedAction", () {
+        sut.whenDispatchingAction(() => PlanActionOnboardingStartedAction());
 
-        test('should showOutilsOnboarding', () {
+        test('should showPlanActionOnboarding', () {
           sut.givenStore =
               givenState() //
                   .copyWith(onboardingState: OnboardingState(onboarding: givenOnboarding))
@@ -254,7 +293,7 @@ void main() {
 
           sut.thenExpectAtSomePoint(
             StateIs<OnboardingState>((state) => state.onboardingState, (state) {
-              expect(state.showOutilsOnboarding, true);
+              expect(state.showPlanActionOnboarding, true);
             }),
           );
         });
@@ -357,6 +396,24 @@ void main() {
         });
       });
 
+      group('when plan action is completed', () {
+        sut.whenDispatchingAction(() => OnboardingSuccessAction(Onboarding(planActionCompleted: true)));
+
+        test('should hide plan action showcase', () {
+          sut.givenStore =
+              givenState() //
+                  .copyWith(onboardingState: OnboardingState(showPlanActionOnboarding: true))
+                  .store((f) => {f.onboardingRepository = repository});
+
+          sut.thenExpectAtSomePoint(
+            StateIs<OnboardingState>((state) => state.onboardingState, (state) {
+              expect(state.showPlanActionOnboarding, false);
+              expect(state.onboarding?.planActionCompleted, true);
+            }),
+          );
+        });
+      });
+
       group('when evenement is completed', () {
         sut.whenDispatchingAction(() => OnboardingSuccessAction(Onboarding(evenementCompleted: true)));
 
@@ -370,24 +427,6 @@ void main() {
             StateIs<OnboardingState>((state) => state.onboardingState, (state) {
               expect(state.showEvenementOnboarding, false);
               expect(state.onboarding?.evenementCompleted, true);
-            }),
-          );
-        });
-      });
-
-      group('when outils is completed', () {
-        sut.whenDispatchingAction(() => OnboardingSuccessAction(Onboarding(outilsCompleted: true)));
-
-        test('should hide outils showcase', () {
-          sut.givenStore =
-              givenState() //
-                  .copyWith(onboardingState: OnboardingState(showOutilsOnboarding: true))
-                  .store((f) => {f.onboardingRepository = repository});
-
-          sut.thenExpectAtSomePoint(
-            StateIs<OnboardingState>((state) => state.onboardingState, (state) {
-              expect(state.showOutilsOnboarding, false);
-              expect(state.onboarding?.outilsCompleted, true);
             }),
           );
         });
@@ -430,7 +469,6 @@ void main() {
           actionCompleted: true,
           offreCompleted: true,
           evenementCompleted: true,
-          outilsCompleted: true,
         );
 
         sut.whenDispatchingAction(() => OnboardingSuccessAction(newOnboarding));

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 
 class ChatDaySection extends StatelessWidget {
@@ -10,13 +9,17 @@ class ChatDaySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Semantics(
-        header: true,
-        child: Text(
-          dayLabel,
-          style: TextStyles.textXsRegular().copyWith(color: context.grey800),
-          semanticsLabel: dayLabel.toDateForScreenReaders(),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s1v),
+      child: Center(
+        child: Semantics(
+          header: true,
+          child: Text(
+            dayLabel,
+            style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textMentionGrey(context)),
+            textAlign: TextAlign.center,
+            semanticsLabel: dayLabel.toDateForScreenReaders(),
+          ),
         ),
       ),
     );

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 
 class OffreNotFoundPage extends StatelessWidget {
@@ -17,29 +15,67 @@ class OffreNotFoundPage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.offreNotFound,
       child: Scaffold(
-        backgroundColor: context.bg,
-        appBar: SecondaryAppBar(title: Strings.offreNotFoundTitle, backgroundColor: context.bg),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-          child: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Center(child: SizedBox(height: 200, width: 200, child: Image.asset(Drawables.notFound))),
-                  SizedBox(height: Margins.spacing_xl),
-                  Text(Strings.offreNotFoundBodyTitle, textAlign: TextAlign.center, style: TextStyles.textMBold.copyWith(color: context.content)),
-                  SizedBox(height: Margins.spacing_m),
-                  Text(
-                    Strings.offreNotFoundBodySubtitle,
-                    textAlign: TextAlign.center,
-                    style: TextStyles.textSRegular(color: context.content),
-                  ),
-                  SizedBox(height: Margins.spacing_m),
-                  PrimaryActionButton(label: Strings.close, onPressed: () => Navigator.pop(context)),
-                  SizedBox(height: Margins.spacing_xx_huge),
-                ],
+        backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+        appBar: AppBar(
+          toolbarHeight: PrimaryAppBar.toolBarHeight,
+          titleSpacing: DsfrSpacings.s2w,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          surfaceTintColor: Colors.transparent,
+          backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+          iconTheme: IconThemeData(color: DsfrColorDecisions.textTitleGrey(context)),
+          title: Semantics(
+            header: true,
+            child: Tooltip(
+              message: Strings.offreNotFoundTitle,
+              excludeFromSemantics: true,
+              child: Text(
+                Strings.offreNotFoundTitle,
+                style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
+            child: Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Center(
+                      child: SvgPicture.asset(
+                        Drawables.illustrationWarning,
+                        width: 160,
+                        height: 160,
+                        excludeFromSemantics: true,
+                      ),
+                    ),
+                    const SizedBox(height: DsfrSpacings.s3w),
+                    Text(
+                      Strings.offreNotFoundBodyTitle,
+                      textAlign: TextAlign.center,
+                      style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+                    ),
+                    const SizedBox(height: DsfrSpacings.s1w),
+                    Text(
+                      Strings.offreNotFoundBodySubtitle,
+                      textAlign: TextAlign.center,
+                      style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+                    ),
+                    const SizedBox(height: DsfrSpacings.s3w),
+                    DsfrButton(
+                      label: Strings.close,
+                      variant: DsfrButtonVariant.primary,
+                      size: DsfrComponentSize.lg,
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    const SizedBox(height: DsfrSpacings.s4w),
+                  ],
+                ),
               ),
             ),
           ),

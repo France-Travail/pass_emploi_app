@@ -82,7 +82,6 @@ void main() {
             rendezvousCount: "3",
             actionsOuDemarchesCount: "1",
             actionsOuDemarchesLabel: "Action",
-            withComptageDesHeures: true,
           ),
           AccueilColorSeparatorItem(),
           AccueilProchainRendezvousItem(mockRendezvousMiloCV().id),
@@ -107,7 +106,6 @@ void main() {
                 mockAccueilMilo().copyWith(
                   prochainRendezVous: rdv,
                   prochaineSessionMilo: sessionMilo,
-                  peutVoirLeComptageDesHeures: false,
                   cetteSemaine: AccueilCetteSemaine(
                     nombreRendezVous: 3,
                     nombreActionsDemarchesARealiser: 2,
@@ -129,7 +127,6 @@ void main() {
             rendezvousCount: "3",
             actionsOuDemarchesCount: "2",
             actionsOuDemarchesLabel: "Actions",
-            withComptageDesHeures: false,
           ),
           AccueilColorSeparatorItem(),
           AccueilProchaineSessionMiloItem(sessionMilo.id),
@@ -168,7 +165,6 @@ void main() {
             rendezvousCount: "3",
             actionsOuDemarchesCount: "1",
             actionsOuDemarchesLabel: "Démarche",
-            withComptageDesHeures: true,
           ),
           AccueilColorSeparatorItem(),
           AccueilProchainRendezvousItem(mockRendezvousPoleEmploi().id),
@@ -202,7 +198,6 @@ void main() {
             rendezvousCount: "3",
             actionsOuDemarchesCount: "1",
             actionsOuDemarchesLabel: "Démarche",
-            withComptageDesHeures: true,
           ),
           AccueilColorSeparatorItem(),
           AccueilProchainRendezvousItem(mockRendezvousPoleEmploi().id),
@@ -230,7 +225,6 @@ void main() {
           rendezvousCount: null,
           actionsOuDemarchesCount: "1",
           actionsOuDemarchesLabel: "Démarche",
-          withComptageDesHeures: true,
         ),
       );
     });
@@ -802,12 +796,12 @@ void main() {
       final viewModel = AccueilViewModel.create(store);
 
       // Then
-      expect(viewModel.items.first, OnboardingItem(completedSteps: 1, totalSteps: 6));
+      expect(viewModel.items.first, OnboardingItem(completedSteps: 1, totalSteps: 5));
     });
   });
 
   group('messageInformatif', () {
-    test('should not display item when accueil has no messageInformatif', () {
+    test('should not display item when communications is not loaded', () {
       // Given
       final store = givenState().loggedInMiloUser().withAccueilMiloSuccess().store();
 
@@ -818,12 +812,24 @@ void main() {
       expect(viewModel.items.firstWhereOrNull((item) => item is AccueilMessageInformatifItem), isNull);
     });
 
-    test('should display item as first item when accueil has a messageInformatif', () {
+    test('should not display item when communications has no messageInformatif', () {
+      // Given
+      final store = givenState().loggedInMiloUser().withAccueilMiloSuccess().withCommunicationsSuccess().store();
+
+      // When
+      final viewModel = AccueilViewModel.create(store);
+
+      // Then
+      expect(viewModel.items.firstWhereOrNull((item) => item is AccueilMessageInformatifItem), isNull);
+    });
+
+    test('should display item as first item when communications has a messageInformatif', () {
       // Given
       final messageInformatif = mockMessageInformatif();
       final store = givenState()
           .loggedInMiloUser()
-          .withAccueilMiloSuccess(mockAccueilMilo().copyWith(messageInformatif: messageInformatif))
+          .withAccueilMiloSuccess()
+          .withCommunicationsSuccess(messageInformatif)
           .store();
 
       // When

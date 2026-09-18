@@ -34,16 +34,16 @@ String? getDemoFileName(String url, String query) {
   if (url.removeLastPath().endsWith('/rendezvous')) return 'rendez_vous_detail';
   if (url.contains('/animations-collectives')) return 'event_list';
   if (url.endsWith('/sessions')) return 'session_milo_list';
-  if (url.contains('/diagoriente/urls')) return 'diagoriente_urls';
-  if (url.contains('/diagoriente/metiers-favoris')) return 'diagoriente_metiers_favoris';
   if (url.contains('/pole-emploi/cv')) return 'cv_pole_emploi';
   if (url.endsWith('/evenements-emploi')) return 'recherche_evenements_emploi';
   if (url.contains('/evenements-emploi/')) return 'evenement_emploi_details';
   if (url.contains('/catalogue')) return 'thematiques_demarche';
   if (url.contains('/sessions/')) return 'session_milo_details';
   if (url.endsWith('/notifications')) return 'notifications';
+  if (url.endsWith('/communications')) return 'communications';
   if (url.endsWith('/actualites')) return 'actualites_mission_locale';
   if (url.endsWith('/comptage')) return 'comptage';
+  if (url.endsWith('/fonctionnalites')) return 'fonctionnalites';
 
   return null;
 }

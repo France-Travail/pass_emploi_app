@@ -4,8 +4,10 @@ import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_state.dart';
 import 'package:pass_emploi_app/features/login/login_state.dart';
 import 'package:pass_emploi_app/features/tutorial/tutorial_state.dart';
+import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/cgu.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/tutorial/tutorial.dart';
 import 'package:pass_emploi_app/models/version.dart';
 import 'package:pass_emploi_app/presentation/main_page_view_model.dart';
@@ -322,6 +324,185 @@ void main() {
       final viewModel = RouterPageViewModel.create(store, Platform.IOS);
 
       expect(viewModel.routerPageDisplayState, RouterPageDisplayState.cgu);
+    });
+
+    test('should show onboarding questionnaire when user is logged in as invite and questionnaire unfinished', () {
+      final store =
+          givenState() //
+              .copyWith(loginState: successUserState(loginMode: LoginMode.INVITE, accompagnement: Accompagnement.cej))
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withOnboardingQuestionnaire(finished: false)
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.onboardingQuestionnaire);
+    });
+
+    test('should show main when user is logged in as invite and onboarding finished', () {
+      final store =
+          givenState() //
+              .copyWith(loginState: successUserState(loginMode: LoginMode.INVITE, accompagnement: Accompagnement.cej))
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withOnboardingQuestionnaire(finished: true)
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.main);
+    });
+
+    test('should show tutorial when invite onboarding is finished and tutorial is pending', () {
+      final store =
+          givenState() //
+              .copyWith(loginState: successUserState(loginMode: LoginMode.INVITE, accompagnement: Accompagnement.cej))
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withOnboardingQuestionnaire(finished: true)
+              .copyWith(tutorialState: ShowTutorialState(Tutorial.milo))
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.tutorial);
+    });
+
+    test('should show splash when onboarding questionnaire is not initialized', () {
+      final store =
+          givenState() //
+              .copyWith(loginState: successUserState(loginMode: LoginMode.INVITE, accompagnement: Accompagnement.cej))
+              .withFirstLaunchOnboardingSuccessState(false)
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.splash);
+    });
+
+    test('should not wait for the back when user is invite, so an offline invite still gets the questionnaire', () {
+      final store =
+          givenState() //
+              .copyWith(loginState: successUserState(loginMode: LoginMode.INVITE, accompagnement: Accompagnement.cej))
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withFonctionnalitesNotInitialized()
+              .withOnboardingQuestionnaire(finished: false)
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.onboardingQuestionnaire);
+    });
+  });
+
+  group("RouterPageViewModel.create when user is in the pilot region…", () {
+    test('…should show splash while fonctionnalites are not resolved yet', () {
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withFonctionnalitesNotInitialized()
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.splash);
+    });
+
+    test('…should show cgu before waiting for fonctionnalites', () {
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withFonctionnalitesNotInitialized()
+              .withCguNeverAccepted()
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.cgu);
+    });
+
+    test('…should show onboarding questionnaire when PLAN_ACTION is active and questionnaire unfinished', () {
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withPlanActionFonctionnalite()
+              .withOnboardingQuestionnaire(finished: false)
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.onboardingQuestionnaire);
+    });
+
+    test('…should show splash when PLAN_ACTION is active but questionnaire is not initialized yet', () {
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withPlanActionFonctionnalite()
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.splash);
+    });
+
+    test('…should show main when PLAN_ACTION is active and questionnaire is finished', () {
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withPlanActionFonctionnalite()
+              .withOnboardingQuestionnaire(finished: true)
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.main);
+    });
+
+    test('…should show tutorial after the questionnaire when it is pending', () {
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withPlanActionFonctionnalite()
+              .withOnboardingQuestionnaire(finished: true)
+              .copyWith(tutorialState: ShowTutorialState(Tutorial.milo))
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.tutorial);
+    });
+  });
+
+  group("RouterPageViewModel.create when user is outside the pilot region…", () {
+    test('…should show main without any questionnaire', () {
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withoutFonctionnalites()
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.main);
+    });
+
+    test('…should show main when the fonctionnalites call failed, closed by default', () {
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withFonctionnalitesFailure()
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.main);
     });
   });
 

@@ -112,10 +112,6 @@ class AnalyticsScreenNames {
   static const alerteSuggestionsList = "saved_searches/suggested_list";
   static const alerteList = "saved_searches/list";
   static const alerteListFromAccueil = "saved_searches/list/from-accueil";
-  static const alerteListFilterEmploi = "saved_searches/list?filtre=emploi";
-  static const alerteListFilterAlternance = "saved_searches/list?filtre=alternance";
-  static const alerteListFilterImmersion = "saved_searches/list?filtre=immersion";
-  static const alerteListFilterServiceCivique = "saved_searches/list?filtre=service_civique";
 
   static const alerteEmploiDelete = "/saved_searches/emploi/delete";
   static const alerteAlternanceDelete = "/saved_searches/alternance/delete";
@@ -125,16 +121,13 @@ class AnalyticsScreenNames {
   static const suppressionAccount = "/profil/suppression-compte";
   static const shareActivity = "/profil/autorisation-partage-conseiller";
   static const notificationPreferences = "/profil/preferences-push-notification";
+  static const confidentialite = "/profil/confidentialite";
 
   static const explicationModeDemo = "/entree/mode-demo";
 
   static const tutorialPage = "/new-feature_tutorial";
 
   static const actionCommentsPage = "/actions/detail/comments/view";
-
-  static const diagorienteEntryPage = "/diagoriente";
-  static const diagorienteChatBot = "/diagoriente/chatbot";
-  static const diagorienteFavoris = "/diagoriente/favoris";
 
   static const cvListPage = "/cv/list";
   static const cguPage = "cgu";
@@ -143,6 +136,7 @@ class AnalyticsScreenNames {
 
   static String inAppFeedbackFeature(String feature) => "/feedback/$feature/affichage";
   static String inAppFeedbackFeatureFermeture(String feature) => "/feedback/$feature/fermeture";
+  static const actionPlanFeedback = "/feedback/action-plan/affichage";
 
   static const offreNotFound = "offre_not_found";
 }
@@ -191,6 +185,7 @@ class AnalyticsActionNames {
   static const skipRating = "/notation/skip";
   static const negativeRating = "/notation/defavorable";
   static const positiveRating = "/notation/favorable";
+  static const proposeIdea = "/notation/proposer-idee";
 
   static const contactEmailSent = "/contact/email-sent";
 
@@ -235,14 +230,6 @@ class AnalyticsEventNames {
   static const createActionStep3TermineAction = "Statut : Terminé";
   static const createActionStep3AvecRappelAction = "Rappel : Oui";
   static const createActionStep3SansRappelAction = "Rappel : Non";
-
-  static const autocompleteMotCleDiagorienteMetiersFavorisEventCategory = "Préférences métiers dans les mots clés";
-  static const autocompleteMotCleDiagorienteMetiersFavorisDisplayAction = "Affichage des préférences métiers";
-  static const autocompleteMotCleDiagorienteMetiersFavorisClickAction = "Clic préférences métiers";
-
-  static const autocompleteMetierDiagorienteMetiersFavorisEventCategory = "Préférences métiers dans métier";
-  static const autocompleteMetierDiagorienteMetiersFavorisDisplayAction = "Affichage des préférences métiers";
-  static const autocompleteMetierDiagorienteMetiersFavorisClickAction = "Clic préférences métiers";
 
   static const webAuthPageEventCategory = "Mire connexion mobile";
   static const webAuthPageSuccessAction = "Connexion post mire OK";
@@ -289,6 +276,8 @@ class AnalyticsEventNames {
   static const feedback3Action = "Note 3/5";
   static const feedback4Action = "Note 4/5";
   static const feedback5Action = "Note 5/5";
+  static const actionPlanFeedbackGiveOpinionAction = "Donne ton avis";
+  static const actionPlanFeedbackSkipAction = "Passer cette étape";
 
   static const accueilCategory = "Accueil";
   static const accueilDetailSemainePressed = "Clic sur le détail de la semaine";

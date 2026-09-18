@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/events/list/event_list_actions.dart';
@@ -9,14 +11,11 @@ import 'package:pass_emploi_app/presentation/events/event_list_page_view_model.d
 import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
+import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/animated_list_loader.dart';
 import 'package:pass_emploi_app/widgets/cards/rendezvous_card.dart';
-import 'package:pass_emploi_app/widgets/illustration/empty_state_placeholder.dart';
-import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
 import 'package:pass_emploi_app/widgets/refresh_indicator_ext.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 
@@ -63,14 +62,43 @@ class _EmptyListPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicatorAddingScrollview(
       onRefresh: () async => viewModel.onRetry(),
-      child: SingleChildScrollView(
-        child: Center(
-          child: EmptyStatePlaceholder(
-            illustration: Illustration.grey(Icons.event, withWhiteBackground: true),
-            title: Strings.eventListEmpty,
-            subtitle: Strings.eventListEmptySubtitle,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s7w),
+            child: Center(
+              child: SvgPicture.asset(
+                Drawables.illustrationEvenementsEmpty,
+                width: 212,
+                fit: BoxFit.contain,
+                excludeFromSemantics: true,
+              ),
+            ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Semantics(
+                  header: true,
+                  child: Text(
+                    Strings.eventListEmpty,
+                    style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+                  ),
+                ),
+                const SizedBox(height: DsfrSpacings.s1w),
+                Text(
+                  Strings.eventListEmptySubtitle,
+                  style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -92,14 +120,7 @@ class _Content extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: Margins.spacing_base),
-                  child: Text(
-                    Strings.eventListHeaderText,
-                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+                SizedBox(height: Margins.spacing_base),
                 ListView.separated(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -112,11 +133,13 @@ class _Content extends StatelessWidget {
                         context: context,
                         stateSource: RendezvousStateSource.eventListAnimationsCollectives,
                         evenementEngagement: EvenementEngagement.ANIMATION_COLLECTIVE_AFFICHEE,
+                        showDate: true,
                       ),
                       final SessionMiloId s => s.id.rendezvousCard(
                         context: context,
                         stateSource: RendezvousStateSource.eventListSessionsMilo,
                         evenementEngagement: EvenementEngagement.SESSION_AFFICHEE,
+                        showDate: true,
                       ),
                     };
                   },

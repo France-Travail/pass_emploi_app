@@ -28,8 +28,12 @@ class OnboardingMiddleware extends MiddlewareClass<AppState> {
       store.dispatch(OnboardingSuccessAction(result));
     } else if (action is OnboardingPushNotificationPermissionRequestAction) {
       await _handleNotificationsPermissions(store);
+    } else if (action is OnboardingNotificationsDismissedAction) {
+      _updateOnboarding(store, (onboarding) => onboarding?.copyWith(showNotificationsOnboarding: false));
     } else if (action is SendMessageAction) {
       _updateOnboarding(store, (onboarding) => onboarding?.copyWith(messageCompleted: true));
+    } else if (action is PlanActionOnboardingCompletedAction) {
+      _updateOnboarding(store, (onboarding) => onboarding?.copyWith(planActionCompleted: true));
     } else if (action is UserActionCreateSuccessAction || action is CreateDemarcheSuccessAction) {
       _updateOnboarding(store, (onboarding) => onboarding?.copyWith(actionCompleted: true));
     } else if (action is RechercheRequestAction) {
@@ -38,11 +42,6 @@ class OnboardingMiddleware extends MiddlewareClass<AppState> {
       } else {
         _updateOnboarding(store, (onboarding) => onboarding?.copyWith(offreCompleted: true));
       }
-    } else if (action is OutilsOnboardingStartedAction) {
-      // delayed to let user see the onboarding
-      Future.delayed(const Duration(seconds: 1), () {
-        _updateOnboarding(store, (onboarding) => onboarding?.copyWith(outilsCompleted: true));
-      });
     } else if (action is OnboardingHideAction) {
       _updateOnboarding(store, (onboarding) => onboarding?.copyWith(showOnboarding: false));
     }
@@ -72,7 +71,7 @@ class OnboardingMiddleware extends MiddlewareClass<AppState> {
     if (updatedOnboarding != null) {
       await _save(updatedOnboarding);
       store.dispatch(OnboardingSuccessAction(updatedOnboarding));
-      if (updatedOnboarding.isCompleted(store.state.accompagnement())) {
+      if (updatedOnboarding.isCompleted(store.state.onboardingStepsVisibility())) {
         PassEmploiMatomoTracker.instance.trackEvent(
           eventCategory: AnalyticsEventNames.onboardingCategory,
           action: AnalyticsEventNames.onboardingCompletedOnboardingAction,

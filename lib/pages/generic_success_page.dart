@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/drawables.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/success/success_dialog_app_bar.dart';
+import 'package:pass_emploi_app/widgets/success/success_illustration.dart';
 
 class GenericSuccessPage extends StatelessWidget {
   const GenericSuccessPage({super.key, required this.title, required this.content});
@@ -22,27 +19,42 @@ class GenericSuccessPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.bg,
-      appBar: SecondaryAppBar(title: title, backgroundColor: context.bg),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Center(child: SizedBox(height: 130, width: 130, child: Image.asset(Drawables.success))),
-                SizedBox(height: Margins.spacing_xl),
-                Text(title, textAlign: TextAlign.center, style: TextStyles.textMBold.copyWith(color: context.content)),
-                if (content != null) ...[
-                  SizedBox(height: Margins.spacing_m),
-                  Text(content!, textAlign: TextAlign.center, style: TextStyles.textSRegular(color: context.content)),
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+      appBar: SuccessDialogAppBar(title: title),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SuccessIllustration(size: 160),
+                  const SizedBox(height: DsfrSpacings.s3w),
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+                  ),
+                  if (content != null) ...[
+                    const SizedBox(height: DsfrSpacings.s1w),
+                    Text(
+                      content!,
+                      textAlign: TextAlign.center,
+                      style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+                    ),
+                  ],
+                  const SizedBox(height: DsfrSpacings.s3w),
+                  DsfrButton(
+                    label: Strings.close,
+                    variant: DsfrButtonVariant.primary,
+                    size: DsfrComponentSize.lg,
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  const SizedBox(height: DsfrSpacings.s4w),
                 ],
-                SizedBox(height: Margins.spacing_m),
-                PrimaryActionButton(label: Strings.close, onPressed: () => Navigator.pop(context)),
-                SizedBox(height: Margins.spacing_xx_huge),
-              ],
+              ),
             ),
           ),
         ),

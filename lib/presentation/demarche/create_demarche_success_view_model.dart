@@ -10,15 +10,21 @@ import 'package:redux/redux.dart';
 class CreateDemarcheSuccessViewModel extends Equatable {
   final String? demarcheId;
   final DisplayState displayState;
-  final String demarcheSuccessTitle;
-  final String demarcheSuccessSubtitle;
+  final String firstName;
+  final bool isPlural;
 
   CreateDemarcheSuccessViewModel({
     required this.demarcheId,
     required this.displayState,
-    required this.demarcheSuccessTitle,
-    required this.demarcheSuccessSubtitle,
+    required this.firstName,
+    required this.isPlural,
   });
+
+  String get appBarTitle =>
+      isPlural ? Strings.createDemarcheAppBarTitle : Strings.createOneDemarcheAppBarTitle;
+
+  String get subtitle =>
+      isPlural ? Strings.demarcheSuccessSubtitlePlural : Strings.demarcheSuccessSubtitle;
 
   factory CreateDemarcheSuccessViewModel.create(Store<AppState> store, CreateDemarcheSource source) {
     return CreateDemarcheSuccessViewModel(
@@ -27,19 +33,13 @@ class CreateDemarcheSuccessViewModel extends Equatable {
         CreateDemarcheSource.iaFt => _createDemarcheBatchDisplayState(store),
         _ => _createDemarcheDisplayState(store),
       },
-      demarcheSuccessTitle: switch (source) {
-        CreateDemarcheSource.iaFt => Strings.demarcheSuccessTitlePlural,
-        _ => Strings.demarcheSuccessTitle,
-      },
-      demarcheSuccessSubtitle: switch (source) {
-        CreateDemarcheSource.iaFt => Strings.demarcheSuccessSubtitlePlural,
-        _ => Strings.demarcheSuccessSubtitle,
-      },
+      firstName: store.state.user()?.firstName ?? "",
+      isPlural: source == CreateDemarcheSource.iaFt,
     );
   }
 
   @override
-  List<Object?> get props => [demarcheId, displayState];
+  List<Object?> get props => [demarcheId, displayState, firstName, isPlural];
 }
 
 String? _demarcheId(Store<AppState> store, CreateDemarcheSource source) {

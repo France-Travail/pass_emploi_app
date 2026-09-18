@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
@@ -8,17 +10,11 @@ import 'package:pass_emploi_app/pages/generic_success_page.dart';
 import 'package:pass_emploi_app/pages/immersion/immersion_contact_mode.dart';
 import 'package:pass_emploi_app/presentation/immersion/immersion_contact_form_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/loading_overlay.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
-import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
 
 class ImmersionContactFormPage extends StatelessWidget {
   const ImmersionContactFormPage({super.key});
@@ -76,14 +72,19 @@ class _Scaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.bg,
-      appBar: SecondaryAppBar(title: Strings.immersitionContactFormTitle, backgroundColor: context.bg),
-      body: Stack(
-        children: [
-          _Form(viewModel: viewModel),
-          if (viewModel.sendingState.isLoading()) LoadingOverlay(),
-        ],
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = DsfrColorDecisions.backgroundDefaultGrey(context);
+    return Theme(
+      data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+      child: Scaffold(
+        backgroundColor: backgroundColor,
+        appBar: SecondaryAppBar(title: Strings.immersitionContactFormTitle, backgroundColor: backgroundColor),
+        body: Stack(
+          children: [
+            _Form(viewModel: viewModel),
+            if (viewModel.sendingState.isLoading()) LoadingOverlay(),
+          ],
+        ),
       ),
     );
   }
@@ -139,37 +140,43 @@ class _FormState extends State<_Form> {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_m),
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: Margins.spacing_base),
+                  const SizedBox(height: DsfrSpacings.s2w),
                   ContactModeTag(contactMode: widget.viewModel.contactMode),
-                  SizedBox(height: Margins.spacing_m),
+                  const SizedBox(height: DsfrSpacings.s2w),
                   Text(
                     Strings.immersitionContactFormSubtitle,
-                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
+                    style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
                   ),
-                  SizedBox(height: Margins.spacing_m),
+                  const SizedBox(height: DsfrSpacings.s2w),
                   Text(
                     Strings.immersitionContactFormHint,
-                    style: TextStyles.textBaseBold.copyWith(color: context.content),
+                    style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
                   ),
-                  SizedBox(height: Margins.spacing_m),
+                  const SizedBox(height: DsfrSpacings.s2w),
+                  Text(
+                    Strings.mandatoryFields,
+                    style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textMentionGrey(context)),
+                  ),
+                  const SizedBox(height: DsfrSpacings.s2w),
                   ImmersionTextFormField(
                     isMandatory: true,
                     controller: state.userFirstNameController,
                     focusNode: state.userFirstNameFocus,
                     label: Strings.immersitionContactFormSurnameHint,
                   ),
-                  SizedBox(height: Margins.spacing_m),
+                  const SizedBox(height: DsfrSpacings.s2w),
                   ImmersionTextFormField(
                     isMandatory: true,
                     controller: state.userLastNameController,
                     focusNode: state.userLastNameFocus,
                     label: Strings.immersitionContactFormNameHint,
                   ),
-                  SizedBox(height: Margins.spacing_m),
+                  const SizedBox(height: DsfrSpacings.s2w),
                   ImmersionTextFormField(
                     isMandatory: true,
                     mandatoryError: state.showValidationErrors && !state.isEmailValid()
@@ -181,7 +188,7 @@ class _FormState extends State<_Form> {
                     keyboardType: TextInputType.emailAddress,
                     textCapitalization: TextCapitalization.none,
                   ),
-                  SizedBox(height: Margins.spacing_m),
+                  const SizedBox(height: DsfrSpacings.s2w),
                   ImmersionTextFormField(
                     isMandatory: true,
                     mandatoryError: state.showValidationErrors && !state.isTelephoneValid()
@@ -193,14 +200,14 @@ class _FormState extends State<_Form> {
                     keyboardType: TextInputType.phone,
                     textCapitalization: TextCapitalization.none,
                   ),
-                  SizedBox(height: Margins.spacing_m),
+                  const SizedBox(height: DsfrSpacings.s2w),
                   ImmersionTextFormField(
                     isMandatory: true,
                     controller: state.datePreferencesController,
                     focusNode: state.datePreferencesFocus,
                     label: Strings.immersitionContactFormStartDateHint,
                   ),
-                  SizedBox(height: Margins.spacing_m),
+                  const SizedBox(height: DsfrSpacings.s2w),
                   ImmersionTextFormField(
                     isMandatory: false,
                     controller: state.experienceController,
@@ -210,7 +217,7 @@ class _FormState extends State<_Form> {
                     maxLength: 250,
                     maxLines: 5,
                   ),
-                  SizedBox(height: Margins.spacing_m),
+                  const SizedBox(height: DsfrSpacings.s2w),
                   ImmersionTextFormField(
                     isMandatory: false,
                     mandatoryError: state.showValidationErrors && !state.isLinkedinValid()
@@ -222,18 +229,20 @@ class _FormState extends State<_Form> {
                     keyboardType: TextInputType.url,
                     textCapitalization: TextCapitalization.none,
                   ),
-                  SizedBox(height: Margins.spacing_m),
+                  const SizedBox(height: DsfrSpacings.s2w),
                 ],
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(Margins.spacing_m),
+            padding: const EdgeInsets.all(DsfrSpacings.s2w),
             child: SizedBox(
               width: double.infinity,
-              child: PrimaryActionButton(
+              child: DsfrButton(
                 label: Strings.immersionContactFormButton,
-                icon: AppIcons.outgoing_mail,
+                icon: DsfrIcons.businessMailLine,
+                variant: DsfrButtonVariant.primary,
+                size: DsfrComponentSize.md,
                 onPressed: state.isButtonEnabled && !widget.viewModel.sendingState.isLoading()
                     ? _validateAndSubmit
                     : null,
@@ -277,24 +286,21 @@ class ImmersionTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final displayedLabel = isMandatory ? '* $label' : '$label ${Strings.immersitionContactFormOptionalSuffix}';
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(displayedLabel, style: TextStyles.textBaseMedium.copyWith(color: context.content)),
-        SizedBox(height: Margins.spacing_base),
-        BaseTextField(
-          focusNode: focusNode,
-          minLines: 1,
-          maxLength: maxLength,
-          maxLines: maxLines,
-          controller: controller,
-          errorText: focusNode.hasFocus ? null : mandatoryError,
-          keyboardType: keyboardType,
-          textCapitalization: textCapitalization,
-          onChanged: onChanged,
-          hintText: hintText,
-        ),
-      ],
+    final error = focusNode.hasFocus ? null : mandatoryError;
+    return DsfrInput(
+      label: displayedLabel,
+      hintText: hintText,
+      controller: controller,
+      focusNode: focusNode,
+      minLines: maxLines > 1 ? maxLines : 1,
+      maxLines: maxLines,
+      keyboardType: keyboardType,
+      textCapitalization: textCapitalization,
+      inputFormatters: maxLength != null ? [LengthLimitingTextInputFormatter(maxLength!)] : null,
+      componentState: error != null
+          ? DsfrComponentState.error(errorMessage: error)
+          : const DsfrComponentState.none(),
+      onChanged: onChanged,
     );
   }
 }

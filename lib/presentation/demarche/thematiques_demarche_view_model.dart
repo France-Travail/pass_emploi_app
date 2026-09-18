@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/features/thematiques_demarche/thematiques_demarche_actions.dart';
 import 'package:pass_emploi_app/features/thematiques_demarche/thematiques_demarche_state.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:redux/redux.dart';
 
 class ThematiqueDemarchePageViewModel extends Equatable {
@@ -62,18 +62,29 @@ DisplayState _displayState(ThematiqueDemarcheState state) {
 class ThematiqueDemarcheItem extends Equatable {
   final String id;
   final String title;
-  final IconData icon;
+  final String emoji;
+  final Color emojiBackground;
 
   ThematiqueDemarcheItem({required this.id, required this.title})
-      : icon = switch (title) {
-          "Mon (nouveau) métier" => AppIcons.work_outline_rounded,
-          "Ma formation professionnelle" => AppIcons.school_outlined,
-          "Mes candidatures" => AppIcons.description_outlined,
-          "Mes entretiens d'embauche" => AppIcons.event,
-          "Ma création ou reprise d'entreprise" => AppIcons.rocket_launch_outlined,
-          "Mes contraintes personnelles" => AppIcons.health_and_safety_outlined,
-          "Mes entretiens avec un conseiller" => AppIcons.person_2_outlined,
-          _ => AppIcons.description_rounded,
+      : emoji = switch (title) {
+          "Mon (nouveau) métier" => '💼',
+          "Ma formation professionnelle" => '🎓',
+          "Mes candidatures" => '📝️',
+          "Mes entretiens d'embauche" => '🧑‍💼',
+          "Ma création ou reprise d'entreprise" => '🚀',
+          "Mes contraintes personnelles" => '⛑️',
+          "Mes entretiens avec un conseiller" => '👥',
+          _ => '📋',
+        },
+        emojiBackground = switch (title) {
+          "Mon (nouveau) métier" => DsfrColors.success950,
+          "Ma formation professionnelle" => DsfrColors.blueCumulus950,
+          "Mes candidatures" => DsfrColors.pinkTuile925,
+          "Mes entretiens d'embauche" => DsfrColors.greenTilleulVerveine950,
+          "Ma création ou reprise d'entreprise" => DsfrColors.greenMenthe950,
+          "Mes contraintes personnelles" => DsfrColors.brownCaramel950,
+          "Mes entretiens avec un conseiller" => DsfrColors.purpleGlycine925,
+          _ => DsfrColors.blueCumulus950,
         };
 
   @override

@@ -42,13 +42,23 @@ class RechercheHomePageViewModel extends Equatable {
           OffreType.serviceCivique,
       ],
       metierLabel: criteres.metier?.label,
-      lieuLabel: criteres.location?.libelle,
+      lieuLabel: _lieuLabel(criteres),
       onOffreTypeTap: (offreType) => _onOffreTypeTap(store, offreType),
     );
   }
 
   @override
   List<Object?> get props => [offreTypes, metierLabel, lieuLabel];
+}
+
+String? _lieuLabel(CriteresRechercheUtilisateur criteres) {
+  final location = criteres.location;
+  if (location == null) return null;
+  final rayon = criteres.rayon;
+  if (rayon != null && location.type == LocationType.COMMUNE) {
+    return '${location.libelle} $rayon km';
+  }
+  return location.libelle;
 }
 
 void _onOffreTypeTap(Store<AppState> store, OffreType offreType) {

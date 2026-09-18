@@ -8,6 +8,8 @@ class OnboardingSuccessAction {
 
 class OnboardingPushNotificationPermissionRequestAction {}
 
+class OnboardingNotificationsDismissedAction {}
+
 class ResetOnboardingShowcaseAction {}
 
 class OnboardingHideAction {}
@@ -22,7 +24,9 @@ class OffreOnboardingStartedAction extends OnboardingStartedAction {}
 
 class EvenementOnboardingStartedAction extends OnboardingStartedAction {}
 
-class OutilsOnboardingStartedAction extends OnboardingStartedAction {}
+class PlanActionOnboardingStartedAction extends OnboardingStartedAction {}
+
+class PlanActionOnboardingCompletedAction {}
 
 // sealed class OnboardingSaveAction {}
 

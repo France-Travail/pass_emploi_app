@@ -51,7 +51,7 @@ extension DateExtensions on DateTime {
 
   String toDayOfWeek() => DateFormat('EEEE d', locale).format(this);
 
-  String toDayShortened() => DateFormat('EEE', locale).format(this);
+  String toDayName() => DateFormat('EEEE', locale).format(this);
 
   String toDayWithFullMonth() => DateFormat('dd MMMM yyyy', locale).format(this);
 
@@ -71,6 +71,8 @@ extension DateExtensions on DateTime {
   }
 
   String toMonth() => DateFormat('MMMM', locale).format(this);
+
+  String toAbbreviatedMonth() => DateFormat('MMM', locale).format(this);
 
   String toFullMonthAndYear() => DateFormat('MMMM yyyy', locale).format(this);
 

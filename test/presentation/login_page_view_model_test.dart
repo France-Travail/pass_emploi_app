@@ -1,15 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pass_emploi_app/configuration/configuration.dart';
+import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/features/login/login_state.dart';
-import 'package:pass_emploi_app/features/preferred_login_mode/preferred_login_mode_state.dart';
+import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/presentation/login_page_view_model.dart';
-import 'package:pass_emploi_app/ui/drawables.dart';
 
+import '../doubles/fixtures.dart';
+import '../doubles/spies.dart';
 import '../dsl/app_state_dsl.dart';
 
 void main() {
-  group('EntreePageViewModel', () {
-    test('entree page view model should not display demander un compte when brand is pass emploi', () {
+  group('LoginPageViewModel', () {
+    test('should not display organism choice when brand is pass emploi', () {
       // Given
       final store = givenPassEmploiState().store();
 
@@ -17,10 +20,11 @@ void main() {
       final viewModel = LoginPageViewModel.create(store);
 
       // Then
-      expect(viewModel.withRequestAccountButton, false);
+      expect(viewModel.withOrganismChoice, false);
+      expect(viewModel.onMissionLocaleLogin, isNull);
     });
 
-    test('entree page view model should display demander un compte when brand is CEJ', () {
+    test('should display organism choice when brand is CEJ', () {
       // Given
       final store = givenState().store();
 
@@ -28,7 +32,21 @@ void main() {
       final viewModel = LoginPageViewModel.create(store);
 
       // Then
-      expect(viewModel.withRequestAccountButton, true);
+      expect(viewModel.withOrganismChoice, true);
+      expect(viewModel.onMissionLocaleLogin, isNotNull);
+    });
+
+    group('hidden invite access', () {
+      test('should accept only the invite access password', () {
+        // Given
+        final viewModel = LoginPageViewModel.create(givenState().store());
+
+        // When & Then
+        expect(viewModel.isInviteAccessPasswordValid("1j1s2026!"), isTrue);
+        expect(viewModel.isInviteAccessPasswordValid(""), isFalse);
+        expect(viewModel.isInviteAccessPasswordValid("1j1s2026"), isFalse);
+        expect(viewModel.isInviteAccessPasswordValid("1J1S2026!"), isFalse);
+      });
     });
 
     test('View model displays loading when login state is loading', () {
@@ -83,104 +101,51 @@ void main() {
       expect(viewModel.technicalErrorMessage, isNull);
     });
 
-    test('View model displays content when login state is logged in', () {
+    test('France Travail login dispatches RequestLoginAction', () {
       // Given
-      final store = givenState().loggedIn().store();
-
-      // When
+      final store = StoreSpy.withState(givenState(configuration(flavor: Flavor.PROD, brand: Brand.cej)));
       final viewModel = LoginPageViewModel.create(store);
 
+      // When
+      viewModel.onFranceTravailLogin();
+
       // Then
-      expect(viewModel.withLoading, isFalse);
-      expect(viewModel.withWrongDeviceClockMessage, isFalse);
-      expect(viewModel.technicalErrorMessage, isNull);
+      expect(store.dispatchedAction, isA<RequestLoginAction>());
+      expect((store.dispatchedAction as RequestLoginAction).mode, LoginMode.POLE_EMPLOI);
     });
 
-    group('preferredLoginMode', () {
-      test('should not display preferred login mode when state is not success', () {
-        // Given
-        final store =
-            givenState().copyWith(preferredLoginModeState: PreferredLoginModeNotInitializedState()).loggedIn().store();
+    test('Mission Locale login dispatches RequestLoginAction', () {
+      // Given
+      final store = StoreSpy.withState(givenState(configuration(flavor: Flavor.PROD, brand: Brand.cej)));
+      final viewModel = LoginPageViewModel.create(store);
 
-        // When
-        final viewModel = LoginPageViewModel.create(store);
+      // When
+      viewModel.onMissionLocaleLogin!.call();
 
-        // Then
-        expect(viewModel.preferredLoginMode, isNull);
-      });
-
-      test('should not display preferred login mode when state is success but login mode is null', () {
-        // Given
-        final store =
-            givenState().copyWith(preferredLoginModeState: PreferredLoginModeSuccessState(null)).loggedIn().store();
-
-        // When
-        final viewModel = LoginPageViewModel.create(store);
-
-        // Then
-        expect(viewModel.preferredLoginMode, isNull);
-      });
-
-      test('should display pole emploi login mode', () {
-        // Given
-        final store = givenState()
-            .copyWith(preferredLoginModeState: PreferredLoginModeSuccessState(LoginMode.POLE_EMPLOI))
-            .loggedIn()
-            .store();
-
-        // When
-        final viewModel = LoginPageViewModel.create(store);
-
-        // Then
-        expect(
-            viewModel.preferredLoginMode,
-            PreferredLoginModeViewModel(
-              title: 'France travail',
-              logo: Drawables.franceTravailLogo,
-            ));
-      });
-
-      test('should display milo login mode', () {
-        // Given
-        final store = givenState()
-            .copyWith(preferredLoginModeState: PreferredLoginModeSuccessState(LoginMode.MILO))
-            .loggedIn()
-            .store();
-
-        // When
-        final viewModel = LoginPageViewModel.create(store);
-
-        // Then
-        expect(
-            viewModel.preferredLoginMode,
-            PreferredLoginModeViewModel(
-              title: 'Mission Locale',
-              logo: Drawables.missionLocaleLogo,
-            ));
-      });
-
-      test('should not display preferred login mode when brand is pass emploi', () {
-        // Given
-        final store = givenPassEmploiState()
-            .copyWith(preferredLoginModeState: PreferredLoginModeSuccessState(LoginMode.MILO))
-            .loggedIn()
-            .store();
-
-        // When
-        final viewModel = LoginPageViewModel.create(store);
-
-        // Then
-        expect(viewModel.preferredLoginMode, null);
-      });
+      // Then
+      expect(store.dispatchedAction, isA<RequestLoginAction>());
+      expect((store.dispatchedAction as RequestLoginAction).mode, LoginMode.MILO);
     });
+
+    for (final flavor in [Flavor.STAGING, Flavor.PROD]) {
+      test('Invite login dispatches RequestLoginAction in $flavor', () {
+        // Given
+        final store = StoreSpy.withState(givenState(configuration(flavor: flavor, brand: Brand.cej)));
+        final viewModel = LoginPageViewModel.create(store);
+
+        // When
+        viewModel.onInviteLogin();
+
+        // Then
+        expect(store.dispatchedAction, isA<RequestLoginAction>());
+        expect((store.dispatchedAction as RequestLoginAction).mode, LoginMode.INVITE);
+      });
+    }
 
     group('accessibility level', () {
       test('should display accessibility partially conform when brand is cej', () {
         // Given
-        final store = givenState()
-            .copyWith(preferredLoginModeState: PreferredLoginModeSuccessState(LoginMode.MILO))
-            .loggedIn()
-            .store();
+        final store = givenState().store();
 
         // When
         final viewModel = LoginPageViewModel.create(store);
@@ -191,10 +156,7 @@ void main() {
 
       test('should display accessibility not conform when brand is pass emploi', () {
         // Given
-        final store = givenPassEmploiState()
-            .copyWith(preferredLoginModeState: PreferredLoginModeSuccessState(LoginMode.MILO))
-            .loggedIn()
-            .store();
+        final store = givenPassEmploiState().store();
 
         // When
         final viewModel = LoginPageViewModel.create(store);

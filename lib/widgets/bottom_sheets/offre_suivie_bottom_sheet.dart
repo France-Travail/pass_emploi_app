@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/pages/postuler_confirmation_page.dart';
 import 'package:pass_emploi_app/pages/simple_confirmation_page.dart';
 import 'package:pass_emploi_app/presentation/offre_suivie_bottom_sheet_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
+import 'package:pass_emploi_app/widgets/bottom_sheets/filtres_bottom_sheet.dart';
 
 class OffreSuivieBottomSheet extends StatelessWidget {
   const OffreSuivieBottomSheet({super.key, required this.offreId});
   final String offreId;
 
   static Future<void> show(BuildContext context, String offreId) async {
-    await showModalBottomSheet<void>(
+    await showPassEmploiBottomSheet<void>(
       context: context,
-      isScrollControlled: true,
       builder: (context) => OffreSuivieBottomSheet(offreId: offreId),
     );
   }
@@ -38,71 +34,54 @@ class OffreSuivieBottomSheet extends StatelessWidget {
       builder: (context, viewModel) {
         return _DisposeWrapper(
           onDispose: viewModel.onNotInterested,
-          child: BottomSheetWrapper(
+          child: FiltresBottomSheet(
             title: Strings.offreSuivieBottomSheetTitle,
             maxHeightFactor: 0.7,
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: Margins.spacing_base),
-                  _Option(
-                    icon: AppIcons.check_circle_rounded,
-                    label: Strings.offreSuivieOuiPostule,
-                    onPressed: () {
-                      trackEvent(OffreSuiviTrackingOption.postule);
-                      viewModel.onPostule();
-                      Navigator.of(context).pop();
-                      Navigator.of(context).push(PostulerConfirmationPage.route(offreId));
-                    },
-                  ),
-                  _Option(
-                    icon: AppIcons.bookmark,
-                    label: Strings.offreSuiviePasEncore,
-                    onPressed: () {
-                      trackEvent(OffreSuiviTrackingOption.interesse);
-                      viewModel.onInteresse();
-                      Navigator.of(context).pop();
-                      Navigator.of(context).push(SimpleConfirmationPage.favoris());
-                    },
-                  ),
-                  _Option(
-                    icon: AppIcons.delete,
-                    label: Strings.offreSuivieNonPasInteresse,
-                    onPressed: () {
-                      trackEvent(OffreSuiviTrackingOption.notInterrested);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  SizedBox(height: Margins.spacing_base),
-                  SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
-                ],
-              ),
+            body: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DsfrButton(
+                  label: Strings.offreSuivieOuiPostule,
+                  icon: DsfrIcons.systemCheckboxCircleLine,
+                  variant: DsfrButtonVariant.primary,
+                  size: DsfrComponentSize.lg,
+                  onPressed: () {
+                    trackEvent(OffreSuiviTrackingOption.postule);
+                    viewModel.onPostule();
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(PostulerConfirmationPage.route(offreId));
+                  },
+                ),
+                const SizedBox(height: DsfrSpacings.s2w),
+                DsfrButton(
+                  label: Strings.offreSuiviePasEncore,
+                  icon: DsfrIcons.businessBookmarkLine,
+                  variant: DsfrButtonVariant.secondary,
+                  size: DsfrComponentSize.lg,
+                  onPressed: () {
+                    trackEvent(OffreSuiviTrackingOption.interesse);
+                    viewModel.onInteresse();
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(SimpleConfirmationPage.favoris());
+                  },
+                ),
+                const SizedBox(height: DsfrSpacings.s2w),
+                DsfrButton(
+                  label: Strings.offreSuivieNonPasInteresse,
+                  icon: DsfrIcons.systemDeleteBinLine,
+                  variant: DsfrButtonVariant.tertiary,
+                  size: DsfrComponentSize.lg,
+                  onPressed: () {
+                    trackEvent(OffreSuiviTrackingOption.notInterrested);
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
             ),
           ),
         );
       },
-    );
-  }
-}
-
-class _Option extends StatelessWidget {
-  const _Option({required this.icon, required this.label, required this.onPressed});
-  final IconData icon;
-  final String label;
-  final void Function() onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final color = context.content;
-    return Semantics(
-      button: true,
-      child: ListTile(
-        contentPadding: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimens.radius_base)),
-        leading: Icon(icon, color: color),
-        title: Text(label, style: TextStyles.textBaseBold.copyWith(color: color)),
-        onTap: onPressed,
-      ),
     );
   }
 }

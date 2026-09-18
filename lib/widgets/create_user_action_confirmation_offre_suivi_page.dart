@@ -14,6 +14,7 @@ import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/errors/error_text.dart';
 
 class CreateUserActionConfirmationOffreSuiviPage extends StatelessWidget {
@@ -31,16 +32,23 @@ class CreateUserActionConfirmationOffreSuiviPage extends StatelessWidget {
     return StoreConnector<AppState, CreateActionSuccessViewModel>(
       converter: (store) => CreateActionSuccessViewModel.create(store),
       builder: (context, viewModel) {
-          return Scaffold(
+        return Scaffold(
+          backgroundColor: context.bg,
+          appBar: SecondaryAppBar(
+            title: Strings.createActionAppBarTitle,
             backgroundColor: context.bg,
-            appBar: SecondaryAppBar(title: Strings.createActionAppBarTitle, backgroundColor: context.bg),
+          ),
           floatingActionButton: viewModel.displayState == DisplayState.CONTENT
               ? _Buttons(
                   onGoActionDetail: () {
-                    Navigator.pop(context);
-                    Navigator.of(
-                      context,
-                    ).push(UserActionDetailPage.materialPageRoute(viewModel.actionId, UserActionStateSource.noSource));
+                    final navigator = Navigator.of(context);
+                    final actionId = viewModel.actionId;
+                    navigator.pop();
+                    UserActionDetailPage.show(
+                      navigator.context,
+                      actionId,
+                      UserActionStateSource.noSource,
+                    );
                   },
                 )
               : null,
@@ -60,7 +68,9 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return switch (viewModel.displayState) {
       DisplayState.CONTENT => _Body(),
-      DisplayState.FAILURE => Center(child: ErrorText(Strings.genericCreationError)),
+      DisplayState.FAILURE => Center(
+        child: ErrorText(Strings.genericCreationError),
+      ),
       _ => const Center(child: CircularProgressIndicator()),
     };
   }
@@ -76,15 +86,23 @@ class _Body extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(height: Margins.spacing_xl),
-            Center(child: SizedBox(height: 130, width: 130, child: Image.asset(Drawables.success))),
+            Center(
+              child: SizedBox(
+                height: 130,
+                width: 130,
+                child: Image.asset(Drawables.success),
+              ),
+            ),
             SizedBox(height: Margins.spacing_xl),
+            DsfrCategoryTag.actionDone(),
+            SizedBox(height: Margins.spacing_s),
             Text(
               Strings.userActionConfirmationTitleSingular,
               style: TextStyles.textMBold.copyWith(color: context.content),
             ),
             SizedBox(height: Margins.spacing_s),
             Text(
-              Strings.userActionConfirmationSubtitle,
+              Strings.userActionConfirmationSubtitleLegacy,
               style: TextStyles.textSRegular(color: context.content),
             ),
             SizedBox(height: Margins.spacing_xx_huge),

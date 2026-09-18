@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
@@ -9,17 +10,13 @@ import 'package:pass_emploi_app/features/recherche/evenement_emploi/evenement_em
 import 'package:pass_emploi_app/features/recherche/recherche_actions.dart';
 import 'package:pass_emploi_app/features/recherche/recherche_state.dart';
 import 'package:pass_emploi_app/models/alerte/alerte_from_request.dart';
-import 'package:pass_emploi_app/models/alerte/immersion_alerte.dart';
-import 'package:pass_emploi_app/models/alerte/offre_emploi_alerte.dart';
-import 'package:pass_emploi_app/models/alerte/service_civique_alerte.dart';
 import 'package:pass_emploi_app/models/recherche/recherche_request.dart';
 import 'package:pass_emploi_app/presentation/recherche/actions_recherche_view_model.dart';
 import 'package:pass_emploi_app/presentation/recherche/bloc_resultat_recherche_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/recherche/actions_recherche.dart';
 import 'package:pass_emploi_app/widgets/recherche/bloc_resultat_recherche.dart';
@@ -39,13 +36,21 @@ abstract class RechercheOffrePage<Result> extends StatefulWidget {
 
   String placeHolderSubtitle();
 
+  String emptyTitle();
+
+  String Function(int count) resultsCountLabel() => Strings.rechercheResultsOffresCount;
+
   RechercheState rechercheState(AppState appState);
 
   RechercheType rechercheType();
 
   FavoriIdsState<Result> favorisState(AppState appState);
 
-  Widget buildAlertBottomSheet();
+  Widget? buildAlertBottomSheet();
+
+  bool withCreateAlerte() => true;
+
+  bool withBackButton() => true;
 
   Future<bool?>? buildFiltresBottomSheet(BuildContext context);
 
@@ -75,76 +80,111 @@ class _RechercheOffrePageState<Result> extends State<RechercheOffrePage<Result>>
   @override
   Widget build(BuildContext context) {
     _store = StoreProvider.of<AppState>(context);
-    final backgroundColor = context.grey100;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Tracker(
       tracking: AnalyticsScreenNames.rechercheInitiale(widget.analyticsType()),
-      child: Scaffold(
-        backgroundColor: backgroundColor,
-        appBar: widget.appBarTitle() != null
-            ? SecondaryAppBar(title: widget.appBarTitle()!, backgroundColor: backgroundColor)
-            : null,
-        floatingActionButton: ActionsRecherche(
-          buildViewModel: widget.buildActionsRechercheViewModel,
-          buildAlertBottomSheet: widget.buildAlertBottomSheet,
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        resizeToAvoidBottomInset: false,
-        body: StoreConnector<AppState, bool>(
-          distinct: true,
-          converter: (store) {
-            final state = widget.rechercheState(store.state);
-            return state.status == RechercheStatus.nouvelleRecherche;
-          },
-          builder: (context, showCriteresFullScreen) {
-            return AnimatedSwitcher(
-              duration: AnimationDurations.fast,
-              switchInCurve: Curves.easeInOut,
-              switchOutCurve: Curves.easeInOut,
-              child: showCriteresFullScreen
-                  ? RechercheCriteresFullScreen<Result>(
-                      key: const ValueKey("rechercheCriteresFullScreen"),
-                      rechercheState: widget.rechercheState,
-                      buildCriteresContentWidget: widget.buildCriteresContentWidget,
-                      rechercheType: widget.rechercheType(),
-                    )
-                  : Padding(
-                      key: const ValueKey("rechercheResultats"),
-                      padding: const EdgeInsets.only(
-                        left: Margins.spacing_base,
-                        top: Margins.spacing_base,
-                        right: Margins.spacing_base,
-                      ),
-                      child: SingleChildScrollView(
-                        clipBehavior: Clip.none,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            StoreConnector<AppState, _EditCriteresTitleSubtitleViewModel>(
-                              distinct: true,
-                              converter: (store) => _EditCriteresTitleSubtitleViewModel.fromState(
-                                rechercheState: widget.rechercheState(store.state),
+      child: Theme(
+        data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        child: Builder(
+          builder: (context) {
+            final backgroundColor = DsfrColorDecisions.backgroundDefaultGrey(context);
+            final pageTitle = widget.appBarTitle();
+            return StoreConnector<AppState, _RechercheOffreLayout>(
+              distinct: true,
+              converter: (store) {
+                final state = widget.rechercheState(store.state);
+                final showCriteresFullScreen = state.status == RechercheStatus.nouvelleRecherche;
+                return _RechercheOffreLayout(
+                  showCriteresFullScreen: showCriteresFullScreen,
+                  showBackAppBar: widget.withBackButton() || (showCriteresFullScreen && state.results != null),
+                );
+              },
+              builder: (context, layout) {
+                return Scaffold(
+                  backgroundColor: backgroundColor,
+                  appBar: layout.showBackAppBar
+                      ? _RechercheBackAppBar<Result>(
+                          backgroundColor: backgroundColor,
+                          rechercheState: widget.rechercheState,
+                        )
+                      : null,
+                  floatingActionButton: ActionsRecherche(
+                    buildViewModel: widget.buildActionsRechercheViewModel,
+                    buildAlertBottomSheet: widget.buildAlertBottomSheet,
+                    hasResults: (appState) {
+                      final results = widget.rechercheState(appState).results;
+                      return results != null && results.isNotEmpty;
+                    },
+                  ),
+                  floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+                  resizeToAvoidBottomInset: false,
+                  body: AnimatedSwitcher(
+                    duration: AnimationDurations.fast,
+                    switchInCurve: Curves.easeInOut,
+                    switchOutCurve: Curves.easeInOut,
+                    child: layout.showCriteresFullScreen
+                        ? Column(
+                            key: const ValueKey("rechercheCriteresFullScreen"),
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              if (pageTitle != null) _PageTitle(pageTitle),
+                              Expanded(
+                                child: RechercheCriteresFullScreen<Result>(
+                                  rechercheState: widget.rechercheState,
+                                  buildCriteresContentWidget: widget.buildCriteresContentWidget,
+                                  rechercheType: widget.rechercheType(),
+                                ),
                               ),
-                              builder: (context, vm) => EditCriteresButton<Result>(
-                                title: vm.title,
-                                subtitle: vm.subtitle,
-                                buildViewModel: widget.buildActionsRechercheViewModel,
-                                buildFiltresBottomSheet: () => widget.buildFiltresBottomSheet(context),
-                                onFiltreApplied: _onFiltreApplied,
+                            ],
+                          )
+                        : Padding(
+                            key: const ValueKey("rechercheResultats"),
+                            padding: const EdgeInsets.only(
+                              left: DsfrSpacings.s2w,
+                              right: DsfrSpacings.s2w,
+                            ),
+                            child: SingleChildScrollView(
+                              clipBehavior: Clip.none,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  if (pageTitle != null) ...[
+                                    _PageTitle(pageTitle, withHorizontalPadding: false),
+                                    const SizedBox(height: DsfrSpacings.s2w),
+                                  ] else
+                                    const SizedBox(height: DsfrSpacings.s2w),
+                                  StoreConnector<AppState, _EditCriteresSearchLabelViewModel>(
+                                    distinct: true,
+                                    converter: (store) => _EditCriteresSearchLabelViewModel.fromState(
+                                      rechercheState: widget.rechercheState(store.state),
+                                    ),
+                                    builder: (context, vm) => EditCriteresButton<Result>(
+                                      searchLabel: vm.searchLabel,
+                                      buildViewModel: widget.buildActionsRechercheViewModel,
+                                      buildFiltresBottomSheet: () => widget.buildFiltresBottomSheet(context),
+                                      onFiltreApplied: _onFiltreApplied,
+                                    ),
+                                  ),
+                                  BlocResultatRecherche<Result>(
+                                    listResultatKey: _listResultatKey,
+                                    rechercheState: widget.rechercheState,
+                                    favorisState: widget.favorisState,
+                                    buildResultItem: widget.buildResultItem,
+                                    analyticsType: widget.analyticsType(),
+                                    placeHolderTitle: widget.placeHolderTitle(),
+                                    placeHolderSubtitle: widget.placeHolderSubtitle(),
+                                    emptyTitle: widget.emptyTitle(),
+                                    resultsCountLabel: widget.resultsCountLabel(),
+                                    buildAlertBottomSheet:
+                                        widget.withCreateAlerte() ? widget.buildAlertBottomSheet : null,
+                                  ),
+                                ],
                               ),
                             ),
-                            BlocResultatRecherche<Result>(
-                              listResultatKey: _listResultatKey,
-                              rechercheState: widget.rechercheState,
-                              favorisState: widget.favorisState,
-                              buildResultItem: widget.buildResultItem,
-                              analyticsType: widget.analyticsType(),
-                              placeHolderTitle: widget.placeHolderTitle(),
-                              placeHolderSubtitle: widget.placeHolderSubtitle(),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                          ),
+                  ),
+                );
+              },
             );
           },
         ),
@@ -155,50 +195,131 @@ class _RechercheOffrePageState<Result> extends State<RechercheOffrePage<Result>>
   void _onFiltreApplied() => (_listResultatKey.currentState as ResultatRechercheContenuState?)?.scrollToTop();
 }
 
-class _EditCriteresTitleSubtitleViewModel extends Equatable {
+class _RechercheOffreLayout extends Equatable {
+  final bool showCriteresFullScreen;
+  final bool showBackAppBar;
+
+  const _RechercheOffreLayout({
+    required this.showCriteresFullScreen,
+    required this.showBackAppBar,
+  });
+
+  @override
+  List<Object?> get props => [showCriteresFullScreen, showBackAppBar];
+}
+
+class _RechercheBackAppBar<Result> extends StatelessWidget implements PreferredSizeWidget {
+  const _RechercheBackAppBar({
+    required this.backgroundColor,
+    required this.rechercheState,
+  });
+
+  final Color backgroundColor;
+  final RechercheState Function(AppState) rechercheState;
+
+  static const double _toolbarHeight = 48;
+
+  @override
+  Size get preferredSize => const Size.fromHeight(_toolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return StoreConnector<AppState, _RechercheBackAppBarViewModel>(
+      distinct: true,
+      converter: (store) {
+        final state = rechercheState(store.state);
+        return _RechercheBackAppBarViewModel(
+          canCloseCriteresToResults:
+              state.status == RechercheStatus.nouvelleRecherche && state.results != null,
+        );
+      },
+      builder: (context, viewModel) {
+        return AppBar(
+          primary: true,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          surfaceTintColor: Colors.transparent,
+          backgroundColor: backgroundColor,
+          toolbarHeight: _toolbarHeight,
+          centerTitle: false,
+          automaticallyImplyLeading: false,
+          titleSpacing: DsfrSpacings.s1w,
+          leadingWidth: 140,
+          leading: Align(
+            alignment: Alignment.centerLeft,
+            child: BackLabelButton(
+              onPressed: () {
+                if (viewModel.canCloseCriteresToResults) {
+                  StoreProvider.of<AppState>(context).dispatch(RechercheCloseCriteresAction<Result>());
+                } else {
+                  Navigator.of(context).maybePop();
+                }
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _RechercheBackAppBarViewModel extends Equatable {
+  final bool canCloseCriteresToResults;
+
+  const _RechercheBackAppBarViewModel({required this.canCloseCriteresToResults});
+
+  @override
+  List<Object?> get props => [canCloseCriteresToResults];
+}
+
+class _PageTitle extends StatelessWidget {
+  const _PageTitle(this.title, {this.withHorizontalPadding = true});
+
   final String title;
-  final String subtitle;
+  final bool withHorizontalPadding;
 
-  const _EditCriteresTitleSubtitleViewModel({required this.title, required this.subtitle});
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        withHorizontalPadding ? DsfrSpacings.s2w : 0,
+        DsfrSpacings.s1w,
+        withHorizontalPadding ? DsfrSpacings.s2w : 0,
+        DsfrSpacings.s1w,
+      ),
+      child: AutoFocusA11y(
+        child: Semantics(
+          header: true,
+          child: Text(
+            title,
+            style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
-  factory _EditCriteresTitleSubtitleViewModel.fromState({required RechercheState rechercheState}) {
+class _EditCriteresSearchLabelViewModel extends Equatable {
+  final String searchLabel;
+
+  const _EditCriteresSearchLabelViewModel({required this.searchLabel});
+
+  factory _EditCriteresSearchLabelViewModel.fromState({required RechercheState rechercheState}) {
     final request = rechercheState.request;
-    if (request == null) return const _EditCriteresTitleSubtitleViewModel(title: "", subtitle: "");
+    if (request == null) return const _EditCriteresSearchLabelViewModel(searchLabel: "");
 
-    final typedRequest = request;
-    final alerte = createAlerteFromRequest(typedRequest);
+    final alerte = createAlerteFromRequest(request);
 
-    final subtitle = alerte?.getTitle() ?? "";
-
-    if (typedRequest is RechercheRequest<EvenementEmploiCriteresRecherche, EvenementEmploiFiltresRecherche>) {
-      final secteur = typedRequest.criteres.secteurActivite;
-      return _EditCriteresTitleSubtitleViewModel(
-        title: secteur?.label ?? Strings.secteurActiviteAll,
-        subtitle: alerte?.getLocation()?.libelle ?? "",
-      );
+    if (request is RechercheRequest<EvenementEmploiCriteresRecherche, EvenementEmploiFiltresRecherche>) {
+      final secteur = request.criteres.secteurActivite?.label ?? Strings.secteurActiviteAll;
+      final location = request.criteres.location.libelle;
+      return _EditCriteresSearchLabelViewModel(searchLabel: "$secteur - $location");
     }
 
-    if (alerte is OffreEmploiAlerte) {
-      return _EditCriteresTitleSubtitleViewModel(
-        title: alerte.onlyAlternance
-            ? Strings.rechercheHomeOffresAlternanceTitle
-            : Strings.rechercheHomeOffresEmploiTitle,
-        subtitle: subtitle,
-      );
-    }
-    if (alerte is ImmersionAlerte) {
-      return _EditCriteresTitleSubtitleViewModel(title: Strings.rechercheHomeOffresImmersionTitle, subtitle: subtitle);
-    }
-    if (alerte is ServiceCiviqueAlerte) {
-      return _EditCriteresTitleSubtitleViewModel(
-        title: Strings.rechercheHomeOffresServiceCiviqueTitle,
-        subtitle: subtitle,
-      );
-    }
-
-    return _EditCriteresTitleSubtitleViewModel(title: "", subtitle: subtitle);
+    return _EditCriteresSearchLabelViewModel(searchLabel: alerte?.getTitle() ?? "");
   }
 
   @override
-  List<Object?> get props => [title, subtitle];
+  List<Object?> get props => [searchLabel];
 }

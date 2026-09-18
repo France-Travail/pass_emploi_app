@@ -40,6 +40,7 @@ void main() {
           'showNotificationsOnboarding': true,
           'showOnboarding': true,
           'messageCompleted': false,
+          'planActionCompleted': false,
           'actionCompleted': false,
           'offreCompleted': false,
           'evenementCompleted': false,

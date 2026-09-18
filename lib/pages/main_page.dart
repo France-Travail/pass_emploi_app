@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:gaimon/gaimon.dart';
 import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_mission_locale_actions.dart';
@@ -14,18 +15,11 @@ import 'package:pass_emploi_app/presentation/main_page_view_model.dart';
 import 'package:pass_emploi_app/presentation/solutions_tabs_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
-import 'package:pass_emploi_app/ui/font_sizes.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
-import 'package:pass_emploi_app/widgets/menu_item.dart' as menu;
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_navigation.dart';
 import 'package:pass_emploi_app/widgets/onboarding/onboarding_showcase.dart';
 import 'package:pass_emploi_app/widgets/pass_emploi_material_app.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
@@ -91,9 +85,24 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
   }
 
   void _showActualisationPeDialog(String actualisationPoleEmploiUrl) {
-    showDialog(
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    showModalBottomSheet<void>(
       context: context,
-      builder: (context) => _PopUpActualisationPe(actualisationPoleEmploiUrl),
+      backgroundColor: DsfrColorDecisions.backgroundTransparent(context),
+      barrierColor: DsfrColorDecisions.backgroundOverlayGrey(context),
+      barrierLabel: Strings.bottomSheetBarrierLabel,
+      elevation: 0,
+      shape: const RoundedRectangleBorder(),
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => Theme(
+        data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        child: DsfrModal(
+          isDismissible: true,
+          closeLabel: Strings.close,
+          child: _PopUpActualisationPe(actualisationPoleEmploiUrl),
+        ),
+      ),
     );
   }
 
@@ -106,18 +115,10 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
           color: context.grey100,
           child: _content(_selectedIndex, viewModel),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          // Required to avoid having a disproportionate NavBar height
-          selectedFontSize: FontSizes.extraSmall,
-          unselectedFontSize: FontSizes.extraSmall,
-          backgroundColor: AppColorsSpecifics.bgToGrey100(context),
-          type: BottomNavigationBarType.fixed,
-          unselectedItemColor: context.grey800,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          items: viewModel.tabs.map((e) => e.asMenuItem(viewModel)).toList(),
+        bottomNavigationBar: DsfrBottomNavigation(
           currentIndex: _selectedIndex,
           onTap: (index) => _onItemTapped(index, viewModel),
+          items: viewModel.tabs.map((e) => e.asNavItem(viewModel)).toList(),
         ),
       ),
     );
@@ -233,48 +234,44 @@ class _ModeDemoWrapper extends StatelessWidget {
 class _PopUpActualisationPe extends StatelessWidget {
   final String actualisationPoleEmploiUrl;
 
-  _PopUpActualisationPe(this.actualisationPoleEmploiUrl);
+  const _PopUpActualisationPe(this.actualisationPoleEmploiUrl);
 
   @override
   Widget build(BuildContext context) {
-    const double fontSize = 16.0;
-    return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8.0))),
-      contentPadding: EdgeInsets.all(Margins.spacing_l),
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Semantics(
+          header: true,
+          child: Text(
             Strings.actualisationPePopUpTitle,
-            style: TextStyles.textMBold.copyWith(color: context.content),
-            textAlign: TextAlign.center,
+            style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
           ),
-          SizedBox(height: Margins.spacing_base),
-          Text(
-            Strings.actualisationPePopUpSubtitle,
-            style: TextStyles.textBaseRegular.copyWith(color: context.content),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: Margins.spacing_l),
-          PrimaryActionButton(
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        Text(
+          Strings.actualisationPePopUpSubtitle,
+          style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+        ),
+        const SizedBox(height: DsfrSpacings.s4w),
+        Semantics(
+          link: true,
+          child: DsfrButton(
             label: Strings.actualisationPePopUpPrimaryButton,
-            icon: AppIcons.open_in_new_rounded,
-            semanticsRoleLink: true,
-            heightPadding: 8,
-            iconSize: Dimens.icon_size_base,
-            fontSize: fontSize,
+            icon: DsfrIcons.systemExternalLinkLine,
+            variant: DsfrButtonVariant.primary,
+            size: DsfrComponentSize.lg,
             onPressed: () => _onActualisationPressed(context),
           ),
-          SizedBox(height: Margins.spacing_base),
-          SecondaryButton(
-            label: Strings.actualisationPePopUpSecondaryButton,
-            onPressed: () => Navigator.pop(context),
-            fontSize: fontSize,
-          ),
-        ],
-      ),
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        DsfrButton(
+          label: Strings.actualisationPePopUpSecondaryButton,
+          variant: DsfrButtonVariant.secondary,
+          size: DsfrComponentSize.lg,
+          onPressed: () => Navigator.pop(context),
+        ),
+      ],
     );
   }
 
@@ -286,43 +283,38 @@ class _PopUpActualisationPe extends StatelessWidget {
 }
 
 extension _MainTab on MainTab {
-  menu.MenuItem asMenuItem(MainPageViewModel viewModel) {
-    switch (this) {
-      case MainTab.accueil:
-        return menu.MenuItem(
-          defaultIcon: AppIcons.home_rounded,
-          inactiveIcon: AppIcons.home_outlined,
-          label: Strings.menuAccueil,
-        );
-      case MainTab.monSuivi:
-        return menu.MenuItem(
-          defaultIcon: AppIcons.bolt_rounded,
-          inactiveIcon: AppIcons.bolt_outlined,
-          label: Strings.menuMonSuivi,
-        );
-      case MainTab.chat:
-        return menu.MenuItem(
-          defaultIcon: AppIcons.chat_rounded,
-          inactiveIcon: AppIcons.chat_outlined,
-          label: Strings.menuChat,
-          withBadge: viewModel.withChatBadge,
-        );
-      case MainTab.solutions:
-        return menu.MenuItem(
-          defaultIcon: AppIcons.pageview_rounded,
-          inactiveIcon: AppIcons.pageview_outlined,
-          label: Strings.menuSolutions,
-        );
-      case MainTab.evenements:
-        return menu.MenuItem(
-          defaultIcon: AppIcons.today_rounded,
-          inactiveIcon: AppIcons.today_outlined,
-          label: Strings.menuEvenements,
-          iconWrapper: (child) => OnboardingShowcase(
-            source: ShowcaseSource.evenement,
-            child: child,
-          ),
-        );
-    }
+  DsfrBottomNavigationItem asNavItem(MainPageViewModel viewModel) {
+    return switch (this) {
+      MainTab.accueil => DsfrBottomNavigationItem(
+        icon: DsfrIcons.buildingsHome4Line,
+        activeIcon: DsfrIcons.buildingsHome4Fill,
+        label: Strings.menuAccueil,
+      ),
+      MainTab.monSuivi => DsfrBottomNavigationItem(
+        icon: DsfrIcons.businessCalendarLine,
+        activeIcon: DsfrIcons.businessCalendarFill,
+        label: Strings.menuMonSuivi,
+      ),
+      MainTab.chat => DsfrBottomNavigationItem(
+        icon: DsfrIcons.communicationChat3Line,
+        activeIcon: DsfrIcons.communicationChat3Fill,
+        label: Strings.menuChat,
+        withBadge: viewModel.withChatBadge,
+      ),
+      MainTab.solutions => DsfrBottomNavigationItem(
+        icon: DsfrIcons.businessBriefcaseLine,
+        activeIcon: DsfrIcons.businessBriefcaseFill,
+        label: Strings.menuSolutions,
+      ),
+      MainTab.evenements => DsfrBottomNavigationItem(
+        icon: DsfrIcons.businessCalendarEventLine,
+        activeIcon: DsfrIcons.businessCalendarEventFill,
+        label: Strings.menuEvenements,
+        tileWrapper: (child) => OnboardingShowcase(
+          source: ShowcaseSource.evenement,
+          child: child,
+        ),
+      ),
+    };
   }
 }

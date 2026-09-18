@@ -6,7 +6,7 @@ import 'package:pass_emploi_app/presentation/alerte_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/alerte_bottom_sheet.dart';
-import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
+import 'package:pass_emploi_app/widgets/bottom_sheets/filtres_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/immersion_bottom_sheet_form.dart';
 import 'package:redux/redux.dart';
 
@@ -18,11 +18,10 @@ class ImmersionAlerteBottomSheet extends AbstractAlerteBottomSheet<ImmersionAler
 
   @override
   Widget buildSaveSearch(BuildContext context, ImmersionAlerteViewModel itemViewModel) {
-    return _buildForm(context, itemViewModel);
-  }
-
-  Widget _buildForm(BuildContext context, ImmersionAlerteViewModel viewModel) {
-    return BottomSheetWrapper(title: Strings.createAlerteTitle, body: ImmersionBottomSheetForm(viewModel));
+    return FiltresBottomSheet(
+      title: Strings.createAlerteTitle,
+      body: ImmersionBottomSheetForm(itemViewModel),
+    );
   }
 
   @override

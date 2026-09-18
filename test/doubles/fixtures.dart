@@ -32,7 +32,6 @@ import 'package:pass_emploi_app/models/cv_pole_emploi.dart';
 import 'package:pass_emploi_app/models/demarche.dart';
 import 'package:pass_emploi_app/models/demarche_du_referentiel.dart';
 import 'package:pass_emploi_app/models/details_jeune.dart';
-import 'package:pass_emploi_app/models/diagoriente_urls.dart';
 import 'package:pass_emploi_app/models/evenement_emploi/evenement_emploi.dart';
 import 'package:pass_emploi_app/models/evenement_emploi/evenement_emploi_details.dart';
 import 'package:pass_emploi_app/models/evenement_emploi/evenement_emploi_modalite.dart';
@@ -421,7 +420,7 @@ Rendezvous mockAnimationCollective() {
     duration: 23,
     withConseiller: true,
     isAnnule: false,
-    type: RendezvousType(RendezvousTypeCode.ENTRETIEN_INDIVIDUEL_CONSEILLER, 'Entretien individuel conseiller'),
+    type: RendezvousType(RendezvousTypeCode.ENTRETIEN_INDIVIDUEL_CONSEILLER, 'Entretien individuel'),
     title: "super entretien",
     comment: 'Amener votre CV',
     conseiller: Conseiller(id: '1', firstName: 'Nils', lastName: 'Tavernier'),
@@ -513,7 +512,7 @@ Rendezvous mockRendezvousMiloCV() {
     duration: 23,
     withConseiller: true,
     isAnnule: false,
-    type: RendezvousType(RendezvousTypeCode.ENTRETIEN_INDIVIDUEL_CONSEILLER, 'Entretien individuel conseiller'),
+    type: RendezvousType(RendezvousTypeCode.ENTRETIEN_INDIVIDUEL_CONSEILLER, 'Entretien individuel'),
     title: 'super entretien',
     comment: 'Amener votre CV',
     conseiller: Conseiller(id: '1', firstName: 'Nils', lastName: 'Tavernier'),
@@ -1042,14 +1041,6 @@ RechercheRequest<EmploiCriteresRecherche, EmploiFiltresRecherche> rechercheEmplo
 
 EmploiFiltresRecherche mockEmploiFiltreZeroDistance() => EmploiFiltresRecherche.withFiltres(distance: 0);
 
-DiagorienteUrls mockDiagorienteUrls() {
-  return DiagorienteUrls(
-    chatBotUrl: 'chatBotUrl',
-    metiersFavorisUrl: 'metiersFavorisUrl',
-    metiersRecommandesUrl: 'metiersRecommandesUrl',
-  );
-}
-
 Favori mockFavori({
   String id = 'id',
   OffreType type = OffreType.immersion,
@@ -1202,7 +1193,6 @@ Accueil mockAccueilMilo({List<Rendezvous>? evenements}) {
     alertes: getMockedAlerte(),
     favoris: mock3Favoris(),
     campagne: mockCampagne(),
-    peutVoirLeComptageDesHeures: true,
   );
 }
 
@@ -1407,6 +1397,7 @@ MonSuivi mockMonSuivi({
   bool errorOnSessionMiloRetrieval = false,
   DateTime? dateDerniereMiseAJourPoleEmploi,
   bool eligibleDemarchesIA = false,
+  bool peutVoirLeComptageDesHeures = false,
 }) {
   return MonSuivi(
     actions: actions ?? [],
@@ -1416,6 +1407,7 @@ MonSuivi mockMonSuivi({
     errorOnSessionMiloRetrieval: errorOnSessionMiloRetrieval,
     dateDerniereMiseAJourPoleEmploi: dateDerniereMiseAJourPoleEmploi,
     eligibleDemarchesIA: eligibleDemarchesIA,
+    peutVoirLeComptageDesHeures: peutVoirLeComptageDesHeures,
   );
 }
 

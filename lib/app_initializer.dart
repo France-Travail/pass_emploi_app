@@ -30,6 +30,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/redux/store_factory.dart';
 import 'package:pass_emploi_app/repositories/accueil_repository.dart';
 import 'package:pass_emploi_app/repositories/action_commentaire_repository.dart';
+import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
 import 'package:pass_emploi_app/repositories/actualite_mission_locale_repository.dart';
 import 'package:pass_emploi_app/repositories/alerte/alerte_delete_repository.dart';
 import 'package:pass_emploi_app/repositories/alerte/get_alerte_repository.dart';
@@ -45,9 +46,11 @@ import 'package:pass_emploi_app/repositories/auto_inscription_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_recrutement_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_repository.dart';
 import 'package:pass_emploi_app/repositories/chat_repository.dart';
+import 'package:pass_emploi_app/repositories/communications_repository.dart';
 import 'package:pass_emploi_app/repositories/comptage_des_heures_repository.dart';
 import 'package:pass_emploi_app/repositories/configuration_application_repository.dart';
 import 'package:pass_emploi_app/repositories/contact_immersion_repository.dart';
+import 'package:pass_emploi_app/repositories/criteres_recherche_persist_repository.dart';
 import 'package:pass_emploi_app/repositories/crypto/chat_crypto.dart';
 import 'package:pass_emploi_app/repositories/crypto/chat_encryption_local_storage.dart';
 import 'package:pass_emploi_app/repositories/cv_repository.dart';
@@ -60,8 +63,6 @@ import 'package:pass_emploi_app/repositories/demarche/update_demarche_repository
 import 'package:pass_emploi_app/repositories/derniere_offre_consultee_repository.dart';
 import 'package:pass_emploi_app/repositories/details_jeune/details_jeune_repository.dart';
 import 'package:pass_emploi_app/repositories/developer_option_repository.dart';
-import 'package:pass_emploi_app/repositories/diagoriente_metiers_favoris_repository.dart';
-import 'package:pass_emploi_app/repositories/diagoriente_urls_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_emploi/evenement_emploi_details_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_emploi/evenement_emploi_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_engagement/evenement_engagement_repository.dart';
@@ -70,12 +71,14 @@ import 'package:pass_emploi_app/repositories/favoris/immersion_favoris_repositor
 import 'package:pass_emploi_app/repositories/favoris/offre_emploi_favoris_repository.dart';
 import 'package:pass_emploi_app/repositories/favoris/service_civique_favoris_repository.dart';
 import 'package:pass_emploi_app/repositories/first_launch_onboarding_repository.dart';
+import 'package:pass_emploi_app/repositories/fonctionnalites_repository.dart';
 import 'package:pass_emploi_app/repositories/ia_ft_suggestions_repository.dart';
 import 'package:pass_emploi_app/repositories/immersion/immersion_details_repository.dart';
 import 'package:pass_emploi_app/repositories/immersion/immersion_repository.dart';
 import 'package:pass_emploi_app/repositories/in_app_feedback_repository.dart';
 import 'package:pass_emploi_app/repositories/in_app_notifications_repository.dart';
 import 'package:pass_emploi_app/repositories/installation_id_repository.dart';
+import 'package:pass_emploi_app/repositories/invite_prenom_repository.dart';
 import 'package:pass_emploi_app/repositories/matching_demarche_repository.dart';
 import 'package:pass_emploi_app/repositories/metier_repository.dart';
 import 'package:pass_emploi_app/repositories/module_feedback_repository.dart';
@@ -83,6 +86,7 @@ import 'package:pass_emploi_app/repositories/mon_suivi_repository.dart';
 import 'package:pass_emploi_app/repositories/offre_emploi/offre_emploi_details_repository.dart';
 import 'package:pass_emploi_app/repositories/offre_emploi/offre_emploi_repository.dart';
 import 'package:pass_emploi_app/repositories/offres_suivies_repository.dart';
+import 'package:pass_emploi_app/repositories/onboarding_questionnaire_repository.dart';
 import 'package:pass_emploi_app/repositories/onboarding_repository.dart';
 import 'package:pass_emploi_app/repositories/piece_jointe_repository.dart';
 import 'package:pass_emploi_app/repositories/preferences_repository.dart';
@@ -96,6 +100,7 @@ import 'package:pass_emploi_app/repositories/search_location_repository.dart';
 import 'package:pass_emploi_app/repositories/service_civique/service_civique_details_repository.dart';
 import 'package:pass_emploi_app/repositories/service_civique/service_civique_repository.dart';
 import 'package:pass_emploi_app/repositories/session_milo_repository.dart';
+import 'package:pass_emploi_app/repositories/soft_update_repository.dart';
 import 'package:pass_emploi_app/repositories/suggestions_recherche_repository.dart';
 import 'package:pass_emploi_app/repositories/suppression_compte_repository.dart';
 import 'package:pass_emploi_app/repositories/thematiques_demarche_repository.dart';
@@ -107,8 +112,6 @@ import 'package:pass_emploi_app/repositories/user_action_repository.dart';
 import 'package:pass_emploi_app/usecases/piece_jointe/piece_jointe_use_case.dart';
 import 'package:pass_emploi_app/utils/compress_image.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/repositories/soft_update_repository.dart';
-import 'package:pass_emploi_app/repositories/criteres_recherche_persist_repository.dart';
 /*AUTOGENERATE-REDUX-APP-INITIALIZER-REPOSITORY-IMPORT*/
 import 'package:pass_emploi_app/utils/secure_storage_exception_handler_decorator.dart';
 import 'package:pass_emploi_app/utils/secure_storage_in_memory_decorator.dart';
@@ -211,7 +214,12 @@ class AppInitializer {
       crashlytics,
       installationIdRepository,
     );
-    final accessTokenRetriever = AuthAccessTokenRetriever(authenticator, remoteConfigRepository, securedPreferences, Lock());
+    final accessTokenRetriever = AuthAccessTokenRetriever(
+      authenticator,
+      remoteConfigRepository,
+      securedPreferences,
+      Lock(),
+    );
     final authAccessChecker = AuthAccessChecker();
     final cacheStore = FileCacheStore((await getTemporaryDirectory()).path);
     final requestCacheManager = PassEmploiCacheManager(cacheStore, configuration.serverBaseUrl);
@@ -291,8 +299,6 @@ class AppInitializer {
       SuggestionsRechercheRepository(dioClient, requestCacheManager, crashlytics),
       AnimationsCollectivesRepository(dioClient, crashlytics),
       SessionMiloRepository(dioClient, crashlytics),
-      DiagorienteUrlsRepository(dioClient, crashlytics),
-      DiagorienteMetiersFavorisRepository(dioClient, requestCacheManager, crashlytics),
       GetFavorisRepository(dioClient, crashlytics),
       RecherchesRecentesRepository(securedPreferences),
       ContactImmersionRepository(dioClient, crashlytics),
@@ -305,6 +311,7 @@ class AppInitializer {
       MonSuiviRepository(dioClient, crashlytics),
       CampagneRecrutementRepository(remoteConfigRepository, securedPreferences),
       PreferredLoginModeRepository(securedPreferences),
+      InvitePrenomRepository(dioClient, crashlytics),
       OnboardingRepository(securedPreferences),
       FirstLaunchOnboardingRepository(securedPreferences),
       PieceJointeUseCase(chatRepository, pieceJointeRepository, ImageCompressor()),
@@ -326,6 +333,10 @@ class AppInitializer {
       ThemeRepository(securedPreferences),
       SoftUpdateRepository(securedPreferences),
       CriteresRecherchePersistRepository(securedPreferences),
+      CommunicationsRepository(dioClient, crashlytics),
+      OnboardingQuestionnaireRepository(securedPreferences),
+      ActionPlanRepository(dioClient, securedPreferences, crashlytics),
+      FonctionnalitesRepository(dioClient, crashlytics),
       /*AUTOGENERATE-REDUX-APP-INITIALIZER-REPOSITORY-CONSTRUCTOR*/
     ).initializeReduxStore(initialState: AppState.initialState(configuration: configuration));
     accessTokenRetriever.setStore(reduxStore);

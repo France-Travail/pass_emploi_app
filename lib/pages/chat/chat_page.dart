@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
@@ -22,7 +23,6 @@ import 'package:pass_emploi_app/widgets/chat/chat_piece_jointe.dart';
 import 'package:pass_emploi_app/widgets/chat/chat_scaffold.dart';
 import 'package:pass_emploi_app/widgets/chat/chat_text_message.dart';
 import 'package:pass_emploi_app/widgets/chat/partage_message.dart';
-import 'package:pass_emploi_app/widgets/info_card.dart';
 import 'package:redux/redux.dart';
 
 class ChatPage extends StatefulWidget {
@@ -99,42 +99,46 @@ class ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
 
   Widget _builder(BuildContext context, ChatPageViewModel viewModel) {
     _controller = (_controller != null) ? _controller : TextEditingController(text: viewModel.brouillon);
-    return ChatScaffold(
-      displayState: viewModel.displayState,
-      onRetry: viewModel.onRetry,
-      withAppBar: widget.withAppBar,
-      withScaffold: widget.withScaffold,
-      content: ChatContent(
-        reversedItems: viewModel.items.reversed.toList(),
-        controller: _controller!,
-        scrollController: _scrollController,
-        messageImportant: viewModel.messageImportant,
-        onSendMessage: viewModel.onSendMessage,
-        onSendImage: viewModel.onSendImage,
-        onSendFile: viewModel.onSendFile,
-        jeunePjEnabled: viewModel.jeunePjEnabled,
-        itemBuilder: (context, index) {
-          final item = viewModel.items.reversed.toList()[index];
-          final widget = item.toWidget(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return Theme(
+      data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+      child: ChatScaffold(
+        displayState: viewModel.displayState,
+        onRetry: viewModel.onRetry,
+        withAppBar: widget.withAppBar,
+        withScaffold: widget.withScaffold,
+        content: ChatContent(
+          reversedItems: viewModel.items.reversed.toList(),
+          controller: _controller!,
+          scrollController: _scrollController,
+          messageImportant: viewModel.messageImportant,
+          onSendMessage: viewModel.onSendMessage,
+          onSendImage: viewModel.onSendImage,
+          onSendFile: viewModel.onSendFile,
+          jeunePjEnabled: viewModel.jeunePjEnabled,
+          itemBuilder: (context, index) {
+            final item = viewModel.items.reversed.toList()[index];
+            final widget = item.toWidget(context);
 
-          if (index == 0 && _animateMessage && item.shouldAnimate) {
-            return ApparitionAnimation(
-              key: ValueKey(item.messageId),
-              child: SizedBox(
-                width: double.infinity,
-                child: widget,
-              ),
-            );
-          } else if (index == 0) {
-            return AutoFocusA11y(
-              child: Semantics(
-                label: Strings.chatA11yLastMessage,
-                child: widget,
-              ),
-            );
-          }
-          return widget;
-        },
+            if (index == 0 && _animateMessage && item.shouldAnimate) {
+              return ApparitionAnimation(
+                key: ValueKey(item.messageId),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: widget,
+                ),
+              );
+            } else if (index == 0) {
+              return AutoFocusA11y(
+                child: Semantics(
+                  label: Strings.chatA11yLastMessage,
+                  child: widget,
+                ),
+              );
+            }
+            return widget;
+          },
+        ),
       ),
     );
   }
@@ -164,7 +168,13 @@ extension on ChatItem {
       child: switch (this) {
         final DayItem item => ChatDaySection(dayLabel: item.dayLabel),
         final TextMessageItem item => ChatTextMessage(item.toParams()),
-        final InformationItem item => InfoCard(message: '${item.title} ${item.description}'),
+        final InformationItem item => Padding(
+          padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s1w),
+          child: DsfrAlert(
+            type: DsfrAlertType.info,
+            description: DsfrAlertDescriptionText('${item.title} ${item.description}'),
+          ),
+        ),
         final DeletedMessageItem item => DeletedMessage(item),
         final PieceJointeMessageItem item => ChatPieceJointe(item.toParams()),
         final PieceJointeImageItem item => ChatImagePieceJointe(item),

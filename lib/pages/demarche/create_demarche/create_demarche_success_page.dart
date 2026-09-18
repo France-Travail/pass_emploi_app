@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
@@ -10,27 +11,39 @@ import 'package:pass_emploi_app/pages/demarche/demarche_detail_page.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_success_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/drawables.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/confetti_wrapper.dart';
-import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/errors/error_text.dart';
 import 'package:pass_emploi_app/widgets/in_app_feedback.dart';
+import 'package:pass_emploi_app/widgets/success/creation_confirmation_body.dart';
+import 'package:pass_emploi_app/widgets/success/success_dialog_app_bar.dart';
 
 enum CreateDemarcheSource { personnalisee, fromReferentiel, iaFt, duplicate }
+
+String? _feedbackFeatureForSource(CreateDemarcheSource source) {
+  switch (source) {
+    case CreateDemarcheSource.personnalisee:
+      return "create-demarche-personnalisee";
+    case CreateDemarcheSource.fromReferentiel:
+      return "create-demarche-referentiel";
+    case CreateDemarcheSource.duplicate:
+      return "create-demarche-duplicate";
+    case CreateDemarcheSource.iaFt:
+      return null;
+  }
+}
 
 class CreateDemarcheSuccessPage extends StatelessWidget {
   const CreateDemarcheSuccessPage({super.key, required this.source});
   final CreateDemarcheSource source;
 
   static Route<dynamic> route(CreateDemarcheSource source) {
-    return MaterialPageRoute(fullscreenDialog: true, builder: (context) => CreateDemarcheSuccessPage(source: source));
+    return MaterialPageRoute(
+      fullscreenDialog: true,
+      builder: (context) => CreateDemarcheSuccessPage(source: source),
+    );
   }
 
   @override
@@ -66,8 +79,14 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return switch (viewModel.displayState) {
       DisplayState.CONTENT => _Body(viewModel, source),
-      DisplayState.FAILURE => _Scaffold(body: Center(child: ErrorText(Strings.genericCreationError))),
-      _ => _Scaffold(body: const Center(child: CircularProgressIndicator())),
+      DisplayState.FAILURE => _Scaffold(
+        appBarTitle: viewModel.appBarTitle,
+        body: Center(child: ErrorText(Strings.genericCreationError)),
+      ),
+      _ => _Scaffold(
+        appBarTitle: viewModel.appBarTitle,
+        body: const Center(child: CircularProgressIndicator()),
+      ),
     };
   }
 }
@@ -79,133 +98,117 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final feedbackFeature = _feedbackFeatureForSource(source);
+
     return _Scaffold(
-      floatingActionButton: _Buttons(
-        onGoActionDetail: viewModel.demarcheId != null
-            ? () {
-                Navigator.pop(context);
-                Navigator.of(context).push(DemarcheDetailPage.materialPageRoute(viewModel.demarcheId!));
-              }
+      appBarTitle: viewModel.appBarTitle,
+      body: CreationConfirmationBody(
+        header: feedbackFeature != null
+            ? InAppFeedback(
+                feature: feedbackFeature,
+                label: Strings.feedbackCreateDemarche,
+              )
             : null,
-        onCreateMore: () {
-          Navigator.pop(context);
-          Navigator.of(context).push(CreateDemarcheFormPage.route());
-        },
-        source: source,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                InAppFeedback(
-                  feature: switch (source) {
-                    CreateDemarcheSource.personnalisee => "create-demarche-personnalisee",
-                    CreateDemarcheSource.fromReferentiel => "create-demarche-referentiel",
-                    CreateDemarcheSource.iaFt => "create-demarche-ia-ft",
-                    CreateDemarcheSource.duplicate => "create-demarche-duplicate",
-                  },
-                  label: Strings.feedbackCreateDemarche,
-                  disabledPlaceholder: switch (source) {
-                    CreateDemarcheSource.iaFt => InAppFeedback(
-                      feature: "create-demarche-ia-ft-suggestions",
-                      label: Strings.feedbackCreateDemarcheSuggestions,
-                      responses: [
-                        Strings.feedbackCreateDemarcheSuggestionsResponse1,
-                        Strings.feedbackCreateDemarcheSuggestionsResponse2,
-                        Strings.feedbackCreateDemarcheSuggestionsResponse3,
-                      ],
-                    ),
-                    _ => null,
-                  },
-                ),
-                SizedBox(height: Margins.spacing_m),
-                Center(child: SizedBox(height: 130, width: 130, child: Image.asset(Drawables.success))),
-                SizedBox(height: Margins.spacing_xl),
-                Text(
-                  switch (source) {
-                    CreateDemarcheSource.iaFt => Strings.demarcheSuccessTitlePlural,
-                    _ => Strings.demarcheSuccessTitle,
-                  },
-                  textAlign: TextAlign.center,
-                  style: TextStyles.textMBold.copyWith(color: context.content),
-                ),
-                SizedBox(height: Margins.spacing_m),
-                Text(
-                  switch (source) {
-                    CreateDemarcheSource.iaFt => Strings.demarcheSuccessSubtitlePlural,
-                    _ => Strings.demarcheSuccessSubtitle,
-                  },
-                  textAlign: TextAlign.center,
-                  style: TextStyles.textSRegular(color: context.content),
-                ),
-                SizedBox(height: Margins.spacing_xx_huge),
-              ],
-            ),
-          ),
+        tag: viewModel.isPlural ? DsfrCategoryTag.demarchesDone() : DsfrCategoryTag.demarcheDone(),
+        title: Strings.userActionConfirmationTitle(viewModel.firstName),
+        subtitle: viewModel.subtitle,
+        actions: _DemarcheSuccessButtons.build(
+          context: context,
+          source: source,
+          onGoActionDetail: viewModel.demarcheId != null
+              ? () {
+                  Navigator.pop(context);
+                  DemarcheDetailPage.show(context, viewModel.demarcheId!);
+                }
+              : null,
+          onCreateMore: () {
+            Navigator.pop(context);
+            Navigator.of(context).push(CreateDemarcheFormPage.route());
+          },
         ),
       ),
     );
   }
 }
 
-class _Buttons extends StatelessWidget {
-  const _Buttons({required this.onGoActionDetail, required this.onCreateMore, required this.source});
-
-  final void Function()? onGoActionDetail;
-  final void Function() onCreateMore;
-  final CreateDemarcheSource source;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (source == CreateDemarcheSource.iaFt) ...[
-            const SizedBox(height: Margins.spacing_base),
-            PrimaryActionButton(
-              label: Strings.consulterMesDemarches,
-              onPressed: () {
-                Navigator.pop(context);
-                StoreProvider.of<AppState>(
-                  context,
-                ).dispatch(HandleDeepLinkAction(MonSuiviDeepLink(), DeepLinkOrigin.inAppNavigation));
-              },
-            ),
-          ] else ...[
-            if (onGoActionDetail != null) ...[
-              AutoFocusA11y(
-                child: PrimaryActionButton(label: Strings.demarcheSuccessConsulter, onPressed: onGoActionDetail),
+class _DemarcheSuccessButtons {
+  static List<Widget> build({
+    required BuildContext context,
+    required CreateDemarcheSource source,
+    required void Function()? onGoActionDetail,
+    required void Function() onCreateMore,
+  }) {
+    if (source == CreateDemarcheSource.iaFt) {
+      return [
+        _primaryButton(
+          label: Strings.consulterMesDemarches,
+          autoFocus: true,
+          onPressed: () {
+            Navigator.pop(context);
+            StoreProvider.of<AppState>(context).dispatch(
+              HandleDeepLinkAction(
+                MonSuiviDeepLink(),
+                DeepLinkOrigin.inAppNavigation,
               ),
-            ],
-            const SizedBox(height: Margins.spacing_base),
-            SecondaryButton(label: Strings.demarcheSuccessCreerUneAutre, onPressed: onCreateMore),
-          ],
-        ],
+            );
+          },
+        ),
+      ];
+    }
+
+    return [
+      if (onGoActionDetail != null) ...[
+        _primaryButton(
+          label: Strings.demarcheSuccessConsulter,
+          autoFocus: true,
+          onPressed: onGoActionDetail,
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+      ],
+      _secondaryButton(
+        label: Strings.demarcheSuccessCreerUneAutre,
+        onPressed: onCreateMore,
       ),
+    ];
+  }
+
+  static Widget _primaryButton({
+    required String label,
+    required VoidCallback onPressed,
+    bool autoFocus = false,
+  }) {
+    final button = DsfrButton(
+      label: label,
+      variant: DsfrButtonVariant.primary,
+      size: DsfrComponentSize.lg,
+      onPressed: onPressed,
+    );
+    return autoFocus ? AutoFocusA11y(child: button) : button;
+  }
+
+  static Widget _secondaryButton({
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return DsfrButton(
+      label: label,
+      variant: DsfrButtonVariant.secondary,
+      size: DsfrComponentSize.lg,
+      onPressed: onPressed,
     );
   }
 }
 
 class _Scaffold extends StatelessWidget {
-  const _Scaffold({this.floatingActionButtonLocation, this.floatingActionButton, required this.body});
-  final FloatingActionButtonLocation? floatingActionButtonLocation;
-  final Widget? floatingActionButton;
+  const _Scaffold({required this.appBarTitle, required this.body});
+  final String appBarTitle;
   final Widget body;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.bg,
-      floatingActionButton: floatingActionButton,
-      floatingActionButtonLocation: floatingActionButtonLocation,
-      appBar: SecondaryAppBar(title: Strings.createDemarcheAppBarTitle, backgroundColor: context.bg),
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+      appBar: SuccessDialogAppBar(title: appBarTitle),
       body: body,
     );
   }

@@ -65,6 +65,20 @@ void main() {
     expect(viewModel.favoris, favoris);
   });
 
+  test('should split postulées and favoris sans postulation', () {
+    // Given
+    final postulee = mockFavori(id: '1', datePostulation: DateTime(2024));
+    final favori = mockFavoriNonPostule(id: '2');
+    final store = givenState().favoriListSuccessState([postulee, favori]).store();
+
+    // When
+    final viewModel = FavoriListViewModel.create(store);
+
+    // Then
+    expect(viewModel.postulees, [postulee]);
+    expect(viewModel.favorisSansPostulation, [favori]);
+  });
+
   test('onRetry should dispatch proper action', () {
     // Given
     final store = givenState().spyStore();

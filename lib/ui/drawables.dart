@@ -6,60 +6,43 @@ class Drawables {
   static const String _assets = "assets/";
   static const String _svg = ".svg";
 
-  static String appLogo = Brand.isCej() ? "${_assets}logo_app_cej$_svg" : "${_assets}logo_app_brsa$_svg";
+  static String appLogo = Brand.isCej()
+      ? "${_assets}logo_app_cej$_svg"
+      : "${_assets}logo_app_brsa$_svg";
 
   static String badge = "${_assets}ic_badge$_svg";
 
-  static String missionLocaleLogo = "${_assets}logo-mission-locale.webp";
   static String franceTravailLogo = "${_assets}logo-france-travail.webp";
-  static String diagorienteLogo = "${_assets}logo_diagoriente.webp";
+  static String missionLocaleLogoTitle =
+      "${_assets}logo_mission_locale_title.webp";
+  static String franceTravailLogoTitle =
+      "${_assets}logo_france_travail_title.webp";
 
-  static String accueilOnboardingIllustration1 = "${_assets}onboarding/illustration_onboarding_1.webp";
-  static String accueilOnboardingIllustration2 = "${_assets}onboarding/illustration_onboarding_2.webp";
-  static String illustrationNavigationBottomSheet = "${_assets}onboarding/illustration_navigation_bottom_sheet.webp";
+  static String campagneRecrutementBg =
+      "${_assets}campagne_recrutement_bg.webp";
 
-  static String onboardingMonSuiviIllustration = "${_assets}onboarding/illustration_onboarding_mon_suivi.webp";
-  static String onboardingChatIllustration = "${_assets}onboarding/illustration_onboarding_chat.webp";
-  static String onboardingRechercheIllustration = "${_assets}onboarding/illustration_onboarding_recherche.webp";
-  static String onboardingEvenementsIllustration = "${_assets}onboarding/illustration_onboarding_evenements.webp";
-  static String onboardingOffreEnregistreeIllustration =
-      "${_assets}onboarding/illustration_onboarding_offre_enregistree.webp";
+  static String logoInProgress = Brand.isCej()
+      ? "${_assets}cej_in_progress.webp"
+      : "${_assets}brsa_in_progress.webp";
 
-  static String campagneRecrutementBg = "${_assets}campagne_recrutement_bg.webp";
-
-  static String logoInProgress = Brand.isCej() ? cejLogoInProgress : passEmploiLogoInProgress;
-  static String cejLogoInProgress = "${_assets}cej_in_progress.webp";
-  static String passEmploiLogoInProgress = "${_assets}brsa_in_progress.webp";
-
-  static String sessionEmploiIllustration = "session_emploi_illustration.webp";
-  static String sessionFormationIllustration = "session_formation_illustration.webp";
-  static String sessionProjetProIllustration = "session_projetPro_illustration.webp";
-  static String sessionLogementIllustration = "session_logement_illustration.webp";
-  static String sessionSanteIllustration = "session_sante_illustration.webp";
-  static String sessionCitoyenneteIllustration = "session_citoyennete_illustration.webp";
-  static String sessionLoisirIllustration = "session_loisir_illustration.webp";
-
-  static String welcomeIllustration1 = "${_assets}onboarding/welcome_illustration_1.webp";
-  static String welcomeIllustration2 = "${_assets}onboarding/welcome_illustration_2.webp";
-  static String welcomeIllustration3 = "${_assets}onboarding/welcome_illustration_3.webp";
-
-  static String notificationsIllustration = "${_assets}onboarding/notfications_illustration.webp";
-
-  static String iaFtIllustration = "${_assets}IA.svg";
-
-  static String iaFtSuggestionsLoading = "${_assets}ia_ft_suggestions_loading.webp";
-  static String iaFtSuggestionsEmpty = "${_assets}ia_ft_suggestions_empty.webp";
-  static String iaFtSuggestionsFailure = "${_assets}ia_ft_suggestions_failure.webp";
+  static String blocMarqueLight = "${_assets}dsfr/bloc_marque_light.svg";
+  static String blocMarqueDark = "${_assets}dsfr/bloc_marque_dark.svg";
+  static String illustrationRechercheEmpty =
+      "${_assets}dsfr/illustration_recherche_empty.webp";
+  static String illustrationEvenementsEmpty =
+      "${_assets}dsfr/illustration_evenements_empty.svg";
+  static String illustrationActualitesEmpty =
+      "${_assets}dsfr/illustration_actualites_empty.svg";
+  static String illustrationSuccess = "${_assets}dsfr/success.svg";
+  static String illustrationWarning = "${_assets}dsfr/warning.svg";
+  static String illustrationThemeSystem = "${_assets}dsfr/system.svg";
+  static String illustrationThemeSun = "${_assets}dsfr/sun.svg";
+  static String illustrationThemeMoon = "${_assets}dsfr/moon.svg";
+  static String illustrationSystem = "${_assets}dsfr/illustration_system.svg";
 
   static String evalImage = "${_assets}evalluation_illustration.webp";
+  static String presseCard = "${_assets}dsfr/presse_card.webp";
+  static String ratingStar = "${_assets}dsfr/star_line.svg";
 
   static String success = "${_assets}success.webp";
-  static String notFound = "${_assets}not_found.webp";
-
-  static String rechercheHomeOffresEmploi = "${_assets}emploi.svg";
-  static String rechercheHomeOffresAlternance = "${_assets}alternance.svg";
-  static String rechercheHomeOffresImmersion = "${_assets}immersion.svg";
-  static String rechercheHomeOffresServiceCivique = "${_assets}service_civique.svg";
-
-  static String megaphone = "${_assets}megaphone.svg";
 }

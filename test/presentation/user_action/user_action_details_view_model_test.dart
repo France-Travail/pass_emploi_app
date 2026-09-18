@@ -427,7 +427,7 @@ void main() {
 
       // Then
       final creationDetails = viewModel.creationDetails;
-      expect(creationDetails, "Ajouté par vous le 01/01/2021");
+      expect(creationDetails, "Ajouté par tu le 01/01/2021");
     });
   });
 

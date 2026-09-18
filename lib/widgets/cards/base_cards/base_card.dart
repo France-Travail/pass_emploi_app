@@ -3,7 +3,6 @@ import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_body.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_pillule.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_subtitle.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_title.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
@@ -13,7 +12,7 @@ class BaseCard extends StatelessWidget {
   final Widget? leading;
   final String title;
   final Widget? tag;
-  final CardPillule? pillule;
+  final Widget? pillule;
   final Widget? iconButton;
   final String? subtitle;
   final String? body;
@@ -58,7 +57,6 @@ class BaseCard extends StatelessWidget {
       button: !linkRole && onTap != null ? true : null,
       link: linkRole ? true : null,
       child: CardContainer(
-        // backgroundColor: AppColorsSpecifics.bgToGrey100(context),
         padding: EdgeInsets.all(Margins.spacing_base),
         onTap: onTap,
         onLongPress: onLongPress,

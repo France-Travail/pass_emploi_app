@@ -52,9 +52,9 @@ class CriteresRecherchePersistMiddleware extends MiddlewareClass<AppState> {
     await _save(
       store,
       current.copyWith(
-        metier: keyword.isNotEmpty ? _metierFromKeyword(keyword, current.metier) : null,
-        location: action.request.criteres.location,
-        rayon: action.request.filtres.distance,
+        metier: () => keyword.isNotEmpty ? _metierFromKeyword(keyword, current.metier) : null,
+        location: () => action.request.criteres.location,
+        rayon: () => action.request.filtres.distance,
       ),
     );
   }
@@ -72,9 +72,9 @@ class CriteresRecherchePersistMiddleware extends MiddlewareClass<AppState> {
     await _save(
       store,
       store.criteresRechercheUtilisateur.copyWith(
-        metier: metier != null ? MetierRomeCritere(metier) : null,
-        location: action.request.criteres.location,
-        rayon: action.request.filtres.distance,
+        metier: () => metier != null ? MetierRomeCritere(metier) : null,
+        location: () => action.request.criteres.location,
+        rayon: () => action.request.filtres.distance,
       ),
     );
   }
@@ -83,7 +83,10 @@ class CriteresRecherchePersistMiddleware extends MiddlewareClass<AppState> {
     Store<AppState> store,
     RechercheRequestAction<ServiceCiviqueCriteresRecherche, ServiceCiviqueFiltresRecherche> action,
   ) async {
-    await _save(store, store.criteresRechercheUtilisateur.copyWith(location: action.request.criteres.location));
+    await _save(
+      store,
+      store.criteresRechercheUtilisateur.copyWith(location: () => action.request.criteres.location),
+    );
   }
 
   Future<void> _save(Store<AppState> store, CriteresRechercheUtilisateur criteres) async {

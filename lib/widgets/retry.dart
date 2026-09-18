@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/media_sizes.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/illustration/illustration.dart';
 
 class Retry extends StatelessWidget {
   final String text;
@@ -19,43 +15,43 @@ class Retry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
+    final height = MediaQuery.sizeOf(context).height;
+    final isCompact = height < MediaSizes.height_xs;
+    final illustrationSize = isCompact ? 80.0 : 160.0;
+
     return Center(
       child: Padding(
-        padding: EdgeInsets.all(Margins.spacing_base),
+        padding: const EdgeInsets.all(DsfrSpacings.s2w),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (!small)
-              SizedBox.square(
-                dimension: height < MediaSizes.height_xs ? 60 : 180,
-                child: Illustration.grey(
-                  AppIcons.warning_rounded,
-                  withWhiteBackground: true,
-                ),
+            if (!small) ...[
+              SvgPicture.asset(
+                Drawables.illustrationWarning,
+                width: illustrationSize,
+                height: illustrationSize,
+                excludeFromSemantics: true,
               ),
-            if (!small) SizedBox(height: height < MediaSizes.height_xs ? Margins.spacing_base : Margins.spacing_l),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  Strings.error,
-                  style: TextStyles.textBaseBold.copyWith(color: context.content),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: Margins.spacing_base),
-                Text(
-                  text,
-                  style: TextStyles.textBaseRegular.copyWith(color: context.content),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: Margins.spacing_l),
-                PrimaryActionButton(
-                  label: buttonLabel ?? Strings.retry,
-                  onPressed: onRetry,
-                ),
-              ],
+              SizedBox(height: isCompact ? DsfrSpacings.s2w : DsfrSpacings.s3w),
+            ],
+            Text(
+              Strings.error,
+              style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: DsfrSpacings.s1w),
+            Text(
+              text,
+              style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: DsfrSpacings.s3w),
+            DsfrButton(
+              label: buttonLabel ?? Strings.retry,
+              icon: DsfrIcons.systemRefreshLine,
+              variant: DsfrButtonVariant.primary,
+              size: DsfrComponentSize.lg,
+              onPressed: onRetry,
             ),
           ],
         ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/features/onboarding/onboarding_actions.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -27,7 +27,7 @@ class ShowcaseWrapper extends StatelessWidget {
   }
 }
 
-enum ShowcaseSource { message, action, offre, evenement, outils }
+enum ShowcaseSource { message, action, offre, evenement, planAction }
 
 class OnboardingShowcase extends StatefulWidget {
   const OnboardingShowcase({super.key, required this.child, required this.source, this.bottom = false});
@@ -53,7 +53,7 @@ class _OnboardingShowcaseState extends State<OnboardingShowcase> {
             ShowcaseSource.action => store.state.onboardingState.showActionOnboarding,
             ShowcaseSource.offre => store.state.onboardingState.showOffreOnboarding,
             ShowcaseSource.evenement => store.state.onboardingState.showEvenementOnboarding,
-            ShowcaseSource.outils => store.state.onboardingState.showOutilsOnboarding,
+            ShowcaseSource.planAction => store.state.onboardingState.showPlanActionOnboarding,
           }) &&
           (store.state.onboardingState.onboarding?.showOnboarding ?? false),
       builder: (context, show) {
@@ -71,18 +71,23 @@ class _OnboardingShowcaseState extends State<OnboardingShowcase> {
             ShowcaseSource.action => Strings.onboardingShowcaseActionTitle,
             ShowcaseSource.offre => Strings.onboardingShowcaseOffreTitle,
             ShowcaseSource.evenement => Strings.onboardingShowcaseEvenementTitle,
-            ShowcaseSource.outils => Strings.onboardingShowcaseOutilsTitle,
+            ShowcaseSource.planAction => Strings.onboardingShowcasePlanActionTitle,
           },
           description: switch (widget.source) {
             ShowcaseSource.message => Strings.onboardingShowcaseMessageDescription,
             ShowcaseSource.action => Strings.onboardingShowcaseActionDescription,
             ShowcaseSource.offre => Strings.onboardingShowcaseOffreDescription,
             ShowcaseSource.evenement => Strings.onboardingShowcaseEvenementDescription,
-            ShowcaseSource.outils => Strings.onboardingShowcaseOutilsDescription,
+            ShowcaseSource.planAction => Strings.onboardingShowcasePlanActionDescription,
           },
-          tooltipBackgroundColor: AppColors.primary,
-          titleTextStyle: TextStyles.textMBold.copyWith(color: AppColors.contentOnPrimary),
-          descTextStyle: TextStyles.textBaseRegular.copyWith(color: AppColors.contentOnPrimary),
+          tooltipBackgroundColor: DsfrColorDecisions.backgroundActionHighBlueFrance(context),
+          tooltipBorderRadius: BorderRadius.zero,
+          titleTextStyle: TextStyles.textMBold.copyWith(
+            color: DsfrColorDecisions.textInvertedBlueFrance(context),
+          ),
+          descTextStyle: TextStyles.textBaseRegular.copyWith(
+            color: DsfrColorDecisions.textInvertedBlueFrance(context),
+          ),
           key: key,
           titleAlignment: Alignment.centerLeft,
           descriptionAlignment: Alignment.centerLeft,

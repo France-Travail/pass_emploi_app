@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
@@ -9,22 +10,17 @@ import 'package:pass_emploi_app/presentation/chat/chat_partage_bottom_sheet_view
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/evenement_emploi/evenement_emploi_details_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/buttons/share_button.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/offre_details/offre_details_actions_footer.dart';
+import 'package:pass_emploi_app/widgets/offre_details/offre_details_header.dart';
+import 'package:pass_emploi_app/widgets/offre_details/offre_details_section_title.dart';
+import 'package:pass_emploi_app/widgets/offre_details/offre_details_tag.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
-import 'package:pass_emploi_app/widgets/sepline.dart';
 
 class EvenementEmploiDetailsPage extends StatelessWidget {
   final String eventId;
@@ -41,7 +37,6 @@ class EvenementEmploiDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = context.bg;
     return Tracker(
       tracking: AnalyticsScreenNames.evenementEmploiDetails,
       child: StoreConnector<AppState, EvenementEmploiDetailsPageViewModel>(
@@ -49,22 +44,18 @@ class EvenementEmploiDetailsPage extends StatelessWidget {
         converter: (store) => EvenementEmploiDetailsPageViewModel.create(store),
         builder: (context, viewModel) {
           return Scaffold(
-            backgroundColor: backgroundColor,
-            floatingActionButton: _FooterButtons(viewModel: viewModel),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-            appBar: SecondaryAppBar(
-              title: Strings.eventEmploiDetailsAppBarTitle,
-              backgroundColor: backgroundColor,
+            backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+            appBar: BackAppBar(
               actions: [
-                if (viewModel.url != null) ...[
-                  SizedBox(width: Margins.spacing_base),
+                if (viewModel.url != null)
                   ShareButton(
                     textToShare: viewModel.url!,
-                    semanticsLabel: viewModel.titre,
-                    subjectForEmail: Strings.a11yPartagerEvenementLabel,
-                    onPressed: () => context.trackEvenementEngagement(EvenementEngagement.EVENEMENT_EXTERNE_PARTAGE),
+                    semanticsLabel: Strings.a11yPartagerEvenementLabel,
+                    subjectForEmail: viewModel.titre,
+                    onPressed: () => context.trackEvenementEngagement(
+                      EvenementEngagement.EVENEMENT_EXTERNE_PARTAGE,
+                    ),
                   ),
-                ],
               ],
             ),
             body: _Body(viewModel: viewModel, eventId: eventId),
@@ -84,10 +75,16 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (viewModel.displayState) {
-      DisplayState.LOADING => Center(child: CircularProgressIndicator()),
+      DisplayState.LOADING => Center(
+        child: CircularProgressIndicator(
+          color: DsfrColorDecisions.backgroundActionHighBlueFrance(context),
+        ),
+      ),
       DisplayState.CONTENT => _Content(viewModel: viewModel),
-      DisplayState.EMPTY ||
-      DisplayState.FAILURE => Retry(Strings.miscellaneousErrorRetry, () => viewModel.retry(eventId)),
+      DisplayState.EMPTY || DisplayState.FAILURE => Retry(
+        Strings.miscellaneousErrorRetry,
+        () => viewModel.retry(eventId),
+      ),
     };
   }
 }
@@ -99,37 +96,64 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(Margins.spacing_base),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _Header(viewModel: viewModel),
-              SepLine(Margins.spacing_base, Margins.spacing_base),
-              if (viewModel.description != null) ...[
-                _Details(description: viewModel.description!),
-                SepLine(Margins.spacing_base, Margins.spacing_base),
+    final footerActions = <OffreDetailsAction>[
+      if (viewModel.url != null)
+        OffreDetailsAction(
+          label: Strings.eventEmploiDetailsInscription,
+          icon: DsfrIcons.systemExternalLinkLine,
+          semanticsLink: true,
+          onPressed: () => _openInscriptionUrl(context),
+        ),
+      OffreDetailsAction(
+        label: Strings.eventEmploiDetailsPartagerConseiller,
+        icon: DsfrIcons.systemShareLine,
+        variant: DsfrButtonVariant.secondary,
+        onPressed: () => _partagerConseiller(context),
+      ),
+    ];
+
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(
+              DsfrSpacings.s2w,
+              DsfrSpacings.s2w,
+              DsfrSpacings.s2w,
+              DsfrSpacings.s3w,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                PageTitle(Strings.eventEmploiDetailsAppBarTitle),
+                const SizedBox(height: DsfrSpacings.s1w),
+                _Header(viewModel: viewModel),
+                if (viewModel.description != null) ...[
+                  const SizedBox(height: DsfrSpacings.s2w),
+                  _Details(description: viewModel.description!),
+                ],
               ],
-              SizedBox(
-                width: double.infinity,
-                child: SecondaryButton(
-                  label: Strings.eventEmploiDetailsPartagerConseiller,
-                  onPressed: () => partagerConseiller(context),
-                ),
-              ),
-              SizedBox(height: Margins.spacing_huge),
-            ],
+            ),
           ),
         ),
-      ),
+        OffreDetailsActionsFooter(actions: footerActions),
+      ],
     );
   }
 
-  void partagerConseiller(BuildContext context) {
-    context.trackEvenementEngagement(EvenementEngagement.EVENEMENT_EXTERNE_PARTAGE_CONSEILLER);
+  void _partagerConseiller(BuildContext context) {
+    context.trackEvenementEngagement(
+      EvenementEngagement.EVENEMENT_EXTERNE_PARTAGE_CONSEILLER,
+    );
     ChatPartageBottomSheet.show(context, ChatPartageEvenementEmploiSource());
+  }
+
+  void _openInscriptionUrl(BuildContext context) {
+    if (viewModel.url == null) return;
+    context.trackEvenementEngagement(
+      EvenementEngagement.EVENEMENT_EXTERNE_INSCRIPTION,
+    );
+    launchExternalUrl(viewModel.url!);
   }
 }
 
@@ -140,22 +164,29 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (viewModel.tag != null) ...[CardTag.evenement(text: viewModel.tag!), SizedBox(height: Margins.spacing_s)],
-        Text(viewModel.titre, style: TextStyles.textLBold(color: context.content)),
-        SizedBox(height: Margins.spacing_base),
-        Wrap(
-          spacing: Margins.spacing_base,
-          children: [
-            CardComplement.date(text: viewModel.date),
-            CardComplement.hour(text: viewModel.heure),
-          ],
-        ),
-        SizedBox(height: Margins.spacing_base),
-        CardComplement.place(text: viewModel.lieu),
-        SizedBox(height: Margins.spacing_base),
+    final tag = viewModel.tag;
+    return OffreDetailsHeader(
+      leading: tag != null && tag.isNotEmpty
+          ? Semantics(
+              label: tag,
+              child: ExcludeSemantics(
+                child: DsfrBadge(
+                  label: tag,
+                  type: DsfrBadgeType.information,
+                  size: DsfrComponentSize.sm,
+                ),
+              ),
+            )
+          : null,
+      title: viewModel.titre,
+      tags: [
+        if (viewModel.date.isNotEmpty) OffreDetailsTag.date(viewModel.date),
+        if (viewModel.heure.isNotEmpty)
+          OffreDetailsTag.hour(
+            viewModel.heure,
+            semanticsLabel: '${Strings.iconAlternativeHour} : ${viewModel.heure.toTimeAndDurationForScreenReaders()}',
+          ),
+        if (viewModel.lieu.isNotEmpty) OffreDetailsTag.location(viewModel.lieu),
       ],
     );
   }
@@ -169,49 +200,17 @@ class _Details extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Text("•", style: TextStyles.textMBoldWithColor(color: AppColors.primary)),
-            SizedBox(width: Margins.spacing_s),
-            Text(Strings.evenementEmploiDetails, style: TextStyles.textMBoldWithColor(color: context.grey800)),
-          ],
+        OffreDetailsSectionTitle(Strings.evenementEmploiDetails),
+        const SizedBox(height: DsfrSpacings.s2w),
+        Text(
+          description,
+          style: DsfrTextStyle.bodyMd(
+            color: DsfrColorDecisions.textDefaultGrey(context),
+          ),
         ),
-        SizedBox(height: Margins.spacing_m),
-        Text(description, style: TextStyles.textBaseRegular.copyWith(color: context.content)),
       ],
     );
-  }
-}
-
-class _FooterButtons extends StatelessWidget {
-  final EvenementEmploiDetailsPageViewModel viewModel;
-
-  _FooterButtons({required this.viewModel});
-
-  @override
-  Widget build(BuildContext context) {
-    return viewModel.url != null
-        ? SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-              child: PrimaryActionButton(
-                icon: AppIcons.open_in_new_rounded,
-                semanticsRoleLink: true,
-                iconSize: Dimens.icon_size_base,
-                label: Strings.eventEmploiDetailsInscription,
-                onPressed: () => _openInscriptionUrl(context),
-              ),
-            ),
-          )
-        : SizedBox.shrink();
-  }
-
-  void _openInscriptionUrl(BuildContext context) {
-    if (viewModel.url == null) return;
-    context.trackEvenementEngagement(EvenementEngagement.EVENEMENT_EXTERNE_INSCRIPTION);
-    launchExternalUrl(viewModel.url!);
   }
 }

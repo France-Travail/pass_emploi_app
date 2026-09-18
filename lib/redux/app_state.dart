@@ -1,9 +1,12 @@
 import 'package:equatable/equatable.dart';
 import 'package:pass_emploi_app/configuration/configuration.dart';
 import 'package:pass_emploi_app/features/accueil/accueil_state.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
+import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_mission_locale_state.dart';
 import 'package:pass_emploi_app/features/alerte/create/alerte_create_state.dart';
 import 'package:pass_emploi_app/features/alerte/delete/alerte_delete_state.dart';
 import 'package:pass_emploi_app/features/alerte/list/alerte_list_state.dart';
+import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription_state.dart';
 import 'package:pass_emploi_app/features/auto_inscription/auto_inscription_state.dart';
 import 'package:pass_emploi_app/features/campagne/campagne_state.dart';
 import 'package:pass_emploi_app/features/cgu/cgu_state.dart';
@@ -13,13 +16,15 @@ import 'package:pass_emploi_app/features/chat/partage/chat_partage_state.dart';
 import 'package:pass_emploi_app/features/chat/piece_jointe/piece_jointe_state.dart';
 import 'package:pass_emploi_app/features/chat/preview_file/preview_file_state.dart';
 import 'package:pass_emploi_app/features/chat/status/chat_status_state.dart';
+import 'package:pass_emploi_app/features/communications/communications_state.dart';
 import 'package:pass_emploi_app/features/comptage_des_heures/comptage_des_heures_state.dart';
 import 'package:pass_emploi_app/features/configuration/configuration_state.dart';
 import 'package:pass_emploi_app/features/connectivity/connectivity_state.dart';
 import 'package:pass_emploi_app/features/contact_immersion/contact_immersion_state.dart';
+import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_state.dart';
 import 'package:pass_emploi_app/features/cv/cv_state.dart';
-import 'package:pass_emploi_app/features/date_consultation_notification/date_consultation_notification_state.dart';
 import 'package:pass_emploi_app/features/date_consultation_actualite_mission_locale/date_consultation_actualite_mission_locale_state.dart';
+import 'package:pass_emploi_app/features/date_consultation_notification/date_consultation_notification_state.dart';
 import 'package:pass_emploi_app/features/date_consultation_offre/date_consultation_offre_state.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_state.dart';
 import 'package:pass_emploi_app/features/demarche/create/create_demarche_state.dart';
@@ -29,7 +34,6 @@ import 'package:pass_emploi_app/features/demarche/update/update_demarche_state.d
 import 'package:pass_emploi_app/features/details_jeune/details_jeune_state.dart';
 import 'package:pass_emploi_app/features/developer_option/activation/developer_options_state.dart';
 import 'package:pass_emploi_app/features/developer_option/matomo/matomo_logging_state.dart';
-import 'package:pass_emploi_app/features/diagoriente_preferences_metier/diagoriente_preferences_metier_state.dart';
 import 'package:pass_emploi_app/features/evenement_emploi/details/evenement_emploi_details_state.dart';
 import 'package:pass_emploi_app/features/events/list/event_list_state.dart';
 import 'package:pass_emploi_app/features/favori/ids/favori_ids_state.dart';
@@ -37,11 +41,13 @@ import 'package:pass_emploi_app/features/favori/list/favori_list_state.dart';
 import 'package:pass_emploi_app/features/favori/update/favori_update_state.dart';
 import 'package:pass_emploi_app/features/feature_flip/feature_flip_state.dart';
 import 'package:pass_emploi_app/features/first_launch_onboarding/first_launch_onboarding_state.dart';
+import 'package:pass_emploi_app/features/fonctionnalites/fonctionnalites_state.dart';
 import 'package:pass_emploi_app/features/ft_ia_tutorial/ft_ia_tutorial_state.dart';
 import 'package:pass_emploi_app/features/ia_ft_suggestions/ia_ft_suggestions_state.dart';
 import 'package:pass_emploi_app/features/immersion/details/immersion_details_state.dart';
 import 'package:pass_emploi_app/features/in_app_feedback/in_app_feedback_state.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_state.dart';
+import 'package:pass_emploi_app/features/invite_prenom/invite_prenom_state.dart';
 import 'package:pass_emploi_app/features/location/search_location_state.dart';
 import 'package:pass_emploi_app/features/login/login_state.dart';
 import 'package:pass_emploi_app/features/matching_demarche/matching_demarche_state.dart';
@@ -51,6 +57,7 @@ import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_state.dart';
 import 'package:pass_emploi_app/features/offre_emploi/details/offre_emploi_details_state.dart';
 import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_state.dart';
 import 'package:pass_emploi_app/features/onboarding/onboarding_state.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
 import 'package:pass_emploi_app/features/preferences/preferences_state.dart';
 import 'package:pass_emploi_app/features/preferences/update/preferences_update_state.dart';
 import 'package:pass_emploi_app/features/preferred_login_mode/preferred_login_mode_state.dart';
@@ -61,10 +68,12 @@ import 'package:pass_emploi_app/features/remote_campagne_accueil/remote_campagne
 import 'package:pass_emploi_app/features/rendezvous/details/rendezvous_details_state.dart';
 import 'package:pass_emploi_app/features/service_civique/detail/service_civique_detail_state.dart';
 import 'package:pass_emploi_app/features/session_milo_details/session_milo_details_state.dart';
+import 'package:pass_emploi_app/features/soft_update/soft_update_state.dart';
 import 'package:pass_emploi_app/features/suggestions_recherche/list/suggestions_recherche_state.dart';
 import 'package:pass_emploi_app/features/suggestions_recherche/traiter/traiter_suggestion_recherche_state.dart';
 import 'package:pass_emploi_app/features/suppression_compte/suppression_compte_state.dart';
 import 'package:pass_emploi_app/features/thematiques_demarche/thematiques_demarche_state.dart';
+import 'package:pass_emploi_app/features/theme/theme_state.dart';
 import 'package:pass_emploi_app/features/top_demarche/top_demarche_state.dart';
 import 'package:pass_emploi_app/features/tutorial/tutorial_state.dart';
 import 'package:pass_emploi_app/features/user_action/commentaire/list/action_commentaire_list_state.dart';
@@ -78,16 +87,13 @@ import 'package:pass_emploi_app/models/alerte/immersion_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/offre_emploi_alerte.dart';
 import 'package:pass_emploi_app/models/alerte/service_civique_alerte.dart';
 import 'package:pass_emploi_app/models/feature_flip.dart';
+import 'package:pass_emploi_app/models/fonctionnalite.dart';
 import 'package:pass_emploi_app/models/immersion.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
+import 'package:pass_emploi_app/models/onboarding.dart';
 import 'package:pass_emploi_app/models/service_civique.dart';
 import 'package:pass_emploi_app/models/user.dart';
-import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_mission_locale_state.dart';
-import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription_state.dart';
-import 'package:pass_emploi_app/features/theme/theme_state.dart';
-import 'package:pass_emploi_app/features/soft_update/soft_update_state.dart';
-import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_state.dart';
 /*AUTOGENERATE-REDUX-APP-STATE-IMPORT*/
 
 class AppState extends Equatable {
@@ -143,7 +149,6 @@ class AppState extends Equatable {
   final RechercheImmersionState rechercheImmersionState;
   final RechercheServiceCiviqueState rechercheServiceCiviqueState;
   final RechercheEvenementEmploiState rechercheEvenementEmploiState;
-  final DiagorientePreferencesMetierState diagorientePreferencesMetierState;
   final RecherchesRecentesState recherchesRecentesState;
   final ContactImmersionState contactImmersionState;
   final AccueilState accueilState;
@@ -155,6 +160,7 @@ class AppState extends Equatable {
   final ConnectivityState connectivityState;
   final MonSuiviState monSuiviState;
   final PreferredLoginModeState preferredLoginModeState;
+  final InvitePrenomState invitePrenomState;
   final OnboardingState onboardingState;
   final FirstLaunchOnboardingState firstLaunchOnboardingState;
   final MessageImportantState messageImportantState;
@@ -177,6 +183,10 @@ class AppState extends Equatable {
   final ThemeState themeState;
   final SoftUpdateState softUpdateState;
   final CriteresRecherchePersistState criteresRecherchePersistState;
+  final CommunicationsState communicationsState;
+  final OnboardingQuestionnaireState onboardingQuestionnaireState;
+  final ActionPlanState actionPlanState;
+  final FonctionnalitesState fonctionnalitesState;
   /*AUTOGENERATE-REDUX-APP-STATE-PROPERTY*/
 
   AppState({
@@ -232,7 +242,6 @@ class AppState extends Equatable {
     required this.rechercheImmersionState,
     required this.rechercheServiceCiviqueState,
     required this.rechercheEvenementEmploiState,
-    required this.diagorientePreferencesMetierState,
     required this.recherchesRecentesState,
     required this.contactImmersionState,
     required this.accueilState,
@@ -244,6 +253,7 @@ class AppState extends Equatable {
     required this.connectivityState,
     required this.monSuiviState,
     required this.preferredLoginModeState,
+    required this.invitePrenomState,
     required this.onboardingState,
     required this.firstLaunchOnboardingState,
     required this.messageImportantState,
@@ -266,6 +276,10 @@ class AppState extends Equatable {
     required this.themeState,
     required this.softUpdateState,
     required this.criteresRecherchePersistState,
+    required this.communicationsState,
+    required this.onboardingQuestionnaireState,
+    required this.actionPlanState,
+    required this.fonctionnalitesState,
     /*AUTOGENERATE-REDUX-APP-STATE-CONSTRUCTOR*/
   });
 
@@ -322,7 +336,6 @@ class AppState extends Equatable {
     final RechercheImmersionState? rechercheImmersionState,
     final RechercheServiceCiviqueState? rechercheServiceCiviqueState,
     final RechercheEvenementEmploiState? rechercheEvenementEmploiState,
-    final DiagorientePreferencesMetierState? diagorientePreferencesMetierState,
     final RecherchesRecentesState? recherchesRecentesState,
     final ContactImmersionState? contactImmersionState,
     final AccueilState? accueilState,
@@ -334,6 +347,7 @@ class AppState extends Equatable {
     final ConnectivityState? connectivityState,
     final MonSuiviState? monSuiviState,
     final PreferredLoginModeState? preferredLoginModeState,
+    final InvitePrenomState? invitePrenomState,
     final OnboardingState? onboardingState,
     final FirstLaunchOnboardingState? firstLaunchOnboardingState,
     final MessageImportantState? messageImportantState,
@@ -356,6 +370,10 @@ class AppState extends Equatable {
     final ThemeState? themeState,
     final SoftUpdateState? softUpdateState,
     final CriteresRecherchePersistState? criteresRecherchePersistState,
+    final CommunicationsState? communicationsState,
+    final OnboardingQuestionnaireState? onboardingQuestionnaireState,
+    final ActionPlanState? actionPlanState,
+    final FonctionnalitesState? fonctionnalitesState,
     /*AUTOGENERATE-REDUX-APP-STATE-COPYPARAM*/
   }) {
     return AppState(
@@ -411,7 +429,6 @@ class AppState extends Equatable {
       rechercheImmersionState: rechercheImmersionState ?? this.rechercheImmersionState,
       rechercheServiceCiviqueState: rechercheServiceCiviqueState ?? this.rechercheServiceCiviqueState,
       rechercheEvenementEmploiState: rechercheEvenementEmploiState ?? this.rechercheEvenementEmploiState,
-      diagorientePreferencesMetierState: diagorientePreferencesMetierState ?? this.diagorientePreferencesMetierState,
       recherchesRecentesState: recherchesRecentesState ?? this.recherchesRecentesState,
       contactImmersionState: contactImmersionState ?? this.contactImmersionState,
       accueilState: accueilState ?? this.accueilState,
@@ -423,6 +440,7 @@ class AppState extends Equatable {
       connectivityState: connectivityState ?? this.connectivityState,
       monSuiviState: monSuiviState ?? this.monSuiviState,
       preferredLoginModeState: preferredLoginModeState ?? this.preferredLoginModeState,
+      invitePrenomState: invitePrenomState ?? this.invitePrenomState,
       onboardingState: onboardingState ?? this.onboardingState,
       firstLaunchOnboardingState: firstLaunchOnboardingState ?? this.firstLaunchOnboardingState,
       messageImportantState: messageImportantState ?? this.messageImportantState,
@@ -446,6 +464,10 @@ class AppState extends Equatable {
       themeState: themeState ?? this.themeState,
       softUpdateState: softUpdateState ?? this.softUpdateState,
       criteresRecherchePersistState: criteresRecherchePersistState ?? this.criteresRecherchePersistState,
+      communicationsState: communicationsState ?? this.communicationsState,
+      onboardingQuestionnaireState: onboardingQuestionnaireState ?? this.onboardingQuestionnaireState,
+      actionPlanState: actionPlanState ?? this.actionPlanState,
+      fonctionnalitesState: fonctionnalitesState ?? this.fonctionnalitesState,
       /*AUTOGENERATE-REDUX-APP-STATE-COPYBODY*/
     );
   }
@@ -504,7 +526,6 @@ class AppState extends Equatable {
       rechercheImmersionState: RechercheState.initial(),
       rechercheServiceCiviqueState: RechercheState.initial(),
       rechercheEvenementEmploiState: RechercheState.initial(),
-      diagorientePreferencesMetierState: DiagorientePreferencesMetierNotInitializedState(),
       recherchesRecentesState: RecherchesRecentesState([]),
       contactImmersionState: ContactImmersionNotInitializedState(),
       accueilState: AccueilNotInitializedState(),
@@ -516,6 +537,7 @@ class AppState extends Equatable {
       connectivityState: ConnectivityState.notInitialized(),
       monSuiviState: MonSuiviNotInitializedState(),
       preferredLoginModeState: PreferredLoginModeNotInitializedState(),
+      invitePrenomState: InvitePrenomNotInitializedState(),
       onboardingState: OnboardingState(),
       firstLaunchOnboardingState: FirstLaunchOnboardingNotInitializedState(),
       messageImportantState: MessageImportantNotInitializedState(),
@@ -538,6 +560,10 @@ class AppState extends Equatable {
       themeState: ThemeNotInitializedState(),
       softUpdateState: SoftUpdateNotShownState(),
       criteresRecherchePersistState: CriteresRecherchePersistNotInitializedState(),
+      communicationsState: CommunicationsNotInitializedState(),
+      onboardingQuestionnaireState: OnboardingQuestionnaireNotInitializedState(),
+      actionPlanState: ActionPlanNotInitializedState(),
+      fonctionnalitesState: FonctionnalitesNotInitializedState(),
       /*AUTOGENERATE-REDUX-APP-STATE-FACTORY*/
     );
   }
@@ -589,7 +615,6 @@ class AppState extends Equatable {
     rechercheImmersionState,
     rechercheServiceCiviqueState,
     rechercheEvenementEmploiState,
-    diagorientePreferencesMetierState,
     recherchesRecentesState,
     contactImmersionState,
     accueilState,
@@ -623,6 +648,10 @@ class AppState extends Equatable {
     themeState,
     softUpdateState,
     criteresRecherchePersistState,
+    communicationsState,
+    onboardingQuestionnaireState,
+    actionPlanState,
+    fonctionnalitesState,
     /*AUTOGENERATE-REDUX-APP-STATE-EQUATABLE*/
   ];
 
@@ -643,7 +672,36 @@ extension AppStateUser on AppState {
 
   bool isPeLoginMode() => user()?.loginMode.isPe() ?? false;
 
+  bool isInviteLoginMode() => user()?.loginMode.isInvite() ?? false;
+
   Accompagnement accompagnement() => user()?.accompagnement ?? Accompagnement.cej;
 
   String? userId() => user()?.id;
+
+  bool hasPlanAction() => isInviteLoginMode() || fonctionnalitesState.actives.contains(Fonctionnalite.planAction);
+
+  bool isFonctionnalitesResolved() => isInviteLoginMode() || fonctionnalitesState.isResolved;
+
+  bool hasMonSuivi() {
+    final user = this.user();
+    if (user == null || user.loginMode.isInvite()) return false;
+    if (user.accompagnement == Accompagnement.ftEspaceCandidat) return false;
+    return true;
+  }
+
+  bool hasChat() {
+    final user = this.user();
+    if (user == null || user.loginMode.isInvite()) return false;
+    if (user.accompagnement == Accompagnement.ftDemandeurDEmploi) return false;
+    if (user.accompagnement == Accompagnement.ftEspaceCandidat) return false;
+    return true;
+  }
+
+  OnboardingStepsVisibility onboardingStepsVisibility() {
+    return OnboardingStepsVisibility(
+      withMessageStep: hasChat(),
+      withPlanActionStep: hasPlanAction(),
+      withActionStep: hasMonSuivi() && accompagnement() != Accompagnement.avenirPro,
+    );
+  }
 }

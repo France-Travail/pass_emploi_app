@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
@@ -7,18 +8,12 @@ import 'package:pass_emploi_app/pages/generic_success_page.dart';
 import 'package:pass_emploi_app/presentation/chat/chat_partage_bottom_sheet_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/info_card.dart';
+import 'package:pass_emploi_app/widgets/bottom_sheets/filtres_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
-import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
 
 class ChatPartageBottomSheet extends StatefulWidget {
   final ChatPartageSource source;
@@ -66,7 +61,10 @@ class ChatPartageBottomSheetState extends State<ChatPartageBottomSheet> {
 
   Widget _builder(BuildContext context, ChatPartageBottomSheetViewModel viewModel) {
     _controller ??= TextEditingController(text: viewModel.defaultMessage);
-    return BottomSheetWrapper(title: viewModel.pageTitle, body: _Body(viewModel, _controller));
+    return FiltresBottomSheet(
+      title: viewModel.pageTitle,
+      body: _Body(viewModel, _controller),
+    );
   }
 
   void _onWillChange(ChatPartageBottomSheetViewModel? _, ChatPartageBottomSheetViewModel viewModel) {
@@ -76,7 +74,13 @@ class ChatPartageBottomSheetState extends State<ChatPartageBottomSheet> {
         A11yUtils.announce(viewModel.shareSuccessTitle);
         viewModel.confirmationDisplayed();
         Navigator.pop(context);
-        Navigator.push(context, GenericSuccessPage.route(title: viewModel.shareSuccessTitle));
+        Navigator.push(
+          context,
+          GenericSuccessPage.route(
+            title: viewModel.shareSuccessTitle,
+            content: viewModel.shareSuccessContent,
+          ),
+        );
         break;
       case DisplayState.FAILURE:
         showSnackBarWithSystemError(context);
@@ -98,68 +102,71 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(_viewModel.willShareTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
-          SizedBox(height: Margins.spacing_base),
-          _Offre(_viewModel),
-          SizedBox(height: Margins.spacing_l),
-          Semantics(
-            label: Strings.messagePourConseiller,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(Strings.messagePourConseiller, style: TextStyles.textBaseMedium.copyWith(color: context.content), semanticsLabel: ' '),
-                SizedBox(height: Margins.spacing_base),
-                _TextField(_controller),
-              ],
-            ),
+    final isLoading = _viewModel.snackbarState == DisplayState.LOADING;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              Text(
+                _viewModel.willShareTitle,
+                style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+              ),
+              const SizedBox(height: DsfrSpacings.s2w),
+              _ShareablePreview(title: _viewModel.shareableTitle),
+              const SizedBox(height: DsfrSpacings.s3w),
+              DsfrInput(
+                label: Strings.messagePourConseiller,
+                controller: _controller,
+                keyboardType: TextInputType.multiline,
+                textInputAction: TextInputAction.done,
+                textCapitalization: TextCapitalization.sentences,
+                minLines: 3,
+                maxLines: 5,
+                enabled: !isLoading,
+              ),
+              const SizedBox(height: DsfrSpacings.s3w),
+              DsfrAlert(
+                type: DsfrAlertType.info,
+                description: DsfrAlertDescriptionText(_viewModel.information),
+              ),
+            ],
           ),
-          SizedBox(height: Margins.spacing_l),
-          InfoCard(message: _viewModel.information),
-          SizedBox(height: Margins.spacing_l),
-          _PartageButton(_viewModel, _controller),
-        ],
-      ),
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        _PartageButton(_viewModel, _controller),
+      ],
     );
   }
 }
 
-class _Offre extends StatelessWidget {
-  final ChatPartageBottomSheetViewModel _viewModel;
+class _ShareablePreview extends StatelessWidget {
+  final String title;
 
-  const _Offre(this._viewModel);
+  const _ShareablePreview({required this.title});
 
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        border: Border.all(color: context.grey100, width: 1),
-        borderRadius: BorderRadius.all(Radius.circular(Dimens.radius_base)),
+        color: DsfrColorDecisions.backgroundContrastGrey(context),
+        border: Border(
+          left: BorderSide(
+            color: DsfrColorDecisions.borderPlainBlueFrance(context),
+            width: 4,
+          ),
+        ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(Margins.spacing_base),
-        child: Text(_viewModel.shareableTitle, style: TextStyles.textBaseBold.copyWith(color: context.content)),
+        padding: const EdgeInsets.all(DsfrSpacings.s2w),
+        child: Text(
+          title,
+          style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+        ),
       ),
-    );
-  }
-}
-
-class _TextField extends StatelessWidget {
-  final TextEditingController? _controller;
-
-  const _TextField(this._controller);
-
-  @override
-  Widget build(BuildContext context) {
-    return BaseTextField(
-      keyboardType: TextInputType.multiline,
-      textInputAction: TextInputAction.done,
-      maxLines: null,
-      controller: _controller,
     );
   }
 }
@@ -173,9 +180,16 @@ class _PartageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (_viewModel.snackbarState) {
-      DisplayState.LOADING => Center(child: CircularProgressIndicator()),
-      _ => PrimaryActionButton(
+      DisplayState.LOADING => Center(
+        child: CircularProgressIndicator(
+          color: DsfrColorDecisions.backgroundActionHighBlueFrance(context),
+        ),
+      ),
+      _ => DsfrButton(
         label: _viewModel.shareButtonTitle,
+        icon: DsfrIcons.systemShareLine,
+        variant: DsfrButtonVariant.primary,
+        size: DsfrComponentSize.lg,
         onPressed: () => _viewModel.onShare(_controller?.text ?? ''),
       ),
     };

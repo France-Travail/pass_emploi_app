@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:pass_emploi_app/models/user_action_type.dart';
 import 'package:pass_emploi_app/pages/user_action/create/create_user_action_form_step1.dart';
 import 'package:pass_emploi_app/pages/user_action/create/create_user_action_form_step2.dart';
 import 'package:pass_emploi_app/pages/user_action/create/create_user_action_form_step3.dart';
 import 'package:pass_emploi_app/presentation/user_action/creation_form/create_user_action_form_view_model.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
-import 'package:pass_emploi_app/widgets/default_app_bar.dart';
-import 'package:pass_emploi_app/widgets/pass_emploi_stepper.dart';
+import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 
 class CreateUserActionForm extends StatefulWidget {
   const CreateUserActionForm({super.key, required this.onSubmit, required this.onAbort});
@@ -32,39 +29,116 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> {
     _viewModel.addListener(_onFormStateChanged);
   }
 
+  @override
+  void dispose() {
+    _viewModel.removeListener(_onFormStateChanged);
+    _viewModel.dispose();
+    super.dispose();
+  }
+
   void _onFormStateChanged() {
     if (_viewModel.isAborted) {
       widget.onAbort();
-    } else if (_viewModel.isSubmitted) {
+      return;
+    }
+    if (_viewModel.isSubmitted) {
       widget.onSubmit(_viewModel);
     }
-    setState(() {});
+    if (mounted) setState(() {});
+  }
+
+  void _onBack() {
+    if (MediaQuery.viewInsetsOf(context).bottom > 0) {
+      FocusScope.of(context).unfocus();
+      return;
+    }
+    _viewModel.viewChangedBackward();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColorsSpecifics.bgToGrey100(context),
-      resizeToAvoidBottomInset: false,
-      appBar: SecondaryAppBar(
-        title: Strings.createActionAppBarTitle,
-        leading: IconButton(
-          tooltip: Strings.close,
-          icon: Icon(Icons.close_rounded, color: context.content),
-          onPressed: () => Navigator.pop(context),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _onBack();
+      },
+      child: Scaffold(
+        backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+        resizeToAvoidBottomInset: false,
+        appBar: _CreateUserActionAppBar(onBackPressed: _onBack),
+        body: Stack(
+          children: [
+            _CreateUserActionForm(_viewModel),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Visibility(
+                visible: _viewModel.shouldDisplayNavigationButtons && MediaQuery.viewInsetsOf(context).bottom == 0,
+                child: _NavButtons(
+                  displayState: _viewModel.displayState,
+                  onGoBackPressed: _onBack,
+                  onGoForwardPressed: _viewModel.canGoForward ? () => _viewModel.viewChangedForward() : null,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
-      body: Stack(
+    );
+  }
+}
+
+class _CreateUserActionAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _CreateUserActionAppBar({required this.onBackPressed});
+
+  final VoidCallback onBackPressed;
+
+  @override
+  Size get preferredSize => const Size.fromHeight(76);
+
+  @override
+  Widget build(BuildContext context) {
+    final backColor = DsfrColorDecisions.textTitleGrey(context);
+    return AppBar(
+      toolbarHeight: preferredSize.height,
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      automaticallyImplyLeading: false,
+      titleSpacing: 0,
+      centerTitle: false,
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _CreateUserActionForm(_viewModel),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Visibility(
-              visible: _viewModel.shouldDisplayNavigationButtons,
-              child: _NavButtons(
-                displayState: _viewModel.displayState,
-                onGoBackPressed: () => _viewModel.viewChangedBackward(),
-                onGoForwardPressed: _viewModel.canGoForward ? () => _viewModel.viewChangedForward() : null,
+          Semantics(
+            button: true,
+            label: Strings.back,
+            child: InkWell(
+              onTap: onBackPressed,
+              child: Padding(
+                padding: const EdgeInsets.only(left: DsfrSpacings.s1w, right: DsfrSpacings.s3v),
+                child: Row(
+                  children: [
+                    Icon(DsfrIcons.systemArrowLeftSLine, color: backColor, size: 32),
+                    Expanded(
+                      child: Text(
+                        Strings.back,
+                        style: DsfrTextStyle.bodyMdBold(color: backColor),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
+            child: Semantics(
+              header: true,
+              child: Text(
+                Strings.createActionAppBarTitle,
+                style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
               ),
             ),
           ),
@@ -87,76 +161,42 @@ class _NavButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: context.bg,
-        border: Border(top: BorderSide(color: AppColors.primaryLighten, width: 1)),
-      ),
+    return ColoredBox(
+      color: DsfrColorDecisions.backgroundDefaultGrey(context),
       child: Padding(
         padding: EdgeInsets.only(
-          top: Margins.spacing_base,
-          left: Margins.spacing_base,
-          right: Margins.spacing_base,
-          bottom: MediaQuery.of(context).padding.bottom,
+          top: DsfrSpacings.s4w,
+          left: DsfrSpacings.s2w,
+          right: DsfrSpacings.s2w,
+          bottom: MediaQuery.of(context).padding.bottom + DsfrSpacings.s2w,
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              flex: 1,
-              child: _BackButton(onPressed: onGoBackPressed),
-            ),
-            const SizedBox(width: Margins.spacing_base),
-            Expanded(
-              flex: 2,
-              child: _NextButton(
+            SizedBox(
+              width: double.infinity,
+              child: DsfrButton(
                 label: displayState.nextLabel,
+                variant: DsfrButtonVariant.primary,
+                size: DsfrComponentSize.md,
                 onPressed: onGoForwardPressed,
+              ),
+            ),
+            const SizedBox(height: DsfrSpacings.s2w),
+            SizedBox(
+              width: double.infinity,
+              child: DsfrButton(
+                label: Strings.back,
+                variant: DsfrButtonVariant.secondary,
+                size: DsfrComponentSize.md,
+                foregroundColor: DsfrColorDecisions.textTitleGrey(context),
+                onPressed: onGoBackPressed,
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _BackButton extends StatelessWidget {
-  const _BackButton({required this.onPressed});
-
-  final void Function()? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return SecondaryButton(
-      label: Strings.back,
-      backgroundColor: context.bg,
-      onPressed: onPressed,
-    );
-  }
-}
-
-class _NextButton extends StatelessWidget {
-  const _NextButton({required this.onPressed, required this.label});
-
-  final String label;
-  final void Function()? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return PrimaryActionButton(
-      label: label,
-      suffix: SizedBox.shrink(
-        child: OverflowBox(
-          maxWidth: double.infinity,
-          maxHeight: double.infinity,
-          child: Padding(
-            padding: const EdgeInsets.only(left: Margins.spacing_base),
-            child: Icon(Icons.arrow_forward_rounded, color: context.content),
-          ),
-        ),
-      ),
-      onPressed: onPressed,
     );
   }
 }
@@ -170,53 +210,59 @@ class _CreateUserActionForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: Margins.spacing_base),
+        const SizedBox(height: DsfrSpacings.s2w),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-          child: PassEmploiStepperProgressBar(
-            stepCount: CreateUserActionDisplayState.stepCount,
-            currentStep: formState.displayState.stepIndex,
+          padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
+          child: AutoFocusA11y(
+            key: ValueKey(formState.displayState),
+            child: DsfrStepper(
+              currentStep: formState.displayState.stepIndex + 1,
+              stepsCount: CreateUserActionDisplayState.stepCount,
+              stepTitle: _stepTitle,
+            ),
           ),
         ),
         Expanded(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: AnimatedSwitcher(
-                  duration: AnimationDurations.fast,
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: switch (formState.displayState) {
-                      CreateUserActionDisplayState.step1 => CreateUserActionFormStep1(
-                        onActionTypeSelected: (type) => formState.userActionTypeSelected(type),
-                      ),
-                      CreateUserActionDisplayState.step2 => CreateUserActionFormStep2(
-                        actionType: formState.step1.actionCategory!,
-                        viewModel: formState.step2,
-                        onTitleChanged: (titleSource) => formState.titleChanged(titleSource),
-                        onDescriptionChanged: (description) => formState.descriptionChanged(description),
-                      ),
-                      CreateUserActionDisplayState.step3 => CreateUserActionFormStep3(
-                        actionType: formState.step1.actionCategory!,
-                        viewModel: formState.step3,
-                        onDateChanged: (id, dateSource) => formState.duplicateUserActionDateChanged(id, dateSource),
-                        onDescriptionChanged: (id, description) =>
-                            formState.duplicateUserActionDescriptionChanged(id, description),
-                        onDelete: (id) => formState.deleteDuplicatedUserAction(id),
-                        onAddDuplicatedUserAction: () => formState.addDuplicatedUserAction(),
-                        titleSource: formState.step2.titleSource,
-                      ),
-                      _ => const SizedBox.shrink(),
-                    },
+          child: Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+            child: AnimatedSwitcher(
+              duration: AnimationDurations.fast,
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: switch (formState.displayState) {
+                  CreateUserActionDisplayState.step1 => CreateUserActionFormStep1(
+                    onActionTypeSelected: (type) => formState.userActionTypeSelected(type),
                   ),
-                ),
+                  CreateUserActionDisplayState.step2 => CreateUserActionFormStep2(
+                    actionType: formState.step1.actionCategory!,
+                    viewModel: formState.step2,
+                    onTitleChanged: (titleSource) => formState.titleChanged(titleSource),
+                    onDescriptionChanged: (description) => formState.descriptionChanged(description),
+                  ),
+                  CreateUserActionDisplayState.step3 => CreateUserActionFormStep3(
+                    actionType: formState.step1.actionCategory!,
+                    viewModel: formState.step3,
+                    onDateChanged: (id, dateSource) => formState.duplicateUserActionDateChanged(id, dateSource),
+                    onDescriptionChanged: (id, description) =>
+                        formState.duplicateUserActionDescriptionChanged(id, description),
+                    onDelete: (id) => formState.deleteDuplicatedUserAction(id),
+                    onAddDuplicatedUserAction: () => formState.addDuplicatedUserAction(),
+                    titleSource: formState.step2.titleSource,
+                  ),
+                  _ => const SizedBox.shrink(),
+                },
               ),
-            ],
+            ),
           ),
         ),
       ],
     );
   }
+
+  String get _stepTitle => switch (formState.displayState) {
+    CreateUserActionDisplayState.step1 => Strings.thematiquesDemarcheDescriptionShort,
+    CreateUserActionDisplayState.step2 => formState.step1.actionCategory!.label,
+    CreateUserActionDisplayState.step3 => Strings.userActionTitleStep3,
+    _ => '',
+  };
 }

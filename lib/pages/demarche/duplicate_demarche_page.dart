@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/features/matching_demarche/matching_demarche_actions.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche_du_referentiel_form.dart';
@@ -8,7 +9,6 @@ import 'package:pass_emploi_app/presentation/demarche/duplicate_demarche_view_mo
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 
@@ -40,7 +40,7 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.bg,
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
       appBar: SecondaryAppBar(title: Strings.duplicateDemarchePageTitle),
       body: switch (viewModel.displayState) {
         DisplayState.EMPTY => Center(child: CircularProgressIndicator()),

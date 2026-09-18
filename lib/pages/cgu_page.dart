@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/presentation/cgu_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
-import 'package:pass_emploi_app/widgets/primary_rounded_bottom_background.dart';
-import 'package:pass_emploi_app/widgets/sepline.dart';
+import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/dsfr/bloc_marque.dart';
 
 class CguPage extends StatelessWidget {
   @override
@@ -39,30 +33,41 @@ class _Scaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.bg,
-      body: Stack(
-        children: [
-          PrimaryRoundedBottomBackground(),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: Margins.spacing_m,
-                right: Margins.spacing_m,
-                top: Margins.spacing_huge,
-                bottom: Margins.spacing_l,
-              ),
-              child: _Body(
-                viewModel,
-                child: switch (viewModel.displayState) {
-                  CguNeverAcceptedDisplayState() => _CguNeverAcceptedContent(),
-                  final CguUpdateRequiredDisplayState vm => _CguUpdateRequiredContent(vm),
-                  null => SizedBox.shrink(),
-                },
-              ),
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return Theme(
+      data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+      child: Scaffold(
+        backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              DsfrSpacings.s3w,
+              DsfrSpacings.s4w,
+              DsfrSpacings.s3w,
+              DsfrSpacings.s3w,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: BlocMarque(),
+                ),
+                const SizedBox(height: DsfrSpacings.s2w),
+                Expanded(
+                  child: _Body(
+                    viewModel,
+                    child: switch (viewModel.displayState) {
+                      CguNeverAcceptedDisplayState() => const _CguNeverAcceptedContent(),
+                      final CguUpdateRequiredDisplayState vm => _CguUpdateRequiredContent(vm),
+                      null => const SizedBox.shrink(),
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -85,159 +90,118 @@ class _BodyState extends State<_Body> {
   @override
   Widget build(BuildContext context) {
     final bool neverAccepted = widget.viewModel.displayState is CguNeverAcceptedDisplayState;
+    final switchParts = neverAccepted ? Strings.cguNeverAcceptedSwitch : Strings.cguUpdateRequiredSwitch;
+    final hasError = shouldHighlightError();
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Expanded(
-          child: CardContainer(
-            padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_m),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(vertical: Margins.spacing_m),
-              child: Column(
-                children: [
-                  widget.child,
-                  SizedBox(height: Margins.spacing_m),
-                  SepLine(
-                    Margins.spacing_m,
-                    Margins.spacing_m,
-                    color: context.grey100,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s3w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                widget.child,
+                const SizedBox(height: DsfrSpacings.s3w),
+                const DsfrDivider(),
+                const SizedBox(height: DsfrSpacings.s3w),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: DsfrLink(
+                    label: switchParts[1],
+                    icon: DsfrIcons.systemExternalLinkLine,
+                    onTap: _launchExternalRedirect,
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Focus(
-                          child: GestureDetector(
-                            onTap: _launchExternalRedirect,
-                            child: Text.rich(
-                              TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: neverAccepted
-                                        ? Strings.cguNeverAcceptedSwitch[0]
-                                        : Strings.cguUpdateRequiredSwitch[0],
-                                    style: _cguSwitchTestStyle(context),
-                                  ),
-                                  TextSpan(
-                                    text: neverAccepted
-                                        ? Strings.cguNeverAcceptedSwitch[1]
-                                        : Strings.cguUpdateRequiredSwitch[1],
-                                    style: _cguSwitchTestStyle(context, underlined: true),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: Margins.spacing_m),
-                      Semantics(
-                        label: Strings.cguSwitchLabel(_cguAccepted),
-                        child: Switch(
-                          value: _cguAccepted,
-                          onChanged: (value) => setState(() => _cguAccepted = value),
-                        ),
-                      ),
-                    ],
+                ),
+                const SizedBox(height: DsfrSpacings.s2w),
+                Semantics(
+                  label: Strings.cguSwitchLabel(_cguAccepted),
+                  child: DsfrToggleSwitch(
+                    label: switchParts[0].trim(),
+                    labelLocation: DsfrToggleSwitchLabelLocation.left,
+                    value: _cguAccepted,
+                    status: _cguAccepted
+                        ? Strings.notificationsToggleEnabled
+                        : Strings.notificationsToggleDisabled,
+                    componentState: hasError
+                        ? DsfrComponentState.error(errorMessage: Strings.cguSwitchError)
+                        : const DsfrComponentState.none(),
+                    onChanged: (value) => setState(() => _cguAccepted = value),
                   ),
-                  SizedBox(height: Margins.spacing_base),
-                  if (shouldHighlightError())
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(AppIcons.error_rounded, color: AppColors.warning),
-                        SizedBox(width: Margins.spacing_s),
-                        Expanded(
-                          child: Text(
-                            Strings.cguSwitchError,
-                            style: TextStyles.textXsRegular(color: AppColors.warning),
-                          ),
-                        ),
-                      ],
-                    ),
+                ),
+                if (hasError) ...[
+                  const SizedBox(height: DsfrSpacings.s2w),
+                  DsfrAlert(
+                    type: DsfrAlertType.error,
+                    description: DsfrAlertDescriptionText(Strings.cguSwitchError),
+                  ),
                 ],
-              ),
+              ],
             ),
           ),
         ),
-        SizedBox(height: Margins.spacing_l),
-        SizedBox(
-          width: double.infinity,
-          child: PrimaryActionButton(
-            label: Strings.cguAccept,
-            onPressed: () {
-              final controller = PrimaryScrollController.of(context);
-              controller.animateTo(
-                controller.position.maxScrollExtent,
-                duration: AnimationDurations.medium,
-                curve: Curves.easeInOut,
-              );
-              setState(() => _acceptCguButtonClicked = true);
-              if (_cguAccepted) widget.viewModel.onAccept();
-            },
-          ),
+        const SizedBox(height: DsfrSpacings.s3w),
+        DsfrButton(
+          label: Strings.cguAccept,
+          variant: DsfrButtonVariant.primary,
+          size: DsfrComponentSize.lg,
+          onPressed: () {
+            final controller = PrimaryScrollController.of(context);
+            controller.animateTo(
+              controller.position.maxScrollExtent,
+              duration: AnimationDurations.medium,
+              curve: Curves.easeInOut,
+            );
+            setState(() => _acceptCguButtonClicked = true);
+            if (_cguAccepted) widget.viewModel.onAccept();
+          },
         ),
-        SizedBox(height: Margins.spacing_s),
-        SizedBox(
-          width: double.infinity,
-          child: SecondaryButton(
-            label: Strings.cguRefuse,
-            onPressed: () => widget.viewModel.onRefuse(),
-          ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        DsfrButton(
+          label: Strings.cguRefuse,
+          variant: DsfrButtonVariant.secondary,
+          size: DsfrComponentSize.lg,
+          onPressed: () => widget.viewModel.onRefuse(),
         ),
       ],
     );
-  }
-
-  TextStyle _cguSwitchTestStyle(BuildContext context, {bool underlined = false}) {
-    var style = shouldHighlightError() ? TextStyles.textSBoldWithColor(AppColors.warning) : TextStyles.textSRegular(color: context.content);
-    if (underlined) style = style.copyWith(decoration: TextDecoration.underline);
-    return style;
   }
 
   bool shouldHighlightError() => _acceptCguButtonClicked && !_cguAccepted;
 }
 
 class _CguNeverAcceptedContent extends StatelessWidget {
+  const _CguNeverAcceptedContent();
+
   @override
   Widget build(BuildContext context) {
+    final bodyStyle = DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context));
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          Strings.cguNeverAcceptedTitle,
-          style: TextStyles.textLBold(color: AppColors.primary),
-        ),
-        SizedBox(height: Margins.spacing_m),
-          Focus(
-          child: GestureDetector(
+        PageTitle(Strings.cguNeverAcceptedTitle),
+        const SizedBox(height: DsfrSpacings.s3w),
+        Text(Strings.cguNeverAcceptedDescription[0], style: bodyStyle),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: DsfrLink(
+            label: Strings.cguNeverAcceptedDescription[1],
+            icon: DsfrIcons.systemExternalLinkLine,
             onTap: _launchExternalRedirect,
-            child: Text.rich(
+          ),
+        ),
+        Text.rich(
+          TextSpan(
+            style: bodyStyle,
+            children: [
+              TextSpan(text: Strings.cguNeverAcceptedDescription[2]),
               TextSpan(
-                children: [
-                  TextSpan(
-                    text: Strings.cguNeverAcceptedDescription[0],
-                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
-                  ),
-                  TextSpan(
-                    text: Strings.cguNeverAcceptedDescription[1],
-                    style: TextStyles.textBaseRegular.copyWith(
-                      color: context.content,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                  TextSpan(
-                    text: Strings.cguNeverAcceptedDescription[2],
-                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
-                  ),
-                  TextSpan(
-                    text: Strings.cguNeverAcceptedDescription[3],
-                    style: TextStyles.textBaseBold.copyWith(color: context.content),
-                  ),
-                  TextSpan(
-                    text: Strings.cguNeverAcceptedDescription[4],
-                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
-                  ),
-                ],
+                text: Strings.cguNeverAcceptedDescription[3],
+                style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textDefaultGrey(context)),
               ),
-            ),
+              TextSpan(text: Strings.cguNeverAcceptedDescription[4]),
+            ],
           ),
         ),
       ],
@@ -252,47 +216,26 @@ class _CguUpdateRequiredContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bodyStyle = DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context));
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        PageTitle(Strings.cguUpdateRequiredTitle),
+        const SizedBox(height: DsfrSpacings.s3w),
         Text(
-          Strings.cguUpdateRequiredTitle,
-          style: TextStyles.textLBold(color: AppColors.primary),
+          Strings.cguUpdateRequiredDescription[0] +
+              displayState.lastUpdateLabel +
+              Strings.cguUpdateRequiredDescription[1],
+          style: bodyStyle,
         ),
-        SizedBox(height: Margins.spacing_m),
-          Focus(
-          child: GestureDetector(
-            onTap: _launchExternalRedirect,
-            child: Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text:
-                        Strings.cguUpdateRequiredDescription[0] +
-                        displayState.lastUpdateLabel +
-                        Strings.cguUpdateRequiredDescription[1],
-                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
-                  ),
-                  TextSpan(
-                    text: Strings.cguUpdateRequiredDescription[2],
-                    style: TextStyles.textBaseRegular.copyWith(
-                      color: context.content,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                  TextSpan(
-                    text: Strings.cguUpdateRequiredDescription[3],
-                    style: TextStyles.textBaseRegular.copyWith(color: context.content),
-                  ),
-                  for (var change in displayState.changes)
-                    TextSpan(
-                      text: " • $change\n",
-                      style: TextStyles.textBaseRegular.copyWith(color: context.content),
-                    ),
-                ],
-              ),
-            ),
-          ),
+        DsfrLink(
+          label: Strings.cguUpdateRequiredDescription[2],
+          icon: DsfrIcons.systemExternalLinkLine,
+          onTap: _launchExternalRedirect,
         ),
+        Text(Strings.cguUpdateRequiredDescription[3], style: bodyStyle),
+        for (final change in displayState.changes)
+          Text(' • $change\n', style: bodyStyle),
       ],
     );
   }

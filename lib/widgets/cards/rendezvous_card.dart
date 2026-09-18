@@ -1,90 +1,166 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/network/post_evenement_engagement.dart';
 import 'package:pass_emploi_app/pages/rendezvous/rendezvous_details_page.dart';
 import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_card_view_model.dart';
 import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/base_card.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_pillule.dart';
-import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_tag.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_event_card.dart';
 import 'package:redux/redux.dart';
 
 class RendezvousCard extends StatelessWidget {
   final RendezvousCardViewModel Function(Store<AppState>) converter;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
+  final bool withChrome;
+  final bool showDate;
 
   const RendezvousCard({
     super.key,
     required this.converter,
-    required this.onTap,
-  });
+    this.onTap,
+    this.withChrome = true,
+    this.showDate = false,
+  }) : assert(!withChrome || onTap != null);
 
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, RendezvousCardViewModel>(
       converter: converter,
-      builder: (context, viewModel) => _Content(viewModel, onTap),
+      builder: (context, viewModel) => withChrome
+          ? _ChromeContent(viewModel, onTap!, showDate: showDate)
+          : _EmbeddedContent(viewModel, showDate: showDate),
     );
   }
 }
 
-class _Content extends StatelessWidget {
+class _ChromeContent extends StatelessWidget {
   final RendezvousCardViewModel viewModel;
   final VoidCallback onTap;
+  final bool showDate;
 
-  const _Content(this.viewModel, this.onTap);
+  const _ChromeContent(this.viewModel, this.onTap, {required this.showDate});
 
   @override
   Widget build(BuildContext context) {
-    return BaseCard(
+    return DsfrEventCard(
       onTap: onTap,
-      imagePath: viewModel.assetImage,
-      title: viewModel.title,
-      tag: CardTag.evenement(text: viewModel.tag),
-      pillule: viewModel.isAnnule ? CardPillule.evenementCanceled() : null,
-      complements: [
-        CardComplement.date(text: viewModel.date),
-        CardComplement.hour(text: viewModel.hourAndDuration),
-        if (viewModel.place != null) CardComplement.place(text: viewModel.place!),
-        if (viewModel.nombreDePlacesRestantes != null) CardComplement.person(text: viewModel.nombreDePlacesRestantes!),
+      emoji: viewModel.emoji,
+      emojiBackgroundColor: viewModel.emojiBackground,
+      semanticsLabel: [
+        viewModel.tag,
+        viewModel.title,
+        viewModel.date,
+        viewModel.hourAndDuration,
+        if (viewModel.place != null) viewModel.place!,
+      ].join('. '),
+      child: _EventBody(viewModel, showInscriptionTags: true, showDate: showDate),
+    );
+  }
+}
+
+class _EmbeddedContent extends StatelessWidget {
+  final RendezvousCardViewModel viewModel;
+  final bool showDate;
+
+  const _EmbeddedContent(this.viewModel, {required this.showDate});
+
+  @override
+  Widget build(BuildContext context) {
+    return _EventBody(viewModel, showInscriptionTags: false, showDate: showDate);
+  }
+}
+
+class _EventBody extends StatelessWidget {
+  final RendezvousCardViewModel viewModel;
+  final bool showInscriptionTags;
+  final bool showDate;
+
+  const _EventBody(this.viewModel, {required this.showInscriptionTags, required this.showDate});
+
+  @override
+  Widget build(BuildContext context) {
+    final inscriptionTags = showInscriptionTags ? _inscriptionTags(viewModel.inscriptionStatus) : null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Wrap(
+          spacing: DsfrSpacings.s1w,
+          runSpacing: DsfrSpacings.s1w,
+          children: [
+            DsfrCategoryTag.evenement(
+              label: viewModel.tag,
+              typeCode: viewModel.typeCode,
+            ),
+            if (viewModel.isAnnule) DsfrStatusBadge.canceled(),
+            if (inscriptionTags != null && inscriptionTags.isNotEmpty) ...[...inscriptionTags],
+          ],
+        ),
+        const SizedBox(height: DsfrSpacings.s1w),
+        Text(
+          viewModel.title,
+          style: DsfrTextStyle.bodyMdBold(
+            color: DsfrColorDecisions.textTitleGrey(context),
+          ),
+        ),
+        const SizedBox(height: DsfrSpacings.s1v),
+        if (showDate) ...[
+          DsfrEventCardComplement(
+            icon: DsfrIcons.businessCalendarEventLine,
+            text: viewModel.date,
+          ),
+          const SizedBox(height: DsfrSpacings.s1v),
+        ],
+        DsfrEventCardComplement(
+          icon: DsfrIcons.systemTimeLine,
+          text: viewModel.hourAndDuration,
+          semanticsLabel: viewModel.hourAndDuration.toTimeAndDurationForScreenReaders(),
+        ),
+        if (viewModel.place != null) ...[
+          const SizedBox(height: DsfrSpacings.s1v),
+          DsfrEventCardComplement(
+            icon: DsfrIcons.mapMapPin2Line,
+            text: viewModel.place!,
+          ),
+        ],
+        if (viewModel.nombreDePlacesRestantes != null) ...[
+          const SizedBox(height: DsfrSpacings.s1v),
+          DsfrEventCardComplement(
+            icon: DsfrIcons.userGroupLine,
+            text: viewModel.nombreDePlacesRestantes!,
+          ),
+        ],
       ],
-      secondaryTags: secondaryTags(viewModel.inscriptionStatus),
     );
   }
 
-  List<Widget>? secondaryTags(InscriptionStatus inscriptionStatus) => switch (inscriptionStatus) {
+  List<Widget> _inscriptionTags(InscriptionStatus inscriptionStatus) => switch (inscriptionStatus) {
     InscriptionStatus.inscrit => [
-      CardTag.secondary(
-        text: Strings.eventVousEtesDejaInscrit,
-        icon: AppIcons.check_circle_outline_rounded,
+      DsfrCategoryTag.success(
+        label: Strings.eventVousEtesDejaInscrit,
+        icon: DsfrIcons.systemCheckboxCircleFill,
       ),
     ],
     InscriptionStatus.autodesinscription => [
-      CardTag.secondary(
-        text: Strings.eventAnnulerMonInscription,
-      ),
+      DsfrCategoryTag.secondary(label: Strings.eventAnnulerMonInscription),
     ],
     InscriptionStatus.notInscrit => [
-      CardTag.secondary(
-        text: Strings.eventInscrivezVousPourParticiper,
+      DsfrCategoryTag.secondary(
+        label: Strings.eventInscrivezVousPourParticiper,
       ),
     ],
     InscriptionStatus.autoinscription => [
-      CardTag.secondary(
-        text: Strings.eventAutoInscription,
-      ),
+      DsfrCategoryTag.secondary(label: Strings.eventAutoInscription),
     ],
     InscriptionStatus.full => [
-      CardTag.warning(
-        text: Strings.eventComplet,
-      ),
+      DsfrStatusBadge.complet(),
     ],
-    InscriptionStatus.hidden => null,
+    InscriptionStatus.hidden => [],
   };
 }
 
@@ -93,15 +169,16 @@ extension RendezvousCardFromId on String {
     required BuildContext context,
     required RendezvousStateSource stateSource,
     required EvenementEngagement evenementEngagement,
+    bool withChrome = true,
+    bool showDate = false,
   }) {
     return RendezvousCard(
       converter: (store) => RendezvousCardViewModel.create(store, stateSource, this),
+      withChrome: withChrome,
+      showDate: showDate,
       onTap: () {
         context.trackEvenementEngagement(evenementEngagement);
-        Navigator.push(
-          context,
-          RendezvousDetailsPage.materialPageRoute(_stateSource(stateSource), this),
-        );
+        RendezvousDetailsPage.show(context, _stateSource(stateSource), this);
       },
     );
   }
