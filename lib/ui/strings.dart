@@ -514,12 +514,6 @@ class Strings {
       : accueilCampagneRecrutementLabelPassEmploi;
   static String accueilCampagneRecrutementPressedTip = "Participer";
 
-  static String vosOutilsEvoluent = "Tes outils évoluent";
-  static String vosOutilsEvoluentDescription(String dateDeMigration) =>
-      "Le $dateDeMigration, l’application du CEJ ne sera plus disponible. Tes services seront accessibles sur l’application Parcours Emploi.";
-  static String downloadParcoursEmploi = "Télécharger l'application";
-
-
   // Comptage des heures
   static String comptageDesHeures0To5 = "Bon début, continue comme ça\u{00A0}!\u{00A0}💪";
   static String comptageDesHeures5To10 = "Bon début, continue comme ça\u{00A0}!\u{00A0}💪";
