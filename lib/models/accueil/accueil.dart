@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:pass_emploi_app/models/accueil/message_informatif.dart';
 import 'package:pass_emploi_app/models/alerte/alerte.dart';
 import 'package:pass_emploi_app/models/campagne.dart';
 import 'package:pass_emploi_app/models/favori.dart';
@@ -22,7 +21,6 @@ class Accueil extends Equatable {
   final Campagne? campagne;
   final String? accueilErreur;
   final bool? peutVoirLeComptageDesHeures;
-  final MessageInformatif? messageInformatif;
 
   Accueil({
     this.dateDerniereMiseAJour,
@@ -36,7 +34,6 @@ class Accueil extends Equatable {
     this.campagne,
     this.accueilErreur,
     this.peutVoirLeComptageDesHeures,
-    this.messageInformatif,
   });
 
   factory Accueil.fromJson(dynamic json) {
@@ -51,7 +48,6 @@ class Accueil extends Equatable {
     final campagne = json["campagne"] != null ? Campagne.fromJson(json["campagne"]) : null;
     final accueilErreur = json["messageDonneesManquantes"] as String?;
     final peutVoirLeComptageDesHeures = json["peutVoirLeComptageDesHeures"] as bool?;
-    final messageInformatif = MessageInformatif.fromJson(json["messageInformatif"]);
 
     return Accueil(
       dateDerniereMiseAJour: dateDerniereMiseAjour,
@@ -65,7 +61,6 @@ class Accueil extends Equatable {
       campagne: campagne,
       accueilErreur: accueilErreur,
       peutVoirLeComptageDesHeures: peutVoirLeComptageDesHeures,
-      messageInformatif: messageInformatif,
     );
   }
 
@@ -80,7 +75,6 @@ class Accueil extends Equatable {
     final List<Favori>? favoris,
     final String? accueilErreur,
     final bool? peutVoirLeComptageDesHeures,
-    final MessageInformatif? messageInformatif,
   }) {
     return Accueil(
       dateDerniereMiseAJour: dateDerniereMiseAJour ?? this.dateDerniereMiseAJour,
@@ -93,7 +87,6 @@ class Accueil extends Equatable {
       favoris: favoris ?? this.favoris,
       accueilErreur: accueilErreur ?? this.accueilErreur,
       peutVoirLeComptageDesHeures: peutVoirLeComptageDesHeures ?? this.peutVoirLeComptageDesHeures,
-      messageInformatif: messageInformatif ?? this.messageInformatif,
     );
   }
 
@@ -109,7 +102,6 @@ class Accueil extends Equatable {
     favoris,
     accueilErreur,
     peutVoirLeComptageDesHeures,
-    messageInformatif,
   ];
 }
 

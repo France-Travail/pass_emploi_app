@@ -97,6 +97,7 @@ import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription
 import 'package:pass_emploi_app/features/theme/theme_middleware.dart';
 import 'package:pass_emploi_app/features/soft_update/soft_update_middleware.dart';
 import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_middleware.dart';
+import 'package:pass_emploi_app/features/communications/communications_middleware.dart';
 /*AUTOGENERATE-REDUX-STOREFACTORY-IMPORT-MIDDLEWARE*/
 import 'package:pass_emploi_app/models/immersion.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
@@ -183,6 +184,7 @@ import 'package:pass_emploi_app/repositories/auto_desinscription_repository.dart
 import 'package:pass_emploi_app/repositories/theme_repository.dart';
 import 'package:pass_emploi_app/repositories/soft_update_repository.dart';
 import 'package:pass_emploi_app/repositories/criteres_recherche_persist_repository.dart';
+import 'package:pass_emploi_app/repositories/communications_repository.dart';
 /*AUTOGENERATE-REDUX-STOREFACTORY-IMPORT-REPOSITORY*/
 import 'package:redux/redux.dart' as redux;
 
@@ -272,6 +274,7 @@ class StoreFactory {
   final ThemeRepository themeRepository;
   final SoftUpdateRepository softUpdateRepository;
   final CriteresRecherchePersistRepository criteresRecherchePersistRepository;
+  final CommunicationsRepository communicationsRepository;
   /*AUTOGENERATE-REDUX-STOREFACTORY-PROPERTY-REPOSITORY*/
 
   StoreFactory(
@@ -360,6 +363,7 @@ class StoreFactory {
     this.themeRepository,
     this.softUpdateRepository,
     this.criteresRecherchePersistRepository,
+    this.communicationsRepository,
     /*AUTOGENERATE-REDUX-STOREFACTORY-CONSTRUCTOR-REPOSITORY*/
   );
 
@@ -470,6 +474,7 @@ class StoreFactory {
         ThemeMiddleware(themeRepository).call,
         SoftUpdateMiddleware(softUpdateRepository, remoteConfigRepository).call,
         CriteresRecherchePersistMiddleware(criteresRecherchePersistRepository).call,
+        CommunicationsMiddleware(communicationsRepository).call,
         /*AUTOGENERATE-REDUX-STOREFACTORY-ADD-MIDDLEWARE*/
         ..._debugMiddlewares(),
         ..._stagingMiddlewares(initialState.configurationState.getFlavor()),

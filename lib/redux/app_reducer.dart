@@ -93,6 +93,7 @@ import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription
 import 'package:pass_emploi_app/features/theme/theme_reducer.dart';
 import 'package:pass_emploi_app/features/soft_update/soft_update_reducer.dart';
 import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_reducer.dart';
+import 'package:pass_emploi_app/features/communications/communications_reducer.dart';
 /*AUTOGENERATE-REDUX-APP-REDUCER-IMPORT*/
 
 AppState reducer(AppState current, dynamic action) {
@@ -227,6 +228,7 @@ AppState reducer(AppState current, dynamic action) {
     themeState: themeReducer(current.themeState, action),
     softUpdateState: softUpdateReducer(current.softUpdateState, action),
     criteresRecherchePersistState: criteresRecherchePersistReducer(current.criteresRecherchePersistState, action),
+    communicationsState: communicationsReducer(current.communicationsState, action),
     /*AUTOGENERATE-REDUX-APP-REDUCER-STATE*/
   );
 }

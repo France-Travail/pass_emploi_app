@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:pass_emploi_app/features/accueil/accueil_actions.dart';
 import 'package:pass_emploi_app/features/accueil/accueil_state.dart';
 import 'package:pass_emploi_app/features/campagne_recrutement/campagne_recrutement_actions.dart';
+import 'package:pass_emploi_app/features/communications/communications_state.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_state.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_state.dart';
@@ -87,7 +88,7 @@ List<AccueilItem> _items(Store<AppState> store) {
   if (accueilState is! AccueilSuccessState || user == null) return [];
 
   return [
-    _messageInformatifItem(accueilState),
+    _messageInformatifItem(store.state),
     _accueilZenithMessageItem(store.state),
     _errorDegradeeItem(accueilState),
     _onboardingItem(store.state),
@@ -105,8 +106,10 @@ List<AccueilItem> _items(Store<AppState> store) {
   ].nonNulls.toList();
 }
 
-AccueilItem? _messageInformatifItem(AccueilSuccessState accueilState) {
-  final messageInformatif = accueilState.accueil.messageInformatif;
+AccueilItem? _messageInformatifItem(AppState state) {
+  final communicationsState = state.communicationsState;
+  if (communicationsState is! CommunicationsSuccessState) return null;
+  final messageInformatif = communicationsState.messageInformatif;
   if (messageInformatif == null) return null;
   return AccueilMessageInformatifItem(messageInformatif);
 }

@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:pass_emploi_app/auth/auth_wrapper.dart';
 import 'package:pass_emploi_app/auth/authenticator.dart';
 import 'package:pass_emploi_app/models/demarche_ia_dto.dart';
+import 'package:pass_emploi_app/models/communications.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/matching_demarche_du_referentiel.dart';
 import 'package:pass_emploi_app/models/offre_dto.dart';
@@ -56,6 +57,7 @@ import 'package:pass_emploi_app/wrappers/connectivity_wrapper.dart';
 import 'package:pass_emploi_app/repositories/soft_update_repository.dart';
 import 'package:pass_emploi_app/models/criteres_recherche_utilisateur.dart';
 import 'package:pass_emploi_app/repositories/criteres_recherche_persist_repository.dart';
+import 'package:pass_emploi_app/repositories/communications_repository.dart';
 /*AUTOGENERATE-REDUX-TEST-MOCKS-REPOSITORY-IMPORT*/
 
 import 'dio_mock.dart';
@@ -374,6 +376,12 @@ class MockCriteresRecherchePersistRepository extends Mock implements CriteresRec
     registerFallbackValue(CriteresRechercheUtilisateur());
     when(() => get()).thenAnswer((_) async => null);
     when(() => save(any())).thenAnswer((_) async {});
+  }
+}
+
+class MockCommunicationsRepository extends Mock implements CommunicationsRepository {
+  MockCommunicationsRepository() {
+    when(() => get(any())).thenAnswer((_) async => Communications());
   }
 }
 

@@ -2,6 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:pass_emploi_app/configuration/configuration.dart';
 import 'package:pass_emploi_app/features/accueil/accueil_state.dart';
 import 'package:pass_emploi_app/features/campagne/campagne_state.dart';
+import 'package:pass_emploi_app/features/communications/communications_state.dart';
 import 'package:pass_emploi_app/features/cgu/cgu_state.dart';
 import 'package:pass_emploi_app/features/chat/brouillon/chat_brouillon_state.dart';
 import 'package:pass_emploi_app/features/chat/messages/chat_state.dart';
@@ -56,6 +57,7 @@ import 'package:pass_emploi_app/features/user_action/update/user_action_update_s
 import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/accueil/accueil.dart';
 import 'package:pass_emploi_app/models/alerte/alerte.dart';
+import 'package:pass_emploi_app/models/accueil/message_informatif.dart';
 import 'package:pass_emploi_app/models/campagne.dart';
 import 'package:pass_emploi_app/models/cgu.dart';
 import 'package:pass_emploi_app/models/chat/message.dart';
@@ -675,6 +677,10 @@ extension AppStateDSL on AppState {
 
   AppState withRemoteCampagneAccueil({List<RemoteCampagneAccueil> campagnes = const []}) {
     return copyWith(remoteCampagneAccueilState: RemoteCampagneAccueilState(campagnes: campagnes));
+  }
+
+  AppState withCommunicationsSuccess([MessageInformatif? messageInformatif]) {
+    return copyWith(communicationsState: CommunicationsSuccessState(messageInformatif));
   }
 
   AppState withAccueilFailure() {
