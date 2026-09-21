@@ -7,4 +7,5 @@ class MediaSizes {
   static const double height_l = 900;
 
   static const double width_s = 350;
+  static const double width_m = 600;
 }

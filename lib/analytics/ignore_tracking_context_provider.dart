@@ -15,12 +15,14 @@ class IgnoreTrackingContextProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return PassEmploiMaterialApp(
       themeMode: themeMode,
-      home: Builder(builder: (materialAppContext) {
-        return IgnoreTrackingContext(
-          nonTrackingContext: materialAppContext,
-          child: child,
-        );
-      }),
+      home: Builder(
+        builder: (materialAppContext) {
+          return IgnoreTrackingContext(
+            nonTrackingContext: materialAppContext,
+            child: child,
+          );
+        },
+      ),
     );
   }
 }

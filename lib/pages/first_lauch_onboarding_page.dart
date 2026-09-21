@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/features/first_launch_onboarding/first_launch_on
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
+import 'package:pass_emploi_app/ui/media_sizes.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
@@ -14,9 +15,13 @@ import 'package:pass_emploi_app/widgets/dsfr/bloc_marque.dart';
 import 'package:pass_emploi_app/widgets/dsfr/emoji_tile.dart';
 import 'package:pass_emploi_app/widgets/dsfr/splash_emoji_cluster.dart';
 
+const double _maxContentWidth = 480;
+const double _maxSplitWidth = 920;
+
 class FirstLaunchOnboardingPage extends StatefulWidget {
   @override
-  State<FirstLaunchOnboardingPage> createState() => _FirstLaunchOnboardingPageState();
+  State<FirstLaunchOnboardingPage> createState() =>
+      _FirstLaunchOnboardingPageState();
 }
 
 class _FirstLaunchOnboardingPageState extends State<FirstLaunchOnboardingPage> {
@@ -31,7 +36,11 @@ class _FirstLaunchOnboardingPageState extends State<FirstLaunchOnboardingPage> {
         data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
         child: AnimatedSwitcher(
           duration: AnimationDurations.medium,
-          child: _firstScreen ? _FirstScreen(onStart: () => setState(() => _firstScreen = false)) : _PageViewScreen(),
+          child: _firstScreen
+              ? _FirstScreen(
+                  onStart: () => setState(() => _firstScreen = false),
+                )
+              : _PageViewScreen(),
         ),
       ),
     );
@@ -45,56 +54,193 @@ class _FirstScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final isTablet = size.shortestSide >= MediaSizes.width_m;
+    final useSplitLayout = isTablet && size.width > size.height;
     return Scaffold(
       backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_m),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Align(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: Margins.spacing_m),
+              child: Align(
                 alignment: Alignment.centerLeft,
                 child: BlocMarque(),
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: Margins.spacing_m),
-                      const SplashEmojiCluster(),
-                      const SizedBox(height: Margins.spacing_base),
-                      const Align(
-                        alignment: Alignment.center,
-                        child: AppLogo(width: 220),
-                      ),
-                      const SizedBox(height: Margins.spacing_l),
-                      Text(
-                        Strings.firstLaunchOnboardingTagline,
-                        style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textDefaultGrey(context)),
-                      ),
-                      const SizedBox(height: Margins.spacing_base),
-                      Text(
-                        Strings.firstLaunchOnboardingDescription,
-                        style: DsfrTextStyle.bodyMd(
-                          color: DsfrColorDecisions.textDefaultGrey(context),
-                        ).copyWith(height: 24 / 16),
-                      ),
-                    ],
-                  ),
+            ),
+            Expanded(
+              child: useSplitLayout
+                  ? _FirstScreenSplit(onStart: onStart)
+                  : _FirstScreenStacked(onStart: onStart, isTablet: isTablet),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FirstScreenStacked extends StatelessWidget {
+  const _FirstScreenStacked({required this.onStart, required this.isTablet});
+
+  final VoidCallback onStart;
+  final bool isTablet;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_m),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: _maxContentWidth,
+                  minHeight: constraints.maxHeight,
+                ),
+                child: Column(
+                  mainAxisAlignment: isTablet
+                      ? MainAxisAlignment.center
+                      : MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const _FirstScreenIntro(),
+                    _ContinueButton(onPressed: onStart),
+                  ],
                 ),
               ),
-              DsfrButton(
-                label: Strings.continueLabel,
-                variant: DsfrButtonVariant.primary,
-                size: DsfrComponentSize.lg,
-                onPressed: onStart,
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _FirstScreenSplit extends StatelessWidget {
+  const _FirstScreenSplit({required this.onStart});
+
+  final VoidCallback onStart;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Margins.spacing_m,
+        vertical: Margins.spacing_m,
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: _maxSplitWidth),
+          child: Row(
+            children: [
+              const Expanded(child: SplashEmojiCluster()),
+              const SizedBox(width: Margins.spacing_xl),
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return SingleChildScrollView(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: constraints.maxHeight,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            const Align(
+                              alignment: Alignment.center,
+                              child: AppLogo(width: 220),
+                            ),
+                            const SizedBox(height: Margins.spacing_l),
+                            const _FirstScreenCopy(),
+                            const SizedBox(height: Margins.spacing_l),
+                            _ContinueButton(onPressed: onStart),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
-              const SizedBox(height: Margins.spacing_m),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _FirstScreenIntro extends StatelessWidget {
+  const _FirstScreenIntro();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: Margins.spacing_m),
+        const SplashEmojiCluster(),
+        const SizedBox(height: Margins.spacing_base),
+        const Align(
+          alignment: Alignment.center,
+          child: AppLogo(width: 220),
+        ),
+        const SizedBox(height: Margins.spacing_l),
+        const _FirstScreenCopy(),
+      ],
+    );
+  }
+}
+
+class _FirstScreenCopy extends StatelessWidget {
+  const _FirstScreenCopy();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          Strings.firstLaunchOnboardingTagline,
+          style: DsfrTextStyle.headline5(
+            color: DsfrColorDecisions.textDefaultGrey(context),
+          ),
+        ),
+        const SizedBox(height: Margins.spacing_base),
+        Text(
+          Strings.firstLaunchOnboardingDescription,
+          style: DsfrTextStyle.bodyMd(
+            color: DsfrColorDecisions.textDefaultGrey(context),
+          ).copyWith(height: 24 / 16),
+        ),
+      ],
+    );
+  }
+}
+
+class _ContinueButton extends StatelessWidget {
+  const _ContinueButton({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: Margins.spacing_m,
+        bottom: Margins.spacing_m,
+      ),
+      child: DsfrButton(
+        label: Strings.continueLabel,
+        variant: DsfrButtonVariant.primary,
+        size: DsfrComponentSize.lg,
+        onPressed: onPressed,
       ),
     );
   }
@@ -138,63 +284,79 @@ class _PageViewScreenState extends State<_PageViewScreen> {
             return SingleChildScrollView(
               child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const AppLogo(width: 120),
-                      const SizedBox(height: Margins.spacing_base),
-                      SizedBox(
-                        height: _pageViewHeight,
-                        child: PageView(
-                          controller: _pageController,
-                          onPageChanged: (value) {
-                            setState(() => _currentPage = value);
-                            if (value == 1) {
-                              page2Key.requestFocusDelayed(duration: AnimationDurations.verySlow);
-                            } else if (value == 2) {
-                              page3Key.requestFocusDelayed(duration: AnimationDurations.verySlow);
-                            }
-                          },
-                          children: [
-                            _heightAwarePage(
-                              index: 0,
-                              child: _DiscoveryCard(
-                                emoji: '🎯',
-                                emojiBackground: DsfrColors.blueCumulus950,
-                                title: Strings.firstLaunchOnboardingCardTitle1,
-                                onContinue: () => _pageController.next(),
-                                autoFocus: true,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxWidth: _maxContentWidth,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const AppLogo(width: 120),
+                        const SizedBox(height: Margins.spacing_base),
+                        SizedBox(
+                          height: _pageViewHeight,
+                          child: PageView(
+                            controller: _pageController,
+                            onPageChanged: (value) {
+                              setState(() => _currentPage = value);
+                              if (value == 1) {
+                                page2Key.requestFocusDelayed(
+                                  duration: AnimationDurations.verySlow,
+                                );
+                              } else if (value == 2) {
+                                page3Key.requestFocusDelayed(
+                                  duration: AnimationDurations.verySlow,
+                                );
+                              }
+                            },
+                            children: [
+                              _heightAwarePage(
+                                index: 0,
+                                child: _DiscoveryCard(
+                                  emoji: '🎯',
+                                  emojiBackground: DsfrColors.blueCumulus950,
+                                  title:
+                                      Strings.firstLaunchOnboardingCardTitle1,
+                                  onContinue: () => _pageController.next(),
+                                  autoFocus: true,
+                                ),
                               ),
-                            ),
-                            _heightAwarePage(
-                              index: 1,
-                              child: _DiscoveryCard(
-                                emoji: '💼',
-                                emojiBackground: DsfrColors.greenEmeraude950,
-                                title: Strings.firstLaunchOnboardingCardTitle2,
-                                onContinue: () => _pageController.next(),
-                                autoFocus: false,
-                                globalKey: page2Key,
+                              _heightAwarePage(
+                                index: 1,
+                                child: _DiscoveryCard(
+                                  emoji: '💼',
+                                  emojiBackground: DsfrColors.greenEmeraude950,
+                                  title:
+                                      Strings.firstLaunchOnboardingCardTitle2,
+                                  onContinue: () => _pageController.next(),
+                                  autoFocus: false,
+                                  globalKey: page2Key,
+                                ),
                               ),
-                            ),
-                            _heightAwarePage(
-                              index: 2,
-                              child: _DiscoveryCard(
-                                emoji: '💬',
-                                emojiBackground: DsfrColors.purpleGlycine925,
-                                title: Strings.firstLaunchOnboardingCardTitle3,
-                                onContinue: () => context.dispatch(FirstLaunchOnboardingFinishAction()),
-                                autoFocus: false,
-                                globalKey: page3Key,
+                              _heightAwarePage(
+                                index: 2,
+                                child: _DiscoveryCard(
+                                  emoji: '💬',
+                                  emojiBackground: DsfrColors.purpleGlycine925,
+                                  title:
+                                      Strings.firstLaunchOnboardingCardTitle3,
+                                  onContinue: () => context.dispatch(
+                                    FirstLaunchOnboardingFinishAction(),
+                                  ),
+                                  autoFocus: false,
+                                  globalKey: page3Key,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: Margins.spacing_base),
-                      _CarouselStepperIndicator(currentPage: _currentPage),
-                    ],
+                        const SizedBox(height: Margins.spacing_base),
+                        _CarouselStepperIndicator(currentPage: _currentPage),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -213,7 +375,10 @@ class _PageViewScreenState extends State<_PageViewScreen> {
       child: _SizeReportingWidget(
         onSizeChange: (size) => _onPageHeightChanged(index, size.height),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_xl, vertical: Margins.spacing_s),
+          padding: const EdgeInsets.symmetric(
+            horizontal: Margins.spacing_xl,
+            vertical: Margins.spacing_s,
+          ),
           child: child,
         ),
       ),
@@ -247,7 +412,9 @@ class _DiscoveryCard extends StatelessWidget {
           topLeft: Radius.circular(Dimens.radius_base),
           topRight: Radius.circular(Dimens.radius_s),
         ),
-        border: Border.all(color: DsfrColorDecisions.borderDefaultGrey(context)),
+        border: Border.all(
+          color: DsfrColorDecisions.borderDefaultGrey(context),
+        ),
         boxShadow: const [
           BoxShadow(
             color: Color(0x29000012),
@@ -279,7 +446,9 @@ class _DiscoveryCard extends StatelessWidget {
                     final text = Text(
                       key: globalKey,
                       title,
-                      style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textDefaultGrey(context)),
+                      style: DsfrTextStyle.bodyMdBold(
+                        color: DsfrColorDecisions.textDefaultGrey(context),
+                      ),
                     );
                     if (autoFocus) return AutoFocusA11y(child: text);
                     return text;
@@ -361,5 +530,8 @@ class _CarouselStepperIndicator extends StatelessWidget {
 }
 
 extension on PageController {
-  Future<void> next() => nextPage(duration: AnimationDurations.medium, curve: Curves.fastEaseInToSlowEaseOut);
+  Future<void> next() => nextPage(
+    duration: AnimationDurations.medium,
+    curve: Curves.fastEaseInToSlowEaseOut,
+  );
 }
