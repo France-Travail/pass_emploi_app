@@ -50,7 +50,14 @@ class PassEmploiMatomoTracker {
       ),
       dimensions: _dimensions,
     );
-    onTrackScreen?.call("$eventLogPrefix - category: $eventCategory \n- action:  $action");
+    onTrackScreen?.call(
+      [
+        "$eventLogPrefix - category: $eventCategory",
+        "- action: $action",
+        if (eventName != null) "- nom: $eventName",
+        if (eventValue != null) "- valeur: $eventValue",
+      ].join('\n'),
+    );
   }
 
   void trackOutlink(String link) {

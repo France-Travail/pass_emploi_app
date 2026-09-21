@@ -52,4 +52,15 @@ void main() {
     await repository.setFinished(false);
     expect(await repository.isFinished(), isFalse);
   });
+
+  test('ever finished survives a resume but not a logout', () async {
+    expect(await repository.hasEverFinished(), isFalse);
+
+    await repository.setFinished(true);
+    await repository.setFinished(false);
+    expect(await repository.hasEverFinished(), isTrue);
+
+    await repository.clear();
+    expect(await repository.hasEverFinished(), isFalse);
+  });
 }

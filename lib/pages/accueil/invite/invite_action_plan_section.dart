@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:pass_emploi_app/analytics/analytics_constants.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_tracking.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
@@ -83,6 +85,13 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
         final willExpand = !_expanded;
         setState(() => _expanded = willExpand);
         if (willExpand) widget.onExpanded?.call();
+        ActionPlanTrackingEvent(
+          willExpand
+              ? AnalyticsEventNames.actionPlanObjectiveExpandedAction
+              : AnalyticsEventNames.actionPlanObjectiveCollapsedAction,
+          name: objective.theme,
+          value: willExpand ? objective.totalCount : null,
+        ).send();
       },
       child: AnimatedContainer(
         duration: AnimationDurations.medium,
@@ -176,7 +185,14 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
                       label: Strings.inviteAccueilAfficherPlus,
                       variant: DsfrButtonVariant.secondary,
                       size: DsfrComponentSize.lg,
-                      onPressed: () => setState(() => _showAll = true),
+                      onPressed: () {
+                        setState(() => _showAll = true);
+                        ActionPlanTrackingEvent(
+                          AnalyticsEventNames.actionPlanShowMoreAction,
+                          name: objective.theme,
+                          value: objective.totalCount - _initialVisible,
+                        ).send();
+                      },
                     ),
                   ],
                 ],
@@ -310,7 +326,13 @@ class InviteActionPlanActionTile extends StatelessWidget {
     );
   }
 
-  void _openLink() => launchExternalUrl(action.url!);
+  void _openLink() {
+    ActionPlanTrackingEvent(
+      AnalyticsEventNames.actionPlanActionOpenedAction,
+      name: [action.label, if (action.serviceName != null) action.serviceName].join(' | '),
+    ).send();
+    launchExternalUrl(action.url!);
+  }
 }
 
 class _EmojiAvatar extends StatelessWidget {

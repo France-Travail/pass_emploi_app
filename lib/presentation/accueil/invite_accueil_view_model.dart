@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
+import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_tracking.dart';
 import 'package:pass_emploi_app/features/onboarding/onboarding_actions.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
@@ -9,6 +11,7 @@ import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
+import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_tracker.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:redux/redux.dart';
@@ -36,8 +39,9 @@ class InviteAccueilViewModel extends Equatable {
   final bool showExplorerTip;
   final bool showRetryGenerate;
   final bool shouldShowAllowNotifications;
+  final ActionPlanTrackingEvent? planDisplayEvent;
   final VoidCallback retryLoad;
-  final VoidCallback resumeOnboarding;
+  final void Function(OnboardingQuestionnaireEntryPoint entryPoint) resumeOnboarding;
   final VoidCallback retryGenerate;
   final VoidCallback hideDiscovery;
   final VoidCallback onPlanActionExpanded;
@@ -63,6 +67,7 @@ class InviteAccueilViewModel extends Equatable {
     required this.showExplorerTip,
     required this.showRetryGenerate,
     required this.shouldShowAllowNotifications,
+    required this.planDisplayEvent,
     required this.retryLoad,
     required this.resumeOnboarding,
     required this.retryGenerate,
@@ -137,8 +142,15 @@ class InviteAccueilViewModel extends Equatable {
       showRetryGenerate:
           showPlanEmptyState && planEmptyKind == InvitePlanEmptyKind.failure && answers.canGenerateActionPlan,
       shouldShowAllowNotifications: onboarding?.showNotificationsOnboarding ?? false,
+      planDisplayEvent: showPlanSection && displayState == DisplayState.CONTENT
+          ? _planDisplayEvent(isFailure: isFailure, plan: plan)
+          : null,
       retryLoad: () => store.dispatch(ActionPlanRequestAction()),
-      resumeOnboarding: () => store.dispatch(OnboardingQuestionnaireResumeAction()),
+      resumeOnboarding: (entryPoint) {
+        final isUpdate = inviteState is OnboardingQuestionnaireSuccessState && inviteState.everFinished;
+        OnboardingQuestionnaireTracker(isUpdate: isUpdate).trackOpening(entryPoint);
+        store.dispatch(OnboardingQuestionnaireResumeAction());
+      },
       retryGenerate: () => store.dispatch(ActionPlanGenerateAction(answers)),
       hideDiscovery: () => store.dispatch(OnboardingHideAction()),
       onPlanActionExpanded: () => store.dispatch(PlanActionOnboardingCompletedAction()),
@@ -167,5 +179,13 @@ class InviteAccueilViewModel extends Equatable {
     showExplorerTip,
     showRetryGenerate,
     shouldShowAllowNotifications,
+    planDisplayEvent,
   ];
+}
+
+ActionPlanTrackingEvent _planDisplayEvent({required bool isFailure, required ActionPlan? plan}) {
+  if (isFailure) return const ActionPlanTrackingEvent(AnalyticsEventNames.actionPlanFailureAction);
+  final objectivesCount = plan?.objectives.where((objective) => objective.actions.isNotEmpty).length ?? 0;
+  if (objectivesCount == 0) return const ActionPlanTrackingEvent(AnalyticsEventNames.actionPlanEmptyAction);
+  return ActionPlanTrackingEvent(AnalyticsEventNames.actionPlanDisplayedAction, value: objectivesCount);
 }

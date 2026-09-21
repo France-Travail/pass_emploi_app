@@ -279,6 +279,43 @@ class AnalyticsEventNames {
   static const actionPlanFeedbackGiveOpinionAction = "Donne ton avis";
   static const actionPlanFeedbackSkipAction = "Passer cette étape";
 
+  static const actionPlanCategory = "Plan d'action";
+  static const actionPlanDisplayedAction = "Plan affiché";
+  static const actionPlanEmptyAction = "Plan vide";
+  static const actionPlanFailureAction = "Échec de récupération";
+  static const actionPlanObjectiveExpandedAction = "Objectif déplié";
+  static const actionPlanObjectiveCollapsedAction = "Objectif replié";
+  static const actionPlanShowMoreAction = "Afficher plus";
+  static const actionPlanActionDoneAction = "Démarche cochée";
+  static const actionPlanActionUndoneAction = "Démarche décochée";
+  static const actionPlanActionDeletedAction = "Démarche supprimée";
+  static const actionPlanActionOpenedAction = "Démarche ouverte";
+  static const actionPlanObjectiveCompletedAction = "Objectif complété";
+  static const actionPlanCompletedAction = "Plan complété";
+  static const actionPlanRetryAction = "Réessayer - échec de récupération";
+  static const actionPlanEmptyModifierAction = "Modifier - plan vide";
+  static const actionPlanModifierAction = "Modifier - bas de page";
+
+  static const questionnaireFirstPassCategory = "Questionnaire - premier passage";
+  static const questionnaireUpdateCategory = "Questionnaire - mise à jour";
+  static const questionnaireOpenedAction = "Ouverture du questionnaire";
+  static const questionnaireExitAction = "Sortie du questionnaire";
+  static const questionnaireStepValidatedAction = "Étape validée";
+  static const questionnaireStepSkippedAction = "Étape passée";
+  static const questionnaireStepBackAction = "Retour en arrière";
+  static const questionnaireDepartementAction = "Réponse - Département d'habitation";
+  static const questionnaireSituationAction = "Réponse - Situation";
+  static const questionnaireObjectifAction = "Réponse - Objectif";
+  static const questionnaireObjectifsCountAction = "Réponse - Nombre d'objectifs";
+  static const questionnaireDomaineAction = "Réponse - Domaine";
+  static const questionnaireZoneAction = "Réponse - Zone de recherche";
+  static const questionnaireFreinAction = "Réponse - Frein";
+  static const questionnaireFreinsCountAction = "Réponse - Nombre de freins";
+  static const questionnaireGeolocationRequestedAction = "Géolocalisation demandée";
+  static const questionnaireGeolocationSucceededAction = "Géolocalisation aboutie";
+  static const questionnaireGeolocationFailedAction = "Géolocalisation échouée";
+  static const questionnaireGenerationOutcomeAction = "Issue de la génération";
+
   static const accueilCategory = "Accueil";
   static const accueilDetailSemainePressed = "Clic sur le détail de la semaine";
   static const acceuilClicSurSuiviDesOffres = "Clic sur le suivi des offres";

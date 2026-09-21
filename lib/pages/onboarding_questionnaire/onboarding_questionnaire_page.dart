@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
@@ -16,6 +17,7 @@ import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questi
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_situation_step.dart';
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_under_age_page.dart';
 import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_form_change_notifier.dart';
+import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_tracker.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/communes_repository.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
@@ -38,6 +40,7 @@ class OnboardingQuestionnairePage extends StatefulWidget {
 class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePage> {
   late final OnboardingQuestionnaireFormChangeNotifier _form;
   late final CommunesRepository _communesRepository;
+  late final OnboardingQuestionnaireTracker _tracker;
   bool _formInitialized = false;
 
   @override
@@ -52,6 +55,10 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
     if (_formInitialized) return;
     _formInitialized = true;
     final store = StoreProvider.of<AppState>(context);
+    final questionnaireState = store.state.onboardingQuestionnaireState;
+    _tracker = OnboardingQuestionnaireTracker(
+      isUpdate: questionnaireState is OnboardingQuestionnaireSuccessState && questionnaireState.everFinished,
+    );
     _form = OnboardingQuestionnaireFormChangeNotifier(
       loadAnswers: () async {
         final questionnaireState = store.state.onboardingQuestionnaireState;
@@ -63,6 +70,7 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
       },
       startAtFirstStep: widget.editMode,
       skipActionPlanGeneration: widget.editMode,
+      tracker: _tracker,
       onFinishWithoutGeneration: (answers) {
         store.dispatch(OnboardingQuestionnaireCompleteAction(answers));
         if (widget.editMode) {
@@ -118,6 +126,11 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
     if (_form.step.isLoader) return;
     final shouldClose = _form.goBack();
     if (!shouldClose) return;
+    _tracker.trackEvent(
+      AnalyticsEventNames.questionnaireExitAction,
+      name: widget.editMode ? "Profil" : "Parcours d'entrée",
+      value: _form.step.questionnaireIndex,
+    );
     if (widget.editMode) {
       Navigator.of(context).maybePop();
     } else {

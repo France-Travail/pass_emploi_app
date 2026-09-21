@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_tracking.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/invite_action_plan_empty_state.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/invite_action_plan_section.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/invite_discovery_tile.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/onboarding_questionnaire_progress_card.dart';
 import 'package:pass_emploi_app/presentation/accueil/invite_accueil_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
+import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_tracker.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -22,6 +25,7 @@ class InviteAccueilBody extends StatefulWidget {
 
 class _InviteAccueilBodyState extends State<InviteAccueilBody> {
   bool _notificationsBottomSheetShown = false;
+  String? _lastPlanDisplayAction;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +35,8 @@ class _InviteAccueilBodyState extends State<InviteAccueilBody> {
       child: StoreConnector<AppState, InviteAccueilViewModel>(
         onInit: (store) => store.dispatch(ActionPlanRequestAction()),
         converter: InviteAccueilViewModel.create,
-        onInitialBuild: _handleNotificationsBottomSheet,
-        onDidChange: (_, viewModel) => _handleNotificationsBottomSheet(viewModel),
+        onInitialBuild: _onViewModel,
+        onDidChange: (_, viewModel) => _onViewModel(viewModel),
         distinct: true,
         builder: (context, viewModel) {
           return CustomScrollView(
@@ -44,6 +48,19 @@ class _InviteAccueilBodyState extends State<InviteAccueilBody> {
         },
       ),
     );
+  }
+
+  void _onViewModel(InviteAccueilViewModel viewModel) {
+    _handleNotificationsBottomSheet(viewModel);
+    _trackPlanDisplay(viewModel);
+  }
+
+  // Sent once per display state (not on every rebuild, nor when the plan reloads with the same state).
+  void _trackPlanDisplay(InviteAccueilViewModel viewModel) {
+    final event = viewModel.planDisplayEvent;
+    if (event == null || event.action == _lastPlanDisplayAction) return;
+    _lastPlanDisplayAction = event.action;
+    event.send();
   }
 
   void _handleNotificationsBottomSheet(InviteAccueilViewModel viewModel) {
@@ -62,9 +79,10 @@ class _Content extends StatelessWidget {
   final InviteAccueilViewModel viewModel;
 
   Future<void> _onModifierPressed(BuildContext context) async {
+    const ActionPlanTrackingEvent(AnalyticsEventNames.actionPlanModifierAction).send();
     final shouldResume = await ActionPlanFeedbackBottomSheet.show(context);
     if (!context.mounted || shouldResume != true) return;
-    viewModel.resumeOnboarding();
+    viewModel.resumeOnboarding(OnboardingQuestionnaireEntryPoint.accueilModifier);
   }
 
   @override
@@ -96,7 +114,7 @@ class _Content extends StatelessWidget {
           if (viewModel.showQuestionnaireCard && viewModel.mode == InviteAccueilMode.incomplet) ...[
             OnboardingQuestionnaireProgressCard(
               answers: viewModel.answers,
-              onResume: viewModel.resumeOnboarding,
+              onResume: () => viewModel.resumeOnboarding(OnboardingQuestionnaireEntryPoint.accueilIncomplet),
               description: questionnaireDescription,
             ),
             const SizedBox(height: Margins.spacing_s),
@@ -119,8 +137,14 @@ class _Content extends StatelessWidget {
                 kind: viewModel.planEmptyKind!,
                 showRetry: viewModel.showRetryGenerate,
                 showModifier: viewModel.showModifierButton,
-                onRetry: viewModel.retryGenerate,
-                onModifier: viewModel.resumeOnboarding,
+                onRetry: () {
+                  const ActionPlanTrackingEvent(AnalyticsEventNames.actionPlanRetryAction).send();
+                  viewModel.retryGenerate();
+                },
+                onModifier: () {
+                  const ActionPlanTrackingEvent(AnalyticsEventNames.actionPlanEmptyModifierAction).send();
+                  viewModel.resumeOnboarding(OnboardingQuestionnaireEntryPoint.planVideModifier);
+                },
               )
             else
               InviteActionPlanSection(
@@ -134,7 +158,7 @@ class _Content extends StatelessWidget {
             const SizedBox(height: Margins.spacing_base),
             OnboardingQuestionnaireProgressCard(
               answers: viewModel.answers,
-              onResume: viewModel.resumeOnboarding,
+              onResume: () => viewModel.resumeOnboarding(OnboardingQuestionnaireEntryPoint.accueilPartiel),
               description: questionnaireDescription,
             ),
           ],

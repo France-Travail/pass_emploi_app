@@ -44,7 +44,9 @@ void main() {
       ..onboardingQuestionnaireRepository = repository
       ..actionPlanRepository = actionPlanRepository;
     final store = factory.initializeReduxStore(initialState: AppState.initialState());
-    final success = store.onChange.firstWhere((s) => s.onboardingQuestionnaireState is OnboardingQuestionnaireSuccessState);
+    final success = store.onChange.firstWhere(
+      (s) => s.onboardingQuestionnaireState is OnboardingQuestionnaireSuccessState,
+    );
 
     store.dispatch(LoginSuccessAction(mockUser(id: 'invite-id', loginMode: LoginMode.INVITE)));
 
@@ -62,7 +64,9 @@ void main() {
       ..onboardingQuestionnaireRepository = repository
       ..actionPlanRepository = actionPlanRepository;
     final store = factory.initializeReduxStore(initialState: givenState().loggedInMiloUser());
-    final success = store.onChange.firstWhere((s) => s.onboardingQuestionnaireState is OnboardingQuestionnaireSuccessState);
+    final success = store.onChange.firstWhere(
+      (s) => s.onboardingQuestionnaireState is OnboardingQuestionnaireSuccessState,
+    );
 
     store.dispatch(FonctionnalitesSuccessAction({Fonctionnalite.planAction}));
 
@@ -293,5 +297,23 @@ void main() {
     final state = await success;
     expect((state.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState).answers.prenom, 'Léa');
     verify(() => repository.saveAnswers(updated)).called(1);
+  });
+
+  test('resuming a questionnaire already finished keeps it flagged as ever finished', () async {
+    when(() => repository.hasEverFinished()).thenAnswer((_) async => true);
+
+    final factory = TestStoreFactory()
+      ..onboardingQuestionnaireRepository = repository
+      ..actionPlanRepository = actionPlanRepository;
+    final store = factory.initializeReduxStore(initialState: AppState.initialState());
+    final success = store.onChange.firstWhere(
+      (s) => s.onboardingQuestionnaireState is OnboardingQuestionnaireSuccessState,
+    );
+
+    store.dispatch(OnboardingQuestionnaireResumeAction());
+
+    final state = (await success).onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState;
+    expect(state.finished, isFalse);
+    expect(state.everFinished, isTrue);
   });
 }

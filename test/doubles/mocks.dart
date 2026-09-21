@@ -403,6 +403,7 @@ class MockOnboardingQuestionnaireRepository extends Mock implements OnboardingQu
     when(() => getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers());
     when(() => saveAnswers(any())).thenAnswer((_) async {});
     when(() => isFinished()).thenAnswer((_) async => false);
+    when(() => hasEverFinished()).thenAnswer((_) async => false);
     when(() => setFinished(any())).thenAnswer((_) async {});
     when(() => clear()).thenAnswer((_) async {});
   }

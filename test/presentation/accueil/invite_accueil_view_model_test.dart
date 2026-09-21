@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pass_emploi_app/analytics/analytics_constants.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_tracking.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
@@ -29,6 +31,7 @@ void main() {
     expect(viewModel.showConseillerCta, isFalse);
     expect(viewModel.shouldShowAllowNotifications, isTrue);
     expect(viewModel.displayState, DisplayState.CONTENT);
+    expect(viewModel.planDisplayEvent, isNull);
   });
 
   test('partiel mode shows plan and questionnaire', () {
@@ -63,6 +66,10 @@ void main() {
     expect(viewModel.showQuestionnaireCard, isTrue);
     expect(viewModel.showPlanSection, isTrue);
     expect(viewModel.plan?.objectives.first.title, 'Trouver un emploi');
+    expect(
+      viewModel.planDisplayEvent,
+      ActionPlanTrackingEvent(AnalyticsEventNames.actionPlanDisplayedAction, value: 1),
+    );
   });
 
   test('complet mode shows modifier and conseiller CTA', () {
@@ -169,6 +176,7 @@ void main() {
 
     expect(viewModel.showPlanEmptyState, isTrue);
     expect(viewModel.planEmptyKind, InvitePlanEmptyKind.empty);
+    expect(viewModel.planDisplayEvent, ActionPlanTrackingEvent(AnalyticsEventNames.actionPlanEmptyAction));
     expect(viewModel.showRetryGenerate, isFalse);
     expect(viewModel.showModifierButton, isTrue);
     expect(viewModel.displayState, DisplayState.CONTENT);
@@ -190,6 +198,7 @@ void main() {
 
     expect(viewModel.showPlanEmptyState, isTrue);
     expect(viewModel.planEmptyKind, InvitePlanEmptyKind.failure);
+    expect(viewModel.planDisplayEvent, ActionPlanTrackingEvent(AnalyticsEventNames.actionPlanFailureAction));
     expect(viewModel.showRetryGenerate, isTrue);
     expect(viewModel.showModifierButton, isFalse);
     expect(viewModel.displayState, DisplayState.CONTENT);

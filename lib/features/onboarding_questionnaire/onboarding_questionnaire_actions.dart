@@ -2,9 +2,10 @@ import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 
 class OnboardingQuestionnaireSuccessAction {
   final bool finished;
+  final bool everFinished;
   final OnboardingQuestionnaireAnswers answers;
 
-  OnboardingQuestionnaireSuccessAction({required this.finished, required this.answers});
+  OnboardingQuestionnaireSuccessAction({required this.finished, required this.answers, this.everFinished = false});
 }
 
 class OnboardingQuestionnaireRequestAction {}

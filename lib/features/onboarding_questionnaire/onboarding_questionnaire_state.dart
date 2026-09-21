@@ -10,10 +10,11 @@ class OnboardingQuestionnaireNotInitializedState extends OnboardingQuestionnaire
 
 class OnboardingQuestionnaireSuccessState extends OnboardingQuestionnaireState {
   final bool finished;
+  final bool everFinished;
   final OnboardingQuestionnaireAnswers answers;
 
-  OnboardingQuestionnaireSuccessState({required this.finished, required this.answers});
+  OnboardingQuestionnaireSuccessState({required this.finished, required this.answers, this.everFinished = false});
 
   @override
-  List<Object?> get props => [finished, answers];
+  List<Object?> get props => [finished, everFinished, answers];
 }

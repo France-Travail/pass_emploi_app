@@ -1,6 +1,9 @@
 import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
+import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
+import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_tracker.dart';
+import 'package:pass_emploi_app/ui/strings.dart';
 
 typedef OnboardingQuestionnaireAnswersLoader = Future<OnboardingQuestionnaireAnswers> Function();
 typedef OnboardingQuestionnaireAnswersSaver = Future<void> Function(OnboardingQuestionnaireAnswers answers);
@@ -40,6 +43,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
   final OnboardingQuestionnaireFinishWithoutGeneration? _onFinishWithoutGeneration;
   final bool startAtFirstStep;
   final bool skipActionPlanGeneration;
+  final OnboardingQuestionnaireTracker? _tracker;
 
   OnboardingQuestionnaireStep step = OnboardingQuestionnaireStep.prenom;
   OnboardingQuestionnaireAnswers savedAnswers = const OnboardingQuestionnaireAnswers();
@@ -68,9 +72,11 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     OnboardingQuestionnaireFinishWithoutGeneration? onFinishWithoutGeneration,
     this.startAtFirstStep = false,
     this.skipActionPlanGeneration = false,
-  })  : _loadAnswers = loadAnswers,
-        _saveAnswers = saveAnswers,
-        _onFinishWithoutGeneration = onFinishWithoutGeneration;
+    OnboardingQuestionnaireTracker? tracker,
+  }) : _loadAnswers = loadAnswers,
+       _saveAnswers = saveAnswers,
+       _onFinishWithoutGeneration = onFinishWithoutGeneration,
+       _tracker = tracker;
 
   Future<void> init() async {
     isLoading = true;
@@ -78,6 +84,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     savedAnswers = await _loadAnswers();
     _hydrateDraftsFromSaved();
     step = startAtFirstStep ? OnboardingQuestionnaireStep.prenom : firstIncompleteStep(savedAnswers);
+    _tracker?.trackStepScreen(step);
     isLoading = false;
     notifyListeners();
   }
@@ -151,16 +158,16 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
   }
 
   bool get canContinue => switch (step) {
-        OnboardingQuestionnaireStep.prenom => draftPrenom.trim().isNotEmpty,
-        OnboardingQuestionnaireStep.dateNaissance => parsedBirthDate != null,
-        OnboardingQuestionnaireStep.habitation => draftHabitation != null,
-        OnboardingQuestionnaireStep.situation => draftSituation != null,
-        OnboardingQuestionnaireStep.objectifs => draftObjectifs.isNotEmpty,
-        OnboardingQuestionnaireStep.domaine => draftDomaine.trim().isNotEmpty,
-        OnboardingQuestionnaireStep.villeRecherche => draftVilleRecherche != null,
-        OnboardingQuestionnaireStep.freins => draftFreins.isNotEmpty,
-        OnboardingQuestionnaireStep.loader => false,
-      };
+    OnboardingQuestionnaireStep.prenom => draftPrenom.trim().isNotEmpty,
+    OnboardingQuestionnaireStep.dateNaissance => parsedBirthDate != null,
+    OnboardingQuestionnaireStep.habitation => draftHabitation != null,
+    OnboardingQuestionnaireStep.situation => draftSituation != null,
+    OnboardingQuestionnaireStep.objectifs => draftObjectifs.isNotEmpty,
+    OnboardingQuestionnaireStep.domaine => draftDomaine.trim().isNotEmpty,
+    OnboardingQuestionnaireStep.villeRecherche => draftVilleRecherche != null,
+    OnboardingQuestionnaireStep.freins => draftFreins.isNotEmpty,
+    OnboardingQuestionnaireStep.loader => false,
+  };
 
   DateTime? get parsedBirthDate {
     if (draftBirthDay.length != 2 || draftBirthMonth.length != 2 || draftBirthYear.length != 4) {
@@ -301,11 +308,15 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     if (!canContinue) return;
     if (step == OnboardingQuestionnaireStep.dateNaissance && isBirthDateUnderMinimumAge) return;
     await _persistCurrentStep();
+    _tracker?.trackStepEvent(AnalyticsEventNames.questionnaireStepValidatedAction, step);
+    _trackAnswers();
     _goNext();
   }
 
   Future<void> skipStep() async {
     await _clearCurrentStep();
+    _tracker?.trackStepEvent(AnalyticsEventNames.questionnaireStepSkippedAction, step);
+    if (step == OnboardingQuestionnaireStep.domaine) _trackDomaine("étape passée");
     _goNext();
   }
 
@@ -359,8 +370,51 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     savedAnswers = savedAnswers.copyWith(clearDomaine: true, domaineInconnu: true);
     await _saveAnswers(savedAnswers);
     draftDomaine = '';
+    _tracker?.trackStepEvent(AnalyticsEventNames.questionnaireStepValidatedAction, step);
+    _trackDomaine("je ne sais pas encore");
     _goNext();
   }
+
+  void _trackAnswers() {
+    final tracker = _tracker;
+    if (tracker == null) return;
+    switch (step) {
+      case OnboardingQuestionnaireStep.habitation:
+        final departement = savedAnswers.habitation?.departement;
+        if (departement != null) {
+          tracker.trackEvent(AnalyticsEventNames.questionnaireDepartementAction, name: departement);
+        }
+      case OnboardingQuestionnaireStep.situation:
+        tracker.trackEvent(AnalyticsEventNames.questionnaireSituationAction, name: savedAnswers.situation?.label);
+      case OnboardingQuestionnaireStep.objectifs:
+        for (final objectif in savedAnswers.objectifs) {
+          tracker.trackEvent(AnalyticsEventNames.questionnaireObjectifAction, name: objectif.label);
+        }
+        tracker.trackEvent(AnalyticsEventNames.questionnaireObjectifsCountAction, value: savedAnswers.objectifs.length);
+      case OnboardingQuestionnaireStep.domaine:
+        _trackDomaine("métier saisi");
+      case OnboardingQuestionnaireStep.villeRecherche:
+        final unchanged = savedAnswers.villeRecherche?.code == savedAnswers.habitation?.code;
+        tracker.trackEvent(
+          AnalyticsEventNames.questionnaireZoneAction,
+          name: unchanged ? "zone inchangée" : "zone modifiée",
+          value: savedAnswers.rayonKm,
+        );
+      case OnboardingQuestionnaireStep.freins:
+        for (final frein in savedAnswers.freins) {
+          tracker.trackEvent(AnalyticsEventNames.questionnaireFreinAction, name: frein.label);
+        }
+        tracker.trackEvent(AnalyticsEventNames.questionnaireFreinsCountAction, value: savedAnswers.freins.length);
+      case OnboardingQuestionnaireStep.prenom ||
+          OnboardingQuestionnaireStep.dateNaissance ||
+          OnboardingQuestionnaireStep.loader:
+        break;
+    }
+  }
+
+  // Never the text typed by the jeune.
+  void _trackDomaine(String answer) =>
+      _tracker?.trackEvent(AnalyticsEventNames.questionnaireDomaineAction, name: answer);
 
   Future<void> _persistCurrentStep() async {
     switch (step) {
@@ -406,6 +460,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
       return;
     }
     step = next;
+    _tracker?.trackStepScreen(step);
     if (step == OnboardingQuestionnaireStep.villeRecherche) {
       _prefillVilleFromHabitation();
     }
@@ -425,7 +480,9 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     if (step == OnboardingQuestionnaireStep.loader) return false;
     final previous = step.previous;
     if (previous == null) return true;
+    _tracker?.trackStepEvent(AnalyticsEventNames.questionnaireStepBackAction, step);
     step = previous;
+    _tracker?.trackStepScreen(step);
     _reloadDraftForStep(step);
     geolocationError = null;
     notifyListeners();
@@ -442,5 +499,24 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     isGeolocating = false;
     geolocationError = message;
     notifyListeners();
+  }
+
+  void startGeolocation() {
+    setGeolocating(true);
+    _tracker?.trackStepEvent(AnalyticsEventNames.questionnaireGeolocationRequestedAction, step);
+  }
+
+  void succeedGeolocation() {
+    setGeolocating(false);
+    _tracker?.trackStepEvent(AnalyticsEventNames.questionnaireGeolocationSucceededAction, step);
+  }
+
+  void failGeolocation(OnboardingQuestionnaireGeolocationFailure failure) {
+    setGeolocationError(Strings.onboardingQuestionnaireGeolocateError);
+    _tracker?.trackEvent(
+      AnalyticsEventNames.questionnaireGeolocationFailedAction,
+      name: failure.label,
+      value: step.questionnaireIndex,
+    );
   }
 }

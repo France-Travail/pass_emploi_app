@@ -14,7 +14,9 @@ import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/pages/cv/cv_list_page.dart';
 import 'package:pass_emploi_app/pages/notification_preferences_page.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_page.dart';
+import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_tracker.dart';
 import 'package:pass_emploi_app/pages/partage_activite_page.dart';
 import 'package:pass_emploi_app/pages/profil/confidentialite_page.dart';
 import 'package:pass_emploi_app/pages/profil/matomo_logging_page.dart';
@@ -241,7 +243,17 @@ class _IdentityHighlight extends StatelessWidget {
                       icon: DsfrIcons.designPencilLine,
                       variant: DsfrButtonVariant.secondary,
                       size: DsfrComponentSize.lg,
-                      onPressed: () => Navigator.push(context, OnboardingQuestionnairePage.materialPageRoute()),
+                      onPressed: () {
+                        final state = StoreProvider.of<AppState>(
+                          context,
+                          listen: false,
+                        ).state.onboardingQuestionnaireState;
+                        final isUpdate = state is OnboardingQuestionnaireSuccessState && state.everFinished;
+                        OnboardingQuestionnaireTracker(
+                          isUpdate: isUpdate,
+                        ).trackOpening(OnboardingQuestionnaireEntryPoint.profil);
+                        Navigator.push(context, OnboardingQuestionnairePage.materialPageRoute());
+                      },
                     ),
                   ),
                 ],

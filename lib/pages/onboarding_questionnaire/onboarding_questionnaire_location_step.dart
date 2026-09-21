@@ -5,6 +5,7 @@ import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_form_change_notifier.dart';
+import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_tracker.dart';
 import 'package:pass_emploi_app/repositories/communes_repository.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -63,12 +64,16 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
 
   @override
   Widget build(BuildContext context) {
-    final label = widget.isHabitation ? Strings.onboardingQuestionnaireHabitationLabel : Strings.onboardingQuestionnaireVilleLabel;
+    final label = widget.isHabitation
+        ? Strings.onboardingQuestionnaireHabitationLabel
+        : Strings.onboardingQuestionnaireVilleLabel;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          widget.isHabitation ? Strings.onboardingQuestionnaireHabitationSubtitle : Strings.onboardingQuestionnaireVilleSubtitle,
+          widget.isHabitation
+              ? Strings.onboardingQuestionnaireHabitationSubtitle
+              : Strings.onboardingQuestionnaireVilleSubtitle,
           style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
         ),
         const SizedBox(height: Margins.spacing_base),
@@ -185,11 +190,11 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
   }
 
   Future<void> _geolocate() async {
-    form.setGeolocating(true);
+    form.startGeolocation();
     try {
       final serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        form.setGeolocationError(Strings.onboardingQuestionnaireGeolocateError);
+        form.failGeolocation(OnboardingQuestionnaireGeolocationFailure.serviceDesactive);
         return;
       }
       var permission = await Geolocator.checkPermission();
@@ -197,7 +202,7 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
         permission = await Geolocator.requestPermission();
       }
       if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
-        form.setGeolocationError(Strings.onboardingQuestionnaireGeolocateError);
+        form.failGeolocation(OnboardingQuestionnaireGeolocationFailure.permissionRefusee);
         return;
       }
       final position = await Geolocator.getCurrentPosition();
@@ -206,7 +211,7 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
         longitude: position.longitude,
       );
       if (commune == null) {
-        form.setGeolocationError(Strings.onboardingQuestionnaireGeolocateError);
+        form.failGeolocation(OnboardingQuestionnaireGeolocationFailure.aucuneCommune);
         return;
       }
       setState(() => _suggestions = []);
@@ -216,9 +221,9 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
       } else {
         form.selectVilleRecherche(commune);
       }
-      form.setGeolocating(false);
+      form.succeedGeolocation();
     } catch (_) {
-      form.setGeolocationError(Strings.onboardingQuestionnaireGeolocateError);
+      form.failGeolocation(OnboardingQuestionnaireGeolocationFailure.positionIntrouvable);
     }
   }
 }

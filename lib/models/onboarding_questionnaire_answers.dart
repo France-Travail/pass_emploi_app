@@ -23,6 +23,12 @@ class QuestionnaireCommune extends Equatable {
     return '$nom ($codePostal)';
   }
 
+  /// Département from the INSEE code (3 digits for overseas: 971, 972…; 2A/2B for Corsica).
+  String? get departement {
+    if (code.length < 2) return null;
+    return code.startsWith('97') && code.length >= 3 ? code.substring(0, 3) : code.substring(0, 2);
+  }
+
   factory QuestionnaireCommune.fromJson(Map<String, dynamic> json, {String? preferredCodePostal}) {
     final codesPostaux = json['codesPostaux'];
     String? codePostal;

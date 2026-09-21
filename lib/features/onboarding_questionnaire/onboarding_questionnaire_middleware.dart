@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/models/criteres_recherche_utilisateur.dart';
 import 'package:pass_emploi_app/models/fonctionnalite.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
+import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_tracker.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
 import 'package:pass_emploi_app/repositories/onboarding_questionnaire_repository.dart';
@@ -36,7 +37,7 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
     } else if (action is OnboardingQuestionnaireCompleteAction) {
       await _complete(store, action.answers);
     } else if (action is OnboardingQuestionnaireFinishAction) {
-      store.dispatch(OnboardingQuestionnaireSuccessAction(finished: true, answers: action.answers));
+      store.dispatch(OnboardingQuestionnaireSuccessAction(finished: true, everFinished: true, answers: action.answers));
     } else if (action is OnboardingQuestionnaireResumeAction) {
       await _resume(store);
     } else if (action is OnboardingQuestionnaireAnswersUpdatedAction) {
@@ -52,10 +53,14 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
   Future<void> _load(Store<AppState> store) async {
     final answers = await _repository.getAnswers();
     final finished = await _repository.isFinished();
-    store.dispatch(OnboardingQuestionnaireSuccessAction(finished: finished, answers: answers));
+    final everFinished = await _repository.hasEverFinished();
+    store.dispatch(
+      OnboardingQuestionnaireSuccessAction(finished: finished, everFinished: everFinished, answers: answers),
+    );
   }
 
   Future<void> _complete(Store<AppState> store, OnboardingQuestionnaireAnswers answers) async {
+    final tracker = OnboardingQuestionnaireTracker(isUpdate: await _repository.hasEverFinished());
     await _repository.saveAnswers(answers);
     _persistRechercheCriteres(store, answers);
     if (answers.canGenerateActionPlan) {
@@ -63,22 +68,31 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
       if (userId == null) {
         store.dispatch(ActionPlanLoadingAction());
         store.dispatch(ActionPlanFailureAction());
+        tracker.trackGenerationOutcome(OnboardingQuestionnaireGenerationOutcome.echec);
       } else {
         store.dispatch(ActionPlanLoadingAction());
         final plan = await _actionPlanRepository.generate(userId, answers);
         if (plan != null) {
           store.dispatch(ActionPlanSuccessAction(plan));
+          tracker.trackGenerationOutcome(
+            plan.objectives.isEmpty
+                ? OnboardingQuestionnaireGenerationOutcome.planVide
+                : OnboardingQuestionnaireGenerationOutcome.planGenere,
+            objectivesCount: plan.objectives.length,
+          );
         } else {
           store.dispatch(ActionPlanFailureAction());
+          tracker.trackGenerationOutcome(OnboardingQuestionnaireGenerationOutcome.echec);
         }
       }
 
       await _repository.setFinished(true);
     } else {
+      tracker.trackGenerationOutcome(OnboardingQuestionnaireGenerationOutcome.impossible);
       store.dispatch(ActionPlanEmptyAction());
       await _repository.setFinished(true);
 
-      store.dispatch(OnboardingQuestionnaireSuccessAction(finished: true, answers: answers));
+      store.dispatch(OnboardingQuestionnaireSuccessAction(finished: true, everFinished: true, answers: answers));
     }
   }
 
@@ -91,6 +105,7 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
   Future<void> _resume(Store<AppState> store) async {
     final answers = await _repository.getAnswers();
     await _repository.setFinished(false);
-    store.dispatch(OnboardingQuestionnaireSuccessAction(finished: false, answers: answers));
+    final everFinished = await _repository.hasEverFinished();
+    store.dispatch(OnboardingQuestionnaireSuccessAction(finished: false, everFinished: everFinished, answers: answers));
   }
 }
