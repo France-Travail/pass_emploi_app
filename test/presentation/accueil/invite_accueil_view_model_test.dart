@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
-import 'package:pass_emploi_app/features/action_plan/action_plan_tracking.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_tracking.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
-import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/presentation/accueil/invite_accueil_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 
@@ -72,7 +72,7 @@ void main() {
     );
   });
 
-  test('complet mode shows modifier and conseiller CTA', () {
+  test('complet mode do not shows modifier and conseiller CTA because not implemented yet', () {
     final answers = OnboardingQuestionnaireAnswers(
       prenom: 'Léa',
       dateNaissance: DateTime(2005, 5, 5),
@@ -109,7 +109,7 @@ void main() {
     expect(viewModel.mode, InviteAccueilMode.complet);
     expect(viewModel.showQuestionnaireCard, isFalse);
     expect(viewModel.showModifierButton, isTrue);
-    expect(viewModel.showConseillerCta, isTrue);
+    expect(viewModel.showConseillerCta, isFalse);
     expect(viewModel.showPlanEmptyState, isFalse);
   });
 
