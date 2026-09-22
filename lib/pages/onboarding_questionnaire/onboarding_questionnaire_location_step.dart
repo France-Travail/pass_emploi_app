@@ -77,28 +77,38 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
           style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
         ),
         const SizedBox(height: Margins.spacing_base),
-        Text(
-          label,
-          style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
-        ),
-        const SizedBox(height: DsfrSpacings.s1w),
-        DsfrInputHeadless(
-          key: ValueKey(widget.isHabitation ? 'habitation' : 'ville'),
-          controller: _controller,
-          onChanged: _onQueryChanged,
-          suffixIcon: _controller.text.isNotEmpty
-              ? IconButton(
-                  tooltip: Strings.clear,
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
-                  icon: Icon(
-                    DsfrIcons.systemCloseLine,
-                    size: 16,
-                    color: DsfrColorDecisions.textDefaultGrey(context),
-                  ),
-                  onPressed: _clearQuery,
-                )
-              : null,
+        MergeSemantics(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                label,
+                style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
+              ),
+              const SizedBox(height: DsfrSpacings.s1w),
+              Semantics(
+                identifier: label,
+                child: DsfrInputHeadless(
+                  key: ValueKey(widget.isHabitation ? 'habitation' : 'ville'),
+                  controller: _controller,
+                  onChanged: _onQueryChanged,
+                  suffixIcon: _controller.text.isNotEmpty
+                      ? IconButton(
+                          tooltip: Strings.clear,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                          icon: Icon(
+                            DsfrIcons.systemCloseLine,
+                            size: 16,
+                            color: DsfrColorDecisions.textDefaultGrey(context),
+                          ),
+                          onPressed: _clearQuery,
+                        )
+                      : null,
+                ),
+              ),
+            ],
+          ),
         ),
         if (_suggestions.isNotEmpty) ...[
           const SizedBox(height: Margins.spacing_s),

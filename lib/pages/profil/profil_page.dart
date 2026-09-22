@@ -146,22 +146,24 @@ class _Scaffold extends StatelessWidget {
                   description: Strings.privacyAndDataSubtitle,
                   onTap: () => Navigator.push(context, ConfidentialitePage.materialPageRoute()),
                 ),
-                const SizedBox(height: DsfrSpacings.s1w),
-                DsfrProfilTile(
-                  icon: DsfrIcons.systemDeleteBinLine,
-                  iconBackgroundColor: DsfrColors.greenEmeraude950,
-                  title: Strings.suppressionButtonLabel,
-                  onTap: () => Navigator.push(context, SuppressionComptePage.materialPageRoute()),
-                ),
-                const SizedBox(height: DsfrSpacings.s4w),
-                DsfrButton(
-                  label: Strings.logoutAction,
-                  icon: DsfrIcons.systemLogoutBoxRLine,
-                  variant: DsfrButtonVariant.secondary,
-                  size: DsfrComponentSize.lg,
-                  onPressed: () => context.dispatch(RequestLogoutAction(LogoutReason.userLogout)),
-                ),
-                const SizedBox(height: DsfrSpacings.s4w),
+                if (viewModel.displayLogoutAndSuppressionCompte) ...[
+                  const SizedBox(height: DsfrSpacings.s1w),
+                  DsfrProfilTile(
+                    icon: DsfrIcons.systemDeleteBinLine,
+                    iconBackgroundColor: DsfrColors.greenEmeraude950,
+                    title: Strings.suppressionButtonLabel,
+                    onTap: () => Navigator.push(context, SuppressionComptePage.materialPageRoute()),
+                  ),
+                  const SizedBox(height: DsfrSpacings.s4w),
+                  DsfrButton(
+                    label: Strings.logoutAction,
+                    icon: DsfrIcons.systemLogoutBoxRLine,
+                    variant: DsfrButtonVariant.secondary,
+                    size: DsfrComponentSize.lg,
+                    onPressed: () => context.dispatch(RequestLogoutAction(LogoutReason.userLogout)),
+                  ),
+                  const SizedBox(height: DsfrSpacings.s4w),
+                ],
                 if (kDebugMode || viewModel.displayDeveloperOptions) ...[
                   const SizedBox(height: DsfrSpacings.s4w),
                   _SectionTitle(Strings.developerOptions),
@@ -442,6 +444,13 @@ class _DeveloperOptions extends StatelessWidget {
             context.dispatch(DeveloperOptionsDeleteAllPrefsAction());
             showSnackBarWithSystemError(context, "Killez 💀- voire supprimer 🗑 - l'app");
           },
+        ),
+        const SizedBox(height: DsfrSpacings.s1w),
+        DsfrProfilTile(
+          icon: DsfrIcons.systemLogoutBoxRLine,
+          iconBackgroundColor: grey,
+          title: Strings.logoutAction,
+          onTap: () => context.dispatch(RequestLogoutAction(LogoutReason.userLogout)),
         ),
       ],
     );

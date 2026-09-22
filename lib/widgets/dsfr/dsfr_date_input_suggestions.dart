@@ -103,7 +103,11 @@ class DsfrDateSuggestions extends StatelessWidget {
         for (final suggestion in dateSuggestionsViewModel.suggestions)
           Semantics(
             button: true,
+            // A11y 10.3.3 : état sélectionné restitué, et nom lu une seule fois.
+            selected: _isSuggestionSelected(suggestion),
             label: suggestion.a11yLabel,
+            onTap: () => onSelected(DateFromSuggestion(suggestion.date, suggestion.label)),
+            excludeSemantics: true,
             child: DsfrButton(
               label: suggestion.label,
               variant: _isSuggestionSelected(suggestion) ? DsfrButtonVariant.primary : DsfrButtonVariant.secondary,

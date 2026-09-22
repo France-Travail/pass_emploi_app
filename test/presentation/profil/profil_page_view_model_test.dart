@@ -115,6 +115,7 @@ void main() {
     // Then
     expect(viewModel.displayMonCompte, isFalse);
     expect(viewModel.displayPartageActivite, isFalse);
+    expect(viewModel.displayLogoutAndSuppressionCompte, isFalse);
   });
 
   test("create when user is not invite should display mon compte and partage activite", () {
@@ -127,6 +128,7 @@ void main() {
     // Then
     expect(viewModel.displayMonCompte, isTrue);
     expect(viewModel.displayPartageActivite, isTrue);
+    expect(viewModel.displayLogoutAndSuppressionCompte, isTrue);
   });
 
   test("create when user is from Milo should not display download CV card", () {

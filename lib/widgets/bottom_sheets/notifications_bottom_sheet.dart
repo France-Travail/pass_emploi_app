@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -7,6 +6,7 @@ import 'package:pass_emploi_app/features/onboarding/onboarding_actions.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
+import 'package:pass_emploi_app/widgets/dsfr/emoji_tile.dart';
 
 class NotificationsBottomSheet extends StatelessWidget {
   const NotificationsBottomSheet({super.key});
@@ -17,6 +17,7 @@ class NotificationsBottomSheet extends StatelessWidget {
       context: context,
       backgroundColor: DsfrColorDecisions.backgroundTransparent(context),
       barrierColor: DsfrColorDecisions.backgroundOverlayGrey(context),
+      barrierLabel: Strings.bottomSheetBarrierLabel,
       elevation: 0,
       shape: const RoundedRectangleBorder(),
       isScrollControlled: true,
@@ -55,7 +56,12 @@ class NotificationsBottomSheet extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: DsfrSpacings.s3w),
-        const Center(child: _BellEmojiTile()),
+        const Center(
+          child: EmojiTile(
+            emoji: '🔔',
+            backgroundColor: DsfrColors.purpleGlycine925,
+          ),
+        ),
         const SizedBox(height: DsfrSpacings.s4w),
         Text(
           Strings.notificationsBottomSheetTitle,
@@ -83,33 +89,6 @@ class NotificationsBottomSheet extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(false),
         ),
       ],
-    );
-  }
-}
-
-class _BellEmojiTile extends StatelessWidget {
-  const _BellEmojiTile();
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        color: DsfrColors.purpleGlycine925,
-        borderRadius: BorderRadius.all(Radius.circular(16)),
-      ),
-      child: SizedBox.square(
-        dimension: 96,
-        child: Center(
-          child: Text(
-            '🔔',
-            style: TextStyle(
-              fontSize: 46,
-              // Force color emoji on iOS for dingbats.
-              fontFamily: defaultTargetPlatform == TargetPlatform.iOS ? 'Apple Color Emoji' : null,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

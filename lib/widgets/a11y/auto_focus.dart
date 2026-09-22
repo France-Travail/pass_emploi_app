@@ -13,6 +13,20 @@ extension GlobayKeyA11yExt on GlobalKey {
   }
 }
 
+extension FocusNodeA11yExt on FocusNode {
+  /// Déplace le focus clavier puis notifie le lecteur d'écran (nom, rôle, valeur).
+  void requestFocusWithA11y({Duration? delay}) {
+    requestFocus();
+    Future.delayed(delay ?? const Duration(milliseconds: 100), () {
+      context?.findRenderObject()?.sendSemanticsEvent(FocusSemanticEvent());
+    });
+  }
+}
+
+/// Déplace le focus du lecteur d'écran sur [child] à son affichage.
+///
+/// Crée un nœud sémantique dédié (`container`) : à placer AU-DESSUS d'un `Semantics(header: true)`,
+/// jamais en dessous, sinon le texte est isolé dans ce nœud et perd son rôle d'en-tête.
 class AutoFocusA11y extends StatefulWidget {
   final Widget child;
   final bool enabled;
@@ -42,8 +56,12 @@ class _AutoFocusA11yState extends State<AutoFocusA11y> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    // Le focus doit viser un nœud sémantique propre au widget : sans `container`, l'événement
+    // remonte au premier ancêtre qui en possède un (la page) et le focus ne se déplace pas.
+    return Semantics(
       key: globalKey,
+      container: true,
+      explicitChildNodes: true,
       child: widget.child,
     );
   }

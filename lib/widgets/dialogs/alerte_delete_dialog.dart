@@ -23,6 +23,7 @@ class AlerteDeleteDialog extends StatelessWidget {
       context: context,
       backgroundColor: DsfrColorDecisions.backgroundTransparent(context),
       barrierColor: DsfrColorDecisions.backgroundOverlayGrey(context),
+      barrierLabel: Strings.bottomSheetBarrierLabel,
       elevation: 0,
       shape: const RoundedRectangleBorder(),
       isScrollControlled: true,

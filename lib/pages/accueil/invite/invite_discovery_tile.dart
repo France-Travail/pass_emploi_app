@@ -18,57 +18,70 @@ class InviteDiscoveryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: DsfrColorDecisions.backgroundDefaultGrey(context),
-      borderRadius: BorderRadius.circular(4),
-      child: InkWell(
-        onTap: () {
-          if (isCompleted) {
-            onHide();
-          } else {
-            Navigator.of(context).push(OnboardingPage.route());
-          }
-        },
+    final title = isCompleted ? Strings.onboardingAccueilTitleCompleted : Strings.inviteAccueilDiscoveryTitle;
+    // A11y : un seul nœud bouton dont le nom reflète l'action (ouvrir la découverte ou la masquer).
+    return Semantics(
+      container: true,
+      button: true,
+      label: [
+        Strings.inviteAccueilDiscoveryProgressA11y(progressPercent),
+        title,
+        if (isCompleted) Strings.inviteAccueilDiscoveryHideA11y,
+      ].join(', '),
+      onTap: () => _onTap(context),
+      excludeSemantics: true,
+      child: Material(
+        color: DsfrColorDecisions.backgroundDefaultGrey(context),
         borderRadius: BorderRadius.circular(4),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4),
-            border: Border.all(color: DsfrColorDecisions.borderActionHighBlueFrance(context)),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(Margins.spacing_base),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DsfrBadge(
-                  label: Strings.inviteAccueilDiscoveryProgress(progressPercent),
-                  type: DsfrBadgeType.news,
-                  size: DsfrComponentSize.sm,
-                  withIcon: true,
-                ),
-                const SizedBox(height: Margins.spacing_s),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        isCompleted
-                            ? Strings.onboardingAccueilTitleCompleted
-                            : Strings.inviteAccueilDiscoveryTitle,
-                        style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+        child: InkWell(
+          onTap: () => _onTap(context),
+          borderRadius: BorderRadius.circular(4),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: DsfrColorDecisions.borderActionHighBlueFrance(context)),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(Margins.spacing_base),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  DsfrBadge(
+                    label: Strings.inviteAccueilDiscoveryProgress(progressPercent),
+                    type: DsfrBadgeType.news,
+                    size: DsfrComponentSize.sm,
+                    withIcon: true,
+                  ),
+                  const SizedBox(height: Margins.spacing_s),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                        ),
                       ),
-                    ),
-                    Icon(
-                      isCompleted ? DsfrIcons.systemCloseLine : DsfrIcons.systemArrowRightSLine,
-                      color: DsfrColorDecisions.textTitleBlueFrance(context),
-                      size: 16,
-                    ),
-                  ],
-                ),
-              ],
+                      Icon(
+                        isCompleted ? DsfrIcons.systemCloseLine : DsfrIcons.systemArrowRightSLine,
+                        color: DsfrColorDecisions.textTitleBlueFrance(context),
+                        size: 16,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  void _onTap(BuildContext context) {
+    if (isCompleted) {
+      onHide();
+    } else {
+      Navigator.of(context).push(OnboardingPage.route());
+    }
   }
 }

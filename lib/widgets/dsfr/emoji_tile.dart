@@ -20,21 +20,24 @@ class EmojiTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final resolvedEmojiSize = emojiSize ?? size * 0.48;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-      ),
-      child: SizedBox.square(
-        dimension: size,
-        child: Center(
-          child: Text(
-            emoji,
-            style: TextStyle(
-              fontSize: resolvedEmojiSize,
-              height: 1,
-              // Force color emoji on iOS for dingbats.
-              fontFamily: defaultTargetPlatform == TargetPlatform.iOS ? 'Apple Color Emoji' : null,
+    // A11y : les emojis sont décoratifs, ils ne doivent pas être lus par les lecteurs d'écran.
+    return ExcludeSemantics(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+        ),
+        child: SizedBox.square(
+          dimension: size,
+          child: Center(
+            child: Text(
+              emoji,
+              style: TextStyle(
+                fontSize: resolvedEmojiSize,
+                height: 1,
+                // Force color emoji on iOS for dingbats.
+                fontFamily: defaultTargetPlatform == TargetPlatform.iOS ? 'Apple Color Emoji' : null,
+              ),
             ),
           ),
         ),

@@ -40,9 +40,7 @@ class ActionPlanRepository {
       final plan = ActionPlan.fromApiJson(data);
       final previous = await _loadState();
       final doneIds = previous?.doneIds ?? await _readDoneActionIds();
-      final merged =
-          (previous == null ? plan : plan.keepActionsFrom(previous.plan))
-              .applyDone(doneIds);
+      final merged = (previous == null ? plan : plan.keepActionsFrom(previous.plan)).applyDone(doneIds);
       await _persist(merged, doneIds);
       return merged.withoutEmptyObjectives();
     } catch (e, stack) {
@@ -97,9 +95,7 @@ class ActionPlanRepository {
     if (plan == null) return null;
     final progress = await _readProgress();
     if (!progress.isEmpty) {
-      final migrated = progress.hasLegacy
-          ? progress.migrateLegacy(plan)
-          : progress;
+      final migrated = progress.hasLegacy ? progress.migrateLegacy(plan) : progress;
       plan = plan.applyProgress(migrated);
     }
     final doneIds = {

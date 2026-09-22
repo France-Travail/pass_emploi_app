@@ -13,7 +13,7 @@ class BlocMarque extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Semantics(
       label: Strings.republiqueFrancaise,
-      image: true,
+      excludeSemantics: true,
       child: SvgPicture.asset(
         isDark ? Drawables.blocMarqueDark : Drawables.blocMarqueLight,
         height: height,

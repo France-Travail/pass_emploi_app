@@ -69,9 +69,13 @@ class EmojiSolutionTile extends StatelessWidget {
     final subtitleStyle = DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context));
 
     final semanticsLabel = (subtitle == null || subtitle!.isEmpty) ? title : '$title. $subtitle';
+    // A11y : un seul nœud bouton ; les textes affichés sont exclus pour éviter la double restitution.
     return Semantics(
+      container: true,
       button: true,
       label: semanticsLabel,
+      onTap: onTap,
+      excludeSemantics: true,
       child: Material(
         color: DsfrColorDecisions.backgroundDefaultGrey(context),
         borderRadius: radius,

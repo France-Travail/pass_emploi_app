@@ -24,6 +24,7 @@ class CreateUserActionFormStep1 extends StatelessWidget {
             children: [
               const SizedBox(height: DsfrSpacings.s2w),
               Semantics(
+                header: true,
                 sortKey: const OrdinalSortKey(1),
                 child: Text(
                   Strings.userActionSubtitleStep1,

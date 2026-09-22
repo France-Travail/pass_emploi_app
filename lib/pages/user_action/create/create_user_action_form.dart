@@ -66,7 +66,11 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> {
       child: Scaffold(
         backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
         resizeToAvoidBottomInset: false,
-        appBar: _CreateUserActionAppBar(onBackPressed: _onBack),
+        appBar: _CreateUserActionAppBar(
+          onBackPressed: _onBack,
+          // A11y 8.2 : la hauteur suit la taille de texte choisie dans les réglages.
+          height: MediaQuery.textScalerOf(context).scale(76),
+        ),
         body: Stack(
           children: [
             _CreateUserActionForm(_viewModel),
@@ -89,12 +93,13 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> {
 }
 
 class _CreateUserActionAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _CreateUserActionAppBar({required this.onBackPressed});
+  const _CreateUserActionAppBar({required this.onBackPressed, required this.height});
 
   final VoidCallback onBackPressed;
+  final double height;
 
   @override
-  Size get preferredSize => const Size.fromHeight(76);
+  Size get preferredSize => Size.fromHeight(height);
 
   @override
   Widget build(BuildContext context) {
@@ -108,12 +113,18 @@ class _CreateUserActionAppBar extends StatelessWidget implements PreferredSizeWi
       automaticallyImplyLeading: false,
       titleSpacing: 0,
       centerTitle: false,
+      // A11y : l'AppBar marquerait tout le bloc (bouton Retour compris) comme en-tête ;
+      // seul le titre porte ce rôle, via son propre Semantics(header).
+      excludeHeaderSemantics: true,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Semantics(
+            container: true,
             button: true,
             label: Strings.back,
+            onTap: onBackPressed,
+            excludeSemantics: true,
             child: InkWell(
               onTap: onBackPressed,
               child: Padding(

@@ -117,14 +117,15 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
       surfaceTintColor: Colors.transparent,
       backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
       titleSpacing: DsfrSpacings.s2w,
-      title: Semantics(
-        header: true,
-        focusable: withAutofocusA11y,
-        child: Tooltip(
-          message: title,
-          excludeFromSemantics: true,
-          child: AutoFocusA11y(
-            enabled: withAutofocusA11y,
+      // A11y : AutoFocusA11y crée son propre nœud sémantique, il doit donc englober l'en-tête
+      // (et non l'inverse) pour que le rôle « en-tête » reste porté par le titre.
+      title: AutoFocusA11y(
+        enabled: withAutofocusA11y,
+        child: Semantics(
+          header: true,
+          child: Tooltip(
+            message: title,
+            excludeFromSemantics: true,
             child: Text(
               title,
               style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
@@ -322,6 +323,8 @@ class ModeDemoAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       scrolledUnderElevation: 0,
       backgroundColor: AppColors.warningLighten,
+      // A11y : bandeau d'information, pas un titre de page.
+      excludeHeaderSemantics: true,
       title: Padding(
         padding: const EdgeInsets.symmetric(vertical: Margins.spacing_base, horizontal: Margins.spacing_m),
         child: Row(

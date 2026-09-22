@@ -16,6 +16,7 @@ import 'package:pass_emploi_app/presentation/solutions_tabs_page_view_model.dart
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
@@ -115,7 +116,8 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
           color: context.grey100,
           child: _content(_selectedIndex, viewModel),
         ),
-        bottomNavigationBar: DsfrBottomNavigation(
+        bottomNavigationBar: _ChatAwareBottomNavigationBar(
+          hideWhenKeyboardVisible: viewModel.tabs[_selectedIndex] == MainTab.chat,
           currentIndex: _selectedIndex,
           onTap: (index) => _onItemTapped(index, viewModel),
           items: viewModel.tabs.map((e) => e.asNavItem(viewModel)).toList(),
@@ -199,6 +201,66 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
   }
 }
 
+/// Masque la barre du bas quand le clavier est ouvert sur la messagerie, sans
+/// reconstruire le corps de [MainPage] (évite la perte de focus du champ texte).
+class _ChatAwareBottomNavigationBar extends StatefulWidget {
+  const _ChatAwareBottomNavigationBar({
+    required this.hideWhenKeyboardVisible,
+    required this.currentIndex,
+    required this.onTap,
+    required this.items,
+  });
+
+  final bool hideWhenKeyboardVisible;
+  final int currentIndex;
+  final ValueChanged<int> onTap;
+  final List<DsfrBottomNavigationItem> items;
+
+  @override
+  State<_ChatAwareBottomNavigationBar> createState() => _ChatAwareBottomNavigationBarState();
+}
+
+class _ChatAwareBottomNavigationBarState extends State<_ChatAwareBottomNavigationBar> with WidgetsBindingObserver {
+  var _keyboardVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    if (!mounted || !widget.hideWhenKeyboardVisible) return;
+    // Attendre la fin de l'animation clavier pour ne pas perturber la prise de focus.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final keyboardVisible = A11yUtils.isKeyboardVisible(context);
+      if (keyboardVisible == _keyboardVisible) return;
+      setState(() => _keyboardVisible = keyboardVisible);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.hideWhenKeyboardVisible && _keyboardVisible) {
+      return const SizedBox.shrink();
+    }
+    return DsfrBottomNavigation(
+      currentIndex: widget.currentIndex,
+      onTap: widget.onTap,
+      items: widget.items,
+    );
+  }
+}
+
 class _ModeDemoWrapper extends StatelessWidget {
   final Widget child;
 
@@ -254,8 +316,13 @@ class _PopUpActualisationPe extends StatelessWidget {
           style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
         ),
         const SizedBox(height: DsfrSpacings.s4w),
+        // A11y 5.1 : un seul rôle (lien) au lieu de lien + bouton.
         Semantics(
+          container: true,
           link: true,
+          label: Strings.actualisationPePopUpPrimaryButton,
+          onTap: () => _onActualisationPressed(context),
+          excludeSemantics: true,
           child: DsfrButton(
             label: Strings.actualisationPePopUpPrimaryButton,
             icon: DsfrIcons.systemExternalLinkLine,

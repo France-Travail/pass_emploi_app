@@ -19,6 +19,7 @@ class ProfilPageViewModel extends Equatable {
   final bool displayMonCompte;
   final bool displayMonConseiller;
   final bool displayPartageActivite;
+  final bool displayLogoutAndSuppressionCompte;
   final bool displayDeveloperOptions;
   final bool withDownloadCv;
   final bool withQuestionnaireHighlight;
@@ -36,6 +37,7 @@ class ProfilPageViewModel extends Equatable {
     required this.displayMonCompte,
     required this.displayMonConseiller,
     required this.displayPartageActivite,
+    required this.displayLogoutAndSuppressionCompte,
     required this.displayDeveloperOptions,
     required this.withDownloadCv,
     required this.withQuestionnaireHighlight,
@@ -69,6 +71,7 @@ class ProfilPageViewModel extends Equatable {
       displayMonCompte: !isInvite,
       displayMonConseiller: _shouldDisplayMonConseiller(store.state.detailsJeuneState),
       displayPartageActivite: !isInvite,
+      displayLogoutAndSuppressionCompte: !isInvite,
       displayDeveloperOptions: store.state.developerOptionsState is DeveloperOptionsActivatedState,
       withDownloadCv: user?.loginMode.isPe() ?? false,
       withQuestionnaireHighlight:
@@ -100,6 +103,7 @@ class ProfilPageViewModel extends Equatable {
         displayMonCompte,
         displayMonConseiller,
         displayPartageActivite,
+        displayLogoutAndSuppressionCompte,
         displayDeveloperOptions,
         withDownloadCv,
         withQuestionnaireHighlight,

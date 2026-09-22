@@ -48,9 +48,13 @@ class SuiviOffreCard<T> extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
+                // A11y : un seul nœud bouton ; textes affichés exclus pour éviter la double restitution.
                 child: Semantics(
+                  container: true,
                   button: true,
                   label: _semanticsLabel(subtitle),
+                  onTap: onTap,
+                  excludeSemantics: true,
                   child: InkWell(
                     onTap: onTap,
                     borderRadius: const BorderRadius.all(Radius.circular(4)),

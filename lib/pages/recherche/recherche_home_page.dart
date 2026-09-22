@@ -133,9 +133,11 @@ class _CriteresUtilisateur extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // A11y : résumé restitué en un seul groupe, ex. « Ta recherche boulanger à Puteaux ».
     return Semantics(
       container: true,
-      label: Strings.rechercheHomeCriteresTitle,
+      label: Strings.rechercheHomeCriteresA11y(metierLabel, lieuLabel),
+      excludeSemantics: true,
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: DsfrColorDecisions.backgroundDefaultGrey(context),

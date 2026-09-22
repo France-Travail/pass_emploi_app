@@ -70,9 +70,14 @@ class DataCard<T> extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(
+                    // A11y : un seul nœud bouton ; textes affichés exclus pour éviter la double restitution
+                    // (sauf contenus additionnels, non couverts par le libellé).
                     child: Semantics(
+                      container: true,
                       button: true,
                       label: _semanticsLabel(contractLabel, mention),
+                      onTap: onTap,
+                      excludeSemantics: leading == null && additionalChild == null,
                       child: InkWell(
                         onTap: onTap,
                         borderRadius: const BorderRadius.all(Radius.circular(4)),

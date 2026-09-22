@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
+import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/chat_piece_jointe_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/onboarding/onboarding_showcase.dart';
 
@@ -55,6 +56,15 @@ class _ChatTextFieldState extends State<ChatTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final input = DsfrInputHeadless(
+      controller: widget.controller,
+      focusNode: widget.focusNode,
+      placeholder: Strings.yourMessage,
+      keyboardType: TextInputType.multiline,
+      minLines: 1,
+      maxLines: 5,
+    );
+
     return OnboardingShowcase(
       source: ShowcaseSource.message,
       child: ColoredBox(
@@ -68,16 +78,24 @@ class _ChatTextFieldState extends State<ChatTextField> {
                 firstChild: const SizedBox(height: DsfrSpacings.s6w, width: 0),
                 secondChild: Padding(
                   padding: const EdgeInsets.only(right: DsfrSpacings.s1w),
-                  child: Tooltip(
-                    message: Strings.sendAttachmentTooltip,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(Dimens.radius_s),
-                      child: DsfrButton(
-                        icon: DsfrIcons.businessAttachmentLine,
-                        iconSemanticLabel: Strings.sendAttachmentTooltip,
-                        variant: DsfrButtonVariant.primary,
-                        size: DsfrComponentSize.lg,
-                        onPressed: onSelectPieceJointe,
+                  // A11y : un seul nœud bouton, nommé une fois.
+                  child: Semantics(
+                    container: true,
+                    button: true,
+                    label: Strings.sendAttachmentTooltip,
+                    onTap: onSelectPieceJointe,
+                    excludeSemantics: true,
+                    child: Tooltip(
+                      message: Strings.sendAttachmentTooltip,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(Dimens.radius_s),
+                        child: DsfrButton(
+                          icon: DsfrIcons.businessAttachmentLine,
+                          iconSemanticLabel: Strings.sendAttachmentTooltip,
+                          variant: DsfrButtonVariant.primary,
+                          size: DsfrComponentSize.lg,
+                          onPressed: onSelectPieceJointe,
+                        ),
                       ),
                     ),
                   ),
@@ -88,25 +106,24 @@ class _ChatTextFieldState extends State<ChatTextField> {
                 duration: AnimationDurations.fast,
               ),
               Expanded(
-                child: Semantics(
-                  label: widget.controller.text.isNotEmpty ? Strings.yourMessage : null,
-                  child: DsfrInputHeadless(
-                    controller: widget.controller,
-                    focusNode: widget.focusNode,
-                    placeholder: Strings.yourMessage,
-                    keyboardType: TextInputType.multiline,
-                    minLines: 1,
-                    maxLines: 5,
-                  ),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () => widget.focusNode.requestFocusWithA11y(),
+                  child: input,
                 ),
               ),
               AnimatedCrossFade(
                 firstChild: const SizedBox(height: DsfrSpacings.s6w, width: 0),
                 secondChild: Padding(
                   padding: const EdgeInsets.only(left: DsfrSpacings.s1w),
+                  // A11y : un seul nœud bouton, nommé une fois, désactivé tant que le message est vide.
                   child: Semantics(
-                    enabled: false,
                     container: true,
+                    button: true,
+                    enabled: showSendButton,
+                    label: Strings.sendMessageTooltip,
+                    onTap: showSendButton ? _onSendPressed : null,
+                    excludeSemantics: true,
                     child: Tooltip(
                       message: Strings.sendMessageTooltip,
                       child: ClipRRect(

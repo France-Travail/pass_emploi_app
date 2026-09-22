@@ -73,14 +73,18 @@ class AlerteCardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void onCardTap() {
+      _trackAlerteCardPressed(trackingSource);
+      onTap();
+    }
+
     return Material(
       color: DsfrColorDecisions.backgroundDefaultGrey(context),
       borderRadius: const BorderRadius.all(Radius.circular(4)),
       child: InkWell(
-        onTap: () {
-          _trackAlerteCardPressed(trackingSource);
-          onTap();
-        },
+        onTap: onCardTap,
+        // A11y : l'action est portée par le nœud bouton ci-dessous, distinct du bouton de suppression.
+        excludeFromSemantics: true,
         borderRadius: const BorderRadius.all(Radius.circular(4)),
         child: DecoratedBox(
           decoration: BoxDecoration(
@@ -92,18 +96,25 @@ class AlerteCardContent extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
-                      ),
-                      Text(
-                        subtitle,
-                        style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textTitleGrey(context)),
-                      ),
-                    ],
+                  child: Semantics(
+                    container: true,
+                    button: true,
+                    label: '$title, $subtitle',
+                    onTap: onCardTap,
+                    excludeSemantics: true,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                        ),
+                        Text(
+                          subtitle,
+                          style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textTitleGrey(context)),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 if (onDelete != null)

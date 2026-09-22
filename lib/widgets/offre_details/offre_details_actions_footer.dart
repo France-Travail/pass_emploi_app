@@ -66,8 +66,14 @@ class _ActionButton extends StatelessWidget {
       size: DsfrComponentSize.lg,
       onPressed: action.onPressed,
     );
+    if (!action.semanticsLink) return SizedBox(width: double.infinity, child: button);
+    // A11y 5.1 : DsfrButton expose toujours un rôle bouton ; on le remplace par un rôle lien unique.
     return Semantics(
-      link: action.semanticsLink,
+      container: true,
+      link: true,
+      label: action.label,
+      onTap: action.onPressed,
+      excludeSemantics: true,
       child: SizedBox(width: double.infinity, child: button),
     );
   }

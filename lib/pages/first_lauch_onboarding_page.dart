@@ -20,8 +20,7 @@ const double _maxSplitWidth = 920;
 
 class FirstLaunchOnboardingPage extends StatefulWidget {
   @override
-  State<FirstLaunchOnboardingPage> createState() =>
-      _FirstLaunchOnboardingPageState();
+  State<FirstLaunchOnboardingPage> createState() => _FirstLaunchOnboardingPageState();
 }
 
 class _FirstLaunchOnboardingPageState extends State<FirstLaunchOnboardingPage> {
@@ -104,9 +103,7 @@ class _FirstScreenStacked extends StatelessWidget {
                   minHeight: constraints.maxHeight,
                 ),
                 child: Column(
-                  mainAxisAlignment: isTablet
-                      ? MainAxisAlignment.center
-                      : MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: isTablet ? MainAxisAlignment.center : MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const _FirstScreenIntro(),
@@ -252,6 +249,8 @@ class _PageViewScreen extends StatefulWidget {
 }
 
 class _PageViewScreenState extends State<_PageViewScreen> {
+  static const _pageCount = 3;
+
   final _pageController = PageController();
   final page2Key = GlobalKey();
   final page3Key = GlobalKey();
@@ -272,6 +271,14 @@ class _PageViewScreenState extends State<_PageViewScreen> {
   void _onPageHeightChanged(int index, double height) {
     if (_pageHeights[index] == height) return;
     setState(() => _pageHeights[index] = height);
+  }
+
+  void _onContinue() {
+    if (_currentPage < _pageCount - 1) {
+      _pageController.next();
+    } else {
+      context.dispatch(FirstLaunchOnboardingFinishAction());
+    }
   }
 
   @override
@@ -318,9 +325,7 @@ class _PageViewScreenState extends State<_PageViewScreen> {
                                 child: _DiscoveryCard(
                                   emoji: '🎯',
                                   emojiBackground: DsfrColors.blueCumulus950,
-                                  title:
-                                      Strings.firstLaunchOnboardingCardTitle1,
-                                  onContinue: () => _pageController.next(),
+                                  title: Strings.firstLaunchOnboardingCardTitle1,
                                   autoFocus: true,
                                 ),
                               ),
@@ -329,10 +334,7 @@ class _PageViewScreenState extends State<_PageViewScreen> {
                                 child: _DiscoveryCard(
                                   emoji: '💼',
                                   emojiBackground: DsfrColors.greenEmeraude950,
-                                  title:
-                                      Strings.firstLaunchOnboardingCardTitle2,
-                                  onContinue: () => _pageController.next(),
-                                  autoFocus: false,
+                                  title: Strings.firstLaunchOnboardingCardTitle2,
                                   globalKey: page2Key,
                                 ),
                               ),
@@ -341,12 +343,7 @@ class _PageViewScreenState extends State<_PageViewScreen> {
                                 child: _DiscoveryCard(
                                   emoji: '💬',
                                   emojiBackground: DsfrColors.purpleGlycine925,
-                                  title:
-                                      Strings.firstLaunchOnboardingCardTitle3,
-                                  onContinue: () => context.dispatch(
-                                    FirstLaunchOnboardingFinishAction(),
-                                  ),
-                                  autoFocus: false,
+                                  title: Strings.firstLaunchOnboardingCardTitle3,
                                   globalKey: page3Key,
                                 ),
                               ),
@@ -354,7 +351,25 @@ class _PageViewScreenState extends State<_PageViewScreen> {
                           ),
                         ),
                         const SizedBox(height: Margins.spacing_base),
-                        _CarouselStepperIndicator(currentPage: _currentPage),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: Margins.spacing_xl,
+                          ),
+                          child: DsfrButton(
+                            label: Strings.continueLabel,
+                            variant: DsfrButtonVariant.primary,
+                            size: DsfrComponentSize.lg,
+                            onPressed: _onContinue,
+                          ),
+                        ),
+                        const SizedBox(height: Margins.spacing_base),
+                        Semantics(
+                          label: 'Page ${_currentPage + 1} sur $_pageCount',
+                          excludeSemantics: true,
+                          child: _CarouselStepperIndicator(
+                            currentPage: _currentPage,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -391,15 +406,13 @@ class _DiscoveryCard extends StatelessWidget {
     required this.emoji,
     required this.emojiBackground,
     required this.title,
-    required this.onContinue,
-    required this.autoFocus,
+    this.autoFocus = false,
     this.globalKey,
   });
 
   final String emoji;
   final Color emojiBackground;
   final String title;
-  final VoidCallback onContinue;
   final bool autoFocus;
   final GlobalKey? globalKey;
 
@@ -429,39 +442,34 @@ class _DiscoveryCard extends StatelessWidget {
         children: [
           const SizedBox(height: Margins.spacing_base),
           Center(
-            child: EmojiTile(
-              emoji: emoji,
-              backgroundColor: emojiBackground,
-              size: 96,
-              emojiSize: 46,
+            child: ExcludeSemantics(
+              child: EmojiTile(
+                emoji: emoji,
+                backgroundColor: emojiBackground,
+                size: 96,
+                emojiSize: 46,
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(Margins.spacing_m),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Builder(
-                  builder: (context) {
-                    final text = Text(
-                      key: globalKey,
-                      title,
-                      style: DsfrTextStyle.bodyMdBold(
-                        color: DsfrColorDecisions.textDefaultGrey(context),
-                      ),
-                    );
-                    if (autoFocus) return AutoFocusA11y(child: text);
-                    return text;
-                  },
-                ),
-                const SizedBox(height: Margins.spacing_s),
-                DsfrButton(
-                  label: Strings.continueLabel,
-                  variant: DsfrButtonVariant.primary,
-                  size: DsfrComponentSize.lg,
-                  onPressed: onContinue,
-                ),
-              ],
+            child: Builder(
+              builder: (context) {
+                // A11y : la clé de focus doit viser un nœud sémantique propre (container).
+                final text = Semantics(
+                  key: globalKey,
+                  container: true,
+                  header: true,
+                  child: Text(
+                    title,
+                    style: DsfrTextStyle.bodyMdBold(
+                      color: DsfrColorDecisions.textDefaultGrey(context),
+                    ),
+                  ),
+                );
+                if (autoFocus) return AutoFocusA11y(child: text);
+                return text;
+              },
             ),
           ),
         ],

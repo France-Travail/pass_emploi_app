@@ -24,62 +24,71 @@ class OnboardingQuestionnaireCheckboxRich extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final canInteract = enabled && onChanged != null;
-    return Material(
-      color: DsfrColorDecisions.backgroundTransparent(context),
-      child: InkWell(
-        onTap: canInteract ? () => onChanged!(!value) : null,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            border: Border.fromBorderSide(
-              BorderSide(
-                color: value
-                    ? DsfrColorDecisions.borderActiveBlueFrance(context)
-                    : DsfrColorDecisions.borderDefaultGrey(context),
-                width: value ? 2 : 1,
+    // A11y : case à cocher avec son libellé et son état ; l'illustration est décorative.
+    return Semantics(
+      container: true,
+      enabled: enabled,
+      checked: value,
+      label: label,
+      onTap: canInteract ? () => onChanged!(!value) : null,
+      excludeSemantics: true,
+      child: Material(
+        color: DsfrColorDecisions.backgroundTransparent(context),
+        child: InkWell(
+          onTap: canInteract ? () => onChanged!(!value) : null,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              border: Border.fromBorderSide(
+                BorderSide(
+                  color: value
+                      ? DsfrColorDecisions.borderActiveBlueFrance(context)
+                      : DsfrColorDecisions.borderDefaultGrey(context),
+                  width: value ? 2 : 1,
+                ),
               ),
             ),
-          ),
-          child: IntrinsicHeight(
-            child: Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(DsfrSpacings.s2w),
-                    child: Row(
-                      spacing: DsfrSpacings.s1w,
-                      children: [
-                        DsfrCheckboxIcon(
-                          value: value,
-                          size: size,
-                          enabled: enabled,
-                        ),
-                        Expanded(
-                          child: Text(
-                            label,
-                            style: DsfrTextStyle.bodyMd(
-                              color: enabled
-                                  ? DsfrColorDecisions.textLabelGrey(context)
-                                  : DsfrColorDecisions.textDisabledGrey(context),
+            child: IntrinsicHeight(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(DsfrSpacings.s2w),
+                      child: Row(
+                        spacing: DsfrSpacings.s1w,
+                        children: [
+                          DsfrCheckboxIcon(
+                            value: value,
+                            size: size,
+                            enabled: enabled,
+                          ),
+                          Expanded(
+                            child: Text(
+                              label,
+                              style: DsfrTextStyle.bodyMd(
+                                color: enabled
+                                    ? DsfrColorDecisions.textLabelGrey(context)
+                                    : DsfrColorDecisions.textDisabledGrey(context),
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                if (trailingIcon != null) ...[
-                  VerticalDivider(
-                    width: 0,
-                    indent: DsfrSpacings.s1v,
-                    endIndent: DsfrSpacings.s1v,
-                  ),
-                  SizedBox(
-                    width: 88,
-                    height: 88,
-                    child: Center(child: trailingIcon),
-                  ),
+                  if (trailingIcon != null) ...[
+                    VerticalDivider(
+                      width: 0,
+                      indent: DsfrSpacings.s1v,
+                      endIndent: DsfrSpacings.s1v,
+                    ),
+                    SizedBox(
+                      width: 88,
+                      height: 88,
+                      child: Center(child: trailingIcon),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),

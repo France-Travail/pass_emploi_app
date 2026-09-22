@@ -94,6 +94,8 @@ class _CreateDemarcheFormState extends State<CreateDemarcheForm> {
         appBar: _CreateDemarcheAppBar(
           onBackPressed: _onBack,
           displayState: _changeNotifier.displayState,
+          // A11y 8.2 : la hauteur suit la taille de texte choisie dans les réglages.
+          height: MediaQuery.textScalerOf(context).scale(76),
         ),
         body: _Body(_changeNotifier),
       ),
@@ -105,13 +107,16 @@ class _CreateDemarcheAppBar extends StatelessWidget implements PreferredSizeWidg
   const _CreateDemarcheAppBar({
     required this.onBackPressed,
     required this.displayState,
+    required this.height,
   });
+
+  final double height;
 
   final VoidCallback onBackPressed;
   final CreateDemarcheDisplayState displayState;
 
   @override
-  Size get preferredSize => const Size.fromHeight(76);
+  Size get preferredSize => Size.fromHeight(height);
 
   @override
   Widget build(BuildContext context) {
@@ -125,12 +130,18 @@ class _CreateDemarcheAppBar extends StatelessWidget implements PreferredSizeWidg
       automaticallyImplyLeading: false,
       titleSpacing: 0,
       centerTitle: false,
+      // A11y : l'AppBar marquerait tout le bloc (bouton Retour compris) comme en-tête ;
+      // seul le titre porte ce rôle, via son propre Semantics(header).
+      excludeHeaderSemantics: true,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Semantics(
+            container: true,
             button: true,
             label: Strings.back,
+            onTap: onBackPressed,
+            excludeSemantics: true,
             child: InkWell(
               onTap: onBackPressed,
               child: Padding(

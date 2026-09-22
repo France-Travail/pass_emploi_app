@@ -184,11 +184,14 @@ class Strings {
   static String firstLaunchOnboardingCardTitle3 = "Echange avec ton conseiller pour t’aider";
 
   // Entree
-  static String republiqueFrancaise = "République Française";
+  static String republiqueFrancaise = "République Française, liberté, égalité, fraternité";
   static String askAccount = "Demander un compte";
   static String loginChooseAccountTitle = "Choisis un compte";
   static String loginChooseAccountDescription =
       "Si tu disposes de plusieurs accès, sélectionne l'organisme qui t'accompagne actuellement.";
+  static String loginPassEmploiTitle = "Connecte-toi";
+  static String loginPassEmploiDescription =
+      "Utilise ton compte France Travail pour accéder à tes démarches, tes offres et tes rendez-vous.";
   static String loginInviteAccessTitle = "Accès invité";
   static String loginInviteAccessPasswordLabel = "Mot de passe";
   static String loginInviteAccessWrongPassword = "Mot de passe incorrect";
@@ -457,6 +460,15 @@ class Strings {
   static String inviteAccueilPlanEmptyBody =
       "Aucune action n'a pu être proposée pour le moment. Modifie tes réponses pour obtenir de nouvelles suggestions.";
   static String inviteAccueilProgressBadge(int done, int total) => "$done/$total";
+  static String inviteAccueilProgressA11y(int done, int total) => "$done actions faites sur $total";
+  static String inviteAccueilDeleteActionA11y(String action) => "Supprimer l'action $action";
+  static String inviteAccueilActionDeletedA11y(String action) => "Action $action supprimée";
+  static String inviteAccueilPlanLoadingA11y = "Chargement de tes pistes à explorer";
+  static String inviteAccueilDiscoveryProgressA11y(int percent) => "Découverte de l'application : $percent % terminé";
+  static String inviteAccueilDiscoveryHideA11y = "Masquer la découverte de l'application";
+  static String inviteAccueilStepsCountA11y(int current, int total) => "$current étapes sur $total";
+  static String onboardingQuestionnaireStepA11y(int current, int total, String title) =>
+      "Étape $current sur $total, $title";
 
   // Card and subcomponents
   static const String emploiTag = "Offre d’emploi";
@@ -1074,6 +1086,11 @@ class Strings {
   static String rechercheHomeExplorerParType = "Explorer par type";
   static String rechercheHomeCriteresMetierVide = "Aucun métier renseigné";
   static String rechercheHomeCriteresLieuVide = "Aucun lieu renseigné";
+  static String rechercheHomeCriteresA11y(String? metier, String? lieu) => [
+    rechercheHomeCriteresTitle,
+    metier ?? rechercheHomeCriteresMetierVide,
+    if (lieu != null) "à $lieu" else rechercheHomeCriteresLieuVide,
+  ].join(" ");
   static String rechercheHomeEmploiEmoji = "💼";
   static String rechercheHomeAlternanceEmoji = "🔁";
   static String rechercheHomeImmersionEmoji = "👀";
@@ -1276,6 +1293,8 @@ class Strings {
   static String searchRadius = "Dans un rayon de recherche";
   static String searchRadiusDescription(int km) => "de $km km";
   static String searchRadiusValue(int km) => "$km";
+  static String searchRadiusA11yValue(int km) => "$km kilomètres";
+  static String searchRadiusA11yHint(int min, int max) => "Minimum $min kilomètres, maximum $max kilomètres";
   static String applyFiltres = "Appliquer les filtres";
   static String resetFiltres = "Réinitialiser";
 
@@ -1822,7 +1841,6 @@ class Strings {
 
   static String offreEnregistreeAdd(String offre) => "Enregistrer l'offre $offre";
   static String link = "Lien";
-  static String openInNewTab = "Ouvrir dans un nouvel onglet";
   static String semanticsLabelInformation = "Information";
   static String invalidField = "Champ invalide";
   static String loadingAnnouncement = "Chargement en cours";
@@ -1845,7 +1863,6 @@ class Strings {
 
   static String addDistance(int value) => 'Augmenter la distance de $value km';
 
-  static String distanceUpdated(int value) => 'Distance mise à jour à $value km';
 
   static String listOffres = "Liste des offres";
 

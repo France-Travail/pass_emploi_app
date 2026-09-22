@@ -181,15 +181,22 @@ class _RechercheRecenteTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(DsfrSpacings.s2w),
-          child: Text(
-            text,
-            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textActionHighBlueFrance(context)),
+    return Semantics(
+      container: true,
+      button: true,
+      label: text,
+      onTap: onTap,
+      excludeSemantics: true,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(DsfrSpacings.s2w),
+            child: Text(
+              text,
+              style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textActionHighBlueFrance(context)),
+            ),
           ),
         ),
       ),

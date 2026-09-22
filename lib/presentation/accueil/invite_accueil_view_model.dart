@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_tracking.dart';
 import 'package:pass_emploi_app/features/onboarding/onboarding_actions.dart';
@@ -136,7 +136,8 @@ class InviteAccueilViewModel extends Equatable {
       showPlanEmptyState: showPlanEmptyState,
       planEmptyKind: planEmptyKind,
 
-      showConseillerCta: mode == InviteAccueilMode.complet && store.state.isInviteLoginMode(),
+      // showConseillerCta: mode == InviteAccueilMode.complet && store.state.isInviteLoginMode(),
+      showConseillerCta: false, // TODO: NOT IMPLEMENTED YET
       showModifierButton: mode == InviteAccueilMode.complet && planEmptyKind != InvitePlanEmptyKind.failure,
       showExplorerTip: mode == InviteAccueilMode.incomplet,
       showRetryGenerate:

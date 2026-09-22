@@ -258,6 +258,8 @@ class DsfrCategoryTag extends StatelessWidget {
 
     return Semantics(
       label: semanticsLabel ?? label,
+      // A11y : évite la double restitution (label + texte affiché).
+      excludeSemantics: true,
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: style.backgroundColor(context),

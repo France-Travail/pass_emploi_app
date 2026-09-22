@@ -4,8 +4,9 @@ import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 
 class AppLogo extends StatelessWidget {
-  const AppLogo({super.key, this.width});
+  const AppLogo({super.key, this.width, this.color});
   final double? width;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +15,7 @@ class AppLogo extends StatelessWidget {
         Drawables.appLogo,
         semanticsLabel: Strings.logoDescription,
         width: width,
+        colorFilter: color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_form_change_notifier.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 
 class OnboardingQuestionnaireBirthdateStep extends StatefulWidget {
   const OnboardingQuestionnaireBirthdateStep({super.key, required this.form});
@@ -29,12 +30,12 @@ class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestio
 
   void _onDayChanged(String value) {
     widget.form.updateBirthDay(value);
-    if (value.length == 2) _monthFocus.requestFocus();
+    if (value.length == 2) _monthFocus.requestFocusWithA11y();
   }
 
   void _onMonthChanged(String value) {
     widget.form.updateBirthMonth(value);
-    if (value.length == 2) _yearFocus.requestFocus();
+    if (value.length == 2) _yearFocus.requestFocusWithA11y();
   }
 
   @override
@@ -53,65 +54,72 @@ class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestio
           style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
         ),
         const SizedBox(height: Margins.spacing_base),
-        Text(
-          Strings.onboardingQuestionnaireBirthdateLabel,
-          style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
+        ExcludeSemantics(
+          child: Text(
+            Strings.onboardingQuestionnaireBirthdateLabel,
+            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
+          ),
         ),
         const SizedBox(height: Margins.spacing_s),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 2,
-              child: DsfrInput(
-                label: Strings.onboardingQuestionnaireBirthdateDayLabel,
-                initialValue: form.draftBirthDay,
-                focusNode: _dayFocus,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                // Avoid maxLength: broken DSFR UI, see https://github.com/Octo-Open-Source/flutter-dsfr/issues/150
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(2),
-                ],
-                onChanged: _onDayChanged,
-                onFieldSubmitted: (_) => _monthFocus.requestFocus(),
+        Semantics(
+          label: Strings.onboardingQuestionnaireBirthdateLabel,
+          container: true,
+          explicitChildNodes: true,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 2,
+                child: DsfrInput(
+                  label: Strings.onboardingQuestionnaireBirthdateDayLabel,
+                  initialValue: form.draftBirthDay,
+                  focusNode: _dayFocus,
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.next,
+                  // Avoid maxLength: broken DSFR UI, see https://github.com/Octo-Open-Source/flutter-dsfr/issues/150
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(2),
+                  ],
+                  onChanged: _onDayChanged,
+                  onFieldSubmitted: (_) => _monthFocus.requestFocusWithA11y(),
+                ),
               ),
-            ),
-            const SizedBox(width: Margins.spacing_s),
-            Expanded(
-              flex: 2,
-              child: DsfrInput(
-                label: Strings.onboardingQuestionnaireBirthdateMonthLabel,
-                initialValue: form.draftBirthMonth,
-                focusNode: _monthFocus,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.next,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(2),
-                ],
-                onChanged: _onMonthChanged,
-                onFieldSubmitted: (_) => _yearFocus.requestFocus(),
+              const SizedBox(width: Margins.spacing_s),
+              Expanded(
+                flex: 2,
+                child: DsfrInput(
+                  label: Strings.onboardingQuestionnaireBirthdateMonthLabel,
+                  initialValue: form.draftBirthMonth,
+                  focusNode: _monthFocus,
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.next,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(2),
+                  ],
+                  onChanged: _onMonthChanged,
+                  onFieldSubmitted: (_) => _yearFocus.requestFocusWithA11y(),
+                ),
               ),
-            ),
-            const SizedBox(width: Margins.spacing_s),
-            Expanded(
-              flex: 3,
-              child: DsfrInput(
-                label: Strings.onboardingQuestionnaireBirthdateYearLabel,
-                initialValue: form.draftBirthYear,
-                focusNode: _yearFocus,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.done,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(4),
-                ],
-                onChanged: form.updateBirthYear,
+              const SizedBox(width: Margins.spacing_s),
+              Expanded(
+                flex: 3,
+                child: DsfrInput(
+                  label: Strings.onboardingQuestionnaireBirthdateYearLabel,
+                  initialValue: form.draftBirthYear,
+                  focusNode: _yearFocus,
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.done,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(4),
+                  ],
+                  onChanged: form.updateBirthYear,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );

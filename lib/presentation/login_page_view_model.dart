@@ -12,6 +12,9 @@ const String _inviteAccessPassword = "1j1s2026!";
 
 class LoginPageViewModel extends Equatable {
   final bool withOrganismChoice;
+  final bool withThemedAppLogo;
+  final String title;
+  final String description;
   final bool withLoading;
   final bool withWrongDeviceClockMessage;
   final String accessibilityLevelLabel;
@@ -22,6 +25,9 @@ class LoginPageViewModel extends Equatable {
 
   LoginPageViewModel({
     required this.withOrganismChoice,
+    required this.withThemedAppLogo,
+    required this.title,
+    required this.description,
     required this.withLoading,
     required this.withWrongDeviceClockMessage,
     required this.accessibilityLevelLabel,
@@ -37,6 +43,9 @@ class LoginPageViewModel extends Equatable {
     final isCej = brand.isCej;
     return LoginPageViewModel(
       withOrganismChoice: isCej,
+      withThemedAppLogo: !isCej,
+      title: isCej ? Strings.loginChooseAccountTitle : Strings.loginPassEmploiTitle,
+      description: isCej ? Strings.loginChooseAccountDescription : Strings.loginPassEmploiDescription,
       withLoading: loginState is LoginLoadingState,
       withWrongDeviceClockMessage: loginState is LoginWrongDeviceClockState,
       accessibilityLevelLabel: isCej ? Strings.accessibilityPartiallyConform : Strings.accessibilityNotConform,
@@ -52,6 +61,9 @@ class LoginPageViewModel extends Equatable {
   @override
   List<Object?> get props => [
         withOrganismChoice,
+        withThemedAppLogo,
+        title,
+        description,
         withLoading,
         withWrongDeviceClockMessage,
         accessibilityLevelLabel,

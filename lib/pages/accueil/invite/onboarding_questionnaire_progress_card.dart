@@ -32,9 +32,12 @@ class OnboardingQuestionnaireProgressCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              Strings.inviteAccueilQuestionnaireTitle,
-              style: DsfrTextStyle.headline6(color: DsfrColorDecisions.textTitleGrey(context)),
+            Semantics(
+              header: true,
+              child: Text(
+                Strings.inviteAccueilQuestionnaireTitle,
+                style: DsfrTextStyle.headline6(color: DsfrColorDecisions.textTitleGrey(context)),
+              ),
             ),
             const SizedBox(height: Margins.spacing_s),
             Text(
@@ -42,49 +45,61 @@ class OnboardingQuestionnaireProgressCard extends StatelessWidget {
               style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
             ),
             const SizedBox(height: Margins.spacing_base),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    Strings.inviteAccueilProfilComplete,
-                    style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
+            // A11y : « Profil complété, 3 étapes sur 7 » en un seul balayage.
+            MergeSemantics(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      Strings.inviteAccueilProfilComplete,
+                      style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
+                    ),
                   ),
-                ),
-                Text(
-                  Strings.inviteAccueilStepsCount(current, total),
-                  style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
-                ),
-              ],
-            ),
-            const SizedBox(height: Margins.spacing_s),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(100),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  border: Border.all(color: DsfrColorDecisions.borderActionHighBlueFrance(context)),
-                ),
-                child: LinearProgressIndicator(
-                  value: progress,
-                  minHeight: 12,
-                  backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
-                  color: DsfrColorDecisions.backgroundActionHighBlueFrance(context),
-                ),
+                  Text(
+                    Strings.inviteAccueilStepsCount(current, total),
+                    semanticsLabel: Strings.inviteAccueilStepsCountA11y(current, total),
+                    style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: Margins.spacing_xs),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '0/$total',
-                  style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textTitleBlueFrance(context)),
-                ),
-                Text(
-                  '$total/$total',
-                  style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textTitleBlueFrance(context)),
-                ),
-              ],
+            const SizedBox(height: Margins.spacing_s),
+            // A11y : la progression est déjà restituée par le texte ci-dessus.
+            ExcludeSemantics(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(color: DsfrColorDecisions.borderActionHighBlueFrance(context)),
+                      ),
+                      child: LinearProgressIndicator(
+                        value: progress,
+                        minHeight: 12,
+                        backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+                        color: DsfrColorDecisions.backgroundActionHighBlueFrance(context),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: Margins.spacing_xs),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '0/$total',
+                        style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+                      ),
+                      Text(
+                        '$total/$total',
+                        style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: Margins.spacing_base),
             DsfrButton(

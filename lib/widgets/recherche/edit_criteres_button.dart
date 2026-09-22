@@ -77,10 +77,13 @@ class _SearchBar extends StatelessWidget {
         width: DsfrSpacings.s0v5,
       ),
     );
+    final semanticsLabel = label.isEmpty ? Strings.rechercheEditButton : '$label, ${Strings.rechercheEditButton}';
 
     return Semantics(
       button: true,
-      label: Strings.rechercheEditButton,
+      label: semanticsLabel,
+      onTap: onTap,
+      excludeSemantics: true,
       child: Row(
         children: [
           Expanded(

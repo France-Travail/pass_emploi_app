@@ -57,6 +57,8 @@ class _OnboardingShowcaseState extends State<OnboardingShowcase> {
           }) &&
           (store.state.onboardingState.onboarding?.showOnboarding ?? false),
       builder: (context, show) {
+        if (!show) return widget.child;
+
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (show && !shown) {
             ShowCaseWidget.of(context).startShowCase([key]);

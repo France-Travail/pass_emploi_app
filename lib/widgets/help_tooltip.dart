@@ -22,7 +22,8 @@ class HelpTooltip extends StatelessWidget {
           message: message,
 
           triggerMode: TooltipTriggerMode.tap,
-          showDuration: Duration(seconds: 3),
+          // A11y 8.7 : l'infobulle reste affichée jusqu'à ce que l'utilisateur touche ailleurs.
+          showDuration: Duration(minutes: 5),
           exitDuration: Duration(seconds: 3),
           textStyle: TextStyles.textSRegular(color: context.content),
           margin: EdgeInsets.symmetric(horizontal: 16),

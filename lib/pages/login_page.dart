@@ -78,23 +78,29 @@ class _Scaffold extends StatelessWidget {
                 const SizedBox(height: Margins.spacing_s),
                 GestureDetector(
                   onDoubleTap: () => Navigator.push(context, ExplicationModeDemoPage.materialPageRoute()),
-                  child: const Center(child: AppLogo(width: 120)),
+                  child: Center(
+                    child: AppLogo(
+                      width: 120,
+                      color: viewModel.withThemedAppLogo ? DsfrColorDecisions.textTitleGrey(context) : null,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: Margins.spacing_l),
-                if (viewModel.withOrganismChoice) ...[
-                  Text(
-                    Strings.loginChooseAccountTitle,
+                Semantics(
+                  header: true,
+                  child: Text(
+                    viewModel.title,
                     style: DsfrTextStyle.headline2(color: DsfrColorDecisions.textTitleGrey(context)),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: Margins.spacing_base),
-                  Text(
-                    Strings.loginChooseAccountDescription,
-                    style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textTitleGrey(context)),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: Margins.spacing_base),
-                ],
+                ),
+                const SizedBox(height: Margins.spacing_base),
+                Text(
+                  viewModel.description,
+                  style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textTitleGrey(context)),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: Margins.spacing_base),
                 LoginPageRemoteMessageCard(),
                 if (viewModel.withLoading)
                   const Padding(
@@ -287,35 +293,38 @@ class _OrganismButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final borderColor = DsfrColorDecisions.borderActionHighBlueFrance(context);
     final textColor = DsfrColorDecisions.textActionHighBlueFrance(context);
-    return Material(
-      color: DsfrColorDecisions.backgroundDefaultGrey(context),
-      child: InkWell(
-        onTap: onPressed,
-        child: Container(
-          constraints: const BoxConstraints(minHeight: 68),
-          decoration: BoxDecoration(
-            border: Border.all(color: borderColor),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Semantics(
-                excludeSemantics: true,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(logo, width: 48, height: 48, fit: BoxFit.cover),
-                ),
+    return Semantics(
+      button: true,
+      label: label,
+      child: Material(
+        color: DsfrColorDecisions.backgroundDefaultGrey(context),
+        child: InkWell(
+          onTap: onPressed,
+          child: ExcludeSemantics(
+            child: Container(
+              constraints: const BoxConstraints(minHeight: 68),
+              decoration: BoxDecoration(
+                border: Border.all(color: borderColor),
               ),
-              const SizedBox(width: Margins.spacing_s),
-              Flexible(
-                child: Text(
-                  label,
-                  style: DsfrTextStyle.bodyLgMedium(color: textColor),
-                  textAlign: TextAlign.center,
-                ),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.asset(logo, width: 48, height: 48, fit: BoxFit.cover),
+                  ),
+                  const SizedBox(width: Margins.spacing_s),
+                  Flexible(
+                    child: Text(
+                      label,
+                      style: DsfrTextStyle.bodyLgMedium(color: textColor),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -323,26 +332,89 @@ class _OrganismButton extends StatelessWidget {
   }
 }
 
-class _InformationsLegales extends StatelessWidget {
+class _InformationsLegales extends StatefulWidget {
+  @override
+  State<_InformationsLegales> createState() => _InformationsLegalesState();
+}
+
+class _InformationsLegalesState extends State<_InformationsLegales> {
+  bool _isExpanded = false;
+
   @override
   Widget build(BuildContext context) {
-    return DsfrAccordionsGroup(
-      values: [
-        DsfrAccordion(
-          headerLabel: Strings.legalInformation,
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Link(Strings.legalNoticeLabel, Strings.legalNoticeUrl),
-              const SizedBox(height: Margins.spacing_base),
-              Link(Strings.privacyPolicyLabel, Strings.privacyPolicyUrl),
-              const SizedBox(height: Margins.spacing_base),
-              Link(Strings.termsOfServiceLabel, Strings.termsOfServiceUrl),
-              const SizedBox(height: Margins.spacing_base),
-              Link(Strings.accessibilityLevelLabel, Strings.accessibilityUrl),
-            ],
+    const divider = DsfrDivider();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        divider,
+        Semantics(
+          button: true,
+          expanded: _isExpanded,
+          label: Strings.legalInformation,
+          child: InkWell(
+            onTap: () => setState(() => _isExpanded = !_isExpanded),
+            child: ColoredBox(
+              color: _isExpanded
+                  ? DsfrColorDecisions.backgroundActionLowBlueFrance(context)
+                  : DsfrColorDecisions.backgroundTransparent(context),
+              child: ExcludeSemantics(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(minHeight: 48),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s3v),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
+                            child: Text(
+                              Strings.legalInformation,
+                              style: DsfrTextStyle.bodyMdMedium(
+                                color: DsfrColorDecisions.textActionHighBlueFrance(context),
+                              ),
+                            ),
+                          ),
+                        ),
+                        AnimatedRotation(
+                          turns: _isExpanded ? -0.5 : 0,
+                          duration: Durations.short4,
+                          child: Icon(
+                            DsfrIcons.systemArrowDownSLine,
+                            size: DsfrSpacings.s2w,
+                            color: DsfrColorDecisions.textActionHighBlueFrance(context),
+                          ),
+                        ),
+                        const SizedBox(width: DsfrSpacings.s2w),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
+        AnimatedCrossFade(
+          firstChild: const SizedBox.shrink(),
+          secondChild: Padding(
+            padding: const EdgeInsets.only(top: DsfrSpacings.s2w, bottom: DsfrSpacings.s3w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Link(Strings.legalNoticeLabel, Strings.legalNoticeUrl),
+                const SizedBox(height: Margins.spacing_base),
+                Link(Strings.privacyPolicyLabel, Strings.privacyPolicyUrl),
+                const SizedBox(height: Margins.spacing_base),
+                Link(Strings.termsOfServiceLabel, Strings.termsOfServiceUrl),
+                const SizedBox(height: Margins.spacing_base),
+                Link(Strings.accessibilityLevelLabel, Strings.accessibilityUrl),
+              ],
+            ),
+          ),
+          crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          duration: Durations.short4,
+        ),
+        divider,
       ],
     );
   }

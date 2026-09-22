@@ -88,9 +88,9 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (viewModel.displayState == DisplayState.LOADING) {
-      return const Padding(
-        padding: EdgeInsets.all(Margins.spacing_xl),
-        child: Center(child: CircularProgressIndicator()),
+      return Padding(
+        padding: const EdgeInsets.all(Margins.spacing_xl),
+        child: Center(child: CircularProgressIndicator(semanticsLabel: Strings.inviteAccueilPlanLoadingA11y)),
       );
     }
 
@@ -120,9 +120,12 @@ class _Content extends StatelessWidget {
             const SizedBox(height: Margins.spacing_s),
           ],
           if (viewModel.showPlanSection) ...[
-            Text(
-              Strings.inviteAccueilPlanTitle,
-              style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context)),
+            Semantics(
+              header: true,
+              child: Text(
+                Strings.inviteAccueilPlanTitle,
+                style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context)),
+              ),
             ),
             if (!viewModel.showPlanEmptyState) ...[
               const SizedBox(height: Margins.spacing_base),
@@ -200,43 +203,47 @@ class _Content extends StatelessWidget {
           ],
           if (viewModel.showConseillerCta) ...[
             const SizedBox(height: Margins.spacing_base),
-            Material(
-              color: DsfrColorDecisions.artworkDecorativeBlueFrance(context),
-              borderRadius: BorderRadius.circular(4),
-              child: InkWell(
-                onTap: () {
-                  // Not implemented yet
-                },
+            Semantics(
+              button: true,
+              child: Material(
+                color: DsfrColorDecisions.artworkDecorativeBlueFrance(context),
                 borderRadius: BorderRadius.circular(4),
-                child: Padding(
-                  padding: const EdgeInsets.all(Margins.spacing_base),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        'assets/dsfr/avatar.webp',
-                        width: 54,
-                        height: 54,
-                      ),
-                      const SizedBox(width: Margins.spacing_base),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              Strings.inviteAccueilConseillerTitle,
-                              style: DsfrTextStyle.bodyMdBold(
-                                color: DsfrColorDecisions.textTitleBlueFrance(context),
-                              ),
-                            ),
-                            Text(
-                              Strings.inviteAccueilConseillerBody,
-                              style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textMentionGrey(context)),
-                            ),
-                          ],
+                child: InkWell(
+                  onTap: () {
+                    // Not implemented yet
+                  },
+                  borderRadius: BorderRadius.circular(4),
+                  child: Padding(
+                    padding: const EdgeInsets.all(Margins.spacing_base),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          'assets/dsfr/avatar.webp',
+                          width: 54,
+                          height: 54,
+                          excludeFromSemantics: true,
                         ),
-                      ),
-                      Icon(DsfrIcons.systemArrowRightSLine, color: DsfrColorDecisions.textTitleBlueFrance(context)),
-                    ],
+                        const SizedBox(width: Margins.spacing_base),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                Strings.inviteAccueilConseillerTitle,
+                                style: DsfrTextStyle.bodyMdBold(
+                                  color: DsfrColorDecisions.textTitleBlueFrance(context),
+                                ),
+                              ),
+                              Text(
+                                Strings.inviteAccueilConseillerBody,
+                                style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textMentionGrey(context)),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(DsfrIcons.systemArrowRightSLine, color: DsfrColorDecisions.textTitleBlueFrance(context)),
+                      ],
+                    ),
                   ),
                 ),
               ),

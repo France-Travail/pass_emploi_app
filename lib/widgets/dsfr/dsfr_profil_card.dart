@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
-import 'package:pass_emploi_app/ui/strings.dart';
 
 class DsfrProfilCard extends StatelessWidget {
   const DsfrProfilCard({
@@ -33,7 +32,6 @@ class DsfrProfilCard extends StatelessWidget {
     return [
       title,
       if (description != null && description!.isNotEmpty) description!,
-      if (_isLink) Strings.openInNewTab,
     ].join('. ');
   }
 

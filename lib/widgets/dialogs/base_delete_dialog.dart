@@ -27,6 +27,7 @@ class BaseDeleteDialog extends StatelessWidget {
   static Future<bool?> show(BuildContext context, {required String title, required String subtitle}) {
     return showDialog<bool>(
       context: context,
+      barrierLabel: Strings.bottomSheetBarrierLabel,
       builder: (context) => BaseDeleteDialog(title: title, subtitle: subtitle),
     );
   }
@@ -54,6 +55,7 @@ class BaseDeleteDialog extends StatelessWidget {
             top: 0,
             right: 0,
             child: IconButton(
+              tooltip: Strings.closeDialog,
               icon: Icon(Icons.close, color: AppColors.primaryDarken),
               onPressed: () => Navigator.pop(context),
             ),

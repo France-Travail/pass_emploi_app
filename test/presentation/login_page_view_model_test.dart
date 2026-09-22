@@ -22,6 +22,12 @@ void main() {
       // Then
       expect(viewModel.withOrganismChoice, false);
       expect(viewModel.onMissionLocaleLogin, isNull);
+      expect(viewModel.withThemedAppLogo, true);
+      expect(viewModel.title, "Connecte-toi");
+      expect(
+        viewModel.description,
+        "Utilise ton compte France Travail pour accéder à tes démarches, tes offres et tes rendez-vous.",
+      );
     });
 
     test('should display organism choice when brand is CEJ', () {
@@ -34,6 +40,12 @@ void main() {
       // Then
       expect(viewModel.withOrganismChoice, true);
       expect(viewModel.onMissionLocaleLogin, isNotNull);
+      expect(viewModel.withThemedAppLogo, false);
+      expect(viewModel.title, "Choisis un compte");
+      expect(
+        viewModel.description,
+        "Si tu disposes de plusieurs accès, sélectionne l'organisme qui t'accompagne actuellement.",
+      );
     });
 
     group('hidden invite access', () {

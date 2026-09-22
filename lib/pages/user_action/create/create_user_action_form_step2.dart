@@ -47,16 +47,18 @@ class _CreateUserActionFormStep2State extends State<CreateUserActionFormStep2> {
             children: [
               const SizedBox(height: DsfrSpacings.s2w),
               Semantics(
-                label: Strings.mandatoryField,
+                header: true,
                 child: Text(
                   Strings.userActionSubtitleStep2,
                   style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
                 ),
               ),
               const SizedBox(height: DsfrSpacings.s1v),
-              Text(
-                Strings.mandatoryField,
-                style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textMentionGrey(context)),
+              ExcludeSemantics(
+                child: Text(
+                  Strings.mandatoryField,
+                  style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textMentionGrey(context)),
+                ),
               ),
               const SizedBox(height: DsfrSpacings.s2w),
               _SuggestionTagWrap(
@@ -114,25 +116,42 @@ class _SuggestionTagWrap extends StatelessWidget {
       children: [
         ...suggestionList.map((suggestion) {
           final isSelected = selectedSuggestion == suggestion;
-          return DsfrTag(
-            label: suggestion.value,
-            size: DsfrComponentSize.md,
-            isSelected: isSelected,
-            onSelectionChanged: (selected) => onSelected(
-              selected ? CreateActionTitleFromSuggestions(suggestion) : CreateActionTitleNotInitialized(),
+          return _SelectableTagSemantics(
+            child: DsfrTag(
+              label: suggestion.value,
+              size: DsfrComponentSize.md,
+              isSelected: isSelected,
+              onSelectionChanged: (selected) => onSelected(
+                selected ? CreateActionTitleFromSuggestions(suggestion) : CreateActionTitleNotInitialized(),
+              ),
             ),
           );
         }),
-        DsfrTag(
-          label: Strings.userActionOther,
-          size: DsfrComponentSize.md,
-          isSelected: isOtherSelected,
-          onSelectionChanged: (selected) => onSelected(
-            selected ? CreateActionTitleFromUserInput('') : CreateActionTitleNotInitialized(),
+        _SelectableTagSemantics(
+          child: DsfrTag(
+            label: Strings.userActionOther,
+            size: DsfrComponentSize.md,
+            isSelected: isOtherSelected,
+            onSelectionChanged: (selected) => onSelected(
+              selected ? CreateActionTitleFromUserInput('') : CreateActionTitleNotInitialized(),
+            ),
           ),
         ),
       ],
     );
+  }
+}
+
+/// A11y 10.3.1 : les [DsfrTag] sélectionnables n'exposent pas de rôle bouton (seulement `selected`).
+/// On fusionne un rôle bouton avec la sémantique du tag.
+class _SelectableTagSemantics extends StatelessWidget {
+  const _SelectableTagSemantics({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return MergeSemantics(child: Semantics(button: true, child: child));
   }
 }
 

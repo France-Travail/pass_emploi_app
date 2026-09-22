@@ -37,7 +37,6 @@ class DsfrTuileCard extends StatelessWidget {
     return [
       title,
       if (description != null && description!.isNotEmpty) description!,
-      if (_isLink) Strings.openInNewTab,
     ].join('. ');
   }
 

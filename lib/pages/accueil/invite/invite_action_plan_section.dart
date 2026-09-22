@@ -7,7 +7,9 @@ import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
+import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/onboarding/onboarding_showcase.dart';
 
 class InviteActionPlanSection extends StatelessWidget {
@@ -71,6 +73,7 @@ class _ObjectiveAccordion extends StatefulWidget {
 class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
   bool _expanded = false;
   bool _showAll = false;
+  final GlobalKey _firstRevealedActionKey = GlobalKey();
   static const _initialVisible = 5;
   static const _animationCurve = Curves.ease;
 
@@ -80,67 +83,78 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
     final visibleActions = _showAll ? objective.actions : objective.actions.take(_initialVisible).toList();
     final hasMore = objective.actions.length > _initialVisible;
 
-    final header = InkWell(
-      onTap: () {
-        final willExpand = !_expanded;
-        setState(() => _expanded = willExpand);
-        if (willExpand) widget.onExpanded?.call();
-        ActionPlanTrackingEvent(
-          willExpand
-              ? AnalyticsEventNames.actionPlanObjectiveExpandedAction
-              : AnalyticsEventNames.actionPlanObjectiveCollapsedAction,
-          name: objective.theme,
-          value: willExpand ? objective.totalCount : null,
-        ).send();
-      },
-      child: AnimatedContainer(
-        duration: AnimationDurations.medium,
-        curve: _animationCurve,
-        color: _expanded
-            ? DsfrColorDecisions.backgroundActionLowBlueFrance(context)
-            : DsfrColorDecisions.backgroundDefaultGrey(context),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: Margins.spacing_base,
-            vertical: Margins.spacing_s,
-          ),
-          child: Row(
-            children: [
-              _EmojiAvatar(
-                emoji: _emojiForTheme(objective.theme),
-                color: _colorForTheme(objective.theme),
-              ),
-              const SizedBox(width: Margins.spacing_base),
-              Expanded(
-                child: Text(
-                  objective.title,
-                  style: DsfrTextStyle.bodyMdMedium(
-                    color: DsfrColorDecisions.textTitleBlueFrance(context),
+    void toggle() {
+      final willExpand = !_expanded;
+      setState(() => _expanded = willExpand);
+      if (willExpand) widget.onExpanded?.call();
+      ActionPlanTrackingEvent(
+        willExpand
+            ? AnalyticsEventNames.actionPlanObjectiveExpandedAction
+            : AnalyticsEventNames.actionPlanObjectiveCollapsedAction,
+        name: objective.theme,
+        value: willExpand ? objective.totalCount : null,
+      ).send();
+    }
+
+    // A11y : un seul nœud bouton, avec l'état déplié/replié et la progression explicitée.
+    final header = Semantics(
+      container: true,
+      button: true,
+      expanded: _expanded,
+      label: '${objective.title}, ${Strings.inviteAccueilProgressA11y(objective.doneCount, objective.totalCount)}',
+      onTap: toggle,
+      excludeSemantics: true,
+      child: InkWell(
+        onTap: toggle,
+        child: AnimatedContainer(
+          duration: AnimationDurations.medium,
+          curve: _animationCurve,
+          color: _expanded
+              ? DsfrColorDecisions.backgroundActionLowBlueFrance(context)
+              : DsfrColorDecisions.backgroundDefaultGrey(context),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: Margins.spacing_base,
+              vertical: Margins.spacing_s,
+            ),
+            child: Row(
+              children: [
+                _EmojiAvatar(
+                  emoji: _emojiForTheme(objective.theme),
+                  color: _colorForTheme(objective.theme),
+                ),
+                const SizedBox(width: Margins.spacing_base),
+                Expanded(
+                  child: Text(
+                    objective.title,
+                    style: DsfrTextStyle.bodyMdMedium(
+                      color: DsfrColorDecisions.textTitleBlueFrance(context),
+                    ),
                   ),
                 ),
-              ),
-              DsfrBadge(
-                label: Strings.inviteAccueilProgressBadge(
-                  objective.doneCount,
-                  objective.totalCount,
+                DsfrBadge(
+                  label: Strings.inviteAccueilProgressBadge(
+                    objective.doneCount,
+                    objective.totalCount,
+                  ),
+                  type: objective.isComplete ? DsfrBadgeType.success : DsfrBadgeType.news,
+                  size: DsfrComponentSize.sm,
+                  withIcon: true,
                 ),
-                type: objective.isComplete ? DsfrBadgeType.success : DsfrBadgeType.news,
-                size: DsfrComponentSize.sm,
-                withIcon: true,
-              ),
-              const SizedBox(width: Margins.spacing_base),
-              AnimatedRotation(
-                turns: _expanded ? 0.5 : 0,
-                duration: AnimationDurations.medium,
-                curve: _animationCurve,
-                child: Icon(
-                  DsfrIcons.systemArrowDownSLine,
-                  color: DsfrColorDecisions.textActionHighBlueFrance(
-                    context,
+                const SizedBox(width: Margins.spacing_base),
+                AnimatedRotation(
+                  turns: _expanded ? 0.5 : 0,
+                  duration: AnimationDurations.medium,
+                  curve: _animationCurve,
+                  child: Icon(
+                    DsfrIcons.systemArrowDownSLine,
+                    color: DsfrColorDecisions.textActionHighBlueFrance(
+                      context,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -171,12 +185,13 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
               alignment: Alignment.topCenter,
               child: Column(
                 children: [
-                  for (final action in visibleActions) ...[
+                  for (var i = 0; i < visibleActions.length; i++) ...[
                     const SizedBox(height: Margins.spacing_s),
                     InviteActionPlanActionTile(
-                      action: action,
-                      onToggleDone: () => widget.onToggleDone(action.id),
-                      onDelete: () => widget.onDelete(action.id),
+                      focusKey: _showAll && i == _initialVisible ? _firstRevealedActionKey : null,
+                      action: visibleActions[i],
+                      onToggleDone: () => widget.onToggleDone(visibleActions[i].id),
+                      onDelete: () => widget.onDelete(visibleActions[i].id),
                     ),
                   ],
                   if (hasMore && !_showAll) ...[
@@ -187,6 +202,10 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
                       size: DsfrComponentSize.lg,
                       onPressed: () {
                         setState(() => _showAll = true);
+                        // A11y 10.2 : placer le focus sur la première action nouvellement affichée.
+                        WidgetsBinding.instance.addPostFrameCallback(
+                          (_) => _firstRevealedActionKey.requestFocusDelayed(),
+                        );
                         ActionPlanTrackingEvent(
                           AnalyticsEventNames.actionPlanShowMoreAction,
                           name: objective.theme,
@@ -214,11 +233,18 @@ class InviteActionPlanActionTile extends StatelessWidget {
     required this.action,
     required this.onToggleDone,
     required this.onDelete,
+    this.focusKey,
   });
 
   final ActionPlanAction action;
   final VoidCallback onToggleDone;
   final VoidCallback onDelete;
+  final GlobalKey? focusKey;
+
+  void _delete() {
+    onDelete();
+    A11yUtils.announce(Strings.inviteAccueilActionDeletedA11y(action.label));
+  }
 
   bool get _hasLink => action.kind == ActionPlanActionKind.link && action.url != null && action.url!.isNotEmpty;
 
@@ -236,6 +262,8 @@ class InviteActionPlanActionTile extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: _hasLink ? _openLink : null,
+          // A11y : l'action de lien est portée par le nœud « lien » dédié ci-dessous.
+          excludeFromSemantics: true,
           borderRadius: BorderRadius.circular(8),
           child: Padding(
             padding: const EdgeInsets.all(Margins.spacing_base),
@@ -243,76 +271,63 @@ class InviteActionPlanActionTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Semantics(
+                  key: focusKey,
+                  container: true,
+                  // Sans `enabled: true` explicite, iOS annonce la case « estompé » (désactivée).
+                  enabled: true,
                   checked: action.done,
                   label: action.label,
-                  hint: action.serviceName,
-                  button: true,
+                  hint: _hasLink ? null : action.serviceName,
+                  onTap: onToggleDone,
+                  excludeSemantics: true,
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: onToggleDone,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        right: Margins.spacing_base,
-                      ),
-                      child: DsfrCheckboxIcon(
-                        value: action.done,
-                        size: DsfrComponentSize.md,
+                    // Zone tactile d'au moins 44 x 44.
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        widthFactor: 1,
+                        child: DsfrCheckboxIcon(
+                          value: action.done,
+                          size: DsfrComponentSize.md,
+                        ),
                       ),
                     ),
                   ),
                 ),
+                const SizedBox(width: Margins.spacing_xs),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        action.label,
-                        style: DsfrTextStyle.bodyMd(
-                          color: DsfrColorDecisions.textLabelGrey(context),
+                      // A11y : libellé déjà porté par la case à cocher.
+                      ExcludeSemantics(
+                        child: Text(
+                          action.label,
+                          style: DsfrTextStyle.bodyMd(
+                            color: DsfrColorDecisions.textLabelGrey(context),
+                          ),
                         ),
                       ),
-                      if (action.serviceName != null)
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                action.serviceName!,
-                                style:
-                                    DsfrTextStyle.bodySm(
-                                      color: DsfrColorDecisions.textActionHighBlueFrance(
-                                        context,
-                                      ),
-                                    ).copyWith(
-                                      decoration: _hasLink ? TextDecoration.underline : null,
-                                      decorationColor: _hasLink
-                                          ? DsfrColorDecisions.textActionHighBlueFrance(
-                                              context,
-                                            )
-                                          : null,
-                                    ),
-                              ),
-                            ),
-                            if (_hasLink) ...[
-                              const SizedBox(width: Margins.spacing_xs),
-                              Padding(
-                                // manually ajusted to match the text
-                                padding: const EdgeInsets.only(top: 2.0),
-                                child: Icon(
-                                  DsfrIcons.systemExternalLinkLine,
-                                  size: 12,
-                                  color: DsfrColorDecisions.textActionHighBlueFrance(
-                                    context,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
+                      if (_hasLink)
+                        Semantics(
+                          container: true,
+                          link: true,
+                          label: action.serviceName ?? action.label,
+                          onTap: _openLink,
+                          excludeSemantics: true,
+                          child: _serviceName(context),
+                        )
+                      else if (action.serviceName != null)
+                        ExcludeSemantics(child: _serviceName(context)),
                     ],
                   ),
                 ),
                 IconButton(
-                  onPressed: onDelete,
+                  onPressed: _delete,
+                  tooltip: Strings.inviteAccueilDeleteActionA11y(action.label),
                   icon: Icon(
                     DsfrIcons.systemDeleteBinFill,
                     color: DsfrColorDecisions.textActionHighBlueFrance(context),
@@ -323,6 +338,46 @@ class InviteActionPlanActionTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _serviceName(BuildContext context) {
+    if (action.serviceName == null) return const SizedBox.shrink();
+    return Row(
+      children: [
+        Flexible(
+          child: Text(
+            action.serviceName!,
+            style:
+                DsfrTextStyle.bodySm(
+                  color: DsfrColorDecisions.textActionHighBlueFrance(
+                    context,
+                  ),
+                ).copyWith(
+                  decoration: _hasLink ? TextDecoration.underline : null,
+                  decorationColor: _hasLink
+                      ? DsfrColorDecisions.textActionHighBlueFrance(
+                          context,
+                        )
+                      : null,
+                ),
+          ),
+        ),
+        if (_hasLink) ...[
+          const SizedBox(width: Margins.spacing_xs),
+          Padding(
+            // manually ajusted to match the text
+            padding: const EdgeInsets.only(top: 2.0),
+            child: Icon(
+              DsfrIcons.systemExternalLinkLine,
+              size: 12,
+              color: DsfrColorDecisions.textActionHighBlueFrance(
+                context,
+              ),
+            ),
+          ),
+        ],
+      ],
     );
   }
 
@@ -351,12 +406,15 @@ class _EmojiAvatar extends StatelessWidget {
         color: color,
         borderRadius: BorderRadius.circular(15),
       ),
-      child: Text(
-        emoji,
-        style: TextStyle(
-          fontSize: 24,
-          // Force color emoji on iOS for dingbats like ✈️ (U+2708).
-          fontFamily: defaultTargetPlatform == TargetPlatform.iOS ? 'Apple Color Emoji' : null,
+      // A11y : emoji décoratif.
+      child: ExcludeSemantics(
+        child: Text(
+          emoji,
+          style: TextStyle(
+            fontSize: 24,
+            // Force color emoji on iOS for dingbats like ✈️ (U+2708).
+            fontFamily: defaultTargetPlatform == TargetPlatform.iOS ? 'Apple Color Emoji' : null,
+          ),
         ),
       ),
     );

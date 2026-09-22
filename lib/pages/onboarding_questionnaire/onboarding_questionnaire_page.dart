@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
+import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
-import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_app_bar.dart';
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_birthdate_step.dart';
@@ -23,6 +23,7 @@ import 'package:pass_emploi_app/repositories/communes_repository.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 
 class OnboardingQuestionnairePage extends StatefulWidget {
   final bool editMode;
@@ -155,10 +156,26 @@ class _QuestionnaireBody extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-          child: DsfrStepper(
-            currentStep: form.step.questionnaireIndex,
-            stepsCount: OnboardingQuestionnaireStep.questionnaireCount,
-            stepTitle: _stepTitle(form.step),
+          // A11y 10.2 : à chaque changement d'étape, le focus du lecteur d'écran part du bouton
+          // « Continuer » pour aller sur le titre de la nouvelle étape.
+          child: AutoFocusA11y(
+            key: ValueKey(form.step),
+            duration: AnimationDurations.slow,
+            // A11y 10.2.3 : « Étape X sur Y, titre » restitué en un seul en-tête.
+            child: Semantics(
+              header: true,
+              label: Strings.onboardingQuestionnaireStepA11y(
+                form.step.questionnaireIndex,
+                OnboardingQuestionnaireStep.questionnaireCount,
+                _stepTitle(form.step),
+              ),
+              excludeSemantics: true,
+              child: DsfrStepper(
+                currentStep: form.step.questionnaireIndex,
+                stepsCount: OnboardingQuestionnaireStep.questionnaireCount,
+                stepTitle: _stepTitle(form.step),
+              ),
+            ),
           ),
         ),
         Expanded(
@@ -172,7 +189,9 @@ class _QuestionnaireBody extends StatelessWidget {
                 return Stack(
                   alignment: Alignment.topCenter,
                   children: [
-                    ...previousChildren,
+                    // A11y : l'étape précédente, encore affichée pendant le fondu, ne doit plus être
+                    // atteignable par le lecteur d'écran.
+                    ...previousChildren.map((child) => ExcludeSemantics(child: child)),
                     if (currentChild != null) currentChild,
                   ],
                 );

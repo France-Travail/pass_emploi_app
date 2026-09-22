@@ -665,11 +665,17 @@ class _AgendaTile extends StatelessWidget {
 
     final interactiveChild = (onTap == null && onLongPress == null)
         ? paddedChild
-        : InkWell(
-            onTap: onTap,
-            onLongPress: onLongPress,
-            customBorder: shape,
-            child: paddedChild,
+        // A11y 15.3.2 : un seul nœud bouton regroupant la date et le contenu de la carte.
+        : MergeSemantics(
+            child: Semantics(
+              button: onTap != null,
+              child: InkWell(
+                onTap: onTap,
+                onLongPress: onLongPress,
+                customBorder: shape,
+                child: paddedChild,
+              ),
+            ),
           );
 
     if (dashed) {
@@ -733,19 +739,16 @@ class _Day extends StatelessWidget {
   Widget build(BuildContext context) {
     final textColor = DsfrColorDecisions.textTitleGrey(context);
 
+    // A11y 8.2 : la colonne s'élargit avec la taille de texte au lieu de réduire le nom du jour.
     return SizedBox(
-      width: DsfrSpacings.s8w,
+      width: MediaQuery.textScalerOf(context).scale(DsfrSpacings.s8w),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              day.name,
-              style: DsfrTextStyle.bodyXs(color: textColor),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-            ),
+          Text(
+            day.name,
+            style: DsfrTextStyle.bodyXs(color: textColor),
+            textAlign: TextAlign.center,
           ),
           Text(
             day.number,
