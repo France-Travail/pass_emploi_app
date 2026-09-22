@@ -3,7 +3,7 @@ description: Pass Emploi iOS and Android app.
 
 publish_to: "none"
 # 1j1s branch in on this version - no tag assigned
-version: 5.0.0
+version: 5.0.1
 
 environment:
   sdk: 3.9.2 # Dart version
