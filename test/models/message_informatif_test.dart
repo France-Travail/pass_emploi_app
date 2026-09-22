@@ -9,7 +9,7 @@ void main() {
 
     test('should parse a message with a cta (migration vers une autre app)', () {
       final message = MessageInformatif.fromJson({
-        "id": "migration-parcours-emploi",
+        "id": 1,
         "titre": "Votre application évolue",
         "contenu": "Le 15 octobre 2026, l’application pass emploi ne sera plus disponible.",
         "cta": {
@@ -22,7 +22,7 @@ void main() {
       expect(
         message,
         MessageInformatif(
-          id: "migration-parcours-emploi",
+          id: 1,
           titre: "Votre application évolue",
           contenu: "Le 15 octobre 2026, l’application pass emploi ne sera plus disponible.",
           cta: MessageInformatifCta(
@@ -36,7 +36,7 @@ void main() {
 
     test('should parse a message without cta (rebranding)', () {
       final message = MessageInformatif.fromJson({
-        "id": "rebranding-app-jeune",
+        "id": 2,
         "titre": "L’application change bientôt de nom",
         "contenu": "Votre application change de nom le 15 octobre 2026 et devient Parcours Emploi.",
         "cta": null,

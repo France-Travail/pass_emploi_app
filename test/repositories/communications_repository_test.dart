@@ -30,7 +30,7 @@ void main() {
               result,
               Communications(
                 messageInformatif: MessageInformatif(
-                  id: "migration-parcours-emploi-2026",
+                  id: 1,
                   titre: "Votre application évolue",
                   contenu:
                       "Le 15 octobre 2026, l’application pass emploi ne sera plus disponible. Vos services seront accessibles sur l’application Parcours Emploi.",

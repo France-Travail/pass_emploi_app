@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class MessageInformatif extends Equatable {
-  final String id;
+  final int id;
   final String titre;
   final String contenu;
   final MessageInformatifCta? cta;
@@ -16,7 +16,7 @@ class MessageInformatif extends Equatable {
   static MessageInformatif? fromJson(dynamic json) {
     if (json == null) return null;
     return MessageInformatif(
-      id: json["id"] as String,
+      id: json["id"] as int,
       titre: json["titre"] as String,
       contenu: json["contenu"] as String,
       cta: MessageInformatifCta.fromJson(json["cta"]),
