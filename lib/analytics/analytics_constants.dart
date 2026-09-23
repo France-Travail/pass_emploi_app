@@ -292,6 +292,8 @@ class AnalyticsEventNames {
   static const actionPlanActionOpenedAction = "Démarche ouverte";
   static const actionPlanObjectiveCompletedAction = "Objectif complété";
   static const actionPlanCompletedAction = "Plan complété";
+  static const actionPlanObjectiveUsefulAction = "Avis objectif - Oui";
+  static const actionPlanObjectiveNotUsefulAction = "Avis objectif - Pas vraiment";
   static const actionPlanRetryAction = "Réessayer - échec de récupération";
   static const actionPlanEmptyModifierAction = "Modifier - plan vide";
   static const actionPlanModifierAction = "Modifier - bas de page";

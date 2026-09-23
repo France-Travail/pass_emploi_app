@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_tracking.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
+import 'package:pass_emploi_app/ui/external_links.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
@@ -18,12 +19,14 @@ class InviteActionPlanSection extends StatelessWidget {
     required this.plan,
     required this.onToggleDone,
     required this.onDelete,
+    required this.onFeedback,
     this.onObjectiveExpanded,
   });
 
   final ActionPlan? plan;
   final void Function(String actionId) onToggleDone;
   final void Function(String actionId) onDelete;
+  final void Function(String objectiveId) onFeedback;
   final VoidCallback? onObjectiveExpanded;
 
   @override
@@ -41,6 +44,7 @@ class InviteActionPlanSection extends StatelessWidget {
             objective: objectives[i],
             onToggleDone: onToggleDone,
             onDelete: onDelete,
+            onFeedback: () => onFeedback(objectives[i].id),
             onExpanded: onObjectiveExpanded,
             withShowcase: i == 0,
           ),
@@ -56,6 +60,7 @@ class _ObjectiveAccordion extends StatefulWidget {
     required this.objective,
     required this.onToggleDone,
     required this.onDelete,
+    required this.onFeedback,
     this.onExpanded,
     this.withShowcase = false,
   });
@@ -63,6 +68,7 @@ class _ObjectiveAccordion extends StatefulWidget {
   final ActionPlanObjective objective;
   final void Function(String actionId) onToggleDone;
   final void Function(String actionId) onDelete;
+  final VoidCallback onFeedback;
   final VoidCallback? onExpanded;
   final bool withShowcase;
 
@@ -213,6 +219,10 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
                         ).send();
                       },
                     ),
+                  ],
+                  if (!hasMore || _showAll) ...[
+                    const SizedBox(height: Margins.spacing_s),
+                    InviteObjectiveFeedback(objective: objective, onFeedback: widget.onFeedback),
                   ],
                 ],
               ),
@@ -387,6 +397,75 @@ class InviteActionPlanActionTile extends StatelessWidget {
       name: [action.label, if (action.serviceName != null) action.serviceName].join(' | '),
     ).send();
     launchExternalUrl(action.url!);
+  }
+}
+
+class InviteObjectiveFeedback extends StatelessWidget {
+  const InviteObjectiveFeedback({
+    super.key,
+    required this.objective,
+    required this.onFeedback,
+  });
+
+  final ActionPlanObjective objective;
+  final VoidCallback onFeedback;
+
+  void _answer({required bool useful}) {
+    ActionPlanTrackingEvent(
+      useful
+          ? AnalyticsEventNames.actionPlanObjectiveUsefulAction
+          : AnalyticsEventNames.actionPlanObjectiveNotUsefulAction,
+      name: objective.theme,
+    ).send();
+    if (!useful) launchExternalUrl(ExternalLinks.actionPlanObjectiveFeedback);
+    onFeedback();
+    // A11y : les boutons disparaissent au profit du remerciement.
+    A11yUtils.announce(Strings.inviteAccueilObjectiveFeedbackThanks);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final titleStyle = DsfrTextStyle.bodyLgBold(color: DsfrColorDecisions.textTitleGrey(context));
+    return Container(
+      width: double.infinity,
+      color: DsfrColorDecisions.artworkDecorativeBlueFrance(context),
+      padding: const EdgeInsets.all(DsfrSpacings.s2w),
+      child: objective.feedbackGiven
+          ? Text(Strings.inviteAccueilObjectiveFeedbackThanks, style: titleStyle)
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(Strings.inviteAccueilObjectiveFeedbackTitle, style: titleStyle),
+                const SizedBox(height: DsfrSpacings.s3v),
+                Wrap(
+                  spacing: DsfrSpacings.s3v,
+                  runSpacing: DsfrSpacings.s3v,
+                  children: [
+                    DsfrButton(
+                      label: Strings.inviteAccueilObjectiveFeedbackYes,
+                      icon: DsfrIcons.systemThumbUpLine,
+                      variant: DsfrButtonVariant.tertiary,
+                      size: DsfrComponentSize.lg,
+                      onPressed: () => _answer(useful: true),
+                    ),
+                    // A11y : le bouton ouvre le navigateur, ce que son libellé ne dit pas.
+                    MergeSemantics(
+                      child: Semantics(
+                        hint: Strings.inviteAccueilObjectiveFeedbackNoA11y,
+                        child: DsfrButton(
+                          label: Strings.inviteAccueilObjectiveFeedbackNo,
+                          icon: DsfrIcons.systemThumbDownLine,
+                          variant: DsfrButtonVariant.tertiary,
+                          size: DsfrComponentSize.lg,
+                          onPressed: () => _answer(useful: false),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+    );
   }
 }
 

@@ -32,3 +32,9 @@ class ActionPlanDeleteAction {
 
   ActionPlanDeleteAction(this.actionId);
 }
+
+class ActionPlanFeedbackAction {
+  final String objectiveId;
+
+  ActionPlanFeedbackAction(this.objectiveId);
+}

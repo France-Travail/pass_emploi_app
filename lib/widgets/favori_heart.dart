@@ -92,14 +92,19 @@ void _displayFavoriErrorSnackbar(BuildContext context) {
       backgroundColor: Colors.transparent,
       elevation: 0,
       padding: EdgeInsets.zero,
-      content: ColoredBox(
-        color: DsfrColorDecisions.backgroundDefaultGrey(context),
-        child: DsfrAlert(
-          type: DsfrAlertType.error,
-          title: Strings.error,
-          description: DsfrAlertDescriptionText(Strings.favoriUpdateError),
-          semanticCloseLabel: Strings.closeInformationMessage,
-          onClose: clearAllSnackBars,
+      // A11y : sans cela, la snackbar fusionne le message et la croix en un seul bouton pour le lecteur d'écran.
+      content: Semantics(
+        container: true,
+        explicitChildNodes: true,
+        child: ColoredBox(
+          color: DsfrColorDecisions.backgroundDefaultGrey(context),
+          child: DsfrAlert(
+            type: DsfrAlertType.error,
+            title: Strings.error,
+            description: DsfrAlertDescriptionText(Strings.favoriUpdateError),
+            semanticCloseLabel: Strings.closeInformationMessage,
+            onClose: clearAllSnackBars,
+          ),
         ),
       ),
     ),

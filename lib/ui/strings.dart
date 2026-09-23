@@ -452,6 +452,11 @@ class Strings {
   static String inviteAccueilConseillerTitle = "Être accompagné par un conseiller ?";
   static String inviteAccueilConseillerBody = "Un professionnel près de chez toi peut t'aider à avancer.";
   static String inviteAccueilAfficherPlus = "Afficher plus";
+  static String inviteAccueilObjectiveFeedbackTitle = "Ces actions t'ont été utiles ?";
+  static String inviteAccueilObjectiveFeedbackYes = "Oui";
+  static String inviteAccueilObjectiveFeedbackNo = "Pas vraiment";
+  static String inviteAccueilObjectiveFeedbackNoA11y = "Ouvre un formulaire dans ton navigateur";
+  static String inviteAccueilObjectiveFeedbackThanks = "Merci pour ton retour !";
   static String inviteAccueilRetryPlan = "Réessayer de générer mes suggestions";
   static String inviteAccueilPlanFailureTitle = "Tes suggestions d'actions n'ont pas pu être générées";
   static String inviteAccueilPlanFailureBody =
