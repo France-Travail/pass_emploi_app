@@ -258,6 +258,97 @@ void main() {
       expect(next.findAction('e'), isNull);
     });
 
+    group('objective feedback', () {
+      test('marks only the answered objective and keeps it on reload', () async {
+        await _stubGenerate(
+          client,
+          _plan(objectives: [_objectiveX(), _objectiveY()]),
+        );
+        await repository.generate('userId', answers);
+
+        final plan = await repository.giveFeedback('objective-x');
+
+        expect(plan!.findObjective('objective-x')?.feedbackGiven, isTrue);
+        expect(plan.findObjective('objective-y')?.feedbackGiven, isFalse);
+        final reloaded = await repository.getStoredPlan();
+        expect(reloaded!.findObjective('objective-x')?.feedbackGiven, isTrue);
+      });
+
+      test('keeps feedback when an action is checked or deleted', () async {
+        await _stubGenerate(client, _plan(objectives: [_objectiveX()]));
+        await repository.generate('userId', answers);
+        await repository.giveFeedback('objective-x');
+
+        await repository.toggleDone('a');
+        final plan = await repository.deleteAction('b');
+
+        expect(plan!.findObjective('objective-x')?.feedbackGiven, isTrue);
+      });
+
+      test('ignores an unknown objective', () async {
+        await _stubGenerate(client, _plan(objectives: [_objectiveX()]));
+        await repository.generate('userId', answers);
+
+        expect(await repository.giveFeedback('unknown'), isNull);
+        expect((await repository.getStoredPlan())!.findObjective('objective-x')?.feedbackGiven, isFalse);
+      });
+
+      test(
+        'keeps feedback of objectives kept by a new generation, asks it again for new ones',
+        () async {
+          await _stubGenerate(client, _plan(objectives: [_objectiveX()]));
+          await repository.generate('userId', answers);
+          await repository.giveFeedback('objective-x');
+
+          await _stubGenerate(
+            client,
+            _plan(
+              objectives: [_objectiveX(id: 'objective-x-new'), _objectiveY()],
+            ),
+          );
+          final next = await repository.generate('userId', answers);
+
+          expect(next!.findObjective('objective-x-new')?.feedbackGiven, isTrue);
+          expect(next.findObjective('objective-y')?.feedbackGiven, isFalse);
+        },
+      );
+
+      test(
+        'asks feedback again when an objective is dropped then selected again',
+        () async {
+          await _stubGenerate(
+            client,
+            _plan(objectives: [_objectiveX(), _objectiveY()]),
+          );
+          await repository.generate('userId', answers);
+          await repository.giveFeedback('objective-x');
+          await repository.giveFeedback('objective-y');
+
+          await _stubGenerate(client, _plan(objectives: [_objectiveX()]));
+          await repository.generate('userId', answers);
+
+          await _stubGenerate(
+            client,
+            _plan(objectives: [_objectiveX(), _objectiveY()]),
+          );
+          final withYAgain = await repository.generate('userId', answers);
+
+          expect(withYAgain!.findObjective('objective-x')?.feedbackGiven, isTrue);
+          expect(withYAgain.findObjective('objective-y')?.feedbackGiven, isFalse);
+        },
+      );
+
+      test('is forgotten on clear', () async {
+        await _stubGenerate(client, _plan(objectives: [_objectiveX()]));
+        await repository.generate('userId', answers);
+        await repository.giveFeedback('objective-x');
+
+        await repository.clear();
+
+        expect(await preferences.read(key: 'actionPlanFeedbackThemes'), isNull);
+      });
+    });
+
     test('applies stored progress once then clears it', () async {
       await preferences.write(
         key: 'actionPlan',
