@@ -47,6 +47,7 @@ class InviteAccueilViewModel extends Equatable {
   final VoidCallback onPlanActionExpanded;
   final void Function(String actionId) toggleDone;
   final void Function(String actionId) deleteAction;
+  final void Function(String objectiveId) giveObjectiveFeedback;
 
   const InviteAccueilViewModel({
     required this.displayState,
@@ -75,6 +76,7 @@ class InviteAccueilViewModel extends Equatable {
     required this.onPlanActionExpanded,
     required this.toggleDone,
     required this.deleteAction,
+    required this.giveObjectiveFeedback,
   });
 
   factory InviteAccueilViewModel.create(Store<AppState> store) {
@@ -157,6 +159,7 @@ class InviteAccueilViewModel extends Equatable {
       onPlanActionExpanded: () => store.dispatch(PlanActionOnboardingCompletedAction()),
       toggleDone: (id) => store.dispatch(ActionPlanToggleDoneAction(id)),
       deleteAction: (id) => store.dispatch(ActionPlanDeleteAction(id)),
+      giveObjectiveFeedback: (id) => store.dispatch(ActionPlanFeedbackAction(id)),
     );
   }
 

@@ -154,6 +154,7 @@ class _Content extends StatelessWidget {
                 plan: viewModel.plan,
                 onToggleDone: viewModel.toggleDone,
                 onDelete: viewModel.deleteAction,
+                onFeedback: viewModel.giveObjectiveFeedback,
                 onObjectiveExpanded: viewModel.onPlanActionExpanded,
               ),
           ],
