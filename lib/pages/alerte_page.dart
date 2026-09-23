@@ -515,38 +515,43 @@ void _displaySuccessSnackbar(
       backgroundColor: Colors.transparent,
       elevation: 0,
       padding: EdgeInsets.zero,
-      content: ColoredBox(
-        color: DsfrColorDecisions.backgroundDefaultGrey(context),
-        child: DsfrAlert(
-          type: DsfrAlertType.success,
-          title: Strings.suggestionRechercheAjoutee,
-          description: DsfrAlertDescriptionWidget(
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  Strings.suggestionRechercheAjouteeDescription,
-                  style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
-                ),
-                const SizedBox(height: DsfrSpacings.s1w),
-                DsfrLink(
-                  label: Strings.voirResultatsSuggestion,
-                  icon: DsfrIcons.systemArrowRightLine,
-                  iconPosition: DsfrLinkIconPosition.end,
-                  size: DsfrComponentSize.md,
-                  onTap: () {
-                    newViewModel.seeOffreResults();
-                    newViewModel.resetTraiterState();
-                    clearAllSnackBars();
-                  },
-                ),
-              ],
+      // A11y : sans cela, la snackbar fusionne le message et la croix en un seul bouton pour le lecteur d'écran.
+      content: Semantics(
+        container: true,
+        explicitChildNodes: true,
+        child: ColoredBox(
+          color: DsfrColorDecisions.backgroundDefaultGrey(context),
+          child: DsfrAlert(
+            type: DsfrAlertType.success,
+            title: Strings.suggestionRechercheAjoutee,
+            description: DsfrAlertDescriptionWidget(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    Strings.suggestionRechercheAjouteeDescription,
+                    style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+                  ),
+                  const SizedBox(height: DsfrSpacings.s1w),
+                  DsfrLink(
+                    label: Strings.voirResultatsSuggestion,
+                    icon: DsfrIcons.systemArrowRightLine,
+                    iconPosition: DsfrLinkIconPosition.end,
+                    size: DsfrComponentSize.md,
+                    onTap: () {
+                      newViewModel.seeOffreResults();
+                      newViewModel.resetTraiterState();
+                      clearAllSnackBars();
+                    },
+                  ),
+                ],
+              ),
             ),
+            onClose: () {
+              newViewModel.resetTraiterState();
+              clearAllSnackBars();
+            },
           ),
-          onClose: () {
-            newViewModel.resetTraiterState();
-            clearAllSnackBars();
-          },
         ),
       ),
     ),
