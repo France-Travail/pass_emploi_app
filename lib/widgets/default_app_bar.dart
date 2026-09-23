@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart' hide DsfrNotice;
 import 'package:pass_emploi_app/pages/notifications_center/notifications_center_page.dart';
 import 'package:pass_emploi_app/pages/profil/profil_page.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_notice.dart';
 
 class PrimarySliverAppbar extends StatelessWidget {
   final String title;
@@ -322,28 +319,12 @@ class ModeDemoAppBar extends StatelessWidget implements PreferredSizeWidget {
       titleSpacing: 0,
       elevation: 0,
       scrolledUnderElevation: 0,
-      backgroundColor: AppColors.warningLighten,
+      surfaceTintColor: Colors.transparent,
+      // Même fond que le bandeau, pour la barre d'état.
+      backgroundColor: DsfrColorDecisions.backgroundContrastInfo(context),
       // A11y : bandeau d'information, pas un titre de page.
       excludeHeaderSemantics: true,
-      title: Padding(
-        padding: const EdgeInsets.symmetric(vertical: Margins.spacing_base, horizontal: Margins.spacing_m),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Icon(
-              AppIcons.info_rounded,
-              color: AppColors.warning,
-            ),
-            SizedBox(width: Margins.spacing_base),
-            Expanded(
-              child: Text(
-                Strings.modeDemoAppBarLabel,
-                style: TextStyles.textBaseBoldWithColor(AppColors.warning),
-              ),
-            ),
-          ],
-        ),
-      ),
+      title: DsfrNotice(titre: Strings.modeDemoAppBarLabel),
     );
   }
 

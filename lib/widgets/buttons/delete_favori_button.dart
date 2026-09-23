@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/models/favori.dart';
 import 'package:pass_emploi_app/pages/offre_page.dart';
@@ -6,7 +7,6 @@ import 'package:pass_emploi_app/presentation/favori_heart_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/favori_heart.dart';
 import 'package:pass_emploi_app/widgets/favori_state_selector.dart';
 
@@ -20,8 +20,10 @@ class DeleteFavoriButton<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreConnector<AppState, FavoriHeartViewModel<T>>(
       builder: (context, vm) {
-        return PrimaryActionButton(
+        return DsfrButton(
           label: Strings.deleteOffreFromFavori,
+          variant: DsfrButtonVariant.primary,
+          size: DsfrComponentSize.lg,
           onPressed: vm.withLoading
               ? null
               : () {

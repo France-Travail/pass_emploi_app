@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/pages/user_action/create/create_user_action_form_page.dart';
 import 'package:pass_emploi_app/pages/user_action/user_action_detail_page.dart';
@@ -6,16 +7,12 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/user_action/create_user_action_confirmation_view_model.dart';
 import 'package:pass_emploi_app/presentation/user_action/user_action_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/drawables.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/errors/error_text.dart';
+import 'package:pass_emploi_app/widgets/success/creation_confirmation_body.dart';
 
 class CreateUserActionConfirmationOffreSuiviPage extends StatelessWidget {
   const CreateUserActionConfirmationOffreSuiviPage({super.key});
@@ -32,27 +29,13 @@ class CreateUserActionConfirmationOffreSuiviPage extends StatelessWidget {
     return StoreConnector<AppState, CreateActionSuccessViewModel>(
       converter: (store) => CreateActionSuccessViewModel.create(store),
       builder: (context, viewModel) {
+        final backgroundColor = DsfrColorDecisions.backgroundDefaultGrey(context);
         return Scaffold(
-          backgroundColor: context.bg,
+          backgroundColor: backgroundColor,
           appBar: SecondaryAppBar(
             title: Strings.createActionAppBarTitle,
-            backgroundColor: context.bg,
+            backgroundColor: backgroundColor,
           ),
-          floatingActionButton: viewModel.displayState == DisplayState.CONTENT
-              ? _Buttons(
-                  onGoActionDetail: () {
-                    final navigator = Navigator.of(context);
-                    final actionId = viewModel.actionId;
-                    navigator.pop();
-                    UserActionDetailPage.show(
-                      navigator.context,
-                      actionId,
-                      UserActionStateSource.noSource,
-                    );
-                  },
-                )
-              : null,
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
           body: _Content(viewModel: viewModel),
         );
       },
@@ -67,73 +50,36 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (viewModel.displayState) {
-      DisplayState.CONTENT => _Body(),
+      DisplayState.CONTENT => CreationConfirmationBody(
+        tag: DsfrCategoryTag.actionDone(),
+        title: Strings.userActionConfirmationTitleSingular,
+        subtitle: Strings.userActionConfirmationSubtitleLegacy,
+        actions: [
+          AutoFocusA11y(
+            child: DsfrButton(
+              label: Strings.userActionConfirmationSeeDetailButton,
+              variant: DsfrButtonVariant.primary,
+              size: DsfrComponentSize.lg,
+              onPressed: () => _goToActionDetail(context),
+            ),
+          ),
+        ],
+      ),
       DisplayState.FAILURE => Center(
         child: ErrorText(Strings.genericCreationError),
       ),
       _ => const Center(child: CircularProgressIndicator()),
     };
   }
-}
 
-class _Body extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(height: Margins.spacing_xl),
-            Center(
-              child: SizedBox(
-                height: 130,
-                width: 130,
-                child: Image.asset(Drawables.success),
-              ),
-            ),
-            SizedBox(height: Margins.spacing_xl),
-            DsfrCategoryTag.actionDone(),
-            SizedBox(height: Margins.spacing_s),
-            Text(
-              Strings.userActionConfirmationTitleSingular,
-              style: TextStyles.textMBold.copyWith(color: context.content),
-            ),
-            SizedBox(height: Margins.spacing_s),
-            Text(
-              Strings.userActionConfirmationSubtitleLegacy,
-              style: TextStyles.textSRegular(color: context.content),
-            ),
-            SizedBox(height: Margins.spacing_xx_huge),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _Buttons extends StatelessWidget {
-  const _Buttons({required this.onGoActionDetail});
-
-  final void Function() onGoActionDetail;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          AutoFocusA11y(
-            child: PrimaryActionButton(
-              label: Strings.userActionConfirmationSeeDetailButton,
-              onPressed: onGoActionDetail,
-            ),
-          ),
-        ],
-      ),
+  void _goToActionDetail(BuildContext context) {
+    final navigator = Navigator.of(context);
+    final actionId = viewModel.actionId;
+    navigator.pop();
+    UserActionDetailPage.show(
+      navigator.context,
+      actionId,
+      UserActionStateSource.noSource,
     );
   }
 }
