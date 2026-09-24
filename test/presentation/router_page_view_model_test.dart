@@ -1,5 +1,6 @@
 import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_state.dart';
 import 'package:pass_emploi_app/features/login/login_state.dart';
@@ -446,6 +447,20 @@ void main() {
       final viewModel = RouterPageViewModel.create(store, Platform.IOS);
 
       expect(viewModel.routerPageDisplayState, RouterPageDisplayState.splash);
+    });
+
+    test('…should show restore failure when PLAN_ACTION is active and plan could not be fetched', () {
+      final store =
+          givenState() //
+              .loggedInMiloUser()
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withPlanActionFonctionnalite()
+              .copyWith(actionPlanState: ActionPlanFailureState())
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.actionPlanRestoreFailure);
     });
 
     test('…should show main when PLAN_ACTION is active and questionnaire is finished', () {
