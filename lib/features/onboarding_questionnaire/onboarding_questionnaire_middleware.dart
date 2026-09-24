@@ -28,12 +28,12 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
       await _load(store);
     } else if (action is FonctionnalitesSuccessAction && action.actives.contains(Fonctionnalite.planAction)) {
       if (store.state.onboardingQuestionnaireState is OnboardingQuestionnaireNotInitializedState) {
-        await _load(store);
+        await _loadOrRestoreFromServer(store);
       }
     } else if (action is RequestLogoutAction) {
       await _clear();
     } else if (action is OnboardingQuestionnaireRequestAction) {
-      await _load(store);
+      await _loadOrRestoreFromServer(store);
     } else if (action is OnboardingQuestionnaireCompleteAction) {
       await _complete(store, action.answers);
     } else if (action is OnboardingQuestionnaireFinishAction) {
@@ -57,6 +57,23 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
     store.dispatch(
       OnboardingQuestionnaireSuccessAction(finished: finished, everFinished: everFinished, answers: answers),
     );
+  }
+
+  Future<void> _loadOrRestoreFromServer(Store<AppState> store) async {
+    final userId = store.state.userId();
+    if (userId == null || await _repository.hasEverFinished()) return _load(store);
+
+    store.dispatch(ActionPlanLoadingAction());
+    switch (await _actionPlanRepository.fetch(userId)) {
+      case ActionPlanFetchFound(:final plan):
+        await _repository.setFinished(true);
+        store.dispatch(ActionPlanSuccessAction(plan));
+        await _load(store);
+      case ActionPlanFetchNotFound():
+        await _load(store);
+      case ActionPlanFetchFailure():
+        store.dispatch(ActionPlanFailureAction());
+    }
   }
 
   Future<void> _complete(Store<AppState> store, OnboardingQuestionnaireAnswers answers) async {

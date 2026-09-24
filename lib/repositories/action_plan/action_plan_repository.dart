@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:pass_emploi_app/crashlytics/crashlytics.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
@@ -38,19 +39,36 @@ class ActionPlanRepository {
       );
       final data = response.data;
       if (data is! Map<String, dynamic>) return null;
-      final plan = ActionPlan.fromApiJson(data);
-      final previous = await _loadState();
-      final doneIds = previous?.doneIds ?? await _readDoneActionIds();
-      final merged = (previous == null ? plan : plan.keepActionsFrom(previous.plan)).applyDone(doneIds);
-      // Objectives absent from the previous plan come with new actions: their feedback is asked again.
-      final feedbackThemes = previous?.feedbackThemes.intersection(merged.themes) ?? <String>{};
-      await _persist(merged, doneIds);
-      await _writeFeedbackThemes(feedbackThemes);
-      return merged.applyFeedback(feedbackThemes).withoutEmptyObjectives();
+      return await _mergeAndPersist(ActionPlan.fromApiJson(data));
     } catch (e, stack) {
       _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
       return null;
     }
+  }
+
+  Future<ActionPlanFetchResult> fetch(String userId) async {
+    final url = '/jeunes/$userId/plan-action';
+    try {
+      final response = await _httpClient.get(url);
+      final data = response.data;
+      if (data is! Map<String, dynamic>) return ActionPlanFetchFailure();
+      return ActionPlanFetchFound(await _mergeAndPersist(ActionPlan.fromApiJson(data)));
+    } catch (e, stack) {
+      if (e is DioException && e.response?.statusCode == 404) return ActionPlanFetchNotFound();
+      _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
+      return ActionPlanFetchFailure();
+    }
+  }
+
+  Future<ActionPlan> _mergeAndPersist(ActionPlan plan) async {
+    final previous = await _loadState();
+    final doneIds = previous?.doneIds ?? await _readDoneActionIds();
+    final merged = (previous == null ? plan : plan.keepActionsFrom(previous.plan)).applyDone(doneIds);
+    // Objectives absent from the previous plan come with new actions: their feedback is asked again.
+    final feedbackThemes = previous?.feedbackThemes.intersection(merged.themes) ?? <String>{};
+    await _persist(merged, doneIds);
+    await _writeFeedbackThemes(feedbackThemes);
+    return merged.applyFeedback(feedbackThemes).withoutEmptyObjectives();
   }
 
   Future<ActionPlan?> getStoredPlan() async {
@@ -173,6 +191,24 @@ class ActionPlanRepository {
     }
   }
 }
+
+sealed class ActionPlanFetchResult extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
+
+class ActionPlanFetchFound extends ActionPlanFetchResult {
+  final ActionPlan plan;
+
+  ActionPlanFetchFound(this.plan);
+
+  @override
+  List<Object?> get props => [plan];
+}
+
+class ActionPlanFetchNotFound extends ActionPlanFetchResult {}
+
+class ActionPlanFetchFailure extends ActionPlanFetchResult {}
 
 class _ActionPlanState {
   final ActionPlan plan;

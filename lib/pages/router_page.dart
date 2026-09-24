@@ -11,6 +11,7 @@ import 'package:pass_emploi_app/pages/cgu_page.dart';
 import 'package:pass_emploi_app/pages/first_lauch_onboarding_page.dart';
 import 'package:pass_emploi_app/pages/login_page.dart';
 import 'package:pass_emploi_app/pages/main_page.dart';
+import 'package:pass_emploi_app/pages/onboarding_questionnaire/action_plan_restore_failure_page.dart';
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_page.dart';
 import 'package:pass_emploi_app/pages/spash_screen_page.dart';
 import 'package:pass_emploi_app/pages/tutorial_page.dart';
@@ -85,6 +86,7 @@ class _RouterPageState extends State<RouterPage> with WidgetsBindingObserver {
       RouterPageDisplayState.onboarding => FirstLaunchOnboardingPage(),
       RouterPageDisplayState.login => LoginPage(),
       RouterPageDisplayState.onboardingQuestionnaire => OnboardingQuestionnairePage(),
+      RouterPageDisplayState.actionPlanRestoreFailure => ActionPlanRestoreFailurePage(),
       RouterPageDisplayState.cgu => CguPage(),
       RouterPageDisplayState.tutorial => TutorialPage(),
       RouterPageDisplayState.main => MainPage(
