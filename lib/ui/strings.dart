@@ -444,6 +444,7 @@ class Strings {
   static String inviteAccueilStepsCount(int current, int total) => "$current/$total étapes";
   static String inviteAccueilResumeQuestionnaire = "Reprendre le questionnaire";
   static String inviteAccueilModifier = "Modifier";
+  static String actionPlanRestoreError = "Nous n’avons pas pu récupérer ton plan d’action.";
   static String actionPlanFeedbackTitle = "Avant de continuer";
   static String actionPlanFeedbackDescription = "Dis-nous ce que tu as pensé des pistes d’actions suggérées\u{00A0}?";
   static String actionPlanFeedbackGiveOpinion = "Donne ton avis";

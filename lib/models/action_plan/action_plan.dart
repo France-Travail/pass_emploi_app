@@ -181,8 +181,9 @@ class ActionPlan extends Equatable {
 
   String? objectiveIdOf(String actionId) {
     for (final objective in objectives) {
-      if (objective.actions.any((action) => action.id == actionId))
+      if (objective.actions.any((action) => action.id == actionId)) {
         return objective.id;
+      }
     }
     return null;
   }

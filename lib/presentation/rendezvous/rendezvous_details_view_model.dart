@@ -112,12 +112,13 @@ class RendezvousDetailsViewModel extends Equatable {
   }) {
     final rdv = _getRendezvous(store, source, rdvId);
     final dateDerniereMiseAJour = _getDateDerniereMiseAJour(store, source);
-    if (rdv == null)
+    if (rdv == null) {
       return RendezvousDetailsViewModel._createBlankRendezvous(
         store,
         source,
         rdvId,
       );
+    }
     final address = _address(rdv);
     final comment = (rdv.comment != null && rdv.comment!.trim().isNotEmpty)
         ? rdv.comment
@@ -283,8 +284,9 @@ Rendezvous? _getRendezvous(
 }
 
 String? _nombreDePlacesRestantes(Rendezvous rdv) {
-  if (rdv.nombreDePlacesRestantes == null || rdv.nombreDePlacesRestantes == 0)
+  if (rdv.nombreDePlacesRestantes == null || rdv.nombreDePlacesRestantes == 0) {
     return null;
+  }
   return Strings.placesRestantes(rdv.nombreDePlacesRestantes!);
 }
 
@@ -306,8 +308,9 @@ bool _shouldGetRendezvous(RendezvousStateSource source, Store<AppState> store) {
 }
 
 String _navbarTitle(RendezvousStateSource source, Rendezvous rendezvous) {
-  if (!source.isFromEvenements && !source.isFromEvenementMiloDetails)
+  if (!source.isFromEvenements && !source.isFromEvenementMiloDetails) {
     return Strings.myRendezVous;
+  }
   return rendezvous.estInscrit == true
       ? Strings.myRendezVous
       : Strings.eventTitle;
@@ -355,8 +358,9 @@ String? _commentTitle(
   if (comment != null && rdv.conseiller == null) {
     return Strings.commentWithoutConseiller;
   }
-  if (comment != null && rdv.conseiller != null)
+  if (comment != null && rdv.conseiller != null) {
     return Strings.rendezVousConseillerCommentLabel;
+  }
   return null;
 }
 
@@ -403,10 +407,12 @@ bool _withModalityPart(Rendezvous rdv) {
 }
 
 VisioButtonState _visioButtonState(Rendezvous rdv) {
-  if (rdv.isInVisio && rdv.visioRedirectUrl != null)
+  if (rdv.isInVisio && rdv.visioRedirectUrl != null) {
     return VisioButtonState.ACTIVE;
-  if (rdv.isInVisio && rdv.visioRedirectUrl == null)
+  }
+  if (rdv.isInVisio && rdv.visioRedirectUrl == null) {
     return VisioButtonState.INACTIVE;
+  }
   return VisioButtonState.HIDDEN;
 }
 
@@ -414,8 +420,9 @@ String? _trackingPageName(
   RendezvousStateSource source,
   RendezvousTypeCode type,
 ) {
-  if (source.isFromEvenementMiloDetails)
+  if (source.isFromEvenementMiloDetails) {
     return AnalyticsScreenNames.sessionMiloDetails;
+  }
   if ([
     RendezvousTypeCode.ATELIER,
     RendezvousTypeCode.INFORMATION_COLLECTIVE,
@@ -496,10 +503,11 @@ RendezvousCtaVm? _miloCta(Store<AppState> store, Rendezvous rdv) {
     );
   }
 
-  if (rdv.isComplet)
+  if (rdv.isComplet) {
     return RendezVousShareToConseiller(
       chatPartageSource: ChatPartageSessionMiloSource(rdv.id),
     );
+  }
 
   return RendezVousShareToConseillerDemandeInscription(
     onPressed: () => store.dispatch(

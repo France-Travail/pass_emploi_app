@@ -49,6 +49,11 @@ jobs:
         with:
           varFilePath: ./.github/variables/myvars.env
 
+      - uses: actions/setup-java@v4
+        with:
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          java-version: 21
+
       - uses: subosito/flutter-action@v2
         with:
           cache: true
@@ -70,9 +75,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y unzip
-          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006.zip
           unzip -q sonar-scanner.zip
-          echo "$(pwd)/sonar-scanner-5.0.1.3006-linux/bin" >> "$GITHUB_PATH"
+          echo "$(pwd)/sonar-scanner-5.0.1.3006/bin" >> "$GITHUB_PATH"
 
       - name: SonarCloud Scan
         env:

@@ -101,6 +101,49 @@ void main() {
         });
       });
     });
+
+    group('fetch', () {
+      sut.when((repository) => repository.fetch('userId'));
+
+      group('when response is valid', () {
+        sut.givenJsonResponse(fromJson: 'action_plan.json');
+
+        test('request should be valid', () async {
+          await sut.expectRequestBody(method: HttpMethod.get, url: '/jeunes/userId/plan-action');
+        });
+
+        test('response should be valid and persisted', () async {
+          await sut.expectResult<ActionPlanFetchResult>((result) {
+            expect(result, isA<ActionPlanFetchFound>());
+            final plan = (result as ActionPlanFetchFound).plan;
+            expect(plan.id, '0b7956f3-0064-4070-906e-53f47845506d');
+            expect(plan.objectives.first.actions, hasLength(3));
+          });
+
+          expect(await preferences.read(key: 'actionPlan'), isNotNull);
+        });
+      });
+
+      group('when jeune has no plan', () {
+        sut.givenResponseCode(404);
+
+        test('response should be not found', () async {
+          await sut.expectResult<ActionPlanFetchResult>((result) {
+            expect(result, isA<ActionPlanFetchNotFound>());
+          });
+        });
+      });
+
+      group('when response is invalid', () {
+        sut.givenResponseCode(500);
+
+        test('response should be a failure', () async {
+          await sut.expectResult<ActionPlanFetchResult>((result) {
+            expect(result, isA<ActionPlanFetchFailure>());
+          });
+        });
+      });
+    });
   });
 
   group('ActionPlanRepository across generations', () {
