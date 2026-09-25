@@ -33,20 +33,17 @@ class ChatTextField extends StatefulWidget {
 }
 
 class _ChatTextFieldState extends State<ChatTextField> {
-  late bool showSendButton;
+  ChatPieceJointeBottomSheetResult? pieceJointeBrouillon;
+
+  bool get showSendButton => widget.controller.text.isNotEmpty || pieceJointeBrouillon != null;
 
   @override
   void initState() {
-    showSendButton = !widget.jeunePjEnabled && widget.controller.text.isNotEmpty;
     widget.controller.addListener(_onTextFieldChanged);
     super.initState();
   }
 
-  void _onTextFieldChanged() {
-    setState(() {
-      showSendButton = widget.controller.text.isNotEmpty;
-    });
-  }
+  void _onTextFieldChanged() => setState(() {});
 
   @override
   void dispose() {
@@ -71,78 +68,88 @@ class _ChatTextFieldState extends State<ChatTextField> {
         color: DsfrColorDecisions.backgroundDefaultGrey(context),
         child: Padding(
           padding: const EdgeInsets.all(DsfrSpacings.s2w),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              AnimatedCrossFade(
-                firstChild: const SizedBox(height: DsfrSpacings.s6w, width: 0),
-                secondChild: Padding(
-                  padding: const EdgeInsets.only(right: DsfrSpacings.s1w),
-                  // A11y : un seul nœud bouton, nommé une fois.
-                  child: Semantics(
-                    container: true,
-                    button: true,
-                    label: Strings.sendAttachmentTooltip,
-                    onTap: onSelectPieceJointe,
-                    excludeSemantics: true,
-                    child: Tooltip(
-                      message: Strings.sendAttachmentTooltip,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(Dimens.radius_s),
-                        child: DsfrButton(
-                          icon: DsfrIcons.businessAttachmentLine,
-                          iconSemanticLabel: Strings.sendAttachmentTooltip,
-                          variant: DsfrButtonVariant.primary,
-                          size: DsfrComponentSize.lg,
-                          onPressed: onSelectPieceJointe,
+              if (pieceJointeBrouillon != null)
+                _PieceJointeBrouillon(
+                  fileName: pieceJointeBrouillon!.path.split('/').last,
+                  onRemove: () => setState(() => pieceJointeBrouillon = null),
+                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  AnimatedCrossFade(
+                    firstChild: const SizedBox(height: DsfrSpacings.s6w, width: 0),
+                    secondChild: Padding(
+                      padding: const EdgeInsets.only(right: DsfrSpacings.s1w),
+                      // A11y : un seul nœud bouton, nommé une fois.
+                      child: Semantics(
+                        container: true,
+                        button: true,
+                        label: Strings.sendAttachmentTooltip,
+                        onTap: onSelectPieceJointe,
+                        excludeSemantics: true,
+                        child: Tooltip(
+                          message: Strings.sendAttachmentTooltip,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(Dimens.radius_s),
+                            child: DsfrButton(
+                              icon: DsfrIcons.businessAttachmentLine,
+                              iconSemanticLabel: Strings.sendAttachmentTooltip,
+                              variant: DsfrButtonVariant.primary,
+                              size: DsfrComponentSize.lg,
+                              onPressed: onSelectPieceJointe,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+                    crossFadeState: widget.jeunePjEnabled && pieceJointeBrouillon == null
+                        ? CrossFadeState.showSecond
+                        : CrossFadeState.showFirst,
+                    duration: AnimationDurations.fast,
                   ),
-                ),
-                crossFadeState: widget.jeunePjEnabled && !showSendButton
-                    ? CrossFadeState.showSecond
-                    : CrossFadeState.showFirst,
-                duration: AnimationDurations.fast,
-              ),
-              Expanded(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () => widget.focusNode.requestFocusWithA11y(),
-                  child: input,
-                ),
-              ),
-              AnimatedCrossFade(
-                firstChild: const SizedBox(height: DsfrSpacings.s6w, width: 0),
-                secondChild: Padding(
-                  padding: const EdgeInsets.only(left: DsfrSpacings.s1w),
-                  // A11y : un seul nœud bouton, nommé une fois, désactivé tant que le message est vide.
-                  child: Semantics(
-                    container: true,
-                    button: true,
-                    enabled: showSendButton,
-                    label: Strings.sendMessageTooltip,
-                    onTap: showSendButton ? _onSendPressed : null,
-                    excludeSemantics: true,
-                    child: Tooltip(
-                      message: Strings.sendMessageTooltip,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(Dimens.radius_s),
-                        child: DsfrButton(
-                          icon: DsfrIcons.businessSendPlaneFill,
-                          iconSemanticLabel: Strings.sendMessageTooltip,
-                          variant: DsfrButtonVariant.primary,
-                          size: DsfrComponentSize.lg,
-                          onPressed: showSendButton ? _onSendPressed : () {},
+                  Expanded(
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () => widget.focusNode.requestFocusWithA11y(),
+                      child: input,
+                    ),
+                  ),
+                  AnimatedCrossFade(
+                    firstChild: const SizedBox(height: DsfrSpacings.s6w, width: 0),
+                    secondChild: Padding(
+                      padding: const EdgeInsets.only(left: DsfrSpacings.s1w),
+                      // A11y : un seul nœud bouton, nommé une fois, désactivé tant que le message est vide.
+                      child: Semantics(
+                        container: true,
+                        button: true,
+                        enabled: showSendButton,
+                        label: Strings.sendMessageTooltip,
+                        onTap: showSendButton ? _onSendPressed : null,
+                        excludeSemantics: true,
+                        child: Tooltip(
+                          message: Strings.sendMessageTooltip,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(Dimens.radius_s),
+                            child: DsfrButton(
+                              icon: DsfrIcons.businessSendPlaneFill,
+                              iconSemanticLabel: Strings.sendMessageTooltip,
+                              variant: DsfrButtonVariant.primary,
+                              size: DsfrComponentSize.lg,
+                              onPressed: showSendButton ? _onSendPressed : () {},
+                            ),
+                          ),
                         ),
                       ),
                     ),
+                    crossFadeState: showSendButton || A11yUtils.withScreenReader(context)
+                        ? CrossFadeState.showSecond
+                        : CrossFadeState.showFirst,
+                    duration: AnimationDurations.fast,
                   ),
-                ),
-                crossFadeState: showSendButton || A11yUtils.withScreenReader(context)
-                    ? CrossFadeState.showSecond
-                    : CrossFadeState.showFirst,
-                duration: AnimationDurations.fast,
+                ],
               ),
             ],
           ),
@@ -161,16 +168,55 @@ class _ChatTextFieldState extends State<ChatTextField> {
       widget.controller.clear();
       context.trackEvenementEngagement(EvenementEngagement.MESSAGE_ENVOYE);
     }
+    final pieceJointe = pieceJointeBrouillon;
+    if (pieceJointe is ChatPieceJointeBottomSheetImageResult) {
+      widget.onSendImage(pieceJointe.path);
+    } else if (pieceJointe is ChatPieceJointeBottomSheetFileResult) {
+      widget.onSendFile(pieceJointe.path);
+    }
+    setState(() => pieceJointeBrouillon = null);
   }
 
   void onSelectPieceJointe() async {
     final fileSource = await ChatPieceJointeBottomSheet.show(context);
-    if (fileSource != null) {
-      if (fileSource is ChatPieceJointeBottomSheetImageResult) {
-        widget.onSendImage(fileSource.path);
-      } else if (fileSource is ChatPieceJointeBottomSheetFileResult) {
-        widget.onSendFile(fileSource.path);
-      }
-    }
+    if (fileSource != null) setState(() => pieceJointeBrouillon = fileSource);
+  }
+}
+
+class _PieceJointeBrouillon extends StatelessWidget {
+  final String fileName;
+  final VoidCallback onRemove;
+
+  const _PieceJointeBrouillon({required this.fileName, required this.onRemove});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: DsfrSpacings.s1w),
+      child: Row(
+        children: [
+          Icon(
+            DsfrIcons.businessAttachmentLine,
+            size: DsfrSpacings.s3w,
+            color: DsfrColorDecisions.textDefaultGrey(context),
+          ),
+          SizedBox(width: DsfrSpacings.s1w),
+          Expanded(
+            child: Text(
+              fileName,
+              overflow: TextOverflow.ellipsis,
+              style: DsfrTextStyle.bodySmBold(color: DsfrColorDecisions.textDefaultGrey(context)),
+            ),
+          ),
+          DsfrButton(
+            icon: DsfrIcons.systemCloseLine,
+            iconSemanticLabel: Strings.chatPieceJointeBrouillonRemove,
+            variant: DsfrButtonVariant.tertiaryWithoutBorder,
+            size: DsfrComponentSize.md,
+            onPressed: onRemove,
+          ),
+        ],
+      ),
+    );
   }
 }

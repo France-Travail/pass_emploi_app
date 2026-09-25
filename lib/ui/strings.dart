@@ -102,6 +102,7 @@ class Strings {
   static String sendingFailed = "L'envoi a échoué";
   static String sendMessageTooltip = "Envoyer le message";
   static String sendAttachmentTooltip = "Envoyer une pièce jointe";
+  static String chatPieceJointeBrouillonRemove = "Retirer la pièce jointe";
   static String chatError = "Erreur lors de la récupération de ta messagerie";
   static String chatTabMonConseiller = "Mon conseiller";
   static String chatTabMaMissionLocale = "Ma mission locale";
