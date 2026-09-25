@@ -32,6 +32,39 @@ void main() {
   });
 
   group('Login tests', () {
+    test('login sends application-du-cej to Connect when branded CEJ', () async {
+      // Given : la fixture configuration() est brandée CEJ
+      when(
+        () => wrapper.login(_tokenRequest(application: 'application-du-cej')),
+      ).thenAnswer((_) async => authTokenResponse());
+
+      // When
+      final result = await authenticator.login(AuthenticationMode.GENERIC);
+
+      // Then
+      expect(result, isA<SuccessAuthenticatorResponse>());
+    });
+
+    test('login sends pass-emploi to Connect when branded Pass Emploi', () async {
+      // Given
+      final wrapper = MockAuthWrapper();
+      final authenticator = Authenticator(
+        wrapper,
+        logoutRepository,
+        configuration(brand: Brand.passEmploi),
+        secureStorage,
+      );
+      when(
+        () => wrapper.login(_tokenRequest(application: 'pass-emploi')),
+      ).thenAnswer((_) async => authTokenResponse());
+
+      // When
+      final result = await authenticator.login(AuthenticationMode.GENERIC);
+
+      // Then
+      expect(result, isA<SuccessAuthenticatorResponse>());
+    });
+
     test('token is saved and returned when login in GENERIC mode is successful', () async {
       // Given
       when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async => authTokenResponse());
@@ -121,7 +154,7 @@ void main() {
         configuration(brand: Brand.passEmploi),
         secureStorage,
       );
-      when(() => wrapper.login(_tokenRequest())).thenAnswer(
+      when(() => wrapper.login(_tokenRequest(application: 'pass-emploi'))).thenAnswer(
         (_) async =>
             AuthTokenResponse(accessToken: 'accessToken', idToken: realPassEmploiIdToken, refreshToken: 'refreshToken'),
       );
@@ -532,14 +565,18 @@ void main() {
 
 class MockCrashlytics extends Mock implements Crashlytics {}
 
-AuthTokenRequest _tokenRequest({Map<String, String>? additionalParameters}) {
+// `application` est toujours envoyé à Connect ; la fixture configuration() est brandée CEJ par défaut.
+AuthTokenRequest _tokenRequest({
+  Map<String, String>? additionalParameters,
+  String application = 'application-du-cej',
+}) {
   return AuthTokenRequest(
     configuration().authClientId,
     configuration().authLoginRedirectUrl,
     configuration().authIssuer,
     configuration().authScopes,
     configuration().authClientSecret,
-    additionalParameters,
+    {'application': application, ...?additionalParameters},
   );
 }
 
