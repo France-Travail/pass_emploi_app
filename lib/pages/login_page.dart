@@ -94,6 +94,14 @@ class _Scaffold extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                 ),
+                if (viewModel.subtitle != null) ...[
+                  const SizedBox(height: Margins.spacing_s),
+                  Text(
+                    viewModel.subtitle!,
+                    style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
                 const SizedBox(height: Margins.spacing_base),
                 Text(
                   viewModel.description,

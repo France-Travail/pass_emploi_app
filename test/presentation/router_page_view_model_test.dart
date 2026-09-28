@@ -51,6 +51,18 @@ void main() {
       expect(viewModel.routerPageDisplayState, RouterPageDisplayState.onboarding);
     });
 
+    test('…with first launch onboarding on pass emploi should display login page', () {
+      final store =
+          givenState(passEmploiConfiguration()) //
+              .copyWith(loginState: UserNotLoggedInState())
+              .withFirstLaunchOnboardingSuccessState(true)
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.login);
+    });
+
     test('…without first launch onboarding should display login page', () {
       final store = givenState()
           .copyWith(loginState: UserNotLoggedInState())

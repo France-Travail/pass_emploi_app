@@ -104,7 +104,9 @@ RouterPageDisplayState _routerPageDisplayState(Store<AppState> store) {
     return RouterPageDisplayState.main;
   }
 
-  if (onboardingState is FirstLaunchOnboardingSuccessState && onboardingState.showOnboarding) {
+  // Les écrans de découverte du premier lancement sont propres au CEJ : pass emploi ouvre directement la connexion.
+  final isCej = store.state.configurationState.getBrand().isCej;
+  if (isCej && onboardingState is FirstLaunchOnboardingSuccessState && onboardingState.showOnboarding) {
     return RouterPageDisplayState.onboarding;
   }
 
