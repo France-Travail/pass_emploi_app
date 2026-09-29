@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/auth/auth_wrapper.dart';
 import 'package:pass_emploi_app/configuration/configuration.dart';
 import 'package:pass_emploi_app/crashlytics/crashlytics.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
+import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/repositories/auth/logout_repository.dart';
 import 'package:pass_emploi_app/repositories/installation_id_repository.dart';
 
@@ -185,9 +186,22 @@ class Authenticator {
     if (mode == AuthenticationMode.POLE_EMPLOI) idpHintParameters = poleEmploiParams;
     if (mode == AuthenticationMode.INVITE) idpHintParameters = inviteParams;
 
+    // `application` identifie l'app auprès de Connect (pass-emploi ou 1j1s) : les deux partagent le même client_id.
+    final parameters = {...?idpHintParameters, 'application': _applicationParameter()};
+
     final installationId = await _readInstallationIdForLogin();
-    if (installationId == null) return idpHintParameters;
-    return {...?idpHintParameters, 'installation_id': installationId};
+    if (installationId == null) return parameters;
+    return {...parameters, 'installation_id': installationId};
+  }
+
+  String _applicationParameter() {
+    switch (_configuration.brand) {
+      // Le brand `cej` est l'app 1 jeune 1 solution
+      case Brand.cej:
+        return '1j1s';
+      case Brand.passEmploi:
+        return 'pass-emploi';
+    }
   }
 
   Future<String?> _readInstallationIdForLogin() async {
