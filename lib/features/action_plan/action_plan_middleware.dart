@@ -50,6 +50,9 @@ class ActionPlanMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(ActionPlanSuccessAction(plan));
         _track(before, plan, action.actionId, deleted: true);
       }
+    } else if (action is ActionPlanFeedbackAction) {
+      final plan = await _repository.giveFeedback(action.objectiveId);
+      if (plan != null) store.dispatch(ActionPlanSuccessAction(plan));
     }
   }
 

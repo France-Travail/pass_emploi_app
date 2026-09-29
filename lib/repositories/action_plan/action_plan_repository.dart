@@ -11,6 +11,7 @@ class ActionPlanRepository {
   static const _planKey = 'actionPlan';
   static const _progressKey = 'actionPlanProgress';
   static const _doneKey = 'actionPlanDoneActionIds';
+  static const _feedbackKey = 'actionPlanFeedbackThemes';
 
   final Dio _httpClient;
   final FlutterSecureStorage _preferences;
@@ -41,8 +42,11 @@ class ActionPlanRepository {
       final previous = await _loadState();
       final doneIds = previous?.doneIds ?? await _readDoneActionIds();
       final merged = (previous == null ? plan : plan.keepActionsFrom(previous.plan)).applyDone(doneIds);
+      // Objectives absent from the previous plan come with new actions: their feedback is asked again.
+      final feedbackThemes = previous?.feedbackThemes.intersection(merged.themes) ?? <String>{};
       await _persist(merged, doneIds);
-      return merged.withoutEmptyObjectives();
+      await _writeFeedbackThemes(feedbackThemes);
+      return merged.applyFeedback(feedbackThemes).withoutEmptyObjectives();
     } catch (e, stack) {
       _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
       return null;
@@ -84,10 +88,21 @@ class ActionPlanRepository {
     return next.withoutEmptyObjectives();
   }
 
+  Future<ActionPlan?> giveFeedback(String objectiveId) async {
+    final state = await _loadState();
+    if (state == null) return null;
+    final objective = state.plan.findObjective(objectiveId);
+    if (objective == null) return null;
+    final feedbackThemes = {...state.feedbackThemes, objective.theme};
+    await _writeFeedbackThemes(feedbackThemes);
+    return state.plan.applyFeedback(feedbackThemes).withoutEmptyObjectives();
+  }
+
   Future<void> clear() async {
     await _preferences.delete(key: _planKey);
     await _preferences.delete(key: _progressKey);
     await _preferences.delete(key: _doneKey);
+    await _preferences.delete(key: _feedbackKey);
   }
 
   Future<_ActionPlanState?> _loadState() async {
@@ -103,7 +118,8 @@ class ActionPlanRepository {
       ...plan.doneActionIds,
       ...progress.allDoneActionIds,
     };
-    return _ActionPlanState(plan.applyDone(doneIds), doneIds);
+    final feedbackThemes = await _readFeedbackThemes();
+    return _ActionPlanState(plan.applyDone(doneIds).applyFeedback(feedbackThemes), doneIds, feedbackThemes);
   }
 
   Future<void> _persist(ActionPlan plan, Set<String> doneIds) async {
@@ -115,8 +131,16 @@ class ActionPlanRepository {
     await _preferences.delete(key: _progressKey);
   }
 
-  Future<Set<String>> _readDoneActionIds() async {
-    final raw = await _preferences.read(key: _doneKey);
+  Future<Set<String>> _readDoneActionIds() => _readStringSet(_doneKey);
+
+  Future<Set<String>> _readFeedbackThemes() => _readStringSet(_feedbackKey);
+
+  Future<void> _writeFeedbackThemes(Set<String> themes) async {
+    await _preferences.write(key: _feedbackKey, value: jsonEncode(themes.toList()));
+  }
+
+  Future<Set<String>> _readStringSet(String key) async {
+    final raw = await _preferences.read(key: key);
     if (raw == null || raw.isEmpty) return {};
     try {
       final decoded = jsonDecode(raw);
@@ -153,6 +177,7 @@ class ActionPlanRepository {
 class _ActionPlanState {
   final ActionPlan plan;
   final Set<String> doneIds;
+  final Set<String> feedbackThemes;
 
-  const _ActionPlanState(this.plan, this.doneIds);
+  const _ActionPlanState(this.plan, this.doneIds, this.feedbackThemes);
 }

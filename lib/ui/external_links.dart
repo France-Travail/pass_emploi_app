@@ -5,6 +5,7 @@ class ExternalLinks {
       ? "https://framaforms.org/participez-a-la-conception-de-lapplication-du-contrat-dengagement-jeune-1707239593"
       : "https://tally.so/r/wbxAy1";
   static final String actionPlanFeedback = "https://tally.so/r/A7Xb0z";
+  static const String actionPlanObjectiveFeedback = "https://tally.so/r/pb2PQZ";
   static final String proposerUneIdee = "https://tally.so/r/GxAdLL";
   static const String unJeuneUneSolution = "https://www.1jeune1solution.gouv.fr/contrat-engagement-jeune";
   static const String espaceCandidats = "https://candidat.pole-emploi.fr/espacepersonnel/";

@@ -98,12 +98,15 @@ class ActionPlanObjective extends Equatable {
   final String title;
   final String theme;
   final List<ActionPlanAction> actions;
+  // Stored apart from the plan by ActionPlanRepository, never sent by the API.
+  final bool feedbackGiven;
 
   const ActionPlanObjective({
     required this.id,
     required this.title,
     required this.theme,
     required this.actions,
+    this.feedbackGiven = false,
   });
 
   int get doneCount => actions.where((a) => a.done).length;
@@ -112,12 +115,13 @@ class ActionPlanObjective extends Equatable {
 
   bool get isComplete => totalCount > 0 && doneCount == totalCount;
 
-  ActionPlanObjective copyWith({List<ActionPlanAction>? actions}) {
+  ActionPlanObjective copyWith({List<ActionPlanAction>? actions, bool? feedbackGiven}) {
     return ActionPlanObjective(
       id: id,
       title: title,
       theme: theme,
       actions: actions ?? this.actions,
+      feedbackGiven: feedbackGiven ?? this.feedbackGiven,
     );
   }
 
@@ -159,7 +163,7 @@ class ActionPlanObjective extends Equatable {
   };
 
   @override
-  List<Object?> get props => [id, title, theme, actions];
+  List<Object?> get props => [id, title, theme, actions, feedbackGiven];
 }
 
 class ActionPlan extends Equatable {
@@ -230,6 +234,27 @@ class ActionPlan extends Equatable {
           )
           .toList(),
     );
+  }
+
+  Set<String> get themes => {for (final objective in objectives) objective.theme};
+
+  ActionPlan applyFeedback(Set<String> feedbackThemes) {
+    return copyWith(
+      objectives: objectives
+          .map(
+            (objective) => objective.copyWith(
+              feedbackGiven: feedbackThemes.contains(objective.theme),
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  ActionPlanObjective? findObjective(String objectiveId) {
+    for (final objective in objectives) {
+      if (objective.id == objectiveId) return objective;
+    }
+    return null;
   }
 
   ActionPlan applyProgress(ActionPlanProgress progress) {
