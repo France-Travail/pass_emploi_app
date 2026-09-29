@@ -17,14 +17,8 @@ class ActionPlanMiddleware extends MiddlewareClass<AppState> {
 
     if (action is ActionPlanRequestAction) {
       // For a jeune accompagné, the plan is synced with the server by the onboarding questionnaire middleware.
-      if (!store.state.isInviteLoginMode()) return;
-      store.dispatch(ActionPlanLoadingAction());
-      final plan = await _repository.getStoredPlan();
-      if (plan == null) {
-        store.dispatch(ActionPlanEmptyAction());
-      } else {
-        store.dispatch(ActionPlanSuccessAction(plan));
-      }
+      if (_persistedPlanUserId(store) != null) return;
+      await _loadStoredPlan(store);
     } else if (action is ActionPlanGenerateAction) {
       final userId = store.state.userId();
       if (userId == null) {
@@ -32,7 +26,11 @@ class ActionPlanMiddleware extends MiddlewareClass<AppState> {
         return;
       }
       store.dispatch(ActionPlanLoadingAction());
-      final plan = await _repository.generate(userId, action.answers);
+      final plan = await _repository.generate(
+        userId,
+        action.answers,
+        keepLocalProgress: store.state.isInviteLoginMode(),
+      );
       if (plan == null) {
         store.dispatch(ActionPlanFailureAction());
       } else {
@@ -40,6 +38,16 @@ class ActionPlanMiddleware extends MiddlewareClass<AppState> {
       }
     } else if (action is ActionPlanToggleDoneAction) {
       final before = _currentPlan(store);
+      final userId = _persistedPlanUserId(store);
+      if (userId != null) {
+        final current = before?.findAction(action.actionId);
+        if (current == null) return;
+        final sent = await _repository.sendDone(userId, action.actionId, done: !current.done);
+        if (!sent) {
+          store.dispatch(ActionPlanFailureAction());
+          return;
+        }
+      }
       final plan = await _repository.toggleDone(action.actionId);
       if (plan != null) {
         store.dispatch(ActionPlanSuccessAction(plan));
@@ -47,6 +55,15 @@ class ActionPlanMiddleware extends MiddlewareClass<AppState> {
       }
     } else if (action is ActionPlanDeleteAction) {
       final before = _currentPlan(store);
+      final userId = _persistedPlanUserId(store);
+      if (userId != null) {
+        if (before?.findAction(action.actionId) == null) return;
+        final sent = await _repository.sendDelete(userId, action.actionId);
+        if (!sent) {
+          store.dispatch(ActionPlanFailureAction());
+          return;
+        }
+      }
       final plan = await _repository.deleteAction(action.actionId);
       if (plan != null) {
         store.dispatch(ActionPlanSuccessAction(plan));
@@ -56,6 +73,21 @@ class ActionPlanMiddleware extends MiddlewareClass<AppState> {
       final plan = await _repository.giveFeedback(action.objectiveId);
       if (plan != null) store.dispatch(ActionPlanSuccessAction(plan));
     }
+  }
+
+  Future<void> _loadStoredPlan(Store<AppState> store) async {
+    store.dispatch(ActionPlanLoadingAction());
+    final plan = await _repository.getStoredPlan();
+    if (plan == null) {
+      store.dispatch(ActionPlanEmptyAction());
+    } else {
+      store.dispatch(ActionPlanSuccessAction(plan));
+    }
+  }
+
+  String? _persistedPlanUserId(Store<AppState> store) {
+    if (store.state.isInviteLoginMode()) return null;
+    return store.state.userId();
   }
 
   ActionPlan? _currentPlan(Store<AppState> store) {

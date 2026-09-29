@@ -352,7 +352,7 @@ void main() {
     verify(() => repository.saveAnswers(any())).called(1);
     await untilCalled(() => repository.setFinished(true));
     verify(() => repository.setFinished(true)).called(1);
-    verifyNever(() => actionPlanRepository.generate(any(), any()));
+    verifyNever(() => actionPlanRepository.generate(any(), any(), keepLocalProgress: any(named: 'keepLocalProgress')));
     verifyNever(() => criteresRecherchePersistRepository.save(any()));
   });
 
@@ -412,7 +412,8 @@ void main() {
     final plan = const ActionPlan(id: 'p1', greeting: 'Salut', objectives: []);
     when(() => repository.saveAnswers(any())).thenAnswer((_) async {});
     when(() => repository.setFinished(true)).thenAnswer((_) async {});
-    when(() => actionPlanRepository.generate(any(), any())).thenAnswer((_) async => plan);
+    when(() => actionPlanRepository.generate(any(), any(), keepLocalProgress: any(named: 'keepLocalProgress')))
+        .thenAnswer((_) async => plan);
 
     final factory = TestStoreFactory()
       ..onboardingQuestionnaireRepository = repository
@@ -433,7 +434,31 @@ void main() {
     verify(() => repository.saveAnswers(answers)).called(1);
     await untilCalled(() => repository.setFinished(true));
     verify(() => repository.setFinished(true)).called(1);
-    verify(() => actionPlanRepository.generate(any(), answers)).called(1);
+    verify(() => actionPlanRepository.generate(any(), answers, keepLocalProgress: true)).called(1);
+  });
+
+  test('complete for a non invite jeune generates plan without keeping local progress', () async {
+    final answers = const OnboardingQuestionnaireAnswers(
+      situation: QuestionnaireSituation.lycee,
+      objectifs: {QuestionnaireObjectif.emploi},
+    );
+    const plan = ActionPlan(id: 'p1', greeting: 'Salut', objectives: []);
+    when(() => repository.saveAnswers(any())).thenAnswer((_) async {});
+    when(() => repository.setFinished(true)).thenAnswer((_) async {});
+    when(
+      () => actionPlanRepository.generate(any(), any(), keepLocalProgress: any(named: 'keepLocalProgress')),
+    ).thenAnswer((_) async => plan);
+
+    final factory = TestStoreFactory()
+      ..onboardingQuestionnaireRepository = repository
+      ..actionPlanRepository = actionPlanRepository;
+    final store = factory.initializeReduxStore(initialState: givenState().loggedInMiloUser());
+    final generated = store.onChange.firstWhere((s) => s.actionPlanState is ActionPlanSuccessState);
+
+    store.dispatch(OnboardingQuestionnaireCompleteAction(answers));
+
+    await generated;
+    verify(() => actionPlanRepository.generate(any(), answers, keepLocalProgress: false)).called(1);
   });
 
   test('finish action marks questionnaire as finished in state', () async {

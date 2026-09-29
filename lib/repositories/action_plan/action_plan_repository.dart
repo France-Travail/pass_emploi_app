@@ -28,8 +28,9 @@ class ActionPlanRepository {
 
   Future<ActionPlan?> generate(
     String userId,
-    OnboardingQuestionnaireAnswers answers,
-  ) async {
+    OnboardingQuestionnaireAnswers answers, {
+    bool keepLocalProgress = true,
+  }) async {
     if (!answers.canGenerateActionPlan) return null;
     final url = '/jeunes/$userId/plan-action';
     try {
@@ -39,7 +40,8 @@ class ActionPlanRepository {
       );
       final data = response.data;
       if (data is! Map<String, dynamic>) return null;
-      return await _mergeAndPersist(ActionPlan.fromApiJson(data));
+      final plan = ActionPlan.fromApiJson(data);
+      return keepLocalProgress ? await _mergeAndPersist(plan) : await _replaceAndPersist(plan);
     } catch (e, stack) {
       _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
       return null;
@@ -52,7 +54,7 @@ class ActionPlanRepository {
       final response = await _httpClient.get(url);
       final data = response.data;
       if (data is! Map<String, dynamic>) return ActionPlanFetchFailure();
-      return ActionPlanFetchFound(await _mergeAndPersist(ActionPlan.fromApiJson(data)));
+      return ActionPlanFetchFound(await _replaceAndPersist(ActionPlan.fromApiJson(data)));
     } catch (e, stack) {
       if (e is DioException && e.response?.statusCode == 404) return ActionPlanFetchNotFound();
       _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
@@ -69,6 +71,13 @@ class ActionPlanRepository {
     await _persist(merged, doneIds);
     await _writeFeedbackThemes(feedbackThemes);
     return merged.applyFeedback(feedbackThemes).withoutEmptyObjectives();
+  }
+
+  Future<ActionPlan> _replaceAndPersist(ActionPlan plan) async {
+    final feedbackThemes = (await _readFeedbackThemes()).intersection(plan.themes);
+    await _persist(plan, plan.doneActionIds);
+    await _writeFeedbackThemes(feedbackThemes);
+    return plan.applyFeedback(feedbackThemes).withoutEmptyObjectives();
   }
 
   Future<ActionPlan?> getStoredPlan() async {
@@ -114,6 +123,28 @@ class ActionPlanRepository {
     final feedbackThemes = {...state.feedbackThemes, objective.theme};
     await _writeFeedbackThemes(feedbackThemes);
     return state.plan.applyFeedback(feedbackThemes).withoutEmptyObjectives();
+  }
+
+  Future<bool> sendDone(String userId, String actionId, {required bool done}) async {
+    final url = '/jeunes/$userId/plan-action/taches/$actionId';
+    try {
+      await _httpClient.patch(url, data: {'terminee': done});
+      return true;
+    } catch (e, stack) {
+      _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
+      return false;
+    }
+  }
+
+  Future<bool> sendDelete(String userId, String actionId) async {
+    final url = '/jeunes/$userId/plan-action/taches/$actionId';
+    try {
+      await _httpClient.delete(url);
+      return true;
+    } catch (e, stack) {
+      _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
+      return false;
+    }
   }
 
   Future<void> clear() async {

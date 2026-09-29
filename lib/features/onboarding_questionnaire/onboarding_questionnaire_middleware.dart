@@ -104,7 +104,11 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
         tracker.trackGenerationOutcome(OnboardingQuestionnaireGenerationOutcome.echec);
       } else {
         store.dispatch(ActionPlanLoadingAction());
-        final plan = await _actionPlanRepository.generate(userId, answers);
+        final plan = await _actionPlanRepository.generate(
+          userId,
+          answers,
+          keepLocalProgress: store.state.isInviteLoginMode(),
+        );
         if (plan != null) {
           store.dispatch(ActionPlanSuccessAction(plan));
           tracker.trackGenerationOutcome(
