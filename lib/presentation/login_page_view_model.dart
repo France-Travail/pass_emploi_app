@@ -11,6 +11,7 @@ class LoginPageViewModel extends Equatable {
   final bool withOrganismChoice;
   final bool withThemedAppLogo;
   final String title;
+  final String? subtitle;
   final String description;
   final bool withLoading;
   final bool withWrongDeviceClockMessage;
@@ -29,6 +30,7 @@ class LoginPageViewModel extends Equatable {
     required this.withOrganismChoice,
     required this.withThemedAppLogo,
     required this.title,
+    required this.subtitle,
     required this.description,
     required this.withLoading,
     required this.withWrongDeviceClockMessage,
@@ -49,6 +51,7 @@ class LoginPageViewModel extends Equatable {
       withOrganismChoice: isCej,
       withThemedAppLogo: !isCej,
       title: isCej ? Strings.loginChooseAccountTitle : Strings.loginPassEmploiTitle,
+      subtitle: isCej ? null : Strings.loginPassEmploiSubtitle,
       description: isCej ? Strings.loginChooseAccountDescription : Strings.loginPassEmploiDescription,
       withLoading: loginState is LoginLoadingState,
       withWrongDeviceClockMessage: loginState is LoginWrongDeviceClockState,
@@ -66,6 +69,7 @@ class LoginPageViewModel extends Equatable {
         withOrganismChoice,
         withThemedAppLogo,
         title,
+        subtitle,
         description,
         withLoading,
         withWrongDeviceClockMessage,

@@ -23,10 +23,11 @@ void main() {
       expect(viewModel.withOrganismChoice, false);
       expect(viewModel.onMissionLocaleLogin, isNull);
       expect(viewModel.withThemedAppLogo, true);
-      expect(viewModel.title, "Connecte-toi");
+      expect(viewModel.title, "Bienvenue");
+      expect(viewModel.subtitle, "L'app dédiée à votre accompagnement");
       expect(
         viewModel.description,
-        "Utilise ton compte France Travail pour accéder à tes démarches, tes offres et tes rendez-vous.",
+        "Utilisez votre compte France Travail pour accéder à vos démarches, offres et rendez-vous",
       );
     });
 
@@ -42,6 +43,7 @@ void main() {
       expect(viewModel.onMissionLocaleLogin, isNotNull);
       expect(viewModel.withThemedAppLogo, false);
       expect(viewModel.title, "Choisis un compte");
+      expect(viewModel.subtitle, isNull);
       expect(
         viewModel.description,
         "Si tu disposes de plusieurs accès, sélectionne l'organisme qui t'accompagne actuellement.",
