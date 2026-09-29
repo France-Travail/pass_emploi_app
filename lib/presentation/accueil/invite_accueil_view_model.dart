@@ -92,7 +92,9 @@ class InviteAccueilViewModel extends Equatable {
     };
 
     final plan = actionPlanState is ActionPlanSuccessState ? actionPlanState.plan : null;
-    final showPlanSection = mode != InviteAccueilMode.incomplet;
+    // A plan restored from the server comes without the questionnaire answers: it is shown anyway.
+    final hasRestoredPlan = plan != null && plan.objectives.isNotEmpty;
+    final showPlanSection = mode != InviteAccueilMode.incomplet || hasRestoredPlan;
     final displayState = !showPlanSection
         ? DisplayState.CONTENT
         : switch (actionPlanState) {

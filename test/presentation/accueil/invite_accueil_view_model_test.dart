@@ -34,6 +34,37 @@ void main() {
     expect(viewModel.planDisplayEvent, isNull);
   });
 
+  test('incomplet mode shows plan section when a plan was restored from server', () {
+    final plan = ActionPlan(
+      id: 'plan-1',
+      greeting: 'Salut',
+      objectives: [
+        ActionPlanObjective(
+          id: 'obj-1',
+          title: 'Découvrir des métiers',
+          theme: 'DECOUVRIR_METIERS',
+          actions: [
+            ActionPlanAction(id: 'a-1', label: 'Je consulte des fiches métiers', kind: ActionPlanActionKind.link),
+          ],
+        ),
+      ],
+    );
+    final store = givenState()
+        .loggedInUser(loginMode: LoginMode.INVITE)
+        .withOnboardingQuestionnaire(finished: true)
+        .withActionPlanSuccess(plan)
+        .store();
+
+    final viewModel = InviteAccueilViewModel.create(store);
+
+    expect(viewModel.mode, InviteAccueilMode.incomplet);
+    expect(viewModel.showQuestionnaireCard, isTrue);
+    expect(viewModel.showPlanSection, isTrue);
+    expect(viewModel.showPlanEmptyState, isFalse);
+    expect(viewModel.plan?.objectives.first.title, 'Découvrir des métiers');
+    expect(viewModel.displayState, DisplayState.CONTENT);
+  });
+
   test('partiel mode shows plan and questionnaire', () {
     final answers = const OnboardingQuestionnaireAnswers(
       situation: QuestionnaireSituation.lycee,
