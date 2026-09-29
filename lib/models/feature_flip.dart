@@ -8,12 +8,14 @@ class FeatureFlip extends Equatable {
   final LoginPageRemoteMessage? loginPageMessage;
   final AccueilZenithMessage? accueilZenithMessage;
   final bool isActualiteMissionLocaleEnabled;
+  final String? inviteAccessPassword;
   FeatureFlip({
     required this.withCampagneRecrutement,
     required this.withMonSuiviDemarchesKoMessage,
     required this.loginPageMessage,
     required this.accueilZenithMessage,
     required this.isActualiteMissionLocaleEnabled,
+    required this.inviteAccessPassword,
   });
 
   factory FeatureFlip.initial() {
@@ -23,6 +25,7 @@ class FeatureFlip extends Equatable {
       loginPageMessage: null,
       accueilZenithMessage: null,
       isActualiteMissionLocaleEnabled: false,
+      inviteAccessPassword: null,
     );
   }
 
@@ -32,6 +35,7 @@ class FeatureFlip extends Equatable {
     LoginPageRemoteMessage? loginPageMessage,
     AccueilZenithMessage? accueilZenithMessage,
     bool? isActualiteMissionLocaleEnabled,
+    String? inviteAccessPassword,
   }) {
     return FeatureFlip(
       withCampagneRecrutement: withCampagneRecrutement ?? this.withCampagneRecrutement,
@@ -39,6 +43,7 @@ class FeatureFlip extends Equatable {
       loginPageMessage: loginPageMessage ?? this.loginPageMessage,
       accueilZenithMessage: accueilZenithMessage ?? this.accueilZenithMessage,
       isActualiteMissionLocaleEnabled: isActualiteMissionLocaleEnabled ?? this.isActualiteMissionLocaleEnabled,
+      inviteAccessPassword: inviteAccessPassword ?? this.inviteAccessPassword,
     );
   }
 
@@ -49,5 +54,6 @@ class FeatureFlip extends Equatable {
     loginPageMessage,
     accueilZenithMessage,
     isActualiteMissionLocaleEnabled,
+    inviteAccessPassword,
   ];
 }

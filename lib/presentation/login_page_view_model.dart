@@ -7,9 +7,6 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:redux/redux.dart';
 
-// Accès caché au mode invité (5 taps sur le bloc marque), pour les tests utilisateurs en production.
-const String _inviteAccessPassword = "1j1s2026!";
-
 class LoginPageViewModel extends Equatable {
   final bool withOrganismChoice;
   final bool withThemedAppLogo;
@@ -23,6 +20,11 @@ class LoginPageViewModel extends Equatable {
   final void Function()? onMissionLocaleLogin;
   final void Function() onInviteLogin;
 
+  /// Accès caché au mode invité (5 taps sur le bloc marque), pour les tests utilisateurs en production.
+  /// Le mot de passe vient de Firebase Remote Config (clé `invite_access_password`) ;
+  /// sans valeur distante, l'accès est désactivé.
+  final bool Function(String password) isInviteAccessPasswordValid;
+
   LoginPageViewModel({
     required this.withOrganismChoice,
     required this.withThemedAppLogo,
@@ -35,12 +37,14 @@ class LoginPageViewModel extends Equatable {
     required this.onFranceTravailLogin,
     required this.onMissionLocaleLogin,
     required this.onInviteLogin,
+    required this.isInviteAccessPasswordValid,
   });
 
   factory LoginPageViewModel.create(Store<AppState> store) {
     final loginState = store.state.loginState;
     final brand = store.state.configurationState.getBrand();
     final isCej = brand.isCej;
+    final inviteAccessPassword = store.state.featureFlipState.featureFlip.inviteAccessPassword;
     return LoginPageViewModel(
       withOrganismChoice: isCej,
       withThemedAppLogo: !isCej,
@@ -53,10 +57,9 @@ class LoginPageViewModel extends Equatable {
       onFranceTravailLogin: () => store.dispatch(RequestLoginAction(LoginMode.POLE_EMPLOI)),
       onMissionLocaleLogin: isCej ? () => store.dispatch(RequestLoginAction(LoginMode.MILO)) : null,
       onInviteLogin: () => store.dispatch(RequestLoginAction(LoginMode.INVITE)),
+      isInviteAccessPasswordValid: (password) => inviteAccessPassword != null && password == inviteAccessPassword,
     );
   }
-
-  bool isInviteAccessPasswordValid(String password) => password == _inviteAccessPassword;
 
   @override
   List<Object?> get props => [

@@ -69,6 +69,14 @@ class RemoteConfigRepository {
     return LoginPageRemoteMessage.fromJson(json.decode(key) as Map<String, dynamic>);
   }
 
+  String? inviteAccessPassword() {
+    if (_firebaseRemoteConfig == null) return null;
+    final value = _firebaseRemoteConfig.getString("invite_access_password");
+    // Despite Remote config documentation, Firebase returns "null" string value when key is not found
+    if (value.isEmpty || value == "null") return null;
+    return value;
+  }
+
   AccueilZenithMessage? accueilZenithMessage() {
     if (_firebaseRemoteConfig == null) return null;
     final key = _firebaseRemoteConfig.getString("zenith_accueil_message_milo");

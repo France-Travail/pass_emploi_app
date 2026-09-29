@@ -49,15 +49,25 @@ void main() {
     });
 
     group('hidden invite access', () {
-      test('should accept only the invite access password', () {
+      test('should accept only the password from remote config', () {
+        // Given
+        final store = givenState().withFeatureFlip(inviteAccessPassword: "remote-password!").store();
+        final viewModel = LoginPageViewModel.create(store);
+
+        // When & Then
+        expect(viewModel.isInviteAccessPasswordValid("remote-password!"), isTrue);
+        expect(viewModel.isInviteAccessPasswordValid(""), isFalse);
+        expect(viewModel.isInviteAccessPasswordValid("remote-password"), isFalse);
+        expect(viewModel.isInviteAccessPasswordValid("REMOTE-PASSWORD!"), isFalse);
+      });
+
+      test('should reject any password when remote config has none', () {
         // Given
         final viewModel = LoginPageViewModel.create(givenState().store());
 
         // When & Then
-        expect(viewModel.isInviteAccessPasswordValid("1j1s2026!"), isTrue);
         expect(viewModel.isInviteAccessPasswordValid(""), isFalse);
-        expect(viewModel.isInviteAccessPasswordValid("1j1s2026"), isFalse);
-        expect(viewModel.isInviteAccessPasswordValid("1J1S2026!"), isFalse);
+        expect(viewModel.isInviteAccessPasswordValid("1j1s2026!"), isFalse);
       });
     });
 

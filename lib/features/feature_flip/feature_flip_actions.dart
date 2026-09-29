@@ -30,3 +30,9 @@ class FeatureFlipActualiteMissionLocaleEnabledAction {
 
   FeatureFlipActualiteMissionLocaleEnabledAction(this.isActualiteMissionLocaleEnabled);
 }
+
+class FeatureFlipInviteAccessPasswordAction {
+  final String inviteAccessPassword;
+
+  FeatureFlipInviteAccessPasswordAction(this.inviteAccessPassword);
+}
