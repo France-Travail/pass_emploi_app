@@ -1,4 +1,5 @@
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_actions.dart';
 import 'package:pass_emploi_app/features/fonctionnalites/fonctionnalites_actions.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
@@ -27,13 +28,13 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
     if (action is LoginSuccessAction && action.user.loginMode.isInvite()) {
       await _load(store);
     } else if (action is FonctionnalitesSuccessAction && action.actives.contains(Fonctionnalite.planAction)) {
-      if (store.state.onboardingQuestionnaireState is OnboardingQuestionnaireNotInitializedState) {
-        await _load(store);
-      }
+      // Fonctionnalites are fetched at login, at launch when already logged in and back to foreground:
+      // the plan is synced with the server each time, unless the questionnaire is being filled.
+      if (!_isQuestionnaireInProgress(store)) await _syncWithServer(store);
     } else if (action is RequestLogoutAction) {
       await _clear();
     } else if (action is OnboardingQuestionnaireRequestAction) {
-      await _load(store);
+      await _syncWithServer(store);
     } else if (action is OnboardingQuestionnaireCompleteAction) {
       await _complete(store, action.answers);
     } else if (action is OnboardingQuestionnaireFinishAction) {
@@ -57,6 +58,38 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
     store.dispatch(
       OnboardingQuestionnaireSuccessAction(finished: finished, everFinished: everFinished, answers: answers),
     );
+  }
+
+  bool _isQuestionnaireInProgress(Store<AppState> store) {
+    final state = store.state.onboardingQuestionnaireState;
+    return state is OnboardingQuestionnaireSuccessState && !state.finished;
+  }
+
+  Future<void> _syncWithServer(Store<AppState> store) async {
+    final userId = store.state.userId();
+    if (userId == null || store.state.isInviteLoginMode()) return _load(store);
+
+    // A plan already displayed is refreshed silently, and so is a retry after a failure:
+    // a loading state before the questionnaire is loaded would replace the app by the splash screen.
+    final actionPlanState = store.state.actionPlanState;
+    if (actionPlanState is! ActionPlanSuccessState && actionPlanState is! ActionPlanFailureState) {
+      store.dispatch(ActionPlanLoadingAction());
+    }
+    switch (await _actionPlanRepository.fetch(userId)) {
+      case ActionPlanFetchFound(:final plan):
+        await _repository.setFinished(true);
+        store.dispatch(ActionPlanSuccessAction(plan));
+        await _load(store);
+      case ActionPlanFetchNotFound():
+        if (await _repository.isFinished()) {
+          await _repository.setFinished(false);
+          await _actionPlanRepository.clear();
+        }
+        store.dispatch(ActionPlanEmptyAction());
+        await _load(store);
+      case ActionPlanFetchFailure():
+        store.dispatch(ActionPlanFailureAction());
+    }
   }
 
   Future<void> _complete(Store<AppState> store, OnboardingQuestionnaireAnswers answers) async {

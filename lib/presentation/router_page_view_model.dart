@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 import 'package:pass_emploi_app/features/cgu/cgu_state.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/first_launch_onboarding/first_launch_onboarding_state.dart';
@@ -15,7 +16,15 @@ import 'package:pass_emploi_app/utils/platform.dart';
 import 'package:pass_emploi_app/utils/store_extensions.dart';
 import 'package:redux/redux.dart';
 
-enum RouterPageDisplayState { splash, onboarding, login, cgu, main, tutorial, onboardingQuestionnaire }
+enum RouterPageDisplayState {
+  splash,
+  onboarding,
+  login,
+  cgu,
+  main,
+  tutorial,
+  onboardingQuestionnaire,
+}
 
 class RouterPageViewModel extends Equatable {
   final RouterPageDisplayState routerPageDisplayState;
@@ -91,9 +100,9 @@ RouterPageDisplayState _routerPageDisplayState(Store<AppState> store) {
     }
     if (store.state.hasPlanAction()) {
       if (onboardingQuestionnaireState is OnboardingQuestionnaireNotInitializedState) {
-        return RouterPageDisplayState.splash;
-      }
-      if (onboardingQuestionnaireState is! OnboardingQuestionnaireSuccessState ||
+        // When the plan cannot be fetched, the app stays usable: the accueil offers to retry.
+        if (store.state.actionPlanState is! ActionPlanFailureState) return RouterPageDisplayState.splash;
+      } else if (onboardingQuestionnaireState is! OnboardingQuestionnaireSuccessState ||
           !onboardingQuestionnaireState.finished) {
         return RouterPageDisplayState.onboardingQuestionnaire;
       }

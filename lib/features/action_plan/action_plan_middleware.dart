@@ -16,6 +16,8 @@ class ActionPlanMiddleware extends MiddlewareClass<AppState> {
     next(action);
 
     if (action is ActionPlanRequestAction) {
+      // For a jeune accompagné, the plan is synced with the server by the onboarding questionnaire middleware.
+      if (!store.state.isInviteLoginMode()) return;
       store.dispatch(ActionPlanLoadingAction());
       final plan = await _repository.getStoredPlan();
       if (plan == null) {

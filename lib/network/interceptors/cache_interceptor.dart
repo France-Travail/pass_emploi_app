@@ -41,7 +41,8 @@ extension on RequestOptions {
       !_isDetailsJeuneRequest() &&
       !_isSessionsDetailsRequest() &&
       !_isComptageDesHeuresRequest() &&
-      !_isUserActionRequest();
+      !_isUserActionRequest() &&
+      !_isPlanActionRequest();
 
   bool _isMonSuiviRequest() => uri.toString().contains('mon-suivi');
 
@@ -52,4 +53,7 @@ extension on RequestOptions {
   bool _isComptageDesHeuresRequest() => uri.toString().contains('comptage');
 
   bool _isUserActionRequest() => uri.toString().contains('actions/');
+
+  // The plan must always come from the server: a cached plan served on network failure could be stale.
+  bool _isPlanActionRequest() => uri.toString().contains('plan-action');
 }
