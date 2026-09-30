@@ -58,6 +58,26 @@ void main() {
     verify(() => responseHandler.next(response)).called(1);
     verify(() => errorHandler.next(error)).called(1);
   });
+
+  test('for plan-action routes, cache should NOT be used, so a stale plan is never served when network fails', () {
+    // Given
+    final options = RequestOptions(baseUrl: 'https://api.passemploi.fr', path: '/jeunes/id-jeune/plan-action');
+    final response = Response(requestOptions: options);
+    final error = DioException(requestOptions: options);
+
+    // When
+    cacheInterceptor.onPassEmploiRequest(options, requestHandler);
+    cacheInterceptor.onPassEmploiResponse(response, responseHandler);
+    cacheInterceptor.onPassEmploiError(error, errorHandler);
+
+    // Then
+    verifyNever(() => decorated.onRequest(options, requestHandler));
+    verifyNever(() => decorated.onResponse(response, responseHandler));
+    verifyNever(() => decorated.onError(error, errorHandler));
+    verify(() => requestHandler.next(options)).called(1);
+    verify(() => responseHandler.next(response)).called(1);
+    verify(() => errorHandler.next(error)).called(1);
+  });
 }
 
 class MockDioCacheInterceptor extends Mock implements DioCacheInterceptor {}
