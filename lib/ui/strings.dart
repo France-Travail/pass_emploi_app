@@ -519,9 +519,9 @@ class Strings {
   static String inviteAccueilPlanFailureBody =
       "Impossible de générer tes suggestions d'actions pour le moment. Réessaie dans un instant.";
   static String inviteAccueilRetryLoadPlan = "Réessayer";
-  static String inviteAccueilPlanLoadingFailureTitle = "Ton plan d'action n'a pas pu être chargé";
+  static String inviteAccueilPlanLoadingFailureTitle = "Tes suggestions d'actions n'ont pas pu être chargées";
   static String inviteAccueilPlanLoadingFailureBody =
-      "Impossible de charger ton plan d'action pour le moment. Réessaie dans un instant.";
+      "Impossible de charger tes suggestions d'actions pour le moment. Réessaie dans un instant.";
   static String inviteAccueilPlanEmptyTitle = "Tes suggestions d'actions ne sont pas disponibles";
   static String inviteAccueilPlanEmptyBody =
       "Aucune action n'a pu être proposée pour le moment. Modifie tes réponses pour obtenir de nouvelles suggestions.";
