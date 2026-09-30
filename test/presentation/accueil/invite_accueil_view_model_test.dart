@@ -1,7 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_tracking.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
@@ -9,6 +11,7 @@ import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/presentation/accueil/invite_accueil_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 
+import '../../doubles/spies.dart';
 import '../../dsl/app_state_dsl.dart';
 
 void main() {
@@ -208,7 +211,7 @@ void main() {
     expect(viewModel.showPlanEmptyState, isTrue);
     expect(viewModel.planEmptyKind, InvitePlanEmptyKind.empty);
     expect(viewModel.planDisplayEvent, ActionPlanTrackingEvent(AnalyticsEventNames.actionPlanEmptyAction));
-    expect(viewModel.showRetryGenerate, isFalse);
+    expect(viewModel.showRetry, isFalse);
     expect(viewModel.showModifierButton, isTrue);
     expect(viewModel.displayState, DisplayState.CONTENT);
   });
@@ -230,7 +233,7 @@ void main() {
     expect(viewModel.showPlanEmptyState, isTrue);
     expect(viewModel.planEmptyKind, InvitePlanEmptyKind.failure);
     expect(viewModel.planDisplayEvent, ActionPlanTrackingEvent(AnalyticsEventNames.actionPlanFailureAction));
-    expect(viewModel.showRetryGenerate, isTrue);
+    expect(viewModel.showRetry, isTrue);
     expect(viewModel.showModifierButton, isFalse);
     expect(viewModel.displayState, DisplayState.CONTENT);
   });
@@ -256,8 +259,54 @@ void main() {
 
     expect(viewModel.showPlanEmptyState, isTrue);
     expect(viewModel.planEmptyKind, InvitePlanEmptyKind.failure);
-    expect(viewModel.showRetryGenerate, isTrue);
+    expect(viewModel.showRetry, isTrue);
     expect(viewModel.showModifierButton, isFalse);
+  });
+
+  test('for a jeune accompagné whose plan cannot be loaded, shows loading failure with retry even without answers', () {
+    final store = givenState()
+        .loggedInMiloUser()
+        .withOnboardingQuestionnaire(finished: true)
+        .copyWith(actionPlanState: ActionPlanFailureState())
+        .store();
+
+    final viewModel = InviteAccueilViewModel.create(store);
+
+    expect(viewModel.mode, InviteAccueilMode.incomplet);
+    expect(viewModel.showPlanSection, isTrue);
+    expect(viewModel.showPlanEmptyState, isTrue);
+    expect(viewModel.planEmptyKind, InvitePlanEmptyKind.loadingFailure);
+    expect(viewModel.showRetry, isTrue);
+    expect(viewModel.showModifierButton, isFalse);
+  });
+
+  test('for a jeune accompagné, retry fetches the plan from server again', () {
+    final store = StoreSpy.withState(
+      givenState().loggedInMiloUser().withOnboardingQuestionnaire(finished: true).copyWith(
+            actionPlanState: ActionPlanFailureState(),
+          ),
+    );
+
+    InviteAccueilViewModel.create(store).retry();
+
+    expect(store.dispatchedAction, isA<OnboardingQuestionnaireRequestAction>());
+  });
+
+  test('for an invite, retry generates the plan again', () {
+    final answers = const OnboardingQuestionnaireAnswers(
+      situation: QuestionnaireSituation.lycee,
+      objectifs: {QuestionnaireObjectif.emploi},
+    );
+    final store = StoreSpy.withState(
+      givenState()
+          .loggedInUser(loginMode: LoginMode.INVITE)
+          .withOnboardingQuestionnaire(finished: true, answers: answers)
+          .copyWith(actionPlanState: ActionPlanFailureState()),
+    );
+
+    InviteAccueilViewModel.create(store).retry();
+
+    expect(store.dispatchedAction, isA<ActionPlanGenerateAction>());
   });
 
   test('discovery tile hidden when onboarding is dismissed', () {

@@ -138,11 +138,11 @@ class _Content extends StatelessWidget {
             if (viewModel.showPlanEmptyState)
               InviteActionPlanEmptyState(
                 kind: viewModel.planEmptyKind!,
-                showRetry: viewModel.showRetryGenerate,
+                showRetry: viewModel.showRetry,
                 showModifier: viewModel.showModifierButton,
                 onRetry: () {
                   const ActionPlanTrackingEvent(AnalyticsEventNames.actionPlanRetryAction).send();
-                  viewModel.retryGenerate();
+                  viewModel.retry();
                 },
                 onModifier: () {
                   const ActionPlanTrackingEvent(AnalyticsEventNames.actionPlanEmptyModifierAction).send();

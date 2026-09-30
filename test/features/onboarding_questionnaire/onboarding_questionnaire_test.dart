@@ -146,10 +146,13 @@ void main() {
     verify(() => actionPlanRepository.fetch(any())).called(1);
   });
 
-  test('after PLAN_ACTION is activated for a jeune who already went through the questionnaire, does not fetch plan from server', () async {
+  test('on app launch for a jeune who already went through the questionnaire on this device, still fetches plan from server', () async {
+    const plan = ActionPlan(id: 'p2', greeting: '', objectives: []);
     when(() => repository.getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers());
-    when(() => repository.isFinished()).thenAnswer((_) async => false);
+    when(() => repository.isFinished()).thenAnswer((_) async => true);
     when(() => repository.hasEverFinished()).thenAnswer((_) async => true);
+    when(() => repository.setFinished(true)).thenAnswer((_) async {});
+    when(() => actionPlanRepository.fetch(any())).thenAnswer((_) async => ActionPlanFetchFound(plan));
 
     final factory = TestStoreFactory()
       ..onboardingQuestionnaireRepository = repository
@@ -161,8 +164,86 @@ void main() {
 
     store.dispatch(FonctionnalitesSuccessAction({Fonctionnalite.planAction}));
 
-    await success;
-    verifyNever(() => actionPlanRepository.fetch(any()));
+    final state = await success;
+    expect(state.actionPlanState, ActionPlanSuccessState(plan));
+    verify(() => actionPlanRepository.fetch(any())).called(1);
+  });
+
+  test('when fonctionnalites are refreshed (back to foreground), silently replaces the displayed plan with the server one', () async {
+    const displayed = ActionPlan(id: 'p1', greeting: '', objectives: []);
+    const updated = ActionPlan(id: 'p2', greeting: '', objectives: []);
+    when(() => repository.getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers());
+    when(() => repository.isFinished()).thenAnswer((_) async => true);
+    when(() => repository.hasEverFinished()).thenAnswer((_) async => true);
+    when(() => repository.setFinished(true)).thenAnswer((_) async {});
+    when(() => actionPlanRepository.fetch(any())).thenAnswer((_) async => ActionPlanFetchFound(updated));
+
+    final factory = TestStoreFactory()
+      ..onboardingQuestionnaireRepository = repository
+      ..actionPlanRepository = actionPlanRepository;
+    final store = factory.initializeReduxStore(
+      initialState: givenState().loggedInMiloUser().withOnboardingQuestionnaire(finished: true).withActionPlanSuccess(displayed),
+    );
+    final states = <ActionPlanState>[];
+    store.onChange.listen((s) => states.add(s.actionPlanState));
+    final refreshed = store.onChange.firstWhere((s) => s.actionPlanState == ActionPlanSuccessState(updated));
+
+    store.dispatch(FonctionnalitesSuccessAction({Fonctionnalite.planAction}));
+
+    await refreshed;
+    expect(states.whereType<ActionPlanLoadingState>(), isEmpty);
+  });
+
+  test('when the plan no longer exists on server, clears the local plan and forces the questionnaire', () async {
+    var finished = true;
+    when(() => repository.getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers(prenom: 'Léa'));
+    when(() => repository.isFinished()).thenAnswer((_) async => finished);
+    when(() => repository.hasEverFinished()).thenAnswer((_) async => true);
+    when(() => repository.setFinished(false)).thenAnswer((_) async { finished = false; });
+    when(() => actionPlanRepository.clear()).thenAnswer((_) async {});
+    when(() => actionPlanRepository.fetch(any())).thenAnswer((_) async => ActionPlanFetchNotFound());
+
+    final factory = TestStoreFactory()
+      ..onboardingQuestionnaireRepository = repository
+      ..actionPlanRepository = actionPlanRepository;
+    final store = factory.initializeReduxStore(
+      initialState: givenState()
+          .loggedInMiloUser()
+          .withOnboardingQuestionnaire(finished: true)
+          .withActionPlanSuccess(const ActionPlan(id: 'p1', greeting: '', objectives: [])),
+    );
+    final questionnaire = store.onChange.firstWhere(
+      (s) => (s.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState).finished == false,
+    );
+
+    store.dispatch(FonctionnalitesSuccessAction({Fonctionnalite.planAction}));
+
+    final state = await questionnaire;
+    expect((state.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState).answers.prenom, 'Léa');
+    expect(state.actionPlanState, isA<ActionPlanEmptyState>());
+    verify(() => repository.setFinished(false)).called(1);
+    verify(() => actionPlanRepository.clear()).called(1);
+  });
+
+  test('when refreshing the plan fails after the questionnaire is loaded, fails action plan and keeps the questionnaire finished', () async {
+    when(() => actionPlanRepository.fetch(any())).thenAnswer((_) async => ActionPlanFetchFailure());
+
+    final factory = TestStoreFactory()
+      ..onboardingQuestionnaireRepository = repository
+      ..actionPlanRepository = actionPlanRepository;
+    final store = factory.initializeReduxStore(
+      initialState: givenState()
+          .loggedInMiloUser()
+          .withOnboardingQuestionnaire(finished: true)
+          .withActionPlanSuccess(const ActionPlan(id: 'p1', greeting: '', objectives: [])),
+    );
+    final failure = store.onChange.firstWhere((s) => s.actionPlanState is ActionPlanFailureState);
+
+    store.dispatch(FonctionnalitesSuccessAction({Fonctionnalite.planAction}));
+
+    final state = await failure;
+    expect((state.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState).finished, isTrue);
+    verifyNever(() => repository.setFinished(any()));
   });
 
   test('does not reload answers when questionnaire is already loaded, so an ongoing form is not overwritten', () async {
@@ -183,6 +264,7 @@ void main() {
     await Future<void>.delayed(const Duration(milliseconds: 50));
 
     verifyNever(() => repository.getAnswers());
+    verifyNever(() => actionPlanRepository.fetch(any()));
     final questionnaireState = store.state.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState;
     expect(questionnaireState.answers.prenom, 'Léa');
   });

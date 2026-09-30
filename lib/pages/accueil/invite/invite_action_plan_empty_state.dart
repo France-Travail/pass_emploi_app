@@ -22,22 +22,30 @@ class InviteActionPlanEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isFailure = kind == InvitePlanEmptyKind.failure;
+    final isFailure = kind != InvitePlanEmptyKind.empty;
+    final (title, body) = switch (kind) {
+      InvitePlanEmptyKind.failure => (Strings.inviteAccueilPlanFailureTitle, Strings.inviteAccueilPlanFailureBody),
+      InvitePlanEmptyKind.loadingFailure => (
+        Strings.inviteAccueilPlanLoadingFailureTitle,
+        Strings.inviteAccueilPlanLoadingFailureBody,
+      ),
+      InvitePlanEmptyKind.empty => (Strings.inviteAccueilPlanEmptyTitle, Strings.inviteAccueilPlanEmptyBody),
+    };
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         DsfrAlert(
           type: isFailure ? DsfrAlertType.warning : DsfrAlertType.info,
-          title: isFailure ? Strings.inviteAccueilPlanFailureTitle : Strings.inviteAccueilPlanEmptyTitle,
-          description: DsfrAlertDescriptionText(
-            isFailure ? Strings.inviteAccueilPlanFailureBody : Strings.inviteAccueilPlanEmptyBody,
-          ),
+          title: title,
+          description: DsfrAlertDescriptionText(body),
         ),
         if (showRetry) ...[
           const SizedBox(height: Margins.spacing_base),
           DsfrButton(
-            label: Strings.inviteAccueilRetryPlan,
+            label: kind == InvitePlanEmptyKind.loadingFailure
+                ? Strings.inviteAccueilRetryLoadPlan
+                : Strings.inviteAccueilRetryPlan,
             variant: DsfrButtonVariant.primary,
             size: DsfrComponentSize.lg,
             onPressed: onRetry,
