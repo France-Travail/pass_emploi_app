@@ -114,6 +114,8 @@ class InviteAccueilViewModel extends Equatable {
         ? (isPlanPersisted ? InvitePlanEmptyKind.loadingFailure : InvitePlanEmptyKind.failure)
         : InvitePlanEmptyKind.empty;
 
+    // Before the plan is fetched from server, it is unknown whether the questionnaire must be filled.
+    final isQuestionnaireResolved = inviteState is OnboardingQuestionnaireSuccessState;
     final prenom = answers.prenom?.trim().isNotEmpty == true ? answers.prenom : store.state.user()?.firstName;
 
     final onboarding = store.state.onboardingState.onboarding;
@@ -138,7 +140,7 @@ class InviteAccueilViewModel extends Equatable {
       showDiscoveryTile: showDiscoveryTile,
       discoveryProgressPercent: discoveryProgressPercent,
       discoveryCompleted: discoveryCompleted,
-      showQuestionnaireCard: mode != InviteAccueilMode.complet,
+      showQuestionnaireCard: isQuestionnaireResolved && mode != InviteAccueilMode.complet,
       showPlanSection: showPlanSection,
       showPlanEmptyState: showPlanEmptyState,
       planEmptyKind: planEmptyKind,
@@ -146,7 +148,7 @@ class InviteAccueilViewModel extends Equatable {
       // showConseillerCta: mode == InviteAccueilMode.complet && store.state.isInviteLoginMode(),
       showConseillerCta: false, // TODO: NOT IMPLEMENTED YET
       showModifierButton: mode == InviteAccueilMode.complet && !isFailure,
-      showExplorerTip: mode == InviteAccueilMode.incomplet,
+      showExplorerTip: isQuestionnaireResolved && mode == InviteAccueilMode.incomplet,
       showRetry: showPlanEmptyState && isFailure && (isPlanPersisted || answers.canGenerateActionPlan),
       shouldShowAllowNotifications: onboarding?.showNotificationsOnboarding ?? false,
       planDisplayEvent: showPlanSection && displayState == DisplayState.CONTENT

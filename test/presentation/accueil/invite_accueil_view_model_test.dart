@@ -280,6 +280,18 @@ void main() {
     expect(viewModel.showModifierButton, isFalse);
   });
 
+  test('for a jeune accompagné whose plan could not be fetched at launch, shows loading failure without questionnaire', () {
+    final store = givenState().loggedInMiloUser().copyWith(actionPlanState: ActionPlanFailureState()).store();
+
+    final viewModel = InviteAccueilViewModel.create(store);
+
+    expect(viewModel.showPlanSection, isTrue);
+    expect(viewModel.planEmptyKind, InvitePlanEmptyKind.loadingFailure);
+    expect(viewModel.showRetry, isTrue);
+    expect(viewModel.showQuestionnaireCard, isFalse);
+    expect(viewModel.showExplorerTip, isFalse);
+  });
+
   test('for a jeune accompagné, retry fetches the plan from server again', () {
     final store = StoreSpy.withState(
       givenState().loggedInMiloUser().withOnboardingQuestionnaire(finished: true).copyWith(

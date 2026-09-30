@@ -69,8 +69,12 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
     final userId = store.state.userId();
     if (userId == null || store.state.isInviteLoginMode()) return _load(store);
 
-    // A plan already displayed is refreshed silently, without a loading state.
-    if (store.state.actionPlanState is! ActionPlanSuccessState) store.dispatch(ActionPlanLoadingAction());
+    // A plan already displayed is refreshed silently, and so is a retry after a failure:
+    // a loading state before the questionnaire is loaded would replace the app by the splash screen.
+    final actionPlanState = store.state.actionPlanState;
+    if (actionPlanState is! ActionPlanSuccessState && actionPlanState is! ActionPlanFailureState) {
+      store.dispatch(ActionPlanLoadingAction());
+    }
     switch (await _actionPlanRepository.fetch(userId)) {
       case ActionPlanFetchFound(:final plan):
         await _repository.setFinished(true);

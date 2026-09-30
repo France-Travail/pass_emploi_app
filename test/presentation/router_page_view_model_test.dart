@@ -461,7 +461,7 @@ void main() {
       expect(viewModel.routerPageDisplayState, RouterPageDisplayState.splash);
     });
 
-    test('…should show restore failure when PLAN_ACTION is active and plan could not be fetched', () {
+    test('…should show main when PLAN_ACTION is active and plan could not be fetched, so the app stays usable', () {
       final store =
           givenState() //
               .loggedInMiloUser()
@@ -472,7 +472,7 @@ void main() {
 
       final viewModel = RouterPageViewModel.create(store, Platform.IOS);
 
-      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.actionPlanRestoreFailure);
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.main);
     });
 
     test('…should show main when PLAN_ACTION is active and questionnaire is finished', () {

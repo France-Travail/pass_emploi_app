@@ -146,6 +146,30 @@ void main() {
     verify(() => actionPlanRepository.fetch(any())).called(1);
   });
 
+  test('retrying after a failure does not go through a loading state, so the app is not replaced by the splash screen', () async {
+    const plan = ActionPlan(id: 'p1', greeting: '', objectives: []);
+    when(() => repository.getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers());
+    when(() => repository.isFinished()).thenAnswer((_) async => true);
+    when(() => repository.hasEverFinished()).thenAnswer((_) async => true);
+    when(() => repository.setFinished(true)).thenAnswer((_) async {});
+    when(() => actionPlanRepository.fetch(any())).thenAnswer((_) async => ActionPlanFetchFound(plan));
+
+    final factory = TestStoreFactory()
+      ..onboardingQuestionnaireRepository = repository
+      ..actionPlanRepository = actionPlanRepository;
+    final store = factory.initializeReduxStore(
+      initialState: givenState().loggedInMiloUser().copyWith(actionPlanState: ActionPlanFailureState()),
+    );
+    final states = <ActionPlanState>[];
+    store.onChange.listen((s) => states.add(s.actionPlanState));
+    final success = store.onChange.firstWhere((s) => s.actionPlanState is ActionPlanSuccessState);
+
+    store.dispatch(OnboardingQuestionnaireRequestAction());
+
+    await success;
+    expect(states.whereType<ActionPlanLoadingState>(), isEmpty);
+  });
+
   test('on app launch for a jeune who already went through the questionnaire on this device, still fetches plan from server', () async {
     const plan = ActionPlan(id: 'p2', greeting: '', objectives: []);
     when(() => repository.getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers());

@@ -24,7 +24,6 @@ enum RouterPageDisplayState {
   main,
   tutorial,
   onboardingQuestionnaire,
-  actionPlanRestoreFailure,
 }
 
 class RouterPageViewModel extends Equatable {
@@ -101,11 +100,9 @@ RouterPageDisplayState _routerPageDisplayState(Store<AppState> store) {
     }
     if (store.state.hasPlanAction()) {
       if (onboardingQuestionnaireState is OnboardingQuestionnaireNotInitializedState) {
-        return store.state.actionPlanState is ActionPlanFailureState
-            ? RouterPageDisplayState.actionPlanRestoreFailure
-            : RouterPageDisplayState.splash;
-      }
-      if (onboardingQuestionnaireState is! OnboardingQuestionnaireSuccessState ||
+        // When the plan cannot be fetched, the app stays usable: the accueil offers to retry.
+        if (store.state.actionPlanState is! ActionPlanFailureState) return RouterPageDisplayState.splash;
+      } else if (onboardingQuestionnaireState is! OnboardingQuestionnaireSuccessState ||
           !onboardingQuestionnaireState.finished) {
         return RouterPageDisplayState.onboardingQuestionnaire;
       }
