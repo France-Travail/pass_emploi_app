@@ -46,6 +46,7 @@ class InviteAccueilViewModel extends Equatable {
   final VoidCallback hideDiscovery;
   final VoidCallback onPlanActionExpanded;
   final void Function(String actionId) toggleDone;
+  final bool Function(String actionId) doitDeclarer;
   final void Function(String actionId) deleteAction;
   final void Function(String objectiveId) giveObjectiveFeedback;
 
@@ -75,6 +76,7 @@ class InviteAccueilViewModel extends Equatable {
     required this.hideDiscovery,
     required this.onPlanActionExpanded,
     required this.toggleDone,
+    required this.doitDeclarer,
     required this.deleteAction,
     required this.giveObjectiveFeedback,
   });
@@ -166,6 +168,10 @@ class InviteAccueilViewModel extends Equatable {
       hideDiscovery: () => store.dispatch(OnboardingHideAction()),
       onPlanActionExpanded: () => store.dispatch(PlanActionOnboardingCompletedAction()),
       toggleDone: (id) => store.dispatch(ActionPlanToggleDoneAction(id)),
+      doitDeclarer: (id) {
+        final action = plan?.findAction(id);
+        return action != null && !action.done && action.declarationRequise;
+      },
       deleteAction: (id) => store.dispatch(ActionPlanDeleteAction(id)),
       giveObjectiveFeedback: (id) => store.dispatch(ActionPlanFeedbackAction(id)),
     );
