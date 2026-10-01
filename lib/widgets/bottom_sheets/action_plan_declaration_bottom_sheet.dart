@@ -108,16 +108,6 @@ class _FormulaireState extends State<_Formulaire> {
           ),
           if (viewModel.commentaireRequis) ...[
             const SizedBox(height: DsfrSpacings.s3w),
-            Text(
-              Strings.actionPlanDeclarationDecrire,
-              style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
-            ),
-            const SizedBox(height: DsfrSpacings.s1v),
-            Text(
-              Strings.actionPlanDeclarationDecrireAide,
-              style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textMentionGrey(context)),
-            ),
-            const SizedBox(height: DsfrSpacings.s1w),
             UserActionDescriptionField(
               descriptionController: _commentaire,
               onDescriptionChanged: (_) => setState(() {}),
