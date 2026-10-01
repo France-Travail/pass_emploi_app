@@ -4,6 +4,7 @@ import 'package:pass_emploi_app/features/action_plan/action_plan_declaration_sta
 import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
+import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/presentation/action_plan/action_plan_declaration_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -129,6 +130,11 @@ void main() {
 
     ActionPlanDeclarationViewModel.create(store, actionId).onVoirAgenda();
 
-    expect(store.dispatchedAction, isA<HandleDeepLinkAction>());
+    expect(
+      store.dispatchedAction,
+      isA<HandleDeepLinkAction>()
+          .having((action) => action.deepLink, 'deepLink', isA<MonSuiviDeepLink>())
+          .having((action) => action.origin, 'origin', DeepLinkOrigin.inAppNavigation),
+    );
   });
 }

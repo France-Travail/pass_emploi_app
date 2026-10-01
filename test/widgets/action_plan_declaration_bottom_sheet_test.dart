@@ -147,6 +147,31 @@ void main() {
     expect(find.text(Strings.actionPlanDeclarationRetourPlan), findsOneWidget);
   });
 
+  testWidgets("show réinitialise la déclaration avant d'ouvrir la bottomsheet", (tester) async {
+    final store = StoreSpy.withState(
+      milo(ActionPlanDeclarationFailureState(actionId, ActionPlanDeclarationFailureReason.autre)),
+    );
+    await tester.pumpWidget(
+      StoreProvider<AppState>(
+        store: store,
+        child: MaterialApp(
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => ActionPlanDeclarationBottomSheet.show(context, actionId),
+              child: const Text('ouvrir'),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('ouvrir'));
+    await tester.pumpAndSettle();
+
+    expect(store.dispatchedActions.whereType<ActionPlanDeclarationResetAction>(), hasLength(1));
+    expect(find.byType(ActionPlanDeclarationBottomSheet), findsOneWidget);
+  });
+
   group("annonces pour lecteur d'écran", () {
     Future<List<String>> pumpEtCapteAnnonces(WidgetTester tester, AppState initial, List<AppState> transitions) async {
       final annonces = <String>[];
