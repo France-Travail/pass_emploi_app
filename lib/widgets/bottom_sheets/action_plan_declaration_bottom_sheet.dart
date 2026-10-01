@@ -16,7 +16,7 @@ import 'package:pass_emploi_app/widgets/date_pickers/past_date_choice.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 
-class ActionPlanDeclarationBottomSheet extends StatelessWidget {
+class ActionPlanDeclarationBottomSheet extends StatefulWidget {
   const ActionPlanDeclarationBottomSheet({super.key, required this.actionId});
 
   final String actionId;
@@ -28,6 +28,26 @@ class ActionPlanDeclarationBottomSheet extends StatelessWidget {
       name: AnalyticsScreenNames.actionPlanDeclaration,
       builder: (context) => ActionPlanDeclarationBottomSheet(actionId: actionId),
     );
+  }
+
+  @override
+  State<ActionPlanDeclarationBottomSheet> createState() => _ActionPlanDeclarationBottomSheetState();
+}
+
+class _ActionPlanDeclarationBottomSheetState extends State<ActionPlanDeclarationBottomSheet> {
+  DateInputSource _date = DateNotInitialized();
+  final TextEditingController _commentaire = TextEditingController();
+
+  @override
+  void dispose() {
+    _commentaire.dispose();
+    super.dispose();
+  }
+
+  bool _peutDeclarer(ActionPlanDeclarationViewModel viewModel) {
+    if (viewModel.displayState == DisplayState.LOADING) return false;
+    if (!_date.isValid) return false;
+    return !viewModel.commentaireRequis || _commentaire.text.trim().isNotEmpty;
   }
 
   void _annoncer(ActionPlanDeclarationViewModel? ancien, ActionPlanDeclarationViewModel nouveau) {
@@ -44,54 +64,25 @@ class ActionPlanDeclarationBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, ActionPlanDeclarationViewModel>(
-      converter: (store) => ActionPlanDeclarationViewModel.create(store, actionId),
+      converter: (store) => ActionPlanDeclarationViewModel.create(store, widget.actionId),
       distinct: true,
       onDidChange: _annoncer,
       builder: (context, viewModel) {
         final enChargement = viewModel.displayState == DisplayState.LOADING;
+        final succes = viewModel.displayState == DisplayState.CONTENT;
         return PopScope(
           canPop: !enChargement,
           child: DsfrBottomSheet(
             isDismissible: !enChargement,
-            child: viewModel.displayState == DisplayState.CONTENT
-                ? _Succes(viewModel: viewModel)
-                : _Formulaire(viewModel: viewModel),
+            actions: succes ? null : _actions(viewModel),
+            child: succes ? _Succes(viewModel: viewModel) : _formulaire(viewModel),
           ),
         );
       },
     );
   }
-}
 
-class _Formulaire extends StatefulWidget {
-  const _Formulaire({required this.viewModel});
-
-  final ActionPlanDeclarationViewModel viewModel;
-
-  @override
-  State<_Formulaire> createState() => _FormulaireState();
-}
-
-class _FormulaireState extends State<_Formulaire> {
-  DateInputSource _date = DateNotInitialized();
-  final TextEditingController _commentaire = TextEditingController();
-
-  @override
-  void dispose() {
-    _commentaire.dispose();
-    super.dispose();
-  }
-
-  bool get _peutDeclarer {
-    final viewModel = widget.viewModel;
-    if (viewModel.displayState == DisplayState.LOADING) return false;
-    if (!_date.isValid) return false;
-    return !viewModel.commentaireRequis || _commentaire.text.trim().isNotEmpty;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final viewModel = widget.viewModel;
+  Widget _formulaire(ActionPlanDeclarationViewModel viewModel) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -123,24 +114,32 @@ class _FormulaireState extends State<_Formulaire> {
             isInvalid: false,
           ),
         ],
+      ],
+    );
+  }
+
+  Widget _actions(ActionPlanDeclarationViewModel viewModel) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
         if (viewModel.messageErreur != null) ...[
-          const SizedBox(height: DsfrSpacings.s2w),
           DsfrAlert(
             type: DsfrAlertType.error,
             description: DsfrAlertDescriptionText(viewModel.messageErreur!),
           ),
+          const SizedBox(height: DsfrSpacings.s2w),
         ],
         if (viewModel.displayState == DisplayState.LOADING) ...[
-          const SizedBox(height: DsfrSpacings.s2w),
           const Center(child: CircularProgressIndicator()),
+          const SizedBox(height: DsfrSpacings.s2w),
         ],
-        const SizedBox(height: DsfrSpacings.s3w),
         DsfrButton(
           label: Strings.markActionAsDone,
           icon: DsfrIcons.systemCheckLine,
           variant: DsfrButtonVariant.primary,
           size: DsfrComponentSize.lg,
-          onPressed: _peutDeclarer ? () => viewModel.onDeclare(_date.selectedDate, _commentaire.text) : null,
+          onPressed: _peutDeclarer(viewModel) ? () => viewModel.onDeclare(_date.selectedDate, _commentaire.text) : null,
         ),
       ],
     );

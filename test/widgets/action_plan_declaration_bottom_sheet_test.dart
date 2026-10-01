@@ -147,6 +147,19 @@ void main() {
     expect(find.text(Strings.actionPlanDeclarationRetourPlan), findsOneWidget);
   });
 
+  testWidgets('le bouton Marquer comme terminé est fixé en bas, hors du contenu défilant', (tester) async {
+    await pump(tester, milo());
+
+    expect(
+      find.ancestor(of: find.text(Strings.markActionAsDone), matching: find.byType(SingleChildScrollView)),
+      findsNothing,
+    );
+    expect(
+      find.ancestor(of: find.text(Strings.actionPlanDeclarationQuand), matching: find.byType(SingleChildScrollView)),
+      findsOneWidget,
+    );
+  });
+
   testWidgets("show réinitialise la déclaration avant d'ouvrir la bottomsheet", (tester) async {
     final store = StoreSpy.withState(
       milo(ActionPlanDeclarationFailureState(actionId, ActionPlanDeclarationFailureReason.autre)),
