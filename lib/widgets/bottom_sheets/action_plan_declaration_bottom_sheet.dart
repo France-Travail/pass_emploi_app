@@ -32,10 +32,7 @@ class ActionPlanDeclarationBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DsfrBottomSheet(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(DsfrSpacings.s2w, 0, DsfrSpacings.s2w, DsfrSpacings.s2w),
-        child: ActionPlanDeclarationContent(actionId: actionId),
-      ),
+      child: ActionPlanDeclarationContent(actionId: actionId),
     );
   }
 }
@@ -86,53 +83,57 @@ class _FormulaireState extends State<_Formulaire> {
   @override
   Widget build(BuildContext context) {
     final viewModel = widget.viewModel;
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (viewModel.categorie != null) ...[
-            Align(
-              alignment: Alignment.centerLeft,
-              child: DsfrCategoryTag.emploiCategory(label: viewModel.categorie!),
-            ),
-            const SizedBox(height: DsfrSpacings.s1w),
-          ],
-          Text(
-            viewModel.titre,
-            style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textTitleGrey(context)),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (viewModel.categorie != null) ...[
+          Align(
+            alignment: Alignment.centerLeft,
+            child: DsfrCategoryTag.emploiCategory(label: viewModel.categorie!),
           ),
+          const SizedBox(height: DsfrSpacings.s1w),
+        ],
+        Text(
+          viewModel.titre,
+          style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textTitleGrey(context)),
+        ),
+        const SizedBox(height: DsfrSpacings.s3w),
+        PastDateChoice(
+          title: Strings.actionPlanDeclarationQuand,
+          onDateChanged: (date) => setState(() => _date = date),
+        ),
+        if (viewModel.commentaireRequis) ...[
           const SizedBox(height: DsfrSpacings.s3w),
-          PastDateChoice(
-            title: Strings.actionPlanDeclarationQuand,
-            onDateChanged: (date) => setState(() => _date = date),
-          ),
-          if (viewModel.commentaireRequis) ...[
-            const SizedBox(height: DsfrSpacings.s3w),
-            UserActionDescriptionField(
-              descriptionController: _commentaire,
-              onDescriptionChanged: (_) => setState(() {}),
-              onClear: () => setState(_commentaire.clear),
-              hintText: Strings.actionPlanDeclarationDecrireExemple,
-              isInvalid: false,
-            ),
-          ],
-          if (viewModel.messageErreur != null) ...[
-            const SizedBox(height: DsfrSpacings.s2w),
-            DsfrAlert(
-              type: DsfrAlertType.error,
-              description: DsfrAlertDescriptionText(viewModel.messageErreur!),
-            ),
-          ],
-          const SizedBox(height: DsfrSpacings.s3w),
-          DsfrButton(
-            label: Strings.markActionAsDone,
-            icon: DsfrIcons.systemCheckLine,
-            variant: DsfrButtonVariant.primary,
-            size: DsfrComponentSize.lg,
-            onPressed: _peutDeclarer ? () => viewModel.onDeclare(_date.selectedDate, _commentaire.text) : null,
+          UserActionDescriptionField(
+            descriptionController: _commentaire,
+            onDescriptionChanged: (_) => setState(() {}),
+            onClear: () => setState(_commentaire.clear),
+            hintText: Strings.actionPlanDeclarationDecrireExemple,
+            label: Strings.actionPlanDeclarationDecrire,
+            helpText: Strings.actionPlanDeclarationDecrireAide,
+            isInvalid: false,
           ),
         ],
-      ),
+        if (viewModel.messageErreur != null) ...[
+          const SizedBox(height: DsfrSpacings.s2w),
+          DsfrAlert(
+            type: DsfrAlertType.error,
+            description: DsfrAlertDescriptionText(viewModel.messageErreur!),
+          ),
+        ],
+        if (viewModel.displayState == DisplayState.LOADING) ...[
+          const SizedBox(height: DsfrSpacings.s2w),
+          const Center(child: CircularProgressIndicator()),
+        ],
+        const SizedBox(height: DsfrSpacings.s3w),
+        DsfrButton(
+          label: Strings.markActionAsDone,
+          icon: DsfrIcons.systemCheckLine,
+          variant: DsfrButtonVariant.primary,
+          size: DsfrComponentSize.lg,
+          onPressed: _peutDeclarer ? () => viewModel.onDeclare(_date.selectedDate, _commentaire.text) : null,
+        ),
+      ],
     );
   }
 }

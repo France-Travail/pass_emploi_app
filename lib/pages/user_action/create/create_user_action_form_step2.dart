@@ -165,8 +165,12 @@ class UserActionDescriptionField extends StatefulWidget {
     required this.hintText,
     this.descriptionFocusNode,
     required this.isInvalid,
+    this.label,
+    this.helpText,
   });
 
+  final String? label;
+  final String? helpText;
   final Key? descriptionKey;
   final FocusNode? descriptionFocusNode;
   final TextEditingController descriptionController;
@@ -270,8 +274,8 @@ class _UserActionDescriptionFieldState extends State<UserActionDescriptionField>
           Expanded(
             child: DsfrInput(
               key: widget.descriptionKey,
-              label: Strings.userActionDescriptionTextfieldStep2,
-              hintText: Strings.userActionDescriptionDescriptionfieldStep2,
+              label: widget.label ?? Strings.userActionDescriptionTextfieldStep2,
+              hintText: widget.helpText ?? Strings.userActionDescriptionDescriptionfieldStep2,
               placeholder: widget.hintText,
               controller: widget.descriptionController,
               focusNode: widget.descriptionFocusNode,

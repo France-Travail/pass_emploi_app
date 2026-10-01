@@ -43,7 +43,7 @@ void main() {
       StoreProvider<AppState>(
         store: store,
         child: const MaterialApp(
-          home: Scaffold(body: ActionPlanDeclarationContent(actionId: actionId)),
+          home: Scaffold(body: SingleChildScrollView(child: ActionPlanDeclarationContent(actionId: actionId))),
         ),
       ),
     );
@@ -65,6 +65,7 @@ void main() {
     expect(find.text('Je crée mon CV'), findsOneWidget);
     expect(find.text(Strings.actionPlanDeclarationQuand), findsOneWidget);
     expect(find.text(Strings.actionPlanDeclarationDecrire), findsOneWidget);
+    expect(find.text(Strings.actionPlanDeclarationDecrireAide), findsOneWidget);
   });
 
   testWidgets('France Travail : pas de description', (tester) async {
@@ -108,6 +109,12 @@ void main() {
     await tester.pump();
 
     expect(store.dispatchedActions.whereType<ActionPlanDeclareAction>(), isEmpty);
+  });
+
+  testWidgets('pendant le chargement, affiche un indicateur', (tester) async {
+    await pump(tester, milo(ActionPlanDeclarationLoadingState()));
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
   testWidgets("affiche le message d'échec", (tester) async {
