@@ -256,6 +256,11 @@ class InviteActionPlanActionTile extends StatelessWidget {
     A11yUtils.announce(Strings.inviteAccueilActionDeletedA11y(action.label));
   }
 
+  String? get _hintCase {
+    if (!action.done && action.declarationRequise) return Strings.actionPlanDeclarationOuvreFormulaireA11y;
+    return _hasLink ? null : action.serviceName;
+  }
+
   bool get _hasLink => action.kind == ActionPlanActionKind.link && action.url != null && action.url!.isNotEmpty;
 
   @override
@@ -287,7 +292,7 @@ class InviteActionPlanActionTile extends StatelessWidget {
                   enabled: true,
                   checked: action.done,
                   label: action.label,
-                  hint: _hasLink ? null : action.serviceName,
+                  hint: _hintCase,
                   onTap: onToggleDone,
                   excludeSemantics: true,
                   child: GestureDetector(

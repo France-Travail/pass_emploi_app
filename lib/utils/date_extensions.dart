@@ -5,20 +5,23 @@ import 'package:intl/intl.dart';
 final DateTime minDateTime = DateTime.fromMicrosecondsSinceEpoch(0);
 const String locale = 'fr';
 
+String formaterDecalageHoraire(Duration decalage) {
+  String twoDigits(int n) => n >= 10 ? "$n" : "0$n";
+
+  final heures = twoDigits(decalage.inHours.abs());
+  final minutes = twoDigits(decalage.inMinutes.remainder(60).abs());
+  final signe = decalage.isNegative ? "-" : "+";
+  return "$signe$heures:$minutes";
+}
+
 extension DateExtensions on DateTime {
   String formatDateToFrench() {
     return DateFormat('d MMMM y', 'fr_FR').format(this);
   }
 
   String toIso8601WithOffsetDateTime() {
-    String twoDigits(int n) => n >= 10 ? "$n" : "0$n";
-
-    final hours = twoDigits(timeZoneOffset.inHours.abs());
-    final minutes = twoDigits(timeZoneOffset.inMinutes.remainder(60));
-    final sign = timeZoneOffset.isNegative ? "-" : "+";
     final formattedDate = DateFormat("yyyy-MM-ddTHH:mm:ss").format(this);
-
-    return "$formattedDate$sign$hours:$minutes";
+    return "$formattedDate${formaterDecalageHoraire(timeZoneOffset)}";
   }
 
   String timeAgo() {
