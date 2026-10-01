@@ -504,6 +504,19 @@ class Strings {
   static String actionPlanFeedbackTitle = "Avant de continuer";
   static String actionPlanFeedbackDescription = "Dis-nous ce que tu as pensé des pistes d’actions suggérées\u{00A0}?";
   static String actionPlanFeedbackGiveOpinion = "Donne ton avis";
+  static String actionPlanDeclarationQuand = "Quand as-tu fait cette action ?";
+  static String actionPlanDeclarationDecrire = "Décrire mon action";
+  static String actionPlanDeclarationDecrireAide =
+      "Ajoute des détails pour que ton conseiller puisse valider l'action.";
+  static String actionPlanDeclarationDecrireExemple = "Exemple : j'ai cherché des offres d'emploi pour le métier…";
+  static String actionPlanDeclarationSolutionRetiree = "Cette action n'est plus proposée.";
+  static String actionPlanDeclarationIndisponible =
+      "Le service est momentanément indisponible, réessaie dans quelques instants.";
+  static String actionPlanDeclarationSuccesEnregistree = "L'action est enregistrée. Retrouve-la dans ton agenda.";
+  static String actionPlanDeclarationSuccesConseiller =
+      "Ton conseiller en est informé. Tu pourras en discuter lors de ton prochain rendez-vous !";
+  static String actionPlanDeclarationVoirAgenda = "Voir mon agenda";
+  static String actionPlanDeclarationRetourPlan = "Retour au plan d'action";
   static String inviteAccueilExplorerTipTitle = "💡 Pas envie de répondre maintenant?";
   static String inviteAccueilExplorerTipBody = "Tu peux explorer librement les offres et les événements depuis le menu";
   static String inviteAccueilConseillerTitle = "Être accompagné par un conseiller ?";
