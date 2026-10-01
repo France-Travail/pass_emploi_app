@@ -69,6 +69,31 @@ class ActionPlanMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(ActionPlanSuccessAction(plan));
         _track(before, plan, action.actionId, deleted: true);
       }
+    } else if (action is ActionPlanDeclareAction) {
+      final before = _currentPlan(store);
+      final userId = _persistedPlanUserId(store);
+      if (userId == null || before?.findAction(action.actionId) == null) {
+        store.dispatch(ActionPlanDeclarationFailureAction(ActionPlanDeclarationFailureReason.autre));
+        return;
+      }
+      store.dispatch(ActionPlanDeclarationLoadingAction());
+      final result = await _repository.sendDeclaration(
+        userId,
+        action.actionId,
+        date: action.date,
+        commentaire: action.commentaire,
+      );
+      switch (result) {
+        case ActionPlanDeclarationFailure(:final reason):
+          store.dispatch(ActionPlanDeclarationFailureAction(reason));
+        case ActionPlanDeclarationSuccess():
+          final plan = await _repository.toggleDone(action.actionId);
+          if (plan != null) {
+            store.dispatch(ActionPlanSuccessAction(plan));
+            _track(before, plan, action.actionId, deleted: false);
+          }
+          store.dispatch(ActionPlanDeclarationSuccessAction());
+      }
     } else if (action is ActionPlanFeedbackAction) {
       final plan = await _repository.giveFeedback(action.objectiveId);
       if (plan != null) store.dispatch(ActionPlanSuccessAction(plan));

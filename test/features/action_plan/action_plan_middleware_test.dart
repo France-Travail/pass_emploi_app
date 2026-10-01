@@ -1,11 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_declaration_state.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
 
 import '../../doubles/mocks.dart';
 import '../../dsl/app_state_dsl.dart';
@@ -73,6 +75,77 @@ void main() {
       expect(store.state.actionPlanState, isA<ActionPlanFailureState>());
       verifyNever(() => repository.getStoredPlan());
       verifyNever(() => repository.fetch(any()));
+    });
+
+    group('declare', () {
+      final date = DateTime(2026, 9, 30);
+
+      Future<AppState> declareAndWait(AppState initialState, bool Function(ActionPlanDeclarationState) until) async {
+        final factory = TestStoreFactory()..actionPlanRepository = repository;
+        final store = factory.initializeReduxStore(initialState: initialState);
+        final result = store.onChange.firstWhere((state) => until(state.actionPlanDeclarationState));
+        store.dispatch(ActionPlanDeclareAction(actionId, date, 'Mon CV'));
+        return result;
+      }
+
+      test('declares on the server, checks the action locally, then succeeds', () async {
+        when(() => repository.toggleDone(actionId)).thenAnswer((_) async => planWith(done: true));
+
+        final state = await declareAndWait(
+          withUncheckedPlan,
+          (state) => state is ActionPlanDeclarationSuccessState,
+        );
+
+        verify(() => repository.sendDeclaration(loggedIn.userId()!, actionId, date: date, commentaire: 'Mon CV'))
+            .called(1);
+        expect(state.actionPlanState, ActionPlanSuccessState(planWith(done: true)));
+      });
+
+      test('keeps the plan untouched and fails with the reason when the server refuses', () async {
+        when(
+          () => repository.sendDeclaration(any(), any(), date: any(named: 'date'), commentaire: any(named: 'commentaire')),
+        ).thenAnswer((_) async => ActionPlanDeclarationFailure(ActionPlanDeclarationFailureReason.solutionRetiree));
+
+        final state = await declareAndWait(
+          withUncheckedPlan,
+          (state) => state is ActionPlanDeclarationFailureState,
+        );
+
+        expect(
+          state.actionPlanDeclarationState,
+          ActionPlanDeclarationFailureState(ActionPlanDeclarationFailureReason.solutionRetiree),
+        );
+        expect(state.actionPlanState, ActionPlanSuccessState(planWith(done: false)));
+        verifyNever(() => repository.toggleDone(any()));
+      });
+
+      test('fails without calling the server when the action is not in the plan', () async {
+        final state = await declareAndWait(
+          loggedIn.copyWith(actionPlanState: ActionPlanEmptyState()),
+          (state) => state is ActionPlanDeclarationFailureState,
+        );
+
+        expect(
+          state.actionPlanDeclarationState,
+          ActionPlanDeclarationFailureState(ActionPlanDeclarationFailureReason.autre),
+        );
+        verifyNever(
+          () => repository.sendDeclaration(any(), any(), date: any(named: 'date'), commentaire: any(named: 'commentaire')),
+        );
+      });
+
+      test('reset brings the declaration back to not initialized', () async {
+        final factory = TestStoreFactory()..actionPlanRepository = repository;
+        final store = factory.initializeReduxStore(
+          initialState: withUncheckedPlan.copyWith(
+            actionPlanDeclarationState: ActionPlanDeclarationFailureState(ActionPlanDeclarationFailureReason.autre),
+          ),
+        );
+
+        store.dispatch(ActionPlanDeclarationResetAction());
+
+        expect(store.state.actionPlanDeclarationState, ActionPlanDeclarationNotInitializedState());
+      });
     });
 
     group('toggle', () {
