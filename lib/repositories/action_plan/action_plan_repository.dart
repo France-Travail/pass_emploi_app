@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/crashlytics/crashlytics.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/repositories/action_plan/action_plan_request_mapper.dart';
+import 'package:pass_emploi_app/utils/date_extensions.dart';
 
 class ActionPlanRepository {
   static const _planKey = 'actionPlan';
@@ -147,6 +148,34 @@ class ActionPlanRepository {
     }
   }
 
+  Future<ActionPlanDeclarationResult> sendDeclaration(
+    String userId,
+    String actionId, {
+    required DateTime date,
+    String? commentaire,
+  }) async {
+    final url = '/jeunes/$userId/plan-action/taches/$actionId';
+    try {
+      await _httpClient.patch(url, data: {
+        'terminee': true,
+        'date': date.toIso8601WithOffsetDateTime(),
+        if (commentaire != null) 'commentaire': commentaire,
+      });
+      return ActionPlanDeclarationSuccess();
+    } catch (e, stack) {
+      _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
+      return ActionPlanDeclarationFailure(_declarationFailureReason(e));
+    }
+  }
+
+  ActionPlanDeclarationFailureReason _declarationFailureReason(Object error) {
+    if (error is! DioException) return ActionPlanDeclarationFailureReason.autre;
+    final statusCode = error.response?.statusCode;
+    if (statusCode == 410) return ActionPlanDeclarationFailureReason.solutionRetiree;
+    if (statusCode == null || statusCode >= 500) return ActionPlanDeclarationFailureReason.indisponible;
+    return ActionPlanDeclarationFailureReason.autre;
+  }
+
   Future<void> clear() async {
     await _preferences.delete(key: _planKey);
     await _preferences.delete(key: _progressKey);
@@ -247,4 +276,22 @@ class _ActionPlanState {
   final Set<String> feedbackThemes;
 
   const _ActionPlanState(this.plan, this.doneIds, this.feedbackThemes);
+}
+
+enum ActionPlanDeclarationFailureReason { solutionRetiree, indisponible, autre }
+
+sealed class ActionPlanDeclarationResult extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
+
+class ActionPlanDeclarationSuccess extends ActionPlanDeclarationResult {}
+
+class ActionPlanDeclarationFailure extends ActionPlanDeclarationResult {
+  final ActionPlanDeclarationFailureReason reason;
+
+  ActionPlanDeclarationFailure(this.reason);
+
+  @override
+  List<Object?> get props => [reason];
 }
