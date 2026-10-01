@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:pass_emploi_app/configuration/configuration.dart';
 import 'package:pass_emploi_app/features/accueil/accueil_state.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_declaration_state.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 import 'package:pass_emploi_app/features/actualite_mission_locale/actualite_mission_locale_state.dart';
 import 'package:pass_emploi_app/features/alerte/create/alerte_create_state.dart';
@@ -186,6 +187,7 @@ class AppState extends Equatable {
   final CommunicationsState communicationsState;
   final OnboardingQuestionnaireState onboardingQuestionnaireState;
   final ActionPlanState actionPlanState;
+  final ActionPlanDeclarationState actionPlanDeclarationState;
   final FonctionnalitesState fonctionnalitesState;
   /*AUTOGENERATE-REDUX-APP-STATE-PROPERTY*/
 
@@ -279,6 +281,7 @@ class AppState extends Equatable {
     required this.communicationsState,
     required this.onboardingQuestionnaireState,
     required this.actionPlanState,
+    required this.actionPlanDeclarationState,
     required this.fonctionnalitesState,
     /*AUTOGENERATE-REDUX-APP-STATE-CONSTRUCTOR*/
   });
@@ -373,6 +376,7 @@ class AppState extends Equatable {
     final CommunicationsState? communicationsState,
     final OnboardingQuestionnaireState? onboardingQuestionnaireState,
     final ActionPlanState? actionPlanState,
+    final ActionPlanDeclarationState? actionPlanDeclarationState,
     final FonctionnalitesState? fonctionnalitesState,
     /*AUTOGENERATE-REDUX-APP-STATE-COPYPARAM*/
   }) {
@@ -467,6 +471,7 @@ class AppState extends Equatable {
       communicationsState: communicationsState ?? this.communicationsState,
       onboardingQuestionnaireState: onboardingQuestionnaireState ?? this.onboardingQuestionnaireState,
       actionPlanState: actionPlanState ?? this.actionPlanState,
+      actionPlanDeclarationState: actionPlanDeclarationState ?? this.actionPlanDeclarationState,
       fonctionnalitesState: fonctionnalitesState ?? this.fonctionnalitesState,
       /*AUTOGENERATE-REDUX-APP-STATE-COPYBODY*/
     );
@@ -563,6 +568,7 @@ class AppState extends Equatable {
       communicationsState: CommunicationsNotInitializedState(),
       onboardingQuestionnaireState: OnboardingQuestionnaireNotInitializedState(),
       actionPlanState: ActionPlanNotInitializedState(),
+      actionPlanDeclarationState: ActionPlanDeclarationNotInitializedState(),
       fonctionnalitesState: FonctionnalitesNotInitializedState(),
       /*AUTOGENERATE-REDUX-APP-STATE-FACTORY*/
     );
@@ -651,6 +657,7 @@ class AppState extends Equatable {
     communicationsState,
     onboardingQuestionnaireState,
     actionPlanState,
+    actionPlanDeclarationState,
     fonctionnalitesState,
     /*AUTOGENERATE-REDUX-APP-STATE-EQUATABLE*/
   ];

@@ -14,6 +14,7 @@ import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/bottom_sheets/action_plan_declaration_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/action_plan_feedback_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/notifications_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
@@ -152,7 +153,9 @@ class _Content extends StatelessWidget {
             else
               InviteActionPlanSection(
                 plan: viewModel.plan,
-                onToggleDone: viewModel.toggleDone,
+                onToggleDone: (id) => viewModel.doitDeclarer(id)
+                    ? ActionPlanDeclarationBottomSheet.show(context, id)
+                    : viewModel.toggleDone(id),
                 onDelete: viewModel.deleteAction,
                 onFeedback: viewModel.giveObjectiveFeedback,
                 onObjectiveExpanded: viewModel.onPlanActionExpanded,

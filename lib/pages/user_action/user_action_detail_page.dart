@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_actions.dart';
@@ -17,7 +16,6 @@ import 'package:pass_emploi_app/pages/user_action/action_commentaires_page.dart'
 import 'package:pass_emploi_app/pages/user_action/user_action_detail_bottom_sheet.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/model/date_input_source.dart';
-import 'package:pass_emploi_app/presentation/model/date_suggestions_view_model.dart';
 import 'package:pass_emploi_app/presentation/user_action/commentaires/action_commentaire_view_model.dart';
 import 'package:pass_emploi_app/presentation/user_action/user_action_details_view_model.dart';
 import 'package:pass_emploi_app/presentation/user_action/user_action_done_bottom_sheet_view_model.dart';
@@ -25,12 +23,12 @@ import 'package:pass_emploi_app/presentation/user_action/user_action_state_sourc
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/utils/date_extensions.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/comment.dart';
 import 'package:pass_emploi_app/widgets/confetti_wrapper.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
+import 'package:pass_emploi_app/widgets/date_pickers/past_date_choice.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/loading_overlay.dart';
@@ -366,19 +364,6 @@ class _FinishActionSection extends StatefulWidget {
 
 class _FinishActionSectionState extends State<_FinishActionSection> {
   DateInputSource _date = DateNotInitialized();
-  late final TextEditingController _dateController;
-
-  @override
-  void initState() {
-    super.initState();
-    _dateController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    _dateController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -390,59 +375,13 @@ class _FinishActionSectionState extends State<_FinishActionSection> {
       );
     }
 
-    final suggestions = DateSuggestionListViewModel.createPast(
-      DateTime.now(),
-      null,
-    ).suggestions;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Semantics(
-          header: true,
-          child: Text(
-            Strings.actionDoneWhen,
-            style: DsfrTextStyle.bodyMdBold(
-              color: DsfrColorDecisions.textTitleGrey(context),
-            ),
-          ),
-        ),
-        const SizedBox(height: DsfrSpacings.s1w),
-        Wrap(
-          spacing: DsfrSpacings.s1w,
-          runSpacing: DsfrSpacings.s1w,
-          children: [
-            for (final suggestion in suggestions)
-              DsfrButton(
-                label: suggestion.date.isToday() ? Strings.dateSuggestionAujourdhui : Strings.dateSuggestionHier,
-                variant: _isSuggestionSelected(suggestion) ? DsfrButtonVariant.primary : DsfrButtonVariant.secondary,
-                size: DsfrComponentSize.sm,
-                onPressed: () => _selectSuggestion(suggestion),
-              ),
-          ],
-        ),
-        const SizedBox(height: DsfrSpacings.s2w),
-        Text(
-          Strings.otherDate,
-          style: DsfrTextStyle.bodyMd(
-            color: DsfrColorDecisions.textLabelGrey(context),
-          ),
-        ),
-        const SizedBox(height: DsfrSpacings.s1v),
-        Text(
-          Strings.cannotFinishActionInFuture,
-          style: DsfrTextStyle.bodyXs(
-            color: DsfrColorDecisions.textMentionGrey(context),
-          ),
-        ),
-        const SizedBox(height: DsfrSpacings.s1w),
-        DsfrInputHeadless(
-          controller: _dateController,
-          isDatePicker: true,
-          lastDate: DateTime.now(),
-          locale: const Locale('fr', 'FR'),
-          onDateChanged: (date) {
-            setState(() => _date = DateFromPicker(date));
-          },
+        PastDateChoice(
+          title: Strings.actionDoneWhen,
+          aide: Strings.cannotFinishActionInFuture,
+          onDateChanged: (date) => setState(() => _date = date),
         ),
         const SizedBox(height: DsfrSpacings.s3w),
         DsfrButton(
@@ -461,20 +400,6 @@ class _FinishActionSectionState extends State<_FinishActionSection> {
         ),
       ],
     );
-  }
-
-  bool _isSuggestionSelected(DateSuggestionViewModel suggestion) {
-    return switch (_date) {
-      DateFromSuggestion(:final date) => DateUtils.dateOnly(date) == DateUtils.dateOnly(suggestion.date),
-      _ => false,
-    };
-  }
-
-  void _selectSuggestion(DateSuggestionViewModel suggestion) {
-    setState(() {
-      _date = DateFromSuggestion(suggestion.date, suggestion.label);
-      _dateController.text = DateFormat('dd/MM/yyyy').format(suggestion.date);
-    });
   }
 }
 
