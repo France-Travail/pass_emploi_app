@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
@@ -9,6 +10,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/action_plan_declaration_bottom_sheet.dart';
+import 'package:redux/redux.dart';
 
 import '../doubles/spies.dart';
 import '../dsl/app_state_dsl.dart';
@@ -143,5 +145,52 @@ void main() {
     expect(find.text(Strings.actionPlanDeclarationSuccesEnregistree), findsOneWidget);
     expect(find.text(Strings.actionPlanDeclarationVoirAgenda), findsOneWidget);
     expect(find.text(Strings.actionPlanDeclarationRetourPlan), findsOneWidget);
+  });
+
+  group("annonces pour lecteur d'écran", () {
+    Future<List<String>> pumpEtCapteAnnonces(WidgetTester tester, AppState initial, List<AppState> transitions) async {
+      final annonces = <String>[];
+      final messenger = tester.binding.defaultBinaryMessenger;
+      messenger.setMockDecodedMessageHandler<dynamic>(SystemChannels.accessibility, (message) async {
+        final map = message as Map;
+        if (map['type'] == 'announce') annonces.add((map['data'] as Map)['message'] as String);
+        return null;
+      });
+      addTearDown(() => messenger.setMockDecodedMessageHandler<dynamic>(SystemChannels.accessibility, null));
+      final store = Store<AppState>((state, action) => action is AppState ? action : state, initialState: initial);
+      await tester.pumpWidget(
+        StoreProvider<AppState>(
+          store: store,
+          child: const MaterialApp(home: Scaffold(body: ActionPlanDeclarationBottomSheet(actionId: actionId))),
+        ),
+      );
+      for (final transition in transitions) {
+        store.dispatch(transition);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 200));
+      }
+      return annonces;
+    }
+
+    testWidgets("annonce le message d'échec", (tester) async {
+      final annonces = await pumpEtCapteAnnonces(tester, milo(), [
+        milo(ActionPlanDeclarationLoadingState(actionId)),
+        milo(ActionPlanDeclarationFailureState(actionId, ActionPlanDeclarationFailureReason.solutionRetiree)),
+      ]);
+
+      expect(annonces, [Strings.actionPlanDeclarationSolutionRetiree]);
+    });
+
+    testWidgets('annonce la confirmation au succès', (tester) async {
+      final annonces = await pumpEtCapteAnnonces(tester, milo(), [
+        milo(ActionPlanDeclarationLoadingState(actionId)),
+        milo(ActionPlanDeclarationSuccessState(actionId)),
+      ]);
+
+      final prenom = milo().user()!.firstName;
+      expect(annonces, [
+        '${Strings.userActionConfirmationTitle(prenom)} ${Strings.actionPlanDeclarationSuccesEnregistree}',
+      ]);
+    });
   });
 }

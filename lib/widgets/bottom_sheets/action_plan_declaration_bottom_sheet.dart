@@ -11,6 +11,7 @@ import 'package:pass_emploi_app/presentation/model/date_input_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/widgets/date_pickers/past_date_choice.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
@@ -29,11 +30,23 @@ class ActionPlanDeclarationBottomSheet extends StatelessWidget {
     );
   }
 
+  void _annoncer(ActionPlanDeclarationViewModel? ancien, ActionPlanDeclarationViewModel nouveau) {
+    if (ancien?.displayState == nouveau.displayState) return;
+    if (nouveau.displayState == DisplayState.FAILURE && nouveau.messageErreur != null) {
+      A11yUtils.announce(nouveau.messageErreur!);
+    } else if (nouveau.displayState == DisplayState.CONTENT) {
+      A11yUtils.announce(
+        '${Strings.userActionConfirmationTitle(nouveau.prenom)} ${Strings.actionPlanDeclarationSuccesEnregistree}',
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, ActionPlanDeclarationViewModel>(
       converter: (store) => ActionPlanDeclarationViewModel.create(store, actionId),
       distinct: true,
+      onDidChange: _annoncer,
       builder: (context, viewModel) {
         final enChargement = viewModel.displayState == DisplayState.LOADING;
         return PopScope(
