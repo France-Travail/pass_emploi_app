@@ -8,15 +8,30 @@ sealed class ActionPlanDeclarationState extends Equatable {
 
 class ActionPlanDeclarationNotInitializedState extends ActionPlanDeclarationState {}
 
-class ActionPlanDeclarationLoadingState extends ActionPlanDeclarationState {}
+class ActionPlanDeclarationLoadingState extends ActionPlanDeclarationState {
+  final String actionId;
 
-class ActionPlanDeclarationSuccessState extends ActionPlanDeclarationState {}
-
-class ActionPlanDeclarationFailureState extends ActionPlanDeclarationState {
-  final ActionPlanDeclarationFailureReason reason;
-
-  ActionPlanDeclarationFailureState(this.reason);
+  ActionPlanDeclarationLoadingState(this.actionId);
 
   @override
-  List<Object?> get props => [reason];
+  List<Object?> get props => [actionId];
+}
+
+class ActionPlanDeclarationSuccessState extends ActionPlanDeclarationState {
+  final String actionId;
+
+  ActionPlanDeclarationSuccessState(this.actionId);
+
+  @override
+  List<Object?> get props => [actionId];
+}
+
+class ActionPlanDeclarationFailureState extends ActionPlanDeclarationState {
+  final String actionId;
+  final ActionPlanDeclarationFailureReason reason;
+
+  ActionPlanDeclarationFailureState(this.actionId, this.reason);
+
+  @override
+  List<Object?> get props => [actionId, reason];
 }

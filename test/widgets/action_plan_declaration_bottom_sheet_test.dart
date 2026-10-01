@@ -43,7 +43,7 @@ void main() {
       StoreProvider<AppState>(
         store: store,
         child: const MaterialApp(
-          home: Scaffold(body: SingleChildScrollView(child: ActionPlanDeclarationContent(actionId: actionId))),
+          home: Scaffold(body: ActionPlanDeclarationBottomSheet(actionId: actionId)),
         ),
       ),
     );
@@ -99,7 +99,7 @@ void main() {
   });
 
   testWidgets('pendant le chargement, le bouton ne déclare pas une seconde fois', (tester) async {
-    final store = await pump(tester, milo(ActionPlanDeclarationLoadingState()));
+    final store = await pump(tester, milo(ActionPlanDeclarationLoadingState(actionId)));
 
     await tester.tap(find.text(Strings.dateSuggestionHier));
     await tester.pump();
@@ -111,20 +111,34 @@ void main() {
     expect(store.dispatchedActions.whereType<ActionPlanDeclareAction>(), isEmpty);
   });
 
+  testWidgets('pendant le chargement, la bottomsheet ne peut pas être fermée', (tester) async {
+    await pump(tester, milo(ActionPlanDeclarationLoadingState(actionId)));
+
+    expect(find.text(Strings.close), findsNothing);
+    expect(tester.widget<PopScope>(find.byType(PopScope)).canPop, isFalse);
+  });
+
+  testWidgets("hors chargement, la bottomsheet peut être fermée", (tester) async {
+    await pump(tester, milo());
+
+    expect(find.text(Strings.close), findsOneWidget);
+    expect(tester.widget<PopScope>(find.byType(PopScope)).canPop, isTrue);
+  });
+
   testWidgets('pendant le chargement, affiche un indicateur', (tester) async {
-    await pump(tester, milo(ActionPlanDeclarationLoadingState()));
+    await pump(tester, milo(ActionPlanDeclarationLoadingState(actionId)));
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
   testWidgets("affiche le message d'échec", (tester) async {
-    await pump(tester, milo(ActionPlanDeclarationFailureState(ActionPlanDeclarationFailureReason.solutionRetiree)));
+    await pump(tester, milo(ActionPlanDeclarationFailureState(actionId, ActionPlanDeclarationFailureReason.solutionRetiree)));
 
     expect(find.text(Strings.actionPlanDeclarationSolutionRetiree), findsOneWidget);
   });
 
   testWidgets('affiche le succès', (tester) async {
-    await pump(tester, milo(ActionPlanDeclarationSuccessState()));
+    await pump(tester, milo(ActionPlanDeclarationSuccessState(actionId)));
 
     expect(find.text(Strings.actionPlanDeclarationSuccesEnregistree), findsOneWidget);
     expect(find.text(Strings.actionPlanDeclarationVoirAgenda), findsOneWidget);

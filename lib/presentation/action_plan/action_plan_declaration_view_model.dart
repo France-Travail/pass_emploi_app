@@ -36,7 +36,7 @@ class ActionPlanDeclarationViewModel extends Equatable {
     final planState = store.state.actionPlanState;
     final action = planState is ActionPlanSuccessState ? planState.plan.findAction(actionId) : null;
     final commentaireRequis = store.state.isMiloLoginMode();
-    final declaration = store.state.actionPlanDeclarationState;
+    final declaration = _declarationDeLaTache(store.state.actionPlanDeclarationState, actionId);
     return ActionPlanDeclarationViewModel(
       titre: action?.label ?? '',
       categorie: action?.categorie,
@@ -54,6 +54,16 @@ class ActionPlanDeclarationViewModel extends Equatable {
       ),
       onVoirAgenda: () => store.dispatch(HandleDeepLinkAction(MonSuiviDeepLink(), DeepLinkOrigin.inAppNavigation)),
     );
+  }
+
+  static ActionPlanDeclarationState _declarationDeLaTache(ActionPlanDeclarationState declaration, String actionId) {
+    final declarationActionId = switch (declaration) {
+      ActionPlanDeclarationNotInitializedState() => null,
+      ActionPlanDeclarationLoadingState(:final actionId) => actionId,
+      ActionPlanDeclarationSuccessState(:final actionId) => actionId,
+      ActionPlanDeclarationFailureState(:final actionId) => actionId,
+    };
+    return declarationActionId == actionId ? declaration : ActionPlanDeclarationNotInitializedState();
   }
 
   static String _message(ActionPlanDeclarationFailureReason reason) => switch (reason) {

@@ -50,12 +50,21 @@ class ActionPlanDeclareAction {
 
 class ActionPlanDeclarationResetAction {}
 
-class ActionPlanDeclarationLoadingAction {}
+class ActionPlanDeclarationLoadingAction {
+  final String actionId;
 
-class ActionPlanDeclarationSuccessAction {}
+  ActionPlanDeclarationLoadingAction(this.actionId);
+}
+
+class ActionPlanDeclarationSuccessAction {
+  final String actionId;
+
+  ActionPlanDeclarationSuccessAction(this.actionId);
+}
 
 class ActionPlanDeclarationFailureAction {
+  final String actionId;
   final ActionPlanDeclarationFailureReason reason;
 
-  ActionPlanDeclarationFailureAction(this.reason);
+  ActionPlanDeclarationFailureAction(this.actionId, this.reason);
 }

@@ -31,25 +31,21 @@ class ActionPlanDeclarationBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DsfrBottomSheet(
-      child: ActionPlanDeclarationContent(actionId: actionId),
-    );
-  }
-}
-
-class ActionPlanDeclarationContent extends StatelessWidget {
-  const ActionPlanDeclarationContent({super.key, required this.actionId});
-
-  final String actionId;
-
-  @override
-  Widget build(BuildContext context) {
     return StoreConnector<AppState, ActionPlanDeclarationViewModel>(
       converter: (store) => ActionPlanDeclarationViewModel.create(store, actionId),
       distinct: true,
-      builder: (context, viewModel) => viewModel.displayState == DisplayState.CONTENT
-          ? _Succes(viewModel: viewModel)
-          : _Formulaire(viewModel: viewModel),
+      builder: (context, viewModel) {
+        final enChargement = viewModel.displayState == DisplayState.LOADING;
+        return PopScope(
+          canPop: !enChargement,
+          child: DsfrBottomSheet(
+            isDismissible: !enChargement,
+            child: viewModel.displayState == DisplayState.CONTENT
+                ? _Succes(viewModel: viewModel)
+                : _Formulaire(viewModel: viewModel),
+          ),
+        );
+      },
     );
   }
 }

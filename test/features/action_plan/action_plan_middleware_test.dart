@@ -99,6 +99,56 @@ void main() {
         verify(() => repository.sendDeclaration(loggedIn.userId()!, actionId, date: date, commentaire: 'Mon CV'))
             .called(1);
         expect(state.actionPlanState, ActionPlanSuccessState(planWith(done: true)));
+        expect(state.actionPlanDeclarationState, ActionPlanDeclarationSuccessState(actionId));
+      });
+
+      test('does not toggle the action again when it is already checked, and still succeeds', () async {
+        final state = await declareAndWait(
+          withCheckedPlan,
+          (state) => state is ActionPlanDeclarationSuccessState,
+        );
+
+        verifyNever(() => repository.toggleDone(any()));
+        expect(state.actionPlanState, ActionPlanSuccessState(planWith(done: true)));
+        expect(state.actionPlanDeclarationState, ActionPlanDeclarationSuccessState(actionId));
+      });
+
+      test('ignores a declaration received while the same action is loading', () async {
+        final factory = TestStoreFactory()..actionPlanRepository = repository;
+        final store = factory.initializeReduxStore(
+          initialState: withUncheckedPlan.copyWith(actionPlanDeclarationState: ActionPlanDeclarationLoadingState(actionId)),
+        );
+
+        store.dispatch(ActionPlanDeclareAction(actionId, date, 'Mon CV'));
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+
+        verifyNever(
+          () => repository.sendDeclaration(any(), any(), date: any(named: 'date'), commentaire: any(named: 'commentaire')),
+        );
+      });
+
+      test('sends the declaration only once when it is triggered twice', () async {
+        when(() => repository.toggleDone(actionId)).thenAnswer((_) async => planWith(done: true));
+        final factory = TestStoreFactory()..actionPlanRepository = repository;
+        final store = factory.initializeReduxStore(initialState: withUncheckedPlan);
+        final result = store.onChange.firstWhere((state) => state.actionPlanDeclarationState is ActionPlanDeclarationSuccessState);
+
+        store.dispatch(ActionPlanDeclareAction(actionId, date, 'Mon CV'));
+        store.dispatch(ActionPlanDeclareAction(actionId, date, 'Mon CV'));
+        await result;
+
+        verify(() => repository.sendDeclaration(loggedIn.userId()!, actionId, date: date, commentaire: 'Mon CV'))
+            .called(1);
+      });
+
+      test('carries the action id in the loading state', () async {
+        final factory = TestStoreFactory()..actionPlanRepository = repository;
+        final store = factory.initializeReduxStore(initialState: withUncheckedPlan);
+        final result = store.onChange.firstWhere((state) => state.actionPlanDeclarationState is ActionPlanDeclarationLoadingState);
+
+        store.dispatch(ActionPlanDeclareAction(actionId, date, 'Mon CV'));
+
+        expect((await result).actionPlanDeclarationState, ActionPlanDeclarationLoadingState(actionId));
       });
 
       test('keeps the plan untouched and fails with the reason when the server refuses', () async {
@@ -113,7 +163,7 @@ void main() {
 
         expect(
           state.actionPlanDeclarationState,
-          ActionPlanDeclarationFailureState(ActionPlanDeclarationFailureReason.solutionRetiree),
+          ActionPlanDeclarationFailureState(actionId, ActionPlanDeclarationFailureReason.solutionRetiree),
         );
         expect(state.actionPlanState, ActionPlanSuccessState(planWith(done: false)));
         verifyNever(() => repository.toggleDone(any()));
@@ -127,7 +177,7 @@ void main() {
 
         expect(
           state.actionPlanDeclarationState,
-          ActionPlanDeclarationFailureState(ActionPlanDeclarationFailureReason.autre),
+          ActionPlanDeclarationFailureState(actionId, ActionPlanDeclarationFailureReason.autre),
         );
         verifyNever(
           () => repository.sendDeclaration(any(), any(), date: any(named: 'date'), commentaire: any(named: 'commentaire')),
@@ -138,7 +188,7 @@ void main() {
         final factory = TestStoreFactory()..actionPlanRepository = repository;
         final store = factory.initializeReduxStore(
           initialState: withUncheckedPlan.copyWith(
-            actionPlanDeclarationState: ActionPlanDeclarationFailureState(ActionPlanDeclarationFailureReason.autre),
+            actionPlanDeclarationState: ActionPlanDeclarationFailureState(actionId, ActionPlanDeclarationFailureReason.autre),
           ),
         );
 

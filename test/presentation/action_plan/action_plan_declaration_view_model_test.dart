@@ -66,7 +66,7 @@ void main() {
       (ActionPlanDeclarationFailureReason.autre, Strings.miscellaneousErrorRetry),
     ]) {
       final viewModel = ActionPlanDeclarationViewModel.create(
-        milo(ActionPlanDeclarationFailureState(reason)).spyStore(),
+        milo(ActionPlanDeclarationFailureState(actionId, reason)).spyStore(),
         actionId,
       );
 
@@ -77,15 +77,28 @@ void main() {
 
   test('passe en chargement puis en succès', () {
     expect(
-      ActionPlanDeclarationViewModel.create(milo(ActionPlanDeclarationLoadingState()).spyStore(), actionId)
+      ActionPlanDeclarationViewModel.create(milo(ActionPlanDeclarationLoadingState(actionId)).spyStore(), actionId)
           .displayState,
       DisplayState.LOADING,
     );
     expect(
-      ActionPlanDeclarationViewModel.create(milo(ActionPlanDeclarationSuccessState()).spyStore(), actionId)
+      ActionPlanDeclarationViewModel.create(milo(ActionPlanDeclarationSuccessState(actionId)).spyStore(), actionId)
           .displayState,
       DisplayState.CONTENT,
     );
+  });
+
+  test("ignore l'état de déclaration d'une autre tâche", () {
+    for (final declaration in [
+      ActionPlanDeclarationFailureState('autre-tache', ActionPlanDeclarationFailureReason.indisponible),
+      ActionPlanDeclarationSuccessState('autre-tache'),
+      ActionPlanDeclarationLoadingState('autre-tache'),
+    ]) {
+      final viewModel = ActionPlanDeclarationViewModel.create(milo(declaration).spyStore(), actionId);
+
+      expect(viewModel.displayState, DisplayState.EMPTY);
+      expect(viewModel.messageErreur, isNull);
+    }
   });
 
   test('déclare avec le commentaire trimé en Mission Locale', () {
