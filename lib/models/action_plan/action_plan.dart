@@ -66,6 +66,7 @@ class ActionPlanAction extends Equatable {
       deepLink: json['destination'] as String?,
       serviceName: json['nomService'] as String?,
       serviceDescription: json['descriptionService'] as String?,
+      done: json['terminee'] as bool? ?? false,
     );
   }
 

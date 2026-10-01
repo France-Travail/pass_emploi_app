@@ -63,11 +63,9 @@ void main() {
                 id: 'p-134',
                 label: "Je me renseigne sur l'alternance",
                 kind: ActionPlanActionKind.link,
-                url:
-                    'https://labonnealternance.apprentissage.beta.gouv.fr/guide-alternant',
+                url: 'https://labonnealternance.apprentissage.beta.gouv.fr/guide-alternant',
                 serviceName: 'La Bonne Alternance',
-                serviceDescription:
-                    "Faciliter la recherche d'alternance pour les jeunes",
+                serviceDescription: "Faciliter la recherche d'alternance pour les jeunes",
               ),
               const ActionPlanAction(
                 id: 'c-alternance-1',
@@ -142,6 +140,69 @@ void main() {
             expect(result, isA<ActionPlanFetchFailure>());
           });
         });
+      });
+    });
+  });
+
+  group('ActionPlanRepository remote sync', () {
+    const actionId = '11111111-1111-1111-1111-111111111111';
+
+    group('sendDone', () {
+      final sut = DioRepositorySut<ActionPlanRepository>();
+      sut.givenRepository((client) => ActionPlanRepository(client, FlutterSecureStorageSpy(delay: Duration.zero)));
+      sut.when((repository) => repository.sendDone('userId', actionId, done: true));
+      sut.givenResponseCode(204);
+
+      test('request should be valid', () async {
+        await sut.expectRequestBody(
+          method: HttpMethod.patch,
+          url: '/jeunes/userId/plan-action/taches/$actionId',
+          rawBody: {'terminee': true},
+        );
+      });
+
+      test('should succeed', () async {
+        await sut.expectResult<bool>((result) => expect(result, isTrue));
+      });
+    });
+
+    group('sendDone when server fails', () {
+      final sut = DioRepositorySut<ActionPlanRepository>();
+      sut.givenRepository((client) => ActionPlanRepository(client, FlutterSecureStorageSpy(delay: Duration.zero)));
+      sut.when((repository) => repository.sendDone('userId', actionId, done: false));
+      sut.givenResponseCode(500);
+
+      test('should fail without throwing', () async {
+        await sut.expectResult<bool>((result) => expect(result, isFalse));
+      });
+    });
+
+    group('sendDelete', () {
+      final sut = DioRepositorySut<ActionPlanRepository>();
+      sut.givenRepository((client) => ActionPlanRepository(client, FlutterSecureStorageSpy(delay: Duration.zero)));
+      sut.when((repository) => repository.sendDelete('userId', actionId));
+      sut.givenResponseCode(204);
+
+      test('request should be valid', () async {
+        await sut.expectRequestBody(
+          method: HttpMethod.delete,
+          url: '/jeunes/userId/plan-action/taches/$actionId',
+        );
+      });
+
+      test('should succeed', () async {
+        await sut.expectResult<bool>((result) => expect(result, isTrue));
+      });
+    });
+
+    group('sendDelete when server fails', () {
+      final sut = DioRepositorySut<ActionPlanRepository>();
+      sut.givenRepository((client) => ActionPlanRepository(client, FlutterSecureStorageSpy(delay: Duration.zero)));
+      sut.when((repository) => repository.sendDelete('userId', actionId));
+      sut.givenResponseCode(500);
+
+      test('should fail without throwing', () async {
+        await sut.expectResult<bool>((result) => expect(result, isFalse));
       });
     });
   });
@@ -346,7 +407,10 @@ void main() {
           await _stubGenerate(
             client,
             _plan(
-              objectives: [_objectiveX(id: 'objective-x-new'), _objectiveY()],
+              objectives: [
+                _objectiveX(id: 'objective-x-new'),
+                _objectiveY(),
+              ],
             ),
           );
           final next = await repository.generate('userId', answers);
@@ -392,6 +456,50 @@ void main() {
       });
     });
 
+    test('generation without local progress keeps the server state as is', () async {
+      await _stubGenerate(client, _plan(objectives: [_objectiveX()]));
+      await repository.generate('userId', answers);
+      await repository.toggleDone('a');
+
+      await _stubGenerate(
+        client,
+        _plan(
+          objectives: [
+            _objectiveX(actions: [_actionB, _actionE]),
+          ],
+        ),
+      );
+      final next = await repository.generate('userId', answers, keepLocalProgress: false);
+
+      expect(next!.findAction('a'), isNull);
+      expect(next.findAction('b')?.done, isFalse);
+      expect(next.findAction('e')?.done, isFalse);
+    });
+
+    test('fetch reads the checked state from the server and ignores local progress', () async {
+      await _stubGenerate(client, _plan(objectives: [_objectiveX()]));
+      await repository.generate('userId', answers);
+      await repository.toggleDone('a');
+      final serverPlan = _plan(
+        objectives: [
+          _objectiveX(actions: [_actionA, _actionB.copyWith(done: true)]),
+        ],
+      );
+      when(() => client.get(any())).thenAnswer(
+        (_) async => Response<dynamic>(
+          requestOptions: RequestOptions(path: '/jeunes/userId/plan-action'),
+          statusCode: 200,
+          data: _toApiJson(serverPlan),
+        ),
+      );
+
+      final result = await repository.fetch('userId');
+
+      final plan = (result as ActionPlanFetchFound).plan;
+      expect(plan.findAction('a')?.done, isFalse);
+      expect(plan.findAction('b')?.done, isTrue);
+    });
+
     test('applies stored progress once then clears it', () async {
       await preferences.write(
         key: 'actionPlan',
@@ -419,8 +527,7 @@ void main() {
       expect(await preferences.read(key: 'actionPlanProgress'), isNull);
 
       final stored = ActionPlan.fromJson(
-        jsonDecode((await preferences.read(key: 'actionPlan'))!)
-            as Map<String, dynamic>,
+        jsonDecode((await preferences.read(key: 'actionPlan'))!) as Map<String, dynamic>,
       );
       expect(stored.findAction('a')?.done, isTrue);
       expect(stored.findAction('b'), isNull);
@@ -509,6 +616,7 @@ Map<String, dynamic> _toApiJson(ActionPlan plan) {
                   ActionPlanActionKind.app => 'NAVIGATION',
                   ActionPlanActionKind.advice => 'CONSEIL',
                 },
+                'terminee': action.done,
               },
           ],
         },

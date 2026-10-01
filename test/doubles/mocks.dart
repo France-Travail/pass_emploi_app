@@ -413,12 +413,16 @@ class MockOnboardingQuestionnaireRepository extends Mock implements OnboardingQu
 class MockActionPlanRepository extends Mock implements ActionPlanRepository {
   MockActionPlanRepository() {
     registerFallbackValue(const OnboardingQuestionnaireAnswers());
-    when(() => generate(any(), any())).thenAnswer((_) async => null);
+    when(
+      () => generate(any(), any(), keepLocalProgress: any(named: 'keepLocalProgress')),
+    ).thenAnswer((_) async => null);
     when(() => fetch(any())).thenAnswer((_) async => ActionPlanFetchNotFound());
     when(() => getStoredPlan()).thenAnswer((_) async => null);
     when(() => toggleDone(any())).thenAnswer((_) async => null);
     when(() => deleteAction(any())).thenAnswer((_) async => null);
     when(() => giveFeedback(any())).thenAnswer((_) async => null);
+    when(() => sendDone(any(), any(), done: any(named: 'done'))).thenAnswer((_) async => true);
+    when(() => sendDelete(any(), any())).thenAnswer((_) async => true);
     when(() => clear()).thenAnswer((_) async {});
   }
 }
