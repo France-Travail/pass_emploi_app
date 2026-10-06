@@ -27,7 +27,7 @@ void main() {
       expect(viewModel.subtitle, "L'app dédiée à votre accompagnement");
       expect(
         viewModel.description,
-        "Utilisez votre compte France Travail pour accéder à vos démarches, offres et rendez-vous",
+        "Utilisez votre compte France Travail pour accéder à vos messages, vos démarches, offres et rendez-vous.",
       );
     });
 
