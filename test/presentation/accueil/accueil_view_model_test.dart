@@ -64,7 +64,6 @@ void main() {
               .loggedInMiloUser()
               .showRating()
               .withAccueilMiloSuccess()
-              .withFeatureFlip(withCampagneRecrutement: true)
               .withCampagne(campagne())
               .store();
 
@@ -76,7 +75,6 @@ void main() {
         viewModel.items,
         [
           RatingAppItem(),
-          CampagneRecrutementItem(onDismiss: () {}),
           CampagneEvaluationItem(titre: "Questionnaire", description: "Super test"),
           AccueilCetteSemaineItem(
             rendezvousCount: "3",
@@ -148,7 +146,6 @@ void main() {
           givenState() //
               .loggedInPoleEmploiUser()
               .withAccueilPoleEmploiSuccess()
-              .withFeatureFlip(withCampagneRecrutement: true)
               .withCampagne(campagne())
               .store();
 
@@ -159,7 +156,6 @@ void main() {
       expect(
         viewModel.items,
         [
-          CampagneRecrutementItem(onDismiss: () {}),
           CampagneEvaluationItem(titre: "Questionnaire", description: "Super test"),
           AccueilCetteSemaineItem(
             rendezvousCount: "3",
@@ -180,7 +176,6 @@ void main() {
           givenState() //
               .loggedInPoleEmploiUser()
               .withAccueilPoleEmploiSuccessErreurDegradee()
-              .withFeatureFlip(withCampagneRecrutement: true)
               .withCampagne(campagne())
               .store();
 
@@ -192,7 +187,6 @@ void main() {
         viewModel.items,
         [
           ErrorDegradeeItem("Certaines données n'ont pas pu être récupérées"),
-          CampagneRecrutementItem(onDismiss: () {}),
           CampagneEvaluationItem(titre: "Questionnaire", description: "Super test"),
           AccueilCetteSemaineItem(
             rendezvousCount: "3",

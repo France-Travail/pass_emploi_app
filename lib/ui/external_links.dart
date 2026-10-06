@@ -1,9 +1,6 @@
 import 'package:pass_emploi_app/models/brand.dart';
 
 class ExternalLinks {
-  static final String campagneRecrutement = Brand.isCej()
-      ? "https://framaforms.org/participez-a-la-conception-de-lapplication-du-contrat-dengagement-jeune-1707239593"
-      : "https://tally.so/r/wbxAy1";
   static final String actionPlanFeedback = "https://tally.so/r/A7Xb0z";
   static const String actionPlanObjectiveFeedback = "https://tally.so/r/pb2PQZ";
   static final String proposerUneIdee = "https://tally.so/r/GxAdLL";

@@ -18,13 +18,6 @@ class Drawables {
   static String franceTravailLogoTitle =
       "${_assets}logo_france_travail_title.webp";
 
-  static String campagneRecrutementBg =
-      "${_assets}campagne_recrutement_bg.webp";
-
-  static String logoInProgress = Brand.isCej()
-      ? "${_assets}cej_in_progress.webp"
-      : "${_assets}brsa_in_progress.webp";
-
   static String blocMarqueLight = "${_assets}dsfr/bloc_marque_light.svg";
   static String blocMarqueDark = "${_assets}dsfr/bloc_marque_dark.svg";
   static String illustrationRechercheEmpty =

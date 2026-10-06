@@ -19,7 +19,6 @@ import 'package:pass_emploi_app/repositories/animations_collectives_repository.d
 import 'package:pass_emploi_app/repositories/auth/chat_security_repository.dart';
 import 'package:pass_emploi_app/repositories/auto_desinscription_repository.dart';
 import 'package:pass_emploi_app/repositories/auto_inscription_repository.dart';
-import 'package:pass_emploi_app/repositories/campagne_recrutement_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_repository.dart';
 import 'package:pass_emploi_app/repositories/chat_repository.dart';
 import 'package:pass_emploi_app/repositories/comptage_des_heures_repository.dart';
@@ -156,7 +155,6 @@ class TestStoreFactory {
   ThematiqueDemarcheRepository thematiquesDemarcheRepository = DummyThematiqueDemarcheRepository();
   TopDemarcheRepository topDemarcheRepository = DummyTopDemarcheRepository();
   MonSuiviRepository monSuiviRepository = DummyMonSuiviRepository();
-  CampagneRecrutementRepository campagneRecrutementRepository = MockCampagneRecrutementRepository();
   PreferredLoginModeRepository preferredLoginModeRepository = MockPreferredLoginModeRepository();
   InvitePrenomRepository invitePrenomRepository = MockInvitePrenomRepository();
   OnboardingRepository onboardingRepository = MockOnboardingRepository();
@@ -250,7 +248,6 @@ class TestStoreFactory {
       thematiquesDemarcheRepository,
       topDemarcheRepository,
       monSuiviRepository,
-      campagneRecrutementRepository,
       preferredLoginModeRepository,
       invitePrenomRepository,
       onboardingRepository,

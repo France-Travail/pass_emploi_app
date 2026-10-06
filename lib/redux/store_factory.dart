@@ -15,7 +15,6 @@ import 'package:pass_emploi_app/features/auto_inscription/auto_inscription_middl
 import 'package:pass_emploi_app/features/bootstrap/bootstrap_middleware.dart';
 import 'package:pass_emploi_app/features/cache/cache_invalidator_middleware.dart';
 import 'package:pass_emploi_app/features/campagne/campagne_middleware.dart';
-import 'package:pass_emploi_app/features/campagne_recrutement/campagne_recrutement_middleware.dart';
 import 'package:pass_emploi_app/features/cgu/cgu_middleware.dart';
 import 'package:pass_emploi_app/features/chat/init/chat_initializer_middleware.dart';
 import 'package:pass_emploi_app/features/chat/messages/chat_middleware.dart';
@@ -119,7 +118,6 @@ import 'package:pass_emploi_app/repositories/alerte/service_civique_alerte_repos
 import 'package:pass_emploi_app/repositories/animations_collectives_repository.dart';
 import 'package:pass_emploi_app/repositories/auth/chat_security_repository.dart';
 import 'package:pass_emploi_app/repositories/auto_inscription_repository.dart';
-import 'package:pass_emploi_app/repositories/campagne_recrutement_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_repository.dart';
 import 'package:pass_emploi_app/repositories/chat_repository.dart';
 import 'package:pass_emploi_app/repositories/comptage_des_heures_repository.dart';
@@ -254,7 +252,6 @@ class StoreFactory {
   final ThematiqueDemarcheRepository thematiquesDemarcheRepository;
   final TopDemarcheRepository topDemarcheRepository;
   final MonSuiviRepository monSuiviRepository;
-  final CampagneRecrutementRepository campagneRecrutementRepository;
   final PreferredLoginModeRepository preferredLoginModeRepository;
   final InvitePrenomRepository invitePrenomRepository;
   final OnboardingRepository onboardingRepository;
@@ -345,7 +342,6 @@ class StoreFactory {
     this.thematiquesDemarcheRepository,
     this.topDemarcheRepository,
     this.monSuiviRepository,
-    this.campagneRecrutementRepository,
     this.preferredLoginModeRepository,
     this.invitePrenomRepository,
     this.onboardingRepository,
@@ -456,7 +452,6 @@ class StoreFactory {
         SessionMiloDetailsMiddleware(sessionMiloRepository).call,
         ConnectivityMiddleware(connectivityWrapper).call,
         MonSuiviMiddleware(monSuiviRepository, remoteConfigRepository).call,
-        CampagneRecrutementMiddleware(campagneRecrutementRepository).call,
         PreferredLoginModeMiddleware(preferredLoginModeRepository).call,
         InvitePrenomMiddleware(invitePrenomRepository).call,
         OnboardingMiddleware(onboardingRepository, pushNotificationManager).call,

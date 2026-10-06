@@ -76,12 +76,11 @@ class _Scaffold extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: Margins.spacing_s),
-                GestureDetector(
-                  onDoubleTap: () => Navigator.push(context, ExplicationModeDemoPage.materialPageRoute()),
+                _ModeDemoTripleTap(
                   child: Center(
                     child: AppLogo(
                       width: 120,
-                      color: viewModel.withThemedAppLogo ? DsfrColorDecisions.textTitleGrey(context) : null,
+                      color: viewModel.withThemedAppLogo ? AppColors.primary : null,
                     ),
                   ),
                 ),
@@ -155,6 +154,45 @@ class _Scaffold extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ModeDemoTripleTap extends StatefulWidget {
+  const _ModeDemoTripleTap({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_ModeDemoTripleTap> createState() => _ModeDemoTripleTapState();
+}
+
+class _ModeDemoTripleTapState extends State<_ModeDemoTripleTap> {
+  static const int _requiredTaps = 3;
+  static const Duration _maxDelayBetweenTaps = Duration(milliseconds: 400);
+
+  int _tapCount = 0;
+  DateTime? _lastTapAt;
+
+  void _onTap() {
+    final now = clock.now();
+    final lastTapAt = _lastTapAt;
+    final isSameSequence = lastTapAt != null && now.difference(lastTapAt) <= _maxDelayBetweenTaps;
+    _tapCount = isSameSequence ? _tapCount + 1 : 1;
+    _lastTapAt = now;
+    if (_tapCount < _requiredTaps) return;
+
+    _tapCount = 0;
+    _lastTapAt = null;
+    Navigator.push(context, ExplicationModeDemoPage.materialPageRoute());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: _onTap,
+      excludeFromSemantics: true,
+      child: widget.child,
     );
   }
 }

@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pass_emploi_app/features/accueil/accueil_actions.dart';
 import 'package:pass_emploi_app/features/accueil/accueil_state.dart';
-import 'package:pass_emploi_app/features/campagne_recrutement/campagne_recrutement_actions.dart';
 import 'package:pass_emploi_app/features/communications/communications_state.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_state.dart';
@@ -112,7 +111,6 @@ List<AccueilItem> _items(Store<AppState> store) {
     _onboardingItem(store.state),
     ..._remoteCampagneAccueilItems(store, store.state),
     _ratingAppItem(store.state),
-    _campagneRecrutementItem(store, store.state),
     _campagneEvaluationItem(store.state),
     _offreSuivies(store),
     _cetteSemaineItem(user, accueilState),
@@ -263,13 +261,6 @@ AccueilItem? _campagneEvaluationItem(AppState state) {
   final campagne = state.campagneState.campagne;
   if (campagne != null) {
     return CampagneEvaluationItem(titre: campagne.titre, description: campagne.description);
-  }
-  return null;
-}
-
-AccueilItem? _campagneRecrutementItem(Store<AppState> store, AppState state) {
-  if (state.featureFlipState.featureFlip.withCampagneRecrutement) {
-    return CampagneRecrutementItem(onDismiss: () => store.dispatch(CampagneRecrutementDismissAction()));
   }
   return null;
 }

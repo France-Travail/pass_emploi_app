@@ -1,12 +1,6 @@
 import 'package:pass_emploi_app/models/accueil_zenith_message.dart';
 import 'package:pass_emploi_app/models/login_page_remote_message.dart';
 
-class FeatureFlipCampagneRecrutementAction {
-  final bool withCampagneRecrutement;
-
-  FeatureFlipCampagneRecrutementAction(this.withCampagneRecrutement);
-}
-
 class FeatureFlipMonSuiviDemarchesKoMessageAction {
   final String? withMonSuiviDemarchesKoMessage;
 

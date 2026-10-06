@@ -445,7 +445,7 @@ class InviteObjectiveFeedback extends StatelessWidget {
                       label: Strings.inviteAccueilObjectiveFeedbackYes,
                       icon: DsfrIcons.systemThumbUpLine,
                       variant: DsfrButtonVariant.tertiary,
-                      size: DsfrComponentSize.lg,
+                      size: DsfrComponentSize.md,
                       onPressed: () => _answer(useful: true),
                     ),
                     // A11y : le bouton ouvre le navigateur, ce que son libellé ne dit pas.
@@ -456,7 +456,7 @@ class InviteObjectiveFeedback extends StatelessWidget {
                           label: Strings.inviteAccueilObjectiveFeedbackNo,
                           icon: DsfrIcons.systemThumbDownLine,
                           variant: DsfrButtonVariant.tertiary,
-                          size: DsfrComponentSize.lg,
+                          size: DsfrComponentSize.md,
                           onPressed: () => _answer(useful: false),
                         ),
                       ),

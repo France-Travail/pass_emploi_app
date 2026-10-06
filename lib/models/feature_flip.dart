@@ -3,14 +3,12 @@ import 'package:pass_emploi_app/models/accueil_zenith_message.dart';
 import 'package:pass_emploi_app/models/login_page_remote_message.dart';
 
 class FeatureFlip extends Equatable {
-  final bool withCampagneRecrutement;
   final String? withMonSuiviDemarchesKoMessage;
   final LoginPageRemoteMessage? loginPageMessage;
   final AccueilZenithMessage? accueilZenithMessage;
   final bool isActualiteMissionLocaleEnabled;
   final String? inviteAccessPassword;
   FeatureFlip({
-    required this.withCampagneRecrutement,
     required this.withMonSuiviDemarchesKoMessage,
     required this.loginPageMessage,
     required this.accueilZenithMessage,
@@ -20,7 +18,6 @@ class FeatureFlip extends Equatable {
 
   factory FeatureFlip.initial() {
     return FeatureFlip(
-      withCampagneRecrutement: false,
       withMonSuiviDemarchesKoMessage: null,
       loginPageMessage: null,
       accueilZenithMessage: null,
@@ -30,7 +27,6 @@ class FeatureFlip extends Equatable {
   }
 
   FeatureFlip copyWith({
-    bool? withCampagneRecrutement,
     String? withMonSuiviDemarchesKoMessage,
     LoginPageRemoteMessage? loginPageMessage,
     AccueilZenithMessage? accueilZenithMessage,
@@ -38,7 +34,6 @@ class FeatureFlip extends Equatable {
     String? inviteAccessPassword,
   }) {
     return FeatureFlip(
-      withCampagneRecrutement: withCampagneRecrutement ?? this.withCampagneRecrutement,
       withMonSuiviDemarchesKoMessage: withMonSuiviDemarchesKoMessage ?? this.withMonSuiviDemarchesKoMessage,
       loginPageMessage: loginPageMessage ?? this.loginPageMessage,
       accueilZenithMessage: accueilZenithMessage ?? this.accueilZenithMessage,
@@ -49,7 +44,6 @@ class FeatureFlip extends Equatable {
 
   @override
   List<Object?> get props => [
-    withCampagneRecrutement,
     withMonSuiviDemarchesKoMessage,
     loginPageMessage,
     accueilZenithMessage,

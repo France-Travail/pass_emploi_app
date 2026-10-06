@@ -32,14 +32,6 @@ class RemoteConfigRepository {
     return _firebaseRemoteConfig.getInt("mon_suivi_ft_start_date_in_months");
   }
 
-  String? lastCampagneRecrutementId() {
-    if (_firebaseRemoteConfig == null) return null;
-
-    // millisecond since epoch
-    final value = _firebaseRemoteConfig.getInt("campagne_recrutement_date_fin");
-    return value > DateTime.now().millisecondsSinceEpoch ? value.toString() : null;
-  }
-
   List<RemoteCampagneAccueil> campagnesAccueil() {
     // try catch because campagnes_accueil is manually set in Firebase Remote Config
     try {

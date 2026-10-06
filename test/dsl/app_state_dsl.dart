@@ -135,14 +135,12 @@ extension AppStateDSL on AppState {
   AppState withDemoMode() => copyWith(demoState: true);
 
   AppState withFeatureFlip({
-    bool? withCampagneRecrutement,
     bool? isActualiteMissionLocaleEnabled,
     String? inviteAccessPassword,
   }) {
     return copyWith(
       featureFlipState: FeatureFlipState(
         FeatureFlip.initial().copyWith(
-          withCampagneRecrutement: withCampagneRecrutement,
           isActualiteMissionLocaleEnabled: isActualiteMissionLocaleEnabled,
           inviteAccessPassword: inviteAccessPassword,
         ),

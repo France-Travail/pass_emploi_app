@@ -43,7 +43,6 @@ import 'package:pass_emploi_app/repositories/auth/chat_security_repository.dart'
 import 'package:pass_emploi_app/repositories/auth/logout_repository.dart';
 import 'package:pass_emploi_app/repositories/auto_desinscription_repository.dart';
 import 'package:pass_emploi_app/repositories/auto_inscription_repository.dart';
-import 'package:pass_emploi_app/repositories/campagne_recrutement_repository.dart';
 import 'package:pass_emploi_app/repositories/campagne_repository.dart';
 import 'package:pass_emploi_app/repositories/chat_repository.dart';
 import 'package:pass_emploi_app/repositories/communications_repository.dart';
@@ -309,7 +308,6 @@ class AppInitializer {
       thematiqueDemarcheRepository,
       TopDemarcheRepository(),
       MonSuiviRepository(dioClient, crashlytics),
-      CampagneRecrutementRepository(remoteConfigRepository, securedPreferences),
       PreferredLoginModeRepository(securedPreferences),
       InvitePrenomRepository(dioClient, crashlytics),
       OnboardingRepository(securedPreferences),

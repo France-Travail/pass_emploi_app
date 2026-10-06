@@ -17,7 +17,6 @@ import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.
 import 'package:pass_emploi_app/repositories/actualite_mission_locale_repository.dart';
 import 'package:pass_emploi_app/repositories/auto_desinscription_repository.dart';
 import 'package:pass_emploi_app/repositories/auto_inscription_repository.dart';
-import 'package:pass_emploi_app/repositories/campagne_recrutement_repository.dart';
 import 'package:pass_emploi_app/repositories/communications_repository.dart';
 import 'package:pass_emploi_app/repositories/comptage_des_heures_repository.dart';
 import 'package:pass_emploi_app/repositories/configuration_application_repository.dart';
@@ -227,23 +226,6 @@ class MockUserActionRepository extends Mock implements UserActionRepository {}
 
 class MockEvenementEngagementRepository extends Mock implements EvenementEngagementRepository {}
 
-class MockCampagneRecrutementRepository extends Mock implements CampagneRecrutementRepository {
-  MockCampagneRecrutementRepository() {
-    when(() => shouldShowCampagneRecrutement()).thenAnswer((_) async => false);
-    when(() => dismissCampagneRecrutement()).thenAnswer((_) async => true);
-    when(() => isFirstLaunch()).thenAnswer((_) async => true);
-    when(() => setCampagneRecrutementInitialRead()).thenAnswer((_) async => true);
-  }
-
-  void withIsFirstLaunch(bool value) {
-    when(() => isFirstLaunch()).thenAnswer((_) async => value);
-  }
-
-  void withShouldShowCampagneRecrutement(bool value) {
-    when(() => shouldShowCampagneRecrutement()).thenAnswer((_) async => value);
-  }
-}
-
 class MockInvitePrenomRepository extends Mock implements InvitePrenomRepository {
   MockInvitePrenomRepository() {
     when(() => getPrenom(any())).thenAnswer((_) async => 'Invité');
@@ -274,7 +256,6 @@ class MockOnboardingRepository extends Mock implements OnboardingRepository {
 class MockRemoteConfigRepository extends Mock implements RemoteConfigRepository {
   MockRemoteConfigRepository() {
     when(() => maxRefreshFailuresBeforeLogout()).thenReturn(20);
-    when(() => lastCampagneRecrutementId()).thenReturn(null);
     when(() => monSuiviPoleEmploiStartDateInMonths()).thenReturn(1);
     when(() => campagnesAccueil()).thenReturn([]);
     when(() => softUpdateVersion(isAndroid: any(named: 'isAndroid'))).thenReturn(null);

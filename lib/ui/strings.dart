@@ -61,9 +61,7 @@ class Strings {
   static String refuserLabel = "Refuser";
   static String consulter = "Consulter";
   static String copie = "Copié";
-  static String notConnected = Brand.isPassEmploi()
-      ? "Vous êtes hors connexion"
-      : "Tu es hors connexion";
+  static String notConnected = Brand.isPassEmploi() ? "Vous êtes hors connexion" : "Tu es hors connexion";
   static const String mandatoryFields = "Les champs marqués d’une * sont obligatoires.";
   static const String allMandatoryFields = "Tous les champs sont obligatoires.";
   static String duplicate = "Dupliquer";
@@ -94,9 +92,7 @@ class Strings {
   static String menuEvenements = "Événements";
 
   // Chat
-  static String yourMessage = Brand.isPassEmploi()
-      ? "Votre message…"
-      : "Ton message…";
+  static String yourMessage = Brand.isPassEmploi() ? "Votre message…" : "Ton message…";
   static String yourConseiller = "Ton conseiller";
   static String today = "Aujourd'hui";
   static String edited = "Modifié";
@@ -217,7 +213,7 @@ class Strings {
   static String loginPassEmploiTitle = "Bienvenue";
   static String loginPassEmploiSubtitle = "L'app dédiée à votre accompagnement";
   static String loginPassEmploiDescription =
-      "Utilisez votre compte France Travail pour accéder à vos démarches, offres et rendez-vous";
+      "Utilisez votre compte France Travail pour accéder à vos messages, vos démarches, offres et rendez-vous.";
   static String loginInviteAccessTitle = "Accès invité";
   static String loginInviteAccessPasswordLabel = "Mot de passe";
   static String loginInviteAccessWrongPassword = "Mot de passe incorrect";
@@ -273,9 +269,7 @@ class Strings {
     " (CDI ou CDD de longue durée)",
   ];
 
-  static String installOnboardingSection = Brand.isPassEmploi()
-      ? "Installez l’application"
-      : "Installe l’application";
+  static String installOnboardingSection = Brand.isPassEmploi() ? "Installez l’application" : "Installe l’application";
   static String messageOnboardingSection = Brand.isPassEmploi()
       ? "Envoyez un message à votre conseiller"
       : "Envoie un message à ton conseiller";
@@ -284,9 +278,7 @@ class Strings {
   static String demarcheOnboardingSection = Brand.isPassEmploi()
       ? "Créez une démarche dans l’agenda"
       : "Crée une démarche dans l’agenda";
-  static String offreOnboardingSection = Brand.isPassEmploi()
-      ? "Recherchez une offre"
-      : "Recherche une offre";
+  static String offreOnboardingSection = Brand.isPassEmploi() ? "Recherchez une offre" : "Recherche une offre";
   static String evenementOnboardingSection = Brand.isPassEmploi()
       ? "Recherchez un événement"
       : "Recherche un événement";
@@ -300,9 +292,7 @@ class Strings {
   static String onboardingShowcaseMessageTitle = Brand.isPassEmploi()
       ? "Saluez votre conseiller."
       : "Salue ton conseiller.";
-  static String onboardingShowcaseActionTitle = Brand.isPassEmploi()
-      ? "Lancez-vous !"
-      : "Lance-toi !";
+  static String onboardingShowcaseActionTitle = Brand.isPassEmploi() ? "Lancez-vous !" : "Lance-toi !";
   static String onboardingShowcaseOffreTitle = "Un emploi en tête?";
   static String onboardingShowcaseEvenementTitle = Brand.isPassEmploi()
       ? "Explorez les événements en lien avec votre projet pro"
@@ -601,14 +591,6 @@ class Strings {
   static String accueilOutilsSection = "Outils";
   static String accueilOutilsSectionDescription = "Découvre des outils pour t'aider dans tes projets";
   static String accueilVoirLesOutils = "Voir tous les outils";
-  static String accueilCampagneRecrutementLabelCej = "Aide-nous à améliorer l’application du CEJ\u{00A0}!";
-  static String accueilCampagneRecrutementLabelPassEmploi = Brand.isPassEmploi()
-      ? "Aidez-nous à améliorer l’application pass emploi\u{00A0}!"
-      : "Aide-nous à améliorer l’application pass emploi\u{00A0}!";
-  static String accueilCampagneRecrutementLabel = Brand.isCej()
-      ? accueilCampagneRecrutementLabelCej
-      : accueilCampagneRecrutementLabelPassEmploi;
-  static String accueilCampagneRecrutementPressedTip = "Participer";
 
   // Comptage des heures
   static String comptageDesHeures0To5 = "Bon début, continue comme ça\u{00A0}!\u{00A0}💪";
@@ -699,9 +681,8 @@ class Strings {
   static String annulerInscription = "Annuler mon inscription";
   static String withAnimateurTitle = "Animateur de la session";
 
-  static String rendezvousWithConseiller(String conseiller) => Brand.isPassEmploi()
-      ? "votre conseiller $conseiller"
-      : "ton conseiller $conseiller";
+  static String rendezvousWithConseiller(String conseiller) =>
+      Brand.isPassEmploi() ? "votre conseiller $conseiller" : "ton conseiller $conseiller";
 
   static String rendezvousCreateur(String createur) {
     return Brand.isPassEmploi()
@@ -732,9 +713,7 @@ class Strings {
   static String evaluationSuccessfullySent = Brand.isPassEmploi()
       ? "Merci pour vos précieux retours\u{00A0}!"
       : "Merci pour tes précieux retours\u{00A0}!";
-  static String pourquoiHintText = Brand.isPassEmploi()
-      ? "Dites-nous pourquoi..."
-      : "Dis-nous pourquoi...";
+  static String pourquoiHintText = Brand.isPassEmploi() ? "Dites-nous pourquoi..." : "Dis-nous pourquoi...";
 
   // User action form
   static const String createActionAppBarTitle = 'Créer une action';
@@ -1045,22 +1024,16 @@ class Strings {
   static String modifiedBy = "Modifiée le ";
   static String createdBy = "Créée le ";
   static String par = " par ";
-  static String votreConseiller = Brand.isPassEmploi()
-      ? "votre conseiller"
-      : "ton conseiller";
+  static String votreConseiller = Brand.isPassEmploi() ? "votre conseiller" : "ton conseiller";
   static const String late = "En retard : ";
-  static String createDemarcheAppBarTitle = Brand.isPassEmploi()
-      ? "Créer vos démarches"
-      : "Créer tes démarches";
+  static String createDemarcheAppBarTitle = Brand.isPassEmploi() ? "Créer vos démarches" : "Créer tes démarches";
   static const String createOneDemarcheAppBarTitle = "Créer une démarche";
   static const String commentaire = "Commentaire";
   static const String descriptionDemarche = "Décrire la démarche";
   static const String caracteres255 = "255 caractères maximum";
   static const String quand = "Quand";
   static const String selectEcheance = "Sélectionner une date d'échéance";
-  static String addADemarche = Brand.isPassEmploi()
-      ? "Créer vos démarches"
-      : "Créer tes démarches";
+  static String addADemarche = Brand.isPassEmploi() ? "Créer vos démarches" : "Créer tes démarches";
   static const String createDemarcheTitle = "Création d'une démarche";
   static const String createDemarcheStep2EmptyTitle = "Aucune démarche ne correspond à ta recherche";
 
@@ -1072,12 +1045,8 @@ class Strings {
       "Sélectionne une démarche ou crée une démarche personnalisée";
   static const String createDemarchePersonnaliseeTitle = "Créer une démarche personnalisée";
   static const String descriptionDemarchePersonnaliseeLabel = "Description de la démarche (obligatoire)";
-  static String selectDemarche = Brand.isPassEmploi()
-      ? "Sélectionnez la démarche"
-      : "Sélectionne la démarche";
-  static String selectMoyen = Brand.isPassEmploi()
-      ? "Sélectionnez le moyen"
-      : "Sélectionne le moyen";
+  static String selectDemarche = Brand.isPassEmploi() ? "Sélectionnez la démarche" : "Sélectionne la démarche";
+  static String selectMoyen = Brand.isPassEmploi() ? "Sélectionnez le moyen" : "Sélectionne le moyen";
   static const String addALaDemarche = "Créer la démarche";
   static const String validateLaDemarche = "Valider ma démarche";
   static const String searchDemarcheHint = "Renseigne un mot clé pour rechercher une démarche à créer";
@@ -1158,9 +1127,7 @@ class Strings {
   static String dateShortMandatory = Brand.isPassEmploi()
       ? "Choisissez une date (obligatoire)"
       : "Choisis une date (obligatoire)";
-  static String thematiquesDemarcheDateShort = Brand.isPassEmploi()
-      ? "Choisissez une date"
-      : "Choisis une date";
+  static String thematiquesDemarcheDateShort = Brand.isPassEmploi() ? "Choisissez une date" : "Choisis une date";
   static String thematiquesDemarchePressedTip = "Parcourir les démarches";
   static String thematiquesErrorTitle = "Il y a un problème de notre côté\u{00A0}!";
   static String thematiquesErrorSubtitle = Brand.isPassEmploi()
@@ -1169,9 +1136,7 @@ class Strings {
   static String otherDemarche = "Autre démarche";
 
   // IA FT
-  static String iaFtStep2Title = Brand.isPassEmploi()
-      ? "Décrivez vos démarches"
-      : "Décris tes démarches";
+  static String iaFtStep2Title = Brand.isPassEmploi() ? "Décrivez vos démarches" : "Décris tes démarches";
   static String iaFtStep2Mandatory = "Obligatoire";
   static String iaFtStep2Warning = Brand.isPassEmploi()
       ? "Ne renseignez aucune donnée sensible"
@@ -1216,9 +1181,7 @@ class Strings {
   static String iaDemarchesAccueilHint = "Créer tes démarches avec l’IA";
 
   static String thematiquesDemarcheButton = "Accéder aux thématiques";
-  static String iaFtEmptyError = Brand.isPassEmploi()
-      ? "Décrivez vos démarches"
-      : "Décris tes démarches";
+  static String iaFtEmptyError = Brand.isPassEmploi() ? "Décrivez vos démarches" : "Décris tes démarches";
 
   // Recherche
   static String derniereRecherche = "Recherches récentes";
@@ -1232,9 +1195,7 @@ class Strings {
   static String rechercheHomeOffresImmersionSubtitle = "Découvrir un métier";
   static String rechercheHomeOffresServiceCiviqueTitle = "Service civique";
   static String rechercheHomeOffresServiceCiviqueSubtitle = "Missions d’engagement";
-  static String rechercheHomeCriteresTitle = Brand.isPassEmploi()
-      ? "Votre recherche"
-      : "Ta recherche";
+  static String rechercheHomeCriteresTitle = Brand.isPassEmploi() ? "Votre recherche" : "Ta recherche";
   static String rechercheHomeExplorerParType = "Explorer par type";
   static String rechercheHomeCriteresMetierVide = "Aucun métier renseigné";
   static String rechercheHomeCriteresLieuVide = "Aucun lieu renseigné";
@@ -1400,11 +1361,11 @@ class Strings {
       "Cette entreprise recherche activement des candidats à l’immersion. Contacte-la en expliquant ton projet professionnel et tes motivations.";
   static String immersionDescriptionLabel = Brand.isPassEmploi()
       ? "Si l’entreprise est d’accord pour vous accueillir :\n\n"
-      "· Prévenez votre conseiller\n"
-      "· Remplissez une convention d’immersion avec lui"
+            "· Prévenez votre conseiller\n"
+            "· Remplissez une convention d’immersion avec lui"
       : "Si l’entreprise est d’accord pour t'accueillir :\n\n"
-      "· Préviens ton conseiller\n"
-      "· Remplis une convention d’immersion avec lui";
+            "· Préviens ton conseiller\n"
+            "· Remplis une convention d’immersion avec lui";
   static String immersionContactBlocTitle = "Contact";
   static String immersionLocationButton = "Localiser l'entreprise";
   static String immersionEmailButton = "Envoyer un e-mail";
@@ -1600,9 +1561,8 @@ class Strings {
   static String myAccountLabel = "Mon compte";
   static String modifyMyInformation = "Modifier mes informations";
   static String emailAddressAccountLabel = "Adresse mail du compte";
-  static String conseillerTileSubtitle(String date) => Brand.isPassEmploi()
-      ? "Votre conseiller depuis le $date"
-      : "Ton conseiller depuis le $date";
+  static String conseillerTileSubtitle(String date) =>
+      Brand.isPassEmploi() ? "Votre conseiller depuis le $date" : "Ton conseiller depuis le $date";
   static String cvTileSubtitle = Brand.isPassEmploi()
       ? "Télécharger vos CV France Travail"
       : "Télécharger tes CV France Travail";
@@ -1639,12 +1599,8 @@ class Strings {
   static String suppressionAccountLabel = Brand.isCej()
       ? _CejStrings.suppressionAccountLabel
       : _PassEmploiStrings.suppressionAccountLabel;
-  static String activityShareLabel = Brand.isPassEmploi()
-      ? "Partager votre activité"
-      : "Partager ton activité";
-  static String activitySharePageTitle = Brand.isPassEmploi()
-      ? "Partage de votre activité"
-      : "Partage de ton activité";
+  static String activityShareLabel = Brand.isPassEmploi() ? "Partager votre activité" : "Partager ton activité";
+  static String activitySharePageTitle = Brand.isPassEmploi() ? "Partage de votre activité" : "Partage de ton activité";
   static String notificationsLabel = "Gérer les notifications";
 
   static String partageFavorisEnabled(bool enabled) =>
@@ -1672,13 +1628,13 @@ class Strings {
 
   static List<String> warningPointsPoleEmploi = Brand.isPassEmploi()
       ? [
-    "vos messages avec votre conseiller",
-    "vos recherches et offres sauvegardées",
-  ]
+          "vos messages avec votre conseiller",
+          "vos recherches et offres sauvegardées",
+        ]
       : [
-    "tes messages avec ton conseiller",
-    "tes recherches et offres sauvegardées",
-  ];
+          "tes messages avec ton conseiller",
+          "tes recherches et offres sauvegardées",
+        ];
   static String lastWarningBeforeSuppression = Brand.isPassEmploi()
       ? "Tapez “supprimer” pour confirmer la suppression de votre compte."
       : "Tape “supprimer” pour confirmer la suppression de ton compte.";
@@ -1752,9 +1708,7 @@ class Strings {
   static String contactPageBody1 = Brand.isCej()
       ? "L’équipe technique de l’application CEJ est en charge du développement de l’application."
       : "L’équipe technique de l’application pass emploi est en charge du développement de l’application.";
-  static String contactPageBody2 = Brand.isPassEmploi()
-      ? "Contactez-nous pour :"
-      : "Contacte-nous pour :";
+  static String contactPageBody2 = Brand.isPassEmploi() ? "Contactez-nous pour :" : "Contacte-nous pour :";
   static String contactPageBody3 = Brand.isCej()
       ? "Pour toutes les informations et les problèmes liés au Contrat d’Engagement Jeune, contacte ton conseiller."
       : "Pour toutes les informations et les problèmes liés à votre dispositif d'accompagnement, veuillez contacter votre conseiller.";
@@ -1846,9 +1800,8 @@ class Strings {
   static String modeDemoExplicationChoix = "Accéder au mode démo";
 
   // Campagne
-  static String campagneTitle(int page, int count) => Brand.isPassEmploi()
-      ? "Votre expérience $page/$count"
-      : "Ton expérience $page/$count";
+  static String campagneTitle(int page, int count) =>
+      Brand.isPassEmploi() ? "Votre expérience $page/$count" : "Ton expérience $page/$count";
 
   // Developer options
   static String developerOptions = 'Options développeurs';
@@ -1930,9 +1883,7 @@ class Strings {
   static String eventEmploiDetailsAppBarTitle = "Détails de l’événement";
   static String eventEmploiDetailsPartagerConseiller = "Partager l'événement à mon conseiller";
   static String eventEmploiDetailsInscription = "Je m'inscris";
-  static String eventPlaceholderTitle = Brand.isPassEmploi()
-      ? "Trouvez un événement"
-      : "Trouve un événement";
+  static String eventPlaceholderTitle = Brand.isPassEmploi() ? "Trouvez un événement" : "Trouve un événement";
   static String eventPlaceholderSubtitle = Brand.isPassEmploi()
       ? "Commencez votre recherche en remplissant les champs ci-dessus."
       : "Commence ta recherche en remplissant les champs ci-dessus.";
@@ -2027,9 +1978,7 @@ class Strings {
   static String postulerTitle = Brand.isPassEmploi()
       ? "Récupérez votre CV sur votre téléphone"
       : "Récupère ton CV sur ton téléphone";
-  static String postulerContinueButton = Brand.isPassEmploi()
-      ? "Continuez vers l’offre"
-      : "Continue vers l’offre";
+  static String postulerContinueButton = Brand.isPassEmploi() ? "Continuez vers l’offre" : "Continue vers l’offre";
 
   // Suggestions alertes location form
   static String suggestionLocalisationAppBarTitle = Brand.isPassEmploi()
@@ -2050,19 +1999,19 @@ class Strings {
   static String cguUpdateRequiredTitle = "Mise à jour des Conditions Générales d'Utilisation (CGU)";
   static List<String> cguNeverAcceptedDescription = Brand.isPassEmploi()
       ? [
-    "L’utilisation de notre service est soumise à l’acceptation préalable de nos ",
-    "↗ Conditions Générales d’Utilisation",
-    ". Ces conditions définissent ",
-    "vos droits et obligations en tant qu'utilisateur ",
-    "de notre application.",
-  ]
+          "L’utilisation de notre service est soumise à l’acceptation préalable de nos ",
+          "↗ Conditions Générales d’Utilisation",
+          ". Ces conditions définissent ",
+          "vos droits et obligations en tant qu'utilisateur ",
+          "de notre application.",
+        ]
       : [
-    "L’utilisation de notre service est soumise à l’acception préalable de nos ",
-    "↗ Conditions Générales d’Utilisation",
-    ". Ces conditions définissent ",
-    "tes droits et obligations en tant qu'utilisateur ",
-    "de notre application.",
-  ];
+          "L’utilisation de notre service est soumise à l’acception préalable de nos ",
+          "↗ Conditions Générales d’Utilisation",
+          ". Ces conditions définissent ",
+          "tes droits et obligations en tant qu'utilisateur ",
+          "de notre application.",
+        ];
   static List<String> cguUpdateRequiredDescription = [
     "Nous avons mis à jour nos CGU le ",
     ". L’utilisation de notre service est soumise à l’acception préalable de nos ",
@@ -2089,9 +2038,7 @@ class Strings {
   static String feedbackBad = "Pas d’accord";
   static String feedbackNeutral = "Neutre";
   static String feedbackGood = "D’accord";
-  static String feedbackThanks = Brand.isPassEmploi()
-      ? "Merci pour votre retour !"
-      : "Merci pour ton retour !";
+  static String feedbackThanks = Brand.isPassEmploi() ? "Merci pour votre retour !" : "Merci pour ton retour !";
 
   static String feedbackProvenanceOffre(String provenance) =>
       "Connaître la source d’une offre ($provenance, etc) m’intéresse.";
@@ -2169,14 +2116,11 @@ class Strings {
   static String feedbackCommentaire = Brand.isPassEmploi()
       ? "Dites-nous pourquoi vous avez attribué cette note\u{00A0}?"
       : "Dis-nous pourquoi tu as attribué cette note\u{00A0}?";
-  static String submitFeedback = Brand.isPassEmploi()
-      ? "Soumettre votre réponse"
-      : "Soumettre ta réponse";
+  static String submitFeedback = Brand.isPassEmploi() ? "Soumettre votre réponse" : "Soumettre ta réponse";
 
   static String removeDistance(int value) => 'Diminuer la distance de $value km';
 
   static String addDistance(int value) => 'Augmenter la distance de $value km';
-
 
   static String listOffres = "Liste des offres";
 
@@ -2209,27 +2153,19 @@ class Strings {
   static String offreSuivieConfirmationPageDescription = Brand.isPassEmploi()
       ? "👏 Bravo pour votre engagement !"
       : "👏 Bravo pour ton engagement !";
-  static String youConsultedThisOfferAt(String timeAgo) => Brand.isPassEmploi()
-      ? "Vous avez consulté cette offre $timeAgo"
-      : "Tu as consulté cette offre $timeAgo";
-  static String youSavedThisOfferAt(String timeAgo) => Brand.isPassEmploi()
-      ? "Vous avez enregistré cette offre $timeAgo"
-      : "Tu as enregistré cette offre $timeAgo";
-  static String ouEnEtesVous = Brand.isPassEmploi()
-      ? "Où en êtes-vous ?"
-      : "Où en es-tu ?";
+  static String youConsultedThisOfferAt(String timeAgo) =>
+      Brand.isPassEmploi() ? "Vous avez consulté cette offre $timeAgo" : "Tu as consulté cette offre $timeAgo";
+  static String youSavedThisOfferAt(String timeAgo) =>
+      Brand.isPassEmploi() ? "Vous avez enregistré cette offre $timeAgo" : "Tu as enregistré cette offre $timeAgo";
+  static String ouEnEtesVous = Brand.isPassEmploi() ? "Où en êtes-vous ?" : "Où en es-tu ?";
 
   static String jaiPostule = "J’ai postulé";
   static String caMinteresse = "Ça m’intéresse";
   static String notYetPostuled = "Je n'ai pas encore postulé";
   static String caNeMinteressePas = "Ça ne m’intéresse plus";
   static String seeNextOffer = "Voir l’offre suivante";
-  static String merciPourVotreReponse = Brand.isPassEmploi()
-      ? "Merci pour votre réponse"
-      : "Merci pour ta réponse";
-  static String suivezVosOffres = Brand.isPassEmploi()
-      ? "Suivez vos offres"
-      : "Suis tes offres";
+  static String merciPourVotreReponse = Brand.isPassEmploi() ? "Merci pour votre réponse" : "Merci pour ta réponse";
+  static String suivezVosOffres = Brand.isPassEmploi() ? "Suivez vos offres" : "Suis tes offres";
   static String suivezVosOffresDescription = Brand.isPassEmploi()
       ? "Retrouvez ici les offres auxquelles vous avez postulé"
       : "Retrouve ici les offres auxquelles tu as postulé";

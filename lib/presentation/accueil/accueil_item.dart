@@ -96,12 +96,6 @@ class CampagneEvaluationItem extends AccueilItem {
   List<Object?> get props => [titre, description];
 }
 
-class CampagneRecrutementItem extends AccueilItem {
-  final void Function() onDismiss;
-
-  CampagneRecrutementItem({required this.onDismiss});
-}
-
 class RatingAppItem extends AccueilItem {}
 
 class RemoteCampagneAccueilItem extends AccueilItem {
