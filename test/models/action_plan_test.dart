@@ -201,6 +201,54 @@ void main() {
       expect(migrated.forObjective('objective-y').deletedActionIds, {'c'});
     });
   });
+
+  group('ActionPlanAction déclaration', () {
+    test('fromApiJson lit declarationRequise et categorie', () {
+      final action = ActionPlanAction.fromApiJson({
+        'id': 't1',
+        'libelle': 'Je crée mon CV',
+        'type': 'CONSEIL',
+        'terminee': false,
+        'declarationRequise': true,
+        'categorie': 'Emploi',
+      });
+
+      expect(action.declarationRequise, isTrue);
+      expect(action.categorie, 'Emploi');
+    });
+
+    test('fromApiJson sans les champs donne false et null', () {
+      final action = ActionPlanAction.fromApiJson({'id': 't1', 'libelle': 'A', 'type': 'CONSEIL'});
+
+      expect(action.declarationRequise, isFalse);
+      expect(action.categorie, isNull);
+    });
+
+    test('toJson puis fromJson conserve les deux champs', () {
+      const action = ActionPlanAction(
+        id: 't1',
+        label: 'A',
+        kind: ActionPlanActionKind.advice,
+        declarationRequise: true,
+        categorie: 'Mes candidatures',
+      );
+
+      expect(ActionPlanAction.fromJson(action.toJson()), action);
+    });
+
+    test('copyWith conserve les deux champs', () {
+      const action = ActionPlanAction(
+        id: 't1',
+        label: 'A',
+        kind: ActionPlanActionKind.advice,
+        declarationRequise: true,
+        categorie: 'Emploi',
+      );
+
+      expect(action.copyWith(done: true).declarationRequise, isTrue);
+      expect(action.copyWith(done: true).categorie, 'Emploi');
+    });
+  });
 }
 
 const _actionA = ActionPlanAction(

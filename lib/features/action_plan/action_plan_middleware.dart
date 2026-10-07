@@ -1,4 +1,5 @@
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_declaration_state.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_tracking.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
@@ -68,6 +69,35 @@ class ActionPlanMiddleware extends MiddlewareClass<AppState> {
       if (plan != null) {
         store.dispatch(ActionPlanSuccessAction(plan));
         _track(before, plan, action.actionId, deleted: true);
+      }
+    } else if (action is ActionPlanDeclareAction) {
+      final declaration = store.state.actionPlanDeclarationState;
+      if (declaration is ActionPlanDeclarationLoadingState && declaration.actionId == action.actionId) return;
+      final before = _currentPlan(store);
+      final userId = _persistedPlanUserId(store);
+      if (userId == null || before?.findAction(action.actionId) == null) {
+        store.dispatch(ActionPlanDeclarationFailureAction(action.actionId, ActionPlanDeclarationFailureReason.autre));
+        return;
+      }
+      store.dispatch(ActionPlanDeclarationLoadingAction(action.actionId));
+      final result = await _repository.sendDeclaration(
+        userId,
+        action.actionId,
+        date: action.date,
+        commentaire: action.commentaire,
+      );
+      switch (result) {
+        case ActionPlanDeclarationFailure(:final reason):
+          store.dispatch(ActionPlanDeclarationFailureAction(action.actionId, reason));
+        case ActionPlanDeclarationSuccess():
+          if (_currentPlan(store)?.findAction(action.actionId)?.done != true) {
+            final plan = await _repository.toggleDone(action.actionId);
+            if (plan != null) {
+              store.dispatch(ActionPlanSuccessAction(plan));
+              _track(before, plan, action.actionId, deleted: false);
+            }
+          }
+          store.dispatch(ActionPlanDeclarationSuccessAction(action.actionId));
       }
     } else if (action is ActionPlanFeedbackAction) {
       final plan = await _repository.giveFeedback(action.objectiveId);

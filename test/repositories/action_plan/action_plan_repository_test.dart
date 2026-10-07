@@ -6,6 +6,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
+import 'package:pass_emploi_app/utils/date_extensions.dart';
 
 import '../../doubles/dio_mock.dart';
 import '../../doubles/spies.dart';
@@ -203,6 +204,82 @@ void main() {
 
       test('should fail without throwing', () async {
         await sut.expectResult<bool>((result) => expect(result, isFalse));
+      });
+    });
+
+    group('sendDeclaration Mission Locale', () {
+      final date = DateTime(2026, 9, 30);
+      final sut = DioRepositorySut<ActionPlanRepository>();
+      sut.givenRepository((client) => ActionPlanRepository(client, FlutterSecureStorageSpy(delay: Duration.zero)));
+      sut.when((repository) => repository.sendDeclaration('userId', actionId, date: date, commentaire: 'Mon CV'));
+      sut.givenResponseCode(204);
+
+      test('request should carry the date with its offset and the commentaire', () async {
+        await sut.expectRequestBody(
+          method: HttpMethod.patch,
+          url: '/jeunes/userId/plan-action/taches/$actionId',
+          rawBody: {'terminee': true, 'date': date.toIso8601WithOffsetDateTime(), 'commentaire': 'Mon CV'},
+        );
+      });
+
+      test('should succeed', () async {
+        await sut.expectResult<ActionPlanDeclarationResult>(
+          (result) => expect(result, ActionPlanDeclarationSuccess()),
+        );
+      });
+    });
+
+    group('sendDeclaration France Travail', () {
+      final date = DateTime(2026, 9, 30);
+      final sut = DioRepositorySut<ActionPlanRepository>();
+      sut.givenRepository((client) => ActionPlanRepository(client, FlutterSecureStorageSpy(delay: Duration.zero)));
+      sut.when((repository) => repository.sendDeclaration('userId', actionId, date: date));
+      sut.givenResponseCode(204);
+
+      test('request should not carry a commentaire', () async {
+        await sut.expectRequestBody(
+          method: HttpMethod.patch,
+          url: '/jeunes/userId/plan-action/taches/$actionId',
+          rawBody: {'terminee': true, 'date': date.toIso8601WithOffsetDateTime()},
+        );
+      });
+    });
+
+    for (final (code, reason) in [
+      (410, ActionPlanDeclarationFailureReason.solutionRetiree),
+      (500, ActionPlanDeclarationFailureReason.indisponible),
+      (503, ActionPlanDeclarationFailureReason.indisponible),
+      (400, ActionPlanDeclarationFailureReason.autre),
+    ]) {
+      group('sendDeclaration when server answers $code', () {
+        final sut = DioRepositorySut<ActionPlanRepository>();
+        sut.givenRepository((client) => ActionPlanRepository(client, FlutterSecureStorageSpy(delay: Duration.zero)));
+        sut.when((repository) => repository.sendDeclaration('userId', actionId, date: DateTime(2026, 9, 30)));
+        sut.givenResponseCode(code);
+
+        test('should fail with $reason', () async {
+          await sut.expectResult<ActionPlanDeclarationResult>(
+            (result) => expect(result, ActionPlanDeclarationFailure(reason)),
+          );
+        });
+      });
+    }
+
+    group('sendDeclaration when the network fails', () {
+      final sut = DioRepositorySut<ActionPlanRepository>();
+      sut.givenRepository((client) => ActionPlanRepository(client, FlutterSecureStorageSpy(delay: Duration.zero)));
+      sut.when((repository) => repository.sendDeclaration('userId', actionId, date: DateTime(2026, 9, 30)));
+      sut.givenResponse(
+        () => throw DioException(
+          requestOptions: RequestOptions(path: '/jeunes/userId/plan-action/taches/$actionId'),
+          type: DioExceptionType.connectionError,
+        ),
+      );
+
+      test('should fail as unavailable', () async {
+        await sut.expectResult<ActionPlanDeclarationResult>(
+          (result) => expect(result, ActionPlanDeclarationFailure(ActionPlanDeclarationFailureReason.indisponible)),
+        );
       });
     });
   });

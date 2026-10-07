@@ -394,6 +394,10 @@ class MockOnboardingQuestionnaireRepository extends Mock implements OnboardingQu
 class MockActionPlanRepository extends Mock implements ActionPlanRepository {
   MockActionPlanRepository() {
     registerFallbackValue(const OnboardingQuestionnaireAnswers());
+    registerFallbackValue(DateTime(2026));
+    when(
+      () => sendDeclaration(any(), any(), date: any(named: 'date'), commentaire: any(named: 'commentaire')),
+    ).thenAnswer((_) async => ActionPlanDeclarationSuccess());
     when(
       () => generate(any(), any(), keepLocalProgress: any(named: 'keepLocalProgress')),
     ).thenAnswer((_) async => null);

@@ -11,6 +11,8 @@ class ActionPlanAction extends Equatable {
   final String? serviceName;
   final String? serviceDescription;
   final bool done;
+  final bool declarationRequise;
+  final String? categorie;
 
   const ActionPlanAction({
     required this.id,
@@ -21,6 +23,8 @@ class ActionPlanAction extends Equatable {
     this.serviceName,
     this.serviceDescription,
     this.done = false,
+    this.declarationRequise = false,
+    this.categorie,
   });
 
   ActionPlanAction copyWith({bool? done}) {
@@ -33,6 +37,8 @@ class ActionPlanAction extends Equatable {
       serviceName: serviceName,
       serviceDescription: serviceDescription,
       done: done ?? this.done,
+      declarationRequise: declarationRequise,
+      categorie: categorie,
     );
   }
 
@@ -49,6 +55,8 @@ class ActionPlanAction extends Equatable {
       serviceName: json['serviceName'] as String?,
       serviceDescription: json['serviceDescription'] as String?,
       done: json['done'] as bool? ?? false,
+      declarationRequise: json['declarationRequise'] as bool? ?? false,
+      categorie: json['categorie'] as String?,
     );
   }
 
@@ -67,6 +75,8 @@ class ActionPlanAction extends Equatable {
       serviceName: json['nomService'] as String?,
       serviceDescription: json['descriptionService'] as String?,
       done: json['terminee'] as bool? ?? false,
+      declarationRequise: json['declarationRequise'] as bool? ?? false,
+      categorie: json['categorie'] as String?,
     );
   }
 
@@ -79,6 +89,8 @@ class ActionPlanAction extends Equatable {
     if (serviceName != null) 'serviceName': serviceName,
     if (serviceDescription != null) 'serviceDescription': serviceDescription,
     'done': done,
+    'declarationRequise': declarationRequise,
+    if (categorie != null) 'categorie': categorie,
   };
 
   @override
@@ -91,6 +103,8 @@ class ActionPlanAction extends Equatable {
     serviceName,
     serviceDescription,
     done,
+    declarationRequise,
+    categorie,
   ];
 }
 

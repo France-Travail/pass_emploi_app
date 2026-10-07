@@ -346,4 +346,44 @@ void main() {
 
     expect(viewModel.shouldShowAllowNotifications, isFalse);
   });
+
+  group('déclaration d’une tâche', () {
+    ActionPlan planAvec({required bool done, required bool declarationRequise}) => ActionPlan(
+      id: 'plan',
+      greeting: '',
+      objectives: [
+        ActionPlanObjective(
+          id: 'objective',
+          title: 'Trouver un emploi',
+          theme: 'EMPLOI',
+          actions: [
+            ActionPlanAction(
+              id: 'tache-1',
+              label: 'Je crée mon CV',
+              kind: ActionPlanActionKind.advice,
+              done: done,
+              declarationRequise: declarationRequise,
+            ),
+          ],
+        ),
+      ],
+    );
+
+    bool doitDeclarer(ActionPlan plan) {
+      final store = givenState().loggedInMiloUser().copyWith(actionPlanState: ActionPlanSuccessState(plan)).store();
+      return InviteAccueilViewModel.create(store).doitDeclarer('tache-1');
+    }
+
+    test('une tâche non cochée avec déclaration ouvre la déclaration', () {
+      expect(doitDeclarer(planAvec(done: false, declarationRequise: true)), isTrue);
+    });
+
+    test('une tâche cochée se décoche directement', () {
+      expect(doitDeclarer(planAvec(done: true, declarationRequise: true)), isFalse);
+    });
+
+    test('une tâche sans déclaration se coche directement', () {
+      expect(doitDeclarer(planAvec(done: false, declarationRequise: false)), isFalse);
+    });
+  });
 }

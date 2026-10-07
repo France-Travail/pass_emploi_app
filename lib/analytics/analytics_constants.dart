@@ -137,6 +137,7 @@ class AnalyticsScreenNames {
   static String inAppFeedbackFeature(String feature) => "/feedback/$feature/affichage";
   static String inAppFeedbackFeatureFermeture(String feature) => "/feedback/$feature/fermeture";
   static const actionPlanFeedback = "/feedback/action-plan/affichage";
+  static const actionPlanDeclaration = "/plan-action/declaration";
 
   static const offreNotFound = "offre_not_found";
 }
