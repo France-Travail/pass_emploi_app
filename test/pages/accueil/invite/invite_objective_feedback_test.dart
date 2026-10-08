@@ -12,91 +12,179 @@ import 'package:redux/redux.dart';
 import '../../../dsl/app_state_dsl.dart';
 
 void main() {
-  group('Bandeau de feedback d’un objectif du plan', () {
-    testWidgets('s’affiche sous la dernière action une fois l’objectif déplié', (tester) async {
+  group('Focus clavier des sections du plan', () {
+    testWidgets('affiche le contour de focus DSFR sur l’en-tête d’objectif', (
+      tester,
+    ) async {
       await _pumpSection(tester, _plan(actionsCount: 2));
 
-      // Objectif replié : le contenu est construit mais masqué.
-      expect(find.text(Strings.inviteAccueilObjectiveFeedbackYes).hitTestable(), findsNothing);
+      expect(find.byWidgetPredicate(_isDsfrFocusRing), findsNothing);
 
-      await _expandObjective(tester);
+      Focus.of(tester.element(find.text('Trouver un emploi'))).requestFocus();
+      await tester.pump();
 
-      expect(find.text(Strings.inviteAccueilObjectiveFeedbackTitle), findsOneWidget);
-      expect(find.text(Strings.inviteAccueilObjectiveFeedbackYes).hitTestable(), findsOneWidget);
-      expect(
-        tester.getTopLeft(find.text(Strings.inviteAccueilObjectiveFeedbackTitle)).dy,
-        greaterThan(tester.getBottomLeft(find.text('Action 2')).dy),
-      );
+      expect(find.byWidgetPredicate(_isDsfrFocusRing), findsOneWidget);
     });
+  });
 
-    testWidgets('n’apparaît qu’une fois toutes les actions affichées', (tester) async {
+  group('Bandeau de feedback d’un objectif du plan', () {
+    testWidgets(
+      's’affiche sous la dernière action une fois l’objectif déplié',
+      (tester) async {
+        await _pumpSection(tester, _plan(actionsCount: 2));
+
+        // Objectif replié : le contenu est construit mais masqué.
+        expect(
+          find.text(Strings.inviteAccueilObjectiveFeedbackYes).hitTestable(),
+          findsNothing,
+        );
+
+        await _expandObjective(tester);
+
+        expect(
+          find.text(Strings.inviteAccueilObjectiveFeedbackTitle),
+          findsOneWidget,
+        );
+        expect(
+          find.text(Strings.inviteAccueilObjectiveFeedbackYes).hitTestable(),
+          findsOneWidget,
+        );
+        expect(
+          tester
+              .getTopLeft(
+                find.text(Strings.inviteAccueilObjectiveFeedbackTitle),
+              )
+              .dy,
+          greaterThan(tester.getBottomLeft(find.text('Action 2')).dy),
+        );
+      },
+    );
+
+    testWidgets('n’apparaît qu’une fois toutes les actions affichées', (
+      tester,
+    ) async {
       await _pumpSection(tester, _plan(actionsCount: 6));
       await _expandObjective(tester);
 
-      expect(find.text(Strings.inviteAccueilObjectiveFeedbackTitle), findsNothing);
+      expect(
+        find.text(Strings.inviteAccueilObjectiveFeedbackTitle),
+        findsNothing,
+      );
 
       await tester.tap(find.text(Strings.inviteAccueilAfficherPlus));
       await tester.pumpAndSettle();
 
-      expect(find.text(Strings.inviteAccueilObjectiveFeedbackTitle), findsOneWidget);
-    });
-
-    testWidgets('« Oui » enregistre la réponse de l’objectif sans ouvrir de lien', (tester) async {
-      final launchedUrls = _captureLaunchedUrls(tester);
-      final answered = <String>[];
-      await _pumpSection(tester, _plan(actionsCount: 2), onFeedback: answered.add);
-      await _expandObjective(tester);
-
-      await tester.tap(find.text(Strings.inviteAccueilObjectiveFeedbackYes));
-      await tester.pumpAndSettle();
-
-      expect(answered, ['objective-id']);
-      expect(launchedUrls, isEmpty);
-    });
-
-    testWidgets('« Pas vraiment » ouvre le formulaire Tally et enregistre la réponse', (tester) async {
-      final launchedUrls = _captureLaunchedUrls(tester);
-      final answered = <String>[];
-      await _pumpSection(tester, _plan(actionsCount: 2), onFeedback: answered.add);
-      await _expandObjective(tester);
-
-      await tester.tap(find.text(Strings.inviteAccueilObjectiveFeedbackNo));
-      await tester.pumpAndSettle();
-
-      expect(answered, ['objective-id']);
-      expect(launchedUrls, [ExternalLinks.actionPlanObjectiveFeedback]);
-    });
-
-    testWidgets('affiche le remerciement à la place des boutons une fois la réponse donnée', (tester) async {
-      await _pumpSection(tester, _plan(actionsCount: 2, feedbackGiven: true));
-      await _expandObjective(tester);
-
-      expect(find.text(Strings.inviteAccueilObjectiveFeedbackThanks), findsOneWidget);
-      expect(find.text(Strings.inviteAccueilObjectiveFeedbackTitle), findsNothing);
-      expect(find.text(Strings.inviteAccueilObjectiveFeedbackYes), findsNothing);
-      expect(find.text(Strings.inviteAccueilObjectiveFeedbackNo), findsNothing);
-    });
-
-    testWidgets('« Pas vraiment » annonce l’ouverture du navigateur au lecteur d’écran', (tester) async {
-      final semantics = tester.ensureSemantics();
-      await _pumpSection(tester, _plan(actionsCount: 2));
-      await _expandObjective(tester);
-
-      final yes = tester.getSemantics(find.bySemanticsLabel(Strings.inviteAccueilObjectiveFeedbackYes));
-      expect(yes, containsSemantics(label: Strings.inviteAccueilObjectiveFeedbackYes, isButton: true));
-      final no = tester.getSemantics(find.bySemanticsLabel(Strings.inviteAccueilObjectiveFeedbackNo));
       expect(
-        no,
-        containsSemantics(
-          label: Strings.inviteAccueilObjectiveFeedbackNo,
-          hint: Strings.inviteAccueilObjectiveFeedbackNoA11y,
-          isButton: true,
-          hasTapAction: true,
-        ),
+        find.text(Strings.inviteAccueilObjectiveFeedbackTitle),
+        findsOneWidget,
       );
-      semantics.dispose();
     });
+
+    testWidgets(
+      '« Oui » enregistre la réponse de l’objectif sans ouvrir de lien',
+      (tester) async {
+        final launchedUrls = _captureLaunchedUrls(tester);
+        final answered = <String>[];
+        await _pumpSection(
+          tester,
+          _plan(actionsCount: 2),
+          onFeedback: answered.add,
+        );
+        await _expandObjective(tester);
+
+        await tester.tap(find.text(Strings.inviteAccueilObjectiveFeedbackYes));
+        await tester.pumpAndSettle();
+
+        expect(answered, ['objective-id']);
+        expect(launchedUrls, isEmpty);
+      },
+    );
+
+    testWidgets(
+      '« Pas vraiment » ouvre le formulaire Tally et enregistre la réponse',
+      (tester) async {
+        final launchedUrls = _captureLaunchedUrls(tester);
+        final answered = <String>[];
+        await _pumpSection(
+          tester,
+          _plan(actionsCount: 2),
+          onFeedback: answered.add,
+        );
+        await _expandObjective(tester);
+
+        await tester.tap(find.text(Strings.inviteAccueilObjectiveFeedbackNo));
+        await tester.pumpAndSettle();
+
+        expect(answered, ['objective-id']);
+        expect(launchedUrls, [ExternalLinks.actionPlanObjectiveFeedback]);
+      },
+    );
+
+    testWidgets(
+      'affiche le remerciement à la place des boutons une fois la réponse donnée',
+      (tester) async {
+        await _pumpSection(tester, _plan(actionsCount: 2, feedbackGiven: true));
+        await _expandObjective(tester);
+
+        expect(
+          find.text(Strings.inviteAccueilObjectiveFeedbackThanks),
+          findsOneWidget,
+        );
+        expect(
+          find.text(Strings.inviteAccueilObjectiveFeedbackTitle),
+          findsNothing,
+        );
+        expect(
+          find.text(Strings.inviteAccueilObjectiveFeedbackYes),
+          findsNothing,
+        );
+        expect(
+          find.text(Strings.inviteAccueilObjectiveFeedbackNo),
+          findsNothing,
+        );
+      },
+    );
+
+    testWidgets(
+      '« Pas vraiment » annonce l’ouverture du navigateur au lecteur d’écran',
+      (tester) async {
+        final semantics = tester.ensureSemantics();
+        await _pumpSection(tester, _plan(actionsCount: 2));
+        await _expandObjective(tester);
+
+        final yes = tester.getSemantics(
+          find.bySemanticsLabel(Strings.inviteAccueilObjectiveFeedbackYes),
+        );
+        expect(
+          yes,
+          containsSemantics(
+            label: Strings.inviteAccueilObjectiveFeedbackYes,
+            isButton: true,
+          ),
+        );
+        final no = tester.getSemantics(
+          find.bySemanticsLabel(Strings.inviteAccueilObjectiveFeedbackNo),
+        );
+        expect(
+          no,
+          containsSemantics(
+            label: Strings.inviteAccueilObjectiveFeedbackNo,
+            hint: Strings.inviteAccueilObjectiveFeedbackNoA11y,
+            isButton: true,
+            hasTapAction: true,
+          ),
+        );
+        semantics.dispose();
+      },
+    );
   });
+}
+
+bool _isDsfrFocusRing(Widget widget) {
+  if (widget is! DecoratedBox) return false;
+  final decoration = widget.decoration;
+  if (decoration is! BoxDecoration) return false;
+  return decoration.border?.top.strokeAlign == BorderSide.strokeAlignOutside;
 }
 
 ActionPlan _plan({required int actionsCount, bool feedbackGiven = false}) {
@@ -111,7 +199,11 @@ ActionPlan _plan({required int actionsCount, bool feedbackGiven = false}) {
         feedbackGiven: feedbackGiven,
         actions: [
           for (var i = 1; i <= actionsCount; i++)
-            ActionPlanAction(id: 'action-$i', label: 'Action $i', kind: ActionPlanActionKind.advice),
+            ActionPlanAction(
+              id: 'action-$i',
+              label: 'Action $i',
+              kind: ActionPlanActionKind.advice,
+            ),
         ],
       ),
     ],
@@ -123,7 +215,10 @@ Future<void> _pumpSection(
   ActionPlan plan, {
   void Function(String objectiveId)? onFeedback,
 }) async {
-  final store = Store<AppState>((state, action) => state, initialState: givenState());
+  final store = Store<AppState>(
+    (state, action) => state,
+    initialState: givenState(),
+  );
   await tester.pumpWidget(
     StoreProvider<AppState>(
       store: store,
@@ -153,7 +248,8 @@ List<String> _captureLaunchedUrls(WidgetTester tester) {
   tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
     const MethodChannel('plugins.flutter.io/url_launcher'),
     (call) async {
-      if (call.method == 'launch') urls.add((call.arguments as Map)['url'] as String);
+      if (call.method == 'launch')
+        urls.add((call.arguments as Map)['url'] as String);
       return true;
     },
   );

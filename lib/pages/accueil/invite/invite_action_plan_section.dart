@@ -76,7 +76,8 @@ class _ObjectiveAccordion extends StatefulWidget {
   State<_ObjectiveAccordion> createState() => _ObjectiveAccordionState();
 }
 
-class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
+class _ObjectiveAccordionState extends State<_ObjectiveAccordion>
+    with MaterialStateMixin<_ObjectiveAccordion> {
   bool _expanded = false;
   bool _showAll = false;
   final GlobalKey _firstRevealedActionKey = GlobalKey();
@@ -86,7 +87,9 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
   @override
   Widget build(BuildContext context) {
     final objective = widget.objective;
-    final visibleActions = _showAll ? objective.actions : objective.actions.take(_initialVisible).toList();
+    final visibleActions = _showAll
+        ? objective.actions
+        : objective.actions.take(_initialVisible).toList();
     final hasMore = objective.actions.length > _initialVisible;
 
     void toggle() {
@@ -107,59 +110,68 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
       container: true,
       button: true,
       expanded: _expanded,
-      label: '${objective.title}, ${Strings.inviteAccueilProgressA11y(objective.doneCount, objective.totalCount)}',
+      label:
+          '${objective.title}, ${Strings.inviteAccueilProgressA11y(objective.doneCount, objective.totalCount)}',
       onTap: toggle,
       excludeSemantics: true,
       child: InkWell(
         onTap: toggle,
-        child: AnimatedContainer(
-          duration: AnimationDurations.medium,
-          curve: _animationCurve,
-          color: _expanded
-              ? DsfrColorDecisions.backgroundActionLowBlueFrance(context)
-              : DsfrColorDecisions.backgroundDefaultGrey(context),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: Margins.spacing_base,
-              vertical: Margins.spacing_s,
-            ),
-            child: Row(
-              children: [
-                _EmojiAvatar(
-                  emoji: _emojiForTheme(objective.theme),
-                  color: _colorForTheme(objective.theme),
-                ),
-                const SizedBox(width: Margins.spacing_base),
-                Expanded(
-                  child: Text(
-                    objective.title,
-                    style: DsfrTextStyle.bodyMdMedium(
-                      color: DsfrColorDecisions.textTitleBlueFrance(context),
+        // Le fond opaque masque le surlignage d'encre : le contour DSFR rend le focus clavier visible.
+        focusColor: DsfrColorDecisions.backgroundTransparent(context),
+        onFocusChange: updateMaterialState(WidgetState.focused),
+        child: DsfrFocusWidget(
+          isFocused: isFocused,
+          child: AnimatedContainer(
+            duration: AnimationDurations.medium,
+            curve: _animationCurve,
+            color: _expanded
+                ? DsfrColorDecisions.backgroundActionLowBlueFrance(context)
+                : DsfrColorDecisions.backgroundDefaultGrey(context),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: Margins.spacing_base,
+                vertical: Margins.spacing_s,
+              ),
+              child: Row(
+                children: [
+                  _EmojiAvatar(
+                    emoji: _emojiForTheme(objective.theme),
+                    color: _colorForTheme(objective.theme),
+                  ),
+                  const SizedBox(width: Margins.spacing_base),
+                  Expanded(
+                    child: Text(
+                      objective.title,
+                      style: DsfrTextStyle.bodyMdMedium(
+                        color: DsfrColorDecisions.textTitleBlueFrance(context),
+                      ),
                     ),
                   ),
-                ),
-                DsfrBadge(
-                  label: Strings.inviteAccueilProgressBadge(
-                    objective.doneCount,
-                    objective.totalCount,
+                  DsfrBadge(
+                    label: Strings.inviteAccueilProgressBadge(
+                      objective.doneCount,
+                      objective.totalCount,
+                    ),
+                    type: objective.isComplete
+                        ? DsfrBadgeType.success
+                        : DsfrBadgeType.news,
+                    size: DsfrComponentSize.sm,
+                    withIcon: true,
                   ),
-                  type: objective.isComplete ? DsfrBadgeType.success : DsfrBadgeType.news,
-                  size: DsfrComponentSize.sm,
-                  withIcon: true,
-                ),
-                const SizedBox(width: Margins.spacing_base),
-                AnimatedRotation(
-                  turns: _expanded ? 0.5 : 0,
-                  duration: AnimationDurations.medium,
-                  curve: _animationCurve,
-                  child: Icon(
-                    DsfrIcons.systemArrowDownSLine,
-                    color: DsfrColorDecisions.textActionHighBlueFrance(
-                      context,
+                  const SizedBox(width: Margins.spacing_base),
+                  AnimatedRotation(
+                    turns: _expanded ? 0.5 : 0,
+                    duration: AnimationDurations.medium,
+                    curve: _animationCurve,
+                    child: Icon(
+                      DsfrIcons.systemArrowDownSLine,
+                      color: DsfrColorDecisions.textActionHighBlueFrance(
+                        context,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -194,9 +206,12 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
                   for (var i = 0; i < visibleActions.length; i++) ...[
                     const SizedBox(height: Margins.spacing_s),
                     InviteActionPlanActionTile(
-                      focusKey: _showAll && i == _initialVisible ? _firstRevealedActionKey : null,
+                      focusKey: _showAll && i == _initialVisible
+                          ? _firstRevealedActionKey
+                          : null,
                       action: visibleActions[i],
-                      onToggleDone: () => widget.onToggleDone(visibleActions[i].id),
+                      onToggleDone: () =>
+                          widget.onToggleDone(visibleActions[i].id),
                       onDelete: () => widget.onDelete(visibleActions[i].id),
                     ),
                   ],
@@ -222,13 +237,18 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> {
                   ],
                   if (!hasMore || _showAll) ...[
                     const SizedBox(height: Margins.spacing_s),
-                    InviteObjectiveFeedback(objective: objective, onFeedback: widget.onFeedback),
+                    InviteObjectiveFeedback(
+                      objective: objective,
+                      onFeedback: widget.onFeedback,
+                    ),
                   ],
                 ],
               ),
             ),
           ),
-          crossFadeState: _expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          crossFadeState: _expanded
+              ? CrossFadeState.showSecond
+              : CrossFadeState.showFirst,
           duration: AnimationDurations.medium,
           sizeCurve: _animationCurve,
         ),
@@ -300,7 +320,10 @@ class InviteActionPlanActionTile extends StatelessWidget {
                     onTap: onToggleDone,
                     // Zone tactile d'au moins 44 x 44.
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                      constraints: const BoxConstraints(
+                        minWidth: 44,
+                        minHeight: 44,
+                      ),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         widthFactor: 1,
@@ -399,7 +422,10 @@ class InviteActionPlanActionTile extends StatelessWidget {
   void _openLink() {
     ActionPlanTrackingEvent(
       AnalyticsEventNames.actionPlanActionOpenedAction,
-      name: [action.label, if (action.serviceName != null) action.serviceName].join(' | '),
+      name: [
+        action.label,
+        if (action.serviceName != null) action.serviceName,
+      ].join(' | '),
     ).send();
     launchExternalUrl(action.url!);
   }
@@ -430,17 +456,25 @@ class InviteObjectiveFeedback extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleStyle = DsfrTextStyle.bodyLgBold(color: DsfrColorDecisions.textTitleGrey(context));
+    final titleStyle = DsfrTextStyle.bodyLgBold(
+      color: DsfrColorDecisions.textTitleGrey(context),
+    );
     return Container(
       width: double.infinity,
       color: DsfrColorDecisions.artworkDecorativeBlueFrance(context),
       padding: const EdgeInsets.all(DsfrSpacings.s2w),
       child: objective.feedbackGiven
-          ? Text(Strings.inviteAccueilObjectiveFeedbackThanks, style: titleStyle)
+          ? Text(
+              Strings.inviteAccueilObjectiveFeedbackThanks,
+              style: titleStyle,
+            )
           : Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(Strings.inviteAccueilObjectiveFeedbackTitle, style: titleStyle),
+                Text(
+                  Strings.inviteAccueilObjectiveFeedbackTitle,
+                  style: titleStyle,
+                ),
                 const SizedBox(height: DsfrSpacings.s3v),
                 Wrap(
                   spacing: DsfrSpacings.s3v,
@@ -497,7 +531,9 @@ class _EmojiAvatar extends StatelessWidget {
           style: TextStyle(
             fontSize: 24,
             // Force color emoji on iOS for dingbats like ✈️ (U+2708).
-            fontFamily: defaultTargetPlatform == TargetPlatform.iOS ? 'Apple Color Emoji' : null,
+            fontFamily: defaultTargetPlatform == TargetPlatform.iOS
+                ? 'Apple Color Emoji'
+                : null,
           ),
         ),
       ),
