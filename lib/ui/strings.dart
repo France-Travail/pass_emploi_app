@@ -1293,9 +1293,7 @@ class Strings {
   static String souhaitDePartagerOffre = Brand.isPassEmploi()
       ? "L’offre que vous souhaitez partager"
       : "L’offre que tu souhaites partager";
-  static String partageOffreDefaultMessage = Brand.isPassEmploi()
-      ? "Bonjour, je vous partage une offre d’emploi afin d’avoir votre avis"
-      : "Bonjour, je te partage une offre d’emploi afin d’avoir ton avis";
+  static String partageOffreDefaultMessage = "Bonjour, je vous partage une offre d’emploi afin d’avoir votre avis";
   static String partageOffreSuccessTitle = "Partage offre d’emploi";
   static String partageOffreSuccessContent = Brand.isPassEmploi()
       ? "L’offre d’emploi a été partagée à votre conseiller sur la messagerie de l’application"
@@ -1333,7 +1331,7 @@ class Strings {
   // Event partage
   static String infoEventPartageChat = "L’événement sera partagé à ton conseiller dans la messagerie";
   static String souhaitDePartagerEvent = "Ce que tu souhaites partager";
-  static String partageEventDefaultMessage = "Bonjour, je te partage un événement afin d’avoir ton avis";
+  static String partageEventDefaultMessage = "Bonjour, je vous partage un événement afin d’avoir votre avis";
   static String partagerAuConseiller = "Partager à mon conseiller";
   static String partageEventNavTitle = "Partage d’événement";
   static String partageEventSuccess = "L’événement a été partagé à ton conseiller sur la messagerie de l’application";
@@ -1343,9 +1341,7 @@ class Strings {
   static String souhaitDePartagerEvenementEmploi = Brand.isPassEmploi()
       ? "L’événement que vous souhaitez partager"
       : "L’événement que tu souhaites partager";
-  static String partageEvenementEmploiDefaultMessage = Brand.isPassEmploi()
-      ? "Bonjour, je vous partage un événement afin d’avoir votre avis"
-      : "Bonjour, je te partage un événement afin d’avoir ton avis";
+  static String partageEvenementEmploiDefaultMessage = "Bonjour, je vous partage un événement afin d’avoir votre avis";
   static String partageEvenementEmploiSuccess = Brand.isPassEmploi()
       ? "L’événement a été partagé à votre conseiller sur la messagerie de l’application"
       : "L’événement a été partagé à ton conseiller sur la messagerie de l’application";
@@ -1357,7 +1353,7 @@ class Strings {
   // Session milo partage
   static String partageSessionMiloNavTitle = "Partage d’événement";
   static String souhaitDePartagerSessionMilo = "Ce que tu souhaites partager";
-  static String partageSessionMiloDefaultMessage = "Bonjour, peux-tu m'inscrire à cet événement ?";
+  static String partageSessionMiloDefaultMessage = "Bonjour, pouvez-vous m'inscrire à cet événement ?";
   static String partageSessionMiloCompletMessage = "Bonjour, cet événement est complet mais je suis intéressé";
   static String partageSessionMiloSuccess =
       "L’événement a été partagé à ton conseiller sur la messagerie de l’application";

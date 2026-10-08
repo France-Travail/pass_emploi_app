@@ -27,7 +27,7 @@ void main() {
       // Then
       expect(viewModel.pageTitle, "Partage d’événement");
       expect(viewModel.willShareTitle, "Ce que tu souhaites partager");
-      expect(viewModel.defaultMessage, "Bonjour, je te partage un événement afin d’avoir ton avis");
+      expect(viewModel.defaultMessage, "Bonjour, je vous partage un événement afin d’avoir votre avis");
       expect(viewModel.information, "L’événement sera partagé à ton conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager à mon conseiller");
       expect(viewModel.shareSuccessTitle, "Partage d’événement");
@@ -91,7 +91,7 @@ void main() {
       // Then
       expect(viewModel.pageTitle, "Partage de l’événement");
       expect(viewModel.willShareTitle, "L’événement que tu souhaites partager");
-      expect(viewModel.defaultMessage, "Bonjour, je te partage un événement afin d’avoir ton avis");
+      expect(viewModel.defaultMessage, "Bonjour, je vous partage un événement afin d’avoir votre avis");
       expect(viewModel.information, "L’événement sera partagé à ton conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager à mon conseiller");
       expect(viewModel.shareSuccessTitle, "Partage de l’événement");
@@ -145,7 +145,7 @@ void main() {
       // Then
       expect(viewModel.pageTitle, "Partage de l’offre d’alternance");
       expect(viewModel.willShareTitle, "L’offre que tu souhaites partager");
-      expect(viewModel.defaultMessage, "Bonjour, je te partage une offre d’emploi afin d’avoir ton avis");
+      expect(viewModel.defaultMessage, "Bonjour, je vous partage une offre d’emploi afin d’avoir votre avis");
       expect(viewModel.information, "L’offre d’emploi sera partagée à ton conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager l’offre d’alternance");
       expect(viewModel.shareSuccessTitle, "Partage offre d’emploi");
@@ -165,7 +165,7 @@ void main() {
       // Then
       expect(viewModel.pageTitle, "Partage de l’offre d’emploi");
       expect(viewModel.willShareTitle, "L’offre que tu souhaites partager");
-      expect(viewModel.defaultMessage, "Bonjour, je te partage une offre d’emploi afin d’avoir ton avis");
+      expect(viewModel.defaultMessage, "Bonjour, je vous partage une offre d’emploi afin d’avoir votre avis");
       expect(viewModel.information, "L’offre d’emploi sera partagée à ton conseiller dans la messagerie");
       expect(viewModel.shareButtonTitle, "Partager l’offre d’emploi");
       expect(viewModel.shareSuccessTitle, "Partage offre d’emploi");
