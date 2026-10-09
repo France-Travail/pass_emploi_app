@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/models/version.dart';
@@ -54,21 +53,20 @@ class Configuration extends Equatable {
     final packageName = await PackageInfoWrapper.getPackageName();
     final flavor = packageName.contains("staging") ? Flavor.STAGING : Flavor.PROD;
     Log.i("Flavor = $flavor");
-    await loadEnvironmentVariables(flavor);
     final brand = Brand.brand;
-    final serverBaseUrl = getOrThrow('SERVER_BASE_URL');
-    final matomoBaseUrl = getOrThrow('MATOMO_BASE_URL');
-    final matomoSiteId = getOrThrow('MATOMO_SITE_ID');
-    final matomoDimensionProduitId = getOrThrow('MATOMO_DIMENSION_PRODUIT_ID');
-    final matomoDimensionAvecConnexionId = getOrThrow('MATOMO_DIMENSION_AVEC_CONNEXION_ID');
-    final authClientId = getOrThrow('AUTH_CLIENT_ID');
-    final authLoginRedirectUrl = getOrThrow('AUTH_LOGIN_URL');
-    final authLogoutRedirectUrl = getOrThrow('AUTH_LOGOUT_URL');
-    final authIssuer = getOrThrow('AUTH_ISSUER');
-    final authScopes = getArrayOrThrow('AUTH_SCOPE');
-    final authClientSecret = getOrThrow('AUTH_CLIENT_SECRET');
-    final iSRGX1CertificateForOldDevices = utf8.decode(base64Decode(getOrThrow('ISRGX1_CERT_FOR_OLD_DEVICES')));
-    final actualisationPoleEmploiUrl = getOrThrow('ACTUALISATION_PE_URL');
+    final serverBaseUrl = String.fromEnvironment('SERVER_BASE_URL');
+    final matomoBaseUrl = String.fromEnvironment('MATOMO_BASE_URL');
+    final matomoSiteId = String.fromEnvironment('MATOMO_SITE_ID');
+    final matomoDimensionProduitId = String.fromEnvironment('MATOMO_DIMENSION_PRODUIT_ID');
+    final matomoDimensionAvecConnexionId = String.fromEnvironment('MATOMO_DIMENSION_AVEC_CONNEXION_ID');
+    final authClientId = String.fromEnvironment('AUTH_CLIENT_ID');
+    final authLoginRedirectUrl = String.fromEnvironment('AUTH_LOGIN_URL');
+    final authLogoutRedirectUrl = String.fromEnvironment('AUTH_LOGOUT_URL');
+    final authIssuer = String.fromEnvironment('AUTH_ISSUER');
+    final authScopes = String.fromEnvironment('AUTH_SCOPE').split(' ').toList(growable: false);
+    final authClientSecret = String.fromEnvironment('AUTH_CLIENT_SECRET');
+    final iSRGX1CertificateForOldDevices = utf8.decode(base64Decode(String.fromEnvironment('ISRGX1_CERT_FOR_OLD_DEVICES')));
+    final actualisationPoleEmploiUrl = String.fromEnvironment('ACTUALISATION_PE_URL');
     final fuseauHoraire = await FlutterTimezone.getLocalTimezone();
     return Configuration(
       currentVersion,
@@ -91,25 +89,6 @@ class Configuration extends Equatable {
     );
   }
 
-  static Future<void> loadEnvironmentVariables(Flavor flavor) async {
-    return await dotenv.load(fileName: flavor == Flavor.STAGING ? "env/.env.staging" : "env/.env.prod");
-  }
-
-  static String getOrThrow(String key) {
-    final value = dotenv.get(key, fallback: "");
-    if (value == "") {
-      throw ("$key must be set in .env file");
-    }
-    return value;
-  }
-
-  static List<String> getArrayOrThrow(String key) {
-    final value = dotenv.get(key, fallback: "");
-    if (value == "") {
-      throw ("$key must be set in .env file");
-    }
-    return value.split(' ');
-  }
 
   @override
   List<Object?> get props => [
