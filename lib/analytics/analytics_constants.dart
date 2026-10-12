@@ -12,6 +12,7 @@ class AnalyticsScreenNames {
   static const onboardingoffreEnregistree = "onboarding/offreEnregistree";
 
   static const login = "login";
+  static const repriseCompteInvite = "login/reprise-compte-invite";
   static const forceUpdate = "force_update";
 
   static String cejInformationPage(int pageNumber) => "entree2/etape-$pageNumber";

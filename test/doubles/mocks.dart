@@ -2,6 +2,7 @@ import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:pass_emploi_app/auth/auth_access_token_retriever.dart';
 import 'package:pass_emploi_app/auth/auth_wrapper.dart';
 import 'package:pass_emploi_app/auth/authenticator.dart';
 import 'package:pass_emploi_app/models/criteres_recherche_utilisateur.dart';
@@ -62,6 +63,7 @@ import 'package:pass_emploi_app/utils/compress_image.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/wrappers/connectivity_wrapper.dart';
 
+import 'package:pass_emploi_app/repositories/reprise_compte_invite_repository.dart';
 /*AUTOGENERATE-REDUX-TEST-MOCKS-REPOSITORY-IMPORT*/
 
 import 'dio_mock.dart';
@@ -81,6 +83,16 @@ class MockAuthenticator extends Mock implements Authenticator {
 }
 
 class MockAuthWrapper extends Mock implements AuthWrapper {}
+
+class MockAuthAccessTokenRetriever extends Mock implements AuthAccessTokenRetriever {
+  void withAccessToken() {
+    when(() => accessToken()).thenAnswer((_) async => 'accessToken');
+  }
+
+  void throwException() {
+    when(() => accessToken()).thenThrow(Exception());
+  }
+}
 
 class MockDetailsJeuneRepository extends Mock implements DetailsJeuneRepository {
   MockDetailsJeuneRepository() {
@@ -417,5 +429,7 @@ class MockFonctionnalitesRepository extends Mock implements FonctionnalitesRepos
     when(() => get(any())).thenAnswer((_) async => null);
   }
 }
+
+class MockRepriseCompteInviteRepository extends Mock implements RepriseCompteInviteRepository {}
 
 /*AUTOGENERATE-REDUX-TEST-MOCKS-REPOSITORY-DECLARATION*/

@@ -47,6 +47,25 @@ void main() {
     expect(await tokenRetriever.accessToken(), "Access token");
   });
 
+  test("refreshedAccessToken refreshes even when id token is still valid", () async {
+    // Given
+    when(() => authenticator.idToken()).thenAnswer((_) async => validIdToken());
+    when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.SUCCESSFUL);
+    when(() => authenticator.accessToken()).thenAnswer((_) async => "Refreshed access token");
+
+    // When-Then
+    expect(await tokenRetriever.refreshedAccessToken(), "Refreshed access token");
+    verify(() => authenticator.performRefreshToken()).called(1);
+  });
+
+  test("refreshedAccessToken throws when refresh fails", () async {
+    // Given
+    when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.NETWORK_UNREACHABLE);
+
+    // When-Then
+    expect(() async => await tokenRetriever.refreshedAccessToken(), throwsException);
+  });
+
   test("Throws WITHOUT logout on a SINGLE GENERIC_ERROR (hoquet transitoire toléré)", () async {
     // Given : un seul échec ambigu (5xx, réponse incomplète) -> pas de déco
     final store = StoreSpy();

@@ -1,3 +1,4 @@
+import 'package:pass_emploi_app/auth/auth_access_token_retriever.dart';
 import 'package:pass_emploi_app/auth/authenticator.dart';
 import 'package:pass_emploi_app/auth/firebase_auth_wrapper.dart';
 import 'package:pass_emploi_app/configuration/configuration.dart';
@@ -87,6 +88,7 @@ import 'package:pass_emploi_app/repositories/communications_repository.dart';
 import 'package:pass_emploi_app/repositories/onboarding_questionnaire_repository.dart';
 import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
 import 'package:pass_emploi_app/repositories/fonctionnalites_repository.dart';
+import 'package:pass_emploi_app/repositories/reprise_compte_invite_repository.dart';
 /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-IMPORT*/
 import 'package:redux/redux.dart';
 
@@ -97,6 +99,7 @@ import '../doubles/mocks.dart';
 class TestStoreFactory {
   final Configuration _configuration = configuration();
   Authenticator authenticator = DummyAuthenticator();
+  AuthAccessTokenRetriever accessTokenRetriever = MockAuthAccessTokenRetriever();
   UserActionRepository userActionRepository = DummyUserActionRepository();
   UserActionPendingCreationRepository userActionPendingCreationRepository = MockUserActionPendingCreationRepository();
   RendezvousRepository rendezvousRepository = MockRendezvousRepository();
@@ -184,12 +187,14 @@ class TestStoreFactory {
   OnboardingQuestionnaireRepository onboardingQuestionnaireRepository = MockOnboardingQuestionnaireRepository();
   ActionPlanRepository actionPlanRepository = MockActionPlanRepository();
   FonctionnalitesRepository fonctionnalitesRepository = MockFonctionnalitesRepository();
+  RepriseCompteInviteRepository repriseCompteInviteRepository = MockRepriseCompteInviteRepository();
   /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-PROPERTY*/
 
   Store<AppState> initializeReduxStore({required AppState initialState}) {
     return StoreFactory(
       _configuration,
       authenticator,
+      accessTokenRetriever,
       crashlytics,
       chatCrypto,
       cryptoStorage,
@@ -275,6 +280,7 @@ class TestStoreFactory {
       onboardingQuestionnaireRepository,
       actionPlanRepository,
       fonctionnalitesRepository,
+      repriseCompteInviteRepository,
       /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-CONSTRUCTOR*/
     ).initializeReduxStore(initialState: initialState);
   }

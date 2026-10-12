@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/configuration/configuration.dart';
 import 'package:pass_emploi_app/crashlytics/crashlytics.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/models/brand.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/repositories/auth/logout_repository.dart';
 import 'package:pass_emploi_app/repositories/installation_id_repository.dart';
 
@@ -19,6 +20,18 @@ const String _appAuthFlowMarkerStorageKey = "loginInProgress";
 enum RefreshTokenStatus { SUCCESSFUL, GENERIC_ERROR, USER_NOT_LOGGED_IN, NETWORK_UNREACHABLE, EXPIRED_REFRESH_TOKEN }
 
 enum AuthenticationMode { GENERIC, SIMILO, POLE_EMPLOI, INVITE, DEMO }
+
+extension LoginModeAuthenticationMode on LoginMode {
+  AuthenticationMode toAuthenticationMode() {
+    return switch (this) {
+      LoginMode.MILO => AuthenticationMode.SIMILO,
+      LoginMode.POLE_EMPLOI => AuthenticationMode.POLE_EMPLOI,
+      LoginMode.INVITE => AuthenticationMode.INVITE,
+      LoginMode.DEMO_MILO => AuthenticationMode.DEMO,
+      LoginMode.DEMO_PE => AuthenticationMode.DEMO,
+    };
+  }
+}
 
 const Map<String, String> similoParams = {"kc_idp_hint": "similo-jeune"};
 const Map<String, String> poleEmploiParams = {"kc_idp_hint": "ft-beneficiaire"};

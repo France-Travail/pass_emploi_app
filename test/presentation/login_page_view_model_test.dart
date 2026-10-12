@@ -2,6 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/configuration/configuration.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/features/login/login_state.dart';
+import 'package:pass_emploi_app/features/reprise_compte_invite/reprise_compte_invite_actions.dart';
+import 'package:pass_emploi_app/features/reprise_compte_invite/reprise_compte_invite_state.dart';
 import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/presentation/login_page_view_model.dart';
@@ -165,6 +167,103 @@ void main() {
         expect((store.dispatchedAction as RequestLoginAction).mode, LoginMode.INVITE);
       });
     }
+
+    group('reprise compte invite', () {
+      test('should display back button and hide hidden invite access', () {
+        // Given
+        final store = givenState().loggedInUser(loginMode: LoginMode.INVITE).store();
+
+        // When
+        final viewModel = LoginPageViewModel.create(store, repriseCompteInvite: true);
+
+        // Then
+        expect(viewModel.withBackButton, isTrue);
+        expect(viewModel.withHiddenInviteAccess, isFalse);
+      });
+
+      test('should not display back button and display hidden invite access on regular login', () {
+        // Given
+        final store = givenState().store();
+
+        // When
+        final viewModel = LoginPageViewModel.create(store);
+
+        // Then
+        expect(viewModel.withBackButton, isFalse);
+        expect(viewModel.withHiddenInviteAccess, isTrue);
+      });
+
+      test('should display loading from reprise state, not from login state', () {
+        // Given
+        final store = givenState()
+            .loggedInUser(loginMode: LoginMode.INVITE)
+            .copyWith(repriseCompteInviteState: RepriseCompteInviteLoadingState())
+            .store();
+
+        // When
+        final viewModel = LoginPageViewModel.create(store, repriseCompteInvite: true);
+
+        // Then
+        expect(viewModel.withLoading, isTrue);
+        expect(viewModel.withWrongDeviceClockMessage, isFalse);
+        expect(viewModel.technicalErrorMessage, isNull);
+      });
+
+      test('should display error message from reprise state', () {
+        // Given
+        final store = givenState()
+            .loggedInUser(loginMode: LoginMode.INVITE)
+            .copyWith(repriseCompteInviteState: RepriseCompteInviteFailureState('error-message'))
+            .store();
+
+        // When
+        final viewModel = LoginPageViewModel.create(store, repriseCompteInvite: true);
+
+        // Then
+        expect(viewModel.withLoading, isFalse);
+        expect(viewModel.technicalErrorMessage, 'error-message');
+      });
+
+      test('should display wrong device clock message from reprise state', () {
+        // Given
+        final store = givenState()
+            .loggedInUser(loginMode: LoginMode.INVITE)
+            .copyWith(repriseCompteInviteState: RepriseCompteInviteWrongDeviceClockState())
+            .store();
+
+        // When
+        final viewModel = LoginPageViewModel.create(store, repriseCompteInvite: true);
+
+        // Then
+        expect(viewModel.withWrongDeviceClockMessage, isTrue);
+      });
+
+      test('France Travail login dispatches RepriseCompteInviteRequestAction', () {
+        // Given
+        final store = StoreSpy.withState(givenState(configuration(flavor: Flavor.PROD, brand: Brand.cej)));
+        final viewModel = LoginPageViewModel.create(store, repriseCompteInvite: true);
+
+        // When
+        viewModel.onFranceTravailLogin();
+
+        // Then
+        expect(store.dispatchedAction, isA<RepriseCompteInviteRequestAction>());
+        expect((store.dispatchedAction as RepriseCompteInviteRequestAction).mode, LoginMode.POLE_EMPLOI);
+      });
+
+      test('Mission Locale login dispatches RepriseCompteInviteRequestAction', () {
+        // Given
+        final store = StoreSpy.withState(givenState(configuration(flavor: Flavor.PROD, brand: Brand.cej)));
+        final viewModel = LoginPageViewModel.create(store, repriseCompteInvite: true);
+
+        // When
+        viewModel.onMissionLocaleLogin!.call();
+
+        // Then
+        expect(store.dispatchedAction, isA<RepriseCompteInviteRequestAction>());
+        expect((store.dispatchedAction as RepriseCompteInviteRequestAction).mode, LoginMode.MILO);
+      });
+    });
 
     group('accessibility level', () {
       test('should display accessibility partially conform when brand is cej', () {

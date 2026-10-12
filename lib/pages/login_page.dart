@@ -5,6 +5,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/mode_demo/explication_page_mode_demo.dart';
+import 'package:pass_emploi_app/features/reprise_compte_invite/reprise_compte_invite_actions.dart';
 import 'package:pass_emploi_app/presentation/login_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
@@ -14,19 +15,29 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
+import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/drawables/app_logo.dart';
 import 'package:pass_emploi_app/widgets/dsfr/bloc_marque.dart';
 import 'package:pass_emploi_app/widgets/login_page_remote_message.dart';
 
 class LoginPage extends StatelessWidget {
+  final bool repriseCompteInvite;
+
+  LoginPage({this.repriseCompteInvite = false});
+
+  static MaterialPageRoute<void> repriseCompteInviteMaterialPageRoute() {
+    return MaterialPageRoute(builder: (context) => LoginPage(repriseCompteInvite: true));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Tracker(
-      tracking: AnalyticsScreenNames.login,
+      tracking: repriseCompteInvite ? AnalyticsScreenNames.repriseCompteInvite : AnalyticsScreenNames.login,
       child: StoreConnector<AppState, LoginPageViewModel>(
-        converter: (store) => LoginPageViewModel.create(store),
+        converter: (store) => LoginPageViewModel.create(store, repriseCompteInvite: repriseCompteInvite),
         builder: (context, viewModel) => _Scaffold(viewModel),
         onWillChange: _onWillChange,
+        onDispose: repriseCompteInvite ? (store) => store.dispatch(RepriseCompteInviteResetAction()) : null,
         distinct: true,
       ),
     );
@@ -62,6 +73,7 @@ class _Scaffold extends StatelessWidget {
       data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
       child: Scaffold(
         backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+        appBar: viewModel.withBackButton ? const BackAppBar() : null,
         body: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_m),
@@ -70,10 +82,9 @@ class _Scaffold extends StatelessWidget {
               children: [
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: _HiddenInviteAccess(
-                    viewModel: viewModel,
-                    child: const BlocMarque(),
-                  ),
+                  child: viewModel.withHiddenInviteAccess
+                      ? _HiddenInviteAccess(viewModel: viewModel, child: const BlocMarque())
+                      : const BlocMarque(),
                 ),
                 const SizedBox(height: Margins.spacing_s),
                 _ModeDemoTripleTap(
