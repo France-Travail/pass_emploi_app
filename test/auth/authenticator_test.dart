@@ -9,6 +9,7 @@ import 'package:pass_emploi_app/auth/authenticator.dart';
 import 'package:pass_emploi_app/crashlytics/crashlytics.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/models/brand.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/repositories/auth/logout_repository.dart';
 import 'package:pass_emploi_app/repositories/installation_id_repository.dart';
 
@@ -478,6 +479,16 @@ void main() {
 
       // When-Then
       expect(await authenticator.refreshToken(), authTokenResponse().refreshToken);
+    });
+  });
+
+  group('LoginMode.toAuthenticationMode', () {
+    test('maps each login mode to its authentication mode', () {
+      expect(LoginMode.MILO.toAuthenticationMode(), AuthenticationMode.SIMILO);
+      expect(LoginMode.POLE_EMPLOI.toAuthenticationMode(), AuthenticationMode.POLE_EMPLOI);
+      expect(LoginMode.INVITE.toAuthenticationMode(), AuthenticationMode.INVITE);
+      expect(LoginMode.DEMO_MILO.toAuthenticationMode(), AuthenticationMode.DEMO);
+      expect(LoginMode.DEMO_PE.toAuthenticationMode(), AuthenticationMode.DEMO);
     });
   });
 
