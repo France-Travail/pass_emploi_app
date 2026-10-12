@@ -9,37 +9,80 @@ void main() {
     sut.givenRepository((client) => RepriseCompteInviteRepository(client));
 
     group('reprendre', () {
-      sut.when((repository) => repository.reprendre(userId: 'userId', jetonInvite: 'jeton-invite'));
+      group('without plan', () {
+        sut.when((repository) => repository.reprendre(userId: 'userId', jetonInvite: 'jeton-invite'));
 
-      group('when response is valid', () {
-        sut.givenResponseCode(204);
+        group('when response is valid', () {
+          sut.givenResponseCode(204);
 
-        test('request should be valid', () async {
-          await sut.expectRequestBody(
-            method: HttpMethod.post,
-            url: "/jeunes/userId/reprise-invite",
-            rawBody: {"jetonInvite": "jeton-invite"},
-          );
+          test('request should be valid', () async {
+            await sut.expectRequestBody(
+              method: HttpMethod.post,
+              url: "/jeunes/userId/reprise-invite",
+              rawBody: {"jetonInvite": "jeton-invite"},
+            );
+          });
+
+          test('response should be true', () async {
+            await sut.expectTrueAsResult();
+          });
         });
 
-        test('response should be true', () async {
-          await sut.expectTrueAsResult();
+        group('when response is invalid', () {
+          sut.givenResponseCode(400);
+
+          test('response should be false', () async {
+            await sut.expectFalseAsResult();
+          });
+        });
+
+        group('when an exception is thrown', () {
+          sut.givenThrowingExceptionResponse();
+
+          test('response should be false', () async {
+            await sut.expectFalseAsResult();
+          });
         });
       });
 
-      group('when response is invalid', () {
-        sut.givenResponseCode(400);
+      group('with plan', () {
+        final plan = {
+          'id': 'plan-1',
+          'objectives': [
+            {
+              'id': 'objective-1',
+              'titre': 'Trouver un emploi',
+              'theme': 'emploi',
+              'actions': [
+                {'id': 'action-1', 'idSolution': 'solution-123', 'terminee': true},
+              ],
+            },
+          ],
+        };
 
-        test('response should be false', () async {
-          await sut.expectFalseAsResult();
-        });
-      });
+        sut.when((repository) => repository.reprendre(
+              userId: 'userId',
+              jetonInvite: 'jeton-invite',
+              plan: plan,
+            ));
 
-      group('when an exception is thrown', () {
-        sut.givenThrowingExceptionResponse();
+        group('when response is valid', () {
+          sut.givenResponseCode(204);
 
-        test('response should be false', () async {
-          await sut.expectFalseAsResult();
+          test('request should include plan', () async {
+            await sut.expectRequestBody(
+              method: HttpMethod.post,
+              url: "/jeunes/userId/reprise-invite",
+              rawBody: {
+                "jetonInvite": "jeton-invite",
+                "plan": plan,
+              },
+            );
+          });
+
+          test('response should be true', () async {
+            await sut.expectTrueAsResult();
+          });
         });
       });
     });

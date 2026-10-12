@@ -9,10 +9,18 @@ class RepriseCompteInviteRepository {
 
   RepriseCompteInviteRepository(this._httpClient, [this._crashlytics]);
 
-  Future<bool> reprendre({required String userId, required String jetonInvite}) async {
+  Future<bool> reprendre({
+    required String userId,
+    required String jetonInvite,
+    Map<String, dynamic>? plan,
+  }) async {
     final url = "/jeunes/$userId/reprise-invite";
     try {
-      await _httpClient.post(url, data: {"jetonInvite": jetonInvite});
+      final data = {
+        "jetonInvite": jetonInvite,
+        if (plan != null) "plan": plan,
+      };
+      await _httpClient.post(url, data: data);
       return true;
     } catch (e, stack) {
       _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);

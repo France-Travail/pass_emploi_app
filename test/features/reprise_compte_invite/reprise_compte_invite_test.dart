@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/features/login/login_state.dart';
 import 'package:pass_emploi_app/features/reprise_compte_invite/reprise_compte_invite_actions.dart';
 import 'package:pass_emploi_app/features/reprise_compte_invite/reprise_compte_invite_state.dart';
+import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 
@@ -34,13 +35,16 @@ void main() {
       ).thenAnswer((_) async => 'jeton-invite');
     });
 
-    void givenInviteStore() {
+    void givenInviteStore({MockActionPlanRepository? actionPlanRepository}) {
       sut.givenStore =
           givenState() //
               .loggedInUser(loginMode: LoginMode.INVITE)
               .store((f) {
                 f.authenticator = authenticator;
                 f.repriseCompteInviteRepository = repository;
+                if (actionPlanRepository != null) {
+                  f.actionPlanRepository = actionPlanRepository;
+                }
               });
     }
 
@@ -57,15 +61,27 @@ void main() {
           when(() => authenticator.idToken()).thenAnswer((_) async => _miloIdToken());
           when(() => authenticator.isLoggedIn()).thenAnswer((_) async => true);
           when(
-            () => repository.reprendre(userId: 'id-jeune', jetonInvite: 'jeton-invite'),
+            () => repository.reprendre(
+              userId: any(named: 'userId'),
+              jetonInvite: any(named: 'jetonInvite'),
+              plan: any(named: 'plan'),
+            ),
           ).thenAnswer((_) async => true);
           givenInviteStore();
 
           // Then
           await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldBeLoggedInAsMiloUser()]);
-          await untilCalled(() => repository.reprendre(userId: 'id-jeune', jetonInvite: 'jeton-invite'));
+          await untilCalled(() => repository.reprendre(
+                userId: any(named: 'userId'),
+                jetonInvite: any(named: 'jetonInvite'),
+                plan: any(named: 'plan'),
+              ));
           await pumpEventQueue();
-          verify(() => repository.reprendre(userId: 'id-jeune', jetonInvite: 'jeton-invite')).called(1);
+          verify(() => repository.reprendre(
+                userId: 'id-jeune',
+                jetonInvite: 'jeton-invite',
+                plan: any(named: 'plan'),
+              )).called(1);
           verifyInOrder([
             () => authenticator.refreshToken(),
             () => authenticator.login(AuthenticationMode.SIMILO),
@@ -86,6 +102,7 @@ void main() {
           () => repository.reprendre(
             userId: any(named: 'userId'),
             jetonInvite: any(named: 'jetonInvite'),
+            plan: any(named: 'plan'),
           ),
         ).thenAnswer((_) async => false);
         givenInviteStore();
@@ -110,6 +127,7 @@ void main() {
           () => repository.reprendre(
             userId: any(named: 'userId'),
             jetonInvite: any(named: 'jetonInvite'),
+            plan: any(named: 'plan'),
           ),
         );
       });
@@ -129,6 +147,7 @@ void main() {
           () => repository.reprendre(
             userId: any(named: 'userId'),
             jetonInvite: any(named: 'jetonInvite'),
+            plan: any(named: 'plan'),
           ),
         );
       });
@@ -147,6 +166,7 @@ void main() {
           () => repository.reprendre(
             userId: any(named: 'userId'),
             jetonInvite: any(named: 'jetonInvite'),
+            plan: any(named: 'plan'),
           ),
         );
       });
@@ -195,6 +215,144 @@ void main() {
 
         // Then
         await sut.thenExpectNever(_shouldLoad());
+      });
+    });
+
+    group('when guest has a local action plan', () {
+      sut.whenDispatchingAction(() => RepriseCompteInviteRequestAction(LoginMode.MILO));
+
+      test('should send the local plan to the API when all actions have idSolution', () async {
+        // Given
+        final actionPlanRepository = MockActionPlanRepository();
+        final localPlan = ActionPlan(
+          id: 'plan-1',
+          greeting: 'Bonjour',
+          objectives: [
+            ActionPlanObjective(
+              id: 'objective-1',
+              title: 'Trouver un emploi',
+              theme: 'emploi',
+              actions: [
+                const ActionPlanAction(
+                  id: 'action-1',
+                  label: 'Faire un CV',
+                  kind: ActionPlanActionKind.advice,
+                  done: true,
+                  idSolution: 'solution-123',
+                ),
+              ],
+            ),
+          ],
+        );
+        when(() => actionPlanRepository.getStoredPlan()).thenAnswer((_) async => localPlan);
+        when(
+          () => authenticator.login(AuthenticationMode.SIMILO),
+        ).thenAnswer((_) async => SuccessAuthenticatorResponse());
+        when(() => authenticator.idToken()).thenAnswer((_) async => _miloIdToken());
+        when(() => authenticator.isLoggedIn()).thenAnswer((_) async => true);
+        when(
+          () => repository.reprendre(
+            userId: any(named: 'userId'),
+            jetonInvite: any(named: 'jetonInvite'),
+            plan: any(named: 'plan'),
+          ),
+        ).thenAnswer((_) async => true);
+        givenInviteStore(actionPlanRepository: actionPlanRepository);
+
+        // Then
+        await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldBeLoggedInAsMiloUser()]);
+        await untilCalled(() => repository.reprendre(
+              userId: any(named: 'userId'),
+              jetonInvite: any(named: 'jetonInvite'),
+              plan: any(named: 'plan'),
+            ));
+        await pumpEventQueue();
+        final captured = verify(
+          () => repository.reprendre(
+            userId: 'id-jeune',
+            jetonInvite: 'jeton-invite',
+            plan: captureAny(named: 'plan'),
+          ),
+        ).captured.single as Map<String, dynamic>;
+        expect(captured['id'], 'plan-1');
+        expect(captured['objectives'], hasLength(1));
+        expect(captured['objectives'][0]['id'], 'objective-1');
+        expect(captured['objectives'][0]['actions'][0]['idSolution'], 'solution-123');
+      });
+
+      test('should not send the plan when an action is missing idSolution', () async {
+        // Given
+        final actionPlanRepository = MockActionPlanRepository();
+        final localPlan = ActionPlan(
+          id: 'plan-1',
+          greeting: 'Bonjour',
+          objectives: [
+            ActionPlanObjective(
+              id: 'objective-1',
+              title: 'Trouver un emploi',
+              theme: 'emploi',
+              actions: [
+                const ActionPlanAction(
+                  id: 'action-1',
+                  label: 'Faire un CV',
+                  kind: ActionPlanActionKind.advice,
+                  done: true,
+                ),
+              ],
+            ),
+          ],
+        );
+        when(() => actionPlanRepository.getStoredPlan()).thenAnswer((_) async => localPlan);
+        when(
+          () => authenticator.login(AuthenticationMode.SIMILO),
+        ).thenAnswer((_) async => SuccessAuthenticatorResponse());
+        when(() => authenticator.idToken()).thenAnswer((_) async => _miloIdToken());
+        when(() => authenticator.isLoggedIn()).thenAnswer((_) async => true);
+        when(
+          () => repository.reprendre(
+            userId: any(named: 'userId'),
+            jetonInvite: any(named: 'jetonInvite'),
+            plan: any(named: 'plan'),
+          ),
+        ).thenAnswer((_) async => true);
+        givenInviteStore(actionPlanRepository: actionPlanRepository);
+
+        // Then
+        await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldBeLoggedInAsMiloUser()]);
+        await pumpEventQueue();
+        verify(() => repository.reprendre(
+              userId: 'id-jeune',
+              jetonInvite: 'jeton-invite',
+              plan: null,
+            )).called(1);
+      });
+
+      test('should not send the plan when there is no local plan', () async {
+        // Given
+        final actionPlanRepository = MockActionPlanRepository();
+        when(() => actionPlanRepository.getStoredPlan()).thenAnswer((_) async => null);
+        when(
+          () => authenticator.login(AuthenticationMode.SIMILO),
+        ).thenAnswer((_) async => SuccessAuthenticatorResponse());
+        when(() => authenticator.idToken()).thenAnswer((_) async => _miloIdToken());
+        when(() => authenticator.isLoggedIn()).thenAnswer((_) async => true);
+        when(
+          () => repository.reprendre(
+            userId: any(named: 'userId'),
+            jetonInvite: any(named: 'jetonInvite'),
+            plan: any(named: 'plan'),
+          ),
+        ).thenAnswer((_) async => true);
+        givenInviteStore(actionPlanRepository: actionPlanRepository);
+
+        // Then
+        await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldBeLoggedInAsMiloUser()]);
+        await pumpEventQueue();
+        verify(() => repository.reprendre(
+              userId: 'id-jeune',
+              jetonInvite: 'jeton-invite',
+              plan: null,
+            )).called(1);
       });
     });
   });
