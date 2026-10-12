@@ -186,17 +186,15 @@ class Authenticator {
     if (mode == AuthenticationMode.POLE_EMPLOI) idpHintParameters = poleEmploiParams;
     if (mode == AuthenticationMode.INVITE) idpHintParameters = inviteParams;
 
-    // `application` identifie l'app auprès de Connect (pass-emploi ou 1j1s) : les deux partagent le même client_id.
-    final parameters = {...?idpHintParameters, 'application': _applicationParameter()};
+    final parameters = {...?idpHintParameters, 'application': _applicationName()};
 
     final installationId = await _readInstallationIdForLogin();
     if (installationId == null) return parameters;
     return {...parameters, 'installation_id': installationId};
   }
 
-  String _applicationParameter() {
+  String _applicationName() {
     switch (_configuration.brand) {
-      // Le brand `cej` est l'app 1 jeune 1 solution
       case Brand.cej:
         return '1j1s';
       case Brand.passEmploi:
