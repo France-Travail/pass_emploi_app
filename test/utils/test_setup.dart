@@ -1,4 +1,3 @@
-import 'package:pass_emploi_app/auth/auth_access_token_retriever.dart';
 import 'package:pass_emploi_app/auth/authenticator.dart';
 import 'package:pass_emploi_app/auth/firebase_auth_wrapper.dart';
 import 'package:pass_emploi_app/configuration/configuration.dart';
@@ -99,7 +98,6 @@ import '../doubles/mocks.dart';
 class TestStoreFactory {
   final Configuration _configuration = configuration();
   Authenticator authenticator = DummyAuthenticator();
-  AuthAccessTokenRetriever accessTokenRetriever = MockAuthAccessTokenRetriever();
   UserActionRepository userActionRepository = DummyUserActionRepository();
   UserActionPendingCreationRepository userActionPendingCreationRepository = MockUserActionPendingCreationRepository();
   RendezvousRepository rendezvousRepository = MockRendezvousRepository();
@@ -194,7 +192,6 @@ class TestStoreFactory {
     return StoreFactory(
       _configuration,
       authenticator,
-      accessTokenRetriever,
       crashlytics,
       chatCrypto,
       cryptoStorage,

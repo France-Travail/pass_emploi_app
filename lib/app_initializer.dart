@@ -251,7 +251,6 @@ class AppInitializer {
     final reduxStore = StoreFactory(
       configuration,
       authenticator,
-      accessTokenRetriever,
       crashlytics,
       chatCrypto,
       cryptoStorage,

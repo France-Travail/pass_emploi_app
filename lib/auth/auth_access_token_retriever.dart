@@ -27,12 +27,6 @@ class AuthAccessTokenRetriever {
     return _lock.synchronized(() async => _accessToken());
   }
 
-  /// Rafraîchit même un token encore valide : l'appelant dispose ainsi d'un access token
-  /// valable toute sa durée de vie (ex. preuve de reprise du compte invité).
-  Future<String> refreshedAccessToken() async {
-    return _lock.synchronized(() async => _refreshAccessToken());
-  }
-
   Future<String> _accessToken() async {
     final accessToken = await _authenticator.idToken();
     if (accessToken == null) throw Exception("ID Token is null");
@@ -42,10 +36,6 @@ class AuthAccessTokenRetriever {
       return (await _authenticator.accessToken())!;
     }
 
-    return _refreshAccessToken();
-  }
-
-  Future<String> _refreshAccessToken() async {
     final refreshTokenStatus = await _authenticator.performRefreshToken();
     switch (refreshTokenStatus) {
       case RefreshTokenStatus.SUCCESSFUL:

@@ -437,6 +437,50 @@ void main() {
     });
   });
 
+  group('Access token from refresh token tests', () {
+    test('returns the refreshed access token without replacing the saved tokens', () async {
+      // Given
+      when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async => authTokenResponse());
+      await authenticator.login(AuthenticationMode.GENERIC);
+      when(() => wrapper.refreshToken(_refreshTokenRequest(refreshToken: 'autreRefreshToken'))).thenAnswer(
+        (_) async => AuthTokenResponse(accessToken: 'autreAccessToken', idToken: 'autreIdToken', refreshToken: 'x'),
+      );
+
+      // When
+      final result = await authenticator.accessTokenFromRefreshToken('autreRefreshToken');
+
+      // Then
+      expect(result, 'autreAccessToken');
+      expect(await secureStorage.read(key: "accessToken"), authTokenResponse().accessToken);
+      expect(await secureStorage.read(key: "refreshToken"), authTokenResponse().refreshToken);
+    });
+
+    test('returns null without logging out when refresh fails', () async {
+      // Given
+      when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async => authTokenResponse());
+      await authenticator.login(AuthenticationMode.GENERIC);
+      when(
+        () => wrapper.refreshToken(_refreshTokenRequest(refreshToken: 'autreRefreshToken')),
+      ).thenThrow(AuthWrapperRefreshTokenExpiredException(''));
+
+      // When
+      final result = await authenticator.accessTokenFromRefreshToken('autreRefreshToken');
+
+      // Then
+      expect(result, isNull);
+      expect(await secureStorage.read(key: "refreshToken"), authTokenResponse().refreshToken);
+    });
+
+    test('refreshToken returns the saved refresh token', () async {
+      // Given
+      when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async => authTokenResponse());
+      await authenticator.login(AuthenticationMode.GENERIC);
+
+      // When-Then
+      expect(await authenticator.refreshToken(), authTokenResponse().refreshToken);
+    });
+  });
+
   group('Logout tests', () {
     test('TRUE is returned and tokens are deleted when user was logged in', () async {
       // Given
@@ -580,12 +624,12 @@ AuthTokenRequest _tokenRequest({
   );
 }
 
-AuthRefreshTokenRequest _refreshTokenRequest() {
+AuthRefreshTokenRequest _refreshTokenRequest({String refreshToken = 'refreshToken'}) {
   return AuthRefreshTokenRequest(
     configuration().authClientId,
     configuration().authLoginRedirectUrl,
     configuration().authIssuer,
-    'refreshToken',
+    refreshToken,
     configuration().authClientSecret,
   );
 }

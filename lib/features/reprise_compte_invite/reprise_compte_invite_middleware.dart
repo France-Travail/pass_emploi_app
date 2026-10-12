@@ -1,4 +1,3 @@
-import 'package:pass_emploi_app/auth/auth_access_token_retriever.dart';
 import 'package:pass_emploi_app/auth/authenticator.dart';
 import 'package:pass_emploi_app/features/bootstrap/bootstrap_action.dart';
 import 'package:pass_emploi_app/features/reprise_compte_invite/reprise_compte_invite_actions.dart';
@@ -10,9 +9,8 @@ import 'package:redux/redux.dart';
 class RepriseCompteInviteMiddleware extends MiddlewareClass<AppState> {
   final RepriseCompteInviteRepository _repository;
   final Authenticator _authenticator;
-  final AuthAccessTokenRetriever _accessTokenRetriever;
 
-  RepriseCompteInviteMiddleware(this._repository, this._authenticator, this._accessTokenRetriever);
+  RepriseCompteInviteMiddleware(this._repository, this._authenticator);
 
   @override
   void call(Store<AppState> store, action, NextDispatcher next) async {
@@ -25,21 +23,15 @@ class RepriseCompteInviteMiddleware extends MiddlewareClass<AppState> {
   Future<void> _reprendre(Store<AppState> store, LoginMode mode) async {
     store.dispatch(RepriseCompteInviteLoadingAction());
 
-    // L'access token invité prouve la reprise une fois le vrai compte connecté. Il est rafraîchi juste avant
-    // la connexion, qui peut durer : l'API vérifie son expiration.
-    final String jetonInvite;
-    try {
-      jetonInvite = await _accessTokenRetriever.refreshedAccessToken();
-    } on Exception catch (e) {
-      store.dispatch(RepriseCompteInviteFailureAction(e.toString()));
-      return;
-    }
+    // Le login remplace les tokens invité : le refresh token invité, qui n'expire pas, est lu avant
+    // pour produire la preuve de reprise après le login, quelle que soit sa durée.
+    final refreshTokenInvite = await _authenticator.refreshToken();
 
     // Les tokens invité ne sont remplacés qu'en cas de succès : annulation et échec laissent la session invité intacte.
     final response = await _authenticator.login(mode.toAuthenticationMode());
     switch (response) {
       case SuccessAuthenticatorResponse():
-        await _rattacherInvite(store, jetonInvite);
+        await _rattacherInvite(store, refreshTokenInvite);
       case CancelledAuthenticatorResponse():
         store.dispatch(RepriseCompteInviteResetAction());
       case WrongDeviceClockAuthenticatorResponse():
@@ -49,11 +41,16 @@ class RepriseCompteInviteMiddleware extends MiddlewareClass<AppState> {
     }
   }
 
-  Future<void> _rattacherInvite(Store<AppState> store, String jetonInvite) async {
+  Future<void> _rattacherInvite(Store<AppState> store, String? refreshTokenInvite) async {
     final idToken = await _authenticator.idToken();
+    final jetonInvite = refreshTokenInvite != null
+        ? await _authenticator.accessTokenFromRefreshToken(refreshTokenInvite)
+        : null;
     // Un échec du rattachement ne bloque pas le jeune, désormais connecté : l'invité non rattaché
     // finira purgé comme inactif.
-    if (idToken != null) await _repository.reprendre(userId: idToken.userId, jetonInvite: jetonInvite);
+    if (idToken != null && jetonInvite != null) {
+      await _repository.reprendre(userId: idToken.userId, jetonInvite: jetonInvite);
+    }
 
     // Comme après une déconnexion, l'état de l'invité est effacé puis l'app redémarre sur le compte connecté.
     store.dispatch(RepriseCompteInviteSuccessAction());

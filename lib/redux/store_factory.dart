@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:pass_emploi_app/auth/auth_access_token_retriever.dart';
 import 'package:pass_emploi_app/auth/authenticator.dart';
 import 'package:pass_emploi_app/auth/firebase_auth_wrapper.dart';
 import 'package:pass_emploi_app/configuration/configuration.dart';
@@ -197,7 +196,6 @@ import 'package:redux/redux.dart' as redux;
 class StoreFactory {
   final Configuration configuration;
   final Authenticator authenticator;
-  final AuthAccessTokenRetriever accessTokenRetriever;
   final Crashlytics crashlytics;
   final ChatCrypto chatCrypto;
   final ChatEncryptionLocalStorage cryptoStorage;
@@ -289,7 +287,6 @@ class StoreFactory {
   StoreFactory(
     this.configuration,
     this.authenticator,
-    this.accessTokenRetriever,
     this.crashlytics,
     this.chatCrypto,
     this.cryptoStorage,
@@ -489,7 +486,7 @@ class StoreFactory {
         OnboardingQuestionnaireMiddleware(onboardingQuestionnaireRepository, actionPlanRepository).call,
         ActionPlanMiddleware(actionPlanRepository).call,
         FonctionnalitesMiddleware(fonctionnalitesRepository).call,
-        RepriseCompteInviteMiddleware(repriseCompteInviteRepository, authenticator, accessTokenRetriever).call,
+        RepriseCompteInviteMiddleware(repriseCompteInviteRepository, authenticator).call,
         /*AUTOGENERATE-REDUX-STOREFACTORY-ADD-MIDDLEWARE*/
         ..._debugMiddlewares(),
         ..._stagingMiddlewares(initialState.configurationState.getFlavor()),

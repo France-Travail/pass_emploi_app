@@ -141,6 +141,27 @@ class Authenticator {
 
   Future<String?> accessToken() async => _preferences.read(key: _accessTokenKey);
 
+  Future<String?> refreshToken() async => _preferences.read(key: _refreshTokenKey);
+
+  /// Contrairement à [performRefreshToken], n'enregistre rien : le refresh token peut appartenir
+  /// à un autre compte que celui connecté (ex. preuve de reprise du compte invité).
+  Future<String?> accessTokenFromRefreshToken(String refreshToken) async {
+    try {
+      final AuthTokenResponse response = await _authWrapper.refreshToken(
+        AuthRefreshTokenRequest(
+          _configuration.authClientId,
+          _configuration.authLoginRedirectUrl,
+          _configuration.authIssuer,
+          refreshToken,
+          _configuration.authClientSecret,
+        ),
+      );
+      return response.accessToken;
+    } on AuthWrapperException {
+      return null;
+    }
+  }
+
   Future<RefreshTokenStatus> performRefreshToken() async {
     final String? refreshToken = await _preferences.read(key: _refreshTokenKey);
     if (refreshToken == null) {

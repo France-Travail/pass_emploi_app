@@ -18,7 +18,6 @@ void main() {
   group('RepriseCompteInvite', () {
     final sut = StoreSut();
     late MockAuthenticator authenticator;
-    late MockAuthAccessTokenRetriever accessTokenRetriever;
     late MockRepriseCompteInviteRepository repository;
 
     setUpAll(() {
@@ -28,9 +27,11 @@ void main() {
 
     setUp(() {
       authenticator = MockAuthenticator();
-      accessTokenRetriever = MockAuthAccessTokenRetriever();
       repository = MockRepriseCompteInviteRepository();
-      when(() => accessTokenRetriever.refreshedAccessToken()).thenAnswer((_) async => 'jeton-invite');
+      when(() => authenticator.refreshToken()).thenAnswer((_) async => 'refresh-token-invite');
+      when(
+        () => authenticator.accessTokenFromRefreshToken('refresh-token-invite'),
+      ).thenAnswer((_) async => 'jeton-invite');
     });
 
     void givenInviteStore() {
@@ -39,7 +40,6 @@ void main() {
               .loggedInUser(loginMode: LoginMode.INVITE)
               .store((f) {
                 f.authenticator = authenticator;
-                f.accessTokenRetriever = accessTokenRetriever;
                 f.repriseCompteInviteRepository = repository;
               });
     }
@@ -48,7 +48,7 @@ void main() {
       sut.whenDispatchingAction(() => RepriseCompteInviteRequestAction(LoginMode.MILO));
 
       test(
-        'should log in the MILO account then attach the guest account to it with the refreshed guest token',
+        'should log in the MILO account then attach the guest account to it with a guest token obtained after login',
         () async {
           // Given
           when(
@@ -66,6 +66,11 @@ void main() {
           await untilCalled(() => repository.reprendre(userId: 'id-jeune', jetonInvite: 'jeton-invite'));
           await pumpEventQueue();
           verify(() => repository.reprendre(userId: 'id-jeune', jetonInvite: 'jeton-invite')).called(1);
+          verifyInOrder([
+            () => authenticator.refreshToken(),
+            () => authenticator.login(AuthenticationMode.SIMILO),
+            () => authenticator.accessTokenFromRefreshToken('refresh-token-invite'),
+          ]);
           verifyNever(() => authenticator.logout(any(), any()));
         },
       );
@@ -89,6 +94,26 @@ void main() {
         await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldBeLoggedInAsMiloUser()]);
       });
 
+      test('should still log in the MILO account without attaching when no guest token can be obtained', () async {
+        // Given
+        when(
+          () => authenticator.login(AuthenticationMode.SIMILO),
+        ).thenAnswer((_) async => SuccessAuthenticatorResponse());
+        when(() => authenticator.idToken()).thenAnswer((_) async => _miloIdToken());
+        when(() => authenticator.isLoggedIn()).thenAnswer((_) async => true);
+        when(() => authenticator.accessTokenFromRefreshToken(any())).thenAnswer((_) async => null);
+        givenInviteStore();
+
+        // Then
+        await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldBeLoggedInAsMiloUser()]);
+        verifyNever(
+          () => repository.reprendre(
+            userId: any(named: 'userId'),
+            jetonInvite: any(named: 'jetonInvite'),
+          ),
+        );
+      });
+
       test('should stay logged in as guest without attaching when login is cancelled', () async {
         // Given
         when(
@@ -99,6 +124,7 @@ void main() {
         // Then
         await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldBeResetWhileStayingGuest()]);
         await pumpEventQueue();
+        verifyNever(() => authenticator.accessTokenFromRefreshToken(any()));
         verifyNever(
           () => repository.reprendre(
             userId: any(named: 'userId'),
@@ -135,19 +161,6 @@ void main() {
         // Then
         await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldFailBecauseOfWrongClock()]);
       });
-
-      test('should fail without starting login when guest token cannot be refreshed', () async {
-        // Given
-        when(() => accessTokenRetriever.refreshedAccessToken()).thenThrow(Exception('refresh failed'));
-        givenInviteStore();
-
-        // Then
-        await sut.thenExpectChangingStatesThroughOrder(
-          [_shouldLoad(), _shouldFailWithMessage('Exception: refresh failed')],
-        );
-        await pumpEventQueue();
-        verifyNever(() => authenticator.login(any()));
-      });
     });
 
     group('when requesting with POLE_EMPLOI', () {
@@ -177,7 +190,6 @@ void main() {
                 .loggedInUser(loginMode: LoginMode.MILO)
                 .store((f) {
                   f.authenticator = authenticator;
-                  f.accessTokenRetriever = accessTokenRetriever;
                   f.repriseCompteInviteRepository = repository;
                 });
 
