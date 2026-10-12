@@ -14,8 +14,13 @@ class TutorialRepository {
 
   List<TutorialPage> getPoleEmploiTutorial() => Tutorial.pe;
 
+  List<TutorialPage> getPlanActionTutorial() => Tutorial.planAction;
+
   Future<void> setTutorialRead() async {
-    await _preferences.write(key: '$_keyPrefix${Tutorial.versionTimestamp}', value: 'read');
+    await _preferences.write(
+      key: '$_keyPrefix${Tutorial.versionTimestamp}',
+      value: 'read',
+    );
   }
 
   Future<bool> shouldShowTutorial() async {
@@ -33,7 +38,9 @@ class TutorialRepository {
   }
 
   Future<bool> _isTutorialNotRead(String version) async {
-    final String? tutorialRead = await _preferences.read(key: '$_keyPrefix$version');
+    final String? tutorialRead = await _preferences.read(
+      key: '$_keyPrefix$version',
+    );
     return tutorialRead == null;
   }
 
@@ -47,6 +54,25 @@ class TutorialRepository {
   }
 
   Future<void> setFtIaTutorialSeen() async {
-    await _preferences.write(key: '$_keyPrefix${Tutorial.ftIaTutorialVersionTimestamp}', value: 'read');
+    await _preferences.write(
+      key: '$_keyPrefix${Tutorial.ftIaTutorialVersionTimestamp}',
+      value: 'read',
+    );
+  }
+
+  Future<bool> shouldShowPlanActionTutorial() async {
+    if (await _isFirstInstall()) {
+      await setTutorialRead();
+      return false;
+    }
+
+    return await _isTutorialNotRead(Tutorial.planActionVersionTimestamp);
+  }
+
+  Future<void> setPlanActionTutorialRead() async {
+    await _preferences.write(
+      key: '$_keyPrefix${Tutorial.planActionVersionTimestamp}',
+      value: 'read',
+    );
   }
 }

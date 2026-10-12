@@ -59,58 +59,42 @@ class _TutorialPageState extends State<TutorialPage> {
 
   Widget _content(TutorialPageViewModel viewModel) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final page = viewModel.pages[_currentPage];
     return Theme(
       data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
       child: Scaffold(
-        backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+        backgroundColor: DsfrColorDecisions.backgroundContrastBlueFrance(
+          context,
+        ),
         body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: DsfrSpacings.s2w),
-              _SkipButton(active: !_isLastPage(viewModel), viewModel: viewModel),
-              const SizedBox(height: DsfrSpacings.s2w),
-              Expanded(
-                child: PageView(
-                  controller: _controller,
-                  children: [
-                    for (final page in viewModel.pages)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
-                        child: _TutorialContentCard(
-                          title: page.title,
-                          description: page.description,
-                          image: page.image,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: DsfrSpacings.s2w),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: DsfrButton(
-                    label: _isLastPage(viewModel) ? Strings.finish : Strings.continueLabel,
-                    variant: DsfrButtonVariant.primary,
-                    size: DsfrComponentSize.lg,
-                    onPressed: () => _onPressed(viewModel),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: DsfrSpacings.s3w,
+              vertical: DsfrSpacings.s1w,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: _TutorialCard(
+                    viewModel: viewModel,
+                    pageController: _controller,
+                    currentPage: _currentPage,
+                    title: page.title,
+                    description: page.description,
                   ),
                 ),
-              ),
-              const SizedBox(height: DsfrSpacings.s2w),
-              _DelayedButton(viewModel: viewModel),
-              const SizedBox(height: DsfrSpacings.s2w),
-              Semantics(
-                label: 'Page ${_currentPage + 1} sur ${viewModel.pages.length}',
-                child: _CarouselStepperIndicator(
-                  currentPage: _currentPage,
-                  pageCount: viewModel.pages.length,
+                const SizedBox(height: DsfrSpacings.s3v),
+                DsfrButton(
+                  label: _isLastPage(viewModel) ? Strings.finish : Strings.continueLabel,
+                  variant: DsfrButtonVariant.primary,
+                  size: DsfrComponentSize.lg,
+                  onPressed: () => _onPressed(viewModel),
                 ),
-              ),
-              const SizedBox(height: DsfrSpacings.s2w),
-            ],
+                const SizedBox(height: DsfrSpacings.s2w),
+                _DelayedButton(viewModel: viewModel),
+              ],
+            ),
           ),
         ),
       ),
@@ -130,66 +114,31 @@ class _TutorialPageState extends State<TutorialPage> {
         duration: AnimationDurations.medium,
         curve: Curves.linearToEaseOut,
       );
-      PassEmploiMatomoTracker.instance.trackScreen(AnalyticsActionNames.continueTutorial);
+      PassEmploiMatomoTracker.instance.trackScreen(
+        AnalyticsActionNames.continueTutorial,
+      );
     } else {
       viewModel.onDone();
-      PassEmploiMatomoTracker.instance.trackScreen(AnalyticsActionNames.doneTutorial);
+      PassEmploiMatomoTracker.instance.trackScreen(
+        AnalyticsActionNames.doneTutorial,
+      );
     }
   }
 }
 
-class _SkipButton extends StatelessWidget {
-  final bool active;
+class _TutorialCard extends StatelessWidget {
   final TutorialPageViewModel viewModel;
-
-  const _SkipButton({
-    required this.active,
-    required this.viewModel,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final button = DsfrButton(
-      label: Strings.skip,
-      variant: DsfrButtonVariant.tertiaryWithoutBorder,
-      size: DsfrComponentSize.md,
-      onPressed: active
-          ? () {
-              viewModel.onDone();
-              PassEmploiMatomoTracker.instance.trackScreen(AnalyticsActionNames.skipTutorial);
-            }
-          : null,
-    );
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
-      child: Row(
-        children: [
-          const Spacer(),
-          if (active)
-            button
-          else
-            ExcludeSemantics(
-              child: Opacity(
-                opacity: 0,
-                child: IgnorePointer(child: button),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _TutorialContentCard extends StatelessWidget {
+  final PageController pageController;
+  final int currentPage;
   final String title;
   final String description;
-  final String image;
 
-  const _TutorialContentCard({
+  const _TutorialCard({
+    required this.viewModel,
+    required this.pageController,
+    required this.currentPage,
     required this.title,
     required this.description,
-    required this.image,
   });
 
   @override
@@ -197,108 +146,58 @@ class _TutorialContentCard extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: DsfrColorDecisions.backgroundDefaultGrey(context),
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(Dimens.radius_base),
-          topRight: Radius.circular(Dimens.radius_s),
-        ),
-        border: Border.all(color: DsfrColorDecisions.borderDefaultGrey(context)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x29000012),
-            offset: Offset(0, 2),
-            blurRadius: 6,
-          ),
-        ],
+        borderRadius: BorderRadius.circular(Dimens.radius_s),
       ),
-      child: Scrollbar(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(DsfrSpacings.s2w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _Animation(image: image),
-                const SizedBox(height: DsfrSpacings.s2w),
-                Semantics(
-                  header: true,
-                  child: Text(
-                    title,
-                    style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
-                  ),
-                ),
-                const SizedBox(height: DsfrSpacings.s2w),
-                Text(
-                  description,
-                  style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
-                ),
-              ],
+      child: Padding(
+        padding: const EdgeInsets.all(DsfrSpacings.s2w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: PageView(
+                controller: pageController,
+                children: [
+                  for (final page in viewModel.pages)
+                    Center(
+                      child: Image.asset(
+                        page.image,
+                        fit: BoxFit.contain,
+                        alignment: Alignment.topCenter,
+                        excludeFromSemantics: true,
+                      ),
+                    ),
+                ],
+              ),
             ),
-          ),
+            const SizedBox(height: DsfrSpacings.s3v),
+            Semantics(
+              label: 'Page ${currentPage + 1} sur ${viewModel.pages.length}',
+              child: _CarouselStepperIndicator(
+                currentPage: currentPage,
+                pageCount: viewModel.pages.length,
+              ),
+            ),
+            const SizedBox(height: DsfrSpacings.s3v),
+            Semantics(
+              header: true,
+              child: Text(
+                title,
+                style: DsfrTextStyle.headline3(
+                  color: DsfrColorDecisions.textTitleGrey(context),
+                ),
+              ),
+            ),
+            const SizedBox(height: DsfrSpacings.s3v),
+            Text(
+              description,
+              style: DsfrTextStyle.bodyMd(
+                color: DsfrColorDecisions.textDefaultGrey(context),
+              ),
+            ),
+          ],
         ),
       ),
     );
-  }
-}
-
-class _Animation extends StatefulWidget {
-  final String image;
-
-  const _Animation({required this.image});
-
-  @override
-  State<_Animation> createState() => _AnimationState();
-}
-
-class _AnimationState extends State<_Animation> with SingleTickerProviderStateMixin {
-  bool _animating = false;
-
-  late final AnimationController _animationController = AnimationController(
-    duration: AnimationDurations.medium,
-    reverseDuration: AnimationDurations.medium,
-    vsync: this,
-  );
-  late final Animation<double> _offsetAnimation =
-      Tween<double>(
-        begin: 0,
-        end: 30,
-      ).animate(
-        CurvedAnimation(
-          parent: _animationController,
-          curve: Curves.bounceInOut,
-        ),
-      );
-
-  Future<void> _playAnimation() async {
-    await _animationController.forward(from: 0);
-    await _animationController.reverse();
-    await _animationController.forward(from: 0);
-    await _animationController.reverse();
-    await _animationController.forward(from: 0);
-    await _animationController.reverse();
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!_animating) {
-      _animating = true;
-      _playAnimation();
-    }
-    return AnimatedBuilder(
-      animation: _offsetAnimation,
-      builder: (context, Widget? child) {
-        return Transform.scale(
-          scale: 1 + _offsetAnimation.value / 150,
-          child: Image.asset(widget.image, excludeFromSemantics: true),
-        );
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
   }
 }
 
@@ -314,7 +213,9 @@ class _DelayedButton extends StatelessWidget {
         label: Strings.seeLater,
         onTap: () {
           viewModel.onDelay();
-          PassEmploiMatomoTracker.instance.trackScreen(AnalyticsActionNames.delayedTutorial);
+          PassEmploiMatomoTracker.instance.trackScreen(
+            AnalyticsActionNames.delayedTutorial,
+          );
         },
       ),
     );
@@ -342,7 +243,7 @@ class _CarouselStepperIndicator extends StatelessWidget {
           duration: AnimationDurations.fast,
           width: isActive ? 24 : 10,
           height: 10,
-          margin: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s1w),
+          margin: EdgeInsets.only(left: i == 0 ? 0 : 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             color: isActive ? active : inactive,

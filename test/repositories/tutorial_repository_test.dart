@@ -36,16 +36,19 @@ void main() {
     expect(shouldShowTutorial, isFalse);
   });
 
-  test("shouldShowTutorial returns true when not on first launch and user did not already saw it", () async {
-    // Given
-    await secureStorage.write(key: 'tutorialRead-111', value: 'read');
+  test(
+    "shouldShowTutorial returns true when not on first launch and user did not already saw it",
+    () async {
+      // Given
+      await secureStorage.write(key: 'tutorialRead-111', value: 'read');
 
-    // When
-    final shouldShowTutorial = await repository.shouldShowTutorial();
+      // When
+      final shouldShowTutorial = await repository.shouldShowTutorial();
 
-    // Then
-    expect(shouldShowTutorial, isTrue);
-  });
+      // Then
+      expect(shouldShowTutorial, isTrue);
+    },
+  );
 
   test("shouldShowTutorial returns false when user already saw it", () async {
     // Given
@@ -57,4 +60,51 @@ void main() {
     // Then
     expect(shouldShowTutorial, isFalse);
   });
+
+  test("getPlanActionTutorial returns the two plan action pages", () {
+    // When
+    final pages = repository.getPlanActionTutorial();
+
+    // Then
+    expect(pages, Tutorial.planAction);
+    expect(pages, hasLength(2));
+  });
+
+  test("shouldShowPlanActionTutorial returns false on first launch", () async {
+    // When
+    final shouldShowTutorial = await repository.shouldShowPlanActionTutorial();
+
+    // Then
+    expect(shouldShowTutorial, isFalse);
+  });
+
+  test(
+    "shouldShowPlanActionTutorial returns true when not on first launch and user did not already saw it",
+    () async {
+      // Given
+      await secureStorage.write(key: 'tutorialRead-111', value: 'read');
+
+      // When
+      final shouldShowTutorial = await repository
+          .shouldShowPlanActionTutorial();
+
+      // Then
+      expect(shouldShowTutorial, isTrue);
+    },
+  );
+
+  test(
+    "shouldShowPlanActionTutorial returns false when user already saw it",
+    () async {
+      // Given
+      await repository.setPlanActionTutorialRead();
+
+      // When
+      final shouldShowTutorial = await repository
+          .shouldShowPlanActionTutorial();
+
+      // Then
+      expect(shouldShowTutorial, isFalse);
+    },
+  );
 }
