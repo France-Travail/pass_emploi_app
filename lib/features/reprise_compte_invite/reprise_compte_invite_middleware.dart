@@ -58,9 +58,7 @@ class RepriseCompteInviteMiddleware extends MiddlewareClass<AppState> {
     Map<String, dynamic>? planApiReprise,
   ) async {
     final idToken = await _authenticator.idToken();
-    final jetonInvite = refreshTokenInvite != null
-        ? await _authenticator.accessTokenFromRefreshToken(refreshTokenInvite)
-        : null;
+    final jetonInvite = await _jetonInvite(refreshTokenInvite);
     // Un échec du rattachement ne bloque pas le jeune, désormais connecté : l'invité non rattaché
     // finira purgé comme inactif.
     if (idToken != null && jetonInvite != null) {
@@ -74,5 +72,10 @@ class RepriseCompteInviteMiddleware extends MiddlewareClass<AppState> {
     // Comme après une déconnexion, l'état de l'invité est effacé puis l'app redémarre sur le compte connecté.
     store.dispatch(RepriseCompteInviteSuccessAction());
     store.dispatch(BootstrapAction());
+  }
+
+  Future<String?> _jetonInvite(String? refreshTokenInvite) async {
+    if (refreshTokenInvite == null) return null;
+    return _authenticator.accessTokenFromRefreshToken(refreshTokenInvite);
   }
 }

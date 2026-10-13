@@ -143,41 +143,23 @@ class Authenticator {
 
   Future<String?> refreshToken() async => _preferences.read(key: _refreshTokenKey);
 
-  /// Contrairement à [performRefreshToken], n'enregistre rien : le refresh token peut appartenir
-  /// à un autre compte que celui connecté (ex. preuve de reprise du compte invité).
   Future<String?> accessTokenFromRefreshToken(String refreshToken) async {
     try {
-      final AuthTokenResponse response = await _authWrapper.refreshToken(
-        AuthRefreshTokenRequest(
-          _configuration.authClientId,
-          _configuration.authLoginRedirectUrl,
-          _configuration.authIssuer,
-          refreshToken,
-          _configuration.authClientSecret,
-        ),
-      );
+      final AuthTokenResponse response = await _exchangeRefreshToken(refreshToken);
       return response.accessToken;
     } on AuthWrapperException {
       return null;
     }
   }
 
-  Future<RefreshTokenStatus> performRefreshToken() async {
+  Future<RefreshTokenStatus> refreshStoredSession() async {
     final String? refreshToken = await _preferences.read(key: _refreshTokenKey);
     if (refreshToken == null) {
       return RefreshTokenStatus.USER_NOT_LOGGED_IN;
     }
 
     try {
-      final AuthTokenResponse response = await _authWrapper.refreshToken(
-        AuthRefreshTokenRequest(
-          _configuration.authClientId,
-          _configuration.authLoginRedirectUrl,
-          _configuration.authIssuer,
-          refreshToken,
-          _configuration.authClientSecret,
-        ),
-      );
+      final AuthTokenResponse response = await _exchangeRefreshToken(refreshToken);
       await _saveToken(response);
       return RefreshTokenStatus.SUCCESSFUL;
     } on AuthWrapperNetworkException {
@@ -191,6 +173,18 @@ class Authenticator {
     } on AuthWrapperRefreshTokenException {
       return RefreshTokenStatus.GENERIC_ERROR;
     }
+  }
+
+  Future<AuthTokenResponse> _exchangeRefreshToken(String refreshToken) {
+    return _authWrapper.refreshToken(
+      AuthRefreshTokenRequest(
+        _configuration.authClientId,
+        _configuration.authLoginRedirectUrl,
+        _configuration.authIssuer,
+        refreshToken,
+        _configuration.authClientSecret,
+      ),
+    );
   }
 
   Future<bool> logout(String userId, LogoutReason reason) async {

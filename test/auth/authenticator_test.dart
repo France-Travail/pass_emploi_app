@@ -343,7 +343,7 @@ void main() {
       await authenticator.login(AuthenticationMode.GENERIC);
 
       // When
-      final result = await authenticator.performRefreshToken();
+      final result = await authenticator.refreshStoredSession();
 
       // Then
       expect(result, RefreshTokenStatus.SUCCESSFUL);
@@ -360,7 +360,7 @@ void main() {
       await authenticator.login(AuthenticationMode.GENERIC);
 
       // When
-      final result = await authenticator.performRefreshToken();
+      final result = await authenticator.refreshStoredSession();
 
       // Then
       expect(result, RefreshTokenStatus.NETWORK_UNREACHABLE);
@@ -376,7 +376,7 @@ void main() {
         await authenticator.login(AuthenticationMode.GENERIC);
 
         // When
-        final result = await authenticator.performRefreshToken();
+        final result = await authenticator.refreshStoredSession();
 
         // Then
         expect(result, RefreshTokenStatus.EXPIRED_REFRESH_TOKEN);
@@ -400,7 +400,7 @@ void main() {
       });
 
       // When
-      final result = await authenticator.performRefreshToken();
+      final result = await authenticator.refreshStoredSession();
 
       // Then
       expect(result, RefreshTokenStatus.SUCCESSFUL);
@@ -419,7 +419,7 @@ void main() {
         await authenticator.login(AuthenticationMode.GENERIC);
 
         // When
-        final result = await authenticator.performRefreshToken();
+        final result = await authenticator.refreshStoredSession();
 
         // Then
         expect(result, RefreshTokenStatus.GENERIC_ERROR);
@@ -430,7 +430,7 @@ void main() {
       // Given user not logged in
 
       // When
-      final result = await authenticator.performRefreshToken();
+      final result = await authenticator.refreshStoredSession();
 
       // Then
       expect(result, RefreshTokenStatus.USER_NOT_LOGGED_IN);

@@ -36,7 +36,7 @@ class AuthAccessTokenRetriever {
       return (await _authenticator.accessToken())!;
     }
 
-    final refreshTokenStatus = await _authenticator.performRefreshToken();
+    final refreshTokenStatus = await _authenticator.refreshStoredSession();
     switch (refreshTokenStatus) {
       case RefreshTokenStatus.SUCCESSFUL:
         await _resetFailureCount();
