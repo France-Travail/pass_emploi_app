@@ -5,18 +5,24 @@ import 'package:pass_emploi_app/features/reprise_compte_invite/reprise_compte_in
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
+import 'package:pass_emploi_app/repositories/onboarding_questionnaire_repository.dart';
 import 'package:pass_emploi_app/repositories/reprise_compte_invite_repository.dart';
+import 'package:pass_emploi_app/repositories/tutorial_repository.dart';
 import 'package:redux/redux.dart';
 
 class RepriseCompteInviteMiddleware extends MiddlewareClass<AppState> {
   final RepriseCompteInviteRepository _repository;
   final Authenticator _authenticator;
   final ActionPlanRepository _actionPlanRepository;
+  final OnboardingQuestionnaireRepository _onboardingQuestionnaireRepository;
+  final TutorialRepository _tutorialRepository;
 
   RepriseCompteInviteMiddleware(
     this._repository,
     this._authenticator,
     this._actionPlanRepository,
+    this._onboardingQuestionnaireRepository,
+    this._tutorialRepository,
   );
 
   @override
@@ -63,8 +69,16 @@ class RepriseCompteInviteMiddleware extends MiddlewareClass<AppState> {
     }
 
     await _authenticator.saveTokens(tokens);
+    await _oublierCompteInvite();
     store.dispatch(RepriseCompteInviteSuccessAction());
     store.dispatch(BootstrapAction());
+  }
+
+  Future<void> _oublierCompteInvite() async {
+    await _onboardingQuestionnaireRepository.clear();
+    await _actionPlanRepository.clear();
+    await _tutorialRepository.setTutorialRead();
+    await _tutorialRepository.setPlanActionTutorialRead();
   }
 }
 

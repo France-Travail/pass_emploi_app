@@ -13,6 +13,7 @@ import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 
+import '../../doubles/fixtures.dart';
 import '../../doubles/mocks.dart';
 import '../../dsl/app_state_dsl.dart';
 import '../../dsl/matchers.dart';
@@ -24,6 +25,8 @@ void main() {
     late MockAuthenticator authenticator;
     late MockRepriseCompteInviteRepository repository;
     late MockActionPlanRepository actionPlanRepository;
+    late MockOnboardingQuestionnaireRepository onboardingQuestionnaireRepository;
+    late MockTutorialRepository tutorialRepository;
 
     setUpAll(() {
       registerFallbackValue(LogoutReason.userLogout);
@@ -35,6 +38,12 @@ void main() {
       authenticator = MockAuthenticator();
       repository = MockRepriseCompteInviteRepository();
       actionPlanRepository = MockActionPlanRepository();
+      onboardingQuestionnaireRepository = MockOnboardingQuestionnaireRepository();
+      tutorialRepository = MockTutorialRepository();
+      when(() => tutorialRepository.setTutorialRead()).thenAnswer((_) async {});
+      when(() => tutorialRepository.setPlanActionTutorialRead()).thenAnswer((_) async {});
+      when(() => tutorialRepository.shouldShowTutorial()).thenAnswer((_) async => false);
+      when(() => tutorialRepository.shouldShowPlanActionTutorial()).thenAnswer((_) async => false);
       when(() => authenticator.saveTokens(any())).thenAnswer((_) async {});
       when(() => authenticator.idToken()).thenAnswer((_) async => _miloIdToken());
       when(() => authenticator.isLoggedIn()).thenAnswer((_) async => true);
@@ -44,11 +53,16 @@ void main() {
     void givenInviteStore() {
       sut.givenStore =
           givenState() //
-              .loggedInUser(loginMode: LoginMode.INVITE)
+              .copyWith(
+                loginState: LoginSuccessState(mockUser(id: 'id-invite', loginMode: LoginMode.INVITE)),
+              )
+              .withoutFonctionnalites()
               .store((f) {
                 f.authenticator = authenticator;
                 f.repriseCompteInviteRepository = repository;
                 f.actionPlanRepository = actionPlanRepository;
+                f.onboardingQuestionnaireRepository = onboardingQuestionnaireRepository;
+                f.tutorialRepository = tutorialRepository;
               });
     }
 
@@ -97,6 +111,46 @@ void main() {
           ),
           () => authenticator.saveTokens(_tokensMilo),
         ]);
+      });
+
+      test('should forget the guest local data so that the MILO account data is displayed', () async {
+        // Given
+        givenMiloLogin(SuccessAuthenticatorResponse(tokens: _tokensMilo));
+        givenReprise(succeeds: true);
+        givenInviteStore();
+
+        // Then
+        await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldBeLoggedInAsMiloUser()]);
+        await untilCalled(() => actionPlanRepository.clear());
+        verify(() => onboardingQuestionnaireRepository.clear()).called(1);
+        verify(() => actionPlanRepository.clear()).called(1);
+      });
+
+      test('should not show tutorials to the MILO account, already discovered as guest', () async {
+        // Given
+        givenMiloLogin(SuccessAuthenticatorResponse(tokens: _tokensMilo));
+        givenReprise(succeeds: true);
+        givenInviteStore();
+
+        // Then
+        await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldBeLoggedInAsMiloUser()]);
+        await untilCalled(() => tutorialRepository.setPlanActionTutorialRead());
+        verify(() => tutorialRepository.setTutorialRead()).called(1);
+        verify(() => tutorialRepository.setPlanActionTutorialRead()).called(1);
+      });
+
+      test('should keep the guest local data when attaching the guest account fails', () async {
+        // Given
+        givenMiloLogin(SuccessAuthenticatorResponse(tokens: _tokensMilo));
+        givenReprise(succeeds: false);
+        givenInviteStore();
+
+        // Then
+        await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldFailWhileStayingGuest()]);
+        await pumpEventQueue();
+        verifyNever(() => onboardingQuestionnaireRepository.clear());
+        verifyNever(() => actionPlanRepository.clear());
+        verifyNever(() => tutorialRepository.setPlanActionTutorialRead());
       });
 
       test('should stay guest without saving the MILO tokens when attaching the guest account fails', () async {

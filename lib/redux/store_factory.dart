@@ -486,7 +486,13 @@ class StoreFactory {
         OnboardingQuestionnaireMiddleware(onboardingQuestionnaireRepository, actionPlanRepository).call,
         ActionPlanMiddleware(actionPlanRepository).call,
         FonctionnalitesMiddleware(fonctionnalitesRepository).call,
-        RepriseCompteInviteMiddleware(repriseCompteInviteRepository, authenticator, actionPlanRepository).call,
+        RepriseCompteInviteMiddleware(
+          repriseCompteInviteRepository,
+          authenticator,
+          actionPlanRepository,
+          onboardingQuestionnaireRepository,
+          tutorialRepository,
+        ).call,
         /*AUTOGENERATE-REDUX-STOREFACTORY-ADD-MIDDLEWARE*/
         ..._debugMiddlewares(),
         ..._stagingMiddlewares(initialState.configurationState.getFlavor()),
