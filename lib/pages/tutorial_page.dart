@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -6,7 +8,7 @@ import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/presentation/tutorial_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
+import 'package:pass_emploi_app/ui/shadows.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 
@@ -143,10 +145,12 @@ class _TutorialCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final imageShadow = Theme.of(context).brightness == Brightness.dark
+        ? Shadows.radius_base.copyWith(color: const Color(0x66000000))
+        : Shadows.radius_base;
     return DecoratedBox(
       decoration: BoxDecoration(
         color: DsfrColorDecisions.backgroundDefaultGrey(context),
-        borderRadius: BorderRadius.circular(Dimens.radius_s),
       ),
       child: Padding(
         padding: const EdgeInsets.all(DsfrSpacings.s2w),
@@ -156,14 +160,26 @@ class _TutorialCard extends StatelessWidget {
             Expanded(
               child: PageView(
                 controller: pageController,
+                clipBehavior: Clip.none,
                 children: [
                   for (final page in viewModel.pages)
                     Center(
-                      child: Image.asset(
-                        page.image,
-                        fit: BoxFit.contain,
-                        alignment: Alignment.topCenter,
-                        excludeFromSemantics: true,
+                      child: Padding(
+                        padding: EdgeInsets.all(DsfrSpacings.s2w),
+                        child: Transform.rotate(
+                          angle: -((math.pi * 2) / 360) * 5, // 5°
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              boxShadow: [imageShadow],
+                            ),
+                            child: Image.asset(
+                              page.image,
+                              fit: BoxFit.contain,
+                              alignment: Alignment.topCenter,
+                              excludeFromSemantics: true,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                 ],

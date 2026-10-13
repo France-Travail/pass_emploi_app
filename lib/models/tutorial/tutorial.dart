@@ -3,7 +3,7 @@ import 'package:pass_emploi_app/models/tutorial/tutorial_page.dart';
 class Tutorial {
   static const String versionTimestamp = '1718704185';
   static const String ftIaTutorialVersionTimestamp = 'ia_1';
-  static const String planActionVersionTimestamp = 'plan_action_2';
+  static const String planActionVersionTimestamp = 'plan_action_3';
 
   static List<TutorialPage> milo = [
     // TutorialPage(
