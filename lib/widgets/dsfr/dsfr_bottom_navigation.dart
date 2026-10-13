@@ -64,7 +64,7 @@ class DsfrBottomNavigationItem {
   final Widget Function(Widget child)? tileWrapper;
 }
 
-class _DsfrBottomNavigationTile extends StatelessWidget {
+class _DsfrBottomNavigationTile extends StatefulWidget {
   const _DsfrBottomNavigationTile({
     required this.item,
     required this.selected,
@@ -76,7 +76,17 @@ class _DsfrBottomNavigationTile extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
+  State<_DsfrBottomNavigationTile> createState() =>
+      _DsfrBottomNavigationTileState();
+}
+
+class _DsfrBottomNavigationTileState extends State<_DsfrBottomNavigationTile>
+    with MaterialStateMixin<_DsfrBottomNavigationTile> {
+  @override
   Widget build(BuildContext context) {
+    final item = widget.item;
+    final selected = widget.selected;
+
     final color = selected
         ? DsfrColorDecisions.textActiveBlueFrance(context)
         : DsfrColorDecisions.textMentionGrey(context);
@@ -113,7 +123,8 @@ class _DsfrBottomNavigationTile extends StatelessWidget {
       selected: selected,
       label: item.label,
       child: InkWell(
-        onTap: onTap,
+        onTap: widget.onTap,
+        onFocusChange: updateMaterialState(WidgetState.focused),
         overlayColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.pressed) ||
               states.contains(WidgetState.hovered) ||
@@ -122,34 +133,37 @@ class _DsfrBottomNavigationTile extends StatelessWidget {
           }
           return Colors.transparent;
         }),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                color: selected
-                    ? DsfrColorDecisions.borderPlainBlueFrance(context)
-                    : Colors.transparent,
-                width: DsfrSpacings.s0v5,
+        child: DsfrFocusWidget(
+          isFocused: isFocused,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: selected
+                      ? DsfrColorDecisions.borderPlainBlueFrance(context)
+                      : Colors.transparent,
+                  width: DsfrSpacings.s0v5,
+                ),
               ),
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 14),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                icon,
-                const SizedBox(height: DsfrSpacings.s1v),
-                ExcludeSemantics(
-                  child: Text(
-                    item.label,
-                    style: labelStyle,
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  icon,
+                  const SizedBox(height: DsfrSpacings.s1v),
+                  ExcludeSemantics(
+                    child: Text(
+                      item.label,
+                      style: labelStyle,
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

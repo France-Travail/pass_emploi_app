@@ -26,14 +26,21 @@ class ShareButton extends StatelessWidget {
     return SecondaryIconButton(
       icon: icon ?? DsfrIcons.systemShareLine,
       iconSize: Dimens.icon_size_m,
-      iconColor: iconColor ?? DsfrColorDecisions.textActionHighBlueFrance(context),
+      iconColor:
+          iconColor ?? DsfrColorDecisions.textActionHighBlueFrance(context),
       tooltip: semanticsLabel,
       onTap: () {
         if (onPressed != null) onPressed!();
+        // iOS exige une origine non nulle pour la feuille de partage.
+        final box = context.findRenderObject() as RenderBox?;
+        final origin = box != null && box.hasSize
+            ? box.localToGlobal(Offset.zero) & box.size
+            : null;
         SharePlus.instance.share(
           ShareParams(
             text: textToShare,
             subject: subjectForEmail,
+            sharePositionOrigin: origin,
           ),
         );
       },

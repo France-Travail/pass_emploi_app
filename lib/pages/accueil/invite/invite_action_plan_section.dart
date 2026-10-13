@@ -277,11 +277,15 @@ class InviteActionPlanActionTile extends StatelessWidget {
   }
 
   String? get _hintCase {
-    if (!action.done && action.declarationRequise) return Strings.actionPlanDeclarationOuvreFormulaireA11y;
+    if (!action.done && action.declarationRequise)
+      return Strings.actionPlanDeclarationOuvreFormulaireA11y;
     return _hasLink ? null : action.serviceName;
   }
 
-  bool get _hasLink => action.kind == ActionPlanActionKind.link && action.url != null && action.url!.isNotEmpty;
+  bool get _hasLink =>
+      action.kind == ActionPlanActionKind.link &&
+      action.url != null &&
+      action.url!.isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
@@ -315,24 +319,9 @@ class InviteActionPlanActionTile extends StatelessWidget {
                   hint: _hintCase,
                   onTap: onToggleDone,
                   excludeSemantics: true,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
+                  child: _FocusableCheckbox(
+                    done: action.done,
                     onTap: onToggleDone,
-                    // Zone tactile d'au moins 44 x 44.
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        minWidth: 44,
-                        minHeight: 44,
-                      ),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        widthFactor: 1,
-                        child: DsfrCheckboxIcon(
-                          value: action.done,
-                          size: DsfrComponentSize.md,
-                        ),
-                      ),
-                    ),
                   ),
                 ),
                 const SizedBox(width: Margins.spacing_xs),
@@ -428,6 +417,46 @@ class InviteActionPlanActionTile extends StatelessWidget {
       ].join(' | '),
     ).send();
     launchExternalUrl(action.url!);
+  }
+}
+
+/// Case à cocher atteignable et activable au clavier (Tab + Entrée/Espace),
+/// avec contour de focus DSFR.
+class _FocusableCheckbox extends StatefulWidget {
+  const _FocusableCheckbox({required this.done, required this.onTap});
+
+  final bool done;
+  final VoidCallback onTap;
+
+  @override
+  State<_FocusableCheckbox> createState() => _FocusableCheckboxState();
+}
+
+class _FocusableCheckboxState extends State<_FocusableCheckbox>
+    with MaterialStateMixin<_FocusableCheckbox> {
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: widget.onTap,
+      borderRadius: BorderRadius.circular(4),
+      focusColor: DsfrColorDecisions.backgroundTransparent(context),
+      onFocusChange: updateMaterialState(WidgetState.focused),
+      child: DsfrFocusWidget(
+        isFocused: isFocused,
+        // Zone tactile d'au moins 44 x 44.
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            widthFactor: 1,
+            child: DsfrCheckboxIcon(
+              value: widget.done,
+              size: DsfrComponentSize.md,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
