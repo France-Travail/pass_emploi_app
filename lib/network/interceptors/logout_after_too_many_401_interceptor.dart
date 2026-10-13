@@ -9,7 +9,7 @@ class LogoutAfterTooMany401Interceptor extends PassEmploiBaseInterceptor {
   final RemoteConfigRepository _remoteConfigRepository;
 
   LogoutAfterTooMany401Interceptor(RemoteConfigRepository remoteConfigRepository)
-      : _remoteConfigRepository = remoteConfigRepository;
+    : _remoteConfigRepository = remoteConfigRepository;
 
   late final Store<AppState> _store;
   int unauthorizedCount = 0;

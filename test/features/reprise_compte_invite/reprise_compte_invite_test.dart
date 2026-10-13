@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pass_emploi_app/auth/auth_id_token.dart';
+import 'package:pass_emploi_app/auth/auth_token_response.dart';
 import 'package:pass_emploi_app/auth/authenticator.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/features/login/login_state.dart';
@@ -20,162 +23,119 @@ void main() {
     final sut = StoreSut();
     late MockAuthenticator authenticator;
     late MockRepriseCompteInviteRepository repository;
+    late MockActionPlanRepository actionPlanRepository;
 
     setUpAll(() {
       registerFallbackValue(LogoutReason.userLogout);
       registerFallbackValue(AuthenticationMode.SIMILO);
+      registerFallbackValue(_tokensMilo);
     });
 
     setUp(() {
       authenticator = MockAuthenticator();
       repository = MockRepriseCompteInviteRepository();
-      when(() => authenticator.refreshToken()).thenAnswer((_) async => 'refresh-token-invite');
-      when(
-        () => authenticator.accessTokenFromRefreshToken('refresh-token-invite'),
-      ).thenAnswer((_) async => 'jeton-invite');
+      actionPlanRepository = MockActionPlanRepository();
+      when(() => authenticator.saveTokens(any())).thenAnswer((_) async {});
+      when(() => authenticator.idToken()).thenAnswer((_) async => _miloIdToken());
+      when(() => authenticator.isLoggedIn()).thenAnswer((_) async => true);
+      when(() => actionPlanRepository.getStoredPlan()).thenAnswer((_) async => null);
     });
 
-    void givenInviteStore({MockActionPlanRepository? actionPlanRepository}) {
+    void givenInviteStore() {
       sut.givenStore =
           givenState() //
               .loggedInUser(loginMode: LoginMode.INVITE)
               .store((f) {
                 f.authenticator = authenticator;
                 f.repriseCompteInviteRepository = repository;
-                if (actionPlanRepository != null) {
-                  f.actionPlanRepository = actionPlanRepository;
-                }
+                f.actionPlanRepository = actionPlanRepository;
               });
+    }
+
+    void givenMiloLogin(AuthenticatorResponse response) {
+      when(() => authenticator.loginWithoutSaving(AuthenticationMode.SIMILO)).thenAnswer((_) async => response);
+    }
+
+    void givenReprise({required bool succeeds}) {
+      when(
+        () => repository.reprendre(
+          idInvite: any(named: 'idInvite'),
+          jetonConnecte: any(named: 'jetonConnecte'),
+          plan: any(named: 'plan'),
+        ),
+      ).thenAnswer((_) async => succeeds);
+    }
+
+    void verifyNeverReprendre() {
+      verifyNever(
+        () => repository.reprendre(
+          idInvite: any(named: 'idInvite'),
+          jetonConnecte: any(named: 'jetonConnecte'),
+          plan: any(named: 'plan'),
+        ),
+      );
     }
 
     group('when requesting with MILO', () {
       sut.whenDispatchingAction(() => RepriseCompteInviteRequestAction(LoginMode.MILO));
 
-      test(
-        'should log in the MILO account then attach the guest account to it with a guest token obtained after login',
-        () async {
-          // Given
-          when(
-            () => authenticator.login(AuthenticationMode.SIMILO),
-          ).thenAnswer((_) async => SuccessAuthenticatorResponse());
-          when(() => authenticator.idToken()).thenAnswer((_) async => _miloIdToken());
-          when(() => authenticator.isLoggedIn()).thenAnswer((_) async => true);
-          when(
-            () => repository.reprendre(
-              userId: any(named: 'userId'),
-              jetonInvite: any(named: 'jetonInvite'),
-              plan: any(named: 'plan'),
-            ),
-          ).thenAnswer((_) async => true);
-          givenInviteStore();
-
-          // Then
-          await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldBeLoggedInAsMiloUser()]);
-          await untilCalled(() => repository.reprendre(
-                userId: any(named: 'userId'),
-                jetonInvite: any(named: 'jetonInvite'),
-                plan: any(named: 'plan'),
-              ));
-          await pumpEventQueue();
-          verify(() => repository.reprendre(
-                userId: 'id-jeune',
-                jetonInvite: 'jeton-invite',
-                plan: any(named: 'plan'),
-              )).called(1);
-          verifyInOrder([
-            () => authenticator.refreshToken(),
-            () => authenticator.login(AuthenticationMode.SIMILO),
-            () => authenticator.accessTokenFromRefreshToken('refresh-token-invite'),
-          ]);
-          verifyNever(() => authenticator.logout(any(), any()));
-        },
-      );
-
-      test('should still log in the MILO account when attaching the guest account fails', () async {
+      test('should attach the guest account, then save the MILO tokens and log in the MILO account', () async {
         // Given
-        when(
-          () => authenticator.login(AuthenticationMode.SIMILO),
-        ).thenAnswer((_) async => SuccessAuthenticatorResponse());
-        when(() => authenticator.idToken()).thenAnswer((_) async => _miloIdToken());
-        when(() => authenticator.isLoggedIn()).thenAnswer((_) async => true);
-        when(
-          () => repository.reprendre(
-            userId: any(named: 'userId'),
-            jetonInvite: any(named: 'jetonInvite'),
-            plan: any(named: 'plan'),
-          ),
-        ).thenAnswer((_) async => false);
+        givenMiloLogin(SuccessAuthenticatorResponse(tokens: _tokensMilo));
+        givenReprise(succeeds: true);
         givenInviteStore();
 
         // Then
         await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldBeLoggedInAsMiloUser()]);
+        await untilCalled(() => authenticator.saveTokens(any()));
+        verifyInOrder([
+          () => authenticator.loginWithoutSaving(AuthenticationMode.SIMILO),
+          () => repository.reprendre(
+            idInvite: 'id-invite',
+            jetonConnecte: 'access-token-milo',
+            plan: null,
+          ),
+          () => authenticator.saveTokens(_tokensMilo),
+        ]);
       });
 
-      test('should still log in the MILO account without attaching when no guest token can be obtained', () async {
+      test('should stay guest without saving the MILO tokens when attaching the guest account fails', () async {
         // Given
-        when(
-          () => authenticator.login(AuthenticationMode.SIMILO),
-        ).thenAnswer((_) async => SuccessAuthenticatorResponse());
-        when(() => authenticator.idToken()).thenAnswer((_) async => _miloIdToken());
-        when(() => authenticator.isLoggedIn()).thenAnswer((_) async => true);
-        when(() => authenticator.accessTokenFromRefreshToken(any())).thenAnswer((_) async => null);
+        givenMiloLogin(SuccessAuthenticatorResponse(tokens: _tokensMilo));
+        givenReprise(succeeds: false);
         givenInviteStore();
 
         // Then
-        await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldBeLoggedInAsMiloUser()]);
-        verifyNever(
-          () => repository.reprendre(
-            userId: any(named: 'userId'),
-            jetonInvite: any(named: 'jetonInvite'),
-            plan: any(named: 'plan'),
-          ),
-        );
+        await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldFailWhileStayingGuest()]);
+        await pumpEventQueue();
+        verifyNever(() => authenticator.saveTokens(any()));
       });
 
       test('should stay logged in as guest without attaching when login is cancelled', () async {
         // Given
-        when(
-          () => authenticator.login(AuthenticationMode.SIMILO),
-        ).thenAnswer((_) async => CancelledAuthenticatorResponse());
+        givenMiloLogin(CancelledAuthenticatorResponse());
         givenInviteStore();
 
         // Then
         await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldBeResetWhileStayingGuest()]);
         await pumpEventQueue();
-        verifyNever(() => authenticator.accessTokenFromRefreshToken(any()));
-        verifyNever(
-          () => repository.reprendre(
-            userId: any(named: 'userId'),
-            jetonInvite: any(named: 'jetonInvite'),
-            plan: any(named: 'plan'),
-          ),
-        );
+        verifyNeverReprendre();
       });
 
       test('should fail with message when login fails', () async {
         // Given
-        when(
-          () => authenticator.login(AuthenticationMode.SIMILO),
-        ).thenAnswer((_) async => FailureAuthenticatorResponse('error-message'));
+        givenMiloLogin(FailureAuthenticatorResponse('error-message'));
         givenInviteStore();
 
         // Then
         await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldFailWithMessage('error-message')]);
         await pumpEventQueue();
-        verifyNever(
-          () => repository.reprendre(
-            userId: any(named: 'userId'),
-            jetonInvite: any(named: 'jetonInvite'),
-            plan: any(named: 'plan'),
-          ),
-        );
+        verifyNeverReprendre();
       });
 
       test('should fail because of wrong clock when device clock is wrong', () async {
         // Given
-        when(
-          () => authenticator.login(AuthenticationMode.SIMILO),
-        ).thenAnswer((_) async => WrongDeviceClockAuthenticatorResponse());
+        givenMiloLogin(WrongDeviceClockAuthenticatorResponse());
         givenInviteStore();
 
         // Then
@@ -189,14 +149,14 @@ void main() {
       test('should log in with France Travail authentication mode', () async {
         // Given
         when(
-          () => authenticator.login(AuthenticationMode.POLE_EMPLOI),
+          () => authenticator.loginWithoutSaving(AuthenticationMode.POLE_EMPLOI),
         ).thenAnswer((_) async => CancelledAuthenticatorResponse());
         givenInviteStore();
 
         // Then
         await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldBeReset()]);
-        await untilCalled(() => authenticator.login(AuthenticationMode.POLE_EMPLOI));
-        verify(() => authenticator.login(AuthenticationMode.POLE_EMPLOI)).called(1);
+        await untilCalled(() => authenticator.loginWithoutSaving(AuthenticationMode.POLE_EMPLOI));
+        verify(() => authenticator.loginWithoutSaving(AuthenticationMode.POLE_EMPLOI)).called(1);
       });
     });
 
@@ -221,142 +181,83 @@ void main() {
     group('when guest has a local action plan', () {
       sut.whenDispatchingAction(() => RepriseCompteInviteRequestAction(LoginMode.MILO));
 
-      test('should send the local plan to the API when all actions have idSolution', () async {
+      test('should send the local plan described with its idSolution', () async {
         // Given
-        final actionPlanRepository = MockActionPlanRepository();
-        final localPlan = ActionPlan(
-          id: 'plan-1',
-          greeting: 'Bonjour',
-          objectives: [
-            ActionPlanObjective(
-              id: 'objective-1',
-              title: 'Trouver un emploi',
-              theme: 'emploi',
-              actions: [
-                const ActionPlanAction(
-                  id: 'action-1',
-                  label: 'Faire un CV',
-                  kind: ActionPlanActionKind.advice,
-                  done: true,
-                  idSolution: 'solution-123',
-                ),
-              ],
-            ),
-          ],
+        final localPlan = _planWith(
+          const ActionPlanAction(
+            id: 'action-1',
+            label: 'Faire un CV',
+            kind: ActionPlanActionKind.advice,
+            done: true,
+            idSolution: 'solution-123',
+          ),
         );
         when(() => actionPlanRepository.getStoredPlan()).thenAnswer((_) async => localPlan);
-        when(
-          () => authenticator.login(AuthenticationMode.SIMILO),
-        ).thenAnswer((_) async => SuccessAuthenticatorResponse());
-        when(() => authenticator.idToken()).thenAnswer((_) async => _miloIdToken());
-        when(() => authenticator.isLoggedIn()).thenAnswer((_) async => true);
-        when(
-          () => repository.reprendre(
-            userId: any(named: 'userId'),
-            jetonInvite: any(named: 'jetonInvite'),
-            plan: any(named: 'plan'),
-          ),
-        ).thenAnswer((_) async => true);
-        givenInviteStore(actionPlanRepository: actionPlanRepository);
+        givenMiloLogin(SuccessAuthenticatorResponse(tokens: _tokensMilo));
+        givenReprise(succeeds: true);
+        givenInviteStore();
 
         // Then
         await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldBeLoggedInAsMiloUser()]);
-        await untilCalled(() => repository.reprendre(
-              userId: any(named: 'userId'),
-              jetonInvite: any(named: 'jetonInvite'),
-              plan: any(named: 'plan'),
-            ));
-        await pumpEventQueue();
-        final captured = verify(
+        await untilCalled(() => authenticator.saveTokens(any()));
+        verify(
           () => repository.reprendre(
-            userId: 'id-jeune',
-            jetonInvite: 'jeton-invite',
-            plan: captureAny(named: 'plan'),
+            idInvite: 'id-invite',
+            jetonConnecte: 'access-token-milo',
+            plan: localPlan.toApiReprise(),
           ),
-        ).captured.single as Map<String, dynamic>;
-        expect(captured['id'], 'plan-1');
-        expect(captured['objectives'], hasLength(1));
-        expect(captured['objectives'][0]['id'], 'objective-1');
-        expect(captured['objectives'][0]['actions'][0]['idSolution'], 'solution-123');
+        ).called(1);
       });
 
-      test('should not send the plan when an action is missing idSolution', () async {
+      test('should not send a plan stored before idSolution existed', () async {
         // Given
-        final actionPlanRepository = MockActionPlanRepository();
-        final localPlan = ActionPlan(
-          id: 'plan-1',
-          greeting: 'Bonjour',
-          objectives: [
-            ActionPlanObjective(
-              id: 'objective-1',
-              title: 'Trouver un emploi',
-              theme: 'emploi',
-              actions: [
-                const ActionPlanAction(
-                  id: 'action-1',
-                  label: 'Faire un CV',
-                  kind: ActionPlanActionKind.advice,
-                  done: true,
-                ),
-              ],
-            ),
-          ],
+        when(() => actionPlanRepository.getStoredPlan()).thenAnswer(
+          (_) async => _planWith(const ActionPlanAction(id: 'action-1', label: 'A', kind: ActionPlanActionKind.advice)),
         );
-        when(() => actionPlanRepository.getStoredPlan()).thenAnswer((_) async => localPlan);
-        when(
-          () => authenticator.login(AuthenticationMode.SIMILO),
-        ).thenAnswer((_) async => SuccessAuthenticatorResponse());
-        when(() => authenticator.idToken()).thenAnswer((_) async => _miloIdToken());
-        when(() => authenticator.isLoggedIn()).thenAnswer((_) async => true);
-        when(
-          () => repository.reprendre(
-            userId: any(named: 'userId'),
-            jetonInvite: any(named: 'jetonInvite'),
-            plan: any(named: 'plan'),
-          ),
-        ).thenAnswer((_) async => true);
-        givenInviteStore(actionPlanRepository: actionPlanRepository);
+        givenMiloLogin(SuccessAuthenticatorResponse(tokens: _tokensMilo));
+        givenReprise(succeeds: true);
+        givenInviteStore();
 
         // Then
         await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldBeLoggedInAsMiloUser()]);
-        await pumpEventQueue();
-        verify(() => repository.reprendre(
-              userId: 'id-jeune',
-              jetonInvite: 'jeton-invite',
-              plan: null,
-            )).called(1);
-      });
-
-      test('should not send the plan when there is no local plan', () async {
-        // Given
-        final actionPlanRepository = MockActionPlanRepository();
-        when(() => actionPlanRepository.getStoredPlan()).thenAnswer((_) async => null);
-        when(
-          () => authenticator.login(AuthenticationMode.SIMILO),
-        ).thenAnswer((_) async => SuccessAuthenticatorResponse());
-        when(() => authenticator.idToken()).thenAnswer((_) async => _miloIdToken());
-        when(() => authenticator.isLoggedIn()).thenAnswer((_) async => true);
-        when(
+        await untilCalled(() => authenticator.saveTokens(any()));
+        verify(
           () => repository.reprendre(
-            userId: any(named: 'userId'),
-            jetonInvite: any(named: 'jetonInvite'),
-            plan: any(named: 'plan'),
+            idInvite: 'id-invite',
+            jetonConnecte: 'access-token-milo',
+            plan: null,
           ),
-        ).thenAnswer((_) async => true);
-        givenInviteStore(actionPlanRepository: actionPlanRepository);
-
-        // Then
-        await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldBeLoggedInAsMiloUser()]);
-        await pumpEventQueue();
-        verify(() => repository.reprendre(
-              userId: 'id-jeune',
-              jetonInvite: 'jeton-invite',
-              plan: null,
-            )).called(1);
+        ).called(1);
       });
     });
   });
 }
+
+final _tokensMilo = AuthTokenResponse(
+  idToken: _unsignedJwt({
+    'userId': 'id-jeune',
+    'given_name': 'F',
+    'family_name': 'L',
+    'iat': 90000000,
+    'exp': 100000000,
+    'userStructure': 'MILO',
+  }),
+  accessToken: 'access-token-milo',
+  refreshToken: 'refresh-token-milo',
+);
+
+String _unsignedJwt(Map<String, dynamic> payload) {
+  String encode(Map<String, dynamic> json) => base64Url.encode(utf8.encode(jsonEncode(json))).replaceAll('=', '');
+  return '${encode({'alg': 'none'})}.${encode(payload)}.';
+}
+
+ActionPlan _planWith(ActionPlanAction action) => ActionPlan(
+  id: 'plan-1',
+  greeting: 'Bonjour',
+  objectives: [
+    ActionPlanObjective(id: 'objective-1', title: 'Trouver un emploi', theme: 'emploi', actions: [action]),
+  ],
+);
 
 AuthIdToken _miloIdToken() => AuthIdToken(
   userId: 'id-jeune',
@@ -380,6 +281,13 @@ Matcher _shouldFailWithMessage(String message) {
   return StateIs<RepriseCompteInviteFailureState>(
     (state) => state.repriseCompteInviteState,
     (state) => expect(state.message, message),
+  );
+}
+
+Matcher _shouldFailWhileStayingGuest() {
+  return StateMatch(
+    (state) => state.repriseCompteInviteState is RepriseCompteInviteFailureState,
+    (state) => expect(state.isInviteLoginMode(), isTrue),
   );
 }
 

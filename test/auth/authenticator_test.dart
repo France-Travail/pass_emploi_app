@@ -80,6 +80,33 @@ void main() {
       expect(await secureStorage.read(key: "refreshToken"), authTokenResponse().refreshToken);
     });
 
+    test('loginWithoutSaving returns the tokens without replacing the current session', () async {
+      // Given
+      await secureStorage.write(key: "refreshToken", value: "refreshTokenInvite");
+      when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async => authTokenResponse());
+
+      // When
+      final result = await authenticator.loginWithoutSaving(AuthenticationMode.GENERIC);
+
+      // Then
+      expect((result as SuccessAuthenticatorResponse).tokens, authTokenResponse());
+      expect(await secureStorage.read(key: "refreshToken"), "refreshTokenInvite");
+      expect(await secureStorage.read(key: "accessToken"), isNull);
+    });
+
+    test('saveTokens replaces the current session', () async {
+      // Given
+      await secureStorage.write(key: "refreshToken", value: "refreshTokenInvite");
+
+      // When
+      await authenticator.saveTokens(authTokenResponse());
+
+      // Then
+      expect(await secureStorage.read(key: "idToken"), authTokenResponse().idToken);
+      expect(await secureStorage.read(key: "accessToken"), authTokenResponse().accessToken);
+      expect(await secureStorage.read(key: "refreshToken"), authTokenResponse().refreshToken);
+    });
+
     test('token is saved and returned when login in SIMILO mode is successful', () async {
       // Given
       when(
@@ -238,9 +265,9 @@ void main() {
 
       // Then
       verify(() => crashlytics.setCustomKey('interrupted_login_mode', 'SIMILO')).called(1);
-      final elapsed = verify(() => crashlytics.setCustomKey('interrupted_login_elapsed_seconds', captureAny()))
-          .captured
-          .single as String;
+      final elapsed =
+          verify(() => crashlytics.setCustomKey('interrupted_login_elapsed_seconds', captureAny())).captured.single
+              as String;
       expect(int.parse(elapsed), inInclusiveRange(90, 92));
       verify(() => crashlytics.recordNonNetworkException(any(), any())).called(1);
       expect(await secureStorage.read(key: 'loginInProgress'), isNull);
@@ -435,50 +462,6 @@ void main() {
       // Then
       expect(result, RefreshTokenStatus.USER_NOT_LOGGED_IN);
       expect(await authenticator.isLoggedIn(), false);
-    });
-  });
-
-  group('Access token from refresh token tests', () {
-    test('returns the refreshed access token without replacing the saved tokens', () async {
-      // Given
-      when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async => authTokenResponse());
-      await authenticator.login(AuthenticationMode.GENERIC);
-      when(() => wrapper.refreshToken(_refreshTokenRequest(refreshToken: 'autreRefreshToken'))).thenAnswer(
-        (_) async => AuthTokenResponse(accessToken: 'autreAccessToken', idToken: 'autreIdToken', refreshToken: 'x'),
-      );
-
-      // When
-      final result = await authenticator.accessTokenFromRefreshToken('autreRefreshToken');
-
-      // Then
-      expect(result, 'autreAccessToken');
-      expect(await secureStorage.read(key: "accessToken"), authTokenResponse().accessToken);
-      expect(await secureStorage.read(key: "refreshToken"), authTokenResponse().refreshToken);
-    });
-
-    test('returns null without logging out when refresh fails', () async {
-      // Given
-      when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async => authTokenResponse());
-      await authenticator.login(AuthenticationMode.GENERIC);
-      when(
-        () => wrapper.refreshToken(_refreshTokenRequest(refreshToken: 'autreRefreshToken')),
-      ).thenThrow(AuthWrapperRefreshTokenExpiredException(''));
-
-      // When
-      final result = await authenticator.accessTokenFromRefreshToken('autreRefreshToken');
-
-      // Then
-      expect(result, isNull);
-      expect(await secureStorage.read(key: "refreshToken"), authTokenResponse().refreshToken);
-    });
-
-    test('refreshToken returns the saved refresh token', () async {
-      // Given
-      when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async => authTokenResponse());
-      await authenticator.login(AuthenticationMode.GENERIC);
-
-      // When-Then
-      expect(await authenticator.refreshToken(), authTokenResponse().refreshToken);
     });
   });
 

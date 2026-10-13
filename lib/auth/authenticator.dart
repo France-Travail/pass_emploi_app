@@ -42,7 +42,11 @@ const Map<String, String> inviteParams = {"kc_idp_hint": "invite"};
 
 sealed class AuthenticatorResponse {}
 
-class SuccessAuthenticatorResponse extends AuthenticatorResponse {}
+class SuccessAuthenticatorResponse extends AuthenticatorResponse {
+  final AuthTokenResponse? tokens;
+
+  SuccessAuthenticatorResponse({this.tokens});
+}
 
 class CancelledAuthenticatorResponse extends AuthenticatorResponse {}
 
@@ -72,9 +76,20 @@ class Authenticator {
   ]);
 
   Future<AuthenticatorResponse> login(AuthenticationMode mode) async {
+    final response = await loginWithoutSaving(mode);
+    if (response is! SuccessAuthenticatorResponse) return response;
+    try {
+      await saveTokens(response.tokens!);
+      return SuccessAuthenticatorResponse();
+    } catch (e) {
+      return FailureAuthenticatorResponse(e.toString());
+    }
+  }
+
+  Future<AuthenticatorResponse> loginWithoutSaving(AuthenticationMode mode) async {
     await _persistAppAuthFlowMarker(mode);
     try {
-      final response = await _authWrapper.login(
+      final tokens = await _authWrapper.login(
         AuthTokenRequest(
           _configuration.authClientId,
           _configuration.authLoginRedirectUrl,
@@ -84,8 +99,7 @@ class Authenticator {
           await _buildLoginAdditionalParameters(mode),
         ),
       );
-      await _saveToken(response);
-      return SuccessAuthenticatorResponse();
+      return SuccessAuthenticatorResponse(tokens: tokens);
     } catch (e) {
       if (e is UserCanceledLoginException) return CancelledAuthenticatorResponse();
       if (e is AuthWrapperWrongDeviceClockException) return WrongDeviceClockAuthenticatorResponse();
@@ -94,6 +108,8 @@ class Authenticator {
       await _deleteAppAuthFlowMarker();
     }
   }
+
+  Future<void> saveTokens(AuthTokenResponse tokens) => _saveToken(tokens);
 
   Future<void> reportInterruptedAppAuthFlowIfPresent() async {
     final String? persistedMarker = await _preferences.read(key: _appAuthFlowMarkerStorageKey);
@@ -140,17 +156,6 @@ class Authenticator {
   }
 
   Future<String?> accessToken() async => _preferences.read(key: _accessTokenKey);
-
-  Future<String?> refreshToken() async => _preferences.read(key: _refreshTokenKey);
-
-  Future<String?> accessTokenFromRefreshToken(String refreshToken) async {
-    try {
-      final AuthTokenResponse response = await _exchangeRefreshToken(refreshToken);
-      return response.accessToken;
-    } on AuthWrapperException {
-      return null;
-    }
-  }
 
   Future<RefreshTokenStatus> refreshStoredSession() async {
     final String? refreshToken = await _preferences.read(key: _refreshTokenKey);

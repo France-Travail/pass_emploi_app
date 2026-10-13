@@ -10,7 +10,9 @@ void main() {
 
     group('reprendre', () {
       group('without plan', () {
-        sut.when((repository) => repository.reprendre(userId: 'userId', jetonInvite: 'jeton-invite'));
+        sut.when(
+          (repository) => repository.reprendre(idInvite: 'id-invite', jetonConnecte: 'jeton-connecte'),
+        );
 
         group('when response is valid', () {
           sut.givenResponseCode(204);
@@ -18,8 +20,8 @@ void main() {
           test('request should be valid', () async {
             await sut.expectRequestBody(
               method: HttpMethod.post,
-              url: "/jeunes/userId/reprise-invite",
-              rawBody: {"jetonInvite": "jeton-invite"},
+              url: "/jeunes/id-invite/reprise-invite",
+              rawBody: {"jetonConnecte": "jeton-connecte"},
             );
           });
 
@@ -60,11 +62,13 @@ void main() {
           ],
         };
 
-        sut.when((repository) => repository.reprendre(
-              userId: 'userId',
-              jetonInvite: 'jeton-invite',
-              plan: plan,
-            ));
+        sut.when(
+          (repository) => repository.reprendre(
+            idInvite: 'id-invite',
+            jetonConnecte: 'jeton-connecte',
+            plan: plan,
+          ),
+        );
 
         group('when response is valid', () {
           sut.givenResponseCode(204);
@@ -72,9 +76,9 @@ void main() {
           test('request should include plan', () async {
             await sut.expectRequestBody(
               method: HttpMethod.post,
-              url: "/jeunes/userId/reprise-invite",
+              url: "/jeunes/id-invite/reprise-invite",
               rawBody: {
-                "jetonInvite": "jeton-invite",
+                "jetonConnecte": "jeton-connecte",
                 "plan": plan,
               },
             );

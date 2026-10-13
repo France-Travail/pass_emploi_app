@@ -237,6 +237,8 @@ class DioRepositorySut<REPO> {
     if (capturedOptions != null) {
       if (options?.contentType != null) expect(capturedOptions.contentType, options?.contentType);
       if (options?.listFormat != null) expect(capturedOptions.listFormat, options?.listFormat);
+      if (options?.headers != null) expect(capturedOptions.headers, options?.headers);
+      if (options?.extra != null) expect(capturedOptions.extra, options?.extra);
     }
     throwModeDemoExceptionIfNecessary(method == HttpMethod.get, Uri.parse(url));
   }

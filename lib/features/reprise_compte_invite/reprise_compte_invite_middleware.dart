@@ -1,3 +1,4 @@
+import 'package:pass_emploi_app/auth/auth_token_response.dart';
 import 'package:pass_emploi_app/auth/authenticator.dart';
 import 'package:pass_emploi_app/features/bootstrap/bootstrap_action.dart';
 import 'package:pass_emploi_app/features/reprise_compte_invite/reprise_compte_invite_actions.dart';
@@ -29,15 +30,10 @@ class RepriseCompteInviteMiddleware extends MiddlewareClass<AppState> {
   Future<void> _reprendre(Store<AppState> store, LoginMode mode) async {
     store.dispatch(RepriseCompteInviteLoadingAction());
 
-    final refreshTokenInvite = await _authenticator.refreshToken();
-
-    final planLocal = await _actionPlanRepository.getStoredPlan();
-    final planApiReprise = planLocal?.toApiReprise();
-
-    final response = await _authenticator.login(mode.toAuthenticationMode());
+    final response = await _authenticator.loginWithoutSaving(mode.toAuthenticationMode());
     switch (response) {
-      case SuccessAuthenticatorResponse():
-        await _rattacherInvite(store, refreshTokenInvite, planApiReprise);
+      case SuccessAuthenticatorResponse(:final tokens):
+        await _rattacherInvite(store, tokens!);
       case CancelledAuthenticatorResponse():
         store.dispatch(RepriseCompteInviteResetAction());
       case WrongDeviceClockAuthenticatorResponse():
@@ -47,27 +43,29 @@ class RepriseCompteInviteMiddleware extends MiddlewareClass<AppState> {
     }
   }
 
-  Future<void> _rattacherInvite(
-    Store<AppState> store,
-    String? refreshTokenInvite,
-    Map<String, dynamic>? planApiReprise,
-  ) async {
-    final idToken = await _authenticator.idToken();
-    final jetonInvite = await _jetonInvite(refreshTokenInvite);
-    if (idToken != null && jetonInvite != null) {
-      await _repository.reprendre(
-        userId: idToken.userId,
-        jetonInvite: jetonInvite,
-        plan: planApiReprise,
-      );
+  Future<void> _rattacherInvite(Store<AppState> store, AuthTokenResponse tokens) async {
+    final idInvite = store.state.userId();
+    if (idInvite == null) {
+      store.dispatch(RepriseCompteInviteFailureAction(_echecReprise));
+      return;
     }
 
+    final planLocal = await _actionPlanRepository.getStoredPlan();
+    final succeeded = await _repository.reprendre(
+      idInvite: idInvite,
+      jetonConnecte: tokens.accessToken,
+      plan: planLocal?.toApiReprise(),
+    );
+
+    if (!succeeded) {
+      store.dispatch(RepriseCompteInviteFailureAction(_echecReprise));
+      return;
+    }
+
+    await _authenticator.saveTokens(tokens);
     store.dispatch(RepriseCompteInviteSuccessAction());
     store.dispatch(BootstrapAction());
   }
-
-  Future<String?> _jetonInvite(String? refreshTokenInvite) async {
-    if (refreshTokenInvite == null) return null;
-    return _authenticator.accessTokenFromRefreshToken(refreshTokenInvite);
-  }
 }
+
+const _echecReprise = 'Reprise du compte invité échouée : connexion abandonnée';
