@@ -29,16 +29,11 @@ class RepriseCompteInviteMiddleware extends MiddlewareClass<AppState> {
   Future<void> _reprendre(Store<AppState> store, LoginMode mode) async {
     store.dispatch(RepriseCompteInviteLoadingAction());
 
-    // Le login remplace les tokens invité : le refresh token invité, qui n'expire pas, est lu avant
-    // pour produire la preuve de reprise après le login, quelle que soit sa durée.
     final refreshTokenInvite = await _authenticator.refreshToken();
 
-    // Le plan local est lu avant le login : le stockage n'est pas effacé par le login, mais cette
-    // lecture avant garantit qu'on capte le plan même en cas d'échec inattendu du login.
     final planLocal = await _actionPlanRepository.getStoredPlan();
     final planApiReprise = planLocal?.toApiReprise();
 
-    // Les tokens invité ne sont remplacés qu'en cas de succès : annulation et échec laissent la session invité intacte.
     final response = await _authenticator.login(mode.toAuthenticationMode());
     switch (response) {
       case SuccessAuthenticatorResponse():
@@ -59,8 +54,6 @@ class RepriseCompteInviteMiddleware extends MiddlewareClass<AppState> {
   ) async {
     final idToken = await _authenticator.idToken();
     final jetonInvite = await _jetonInvite(refreshTokenInvite);
-    // Un échec du rattachement ne bloque pas le jeune, désormais connecté : l'invité non rattaché
-    // finira purgé comme inactif.
     if (idToken != null && jetonInvite != null) {
       await _repository.reprendre(
         userId: idToken.userId,
@@ -69,7 +62,6 @@ class RepriseCompteInviteMiddleware extends MiddlewareClass<AppState> {
       );
     }
 
-    // Comme après une déconnexion, l'état de l'invité est effacé puis l'app redémarre sur le compte connecté.
     store.dispatch(RepriseCompteInviteSuccessAction());
     store.dispatch(BootstrapAction());
   }
