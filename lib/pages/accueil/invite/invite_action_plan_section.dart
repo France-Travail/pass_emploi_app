@@ -277,8 +277,9 @@ class InviteActionPlanActionTile extends StatelessWidget {
   }
 
   String? get _hintCase {
-    if (!action.done && action.declarationRequise)
+    if (!action.done && action.declarationRequise) {
       return Strings.actionPlanDeclarationOuvreFormulaireA11y;
+    }
     return _hasLink ? null : action.serviceName;
   }
 
