@@ -23,10 +23,10 @@ import 'package:pass_emploi_app/widgets/login_page_remote_message.dart';
 class LoginPage extends StatelessWidget {
   final bool repriseCompteInvite;
 
-  LoginPage({this.repriseCompteInvite = false});
+  const LoginPage({super.key, this.repriseCompteInvite = false});
 
   static MaterialPageRoute<void> repriseCompteInviteMaterialPageRoute() {
-    return MaterialPageRoute(builder: (context) => LoginPage(repriseCompteInvite: true));
+    return MaterialPageRoute(builder: (context) => const LoginPage(repriseCompteInvite: true));
   }
 
   @override

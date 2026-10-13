@@ -83,7 +83,7 @@ class _RouterPageState extends State<RouterPage> with WidgetsBindingObserver {
     return switch (viewModel.routerPageDisplayState) {
       RouterPageDisplayState.splash => SplashScreenPage(),
       RouterPageDisplayState.onboarding => FirstLaunchOnboardingPage(),
-      RouterPageDisplayState.login => LoginPage(),
+      RouterPageDisplayState.login => const LoginPage(),
       RouterPageDisplayState.onboardingQuestionnaire => OnboardingQuestionnairePage(),
       RouterPageDisplayState.cgu => CguPage(),
       RouterPageDisplayState.tutorial => TutorialPage(),
