@@ -196,12 +196,15 @@ jobs:
 
       - name: ${{ matrix.app }} - Deploy Android apk to Firebase App Distribution
         run: |
+          APP_ID_VAR="${{ matrix.app }}_STAGING_ANDROID_APP_ID"
+          APP_ID="${!APP_ID_VAR}"
           firebase appdistribution:distribute build/app/outputs/flutter-apk/${{ matrix.apk }} \
-            --app "$STAGING_ANDROID_APP_ID" \
+            --app "$APP_ID" \
             --groups "$STAGING_FIREBASE_RELEASE_GROUPS"
         env:
           GOOGLE_APPLICATION_CREDENTIALS: firebase-credentials.json
-          STAGING_ANDROID_APP_ID: ${{ secrets[format('{0}_STAGING_ANDROID_APP_ID', matrix.app)] }}
+          CEJ_STAGING_ANDROID_APP_ID: ${{ secrets.CEJ_STAGING_ANDROID_APP_ID }}
+          BRSA_STAGING_ANDROID_APP_ID: ${{ secrets.BRSA_STAGING_ANDROID_APP_ID }}
           STAGING_FIREBASE_RELEASE_GROUPS: ${{ secrets.STAGING_FIREBASE_RELEASE_GROUPS }}
 
   build-ios-staging:
@@ -389,10 +392,13 @@ jobs:
 
       - name: ${{ matrix.app }} - Deploy IPA to Firebase App Distribution
         run: |
+          APP_ID_VAR="${{ matrix.app }}_STAGING_IOS_APP_ID"
+          APP_ID="${!APP_ID_VAR}"
           firebase appdistribution:distribute build/ios/ipa/*.ipa \
-            --app "$STAGING_IOS_APP_ID" \
+            --app "$APP_ID" \
             --groups "$STAGING_FIREBASE_RELEASE_GROUPS"
         env:
           GOOGLE_APPLICATION_CREDENTIALS: firebase-credentials.json
-          STAGING_IOS_APP_ID: ${{ secrets[format('{0}_STAGING_IOS_APP_ID', matrix.app)] }}
+          CEJ_STAGING_IOS_APP_ID: ${{ secrets.CEJ_STAGING_IOS_APP_ID }}
+          BRSA_STAGING_IOS_APP_ID: ${{ secrets.BRSA_STAGING_IOS_APP_ID }}
           STAGING_FIREBASE_RELEASE_GROUPS: ${{ secrets.STAGING_FIREBASE_RELEASE_GROUPS }}
