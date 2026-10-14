@@ -249,7 +249,82 @@ void main() {
       expect(action.copyWith(done: true).categorie, 'Emploi');
     });
   });
+
+  group('ActionPlanAction.idSolution', () {
+    test('is read from the API and kept through local persistence', () {
+      final action = ActionPlanAction.fromApiJson({
+        'id': 'a',
+        'libelle': 'A',
+        'type': 'CONSEIL',
+        'terminee': false,
+        'idSolution': 'solution-a',
+      });
+
+      expect(ActionPlanAction.fromJson(action.toJson()).idSolution, 'solution-a');
+    });
+
+    test('is null for an action stored before idSolution existed', () {
+      final action = ActionPlanAction.fromJson({'id': 'a', 'label': 'A', 'kind': 'advice', 'done': false});
+
+      expect(action.idSolution, isNull);
+    });
+  });
+
+  group('ActionPlan.toApiReprise', () {
+    test('describes the plan with its checked actions, without empty objectives', () {
+      final plan = _plan(
+        objectives: [
+          _objectiveX(actions: [_actionAvecSolutionA.copyWith(done: true), _actionAvecSolutionB]),
+          _objectiveY(actions: const []),
+        ],
+      );
+
+      expect(plan.toApiReprise(), {
+        'id': 'plan',
+        'objectives': [
+          {
+            'id': 'objective-x',
+            'titre': 'X',
+            'theme': 'x',
+            'actions': [
+              {'id': 'a', 'idSolution': 'solution-a', 'terminee': true},
+              {'id': 'b', 'idSolution': 'solution-b', 'terminee': false},
+            ],
+          },
+        ],
+      });
+    });
+
+    test('is null when an action was stored before idSolution existed', () {
+      final plan = _plan(
+        objectives: [
+          _objectiveX(actions: [_actionAvecSolutionA, _actionB]),
+        ],
+      );
+
+      expect(plan.toApiReprise(), isNull);
+    });
+
+    test('is null when no objective has actions left', () {
+      final plan = _plan(objectives: [_objectiveX(actions: const [])]);
+
+      expect(plan.toApiReprise(), isNull);
+    });
+  });
 }
+
+const _actionAvecSolutionA = ActionPlanAction(
+  id: 'a',
+  label: 'A',
+  kind: ActionPlanActionKind.advice,
+  idSolution: 'solution-a',
+);
+const _actionAvecSolutionB = ActionPlanAction(
+  id: 'b',
+  label: 'B',
+  kind: ActionPlanActionKind.advice,
+  idSolution: 'solution-b',
+);
 
 const _actionA = ActionPlanAction(
   id: 'a',

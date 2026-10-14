@@ -83,7 +83,7 @@ class _RouterPageState extends State<RouterPage> with WidgetsBindingObserver {
     return switch (viewModel.routerPageDisplayState) {
       RouterPageDisplayState.splash => SplashScreenPage(),
       RouterPageDisplayState.onboarding => FirstLaunchOnboardingPage(),
-      RouterPageDisplayState.login => LoginPage(),
+      RouterPageDisplayState.login => const LoginPage(),
       RouterPageDisplayState.onboardingQuestionnaire => OnboardingQuestionnairePage(),
       RouterPageDisplayState.cgu => CguPage(),
       RouterPageDisplayState.tutorial => TutorialPage(),
@@ -98,7 +98,11 @@ class _RouterPageState extends State<RouterPage> with WidgetsBindingObserver {
     RouterPageViewModel? oldVm,
     RouterPageViewModel newVm,
   ) async {
-    if (newVm.routerPageDisplayState == RouterPageDisplayState.login ||
+    // Les écrans poussés depuis la page principale n'ont plus de sens une fois celle-ci remplacée
+    // (ex. reprise du compte invité, dont le jeune connecté peut d'abord devoir accepter les CGU).
+    final isLeavingMainPage = oldVm?.routerPageDisplayState == RouterPageDisplayState.main;
+    if (isLeavingMainPage ||
+        newVm.routerPageDisplayState == RouterPageDisplayState.login ||
         newVm.routerPageDisplayState == RouterPageDisplayState.main) {
       _removeAllScreensAboveRouterPage();
     }

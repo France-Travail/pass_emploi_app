@@ -248,8 +248,9 @@ List<String> _captureLaunchedUrls(WidgetTester tester) {
   tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
     const MethodChannel('plugins.flutter.io/url_launcher'),
     (call) async {
-      if (call.method == 'launch')
+      if (call.method == 'launch') {
         urls.add((call.arguments as Map)['url'] as String);
+      }
       return true;
     },
   );

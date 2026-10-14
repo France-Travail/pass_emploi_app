@@ -40,7 +40,7 @@ void main() {
   test("Returns access token when id token is invalid but refresh token is SUCCESSFUL", () async {
     // Given
     when(() => authenticator.idToken()).thenAnswer((_) async => invalidIdToken());
-    when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.SUCCESSFUL);
+    when(() => authenticator.refreshStoredSession()).thenAnswer((_) async => RefreshTokenStatus.SUCCESSFUL);
     when(() => authenticator.accessToken()).thenAnswer((_) async => "Access token");
 
     // When-Then
@@ -51,7 +51,7 @@ void main() {
     // Given : un seul échec ambigu (5xx, réponse incomplète) -> pas de déco
     final store = StoreSpy();
     when(() => authenticator.idToken()).thenAnswer((_) async => invalidIdToken());
-    when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.GENERIC_ERROR);
+    when(() => authenticator.refreshStoredSession()).thenAnswer((_) async => RefreshTokenStatus.GENERIC_ERROR);
     when(() => remoteConfig.maxRefreshFailuresBeforeLogout()).thenReturn(3);
     tokenRetriever.setStore(store);
 
@@ -64,7 +64,7 @@ void main() {
     // Given
     final store = StoreSpy();
     when(() => authenticator.idToken()).thenAnswer((_) async => invalidIdToken());
-    when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.GENERIC_ERROR);
+    when(() => authenticator.refreshStoredSession()).thenAnswer((_) async => RefreshTokenStatus.GENERIC_ERROR);
     when(() => remoteConfig.maxRefreshFailuresBeforeLogout()).thenReturn(2);
     tokenRetriever.setStore(store);
 
@@ -85,7 +85,7 @@ void main() {
     // Given
     final store = StoreSpy();
     when(() => authenticator.idToken()).thenAnswer((_) async => invalidIdToken());
-    when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.GENERIC_ERROR);
+    when(() => authenticator.refreshStoredSession()).thenAnswer((_) async => RefreshTokenStatus.GENERIC_ERROR);
     when(() => remoteConfig.maxRefreshFailuresBeforeLogout()).thenReturn(2);
 
     // Session 1 : 1 échec -> compteur=1 (persisté), pas de logout
@@ -114,13 +114,13 @@ void main() {
     tokenRetriever.setStore(store);
 
     // When : GENERIC (1), puis SUCCESS (reset), puis GENERIC (1) -> jamais 2 d'affilée
-    when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.GENERIC_ERROR);
+    when(() => authenticator.refreshStoredSession()).thenAnswer((_) async => RefreshTokenStatus.GENERIC_ERROR);
     try {
       await tokenRetriever.accessToken();
     } catch (_) {}
-    when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.SUCCESSFUL);
+    when(() => authenticator.refreshStoredSession()).thenAnswer((_) async => RefreshTokenStatus.SUCCESSFUL);
     await tokenRetriever.accessToken();
-    when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.GENERIC_ERROR);
+    when(() => authenticator.refreshStoredSession()).thenAnswer((_) async => RefreshTokenStatus.GENERIC_ERROR);
     try {
       await tokenRetriever.accessToken();
     } catch (_) {}
@@ -133,7 +133,7 @@ void main() {
     // Given
     final store = StoreSpy();
     when(() => authenticator.idToken()).thenAnswer((_) async => invalidIdToken());
-    when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.USER_NOT_LOGGED_IN);
+    when(() => authenticator.refreshStoredSession()).thenAnswer((_) async => RefreshTokenStatus.USER_NOT_LOGGED_IN);
     tokenRetriever.setStore(store);
 
     // When
@@ -153,7 +153,7 @@ void main() {
     // Given : hors-ligne transitoire, on garde la session
     final store = StoreSpy();
     when(() => authenticator.idToken()).thenAnswer((_) async => invalidIdToken());
-    when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.NETWORK_UNREACHABLE);
+    when(() => authenticator.refreshStoredSession()).thenAnswer((_) async => RefreshTokenStatus.NETWORK_UNREACHABLE);
     tokenRetriever.setStore(store);
 
     // When-Then
@@ -165,7 +165,7 @@ void main() {
     // Given
     final store = StoreSpy();
     when(() => authenticator.idToken()).thenAnswer((_) async => invalidIdToken());
-    when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.EXPIRED_REFRESH_TOKEN);
+    when(() => authenticator.refreshStoredSession()).thenAnswer((_) async => RefreshTokenStatus.EXPIRED_REFRESH_TOKEN);
     tokenRetriever.setStore(store);
 
     // When-Then
@@ -176,7 +176,7 @@ void main() {
     // Given
     final store = StoreSpy();
     when(() => authenticator.idToken()).thenAnswer((_) async => invalidIdToken());
-    when(() => authenticator.performRefreshToken()).thenAnswer((_) async => RefreshTokenStatus.EXPIRED_REFRESH_TOKEN);
+    when(() => authenticator.refreshStoredSession()).thenAnswer((_) async => RefreshTokenStatus.EXPIRED_REFRESH_TOKEN);
     tokenRetriever.setStore(store);
 
     // When

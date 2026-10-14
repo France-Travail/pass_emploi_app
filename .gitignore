@@ -73,9 +73,13 @@ env/.env.audit
 
 # fvm
 .fvm
+.fvmrc
 
 # Others
 *tutorial_data.csv
 
 # Cursor
 .cursor/
+
+# Tests coverage
+lcov.info

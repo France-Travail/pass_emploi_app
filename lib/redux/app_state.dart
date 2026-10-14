@@ -95,6 +95,7 @@ import 'package:pass_emploi_app/models/offre_emploi.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
 import 'package:pass_emploi_app/models/service_civique.dart';
 import 'package:pass_emploi_app/models/user.dart';
+import 'package:pass_emploi_app/features/reprise_compte_invite/reprise_compte_invite_state.dart';
 /*AUTOGENERATE-REDUX-APP-STATE-IMPORT*/
 
 class AppState extends Equatable {
@@ -189,6 +190,7 @@ class AppState extends Equatable {
   final ActionPlanState actionPlanState;
   final ActionPlanDeclarationState actionPlanDeclarationState;
   final FonctionnalitesState fonctionnalitesState;
+  final RepriseCompteInviteState repriseCompteInviteState;
   /*AUTOGENERATE-REDUX-APP-STATE-PROPERTY*/
 
   AppState({
@@ -283,6 +285,7 @@ class AppState extends Equatable {
     required this.actionPlanState,
     required this.actionPlanDeclarationState,
     required this.fonctionnalitesState,
+    required this.repriseCompteInviteState,
     /*AUTOGENERATE-REDUX-APP-STATE-CONSTRUCTOR*/
   });
 
@@ -378,6 +381,7 @@ class AppState extends Equatable {
     final ActionPlanState? actionPlanState,
     final ActionPlanDeclarationState? actionPlanDeclarationState,
     final FonctionnalitesState? fonctionnalitesState,
+    final RepriseCompteInviteState? repriseCompteInviteState,
     /*AUTOGENERATE-REDUX-APP-STATE-COPYPARAM*/
   }) {
     return AppState(
@@ -473,6 +477,7 @@ class AppState extends Equatable {
       actionPlanState: actionPlanState ?? this.actionPlanState,
       actionPlanDeclarationState: actionPlanDeclarationState ?? this.actionPlanDeclarationState,
       fonctionnalitesState: fonctionnalitesState ?? this.fonctionnalitesState,
+      repriseCompteInviteState: repriseCompteInviteState ?? this.repriseCompteInviteState,
       /*AUTOGENERATE-REDUX-APP-STATE-COPYBODY*/
     );
   }
@@ -570,6 +575,7 @@ class AppState extends Equatable {
       actionPlanState: ActionPlanNotInitializedState(),
       actionPlanDeclarationState: ActionPlanDeclarationNotInitializedState(),
       fonctionnalitesState: FonctionnalitesNotInitializedState(),
+      repriseCompteInviteState: RepriseCompteInviteNotInitializedState(),
       /*AUTOGENERATE-REDUX-APP-STATE-FACTORY*/
     );
   }
@@ -659,6 +665,7 @@ class AppState extends Equatable {
     actionPlanState,
     actionPlanDeclarationState,
     fonctionnalitesState,
+    repriseCompteInviteState,
     /*AUTOGENERATE-REDUX-APP-STATE-EQUATABLE*/
   ];
 

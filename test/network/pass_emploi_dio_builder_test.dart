@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pass_emploi_app/auth/auth_access_checker.dart';
-import 'package:pass_emploi_app/auth/auth_access_token_retriever.dart';
 import 'package:pass_emploi_app/features/mode_demo/is_mode_demo_repository.dart';
 import 'package:pass_emploi_app/network/cache_manager.dart';
 import 'package:pass_emploi_app/network/interceptors/logout_after_too_many_401_interceptor.dart';
@@ -15,6 +14,8 @@ import 'package:pass_emploi_app/repositories/app_version_repository.dart';
 import 'package:pass_emploi_app/repositories/installation_id_repository.dart';
 import 'package:pass_emploi_app/repositories/remote_config_repository.dart';
 import 'package:redux/redux.dart';
+
+import '../doubles/mocks.dart' show MockAuthAccessTokenRetriever;
 
 void main() {
   const path = '/milo/accueil';
@@ -111,16 +112,6 @@ class MockCacheStore extends Mock implements CacheStore {
 class MockModeDemoRepository extends Mock implements ModeDemoRepository {
   MockModeDemoRepository() {
     when(() => isModeDemo()).thenReturn(false);
-  }
-}
-
-class MockAuthAccessTokenRetriever extends Mock implements AuthAccessTokenRetriever {
-  void withAccessToken() {
-    when(() => accessToken()).thenAnswer((_) async => 'accessToken');
-  }
-
-  void throwException() {
-    when(() => accessToken()).thenThrow(Exception());
   }
 }
 

@@ -98,10 +98,12 @@ import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_que
 import 'package:pass_emploi_app/features/action_plan/action_plan_declaration_reducer.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_reducer.dart';
 import 'package:pass_emploi_app/features/fonctionnalites/fonctionnalites_reducer.dart';
+import 'package:pass_emploi_app/features/reprise_compte_invite/reprise_compte_invite_actions.dart';
+import 'package:pass_emploi_app/features/reprise_compte_invite/reprise_compte_invite_reducer.dart';
 /*AUTOGENERATE-REDUX-APP-REDUCER-IMPORT*/
 
 AppState reducer(AppState current, dynamic action) {
-  if (action is RequestLogoutAction) {
+  if (action is RequestLogoutAction || action is RepriseCompteInviteSuccessAction) {
     return AppState.initialState(configuration: current.configurationState.configuration);
   }
   return AppState(
@@ -234,6 +236,7 @@ AppState reducer(AppState current, dynamic action) {
     actionPlanState: actionPlanReducer(current.actionPlanState, action),
     actionPlanDeclarationState: actionPlanDeclarationReducer(current.actionPlanDeclarationState, action),
     fonctionnalitesState: fonctionnalitesReducer(current.fonctionnalitesState, action),
+    repriseCompteInviteState: repriseCompteInviteReducer(current.repriseCompteInviteState, action),
     /*AUTOGENERATE-REDUX-APP-REDUCER-STATE*/
   );
 }

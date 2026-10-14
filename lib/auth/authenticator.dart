@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/configuration/configuration.dart';
 import 'package:pass_emploi_app/crashlytics/crashlytics.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/models/brand.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/repositories/auth/logout_repository.dart';
 import 'package:pass_emploi_app/repositories/installation_id_repository.dart';
 
@@ -20,6 +21,18 @@ enum RefreshTokenStatus { SUCCESSFUL, GENERIC_ERROR, USER_NOT_LOGGED_IN, NETWORK
 
 enum AuthenticationMode { GENERIC, SIMILO, POLE_EMPLOI, INVITE, DEMO }
 
+extension LoginModeAuthenticationMode on LoginMode {
+  AuthenticationMode toAuthenticationMode() {
+    return switch (this) {
+      LoginMode.MILO => AuthenticationMode.SIMILO,
+      LoginMode.POLE_EMPLOI => AuthenticationMode.POLE_EMPLOI,
+      LoginMode.INVITE => AuthenticationMode.INVITE,
+      LoginMode.DEMO_MILO => AuthenticationMode.DEMO,
+      LoginMode.DEMO_PE => AuthenticationMode.DEMO,
+    };
+  }
+}
+
 const Map<String, String> similoParams = {"kc_idp_hint": "similo-jeune"};
 const Map<String, String> poleEmploiParams = {"kc_idp_hint": "ft-beneficiaire"};
 
@@ -29,7 +42,11 @@ const Map<String, String> inviteParams = {"kc_idp_hint": "invite"};
 
 sealed class AuthenticatorResponse {}
 
-class SuccessAuthenticatorResponse extends AuthenticatorResponse {}
+class SuccessAuthenticatorResponse extends AuthenticatorResponse {
+  final AuthTokenResponse? tokens;
+
+  SuccessAuthenticatorResponse({this.tokens});
+}
 
 class CancelledAuthenticatorResponse extends AuthenticatorResponse {}
 
@@ -59,9 +76,20 @@ class Authenticator {
   ]);
 
   Future<AuthenticatorResponse> login(AuthenticationMode mode) async {
+    final response = await loginWithoutSaving(mode);
+    if (response is! SuccessAuthenticatorResponse) return response;
+    try {
+      await saveTokens(response.tokens!);
+      return SuccessAuthenticatorResponse();
+    } catch (e) {
+      return FailureAuthenticatorResponse(e.toString());
+    }
+  }
+
+  Future<AuthenticatorResponse> loginWithoutSaving(AuthenticationMode mode) async {
     await _persistAppAuthFlowMarker(mode);
     try {
-      final response = await _authWrapper.login(
+      final tokens = await _authWrapper.login(
         AuthTokenRequest(
           _configuration.authClientId,
           _configuration.authLoginRedirectUrl,
@@ -71,8 +99,7 @@ class Authenticator {
           await _buildLoginAdditionalParameters(mode),
         ),
       );
-      await _saveToken(response);
-      return SuccessAuthenticatorResponse();
+      return SuccessAuthenticatorResponse(tokens: tokens);
     } catch (e) {
       if (e is UserCanceledLoginException) return CancelledAuthenticatorResponse();
       if (e is AuthWrapperWrongDeviceClockException) return WrongDeviceClockAuthenticatorResponse();
@@ -81,6 +108,8 @@ class Authenticator {
       await _deleteAppAuthFlowMarker();
     }
   }
+
+  Future<void> saveTokens(AuthTokenResponse tokens) => _saveToken(tokens);
 
   Future<void> reportInterruptedAppAuthFlowIfPresent() async {
     final String? persistedMarker = await _preferences.read(key: _appAuthFlowMarkerStorageKey);
@@ -128,22 +157,14 @@ class Authenticator {
 
   Future<String?> accessToken() async => _preferences.read(key: _accessTokenKey);
 
-  Future<RefreshTokenStatus> performRefreshToken() async {
+  Future<RefreshTokenStatus> refreshStoredSession() async {
     final String? refreshToken = await _preferences.read(key: _refreshTokenKey);
     if (refreshToken == null) {
       return RefreshTokenStatus.USER_NOT_LOGGED_IN;
     }
 
     try {
-      final AuthTokenResponse response = await _authWrapper.refreshToken(
-        AuthRefreshTokenRequest(
-          _configuration.authClientId,
-          _configuration.authLoginRedirectUrl,
-          _configuration.authIssuer,
-          refreshToken,
-          _configuration.authClientSecret,
-        ),
-      );
+      final AuthTokenResponse response = await _exchangeRefreshToken(refreshToken);
       await _saveToken(response);
       return RefreshTokenStatus.SUCCESSFUL;
     } on AuthWrapperNetworkException {
@@ -157,6 +178,18 @@ class Authenticator {
     } on AuthWrapperRefreshTokenException {
       return RefreshTokenStatus.GENERIC_ERROR;
     }
+  }
+
+  Future<AuthTokenResponse> _exchangeRefreshToken(String refreshToken) {
+    return _authWrapper.refreshToken(
+      AuthRefreshTokenRequest(
+        _configuration.authClientId,
+        _configuration.authLoginRedirectUrl,
+        _configuration.authIssuer,
+        refreshToken,
+        _configuration.authClientSecret,
+      ),
+    );
   }
 
   Future<bool> logout(String userId, LogoutReason reason) async {
