@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -78,20 +79,20 @@ class ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     return Tracker(
       tracking: AnalyticsScreenNames.chat,
       child: StoreConnector<AppState, ChatPageViewModel>(
-          onInit: (store) {
-            store.dispatch(LastMessageSeenAction());
-            store.dispatch(SubscribeToChatAction());
-          },
-          onDispose: _onDispose,
-          converter: (store) => ChatPageViewModel.create(store),
-          builder: _builder,
-          onDidChange: (_, newVm) {
-            StoreProvider.of<AppState>(context).dispatch(LastMessageSeenAction());
-            _animateMessage = true;
-            _isLoadingMorePast = false;
-          },
-          distinct: true,
-        ),
+        onInit: (store) {
+          store.dispatch(LastMessageSeenAction());
+          store.dispatch(SubscribeToChatAction());
+        },
+        onDispose: _onDispose,
+        converter: (store) => ChatPageViewModel.create(store),
+        builder: _builder,
+        onDidChange: (_, newVm) {
+          StoreProvider.of<AppState>(context).dispatch(LastMessageSeenAction());
+          _animateMessage = true;
+          _isLoadingMorePast = false;
+        },
+        distinct: true,
+      ),
     );
   }
 
@@ -148,38 +149,63 @@ class ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
 }
 
 extension on ChatItem {
+  VoidCallback? _onOptions(BuildContext context) => switch (this) {
+    final TextMessageItem item => () => ChatMessageBottomSheet.show(context, item),
+    final PieceJointeMessageItem item => () => ChatMessageBottomSheet.show(context, item),
+    final PieceJointeImageItem item => () => ChatMessageBottomSheet.show(context, item),
+    final PartageMessageItem item => () => ChatMessageBottomSheet.show(context, item),
+    LocalImageMessageItem() => null,
+    LocalFileMessageItem() => null,
+    DeletedMessageItem() => null,
+    InformationItem() => null,
+    DayItem() => null,
+  };
+
   Widget toWidget(BuildContext context) {
-    return GestureDetector(
-      onLongPress: _vibrate(
-        () => switch (this) {
-          final TextMessageItem item => ChatMessageBottomSheet.show(context, item),
-          final PieceJointeMessageItem item => ChatMessageBottomSheet.show(context, item),
-          final PieceJointeImageItem item => ChatMessageBottomSheet.show(context, item),
-          final PartageMessageItem item => ChatMessageBottomSheet.show(context, item),
-          LocalImageMessageItem() => null,
-          LocalFileMessageItem() => null,
-          DeletedMessageItem() => null,
-          InformationItem() => null,
-          DayItem() => null,
-        },
+    final content = switch (this) {
+      final DayItem item => ChatDaySection(dayLabel: item.dayLabel),
+      final TextMessageItem item => ChatTextMessage(item.toParams()),
+      final InformationItem item => Padding(
+        padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s1w),
+        child: DsfrAlert(
+          type: DsfrAlertType.info,
+          description: DsfrAlertDescriptionText('${item.title} ${item.description}'),
+        ),
       ),
-      child: switch (this) {
-        final DayItem item => ChatDaySection(dayLabel: item.dayLabel),
-        final TextMessageItem item => ChatTextMessage(item.toParams()),
-        final InformationItem item => Padding(
-          padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s1w),
-          child: DsfrAlert(
-            type: DsfrAlertType.info,
-            description: DsfrAlertDescriptionText('${item.title} ${item.description}'),
+      final DeletedMessageItem item => DeletedMessage(item),
+      final PieceJointeMessageItem item => ChatPieceJointe(item.toParams()),
+      final PieceJointeImageItem item => ChatImagePieceJointe(item),
+      final LocalImageMessageItem item => ChatLocalImage(item),
+      final LocalFileMessageItem item => ChatLocalFile(item),
+      final PartageMessageItem item => PartageMessage(item),
+    };
+    final onOptions = _onOptions(context);
+    // A11y 6.2 : le séparateur de jour et les messages sans options ne sont plus annoncés comme activables.
+    if (onOptions == null) return content;
+    // A11y 5.2 : les options d'un message (copier, modifier, supprimer) ne s'ouvraient qu'à l'appui long. Elles
+    // s'ouvrent aussi au clavier (Entrée ou Espace sur le message), avec un contour de focus DSFR, et depuis le
+    // menu des actions du lecteur d'écran.
+    return FocusableActionDetector(
+      actions: {
+        ActivateIntent: CallbackAction<ActivateIntent>(
+          onInvoke: (_) {
+            onOptions();
+            return null;
+          },
+        ),
+      },
+      child: Semantics(
+        customSemanticsActions: {CustomSemanticsAction(label: Strings.chatMessageBottomSheetTitle): onOptions},
+        child: GestureDetector(
+          onLongPress: _vibrate(onOptions),
+          child: Builder(
+            builder: (context) => DsfrFocusWidget(
+              isFocused: Focus.maybeOf(context)?.hasPrimaryFocus ?? false,
+              child: content,
+            ),
           ),
         ),
-        final DeletedMessageItem item => DeletedMessage(item),
-        final PieceJointeMessageItem item => ChatPieceJointe(item.toParams()),
-        final PieceJointeImageItem item => ChatImagePieceJointe(item),
-        final LocalImageMessageItem item => ChatLocalImage(item),
-        final LocalFileMessageItem item => ChatLocalFile(item),
-        final PartageMessageItem item => PartageMessage(item),
-      },
+      ),
     );
   }
 }

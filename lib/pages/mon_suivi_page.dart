@@ -143,12 +143,19 @@ class _ScrollAwareAppBarState extends State<_ScrollAwareAppBar> {
                     duration: AnimationDurations.fast,
                     curve: Curves.fastEaseInToSlowEaseOut,
                   ),
-              icon: Padding(
-                padding: const EdgeInsets.all(DsfrSpacings.s1w),
-                child: Icon(
-                  DsfrIcons.businessCalendarEventLine,
-                  color: DsfrColorDecisions.textActionHighBlueFrance(context),
-                  size: DsfrSpacings.s3w,
+              focusColor: DsfrColorDecisions.backgroundTransparent(context),
+              // A11y 2.3 : contour de focus DSFR (le focus est celui du bouton, lu juste au-dessus).
+              icon: Builder(
+                builder: (context) => DsfrFocusWidget(
+                  isFocused: Focus.maybeOf(context)?.hasPrimaryFocus ?? false,
+                  child: Padding(
+                    padding: const EdgeInsets.all(DsfrSpacings.s1w),
+                    child: Icon(
+                      DsfrIcons.businessCalendarEventLine,
+                      color: DsfrColorDecisions.textActionHighBlueFrance(context),
+                      size: DsfrSpacings.s3w,
+                    ),
+                  ),
                 ),
               ),
               tooltip: Strings.monSuiviTooltip,
@@ -1137,8 +1144,14 @@ class _CreateDemarcheButtonState extends State<CreateDemarcheButton>
                         context,
                       ).withValues(alpha: 0.5),
                     ),
+                    // A11y 8.5, 10.1 et 10.2 : la copie animée du bouton n'est qu'un effet visuel ; elle ne reçoit plus
+                    // le focus clavier et n'est plus lue par le lecteur d'écran.
                     child: IgnorePointer(
-                      child: SizedBox(width: double.infinity, child: button),
+                      child: ExcludeFocus(
+                        child: ExcludeSemantics(
+                          child: SizedBox(width: double.infinity, child: button),
+                        ),
+                      ),
                     ),
                   ),
                 ),

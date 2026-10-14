@@ -93,6 +93,7 @@ class Strings {
 
   // Chat
   static String yourMessage = Brand.isPassEmploi() ? "Votre message…" : "Ton message…";
+  static String yourMessageLabel = Brand.isPassEmploi() ? "Votre message" : "Ton message";
   static String yourConseiller = "Ton conseiller";
   static String today = "Aujourd'hui";
   static String edited = "Modifié";
