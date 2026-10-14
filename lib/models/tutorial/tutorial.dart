@@ -24,7 +24,7 @@ class Tutorial {
 
   static List<TutorialPage> planAction = [
     TutorialPage(
-      title: "Dis-nous où tu en es ...",
+      title: "Dis-nous où tu en es…",
       description:
           "Réponds à quelques questions sur ta situation, ce que tu recherches et les difficultés que tu rencontres.",
       image: "assets/tuto/tuto_1.webp",

@@ -1851,6 +1851,7 @@ class Strings {
 
   // Tutorial
   static String seeLater = "Voir plus tard";
+  static String tutorialPageA11y(int current, int total) => "Page $current sur $total";
   static String finish = "Terminer";
 
   //Appstore rating
