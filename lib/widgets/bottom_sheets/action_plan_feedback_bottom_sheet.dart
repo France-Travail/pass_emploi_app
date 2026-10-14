@@ -24,57 +24,50 @@ class ActionPlanFeedbackBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // A11y 8.2 : la fenêtre défile (marges fournies par DsfrBottomSheet) au lieu de déborder sur un petit téléphone
+    // à 200 %.
     return DsfrBottomSheet(
-      shrinkWrap: true,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          DsfrSpacings.s2w,
-          0,
-          DsfrSpacings.s2w,
-          DsfrSpacings.s2w,
-        ),
-        child: Tracker(
-          tracking: AnalyticsScreenNames.actionPlanFeedback,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // A11y 7.1 / 10.2 : titre de la feuille, en-tête, qui reçoit le focus à l'ouverture.
-              AutoFocusA11y(
-                child: Semantics(
-                  header: true,
-                  child: Text(
-                    Strings.actionPlanFeedbackTitle,
-                    style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textTitleGrey(context)),
-                  ),
+      child: Tracker(
+        tracking: AnalyticsScreenNames.actionPlanFeedback,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // A11y 7.1 / 10.2 : titre de la feuille, en-tête, qui reçoit le focus à l'ouverture.
+            AutoFocusA11y(
+              child: Semantics(
+                header: true,
+                child: Text(
+                  Strings.actionPlanFeedbackTitle,
+                  style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textTitleGrey(context)),
                 ),
               ),
-              const SizedBox(height: DsfrSpacings.s2w),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    Strings.actionPlanFeedbackDescription,
-                    style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
-                  ),
-                  const SizedBox(height: DsfrSpacings.s2w),
-                  DsfrButton(
-                    label: Strings.actionPlanFeedbackGiveOpinion,
-                    variant: DsfrButtonVariant.primary,
-                    size: DsfrComponentSize.lg,
-                    icon: DsfrIcons.systemExternalLinkFill,
-                    onPressed: () => launchExternalUrl(ExternalLinks.actionPlanFeedback),
-                  ),
-                ],
-              ),
-              const SizedBox(height: DsfrSpacings.s2w),
-              DsfrButton(
-                label: Strings.onboardingQuestionnaireSkip,
-                variant: DsfrButtonVariant.secondary,
-                size: DsfrComponentSize.lg,
-                onPressed: () => _continueToForm(context, AnalyticsEventNames.actionPlanFeedbackSkipAction),
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(height: DsfrSpacings.s2w),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  Strings.actionPlanFeedbackDescription,
+                  style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                ),
+                const SizedBox(height: DsfrSpacings.s2w),
+                DsfrButton(
+                  label: Strings.actionPlanFeedbackGiveOpinion,
+                  variant: DsfrButtonVariant.primary,
+                  size: DsfrComponentSize.lg,
+                  icon: DsfrIcons.systemExternalLinkFill,
+                  onPressed: () => launchExternalUrl(ExternalLinks.actionPlanFeedback),
+                ),
+              ],
+            ),
+            const SizedBox(height: DsfrSpacings.s2w),
+            DsfrButton(
+              label: Strings.onboardingQuestionnaireSkip,
+              variant: DsfrButtonVariant.secondary,
+              size: DsfrComponentSize.lg,
+              onPressed: () => _continueToForm(context, AnalyticsEventNames.actionPlanFeedbackSkipAction),
+            ),
+          ],
         ),
       ),
     );

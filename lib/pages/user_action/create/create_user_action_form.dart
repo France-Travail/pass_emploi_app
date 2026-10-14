@@ -99,7 +99,7 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> {
               body: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [appBar, form, ?navButtons],
+                  children: [appBar, form, if (navButtons != null) navButtons],
                 ),
               ),
             )

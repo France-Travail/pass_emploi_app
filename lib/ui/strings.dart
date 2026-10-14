@@ -986,10 +986,11 @@ class Strings {
   static String selectMultipleActions = "Sélectionne une ou plusieurs dates et renseigne la description";
   static String selectOneAction = "Sélectionne une date et renseigne la description";
 
-  static String actionCreationInfos(String creator, String date) => "Ajouté par $creator le $date";
+  static String actionCreationInfos(String creator, String date) => "Ajoutée par $creator le $date";
   static String youLowercase = "tu";
+  static String youStressedLowercase = Brand.isPassEmploi() ? "vous" : "toi";
   static String you = "Tu";
-  static String yourConseillerLowercase = "ton conseiller";
+  static String yourConseillerLowercase = Brand.isPassEmploi() ? "votre conseiller" : "ton conseiller";
   static String congratulationsActionUpdated =
       "Félicitations !\n\nLa mise à jour de ton action a bien été prise en compte";
   static String understood = "J'ai compris";

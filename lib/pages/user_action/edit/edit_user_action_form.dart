@@ -160,20 +160,30 @@ class _CategorySelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          Strings.updateUserActionCategory,
-          style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
+        // A11y 9.2 : le libellé visible est lu avec le bouton (« Catégorie : Aucune, bouton »), pas avant lui.
+        ExcludeSemantics(
+          child: Text(
+            Strings.updateUserActionCategory,
+            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
+          ),
         ),
         const SizedBox(height: DsfrSpacings.s1v),
         SizedBox(
           width: double.infinity,
-          child: DsfrButton(
-            label: changeNotifier.type?.label ?? Strings.userActionNoCategory,
-            icon: DsfrIcons.systemArrowRightSLine,
-            iconLocation: DsfrButtonIconLocation.right,
-            variant: DsfrButtonVariant.secondary,
-            size: DsfrComponentSize.md,
-            onPressed: () => Navigator.of(context).push(_CategorySelectionPage.route()).then(changeNotifier.updateType),
+          child: Semantics(
+            container: true,
+            button: true,
+            label: '${Strings.updateUserActionCategory} : ${changeNotifier.type?.label ?? Strings.userActionNoCategory}',
+            onTap: () => Navigator.of(context).push(_CategorySelectionPage.route()).then(changeNotifier.updateType),
+            excludeSemantics: true,
+            child: DsfrButton(
+              label: changeNotifier.type?.label ?? Strings.userActionNoCategory,
+              icon: DsfrIcons.systemArrowRightSLine,
+              iconLocation: DsfrButtonIconLocation.right,
+              variant: DsfrButtonVariant.secondary,
+              size: DsfrComponentSize.md,
+              onPressed: () => Navigator.of(context).push(_CategorySelectionPage.route()).then(changeNotifier.updateType),
+            ),
           ),
         ),
       ],

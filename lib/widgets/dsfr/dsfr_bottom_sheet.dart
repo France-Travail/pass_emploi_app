@@ -84,10 +84,13 @@ class DsfrBottomSheet extends StatelessWidget {
                   horizontal: DsfrSpacings.s1w,
                   vertical: DsfrSpacings.s2w,
                 ),
-                child: Row(
+                // A11y 8.2 : à 200 %, « Fermer » passe sous le bouton de gauche au lieu de déborder de l'écran.
+                child: Wrap(
+                  alignment: leading != null ? WrapAlignment.spaceBetween : WrapAlignment.end,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  runSpacing: DsfrSpacings.s1w,
                   children: [
                     if (leading != null) leading!,
-                    const Spacer(),
                     if (isDismissible)
                       DsfrButton(
                         label: closeLabel ?? Strings.close,
