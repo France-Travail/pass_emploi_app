@@ -41,22 +41,34 @@ class OnboardingQuestionnairePage extends StatefulWidget {
   State<OnboardingQuestionnairePage> createState() => _OnboardingQuestionnairePageState();
 }
 
-class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePage> {
+class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePage> with WidgetsBindingObserver {
   late final OnboardingQuestionnaireFormChangeNotifier _form;
   late final CommunesRepository _communesRepository;
   late final OnboardingQuestionnaireTracker _tracker;
   bool _formInitialized = false;
   OnboardingQuestionnaireStep? _lastAnnouncedStep;
+  bool _keyboardOpen = false;
 
   @override
   void initState() {
     super.initState();
     _communesRepository = CommunesRepository();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  // Au premier lancement, la page est affichée dans le Scaffold racine de l'app, qui retire déjà la hauteur du
+  // clavier de MediaQuery : le clavier est lu sur la vue, à chaque changement de dimensions.
+  @override
+  void didChangeMetrics() {
+    if (!mounted) return;
+    final open = A11yUtils.isKeyboardVisible(context);
+    if (open != _keyboardOpen) setState(() => _keyboardOpen = open);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _keyboardOpen = A11yUtils.isKeyboardVisible(context);
     if (_formInitialized) return;
     _formInitialized = true;
     final store = StoreProvider.of<AppState>(context);
@@ -90,6 +102,7 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     if (_formInitialized) _form.dispose();
     super.dispose();
   }
@@ -115,8 +128,7 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    // Lu au-dessus du Scaffold : dans son corps, la hauteur du clavier est déjà retirée.
-    final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
+    final keyboardOpen = _keyboardOpen;
     return Theme(
       data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
       child: ListenableBuilder(

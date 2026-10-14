@@ -20,8 +20,9 @@ class CreateUserActionForm extends StatefulWidget {
   State<CreateUserActionForm> createState() => _CreateUserActionFormState();
 }
 
-class _CreateUserActionFormState extends State<CreateUserActionForm> {
+class _CreateUserActionFormState extends State<CreateUserActionForm> with WidgetsBindingObserver {
   late final CreateUserActionFormViewModel _viewModel;
+  bool _keyboardOpen = false;
   // Les clés gardent la barre et l'étape (et le champ qui a le focus) quand la mise en page change.
   final GlobalKey _appBarKey = GlobalKey();
   final GlobalKey _formKey = GlobalKey();
@@ -31,10 +32,21 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> {
     super.initState();
     _viewModel = CreateUserActionFormViewModel();
     _viewModel.addListener(_onFormStateChanged);
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  // Le clavier est lu sur la vue, à chaque changement de dimensions : la page peut être affichée sous un Scaffold
+  // qui a déjà retiré sa hauteur de MediaQuery.
+  @override
+  void didChangeMetrics() {
+    if (!mounted) return;
+    final open = A11yUtils.isKeyboardVisible(context);
+    if (open != _keyboardOpen) setState(() => _keyboardOpen = open);
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _viewModel.removeListener(_onFormStateChanged);
     _viewModel.dispose();
     super.dispose();
@@ -68,7 +80,7 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> {
 
   @override
   Widget build(BuildContext context) {
-    final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
+    final keyboardOpen = _keyboardOpen || MediaQuery.viewInsetsOf(context).bottom > 0;
     final appBar = _CreateUserActionAppBar(
       key: _appBarKey,
       onBackPressed: _onBack,

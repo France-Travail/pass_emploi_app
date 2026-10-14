@@ -12,6 +12,7 @@ import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/creat
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_form/create_demarche_form_display_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 
 class CreateDemarcheForm extends StatefulWidget {
@@ -32,8 +33,9 @@ class CreateDemarcheForm extends StatefulWidget {
   State<CreateDemarcheForm> createState() => _CreateDemarcheFormState();
 }
 
-class _CreateDemarcheFormState extends State<CreateDemarcheForm> {
+class _CreateDemarcheFormState extends State<CreateDemarcheForm> with WidgetsBindingObserver {
   late final CreateDemarcheFormChangeNotifier _changeNotifier;
+  bool _keyboardOpen = false;
 
   @override
   void initState() {
@@ -42,10 +44,21 @@ class _CreateDemarcheFormState extends State<CreateDemarcheForm> {
       displayState: widget.hasDemarcheIa ? CreateDemarcheIaFtStep1() : CreateDemarcheStep1Thematique(),
     );
     _changeNotifier.addListener(_onFormStateChanged);
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  // Le clavier est lu sur la vue, à chaque changement de dimensions : la page peut être affichée sous un Scaffold
+  // qui a déjà retiré sa hauteur de MediaQuery.
+  @override
+  void didChangeMetrics() {
+    if (!mounted) return;
+    final open = A11yUtils.isKeyboardVisible(context);
+    if (open != _keyboardOpen) setState(() => _keyboardOpen = open);
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _changeNotifier.removeListener(_onFormStateChanged);
     _changeNotifier.dispose();
     super.dispose();
@@ -86,7 +99,7 @@ class _CreateDemarcheFormState extends State<CreateDemarcheForm> {
 
   @override
   Widget build(BuildContext context) {
-    final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
+    final keyboardOpen = _keyboardOpen || MediaQuery.viewInsetsOf(context).bottom > 0;
     final appBar = _CreateDemarcheAppBar(
       key: _appBarKey,
       onBackPressed: _onBack,
