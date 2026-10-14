@@ -114,10 +114,7 @@ class CreateUserActionFormViewModel extends ChangeNotifier {
     if (shouldFocusTitleInput) {
       step2.titleInputKey.requestFocusDelayed();
     }
-
-    if (titleSource is CreateActionTitleFromSuggestions) {
-      viewChangedForward();
-    }
+    // A11y 5.3 : choisir une suggestion la sélectionne seulement ; on passe à l'étape 3 avec « Continuer ».
   }
 
   void descriptionChanged(String description) {

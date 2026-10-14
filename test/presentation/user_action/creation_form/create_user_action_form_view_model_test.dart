@@ -211,6 +211,19 @@ void main() {
           expect(viewModel.step2.titleSource.title, "title");
           expect(hasBeenNotified, true);
         });
+
+        test('choosing a suggestion stays on step 2 until the user continues', () {
+          // Given
+          final viewModel = CreateUserActionFormViewModel(initialDisplayState: CreateUserActionDisplayState.step2);
+          final suggestion = UserActionReferentielType.emploi.suggestionList.first;
+
+          // When
+          viewModel.titleChanged(CreateActionTitleFromSuggestions(suggestion));
+
+          // Then
+          expect(viewModel.displayState, CreateUserActionDisplayState.step2);
+          expect(viewModel.canGoForward, true);
+        });
       });
 
       group('descriptionChanged', () {

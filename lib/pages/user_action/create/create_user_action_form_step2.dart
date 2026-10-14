@@ -117,6 +117,11 @@ class _SuggestionTagWrap extends StatelessWidget {
         ...suggestionList.map((suggestion) {
           final isSelected = selectedSuggestion == suggestion;
           return _SelectableTagSemantics(
+            label: suggestion.value,
+            selected: isSelected,
+            onTap: () => onSelected(
+              isSelected ? CreateActionTitleNotInitialized() : CreateActionTitleFromSuggestions(suggestion),
+            ),
             child: DsfrTag(
               label: suggestion.value,
               size: DsfrComponentSize.md,
@@ -128,6 +133,11 @@ class _SuggestionTagWrap extends StatelessWidget {
           );
         }),
         _SelectableTagSemantics(
+          label: Strings.userActionOther,
+          selected: isOtherSelected,
+          onTap: () => onSelected(
+            isOtherSelected ? CreateActionTitleNotInitialized() : CreateActionTitleFromUserInput(''),
+          ),
           child: DsfrTag(
             label: Strings.userActionOther,
             size: DsfrComponentSize.md,
@@ -142,16 +152,33 @@ class _SuggestionTagWrap extends StatelessWidget {
   }
 }
 
-/// A11y 10.3.1 : les [DsfrTag] sélectionnables n'exposent pas de rôle bouton (seulement `selected`).
-/// On fusionne un rôle bouton avec la sémantique du tag.
+/// A11y 5.1 et 10.2 : les [DsfrTag] sélectionnables n'exposent qu'un état `selected`, et les fusionner avec un
+/// rôle bouton dédoublait chaque suggestion. Une seule suggestion peut être choisie : chaque étiquette est
+/// restituée comme une case d'option, avec son état. Le tag garde son affichage et son focus clavier.
 class _SelectableTagSemantics extends StatelessWidget {
-  const _SelectableTagSemantics({required this.child});
+  const _SelectableTagSemantics({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    required this.child,
+  });
 
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    return MergeSemantics(child: Semantics(button: true, child: child));
+    return Semantics(
+      container: true,
+      inMutuallyExclusiveGroup: true,
+      checked: selected,
+      label: label,
+      onTap: onTap,
+      excludeSemantics: true,
+      child: child,
+    );
   }
 }
 
