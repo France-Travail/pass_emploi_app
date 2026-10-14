@@ -58,49 +58,57 @@ class SuiviOffreCard<T> extends StatelessWidget {
                   child: InkWell(
                     onTap: onTap,
                     borderRadius: const BorderRadius.all(Radius.circular(4)),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        _Logo(origin: origin),
-                        const SizedBox(width: DsfrSpacings.s3v),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              DsfrTag(
-                                label: _typeLabel(offreType),
-                                size: DsfrComponentSize.sm,
-                                backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
-                                textColor: DsfrColorDecisions.textLabelGrey(context),
-                              ),
-                              const SizedBox(height: DsfrSpacings.s1v),
-                              Text(
-                                title,
-                                style: DsfrTextStyle.bodyMdBold(
-                                  color: DsfrColorDecisions.textTitleGrey(context),
-                                ),
-                              ),
-                              if (subtitle.isNotEmpty) ...[
-                                Text(
-                                  subtitle,
-                                  style: DsfrTextStyle.bodySm(
-                                    color: DsfrColorDecisions.textTitleGrey(context),
+                    focusColor: Colors.transparent,
+                    // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material (1,3:1).
+                    child: Builder(
+                      builder: (context) => DsfrFocusWidget(
+                        isFocused: Focus.of(context).hasPrimaryFocus,
+                        borderRadius: const BorderRadius.all(Radius.circular(4)),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            _Logo(origin: origin),
+                            const SizedBox(width: DsfrSpacings.s3v),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  DsfrTag(
+                                    label: _typeLabel(offreType),
+                                    size: DsfrComponentSize.sm,
+                                    backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
+                                    textColor: DsfrColorDecisions.textLabelGrey(context),
                                   ),
-                                ),
-                              ],
-                              if (showCandidatureBadge) ...[
-                                const SizedBox(height: DsfrSpacings.s1v),
-                                DsfrBadge(
-                                  label: Strings.candidatureEnvoyee.toUpperCase(),
-                                  type: DsfrBadgeType.information,
-                                  size: DsfrComponentSize.sm,
-                                  withIcon: true,
-                                ),
-                              ],
-                            ],
-                          ),
+                                  const SizedBox(height: DsfrSpacings.s1v),
+                                  Text(
+                                    title,
+                                    style: DsfrTextStyle.bodyMdBold(
+                                      color: DsfrColorDecisions.textTitleGrey(context),
+                                    ),
+                                  ),
+                                  if (subtitle.isNotEmpty) ...[
+                                    Text(
+                                      subtitle,
+                                      style: DsfrTextStyle.bodySm(
+                                        color: DsfrColorDecisions.textTitleGrey(context),
+                                      ),
+                                    ),
+                                  ],
+                                  if (showCandidatureBadge) ...[
+                                    const SizedBox(height: DsfrSpacings.s1v),
+                                    DsfrBadge(
+                                      label: Strings.candidatureEnvoyee.toUpperCase(),
+                                      type: DsfrBadgeType.information,
+                                      size: DsfrComponentSize.sm,
+                                      withIcon: true,
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),

@@ -81,68 +81,76 @@ class DataCard<T> extends StatelessWidget {
                       child: InkWell(
                         onTap: onTap,
                         borderRadius: const BorderRadius.all(Radius.circular(4)),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            if (origin != null) ...[
-                              Padding(
-                                padding: const EdgeInsets.all(DsfrSpacings.s3v),
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: _Logo(origin: origin),
-                                ),
-                              ),
-                            ],
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                  origin != null ? 0 : DsfrSpacings.s3v,
-                                  DsfrSpacings.s3v,
-                                  DsfrSpacings.s3v,
-                                  DsfrSpacings.s3v,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      titre,
-                                      style: DsfrTextStyle.bodyMdBold(
-                                        color: DsfrColorDecisions.textTitleGrey(context),
-                                      ),
+                        focusColor: Colors.transparent,
+                        // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material (1,3:1).
+                        child: Builder(
+                          builder: (context) => DsfrFocusWidget(
+                            isFocused: Focus.of(context).hasPrimaryFocus,
+                            borderRadius: const BorderRadius.all(Radius.circular(4)),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                if (origin != null) ...[
+                                  Padding(
+                                    padding: const EdgeInsets.all(DsfrSpacings.s3v),
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: _Logo(origin: origin),
                                     ),
-                                    if (sousTitre != null && sousTitre!.isNotEmpty)
-                                      Text(
-                                        sousTitre!,
-                                        style: DsfrTextStyle.bodySm(
-                                          color: DsfrColorDecisions.textTitleGrey(context),
+                                  ),
+                                ],
+                                Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.fromLTRB(
+                                      origin != null ? 0 : DsfrSpacings.s3v,
+                                      DsfrSpacings.s3v,
+                                      DsfrSpacings.s3v,
+                                      DsfrSpacings.s3v,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          titre,
+                                          style: DsfrTextStyle.bodyMdBold(
+                                            color: DsfrColorDecisions.textTitleGrey(context),
+                                          ),
                                         ),
-                                      ),
-                                    if (leading != null) ...[
-                                      const SizedBox(height: DsfrSpacings.s1v),
-                                      leading!,
-                                    ],
-                                    if (_hasComplements(contractLabel)) ...[
-                                      const SizedBox(height: DsfrSpacings.s1v),
-                                      ..._buildComplements(contractLabel),
-                                    ],
-                                    if (mention != null) ...[
-                                      const SizedBox(height: DsfrSpacings.s1w),
-                                      Text(
-                                        mention,
-                                        style: DsfrTextStyle.bodyXs(
-                                          color: DsfrColorDecisions.textMentionGrey(context),
-                                        ),
-                                      ),
-                                    ],
-                                    if (additionalChild != null) ...[
-                                      const SizedBox(height: DsfrSpacings.s1w),
-                                      additionalChild!,
-                                    ],
-                                  ],
+                                        if (sousTitre != null && sousTitre!.isNotEmpty)
+                                          Text(
+                                            sousTitre!,
+                                            style: DsfrTextStyle.bodySm(
+                                              color: DsfrColorDecisions.textTitleGrey(context),
+                                            ),
+                                          ),
+                                        if (leading != null) ...[
+                                          const SizedBox(height: DsfrSpacings.s1v),
+                                          leading!,
+                                        ],
+                                        if (_hasComplements(contractLabel)) ...[
+                                          const SizedBox(height: DsfrSpacings.s1v),
+                                          ..._buildComplements(contractLabel),
+                                        ],
+                                        if (mention != null) ...[
+                                          const SizedBox(height: DsfrSpacings.s1w),
+                                          Text(
+                                            mention,
+                                            style: DsfrTextStyle.bodyXs(
+                                              color: DsfrColorDecisions.textMentionGrey(context),
+                                            ),
+                                          ),
+                                        ],
+                                        if (additionalChild != null) ...[
+                                          const SizedBox(height: DsfrSpacings.s1w),
+                                          additionalChild!,
+                                        ],
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),

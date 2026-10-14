@@ -84,10 +84,26 @@ class _OnboardingNotifierWrapperState extends State<OnboardingNotifierWrapper> {
                 child: Semantics(
                   container: true,
                   explicitChildNodes: true,
-                  child: DsfrAlert(
-                    type: DsfrAlertType.success,
-                    description: DsfrAlertDescriptionText(message),
-                    onClose: () => _closeBanner(previousFocus),
+                  // A11y 2.3 : la croix de l'alerte DSFR n'a qu'un voile gris au focus (1,3:1) ; le contour DSFR entoure
+                  // l'alerte, dont la croix est le seul élément focalisable.
+                  child: Focus(
+                    canRequestFocus: false,
+                    skipTraversal: true,
+                    // Sans nœud d'accessibilité : il fusionnerait le message et la croix en un seul bouton.
+                    includeSemantics: false,
+                    child: Builder(
+                      builder: (context) => DsfrFocusWidget(
+                        isFocused: Focus.of(context).hasFocus,
+                        child: Theme(
+                          data: Theme.of(context).copyWith(focusColor: Colors.transparent),
+                          child: DsfrAlert(
+                            type: DsfrAlertType.success,
+                            description: DsfrAlertDescriptionText(message),
+                            onClose: () => _closeBanner(previousFocus),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),

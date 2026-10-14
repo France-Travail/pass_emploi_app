@@ -95,20 +95,27 @@ class AutocompleteSuggestionTile extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(DsfrSpacings.s2w),
-            child: secondaryText == null
-                ? Text(text, style: textStyle)
-                : Text.rich(
-                    TextSpan(
-                      text: text,
-                      style: textStyle,
-                      children: [
-                        const TextSpan(text: ' '),
-                        TextSpan(text: secondaryText, style: textStyle),
-                      ],
-                    ),
-                  ),
+          focusColor: Colors.transparent,
+          // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material (1,3:1).
+          child: Builder(
+            builder: (context) => DsfrFocusWidget(
+              isFocused: Focus.of(context).hasPrimaryFocus,
+              child: Padding(
+                padding: const EdgeInsets.all(DsfrSpacings.s2w),
+                child: secondaryText == null
+                    ? Text(text, style: textStyle)
+                    : Text.rich(
+                        TextSpan(
+                          text: text,
+                          style: textStyle,
+                          children: [
+                            const TextSpan(text: ' '),
+                            TextSpan(text: secondaryText, style: textStyle),
+                          ],
+                        ),
+                      ),
+              ),
+            ),
           ),
         ),
       ),

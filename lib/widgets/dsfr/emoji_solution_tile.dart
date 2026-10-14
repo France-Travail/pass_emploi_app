@@ -85,62 +85,70 @@ class EmojiSolutionTile extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: radius,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
+          focusColor: Colors.transparent,
+          // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material (1,3:1).
+          child: Builder(
+            builder: (context) => DsfrFocusWidget(
+              isFocused: Focus.of(context).hasPrimaryFocus,
               borderRadius: radius,
-              border: Border.all(color: DsfrColorDecisions.artworkDecorativeBlueFrance(context)),
-            ),
-            child: ClipRRect(
-              borderRadius: radius,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s3w, vertical: DsfrSpacings.s2w),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        EmojiTile(
-                          emoji: emoji,
-                          backgroundColor: emojiBackground,
-                          size: DsfrSpacings.s6w,
-                          borderRadius: 15,
-                        ),
-                        const SizedBox(height: DsfrSpacings.s1w),
-                        SizedBox(
-                          height: withTextScale ? null : _linesHeight(context, titleStyle, _titleMaxLines),
-                          width: double.infinity,
-                          child: Text(
-                            title,
-                            textAlign: textAlign,
-                            maxLines: withTextScale ? null : _titleMaxLines,
-                            overflow: withTextScale ? TextOverflow.visible : TextOverflow.ellipsis,
-                            style: titleStyle,
-                          ),
-                        ),
-                        if (subtitle != null && subtitle!.isNotEmpty) ...[
-                          const SizedBox(height: DsfrSpacings.s1v),
-                          SizedBox(
-                            height: withTextScale ? null : _linesHeight(context, subtitleStyle, _subtitleMaxLines),
-                            width: double.infinity,
-                            child: Text(
-                              subtitle!,
-                              textAlign: textAlign,
-                              maxLines: withTextScale ? null : _subtitleMaxLines,
-                              overflow: withTextScale ? TextOverflow.visible : TextOverflow.ellipsis,
-                              style: subtitleStyle,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: radius,
+                  border: Border.all(color: DsfrColorDecisions.artworkDecorativeBlueFrance(context)),
+                ),
+                child: ClipRRect(
+                  borderRadius: radius,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s3w, vertical: DsfrSpacings.s2w),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            EmojiTile(
+                              emoji: emoji,
+                              backgroundColor: emojiBackground,
+                              size: DsfrSpacings.s6w,
+                              borderRadius: 15,
                             ),
-                          ),
-                        ],
-                      ],
-                    ),
+                            const SizedBox(height: DsfrSpacings.s1w),
+                            SizedBox(
+                              height: withTextScale ? null : _linesHeight(context, titleStyle, _titleMaxLines),
+                              width: double.infinity,
+                              child: Text(
+                                title,
+                                textAlign: textAlign,
+                                maxLines: withTextScale ? null : _titleMaxLines,
+                                overflow: withTextScale ? TextOverflow.visible : TextOverflow.ellipsis,
+                                style: titleStyle,
+                              ),
+                            ),
+                            if (subtitle != null && subtitle!.isNotEmpty) ...[
+                              const SizedBox(height: DsfrSpacings.s1v),
+                              SizedBox(
+                                height: withTextScale ? null : _linesHeight(context, subtitleStyle, _subtitleMaxLines),
+                                width: double.infinity,
+                                child: Text(
+                                  subtitle!,
+                                  textAlign: textAlign,
+                                  maxLines: withTextScale ? null : _subtitleMaxLines,
+                                  overflow: withTextScale ? TextOverflow.visible : TextOverflow.ellipsis,
+                                  style: subtitleStyle,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      ColoredBox(
+                        color: DsfrColorDecisions.borderActionHighBlueFrance(context),
+                        child: const SizedBox(height: 4),
+                      ),
+                    ],
                   ),
-                  ColoredBox(
-                    color: DsfrColorDecisions.borderActionHighBlueFrance(context),
-                    child: const SizedBox(height: 4),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
