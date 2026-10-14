@@ -80,7 +80,6 @@ class _Scaffold extends StatelessWidget {
                   child: Center(
                     child: AppLogo(
                       width: 120,
-                      excludeFromSemantics: false,
                       color: viewModel.withThemedAppLogo ? AppColors.primary : null,
                     ),
                   ),
