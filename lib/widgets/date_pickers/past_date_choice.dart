@@ -72,10 +72,15 @@ class _PastDateChoiceState extends State<PastDateChoice> {
           ],
         ),
         const SizedBox(height: DsfrSpacings.s2w),
-        // A11y 9.2 : le libellé et l'aide visibles sont restitués comme nom et description du champ.
+        // A11y 9.2 et 5.1 : en lecture seule, le champ n'avait pas de type pour TalkBack. Il ouvre le calendrier :
+        // il est restitué comme un bouton, avec son libellé, la date choisie et l'aide visible.
         Semantics(
-          label: Strings.otherDate,
+          container: true,
+          button: true,
+          label: _dateController.text.isEmpty ? Strings.otherDate : '${Strings.otherDate}, ${_dateController.text}',
           hint: aide,
+          onTap: _pickOtherDate,
+          excludeSemantics: true,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -111,6 +116,21 @@ class _PastDateChoiceState extends State<PastDateChoice> {
         ),
       ],
     );
+  }
+
+  // Même calendrier que celui ouvert par le champ (DsfrInputHeadless, isDatePicker).
+  Future<void> _pickOtherDate() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      locale: const Locale('fr', 'FR'),
+      initialDate: now,
+      firstDate: now.subtract(const Duration(days: 365)),
+      lastDate: now,
+    );
+    if (picked == null || !mounted) return;
+    _dateController.text = DateFormat('dd/MM/yyyy').format(picked);
+    _setDate(DateFromPicker(picked));
   }
 
   bool _isSuggestionSelected(DateSuggestionViewModel suggestion) {

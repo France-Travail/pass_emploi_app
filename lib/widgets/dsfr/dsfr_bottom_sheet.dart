@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -59,9 +61,15 @@ class DsfrBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // A11y 8.2 et 11.9 : clavier ouvert, la fenêtre ne dépasse plus sous la barre d'état, et les boutons du bas
+    // défilent avec le contenu pour laisser la place au champ en cours de saisie.
+    final keyboardHeight = MediaQuery.viewInsetsOf(context).bottom;
+    final keyboardOpen = keyboardHeight > 0;
+    final screenHeight = MediaQuery.sizeOf(context).height;
+    final availableHeight = screenHeight - keyboardHeight - MediaQuery.paddingOf(context).top;
     return ConstrainedBox(
       constraints: BoxConstraints(
-        maxHeight: MediaQuery.sizeOf(context).height * maxHeightFactor,
+        maxHeight: math.max(0, math.min(screenHeight * maxHeightFactor, availableHeight)),
       ),
       child: Material(
         color: DsfrColorDecisions.backgroundDefaultGrey(context),
@@ -103,10 +111,21 @@ class DsfrBottomSheet extends StatelessWidget {
                       DsfrSpacings.s2w,
                       DsfrSpacings.s2w,
                     ),
-                    child: child,
+                    // Le contenu reste au même endroit de l'arbre : le champ garde le focus quand le clavier s'ouvre.
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        child,
+                        if (keyboardOpen && actions != null) ...[
+                          const SizedBox(height: DsfrSpacings.s2w),
+                          actions!,
+                        ],
+                      ],
+                    ),
                   ),
                 ),
-              if (actions != null)
+              if (actions != null && (shrinkWrap || !keyboardOpen))
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
                     DsfrSpacings.s2w,

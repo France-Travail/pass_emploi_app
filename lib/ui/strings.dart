@@ -514,6 +514,7 @@ class Strings {
   static String actionPlanFeedbackGiveOpinion = "Donne ton avis";
   static String actionPlanDeclarationQuand = "Quand as-tu fait cette action\u{00A0}?";
   static String actionPlanDeclarationDecrire = "Décrire mon action";
+  static String actionPlanDeclarationDecrireObligatoire = "Décrire mon action (obligatoire)";
   static String actionPlanDeclarationDecrireAide =
       "Ajoute des détails pour que ton conseiller puisse valider l’action.";
   static String actionPlanDeclarationDecrireExemple = "Exemple : j’ai cherché des offres d’emploi pour le métier…";
@@ -552,6 +553,7 @@ class Strings {
       "$done ${done <= 1 ? 'action faite' : 'actions faites'} sur $total";
   static String inviteAccueilDeleteActionA11y(String action) => "Supprimer l'action $action";
   static String inviteAccueilActionDeletedA11y(String action) => "Action $action supprimée";
+  static String inviteAccueilDeleteConfirmTitle = "Supprimer l'action\u{00A0}?";
   static String inviteAccueilPlanLoadingA11y = "Chargement de tes pistes à explorer";
   static String inviteAccueilDiscoveryProgressA11y(int percent) => "Découverte de l'application : $percent % terminé";
   static String inviteAccueilDiscoveryHideA11y = "Masquer la découverte de l'application";
