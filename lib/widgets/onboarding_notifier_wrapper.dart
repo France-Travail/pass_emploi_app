@@ -4,6 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/widgets/confetti_wrapper.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
 
@@ -112,6 +113,9 @@ class _OnboardingNotifierWrapperState extends State<OnboardingNotifierWrapper> {
         ),
       ),
     );
+    // A11y 5.4 : en bas, la SnackBar Material était une région annoncée ; le bandeau du haut ne l'est pas. Le message
+    // est donc annoncé à son apparition, sans l'émoji (que TalkBack lirait par son nom).
+    A11yUtils.announce(message.replaceAll(RegExp(r'\p{Extended_Pictographic}️?', unicode: true), '').trim());
   }
 
   void _closeBanner(FocusNode? previousFocus) {
