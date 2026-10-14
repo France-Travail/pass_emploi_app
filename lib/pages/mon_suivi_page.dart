@@ -419,6 +419,9 @@ class _TodayCenteredMonSuiviList extends StatelessWidget {
         bottom: A11yUtils.withScreenReader(context) ? DsfrSpacings.s15w : 0,
       ),
       child: CustomScrollView(
+        // A11y 7.2 : sur Android, TalkBack n'annonce une liste (« Liste, N éléments ») que pour une zone qui défile
+        // dont le nombre d'éléments est connu : les jours des deux listes, plus leurs boutons de période.
+        semanticChildCount: pastItems.length + presentAndFutureItems.length + 2,
         center: _StateProvider.maybeOf(context)?.centerKey,
         controller: _StateProvider.maybeOf(context)?.scrollController,
         slivers: [

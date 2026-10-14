@@ -46,43 +46,56 @@ class DsfrProfilCard extends StatelessWidget {
       side: BorderSide(color: DsfrColorDecisions.borderDefaultGrey(context)),
     );
 
+    // A11y 2.3 : contour de focus DSFR autour de la tuile (hors de la découpe arrondie), à la place du voile gris.
+    // Le Focus englobant ne prend pas le focus lui-même : il signale celui de l'InkWell.
     final card = ExcludeSemantics(
-      child: Material(
-        color: DsfrColorDecisions.backgroundDefaultGrey(context),
-        shape: shape,
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          customBorder: shape,
-          child: Padding(
-            padding: const EdgeInsets.all(DsfrSpacings.s3v),
-            child: Row(
-              children: [
-                leading,
-                const SizedBox(width: DsfrSpacings.s3v),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+      child: Focus(
+        canRequestFocus: false,
+        skipTraversal: true,
+        child: Builder(
+          builder: (context) => DsfrFocusWidget(
+            isFocused: Focus.of(context).hasFocus,
+            borderRadius: radius,
+            child: Material(
+              color: DsfrColorDecisions.backgroundDefaultGrey(context),
+              shape: shape,
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: onTap,
+                customBorder: shape,
+                focusColor: DsfrColorDecisions.backgroundTransparent(context),
+                child: Padding(
+                  padding: const EdgeInsets.all(DsfrSpacings.s3v),
+                  child: Row(
                     children: [
-                      Text(
-                        title,
-                        style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+                      leading,
+                      const SizedBox(width: DsfrSpacings.s3v),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+                            ),
+                            if (description != null)
+                              Text(
+                                description!,
+                                style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textTitleGrey(context)),
+                              ),
+                          ],
+                        ),
                       ),
-                      if (description != null)
-                        Text(
-                          description!,
-                          style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textTitleGrey(context)),
+                      if (_showChevron)
+                        Icon(
+                          DsfrIcons.systemArrowRightSLine,
+                          size: 16,
+                          color: DsfrColorDecisions.textTitleBlueFrance(context),
                         ),
                     ],
                   ),
                 ),
-                if (_showChevron)
-                  Icon(
-                    DsfrIcons.systemArrowRightSLine,
-                    size: 16,
-                    color: DsfrColorDecisions.textTitleBlueFrance(context),
-                  ),
-              ],
+              ),
             ),
           ),
         ),
