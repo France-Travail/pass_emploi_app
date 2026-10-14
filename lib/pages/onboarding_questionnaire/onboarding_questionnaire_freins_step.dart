@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questi
 import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_form_change_notifier.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 
 class OnboardingQuestionnaireFreinsStep extends StatelessWidget {
   const OnboardingQuestionnaireFreinsStep({super.key, required this.form});
@@ -36,7 +37,7 @@ class OnboardingQuestionnaireFreinsStep extends StatelessWidget {
                       emoji: frein.emoji,
                       backgroundColor: frein.illustrationColor,
                     ),
-                    onChanged: (_) => form.toggleFrein(frein),
+                    onChanged: (_) => _selectExclusiveFrein(form, frein),
                   )
                 : OnboardingQuestionnaireCheckboxRich(
                     label: frein.label,
@@ -52,5 +53,16 @@ class OnboardingQuestionnaireFreinsStep extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+void _selectExclusiveFrein(OnboardingQuestionnaireFormChangeNotifier form, QuestionnaireFrein frein) {
+  final uncheckedLabels = QuestionnaireFrein.values
+      .where((other) => !other.isExclusive && form.draftFreins.contains(other))
+      .map((other) => other.label)
+      .toList();
+  form.toggleFrein(frein);
+  if (uncheckedLabels.isNotEmpty && form.draftFreins.contains(frein)) {
+    A11yUtils.announce(Strings.onboardingQuestionnaireFreinsUncheckedA11y(uncheckedLabels));
   }
 }

@@ -444,6 +444,11 @@ class Strings {
   static String onboardingQuestionnaireFreinNumerique = "Difficulté avec le numérique";
   static String onboardingQuestionnaireFreinFrancais = "Difficulté avec le Français";
   static String onboardingQuestionnaireFreinRienNeMeBloque = "Rien ne me bloque";
+  static String onboardingQuestionnaireFreinsUncheckedA11y(List<String> labels) {
+    final names = labels.join(', ');
+    if (labels.length == 1) return "$names, décochée";
+    return "Les autres cases ont été décochées : $names";
+  }
 
   static String onboardingQuestionnaireLoaderTitle = "On construit tes suggestions d'actions";
   static String onboardingQuestionnaireLoaderSubtitle =
