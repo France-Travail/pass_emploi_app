@@ -149,7 +149,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(toolBarHeight);
 }
 
-class BackLabelButton extends StatelessWidget {
+class BackLabelButton extends StatefulWidget {
   const BackLabelButton({super.key, required this.onPressed});
 
   final VoidCallback onPressed;
@@ -160,7 +160,10 @@ class BackLabelButton extends StatelessWidget {
   /// Largeur nécessaire pour afficher « Retour » en entier à la taille de texte choisie dans les réglages.
   static double preferredWidth(BuildContext context) {
     final label = TextPainter(
-      text: TextSpan(text: Strings.back, style: DsfrTextStyle.bodyMdMedium(color: DsfrColorDecisions.textTitleGrey(context))),
+      text: TextSpan(
+        text: Strings.back,
+        style: DsfrTextStyle.bodyMdMedium(color: DsfrColorDecisions.textTitleGrey(context)),
+      ),
       textScaler: MediaQuery.textScalerOf(context),
       textDirection: TextDirection.ltr,
       maxLines: 1,
@@ -172,29 +175,46 @@ class BackLabelButton extends StatelessWidget {
   }
 
   @override
+  State<BackLabelButton> createState() => _BackLabelButtonState();
+}
+
+class _BackLabelButtonState extends State<BackLabelButton> {
+  bool _focused = false;
+
+  @override
   Widget build(BuildContext context) {
     final color = DsfrColorDecisions.textTitleGrey(context);
-    return TextButton(
-      onPressed: onPressed,
-      style: TextButton.styleFrom(
-        foregroundColor: color,
-        padding: _padding,
-        minimumSize: const Size(0, DsfrSpacings.s5w),
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        shape: const RoundedRectangleBorder(),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(DsfrIcons.systemArrowLeftSLine, size: _iconSize, color: color),
-          const SizedBox(width: DsfrSpacings.s1w),
-          Flexible(
-            child: Text(
-              Strings.back,
-              style: DsfrTextStyle.bodyMdMedium(color: color),
+    // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material (1,2:1).
+    return DsfrFocusWidget(
+      isFocused: _focused,
+      child: TextButton(
+        onPressed: widget.onPressed,
+        onFocusChange: (focused) => setState(() => _focused = focused),
+        style:
+            TextButton.styleFrom(
+              foregroundColor: color,
+              padding: BackLabelButton._padding,
+              minimumSize: const Size(0, DsfrSpacings.s5w),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              shape: const RoundedRectangleBorder(),
+            ).copyWith(
+              overlayColor: WidgetStateProperty.resolveWith(
+                (states) => states.contains(WidgetState.focused) ? Colors.transparent : null,
+              ),
             ),
-          ),
-        ],
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(DsfrIcons.systemArrowLeftSLine, size: BackLabelButton._iconSize, color: color),
+            const SizedBox(width: DsfrSpacings.s1w),
+            Flexible(
+              child: Text(
+                Strings.back,
+                style: DsfrTextStyle.bodyMdMedium(color: color),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -34,7 +34,7 @@ void main() {
     return tester.renderObject<RenderParagraph>(find.text(text));
   }
 
-  testWidgets('A11y 8.2 : à 200 %, les libellés de la barre de navigation ne sont jamais coupés en plein mot',
+  testWidgets('A11y 8.2 : à 200 %, les libellés de la barre de navigation gardent leur taille et restent entiers',
       (tester) async {
     final semantics = tester.ensureSemantics();
     final labels = [
@@ -64,12 +64,12 @@ void main() {
 
     expect(tester.takeException(), isNull);
     for (final label in labels) {
-      // Le mot entier est un seul Text d'une seule ligne, réduit si besoin pour tenir dans la tuile.
+      // Contre-audit RAAM du 14/10 : réduire le libellé pour le faire tenir l'empêchait d'atteindre 200 %.
+      // Il garde sa taille et passe à la ligne ; rien n'est tronqué ni ne déborde de la tuile.
       final paragraph = paragraphOf(tester, label);
       expect(paragraph.didExceedMaxLines, isFalse, reason: label);
-      expect(paragraph.getMinIntrinsicHeight(double.infinity), paragraph.size.height, reason: label);
-      final fitted = find.ancestor(of: find.text(label), matching: find.byType(FittedBox));
-      expect(tester.getSize(fitted).width, lessThanOrEqualTo(360 / labels.length), reason: label);
+      expect(find.ancestor(of: find.text(label), matching: find.byType(FittedBox)), findsNothing, reason: label);
+      expect(tester.getSize(find.text(label)).width, lessThanOrEqualTo(360 / labels.length), reason: label);
       // L'état sélectionné et le libellé restent restitués par un seul nœud.
       expect(find.bySemanticsLabel(label), findsOneWidget, reason: label);
     }

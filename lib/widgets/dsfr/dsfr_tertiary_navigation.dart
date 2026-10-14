@@ -42,10 +42,9 @@ class DsfrTertiaryNavigation extends StatelessWidget {
       unselectedLabelColor: inactiveColor,
       labelStyle: DsfrTextStyle.bodyMdBold(color: activeColor),
       unselectedLabelStyle: DsfrTextStyle.bodyMd(color: inactiveColor),
+      // A11y 2.3 : au focus clavier, contour DSFR autour du libellé (voir _tab) à la place du fond bleu pâle (1,3:1).
       overlayColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.pressed) ||
-            states.contains(WidgetState.hovered) ||
-            states.contains(WidgetState.focused)) {
+        if (states.contains(WidgetState.pressed) || states.contains(WidgetState.hovered)) {
           return hoverColor;
         }
         return Colors.transparent;
@@ -57,21 +56,29 @@ class DsfrTertiaryNavigation extends StatelessWidget {
   }
 
   Tab _tab(String label, int badgeCount) {
-    if (badgeCount <= 0) return Tab(text: label);
+    final content = badgeCount <= 0
+        ? Text(label)
+        : Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(label),
+              const SizedBox(width: DsfrSpacings.s1w),
+              DsfrBadge(
+                label: badgeCount > 9 ? '9+' : '$badgeCount',
+                type: DsfrBadgeType.news,
+                size: DsfrComponentSize.sm,
+                backgroundCustomColor: DsfrColors.purpleGlycine950,
+                textCustomColor: DsfrColors.purpleGlycineSun319,
+              ),
+            ],
+          );
+    // Le focus clavier est porté par l'InkWell de l'onglet, juste au-dessus : on le lit pour tracer le contour DSFR.
     return Tab(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(label),
-          const SizedBox(width: DsfrSpacings.s1w),
-          DsfrBadge(
-            label: badgeCount > 9 ? '9+' : '$badgeCount',
-            type: DsfrBadgeType.news,
-            size: DsfrComponentSize.sm,
-            backgroundCustomColor: DsfrColors.purpleGlycine950,
-            textCustomColor: DsfrColors.purpleGlycineSun319,
-          ),
-        ],
+      child: Builder(
+        builder: (context) => DsfrFocusWidget(
+          isFocused: Focus.maybeOf(context)?.hasPrimaryFocus ?? false,
+          child: content,
+        ),
       ),
     );
   }

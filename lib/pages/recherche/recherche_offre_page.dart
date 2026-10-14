@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
@@ -108,80 +110,87 @@ class _RechercheOffrePageState<Result> extends State<RechercheOffrePage<Result>>
                           rechercheState: widget.rechercheState,
                         )
                       : null,
-                  floatingActionButton: ActionsRecherche(
-                    buildViewModel: widget.buildActionsRechercheViewModel,
-                    buildAlertBottomSheet: widget.buildAlertBottomSheet,
-                    hasResults: (appState) {
-                      final results = widget.rechercheState(appState).results;
-                      return results != null && results.isNotEmpty;
-                    },
+                  // A11y 10.1 : le bouton flottant forme son propre groupe de tabulation ; il est atteint une
+                  // seule fois, après les résultats, au lieu de revenir après chaque offre.
+                  floatingActionButton: FocusTraversalGroup(
+                    child: ActionsRecherche(
+                      buildViewModel: widget.buildActionsRechercheViewModel,
+                      buildAlertBottomSheet: widget.buildAlertBottomSheet,
+                      hasResults: (appState) {
+                        final results = widget.rechercheState(appState).results;
+                        return results != null && results.isNotEmpty;
+                      },
+                    ),
                   ),
                   floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
                   resizeToAvoidBottomInset: false,
-                  body: AnimatedSwitcher(
-                    duration: AnimationDurations.fast,
-                    switchInCurve: Curves.easeInOut,
-                    switchOutCurve: Curves.easeInOut,
-                    child: layout.showCriteresFullScreen
-                        ? Column(
-                            key: const ValueKey("rechercheCriteresFullScreen"),
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              if (pageTitle != null) _PageTitle(pageTitle),
-                              Expanded(
-                                child: RechercheCriteresFullScreen<Result>(
-                                  rechercheState: widget.rechercheState,
-                                  buildCriteresContentWidget: widget.buildCriteresContentWidget,
-                                  rechercheType: widget.rechercheType(),
+                  body: FocusTraversalGroup(
+                    child: AnimatedSwitcher(
+                      duration: AnimationDurations.fast,
+                      switchInCurve: Curves.easeInOut,
+                      switchOutCurve: Curves.easeInOut,
+                      child: layout.showCriteresFullScreen
+                          ? Column(
+                              key: const ValueKey("rechercheCriteresFullScreen"),
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                if (pageTitle != null) _PageTitle(pageTitle),
+                                Expanded(
+                                  child: RechercheCriteresFullScreen<Result>(
+                                    rechercheState: widget.rechercheState,
+                                    buildCriteresContentWidget: widget.buildCriteresContentWidget,
+                                    rechercheType: widget.rechercheType(),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Padding(
+                              key: const ValueKey("rechercheResultats"),
+                              padding: const EdgeInsets.only(
+                                left: DsfrSpacings.s2w,
+                                right: DsfrSpacings.s2w,
+                              ),
+                              child: SingleChildScrollView(
+                                clipBehavior: Clip.none,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    if (pageTitle != null) ...[
+                                      _PageTitle(pageTitle, withHorizontalPadding: false),
+                                      const SizedBox(height: DsfrSpacings.s2w),
+                                    ] else
+                                      const SizedBox(height: DsfrSpacings.s2w),
+                                    StoreConnector<AppState, _EditCriteresSearchLabelViewModel>(
+                                      distinct: true,
+                                      converter: (store) => _EditCriteresSearchLabelViewModel.fromState(
+                                        rechercheState: widget.rechercheState(store.state),
+                                      ),
+                                      builder: (context, vm) => EditCriteresButton<Result>(
+                                        searchLabel: vm.searchLabel,
+                                        buildViewModel: widget.buildActionsRechercheViewModel,
+                                        buildFiltresBottomSheet: () => widget.buildFiltresBottomSheet(context),
+                                        onFiltreApplied: _onFiltreApplied,
+                                      ),
+                                    ),
+                                    BlocResultatRecherche<Result>(
+                                      listResultatKey: _listResultatKey,
+                                      rechercheState: widget.rechercheState,
+                                      favorisState: widget.favorisState,
+                                      buildResultItem: widget.buildResultItem,
+                                      analyticsType: widget.analyticsType(),
+                                      placeHolderTitle: widget.placeHolderTitle(),
+                                      placeHolderSubtitle: widget.placeHolderSubtitle(),
+                                      emptyTitle: widget.emptyTitle(),
+                                      resultsCountLabel: widget.resultsCountLabel(),
+                                      buildAlertBottomSheet: widget.withCreateAlerte()
+                                          ? widget.buildAlertBottomSheet
+                                          : null,
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          )
-                        : Padding(
-                            key: const ValueKey("rechercheResultats"),
-                            padding: const EdgeInsets.only(
-                              left: DsfrSpacings.s2w,
-                              right: DsfrSpacings.s2w,
                             ),
-                            child: SingleChildScrollView(
-                              clipBehavior: Clip.none,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  if (pageTitle != null) ...[
-                                    _PageTitle(pageTitle, withHorizontalPadding: false),
-                                    const SizedBox(height: DsfrSpacings.s2w),
-                                  ] else
-                                    const SizedBox(height: DsfrSpacings.s2w),
-                                  StoreConnector<AppState, _EditCriteresSearchLabelViewModel>(
-                                    distinct: true,
-                                    converter: (store) => _EditCriteresSearchLabelViewModel.fromState(
-                                      rechercheState: widget.rechercheState(store.state),
-                                    ),
-                                    builder: (context, vm) => EditCriteresButton<Result>(
-                                      searchLabel: vm.searchLabel,
-                                      buildViewModel: widget.buildActionsRechercheViewModel,
-                                      buildFiltresBottomSheet: () => widget.buildFiltresBottomSheet(context),
-                                      onFiltreApplied: _onFiltreApplied,
-                                    ),
-                                  ),
-                                  BlocResultatRecherche<Result>(
-                                    listResultatKey: _listResultatKey,
-                                    rechercheState: widget.rechercheState,
-                                    favorisState: widget.favorisState,
-                                    buildResultItem: widget.buildResultItem,
-                                    analyticsType: widget.analyticsType(),
-                                    placeHolderTitle: widget.placeHolderTitle(),
-                                    placeHolderSubtitle: widget.placeHolderSubtitle(),
-                                    emptyTitle: widget.emptyTitle(),
-                                    resultsCountLabel: widget.resultsCountLabel(),
-                                    buildAlertBottomSheet:
-                                        widget.withCreateAlerte() ? widget.buildAlertBottomSheet : null,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                    ),
                   ),
                 );
               },
@@ -229,8 +238,7 @@ class _RechercheBackAppBar<Result> extends StatelessWidget implements PreferredS
       converter: (store) {
         final state = rechercheState(store.state);
         return _RechercheBackAppBarViewModel(
-          canCloseCriteresToResults:
-              state.status == RechercheStatus.nouvelleRecherche && state.results != null,
+          canCloseCriteresToResults: state.status == RechercheStatus.nouvelleRecherche && state.results != null,
         );
       },
       builder: (context, viewModel) {
@@ -244,7 +252,8 @@ class _RechercheBackAppBar<Result> extends StatelessWidget implements PreferredS
           centerTitle: false,
           automaticallyImplyLeading: false,
           titleSpacing: DsfrSpacings.s1w,
-          leadingWidth: 140,
+          // A11y 8.2 : « Retour » n'est plus rogné en « Reto » quand le texte est agrandi.
+          leadingWidth: math.max(140, BackLabelButton.preferredWidth(context)),
           leading: Align(
             alignment: Alignment.centerLeft,
             child: BackLabelButton(
