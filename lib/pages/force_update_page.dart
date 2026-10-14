@@ -31,7 +31,6 @@ class ForceUpdatePage extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-        Locale('en'),
         Locale('fr'),
       ],
       home: Builder(

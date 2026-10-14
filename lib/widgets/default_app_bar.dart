@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart' hide DsfrNotice;
 import 'package:pass_emploi_app/pages/notifications_center/notifications_center_page.dart';
@@ -152,6 +154,23 @@ class BackLabelButton extends StatelessWidget {
 
   final VoidCallback onPressed;
 
+  static const double _iconSize = 16;
+  static const EdgeInsets _padding = EdgeInsets.symmetric(vertical: 8, horizontal: 16);
+
+  /// Largeur nécessaire pour afficher « Retour » en entier à la taille de texte choisie dans les réglages.
+  static double preferredWidth(BuildContext context) {
+    final label = TextPainter(
+      text: TextSpan(text: Strings.back, style: DsfrTextStyle.bodyMdMedium(color: DsfrColorDecisions.textTitleGrey(context))),
+      textScaler: MediaQuery.textScalerOf(context),
+      textDirection: TextDirection.ltr,
+      maxLines: 1,
+    )..layout();
+    // Marge : le style de texte du TextButton ajoute un léger espacement entre les lettres.
+    final width = label.width + _iconSize + DsfrSpacings.s1w + _padding.horizontal + DsfrSpacings.s1v;
+    label.dispose();
+    return width.ceilToDouble();
+  }
+
   @override
   Widget build(BuildContext context) {
     final color = DsfrColorDecisions.textTitleGrey(context);
@@ -159,7 +178,7 @@ class BackLabelButton extends StatelessWidget {
       onPressed: onPressed,
       style: TextButton.styleFrom(
         foregroundColor: color,
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        padding: _padding,
         minimumSize: const Size(0, DsfrSpacings.s5w),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         shape: const RoundedRectangleBorder(),
@@ -167,7 +186,7 @@ class BackLabelButton extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(DsfrIcons.systemArrowLeftSLine, size: 16, color: color),
+          Icon(DsfrIcons.systemArrowLeftSLine, size: _iconSize, color: color),
           const SizedBox(width: DsfrSpacings.s1w),
           Flexible(
             child: Text(
@@ -190,6 +209,7 @@ class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget> actions;
 
   static const double _toolbarHeight = 48;
+  static const double _leadingWidth = 140;
 
   @override
   Size get preferredSize => const Size.fromHeight(_toolbarHeight);
@@ -206,7 +226,8 @@ class BackAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: false,
       automaticallyImplyLeading: false,
       titleSpacing: DsfrSpacings.s1w,
-      leadingWidth: 140,
+      // A11y 8.2 : « Retour » n'est plus rogné quand le texte est agrandi.
+      leadingWidth: math.max(_leadingWidth, BackLabelButton.preferredWidth(context)),
       leading: Align(
         alignment: Alignment.centerLeft,
         child: BackLabelButton(onPressed: () => Navigator.of(context).maybePop()),

@@ -112,15 +112,21 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
     return _ModeDemoWrapper(
       child: Scaffold(
         backgroundColor: context.bg,
-        body: Container(
-          color: context.grey100,
-          child: _content(_selectedIndex, viewModel),
+        // A11y 10.1 : contenu et barre du bas forment deux groupes de tabulation, pour que le focus
+        // parcoure toute la page avant les onglets, au lieu d'alterner selon la position à l'écran.
+        body: FocusTraversalGroup(
+          child: Container(
+            color: context.grey100,
+            child: _content(_selectedIndex, viewModel),
+          ),
         ),
-        bottomNavigationBar: _ChatAwareBottomNavigationBar(
-          hideWhenKeyboardVisible: viewModel.tabs[_selectedIndex] == MainTab.chat,
-          currentIndex: _selectedIndex,
-          onTap: (index) => _onItemTapped(index, viewModel),
-          items: viewModel.tabs.map((e) => e.asNavItem(viewModel)).toList(),
+        bottomNavigationBar: FocusTraversalGroup(
+          child: _ChatAwareBottomNavigationBar(
+            hideWhenKeyboardVisible: viewModel.tabs[_selectedIndex] == MainTab.chat,
+            currentIndex: _selectedIndex,
+            onTap: (index) => _onItemTapped(index, viewModel),
+            items: viewModel.tabs.map((e) => e.asNavItem(viewModel)).toList(),
+          ),
         ),
       ),
     );

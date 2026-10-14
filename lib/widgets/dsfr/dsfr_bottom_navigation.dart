@@ -32,6 +32,8 @@ class DsfrBottomNavigation extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: Row(
+          // Les libellés longs passent sur deux lignes : les onglets restent alignés en haut.
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             for (var i = 0; i < items.length; i++)
               Expanded(
@@ -153,13 +155,12 @@ class _DsfrBottomNavigationTileState extends State<_DsfrBottomNavigationTile>
                 children: [
                   icon,
                   const SizedBox(height: DsfrSpacings.s1v),
+                  // A11y 8.2 : le libellé passe à la ligne plutôt que d'être tronqué quand le texte est agrandi.
                   ExcludeSemantics(
                     child: Text(
                       item.label,
                       style: labelStyle,
                       textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],

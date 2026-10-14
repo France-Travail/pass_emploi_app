@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/pages/user_action/create/create_user_action_form
 import 'package:pass_emploi_app/presentation/user_action/creation_form/create_user_action_form_view_model.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 
 class CreateUserActionForm extends StatefulWidget {
@@ -55,6 +56,13 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> {
     _viewModel.viewChangedBackward();
   }
 
+  void _onGoForward() {
+    final wasLastStep = _viewModel.displayState == CreateUserActionDisplayState.step3;
+    _viewModel.viewChangedForward();
+    // A11y 5.4 / 9.9 : l'erreur affichée quand on valide un formulaire incomplet est annoncée.
+    if (wasLastStep && !_viewModel.isSubmitted) A11yUtils.announce(Strings.fillAllFields);
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -81,7 +89,7 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> {
                 child: _NavButtons(
                   displayState: _viewModel.displayState,
                   onGoBackPressed: _onBack,
-                  onGoForwardPressed: _viewModel.canGoForward ? () => _viewModel.viewChangedForward() : null,
+                  onGoForwardPressed: _viewModel.canGoForward ? _onGoForward : null,
                 ),
               ),
             ),

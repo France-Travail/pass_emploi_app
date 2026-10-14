@@ -95,6 +95,8 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
         return Semantics(
           label: Strings.listOffres,
           child: GestureDetector(
+            // A11y 5.1 : le toucher sur la liste estompée ne fait pas de la liste un élément activable.
+            excludeFromSemantics: true,
             onTapDown: (_) => viewModel.onListWithOpacityTouch(),
             child: AnimatedOpacity(
               opacity: disabled ? 0.2 : 1,
@@ -102,6 +104,8 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
               child: AbsorbPointer(
                 absorbing: disabled,
                 child: Focus(
+                  // A11y 10.1 : la liste n'est pas un arrêt de tabulation, seules ses offres le sont.
+                  canRequestFocus: false,
                   onFocusChange: (hasFocus) {
                     if (hasFocus) {
                       // A11y - to close bandeau recherche when focus goes to the list
