@@ -27,6 +27,8 @@ class OnboardingQuestionnairePrenomStep extends StatelessWidget {
           inputFormatters: [LengthLimitingTextInputFormatter(256)],
           onChanged: form.updatePrenom,
           textCapitalization: TextCapitalization.words,
+          // A11y 9.12 : le téléphone peut proposer le prénom qu'il connaît.
+          autofillHints: const [AutofillHints.givenName],
         ),
       ],
     );

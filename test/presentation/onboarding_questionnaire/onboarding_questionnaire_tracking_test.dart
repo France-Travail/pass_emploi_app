@@ -88,7 +88,8 @@ void main() {
     );
     await form.init();
 
-    await form.selectHabitationAndContinue(lille);
+    form.selectHabitation(lille);
+    await form.continueStep();
 
     expect(tracker.events, [
       (AnalyticsEventNames.questionnaireStepValidatedAction, 'Étape 3 - Habitation', 3),
@@ -173,7 +174,8 @@ void main() {
     await form.init();
     form.updateRayon(30);
 
-    await form.selectVilleAndContinue(roubaix);
+    form.selectVilleRecherche(roubaix);
+    await form.continueStep();
 
     expect(tracker.events.last, (AnalyticsEventNames.questionnaireZoneAction, 'zone modifiée', 30));
   });

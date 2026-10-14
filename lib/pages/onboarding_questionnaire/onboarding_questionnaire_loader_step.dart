@@ -106,10 +106,14 @@ class _OnboardingQuestionnaireLoaderStepState extends State<OnboardingQuestionna
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: Margins.spacing_m),
-          Text(
-            Strings.onboardingQuestionnaireLoaderTitle,
-            textAlign: TextAlign.center,
-            style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context)),
+          // A11y 7.1 : le titre de l'écran est un en-tête.
+          Semantics(
+            header: true,
+            child: Text(
+              Strings.onboardingQuestionnaireLoaderTitle,
+              textAlign: TextAlign.center,
+              style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context)),
+            ),
           ),
           const SizedBox(height: Margins.spacing_s),
           Text(
@@ -165,13 +169,22 @@ class _OnboardingQuestionnaireLoaderStepState extends State<OnboardingQuestionna
                               runSpacing: 8,
                               children: [
                                 if (answers.objectifs.isNotEmpty)
-                                  DsfrTag(
-                                    backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
-                                    textColor: DsfrColorDecisions.textTitleGrey(context),
+                                  // A11y 6.2 : DsfrTag annonce « non sélectionné » une étiquette qui ne se
+                                  // sélectionne pas ; elle est restituée comme un simple texte.
+                                  Semantics(
+                                    container: true,
                                     label: Strings.onboardingQuestionnaireLoaderObjectifsCount(
                                       answers.objectifs.length,
                                     ),
-                                    size: DsfrComponentSize.sm,
+                                    excludeSemantics: true,
+                                    child: DsfrTag(
+                                      backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
+                                      textColor: DsfrColorDecisions.textTitleGrey(context),
+                                      label: Strings.onboardingQuestionnaireLoaderObjectifsCount(
+                                        answers.objectifs.length,
+                                      ),
+                                      size: DsfrComponentSize.sm,
+                                    ),
                                   ),
                               ],
                             ),
@@ -208,9 +221,12 @@ class _LoaderProgressBar extends StatelessWidget {
     final borderColor = DsfrColorDecisions.borderActionHighBlueFrance(context);
     final mentionColor = DsfrColorDecisions.textMentionGrey(context);
 
+    // A11y 8.1 : un seul nœud, « Progression, 12% », sans les bornes ni le libellé répété.
     return Semantics(
+      container: true,
       label: Strings.onboardingQuestionnaireLoaderProgression,
       value: Strings.onboardingQuestionnaireLoaderProgressPercent(percent),
+      excludeSemantics: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -340,24 +356,34 @@ class _LoaderProgressLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textColor = done ? DsfrColorDecisions.textTitleGrey(context) : DsfrColorDecisions.textDisabledGrey(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          Icon(
-            done ? Icons.check : Icons.schedule,
-            size: 20,
-            color: textColor,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              label,
-              style: DsfrTextStyle.bodyMd(color: textColor),
+    // A11y 2.2 : le gris « désactivé » (3,1:1) passe au gris de mention DSFR, au-dessus de 4,5:1 ;
+    // l'icône (coche ou horloge) continue de distinguer les étapes faites et à venir.
+    final textColor = done ? DsfrColorDecisions.textTitleGrey(context) : DsfrColorDecisions.textMentionGrey(context);
+    // A11y 1.2 et 8.1 : l'état de l'étape, donné par l'icône, est restitué avec son libellé.
+    return Semantics(
+      container: true,
+      label: done
+          ? Strings.onboardingQuestionnaireLoaderStepDoneA11y(label)
+          : Strings.onboardingQuestionnaireLoaderStepPendingA11y(label),
+      excludeSemantics: true,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          children: [
+            Icon(
+              done ? Icons.check : Icons.schedule,
+              size: 20,
+              color: textColor,
             ),
-          ),
-        ],
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                label,
+                style: DsfrTextStyle.bodyMd(color: textColor),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

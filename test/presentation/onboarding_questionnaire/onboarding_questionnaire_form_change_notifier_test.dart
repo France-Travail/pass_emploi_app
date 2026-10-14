@@ -239,6 +239,34 @@ void main() {
       form.updateBirthMonth('06');
 
       expect(form.canContinue, false);
+      expect(form.isBirthDateInvalid, false);
+    });
+
+    test('single digit day and month are accepted', () {
+      form.updateBirthDay('5');
+      form.updateBirthMonth('3');
+      form.updateBirthYear('2006');
+
+      expect(form.canContinue, true);
+      expect(form.parsedBirthDate, DateTime(2006, 3, 5));
+      expect(form.isBirthDateInvalid, false);
+    });
+
+    test('impossible date is invalid and disables continue', () {
+      form.updateBirthDay('31');
+      form.updateBirthMonth('02');
+      form.updateBirthYear('2006');
+
+      expect(form.canContinue, false);
+      expect(form.isBirthDateInvalid, true);
+    });
+
+    test('date is not invalid while the year is incomplete', () {
+      form.updateBirthDay('31');
+      form.updateBirthMonth('02');
+      form.updateBirthYear('20');
+
+      expect(form.isBirthDateInvalid, false);
     });
   });
 
@@ -327,16 +355,26 @@ void main() {
     });
   });
 
-  group('situation auto advance', () {
+  group('situation without auto advance', () {
     setUp(() async {
       await form.init();
       form.step = OnboardingQuestionnaireStep.situation;
     });
 
-    test('selectSituationAndContinue saves and goes to objectifs', () async {
-      await form.selectSituationAndContinue(QuestionnaireSituation.lycee);
+    test('selecting a situation only selects it', () {
+      form.updateSituation(QuestionnaireSituation.lycee);
 
       expect(form.draftSituation, QuestionnaireSituation.lycee);
+      expect(form.canContinue, true);
+      expect(form.step, OnboardingQuestionnaireStep.situation);
+      expect(savedCalls, isEmpty);
+    });
+
+    test('continue saves the selected situation and goes to objectifs', () async {
+      form.updateSituation(QuestionnaireSituation.lycee);
+
+      await form.continueStep();
+
       expect(form.savedAnswers.situation, QuestionnaireSituation.lycee);
       expect(form.step, OnboardingQuestionnaireStep.objectifs);
       expect(savedCalls, hasLength(1));

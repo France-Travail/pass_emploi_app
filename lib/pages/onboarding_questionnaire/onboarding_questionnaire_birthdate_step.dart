@@ -4,6 +4,7 @@ import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_form_change_notifier.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 
 class OnboardingQuestionnaireBirthdateStep extends StatefulWidget {
@@ -19,6 +20,7 @@ class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestio
   final FocusNode _dayFocus = FocusNode();
   final FocusNode _monthFocus = FocusNode();
   final FocusNode _yearFocus = FocusNode();
+  bool _invalidAnnounced = false;
 
   @override
   void dispose() {
@@ -28,19 +30,17 @@ class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestio
     super.dispose();
   }
 
-  void _onDayChanged(String value) {
-    widget.form.updateBirthDay(value);
-    if (value.length == 2) _monthFocus.requestFocusWithA11y();
-  }
-
-  void _onMonthChanged(String value) {
-    widget.form.updateBirthMonth(value);
-    if (value.length == 2) _yearFocus.requestFocusWithA11y();
+  // A11y 9.9 : une date impossible affiche un message, annoncé une fois à son apparition.
+  void _announceInvalidDate(bool invalid) {
+    if (invalid && !_invalidAnnounced) A11yUtils.announce(Strings.onboardingQuestionnaireBirthdateInvalid);
+    _invalidAnnounced = invalid;
   }
 
   @override
   Widget build(BuildContext context) {
     final form = widget.form;
+    final invalid = form.isBirthDateInvalid;
+    _announceInvalidDate(invalid);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -60,11 +60,20 @@ class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestio
             style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
           ),
         ),
+        const SizedBox(height: DsfrSpacings.s1v),
+        // A11y 9.8 : format attendu, en texte d'aide DSFR, lu avec le libellé du groupe.
+        ExcludeSemantics(
+          child: Text(
+            Strings.onboardingQuestionnaireBirthdateHint,
+            style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textMentionGrey(context)),
+          ),
+        ),
         const SizedBox(height: Margins.spacing_s),
         Semantics(
-          label: Strings.onboardingQuestionnaireBirthdateLabel,
+          label: '${Strings.onboardingQuestionnaireBirthdateLabel}, ${Strings.onboardingQuestionnaireBirthdateHint}',
           container: true,
           explicitChildNodes: true,
+          // A11y 5.3 : le curseur ne passe pas seul au champ suivant ; la touche « suivant » du clavier le fait.
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -76,12 +85,13 @@ class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestio
                   focusNode: _dayFocus,
                   keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.next,
+                  autofillHints: const [AutofillHints.birthdayDay],
                   // Avoid maxLength: broken DSFR UI, see https://github.com/Octo-Open-Source/flutter-dsfr/issues/150
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(2),
                   ],
-                  onChanged: _onDayChanged,
+                  onChanged: form.updateBirthDay,
                   onFieldSubmitted: (_) => _monthFocus.requestFocusWithA11y(),
                 ),
               ),
@@ -94,11 +104,12 @@ class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestio
                   focusNode: _monthFocus,
                   keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.next,
+                  autofillHints: const [AutofillHints.birthdayMonth],
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(2),
                   ],
-                  onChanged: _onMonthChanged,
+                  onChanged: form.updateBirthMonth,
                   onFieldSubmitted: (_) => _yearFocus.requestFocusWithA11y(),
                 ),
               ),
@@ -111,6 +122,7 @@ class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestio
                   focusNode: _yearFocus,
                   keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.done,
+                  autofillHints: const [AutofillHints.birthdayYear],
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(4),
@@ -121,6 +133,12 @@ class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestio
             ],
           ),
         ),
+        if (invalid) ...[
+          const SizedBox(height: DsfrSpacings.s1w),
+          DsfrComponentStateWidget(
+            componentState: DsfrComponentState.error(errorMessage: Strings.onboardingQuestionnaireBirthdateInvalid),
+          ),
+        ],
       ],
     );
   }

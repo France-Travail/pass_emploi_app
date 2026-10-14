@@ -34,8 +34,9 @@ class OnboardingQuestionnaireSituationStep extends StatelessWidget {
                 emoji: situation.emoji,
                 backgroundColor: situation.illustrationColor,
               ),
+              // A11y 5.3 : choisir une réponse la sélectionne seulement ; on passe à la suite avec « Continuer ».
               onChanged: (value) {
-                if (value != null) form.selectSituationAndContinue(value);
+                if (value != null) form.updateSituation(value);
               },
             ),
           ),
