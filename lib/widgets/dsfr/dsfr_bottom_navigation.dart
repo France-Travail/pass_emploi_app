@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 
 /// Bottom navigation DSFR (navbar mobile).
 ///
@@ -157,11 +158,13 @@ class _DsfrBottomNavigationTileState extends State<_DsfrBottomNavigationTile>
                   const SizedBox(height: DsfrSpacings.s1v),
                   // A11y 8.2 : le libellé passe à la ligne plutôt que d'être tronqué quand le texte est agrandi.
                   ExcludeSemantics(
-                    child: Text(
-                      item.label,
-                      style: labelStyle,
-                      textAlign: TextAlign.center,
-                    ),
+                    child: A11yUtils.withTextScale(context)
+                        ? _MotsSansCoupure(label: item.label, style: labelStyle)
+                        : Text(
+                            item.label,
+                            style: labelStyle,
+                            textAlign: TextAlign.center,
+                          ),
                   ),
                 ],
               ),
@@ -176,5 +179,27 @@ class _DsfrBottomNavigationTileState extends State<_DsfrBottomNavigationTile>
     }
 
     return tile;
+  }
+}
+
+/// A11y 8.2 : un mot par ligne, réduit si besoin pour tenir dans la largeur : un mot n'est jamais coupé.
+class _MotsSansCoupure extends StatelessWidget {
+  const _MotsSansCoupure({required this.label, required this.style});
+
+  final String label;
+  final TextStyle style;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (final mot in label.split(' '))
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(mot, style: style, maxLines: 1, softWrap: false),
+          ),
+      ],
+    );
   }
 }

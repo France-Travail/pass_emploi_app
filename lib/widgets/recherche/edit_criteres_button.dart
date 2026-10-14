@@ -122,6 +122,8 @@ class _SearchBar extends StatelessWidget {
             borderRadius: const BorderRadius.only(topRight: radius),
             child: InkWell(
               onTap: onTap,
+              // A11y 8.5 : même action que le champ, pas de second arrêt clavier sans indicateur de focus
+              canRequestFocus: false,
               borderRadius: const BorderRadius.only(topRight: radius),
               child: SizedBox(
                 width: DsfrSpacings.s6w,

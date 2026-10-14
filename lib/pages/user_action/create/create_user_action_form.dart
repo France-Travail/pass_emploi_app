@@ -79,22 +79,17 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> {
           // A11y 8.2 : la hauteur suit la taille de texte choisie dans les réglages.
           height: MediaQuery.textScalerOf(context).scale(76),
         ),
-        body: Stack(
-          children: [
-            _CreateUserActionForm(_viewModel),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Visibility(
-                visible: _viewModel.shouldDisplayNavigationButtons && MediaQuery.viewInsetsOf(context).bottom == 0,
-                child: _NavButtons(
-                  displayState: _viewModel.displayState,
-                  onGoBackPressed: _onBack,
-                  onGoForwardPressed: _viewModel.canGoForward ? _onGoForward : null,
-                ),
-              ),
-            ),
-          ],
-        ),
+        body: _CreateUserActionForm(_viewModel),
+        // A11y 8.5 : les boutons ne recouvrent plus le formulaire. Le corps s'arrête au-dessus d'eux,
+        // donc le focus lecteur d'écran / clavier ne peut plus être masqué par les boutons.
+        // Masqués quand le clavier est affiché (resizeToAvoidBottomInset: false, comportement inchangé).
+        bottomNavigationBar: _viewModel.shouldDisplayNavigationButtons && MediaQuery.viewInsetsOf(context).bottom == 0
+            ? _NavButtons(
+                displayState: _viewModel.displayState,
+                onGoBackPressed: _onBack,
+                onGoForwardPressed: _viewModel.canGoForward ? _onGoForward : null,
+              )
+            : null,
       ),
     );
   }

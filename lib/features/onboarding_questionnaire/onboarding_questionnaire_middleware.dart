@@ -41,6 +41,8 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
       store.dispatch(OnboardingQuestionnaireSuccessAction(finished: true, everFinished: true, answers: action.answers));
     } else if (action is OnboardingQuestionnaireResumeAction) {
       await _resume(store);
+    } else if (action is OnboardingQuestionnaireCloseResumedAction) {
+      await _closeResumed(store);
     } else if (action is OnboardingQuestionnaireAnswersUpdatedAction) {
       await _repository.saveAnswers(action.answers);
     }
@@ -81,7 +83,9 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(ActionPlanSuccessAction(plan));
         await _load(store);
       case ActionPlanFetchNotFound():
-        if (await _repository.isFinished()) {
+        // Un plan était attendu (les réponses sauvegardées permettent d'en générer un) mais il manque côté
+        // serveur : on rejoue le questionnaire. Sans plan attendu (étapes toutes passées), il reste terminé.
+        if (await _repository.isFinished() && (await _repository.getAnswers()).canGenerateActionPlan) {
           await _repository.setFinished(false);
           await _actionPlanRepository.clear();
         }
@@ -143,6 +147,21 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
     final answers = await _repository.getAnswers();
     await _repository.setFinished(false);
     final everFinished = await _repository.hasEverFinished();
-    store.dispatch(OnboardingQuestionnaireSuccessAction(finished: false, everFinished: everFinished, answers: answers));
+    store.dispatch(
+      OnboardingQuestionnaireSuccessAction(
+        finished: false,
+        everFinished: everFinished,
+        resumedFromApp: true,
+        answers: answers,
+      ),
+    );
+  }
+
+  // Le questionnaire rouvert depuis l'app est refermé : l'état « terminé » d'avant la reprise est rétabli, les réponses sont conservées.
+  Future<void> _closeResumed(Store<AppState> store) async {
+    final answers = await _repository.getAnswers();
+    await _repository.setFinished(true);
+    final everFinished = await _repository.hasEverFinished();
+    store.dispatch(OnboardingQuestionnaireSuccessAction(finished: true, everFinished: everFinished, answers: answers));
   }
 }

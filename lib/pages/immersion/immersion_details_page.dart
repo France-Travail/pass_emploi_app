@@ -18,6 +18,7 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/platform.dart';
+import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 import 'package:pass_emploi_app/widgets/buttons/delete_favori_button.dart';
 import 'package:pass_emploi_app/widgets/default_animated_switcher.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
@@ -59,7 +60,7 @@ class ImmersionDetailsPage extends StatelessWidget {
         converter: (store) => ImmersionDetailsViewModel.create(store, platform),
         builder: (context, viewModel) => FavorisStateContext(
           selectState: (store) => store.state.immersionFavorisIdsState,
-          child: _scaffold(_body(context, viewModel), context, viewModel.id),
+          child: _scaffold(_body(context, viewModel), context, viewModel.id, viewModel.title),
         ),
         distinct: true,
       ),
@@ -81,7 +82,7 @@ class ImmersionDetailsPage extends StatelessWidget {
     };
   }
 
-  Scaffold _scaffold(Widget body, BuildContext context, String offreId) {
+  Scaffold _scaffold(Widget body, BuildContext context, String offreId, String title) {
     return Scaffold(
       backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
       appBar: BackAppBar(
@@ -90,6 +91,8 @@ class ImmersionDetailsPage extends StatelessWidget {
             offreId: offreId,
             withBorder: false,
             from: OffrePage.immersionDetails,
+            // A11y 5.1 : le nom de l'offre complète l'intitulé du bouton.
+            a11yLabel: title.isEmpty ? ' ' : title,
             onFavoriRemoved: popPageWhenFavoriIsRemoved ? () => Navigator.pop(context) : null,
             icon: DsfrIcons.systemStarLine,
             iconActive: DsfrIcons.systemStarFill,
@@ -120,6 +123,7 @@ class ImmersionDetailsPage extends StatelessWidget {
               icon: cta.icon,
               variant: DsfrButtonVariant.secondary,
               semanticsLink: true,
+              semanticsLinkDestination: LinkDestination.fromUri(cta.uri),
               onPressed: () {
                 context.trackEvenementEngagement(cta.eventType);
                 launchExternalUrl(cta.uri.toString());

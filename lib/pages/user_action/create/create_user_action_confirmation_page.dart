@@ -94,11 +94,11 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return switch (viewModel.displayState) {
       DisplayState.CONTENT => _Body(
-          viewModel: viewModel,
-          multipleActions: multipleActions,
-          showActionDoneTag: showActionDoneTag,
-          source: source,
-        ),
+        viewModel: viewModel,
+        multipleActions: multipleActions,
+        showActionDoneTag: showActionDoneTag,
+        source: source,
+      ),
       DisplayState.FAILURE => Center(child: ErrorText(Strings.genericCreationError)),
       _ => const Center(child: CircularProgressIndicator()),
     };
@@ -141,10 +141,17 @@ class _Body extends StatelessWidget {
                     DsfrCategoryTag.actionDone(),
                     const SizedBox(height: DsfrSpacings.s3v),
                   ],
-                  Text(
-                    Strings.userActionConfirmationTitle(viewModel.firstName),
-                    textAlign: TextAlign.center,
-                    style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context)),
+                  // A11y 5.4 / 7.1 : le focus lecteur d'écran arrive sur le titre (AutoFocusA11y au-dessus
+                  // du header), puis le message et les boutons se lisent dans l'ordre.
+                  AutoFocusA11y(
+                    child: Semantics(
+                      header: true,
+                      child: Text(
+                        Strings.userActionConfirmationTitle(viewModel.firstName),
+                        textAlign: TextAlign.center,
+                        style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context)),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: DsfrSpacings.s1w),
                   Text(
@@ -192,27 +199,23 @@ class _Buttons extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (multipleActions)
-            AutoFocusA11y(
-              child: SizedBox(
-                width: double.infinity,
-                child: DsfrButton(
-                  label: Strings.goToMonSuivi,
-                  variant: DsfrButtonVariant.primary,
-                  size: DsfrComponentSize.md,
-                  onPressed: onGoToMonSuivi,
-                ),
+            SizedBox(
+              width: double.infinity,
+              child: DsfrButton(
+                label: Strings.goToMonSuivi,
+                variant: DsfrButtonVariant.primary,
+                size: DsfrComponentSize.md,
+                onPressed: onGoToMonSuivi,
               ),
             )
           else
-            AutoFocusA11y(
-              child: SizedBox(
-                width: double.infinity,
-                child: DsfrButton(
-                  label: Strings.userActionConfirmationSeeDetailButton,
-                  variant: DsfrButtonVariant.primary,
-                  size: DsfrComponentSize.md,
-                  onPressed: onGoActionDetail,
-                ),
+            SizedBox(
+              width: double.infinity,
+              child: DsfrButton(
+                label: Strings.userActionConfirmationSeeDetailButton,
+                variant: DsfrButtonVariant.primary,
+                size: DsfrComponentSize.md,
+                onPressed: onGoActionDetail,
               ),
             ),
           const SizedBox(height: DsfrSpacings.s2w),

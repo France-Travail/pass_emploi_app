@@ -106,6 +106,8 @@ class OffreEmploiDetailsPage extends StatelessWidget {
               offreId: offreId,
               withBorder: false,
               from: _fromAlternance ? OffrePage.alternanceDetails : OffrePage.emploiDetails,
+              // A11y 5.1 : le nom de l'offre complète l'intitulé du bouton.
+              a11yLabel: title ?? ' ',
               onFavoriRemoved: popPageWhenFavoriIsRemoved ? () => Navigator.pop(context) : null,
               icon: DsfrIcons.systemStarLine,
               iconActive: DsfrIcons.systemStarFill,
@@ -414,9 +416,12 @@ class OffreEmploiDetailsPage extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '•',
-            style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context)),
+          // A11y 7.2 : la puce décorative n'est pas lue séparément.
+          ExcludeSemantics(
+            child: Text(
+              '•',
+              style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context)),
+            ),
           ),
           const SizedBox(width: DsfrSpacings.s1w),
           Expanded(
@@ -436,9 +441,12 @@ class OffreEmploiDetailsPage extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '•',
-            style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context)),
+          // A11y 7.2 : la puce décorative n'est pas lue séparément.
+          ExcludeSemantics(
+            child: Text(
+              '•',
+              style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context)),
+            ),
           ),
           const SizedBox(width: DsfrSpacings.s1w),
           Expanded(

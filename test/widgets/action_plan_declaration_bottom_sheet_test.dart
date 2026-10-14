@@ -49,6 +49,8 @@ void main() {
         ),
       ),
     );
+    // AutoFocusA11y (titre) déclenche un Timer de 100 ms à l'ouverture.
+    await tester.pump(const Duration(milliseconds: 150));
     return store;
   }
 

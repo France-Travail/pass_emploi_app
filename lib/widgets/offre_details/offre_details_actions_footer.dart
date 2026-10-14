@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 
 class OffreDetailsAction {
   const OffreDetailsAction({
@@ -8,6 +9,7 @@ class OffreDetailsAction {
     this.icon,
     this.variant = DsfrButtonVariant.primary,
     this.semanticsLink = false,
+    this.semanticsLinkDestination = LinkDestination.website,
   });
 
   final String label;
@@ -15,6 +17,7 @@ class OffreDetailsAction {
   final IconData? icon;
   final DsfrButtonVariant variant;
   final bool semanticsLink;
+  final LinkDestination semanticsLinkDestination;
 }
 
 class OffreDetailsActionsFooter extends StatelessWidget {
@@ -67,13 +70,12 @@ class _ActionButton extends StatelessWidget {
       onPressed: action.onPressed,
     );
     if (!action.semanticsLink) return SizedBox(width: double.infinity, child: button);
-    // A11y 5.1 : DsfrButton expose toujours un rôle bouton ; on le remplace par un rôle lien unique.
-    return Semantics(
-      container: true,
-      link: true,
+    // A11y 5.1 : DsfrButton expose toujours un rôle bouton ; on le remplace par un rôle lien unique
+    // (bouton + indication de site externe sur Android, où le rôle lien n'est pas annoncé).
+    return ExternalLinkSemantics(
       label: action.label,
       onTap: action.onPressed,
-      excludeSemantics: true,
+      destination: action.semanticsLinkDestination,
       child: SizedBox(width: double.infinity, child: button),
     );
   }

@@ -9,6 +9,7 @@ import 'package:pass_emploi_app/presentation/force_update_view_model.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/platform.dart';
+import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 import 'package:pass_emploi_app/widgets/drawables/app_logo.dart';
 import 'package:pass_emploi_app/widgets/dsfr/bloc_marque.dart';
 
@@ -73,8 +74,11 @@ class ForceUpdatePage extends StatelessWidget {
                       ),
                       if (viewModel.withCallToAction) ...[
                         const SizedBox(height: DsfrSpacings.s3w),
-                        Semantics(
-                          link: true,
+                        // A11y 5.1 : lien vers la page de l'application sur le store.
+                        ExternalLinkSemantics(
+                          label: Strings.updateButton,
+                          destination: LinkDestination.appStore,
+                          onTap: () => launchExternalUrl(viewModel.storeUrl),
                           child: SizedBox(
                             width: double.infinity,
                             child: DsfrButton(

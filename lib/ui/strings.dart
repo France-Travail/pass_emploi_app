@@ -357,6 +357,12 @@ class Strings {
 
   // Onboarding invité
   static String onboardingQuestionnaireBack = "Retour";
+  static String onboardingQuestionnaireLogoutTitle = "Quitter le questionnaire\u{00A0}?";
+  static String onboardingQuestionnaireLogoutContent = Brand.isPassEmploi()
+      ? "Si vous revenez en arrière, vous serez déconnecté. Vous pourrez remplir le questionnaire à votre prochaine connexion."
+      : "Si tu reviens en arrière, tu seras déconnecté. Tu pourras remplir le questionnaire à ta prochaine connexion.";
+  static String onboardingQuestionnaireLogoutConfirm = logoutAction;
+  static String onboardingQuestionnaireLogoutCancel = "Continuer le questionnaire";
   static String onboardingQuestionnaireContinue = "Continuer";
   static String onboardingQuestionnaireSkip = "Passer cette étape";
   static String onboardingQuestionnaireStepOf(int current, int total) => "Étape $current sur $total";
@@ -621,6 +627,12 @@ class Strings {
   static String updatedAgo(String timeAgo) => "Actualisé $timeAgo";
   static String realizedHours = "validée";
   static String declaredHours = "réalisée";
+  static String a11yHeuresRealisees(String heures) => _a11yHeures(heures, "réalisée");
+  static String a11yHeuresValidees(String heures) => _a11yHeures(heures, "validée");
+  static String _a11yHeures(String heures, String adjectif) {
+    final pluriel = (int.tryParse(heures) ?? 0) > 1;
+    return pluriel ? "$heures heures ${adjectif}s" : "$heures heure $adjectif";
+  }
 
   static String comptageDesHeuresError = "Il y a eu une erreur lors de la récupération de tes heures\u{00A0}😕";
 
@@ -1288,7 +1300,7 @@ class Strings {
   static String locationMandatoryTitle = "*Lieu";
   static String searchButton = "Rechercher";
   static String offreDetails = "Détails de l'offre";
-  static String metierHint = "Mot clé, secteur, compétences....";
+  static String metierHint = "Mot clé, secteur, compétences…";
   static String rechercheTabTitle = "Recherche";
   static String offresEnregistreesTabTitle = "Suivi des offres";
   static String alertesTabTitle = "Alertes";
@@ -2119,8 +2131,17 @@ class Strings {
   static String closeDialog = "Fermer la boîte de dialogue";
   static String closeInformationMessage = "Fermer le message d'information";
   static String chosenValue = "Valeur choisie :";
-  static String buttonRole = "bouton";
-  static String bottomSheetBarrierLabel = "$closeDialog, $buttonRole";
+  // A11y 5.1 : le rôle « bouton » est annoncé par le lecteur d'écran, il ne doit pas figurer dans le libellé.
+  static String bottomSheetBarrierLabel = closeDialog;
+  static String a11yExpanded = "développé";
+  static String a11yCollapsed = "réduit";
+  static String a11yOpensExternalSite =
+      Brand.isPassEmploi() ? "Ouvre le site dans votre navigateur" : "Ouvre le site dans ton navigateur";
+  static String a11yOpensAppStore = "Ouvre la page de l’application sur le store";
+  static String a11yOpensAppSettings = "Ouvre les réglages de l’application";
+  static String a11yOpensMailApp =
+      Brand.isPassEmploi() ? "Ouvre votre application de messagerie" : "Ouvre ton application de messagerie";
+  static String a11yOpensPhoneApp = "Ouvre l’application téléphone";
   static String source = "Source : ";
   static const String moodBad = "Emoticone pas d’accord du tout";
   static const String sentimentDissatisfied = "Emoticone plutôt pas d’accord";
@@ -2138,6 +2159,7 @@ class Strings {
   static String addDistance(int value) => 'Augmenter la distance de $value km';
 
   static String listOffres = "Liste des offres";
+  static String rechercheLoadingAnnouncement = "Chargement des offres";
 
   // Autoinscription
   static String demandeInscriptionConfirmationTitle = "Demande d'inscription";

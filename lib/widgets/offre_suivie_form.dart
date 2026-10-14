@@ -9,6 +9,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
+import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 import 'package:pass_emploi_app/widgets/create_user_action_confirmation_offre_suivi_page.dart';
 
 class OffreSuivieForm extends StatelessWidget {
@@ -188,13 +189,17 @@ class _OffreLien extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      link: true,
+    void ouvrirOffre() => Navigator.of(context).push(
+          OffreEmploiDetailsPage.materialPageRoute(offreId, fromAlternance: fromAlternance),
+        );
+    // Navigation interne : bouton sur Android, sans indication de site externe.
+    return ExternalLinkSemantics(
+      label: offreLien,
+      destination: LinkDestination.inApp,
+      onTap: ouvrirOffre,
       child: DsfrLink(
         label: offreLien,
-        onTap: () => Navigator.of(context).push(
-          OffreEmploiDetailsPage.materialPageRoute(offreId, fromAlternance: fromAlternance),
-        ),
+        onTap: ouvrirOffre,
       ),
     );
   }

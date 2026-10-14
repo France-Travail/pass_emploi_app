@@ -62,6 +62,7 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
       converter: (store) => BlocResultatRechercheViewModel.create(store, widget.rechercheState),
       onDidChange: (previousViewModel, viewModel) {
         _trackSearchResults(viewModel, previousViewModel, context);
+        _announceStatusChange(viewModel, previousViewModel);
       },
       distinct: true,
     );
@@ -138,6 +139,34 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
         ],
       ],
     );
+  }
+
+  // A11y 5.4 : annonce les changements de statut de la recherche, une seule fois par transition d'état.
+  // Le "charger plus" (results -> results) n'est volontairement pas annoncé : le focus reste sur la liste.
+  void _announceStatusChange(
+    BlocResultatRechercheViewModel<Result> viewModel,
+    BlocResultatRechercheViewModel<Result>? previousViewModel,
+  ) {
+    final previousState = previousViewModel?.displayState;
+    final state = viewModel.displayState;
+    if (previousState == state) return;
+
+    switch (state) {
+      case BlocResultatRechercheDisplayState.loading:
+        A11yUtils.announce(Strings.rechercheLoadingAnnouncement);
+      case BlocResultatRechercheDisplayState.failure:
+        A11yUtils.announce(Strings.genericError);
+      case BlocResultatRechercheDisplayState.empty:
+        A11yUtils.announce(widget.emptyTitle);
+      case BlocResultatRechercheDisplayState.results:
+        // Pas d'annonce en revenant de l'édition des critères (editRecherche -> results).
+        if (previousState != BlocResultatRechercheDisplayState.editRecherche) {
+          A11yUtils.announce(widget.resultsCountLabel(viewModel.items.length));
+        }
+      case BlocResultatRechercheDisplayState.recherche:
+      case BlocResultatRechercheDisplayState.editRecherche:
+        break;
+    }
   }
 
   void _trackSearchResults(

@@ -14,6 +14,7 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
+import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/preview_file_invisible_handler.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
@@ -298,20 +299,16 @@ class _FranceTravailLinkButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      link: true,
-      button: false,
-      label: '${Strings.cvEmptyButton}, ${Strings.link}',
+    return ExternalLinkSemantics(
+      label: Strings.cvEmptyButton,
       onTap: _launchAndTrackExternalLink,
-      child: ExcludeSemantics(
-        child: DsfrButton(
-          label: Strings.cvEmptyButton,
-          icon: DsfrIcons.systemExternalLinkLine,
-          iconLocation: DsfrButtonIconLocation.right,
-          variant: variant,
-          size: DsfrComponentSize.lg,
-          onPressed: _launchAndTrackExternalLink,
-        ),
+      child: DsfrButton(
+        label: Strings.cvEmptyButton,
+        icon: DsfrIcons.systemExternalLinkLine,
+        iconLocation: DsfrButtonIconLocation.right,
+        variant: variant,
+        size: DsfrComponentSize.lg,
+        onPressed: _launchAndTrackExternalLink,
       ),
     );
   }

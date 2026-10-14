@@ -12,6 +12,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
+import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/date_pickers/past_date_choice.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
@@ -93,9 +94,15 @@ class _ActionPlanDeclarationBottomSheetState extends State<ActionPlanDeclaration
           ),
           const SizedBox(height: DsfrSpacings.s1w),
         ],
-        Text(
-          viewModel.titre,
-          style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textTitleGrey(context)),
+        // A11y 7.1 / 10.2 : titre de la feuille, en-tête, qui reçoit le focus à l'ouverture.
+        AutoFocusA11y(
+          child: Semantics(
+            header: true,
+            child: Text(
+              viewModel.titre,
+              style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textTitleGrey(context)),
+            ),
+          ),
         ),
         const SizedBox(height: DsfrSpacings.s3w),
         PastDateChoice(

@@ -19,6 +19,7 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
+import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_navigation.dart';
 import 'package:pass_emploi_app/widgets/onboarding/onboarding_showcase.dart';
@@ -323,12 +324,9 @@ class _PopUpActualisationPe extends StatelessWidget {
         ),
         const SizedBox(height: DsfrSpacings.s4w),
         // A11y 5.1 : un seul rôle (lien) au lieu de lien + bouton.
-        Semantics(
-          container: true,
-          link: true,
+        ExternalLinkSemantics(
           label: Strings.actualisationPePopUpPrimaryButton,
           onTap: () => _onActualisationPressed(context),
-          excludeSemantics: true,
           child: DsfrButton(
             label: Strings.actualisationPePopUpPrimaryButton,
             icon: DsfrIcons.systemExternalLinkLine,

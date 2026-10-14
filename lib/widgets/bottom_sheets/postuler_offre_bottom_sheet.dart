@@ -4,6 +4,7 @@ import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/pages/cv/cv_list_page.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
+import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
 
 class PostulerOffreBottomSheet extends StatelessWidget {
@@ -58,19 +59,15 @@ class _ContinueButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      link: true,
-      button: false,
-      label: '${Strings.postulerContinueButton}, ${Strings.link}',
+    return ExternalLinkSemantics(
+      label: Strings.postulerContinueButton,
       onTap: onPostuler,
-      child: ExcludeSemantics(
-        child: DsfrButton(
-          label: Strings.postulerContinueButton,
-          icon: DsfrIcons.systemExternalLinkLine,
-          variant: DsfrButtonVariant.primary,
-          size: DsfrComponentSize.lg,
-          onPressed: onPostuler,
-        ),
+      child: DsfrButton(
+        label: Strings.postulerContinueButton,
+        icon: DsfrIcons.systemExternalLinkLine,
+        variant: DsfrButtonVariant.primary,
+        size: DsfrComponentSize.lg,
+        onPressed: onPostuler,
       ),
     );
   }
