@@ -152,7 +152,7 @@ class _FirstScreenSplit extends StatelessWidget {
                           children: [
                             const Align(
                               alignment: Alignment.center,
-                              child: AppLogo(width: 220),
+                              child: AppLogo(width: 220, excludeFromSemantics: false),
                             ),
                             const SizedBox(height: Margins.spacing_l),
                             const _FirstScreenCopy(),
@@ -186,7 +186,7 @@ class _FirstScreenIntro extends StatelessWidget {
         const SizedBox(height: Margins.spacing_base),
         const Align(
           alignment: Alignment.center,
-          child: AppLogo(width: 220),
+          child: AppLogo(width: 220, excludeFromSemantics: false),
         ),
         const SizedBox(height: Margins.spacing_l),
         const _FirstScreenCopy(),
