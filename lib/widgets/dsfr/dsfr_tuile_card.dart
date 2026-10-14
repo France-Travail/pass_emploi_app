@@ -54,46 +54,54 @@ class DsfrTuileCard extends StatelessWidget {
       link: _isLink,
       label: _resolvedSemanticsLabel,
       onTap: onTap,
-      child: ExcludeSemantics(
-        child: Material(
-          color: DsfrColorDecisions.backgroundDefaultGrey(context),
-          shape: shape,
-          clipBehavior: Clip.antiAlias,
-          child: IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _PictoColumn(child: leading),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(DsfrSpacings.s2w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        if (onDismiss != null) ...[
-                          DsfrButton(
+      child: Material(
+        color: DsfrColorDecisions.backgroundDefaultGrey(context),
+        shape: shape,
+        clipBehavior: Clip.antiAlias,
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ExcludeSemantics(child: _PictoColumn(child: leading)),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(DsfrSpacings.s2w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      if (onDismiss != null) ...[
+                        // A11y 5.1 : le bouton de fermeture reste un élément distinct, atteignable au lecteur
+                        // d'écran, et son nom précise ce qu'il ferme.
+                        Semantics(
+                          container: true,
+                          button: true,
+                          label: dismissSemanticLabel ?? Strings.close,
+                          onTap: onDismiss,
+                          excludeSemantics: true,
+                          child: DsfrButton(
                             label: Strings.close,
                             icon: DsfrIcons.systemCloseLine,
                             iconLocation: DsfrButtonIconLocation.right,
-                            iconSemanticLabel: dismissSemanticLabel,
                             variant: DsfrButtonVariant.tertiaryWithoutBorder,
                             size: DsfrComponentSize.sm,
                             onPressed: onDismiss,
                           ),
-                          const SizedBox(height: DsfrSpacings.s3v),
-                        ],
-                        _Content(
+                        ),
+                        const SizedBox(height: DsfrSpacings.s3v),
+                      ],
+                      ExcludeSemantics(
+                        child: _Content(
                           title: title,
                           description: description,
                           onTap: onTap,
                           shape: shape,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

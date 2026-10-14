@@ -51,13 +51,17 @@ class _ChromeContent extends StatelessWidget {
       onTap: onTap,
       emoji: viewModel.emoji,
       emojiBackgroundColor: viewModel.emojiBackground,
+      // A11y 8.1 : les badges et compléments visibles (annulé, inscription, places restantes) sont restitués.
       semanticsLabel: [
         viewModel.tag,
+        if (viewModel.isAnnule) Strings.rendezvousCardAnnule,
+        ?_inscriptionLabel(viewModel.inscriptionStatus),
         viewModel.title,
         viewModel.date,
-        viewModel.hourAndDuration,
+        viewModel.hourAndDuration.toTimeAndDurationForScreenReaders(),
         if (viewModel.place != null) viewModel.place!,
-      ].join('. '),
+        if (viewModel.nombreDePlacesRestantes != null) viewModel.nombreDePlacesRestantes!,
+      ].where((part) => part.isNotEmpty).join('. '),
       child: _EventBody(viewModel, showInscriptionTags: true, showDate: showDate),
     );
   }
@@ -163,6 +167,16 @@ class _EventBody extends StatelessWidget {
     InscriptionStatus.hidden => [],
   };
 }
+
+/// Libellé du badge d'inscription affiché par [_EventBody._inscriptionTags], pour les lecteurs d'écran.
+String? _inscriptionLabel(InscriptionStatus inscriptionStatus) => switch (inscriptionStatus) {
+  InscriptionStatus.inscrit => Strings.eventVousEtesDejaInscrit,
+  InscriptionStatus.autodesinscription => Strings.eventAnnulerMonInscription,
+  InscriptionStatus.notInscrit => Strings.eventInscrivezVousPourParticiper,
+  InscriptionStatus.autoinscription => Strings.eventAutoInscription,
+  InscriptionStatus.full => Strings.eventComplet,
+  InscriptionStatus.hidden => null,
+};
 
 extension RendezvousCardFromId on String {
   Widget rendezvousCard({

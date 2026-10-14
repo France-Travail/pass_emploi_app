@@ -37,7 +37,7 @@ class _Body extends StatelessWidget {
         viewModel.onDone();
         PassEmploiMatomoTracker.instance.trackScreen(AnalyticsActionNames.skipRating);
       },
-      dismissSemanticLabel: '${Strings.closeDialog} ${Strings.ratingLabel}',
+      dismissSemanticLabel: '${Strings.close} : ${Strings.ratingLabel}',
     );
   }
 }

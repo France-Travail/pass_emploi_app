@@ -14,6 +14,13 @@ class A11yUtils {
     return MediaQuery.textScalerOf(context).scale(1.0) > 1.0;
   }
 
+  /// Facteur d'agrandissement appliqué à un texte de [fontSize], pour dimensionner un conteneur.
+  /// Depuis Android 14 l'agrandissement n'est pas linéaire : `textScaler.scale(76)` traite 76 comme une
+  /// taille de police et ne l'agrandit presque pas, il faut donc multiplier la dimension par ce facteur.
+  static double textScaleFactor(BuildContext context, {double fontSize = 16}) {
+    return MediaQuery.textScalerOf(context).scale(fontSize) / fontSize;
+  }
+
   static bool withScreenReader(BuildContext context) {
     return MediaQuery.of(context).accessibleNavigation;
   }
