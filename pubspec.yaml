@@ -69,7 +69,6 @@ dependencies:
   # Others
   flutter_redux: "0.10.0"
   redux: "5.0.0"
-  flutter_dotenv: ^6.0.0
   package_info_plus: ^8.3.1 # Bump to 6.0.0 or greater when matomo_tracker > 4.1.1 is published.
   encrypt: ^5.0.1 # Version 5.0.3 makes 1 test crash
   logger: ^2.6.0
@@ -105,7 +104,6 @@ flutter:
     - assets/mode_demo/
     - assets/mode_demo/brsa/
     - assets/mode_demo/cej/
-    - env/
 
   fonts:
     - family: AppIconsAdditional

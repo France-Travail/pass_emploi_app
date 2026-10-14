@@ -144,7 +144,8 @@ jobs:
             --release \
             --build-number=0 \
             --export-options-plist=ios/prod_export_options.plist \
-            --no-pub
+            --no-pub \
+            --dart-define-from-file=env/.env.prod
 
           ARCHIVE_PATH="$(find build/ios/archive -name "*.xcarchive" -type d | sort | tail -1)"
           echo "CEJ archive: ${ARCHIVE_PATH}"
@@ -205,7 +206,8 @@ jobs:
             --release \
             --build-number=0 \
             --export-options-plist=ios/prod_export_options.plist \
-            --no-pub
+            --no-pub \
+            --dart-define-from-file=env/.env.prod
 
           ARCHIVE_PATH="$(find build/ios/archive -name "*.xcarchive" -type d | sort | tail -1)"
           echo "BRSA archive: ${ARCHIVE_PATH}"
