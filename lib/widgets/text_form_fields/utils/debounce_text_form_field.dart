@@ -26,7 +26,9 @@ class DebounceTextFormField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (label != null) ...[
+          // A11y 5.1 : le titre forme son propre nœud ; fusionné au champ, il le faisait annoncer « Titre ».
           Semantics(
+            container: true,
             header: true,
             child: Text(
               label!,

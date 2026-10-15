@@ -77,8 +77,7 @@ class _ObjectiveAccordion extends StatefulWidget {
   State<_ObjectiveAccordion> createState() => _ObjectiveAccordionState();
 }
 
-class _ObjectiveAccordionState extends State<_ObjectiveAccordion>
-    with MaterialStateMixin<_ObjectiveAccordion> {
+class _ObjectiveAccordionState extends State<_ObjectiveAccordion> with MaterialStateMixin<_ObjectiveAccordion> {
   bool _expanded = false;
   bool _showAll = false;
   final GlobalKey _firstRevealedActionKey = GlobalKey();
@@ -90,9 +89,7 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion>
   @override
   Widget build(BuildContext context) {
     final objective = widget.objective;
-    final visibleActions = _showAll
-        ? objective.actions
-        : objective.actions.take(_initialVisible).toList();
+    final visibleActions = _showAll ? objective.actions : objective.actions.take(_initialVisible).toList();
     final hasMore = objective.actions.length > _initialVisible;
 
     void toggle() {
@@ -117,8 +114,7 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion>
       button: true,
       expanded: _isAndroid ? null : _expanded,
       value: _isAndroid ? (_expanded ? Strings.a11yExpanded : Strings.a11yCollapsed) : null,
-      label:
-          '${objective.title}, ${Strings.inviteAccueilProgressA11y(objective.doneCount, objective.totalCount)}',
+      label: '${objective.title}, ${Strings.inviteAccueilProgressA11y(objective.doneCount, objective.totalCount)}',
       onTap: toggle,
       excludeSemantics: true,
       child: InkWell(
@@ -159,9 +155,7 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion>
                       objective.doneCount,
                       objective.totalCount,
                     ),
-                    type: objective.isComplete
-                        ? DsfrBadgeType.success
-                        : DsfrBadgeType.news,
+                    type: objective.isComplete ? DsfrBadgeType.success : DsfrBadgeType.news,
                     size: DsfrComponentSize.sm,
                     withIcon: true,
                   ),
@@ -213,12 +207,9 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion>
                   for (var i = 0; i < visibleActions.length; i++) ...[
                     const SizedBox(height: Margins.spacing_s),
                     InviteActionPlanActionTile(
-                      focusKey: _showAll && i == _initialVisible
-                          ? _firstRevealedActionKey
-                          : null,
+                      focusKey: _showAll && i == _initialVisible ? _firstRevealedActionKey : null,
                       action: visibleActions[i],
-                      onToggleDone: () =>
-                          widget.onToggleDone(visibleActions[i].id),
+                      onToggleDone: () => widget.onToggleDone(visibleActions[i].id),
                       onDelete: () => widget.onDelete(visibleActions[i].id),
                     ),
                   ],
@@ -253,9 +244,7 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion>
               ),
             ),
           ),
-          crossFadeState: _expanded
-              ? CrossFadeState.showSecond
-              : CrossFadeState.showFirst,
+          crossFadeState: _expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
           duration: AnimationDurations.medium,
           sizeCurve: _animationCurve,
         ),
@@ -264,7 +253,7 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion>
   }
 }
 
-class InviteActionPlanActionTile extends StatelessWidget {
+class InviteActionPlanActionTile extends StatefulWidget {
   const InviteActionPlanActionTile({
     super.key,
     required this.action,
@@ -278,8 +267,71 @@ class InviteActionPlanActionTile extends StatelessWidget {
   final VoidCallback onDelete;
   final GlobalKey? focusKey;
 
-  void _delete() {
-    onDelete();
+  @override
+  State<InviteActionPlanActionTile> createState() => _InviteActionPlanActionTileState();
+}
+
+class _InviteActionPlanActionTileState extends State<InviteActionPlanActionTile> {
+  bool _cardFocused = false;
+  bool _deleteFocused = false;
+
+  ActionPlanAction get action => widget.action;
+
+  // A11y 9.11 : la suppression est confirmée dans une fenêtre DSFR, comme la sortie du questionnaire.
+  Future<void> _delete() async {
+    final confirmed = await showModalBottomSheet<bool>(
+      context: context,
+      backgroundColor: DsfrColorDecisions.backgroundTransparent(context),
+      barrierColor: DsfrColorDecisions.backgroundOverlayGrey(context),
+      barrierLabel: Strings.bottomSheetBarrierLabel,
+      elevation: 0,
+      shape: const RoundedRectangleBorder(),
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => Theme(
+        data: Theme.of(context).brightness == Brightness.dark ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        child: DsfrModal(
+          isDismissible: true,
+          closeLabel: Strings.close,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // A11y : le titre est un en-tête et reçoit le focus du lecteur d'écran à l'ouverture.
+              AutoFocusA11y(
+                child: Semantics(
+                  header: true,
+                  child: Text(
+                    Strings.inviteAccueilDeleteConfirmTitle,
+                    style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+                  ),
+                ),
+              ),
+              const SizedBox(height: DsfrSpacings.s2w),
+              Text(
+                action.label,
+                style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+              ),
+              const SizedBox(height: DsfrSpacings.s4w),
+              DsfrButton(
+                label: Strings.suppressionLabel,
+                variant: DsfrButtonVariant.primary,
+                size: DsfrComponentSize.lg,
+                onPressed: () => Navigator.pop(context, true),
+              ),
+              const SizedBox(height: DsfrSpacings.s2w),
+              DsfrButton(
+                label: Strings.cancelLabel,
+                variant: DsfrButtonVariant.secondary,
+                size: DsfrComponentSize.lg,
+                onPressed: () => Navigator.pop(context, false),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (confirmed != true) return;
+    widget.onDelete();
     A11yUtils.announce(Strings.inviteAccueilActionDeletedA11y(action.label));
   }
 
@@ -290,83 +342,96 @@ class InviteActionPlanActionTile extends StatelessWidget {
     return _hasLink ? null : action.serviceName;
   }
 
-  bool get _hasLink =>
-      action.kind == ActionPlanActionKind.link &&
-      action.url != null &&
-      action.url!.isNotEmpty;
+  bool get _hasLink => action.kind == ActionPlanActionKind.link && action.url != null && action.url!.isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: DsfrColorDecisions.backgroundDefaultGrey(context),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: DsfrColorDecisions.borderDefaultGrey(context),
-        ),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: _hasLink ? _openLink : null,
-          // A11y : l'action de lien est portée par le nœud « lien » dédié ci-dessous.
-          excludeFromSemantics: true,
+    // A11y 2.3 : contour de focus DSFR sur la carte (à lien) et sur la corbeille, à la place du voile gris.
+    return DsfrFocusWidget(
+      isFocused: _cardFocused,
+      borderRadius: BorderRadius.circular(8),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: DsfrColorDecisions.backgroundDefaultGrey(context),
           borderRadius: BorderRadius.circular(8),
-          child: Padding(
-            padding: const EdgeInsets.all(Margins.spacing_base),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Semantics(
-                  key: focusKey,
-                  container: true,
-                  // Sans `enabled: true` explicite, iOS annonce la case « estompé » (désactivée).
-                  enabled: true,
-                  checked: action.done,
-                  label: action.label,
-                  hint: _hintCase,
-                  onTap: onToggleDone,
-                  excludeSemantics: true,
-                  child: _FocusableCheckbox(
-                    done: action.done,
-                    onTap: onToggleDone,
+          border: Border.all(
+            color: DsfrColorDecisions.borderDefaultGrey(context),
+          ),
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: _hasLink ? _openLink : null,
+            // A11y : l'action de lien est portée par le nœud « lien » dédié ci-dessous.
+            excludeFromSemantics: true,
+            borderRadius: BorderRadius.circular(8),
+            focusColor: DsfrColorDecisions.backgroundTransparent(context),
+            onFocusChange: (focused) => setState(() => _cardFocused = focused),
+            child: Padding(
+              padding: const EdgeInsets.all(Margins.spacing_base),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Semantics(
+                    key: widget.focusKey,
+                    container: true,
+                    // Sans `enabled: true` explicite, iOS annonce la case « estompé » (désactivée).
+                    enabled: true,
+                    checked: action.done,
+                    label: action.label,
+                    hint: _hintCase,
+                    onTap: widget.onToggleDone,
+                    excludeSemantics: true,
+                    child: _FocusableCheckbox(
+                      done: action.done,
+                      onTap: widget.onToggleDone,
+                    ),
                   ),
-                ),
-                const SizedBox(width: Margins.spacing_xs),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // A11y : libellé déjà porté par la case à cocher.
-                      ExcludeSemantics(
-                        child: Text(
-                          action.label,
-                          style: DsfrTextStyle.bodyMd(
-                            color: DsfrColorDecisions.textLabelGrey(context),
+                  const SizedBox(width: Margins.spacing_xs),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // A11y : libellé déjà porté par la case à cocher.
+                        ExcludeSemantics(
+                          child: Text(
+                            action.label,
+                            style: DsfrTextStyle.bodyMd(
+                              color: DsfrColorDecisions.textLabelGrey(context),
+                            ),
                           ),
                         ),
+                        if (_hasLink)
+                          // A11y 5.1 : rôle et indication de site externe audibles sur Android.
+                          ExternalLinkSemantics(
+                            label: action.serviceName ?? action.label,
+                            onTap: _openLink,
+                            child: _serviceName(context),
+                          )
+                        else if (action.serviceName != null)
+                          ExcludeSemantics(child: _serviceName(context)),
+                      ],
+                    ),
+                  ),
+                  DsfrFocusWidget(
+                    isFocused: _deleteFocused,
+                    child: Focus(
+                      canRequestFocus: false,
+                      skipTraversal: true,
+                      onFocusChange: (focused) => setState(() => _deleteFocused = focused),
+                      child: IconButton(
+                        onPressed: _delete,
+                        tooltip: Strings.inviteAccueilDeleteActionA11y(action.label),
+                        focusColor: DsfrColorDecisions.backgroundTransparent(context),
+                        icon: Icon(
+                          DsfrIcons.systemDeleteBinFill,
+                          color: DsfrColorDecisions.textActionHighBlueFrance(context),
+                        ),
                       ),
-                      if (_hasLink)
-                        // A11y 5.1 : rôle et indication de site externe audibles sur Android.
-                        ExternalLinkSemantics(
-                          label: action.serviceName ?? action.label,
-                          onTap: _openLink,
-                          child: _serviceName(context),
-                        )
-                      else if (action.serviceName != null)
-                        ExcludeSemantics(child: _serviceName(context)),
-                    ],
+                    ),
                   ),
-                ),
-                IconButton(
-                  onPressed: _delete,
-                  tooltip: Strings.inviteAccueilDeleteActionA11y(action.label),
-                  icon: Icon(
-                    DsfrIcons.systemDeleteBinFill,
-                    color: DsfrColorDecisions.textActionHighBlueFrance(context),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -438,8 +503,7 @@ class _FocusableCheckbox extends StatefulWidget {
   State<_FocusableCheckbox> createState() => _FocusableCheckboxState();
 }
 
-class _FocusableCheckboxState extends State<_FocusableCheckbox>
-    with MaterialStateMixin<_FocusableCheckbox> {
+class _FocusableCheckboxState extends State<_FocusableCheckbox> with MaterialStateMixin<_FocusableCheckbox> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -566,9 +630,7 @@ class _EmojiAvatar extends StatelessWidget {
           style: TextStyle(
             fontSize: 24,
             // Force color emoji on iOS for dingbats like ✈️ (U+2708).
-            fontFamily: defaultTargetPlatform == TargetPlatform.iOS
-                ? 'Apple Color Emoji'
-                : null,
+            fontFamily: defaultTargetPlatform == TargetPlatform.iOS ? 'Apple Color Emoji' : null,
           ),
         ),
       ),

@@ -41,22 +41,34 @@ class OnboardingQuestionnairePage extends StatefulWidget {
   State<OnboardingQuestionnairePage> createState() => _OnboardingQuestionnairePageState();
 }
 
-class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePage> {
+class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePage> with WidgetsBindingObserver {
   late final OnboardingQuestionnaireFormChangeNotifier _form;
   late final CommunesRepository _communesRepository;
   late final OnboardingQuestionnaireTracker _tracker;
   bool _formInitialized = false;
   OnboardingQuestionnaireStep? _lastAnnouncedStep;
+  bool _keyboardOpen = false;
 
   @override
   void initState() {
     super.initState();
     _communesRepository = CommunesRepository();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  // Au premier lancement, la page est affichée dans le Scaffold racine de l'app, qui retire déjà la hauteur du
+  // clavier de MediaQuery : le clavier est lu sur la vue, à chaque changement de dimensions.
+  @override
+  void didChangeMetrics() {
+    if (!mounted) return;
+    final open = A11yUtils.isKeyboardVisible(context);
+    if (open != _keyboardOpen) setState(() => _keyboardOpen = open);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _keyboardOpen = A11yUtils.isKeyboardVisible(context);
     if (_formInitialized) return;
     _formInitialized = true;
     final store = StoreProvider.of<AppState>(context);
@@ -90,6 +102,7 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     if (_formInitialized) _form.dispose();
     super.dispose();
   }
@@ -115,6 +128,7 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final keyboardOpen = _keyboardOpen;
     return Theme(
       data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
       child: ListenableBuilder(
@@ -137,6 +151,7 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
                     : _QuestionnaireBody(
                         form: _form,
                         communesRepository: _communesRepository,
+                        keyboardOpen: keyboardOpen,
                       ),
               ),
             ),
@@ -247,99 +262,128 @@ String _stepTitle(OnboardingQuestionnaireStep step) => switch (step) {
   OnboardingQuestionnaireStep.loader => '',
 };
 
-class _QuestionnaireBody extends StatelessWidget {
+class _QuestionnaireBody extends StatefulWidget {
   const _QuestionnaireBody({
     required this.form,
     required this.communesRepository,
+    required this.keyboardOpen,
   });
 
   final OnboardingQuestionnaireFormChangeNotifier form;
   final CommunesRepository communesRepository;
+  final bool keyboardOpen;
+
+  @override
+  State<_QuestionnaireBody> createState() => _QuestionnaireBodyState();
+}
+
+class _QuestionnaireBodyState extends State<_QuestionnaireBody> {
+  // Les clés gardent l'en-tête, l'étape (et le champ qui a le focus) et les boutons quand la mise en page change.
+  final GlobalKey _headerKey = GlobalKey();
+  final GlobalKey _contentKey = GlobalKey();
+  final GlobalKey _actionsKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
+    final form = widget.form;
+    final header = Padding(
+      key: _headerKey,
+      padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
+      // A11y 10.2 : à chaque changement d'étape, le focus du lecteur d'écran part du bouton
+      // « Continuer » pour aller sur le titre de la nouvelle étape.
+      child: AutoFocusA11y(
+        key: ValueKey(form.step),
+        // Sur Android, l'étape est annoncée par la page (voir _announceStepIfChanged).
+        enabled: defaultTargetPlatform != TargetPlatform.android,
+        duration: AnimationDurations.slow,
+        // A11y 10.2.3 : « Étape X sur Y, titre » restitué en un seul en-tête.
+        child: Semantics(
+          header: true,
+          label: Strings.onboardingQuestionnaireStepA11y(
+            form.step.questionnaireIndex,
+            OnboardingQuestionnaireStep.questionnaireCount,
+            _stepTitle(form.step),
+          ),
+          excludeSemantics: true,
+          child: DsfrStepper(
+            currentStep: form.step.questionnaireIndex,
+            stepsCount: OnboardingQuestionnaireStep.questionnaireCount,
+            stepTitle: _stepTitle(form.step),
+          ),
+        ),
+      ),
+    );
+    final content = AnimatedSwitcher(
+      key: _contentKey,
+      duration: AnimationDurations.slow,
+      switchInCurve: Curves.linear,
+      switchOutCurve: Curves.linear,
+      layoutBuilder: (currentChild, previousChildren) {
+        return Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            // A11y : l'étape précédente, encore affichée pendant le fondu, ne doit plus être
+            // atteignable par le lecteur d'écran.
+            ...previousChildren.map((child) => ExcludeSemantics(child: child)),
+            if (currentChild != null) currentChild,
+          ],
+        );
+      },
+      // Fade-out puis vide puis fade-in : pas de superposition des textes.
+      transitionBuilder: (child, animation) {
+        return FadeTransition(
+          opacity: CurvedAnimation(
+            parent: animation,
+            curve: const Interval(0.5, 1.0, curve: Curves.easeIn),
+          ),
+          child: child,
+        );
+      },
+      child: KeyedSubtree(
+        key: ValueKey(form.step),
+        child: _StepContent(form: form, communesRepository: widget.communesRepository),
+      ),
+    );
+    final actions = _BottomActions(key: _actionsKey, form: form);
+
+    // A11y 8.2 et 11.9 : clavier ouvert (paysage, texte agrandi, petit téléphone), il ne reste presque plus de
+    // place entre l'en-tête et les boutons fixes. Tout défile alors d'un bloc et le champ reste visible.
+    if (widget.keyboardOpen) {
+      return SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            header,
+            Padding(padding: const EdgeInsets.all(Margins.spacing_base), child: content),
+            actions,
+          ],
+        ),
+      );
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-          // A11y 10.2 : à chaque changement d'étape, le focus du lecteur d'écran part du bouton
-          // « Continuer » pour aller sur le titre de la nouvelle étape.
-          child: AutoFocusA11y(
-            key: ValueKey(form.step),
-            // Sur Android, l'étape est annoncée par la page (voir _announceStepIfChanged).
-            enabled: defaultTargetPlatform != TargetPlatform.android,
-            duration: AnimationDurations.slow,
-            // A11y 10.2.3 : « Étape X sur Y, titre » restitué en un seul en-tête.
-            child: Semantics(
-              header: true,
-              label: Strings.onboardingQuestionnaireStepA11y(
-                form.step.questionnaireIndex,
-                OnboardingQuestionnaireStep.questionnaireCount,
-                _stepTitle(form.step),
-              ),
-              excludeSemantics: true,
-              child: DsfrStepper(
-                currentStep: form.step.questionnaireIndex,
-                stepsCount: OnboardingQuestionnaireStep.questionnaireCount,
-                stepTitle: _stepTitle(form.step),
-              ),
-            ),
-          ),
-        ),
+        header,
         Expanded(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(Margins.spacing_base),
-            child: AnimatedSwitcher(
-              duration: AnimationDurations.slow,
-              switchInCurve: Curves.linear,
-              switchOutCurve: Curves.linear,
-              layoutBuilder: (currentChild, previousChildren) {
-                return Stack(
-                  alignment: Alignment.topCenter,
-                  children: [
-                    // A11y : l'étape précédente, encore affichée pendant le fondu, ne doit plus être
-                    // atteignable par le lecteur d'écran.
-                    ...previousChildren.map((child) => ExcludeSemantics(child: child)),
-                    if (currentChild != null) currentChild,
-                  ],
-                );
-              },
-              // Fade-out puis vide puis fade-in : pas de superposition des textes.
-              transitionBuilder: (child, animation) {
-                return FadeTransition(
-                  opacity: CurvedAnimation(
-                    parent: animation,
-                    curve: const Interval(0.5, 1.0, curve: Curves.easeIn),
-                  ),
-                  child: child,
-                );
-              },
-              child: KeyedSubtree(
-                key: ValueKey(form.step),
-                child: _StepContent(form: form, communesRepository: communesRepository),
-              ),
-            ),
+            child: content,
           ),
         ),
-        _BottomActions(form: form),
+        actions,
       ],
     );
   }
 }
 
 class _BottomActions extends StatelessWidget {
-  const _BottomActions({required this.form});
+  const _BottomActions({super.key, required this.form});
 
   final OnboardingQuestionnaireFormChangeNotifier form;
 
   @override
   Widget build(BuildContext context) {
-    final hidePrimaryBecauseAutoAdvance =
-        form.step == OnboardingQuestionnaireStep.situation ||
-        (form.step == OnboardingQuestionnaireStep.habitation && form.draftHabitation == null) ||
-        (form.step == OnboardingQuestionnaireStep.villeRecherche && form.draftVilleRecherche == null);
-
+    // A11y 5.3 : plus aucune étape n'avance seule, « Continuer » est donc toujours proposé.
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         Margins.spacing_base,
@@ -350,13 +394,12 @@ class _BottomActions extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (!hidePrimaryBecauseAutoAdvance)
-            DsfrButton(
-              label: Strings.onboardingQuestionnaireContinue,
-              variant: DsfrButtonVariant.primary,
-              size: DsfrComponentSize.lg,
-              onPressed: form.canContinue ? () => _onContinue(context) : null,
-            ),
+          DsfrButton(
+            label: Strings.onboardingQuestionnaireContinue,
+            variant: DsfrButtonVariant.primary,
+            size: DsfrComponentSize.lg,
+            onPressed: form.canContinue ? () => _onContinue(context) : null,
+          ),
           const SizedBox(height: Margins.spacing_s),
           Center(
             child: DsfrButton(

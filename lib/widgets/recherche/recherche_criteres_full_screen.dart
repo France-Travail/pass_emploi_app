@@ -195,11 +195,18 @@ class _RechercheRecenteTile extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(DsfrSpacings.s2w),
-            child: Text(
-              text,
-              style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textActionHighBlueFrance(context)),
+          focusColor: Colors.transparent,
+          // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material (1,3:1).
+          child: Builder(
+            builder: (context) => DsfrFocusWidget(
+              isFocused: Focus.of(context).hasPrimaryFocus,
+              child: Padding(
+                padding: const EdgeInsets.all(DsfrSpacings.s2w),
+                child: Text(
+                  text,
+                  style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textActionHighBlueFrance(context)),
+                ),
+              ),
             ),
           ),
         ),

@@ -182,7 +182,8 @@ class _DsfrBottomNavigationTileState extends State<_DsfrBottomNavigationTile>
   }
 }
 
-/// A11y 8.2 : un mot par ligne, réduit si besoin pour tenir dans la largeur : un mot n'est jamais coupé.
+/// A11y 8.2 : un mot par ligne, à la taille choisie dans les réglages. Le texte n'est plus réduit pour tenir :
+/// un mot plus large que l'onglet passe à la ligne plutôt que d'être rétréci.
 class _MotsSansCoupure extends StatelessWidget {
   const _MotsSansCoupure({required this.label, required this.style});
 
@@ -194,11 +195,7 @@ class _MotsSansCoupure extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        for (final mot in label.split(' '))
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(mot, style: style, maxLines: 1, softWrap: false),
-          ),
+        for (final mot in label.split(' ')) Text(mot, style: style, textAlign: TextAlign.center),
       ],
     );
   }

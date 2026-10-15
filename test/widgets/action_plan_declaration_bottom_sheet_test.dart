@@ -68,14 +68,14 @@ void main() {
     expect(find.text('EMPLOI'), findsOneWidget);
     expect(find.text('Je crée mon CV'), findsOneWidget);
     expect(find.text(Strings.actionPlanDeclarationQuand), findsOneWidget);
-    expect(find.text(Strings.actionPlanDeclarationDecrire), findsOneWidget);
+    expect(find.text(Strings.actionPlanDeclarationDecrireObligatoire), findsOneWidget);
     expect(find.text(Strings.actionPlanDeclarationDecrireAide), findsOneWidget);
   });
 
   testWidgets('France Travail : pas de description', (tester) async {
     await pump(tester, franceTravail());
 
-    expect(find.text(Strings.actionPlanDeclarationDecrire), findsNothing);
+    expect(find.text(Strings.actionPlanDeclarationDecrireObligatoire), findsNothing);
   });
 
   testWidgets('France Travail : la date suffit pour déclarer', (tester) async {

@@ -93,6 +93,7 @@ class Strings {
 
   // Chat
   static String yourMessage = Brand.isPassEmploi() ? "Votre message…" : "Ton message…";
+  static String yourMessageLabel = Brand.isPassEmploi() ? "Votre message" : "Ton message";
   static String yourConseiller = "Ton conseiller";
   static String today = "Aujourd'hui";
   static String edited = "Modifié";
@@ -381,11 +382,13 @@ class Strings {
   }
 
   static String onboardingQuestionnaireBirthdateSubtitle =
-      "Cette information nous sert à adapter les aides et dispositif auxquels tu as droit. 🎂";
+      "Cette information nous sert à adapter les aides et dispositifs auxquels tu as droit. 🎂";
   static String onboardingQuestionnaireBirthdateLabel = "Date de naissance";
   static String onboardingQuestionnaireBirthdateDayLabel = "Jour";
   static String onboardingQuestionnaireBirthdateMonthLabel = "Mois";
   static String onboardingQuestionnaireBirthdateYearLabel = "Année";
+  static String onboardingQuestionnaireBirthdateHint = "Exemple : 05 03 2006";
+  static String onboardingQuestionnaireBirthdateInvalid = "Cette date n'existe pas. Exemple : 05 03 2006";
   static String onboardingQuestionnaireUnderAgeTitle = "Reviens dans quelque temps\u{00A0}!";
   static String onboardingQuestionnaireUnderAgeDescription = "Cette appli est destinée aux jeunes de 15 à 25 ans.";
   static String onboardingQuestionnaireUnderAgeNoticeTitle = "Encore un peu de patience";
@@ -394,9 +397,12 @@ class Strings {
 
   static String onboardingQuestionnaireHabitationTitle = "Où habites-tu ?";
   static String onboardingQuestionnaireHabitationSubtitle =
-      "Pour te proposer des aides ou dispositif près de chez toi.";
+      "Pour te proposer des aides ou dispositifs près de chez toi.";
   static String onboardingQuestionnaireHabitationLabel = "Ville ou code postal";
   static String onboardingQuestionnaireGeolocate = "Me géolocaliser";
+  static String onboardingQuestionnaireCommunesA11y(int count) =>
+      count == 1 ? "1 commune proposée" : "$count communes proposées";
+  static String onboardingQuestionnaireCommuneSelectedA11y(String commune) => "Commune choisie : $commune";
 
   static String onboardingQuestionnaireSituationTitle = "Où en es-tu ?";
   static String onboardingQuestionnaireSituationSubtitle =
@@ -407,7 +413,7 @@ class Strings {
   static String onboardingQuestionnaireSituationEmploi = "En emploi";
   static String onboardingQuestionnaireSituationAutre = "Autre situation";
 
-  static String onboardingQuestionnaireObjectifsTitle = "Comment peux-t-on t'aider ?";
+  static String onboardingQuestionnaireObjectifsTitle = "Comment peut-on t'aider ?";
   static String onboardingQuestionnaireObjectifsSubtitle =
       "Sélectionne tout ce qui t'intéresse. Tu peux en choisir plusieurs.";
   static String onboardingQuestionnaireObjectifOrienter = "M'orienter";
@@ -476,6 +482,8 @@ class Strings {
   static String onboardingQuestionnaireLoaderStepSolutions = "On sélectionne les solutions près de chez toi";
   static String onboardingQuestionnaireLoaderStepBuild = "On construit tes suggestions d'actions";
   static String onboardingQuestionnaireLoaderStepOrder = "On ordonne tes prochaines actions";
+  static String onboardingQuestionnaireLoaderStepDoneA11y(String step) => "$step, terminé";
+  static String onboardingQuestionnaireLoaderStepPendingA11y(String step) => "$step, à venir";
   static String onboardingQuestionnaireGeolocateError =
       "Impossible de récupérer ta position. Réessaie ou saisis une ville.";
 
@@ -508,6 +516,7 @@ class Strings {
   static String actionPlanFeedbackGiveOpinion = "Donne ton avis";
   static String actionPlanDeclarationQuand = "Quand as-tu fait cette action\u{00A0}?";
   static String actionPlanDeclarationDecrire = "Décrire mon action";
+  static String actionPlanDeclarationDecrireObligatoire = "Décrire mon action (obligatoire)";
   static String actionPlanDeclarationDecrireAide =
       "Ajoute des détails pour que ton conseiller puisse valider l’action.";
   static String actionPlanDeclarationDecrireExemple = "Exemple : j’ai cherché des offres d’emploi pour le métier…";
@@ -542,13 +551,16 @@ class Strings {
   static String inviteAccueilPlanEmptyBody =
       "Aucune action n'a pu être proposée pour le moment. Modifie tes réponses pour obtenir de nouvelles suggestions.";
   static String inviteAccueilProgressBadge(int done, int total) => "$done/$total";
-  static String inviteAccueilProgressA11y(int done, int total) => "$done actions faites sur $total";
+  static String inviteAccueilProgressA11y(int done, int total) =>
+      "$done ${done <= 1 ? 'action faite' : 'actions faites'} sur $total";
   static String inviteAccueilDeleteActionA11y(String action) => "Supprimer l'action $action";
   static String inviteAccueilActionDeletedA11y(String action) => "Action $action supprimée";
+  static String inviteAccueilDeleteConfirmTitle = "Supprimer l'action\u{00A0}?";
   static String inviteAccueilPlanLoadingA11y = "Chargement de tes pistes à explorer";
   static String inviteAccueilDiscoveryProgressA11y(int percent) => "Découverte de l'application : $percent % terminé";
   static String inviteAccueilDiscoveryHideA11y = "Masquer la découverte de l'application";
-  static String inviteAccueilStepsCountA11y(int current, int total) => "$current étapes sur $total";
+  static String inviteAccueilStepsCountA11y(int current, int total) =>
+      "$current ${current <= 1 ? 'étape' : 'étapes'} sur $total";
   static String onboardingQuestionnaireStepA11y(int current, int total, String title) =>
       "Étape $current sur $total, $title";
 
@@ -975,10 +987,11 @@ class Strings {
   static String selectMultipleActions = "Sélectionne une ou plusieurs dates et renseigne la description";
   static String selectOneAction = "Sélectionne une date et renseigne la description";
 
-  static String actionCreationInfos(String creator, String date) => "Ajouté par $creator le $date";
+  static String actionCreationInfos(String creator, String date) => "Ajoutée par $creator le $date";
   static String youLowercase = "tu";
+  static String youStressedLowercase = Brand.isPassEmploi() ? "vous" : "toi";
   static String you = "Tu";
-  static String yourConseillerLowercase = "ton conseiller";
+  static String yourConseillerLowercase = Brand.isPassEmploi() ? "votre conseiller" : "ton conseiller";
   static String congratulationsActionUpdated =
       "Félicitations !\n\nLa mise à jour de ton action a bien été prise en compte";
   static String understood = "J'ai compris";
@@ -1841,6 +1854,7 @@ class Strings {
 
   // Tutorial
   static String seeLater = "Voir plus tard";
+  static String tutorialPageA11y(int current, int total) => "Page $current sur $total";
   static String finish = "Terminer";
 
   //Appstore rating

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
@@ -9,6 +10,7 @@ import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding
 import 'package:pass_emploi_app/repositories/communes_repository.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 
 class OnboardingQuestionnaireLocationStep extends StatefulWidget {
   const OnboardingQuestionnaireLocationStep({
@@ -28,6 +30,7 @@ class OnboardingQuestionnaireLocationStep extends StatefulWidget {
 
 class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestionnaireLocationStep> {
   List<QuestionnaireCommune> _suggestions = [];
+  int? _focusedSuggestion;
   Timer? _debounce;
   late final TextEditingController _controller;
 
@@ -86,23 +89,32 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
                 style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
               ),
               const SizedBox(height: DsfrSpacings.s1w),
+              // A11y 5.1 : fusionné au champ, le bouton d'effacement le faisait passer pour un bouton.
+              // Il reste visible et atteignable au clavier ; pour le lecteur d'écran, il devient une action du champ.
               Semantics(
                 identifier: label,
+                customSemanticsActions: _controller.text.isNotEmpty
+                    ? {CustomSemanticsAction(label: Strings.clear): _clearQuery}
+                    : null,
                 child: DsfrInputHeadless(
                   key: ValueKey(widget.isHabitation ? 'habitation' : 'ville'),
                   controller: _controller,
                   onChanged: _onQueryChanged,
+                  // A11y 9.12 : la commune d'habitation peut être proposée par le téléphone.
+                  autofillHints: widget.isHabitation ? const [AutofillHints.addressCity] : null,
                   suffixIcon: _controller.text.isNotEmpty
-                      ? IconButton(
-                          tooltip: Strings.clear,
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
-                          icon: Icon(
-                            DsfrIcons.systemCloseLine,
-                            size: 16,
-                            color: DsfrColorDecisions.textDefaultGrey(context),
+                      ? ExcludeSemantics(
+                          child: IconButton(
+                            tooltip: Strings.clear,
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                            icon: Icon(
+                              DsfrIcons.systemCloseLine,
+                              size: 16,
+                              color: DsfrColorDecisions.textDefaultGrey(context),
+                            ),
+                            onPressed: _clearQuery,
                           ),
-                          onPressed: _clearQuery,
                         )
                       : null,
                 ),
@@ -112,14 +124,26 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
         ),
         if (_suggestions.isNotEmpty) ...[
           const SizedBox(height: Margins.spacing_s),
-          ..._suggestions.map(
-            (commune) => ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(
-                commune.displayLabel,
-                style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
+          ..._suggestions.indexed.map(
+            (entry) => DsfrFocusWidget(
+              isFocused: _focusedSuggestion == entry.$1,
+              child: ListTile(
+                contentPadding: EdgeInsets.zero,
+                // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material.
+                focusColor: DsfrColorDecisions.backgroundTransparent(context),
+                onFocusChange: (focused) => setState(() {
+                  if (focused) {
+                    _focusedSuggestion = entry.$1;
+                  } else if (_focusedSuggestion == entry.$1) {
+                    _focusedSuggestion = null;
+                  }
+                }),
+                title: Text(
+                  entry.$2.displayLabel,
+                  style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
+                ),
+                onTap: () => _onCommuneSelected(entry.$2),
               ),
-              onTap: () => _onCommuneSelected(commune),
             ),
           ),
         ],
@@ -210,17 +234,34 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
     _debounce = Timer(const Duration(milliseconds: 300), () async {
       final results = await widget.communesRepository.search(value);
       if (!mounted) return;
-      setState(() => _suggestions = results);
+      setState(() {
+        _suggestions = results;
+        _focusedSuggestion = null;
+      });
+      // A11y 5.4 : la liste apparaît sous le champ, son arrivée est annoncée.
+      if (results.isNotEmpty) A11yUtils.announce(Strings.onboardingQuestionnaireCommunesA11y(results.length));
     });
   }
 
-  Future<void> _onCommuneSelected(QuestionnaireCommune commune) async {
-    setState(() => _suggestions = []);
+  // A11y 5.3 : choisir une commune la sélectionne seulement ; on passe à la suite avec « Continuer ».
+  void _onCommuneSelected(QuestionnaireCommune commune) {
+    setState(() {
+      _suggestions = [];
+      _focusedSuggestion = null;
+    });
+    _controller.text = commune.displayLabel;
     if (widget.isHabitation) {
-      await form.selectHabitationAndContinue(commune);
+      form.selectHabitation(commune);
     } else {
-      await form.selectVilleAndContinue(commune);
+      form.selectVilleRecherche(commune);
     }
+    A11yUtils.announce(Strings.onboardingQuestionnaireCommuneSelectedA11y(commune.displayLabel));
+  }
+
+  // A11y 5.4 : l'erreur de géolocalisation s'affiche sous le bouton et est annoncée.
+  void _failGeolocation(OnboardingQuestionnaireGeolocationFailure failure) {
+    form.failGeolocation(failure);
+    A11yUtils.announce(Strings.onboardingQuestionnaireGeolocateError);
   }
 
   Future<void> _geolocate() async {
@@ -228,7 +269,7 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
     try {
       final serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        form.failGeolocation(OnboardingQuestionnaireGeolocationFailure.serviceDesactive);
+        _failGeolocation(OnboardingQuestionnaireGeolocationFailure.serviceDesactive);
         return;
       }
       var permission = await Geolocator.checkPermission();
@@ -236,7 +277,7 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
         permission = await Geolocator.requestPermission();
       }
       if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
-        form.failGeolocation(OnboardingQuestionnaireGeolocationFailure.permissionRefusee);
+        _failGeolocation(OnboardingQuestionnaireGeolocationFailure.permissionRefusee);
         return;
       }
       final position = await Geolocator.getCurrentPosition();
@@ -245,7 +286,7 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
         longitude: position.longitude,
       );
       if (commune == null) {
-        form.failGeolocation(OnboardingQuestionnaireGeolocationFailure.aucuneCommune);
+        _failGeolocation(OnboardingQuestionnaireGeolocationFailure.aucuneCommune);
         return;
       }
       setState(() => _suggestions = []);
@@ -256,8 +297,9 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
         form.selectVilleRecherche(commune);
       }
       form.succeedGeolocation();
+      A11yUtils.announce(Strings.onboardingQuestionnaireCommuneSelectedA11y(commune.displayLabel));
     } catch (_) {
-      form.failGeolocation(OnboardingQuestionnaireGeolocationFailure.positionIntrouvable);
+      _failGeolocation(OnboardingQuestionnaireGeolocationFailure.positionIntrouvable);
     }
   }
 }

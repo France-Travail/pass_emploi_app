@@ -31,26 +31,39 @@ class DsfrEventCard extends StatelessWidget {
     return Semantics(
       button: true,
       label: semanticsLabel,
-      child: Material(
-        color: DsfrColorDecisions.backgroundDefaultGrey(context),
-        shape: shape,
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          customBorder: shape,
-          child: Padding(
-            padding: const EdgeInsets.all(DsfrSpacings.s3v),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                if (emoji != null && emojiBackgroundColor != null) ...[
-                  _buildLeading(emoji: emoji!, emojiBackgroundColor: emojiBackgroundColor!),
-                  const SizedBox(width: DsfrSpacings.s2w),
-                ],
-                Expanded(
-                  child: semanticsLabel != null ? ExcludeSemantics(child: child) : child,
+      // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material (1,3:1).
+      child: Focus(
+        canRequestFocus: false,
+        skipTraversal: true,
+        includeSemantics: false,
+        child: Builder(
+          builder: (context) => DsfrFocusWidget(
+            isFocused: Focus.of(context).hasFocus,
+            borderRadius: _radius,
+            child: Material(
+              color: DsfrColorDecisions.backgroundDefaultGrey(context),
+              shape: shape,
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: onTap,
+                customBorder: shape,
+                focusColor: Colors.transparent,
+                child: Padding(
+                  padding: const EdgeInsets.all(DsfrSpacings.s3v),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      if (emoji != null && emojiBackgroundColor != null) ...[
+                        _buildLeading(emoji: emoji!, emojiBackgroundColor: emojiBackgroundColor!),
+                        const SizedBox(width: DsfrSpacings.s2w),
+                      ],
+                      Expanded(
+                        child: semanticsLabel != null ? ExcludeSemantics(child: child) : child,
+                      ),
+                    ],
+                  ),
                 ),
-              ],
+              ),
             ),
           ),
         ),

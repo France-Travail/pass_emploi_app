@@ -49,8 +49,7 @@ class _MonSuiviPageState extends State<MonSuiviPage> {
         tracking: AnalyticsScreenNames.monSuivi,
         child: _StateProvider(
           child: StoreConnector<AppState, MonSuiviViewModel>(
-            onInit: (store) =>
-                store.dispatch(MonSuiviRequestAction(MonSuiviPeriod.current)),
+            onInit: (store) => store.dispatch(MonSuiviRequestAction(MonSuiviPeriod.current)),
             converter: (store) => MonSuiviViewModel.create(store),
             builder: (_, viewModel) => _Scaffold(
               body: _Body(viewModel),
@@ -75,8 +74,7 @@ class _StateProvider extends InheritedWidget {
 
   _StateProvider({required super.child});
 
-  static _StateProvider? maybeOf(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<_StateProvider>();
+  static _StateProvider? maybeOf(BuildContext context) => context.dependOnInheritedWidgetOfExactType<_StateProvider>();
 
   @override
   bool updateShouldNotify(_StateProvider old) => false;
@@ -137,18 +135,24 @@ class _ScrollAwareAppBarState extends State<_ScrollAwareAppBar> {
       title: Strings.agendaTitle,
       actionButton: withActionButton || isScreenReader
           ? IconButton(
-              onPressed: () =>
-                  _StateProvider.maybeOf(context)?.scrollController.animateTo(
-                    0,
-                    duration: AnimationDurations.fast,
-                    curve: Curves.fastEaseInToSlowEaseOut,
+              onPressed: () => _StateProvider.maybeOf(context)?.scrollController.animateTo(
+                0,
+                duration: AnimationDurations.fast,
+                curve: Curves.fastEaseInToSlowEaseOut,
+              ),
+              focusColor: DsfrColorDecisions.backgroundTransparent(context),
+              // A11y 2.3 : contour de focus DSFR (le focus est celui du bouton, lu juste au-dessus).
+              icon: Builder(
+                builder: (context) => DsfrFocusWidget(
+                  isFocused: Focus.maybeOf(context)?.hasPrimaryFocus ?? false,
+                  child: Padding(
+                    padding: const EdgeInsets.all(DsfrSpacings.s1w),
+                    child: Icon(
+                      DsfrIcons.businessCalendarEventLine,
+                      color: DsfrColorDecisions.textActionHighBlueFrance(context),
+                      size: DsfrSpacings.s3w,
+                    ),
                   ),
-              icon: Padding(
-                padding: const EdgeInsets.all(DsfrSpacings.s1w),
-                child: Icon(
-                  DsfrIcons.businessCalendarEventLine,
-                  color: DsfrColorDecisions.textActionHighBlueFrance(context),
-                  size: DsfrSpacings.s3w,
                 ),
               ),
               tooltip: Strings.monSuiviTooltip,
@@ -272,9 +276,7 @@ class _WarningCardState extends State<_WarningCard> {
     return AnimatedCrossFade(
       duration: AnimationDurations.fast,
       firstChild: const SizedBox.shrink(),
-      crossFadeState: _visible
-          ? CrossFadeState.showSecond
-          : CrossFadeState.showFirst,
+      crossFadeState: _visible ? CrossFadeState.showSecond : CrossFadeState.showFirst,
       secondChild: Padding(
         padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
         child: DsfrAlert(
@@ -340,10 +342,7 @@ class _TodayCenteredMonSuiviList extends StatelessWidget {
   final List<MonSuiviItem> presentAndFutureItems;
 
   _TodayCenteredMonSuiviList(this.viewModel, {required this.withComptageDesHeures})
-    : pastItems = viewModel.items
-          .sublist(0, viewModel.indexOfTodayItem)
-          .reversed
-          .toList(),
+    : pastItems = viewModel.items.sublist(0, viewModel.indexOfTodayItem).reversed.toList(),
       presentAndFutureItems = viewModel.items.sublist(
         viewModel.indexOfTodayItem,
       );
@@ -360,12 +359,14 @@ class _TodayCenteredMonSuiviList extends StatelessWidget {
         bottom: A11yUtils.withScreenReader(context) ? DsfrSpacings.s15w : 0,
       ),
       child: CustomScrollView(
+        // A11y 7.2 : sur Android, TalkBack n'annonce une liste (« Liste, N éléments ») que pour une zone qui défile
+        // dont le nombre d'éléments est connu : les jours des deux listes, plus leurs boutons de période.
+        semanticChildCount: pastItems.length + presentAndFutureItems.length + 2,
         center: _StateProvider.maybeOf(context)?.centerKey,
         controller: _StateProvider.maybeOf(context)?.scrollController,
         slivers: [
           SliverList.separated(
-            separatorBuilder: (context, index) =>
-                const SizedBox(height: DsfrSpacings.s3v),
+            separatorBuilder: (context, index) => const SizedBox(height: DsfrSpacings.s3v),
             itemCount: pastItems.length + 1,
             itemBuilder: (context, index) {
               if (_shouldAutomaticallyLoadPreviousPeriod(
@@ -404,8 +405,7 @@ class _TodayCenteredMonSuiviList extends StatelessWidget {
             ),
           SliverList.separated(
             key: withComptageDesHeures ? null : _StateProvider.maybeOf(context)?.centerKey,
-            separatorBuilder: (context, index) =>
-                const SizedBox(height: DsfrSpacings.s3v),
+            separatorBuilder: (context, index) => const SizedBox(height: DsfrSpacings.s3v),
             itemCount: presentAndFutureItems.length + 1,
             itemBuilder: (context, index) {
               if (_shouldAutomaticallyLoadNextPeriod(
@@ -419,9 +419,7 @@ class _TodayCenteredMonSuiviList extends StatelessWidget {
               if (index == presentAndFutureItems.length) {
                 return Padding(
                   padding: EdgeInsets.only(
-                    bottom: viewModel.withPagination
-                        ? DsfrSpacings.s2w
-                        : DsfrSpacings.s8w,
+                    bottom: viewModel.withPagination ? DsfrSpacings.s2w : DsfrSpacings.s8w,
                   ),
                   child: viewModel.withPagination
                       ? _Pagination(
@@ -458,9 +456,7 @@ class _TodayCenteredMonSuiviList extends StatelessWidget {
     bool loadingNextPeriod,
   ) {
     if (A11yUtils.withScreenReader(context)) return false;
-    return viewModel.withPagination &&
-        index > presentAndFutureItems.length - 2 &&
-        !loadingNextPeriod;
+    return viewModel.withPagination && index > presentAndFutureItems.length - 2 && !loadingNextPeriod;
   }
 
   bool _shouldAutomaticallyLoadPreviousPeriod(
@@ -469,9 +465,7 @@ class _TodayCenteredMonSuiviList extends StatelessWidget {
     bool loadingPreviousPeriod,
   ) {
     if (A11yUtils.withScreenReader(context)) return false;
-    return viewModel.withPagination &&
-        index > pastItems.length - 2 &&
-        !loadingPreviousPeriod;
+    return viewModel.withPagination && index > pastItems.length - 2 && !loadingPreviousPeriod;
   }
 
   void _loadNextPeriod(BuildContext context) {
@@ -623,10 +617,8 @@ class _AgendaTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final resolvedBorder =
-        borderColor ?? DsfrColorDecisions.borderDefaultGrey(context);
-    final resolvedBackground =
-        backgroundColor ?? DsfrColorDecisions.backgroundDefaultGrey(context);
+    final resolvedBorder = borderColor ?? DsfrColorDecisions.borderDefaultGrey(context);
+    final resolvedBackground = backgroundColor ?? DsfrColorDecisions.backgroundDefaultGrey(context);
     final borderRadius = const BorderRadius.all(_radius);
     final shape = RoundedRectangleBorder(
       borderRadius: borderRadius,
@@ -648,6 +640,7 @@ class _AgendaTile extends StatelessWidget {
                 onTap: onTap,
                 onLongPress: onLongPress,
                 customBorder: shape,
+                focusColor: Colors.transparent,
                 child: paddedChild,
               ),
             ),
@@ -672,11 +665,23 @@ class _AgendaTile extends StatelessWidget {
       );
     }
 
-    return Material(
-      color: resolvedBackground,
-      shape: shape,
-      clipBehavior: Clip.antiAlias,
-      child: interactiveChild,
+    // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material (1,3:1).
+    return Focus(
+      canRequestFocus: false,
+      skipTraversal: true,
+      includeSemantics: false,
+      child: Builder(
+        builder: (context) => DsfrFocusWidget(
+          isFocused: Focus.of(context).hasFocus,
+          borderRadius: borderRadius,
+          child: Material(
+            color: resolvedBackground,
+            shape: shape,
+            clipBehavior: Clip.antiAlias,
+            child: interactiveChild,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -974,12 +979,11 @@ extension on MonSuiviEntry {
 
   VoidCallback? onLongPress(BuildContext context) {
     return switch (this) {
-      UserActionMonSuiviEntry(:final id) =>
-        () => UserActionDetailsBottomSheet.show(
-          context,
-          UserActionStateSource.monSuivi,
-          id,
-        ),
+      UserActionMonSuiviEntry(:final id) => () => UserActionDetailsBottomSheet.show(
+        context,
+        UserActionStateSource.monSuivi,
+        id,
+      ),
       DemarcheMonSuiviEntry(:final id) => () => DemarcheDetailsBottomSheet.show(
         context,
         id,
@@ -997,8 +1001,7 @@ class CreateDemarcheButton extends StatefulWidget {
   State<CreateDemarcheButton> createState() => _CreateDemarcheButtonState();
 }
 
-class _CreateDemarcheButtonState extends State<CreateDemarcheButton>
-    with SingleTickerProviderStateMixin {
+class _CreateDemarcheButtonState extends State<CreateDemarcheButton> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _scaleAnimation;
   late final Animation<double> _fadeAnimation;
@@ -1048,9 +1051,7 @@ class _CreateDemarcheButtonState extends State<CreateDemarcheButton>
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) {
-        final label = widget.ctaType == MonSuiviCtaType.createAction
-            ? Strings.addAnAction
-            : Strings.addADemarche;
+        final label = widget.ctaType == MonSuiviCtaType.createAction ? Strings.addAnAction : Strings.addADemarche;
         final button = DsfrButton(
           label: label,
           variant: DsfrButtonVariant.primary,
@@ -1085,8 +1086,14 @@ class _CreateDemarcheButtonState extends State<CreateDemarcheButton>
                         context,
                       ).withValues(alpha: 0.5),
                     ),
+                    // A11y 8.5, 10.1 et 10.2 : la copie animée du bouton n'est qu'un effet visuel ; elle ne reçoit plus
+                    // le focus clavier et n'est plus lue par le lecteur d'écran.
                     child: IgnorePointer(
-                      child: SizedBox(width: double.infinity, child: button),
+                      child: ExcludeFocus(
+                        child: ExcludeSemantics(
+                          child: SizedBox(width: double.infinity, child: button),
+                        ),
+                      ),
                     ),
                   ),
                 ),

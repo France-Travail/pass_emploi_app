@@ -116,7 +116,8 @@ class _ActionPlanDeclarationBottomSheetState extends State<ActionPlanDeclaration
             onDescriptionChanged: (_) => setState(() {}),
             onClear: () => setState(_commentaire.clear),
             hintText: Strings.actionPlanDeclarationDecrireExemple,
-            label: Strings.actionPlanDeclarationDecrire,
+            // A11y 9.7 : la description n'est demandée (et obligatoire) qu'à un jeune Mission Locale.
+            label: Strings.actionPlanDeclarationDecrireObligatoire,
             helpText: Strings.actionPlanDeclarationDecrireAide,
             isInvalid: false,
           ),
@@ -171,10 +172,14 @@ class _Succes extends StatelessWidget {
         const SizedBox(height: DsfrSpacings.s3v),
         Center(child: DsfrCategoryTag.actionDone()),
         const SizedBox(height: DsfrSpacings.s3v),
-        Text(
-          Strings.userActionConfirmationTitle(viewModel.prenom),
-          textAlign: TextAlign.center,
-          style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context)),
+        // A11y 7.1 : « Bravo, Léa ! » est le titre de la confirmation.
+        Semantics(
+          header: true,
+          child: Text(
+            Strings.userActionConfirmationTitle(viewModel.prenom),
+            textAlign: TextAlign.center,
+            style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context)),
+          ),
         ),
         const SizedBox(height: DsfrSpacings.s1w),
         Text(Strings.actionPlanDeclarationSuccesEnregistree, textAlign: TextAlign.center, style: texte),

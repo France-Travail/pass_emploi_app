@@ -30,45 +30,57 @@ class InviteDiscoveryTile extends StatelessWidget {
       ].join(', '),
       onTap: () => _onTap(context),
       excludeSemantics: true,
-      child: Material(
-        color: DsfrColorDecisions.backgroundDefaultGrey(context),
-        borderRadius: BorderRadius.circular(4),
-        child: InkWell(
-          onTap: () => _onTap(context),
-          borderRadius: BorderRadius.circular(4),
-          child: DecoratedBox(
-            decoration: BoxDecoration(
+      // A11y 2.3 : contour de focus DSFR à la place du voile gris ; le Focus englobant signale celui de l'InkWell.
+      child: Focus(
+        canRequestFocus: false,
+        skipTraversal: true,
+        child: Builder(
+          builder: (context) => DsfrFocusWidget(
+            isFocused: Focus.of(context).hasFocus,
+            borderRadius: BorderRadius.circular(4),
+            child: Material(
+              color: DsfrColorDecisions.backgroundDefaultGrey(context),
               borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: DsfrColorDecisions.borderActionHighBlueFrance(context)),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(Margins.spacing_base),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  DsfrBadge(
-                    label: Strings.inviteAccueilDiscoveryProgress(progressPercent),
-                    type: DsfrBadgeType.news,
-                    size: DsfrComponentSize.sm,
-                    withIcon: true,
+              child: InkWell(
+                onTap: () => _onTap(context),
+                borderRadius: BorderRadius.circular(4),
+                focusColor: DsfrColorDecisions.backgroundTransparent(context),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: DsfrColorDecisions.borderActionHighBlueFrance(context)),
                   ),
-                  const SizedBox(height: Margins.spacing_s),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          title,
-                          style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(Margins.spacing_base),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DsfrBadge(
+                          label: Strings.inviteAccueilDiscoveryProgress(progressPercent),
+                          type: DsfrBadgeType.news,
+                          size: DsfrComponentSize.sm,
+                          withIcon: true,
                         ),
-                      ),
-                      Icon(
-                        isCompleted ? DsfrIcons.systemCloseLine : DsfrIcons.systemArrowRightSLine,
-                        color: DsfrColorDecisions.textTitleBlueFrance(context),
-                        size: 16,
-                      ),
-                    ],
+                        const SizedBox(height: Margins.spacing_s),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                title,
+                                style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                              ),
+                            ),
+                            Icon(
+                              isCompleted ? DsfrIcons.systemCloseLine : DsfrIcons.systemArrowRightSLine,
+                              color: DsfrColorDecisions.textTitleBlueFrance(context),
+                              size: 16,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ],
+                ),
               ),
             ),
           ),

@@ -227,7 +227,7 @@ String _creationDetails(UserAction? action) {
   if (action == null) return '';
   final creationDate = action.creationDate.toDay();
   final creatorName =
-      action.creator is ConseillerActionCreator ? Strings.yourConseillerLowercase : Strings.youLowercase;
+      action.creator is ConseillerActionCreator ? Strings.yourConseillerLowercase : Strings.youStressedLowercase;
   return Strings.actionCreationInfos(creatorName, creationDate);
 }
 

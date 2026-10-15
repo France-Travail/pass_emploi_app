@@ -62,14 +62,23 @@ class EditCriteresButton<Result> extends StatelessWidget {
   }
 }
 
-class _SearchBar extends StatelessWidget {
+class _SearchBar extends StatefulWidget {
   const _SearchBar({required this.label, required this.onTap});
 
   final String label;
   final VoidCallback onTap;
 
   @override
+  State<_SearchBar> createState() => _SearchBarState();
+}
+
+class _SearchBarState extends State<_SearchBar> {
+  bool _focused = false;
+
+  @override
   Widget build(BuildContext context) {
+    final label = widget.label;
+    final onTap = widget.onTap;
     const radius = Radius.circular(DsfrSpacings.s1v);
     final underlineBorder = Border(
       bottom: BorderSide(
@@ -84,31 +93,38 @@ class _SearchBar extends StatelessWidget {
       label: semanticsLabel,
       onTap: onTap,
       excludeSemantics: true,
-      child: Row(
-        children: [
-          Expanded(
-            child: Material(
-              color: DsfrColorDecisions.backgroundDefaultGreyHover(context),
-              borderRadius: const BorderRadius.only(topLeft: radius),
-              child: InkWell(
-                onTap: onTap,
+      // A11y 2.3 : contour de focus DSFR autour de la barre, à la place du voile gris de Material.
+      child: DsfrFocusWidget(
+        isFocused: _focused,
+        borderRadius: const BorderRadius.only(topLeft: radius, topRight: radius),
+        child: Row(
+          children: [
+            Expanded(
+              child: Material(
+                color: DsfrColorDecisions.backgroundDefaultGreyHover(context),
                 borderRadius: const BorderRadius.only(topLeft: radius),
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(topLeft: radius),
-                    border: underlineBorder,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
-                    child: SizedBox(
-                      height: DsfrSpacings.s6w,
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          label,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+                child: InkWell(
+                  onTap: onTap,
+                  focusColor: DsfrColorDecisions.backgroundTransparent(context),
+                  onFocusChange: (focused) => setState(() => _focused = focused),
+                  borderRadius: const BorderRadius.only(topLeft: radius),
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(topLeft: radius),
+                      border: underlineBorder,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
+                      child: SizedBox(
+                        height: DsfrSpacings.s6w,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            label,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+                          ),
                         ),
                       ),
                     ),
@@ -116,27 +132,27 @@ class _SearchBar extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          Material(
-            color: DsfrColorDecisions.backgroundActionHighBlueFrance(context),
-            borderRadius: const BorderRadius.only(topRight: radius),
-            child: InkWell(
-              onTap: onTap,
-              // A11y 8.5 : même action que le champ, pas de second arrêt clavier sans indicateur de focus
-              canRequestFocus: false,
+            Material(
+              color: DsfrColorDecisions.backgroundActionHighBlueFrance(context),
               borderRadius: const BorderRadius.only(topRight: radius),
-              child: SizedBox(
-                width: DsfrSpacings.s6w,
-                height: DsfrSpacings.s6w,
-                child: Icon(
-                  DsfrIcons.systemSearchLine,
-                  color: DsfrColorDecisions.textInvertedBlueFrance(context),
-                  size: DsfrSpacings.s3w,
+              child: InkWell(
+                onTap: onTap,
+                // A11y 8.5 : même action que le champ, pas de second arrêt clavier sans indicateur de focus
+                canRequestFocus: false,
+                borderRadius: const BorderRadius.only(topRight: radius),
+                child: SizedBox(
+                  width: DsfrSpacings.s6w,
+                  height: DsfrSpacings.s6w,
+                  child: Icon(
+                    DsfrIcons.systemSearchLine,
+                    color: DsfrColorDecisions.textInvertedBlueFrance(context),
+                    size: DsfrSpacings.s3w,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -63,13 +63,14 @@ void main() {
     semantics.dispose();
   });
 
-  testWidgets('A11y 9.2 : le champ « Autre date » porte son libellé et son aide', (tester) async {
+  testWidgets('A11y 9.2 et 5.1 : le champ « Autre date » porte son libellé, son aide et un rôle de bouton', (tester) async {
     final semantics = tester.ensureSemantics();
     await pump(tester, aide: Strings.cannotFinishActionInFuture);
 
     final champ = tester.getSemantics(find.byType(TextField));
     expect(champ.label, Strings.otherDate);
     expect(champ.hint, Strings.cannotFinishActionInFuture);
+    expect(champ, containsSemantics(isButton: true, hasTapAction: true));
     semantics.dispose();
   });
 }

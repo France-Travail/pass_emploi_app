@@ -116,9 +116,9 @@ class DsfrDateSuggestions extends StatelessWidget {
             ),
           ),
         if (dateSource is DateFromPicker)
+          // Libellé visible déjà présent : l'icône n'a pas à le répéter (« Supprimer la date » était lu deux fois).
           DsfrButton(
             icon: DsfrIcons.systemCloseLine,
-            iconSemanticLabel: Strings.removeDateTooltip,
             label: Strings.removeDateTooltip,
             variant: DsfrButtonVariant.tertiaryWithoutBorder,
             size: DsfrComponentSize.sm,

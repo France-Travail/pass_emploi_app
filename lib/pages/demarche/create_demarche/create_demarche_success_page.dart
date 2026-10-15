@@ -18,6 +18,7 @@ import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/errors/error_text.dart';
 import 'package:pass_emploi_app/widgets/in_app_feedback.dart';
 import 'package:pass_emploi_app/widgets/success/creation_confirmation_body.dart';
+import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/success/success_dialog_app_bar.dart';
 
 enum CreateDemarcheSource { personnalisee, fromReferentiel, iaFt, duplicate }
@@ -208,7 +209,10 @@ class _Scaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
-      appBar: SuccessDialogAppBar(title: appBarTitle),
+      appBar: SuccessDialogAppBar(
+        title: appBarTitle,
+        height: MediaQuery.textScalerOf(context).scale(PrimaryAppBar.toolBarHeight),
+      ),
       body: body,
     );
   }

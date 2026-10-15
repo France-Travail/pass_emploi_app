@@ -169,10 +169,11 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     OnboardingQuestionnaireStep.loader => false,
   };
 
+  // A11y 9.8 : « 5 » vaut « 05 » pour le jour et le mois ; l'année reste sur quatre chiffres.
   DateTime? get parsedBirthDate {
-    if (draftBirthDay.length != 2 || draftBirthMonth.length != 2 || draftBirthYear.length != 4) {
-      return null;
-    }
+    if (draftBirthDay.isEmpty || draftBirthDay.length > 2) return null;
+    if (draftBirthMonth.isEmpty || draftBirthMonth.length > 2) return null;
+    if (draftBirthYear.length != 4) return null;
     final day = int.tryParse(draftBirthDay);
     final month = int.tryParse(draftBirthMonth);
     final year = int.tryParse(draftBirthYear);
@@ -182,6 +183,10 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     if (date.year != year || date.month != month || date.day != day) return null;
     return date;
   }
+
+  /// A11y 9.9 : jour, mois et année saisis, mais la date n'existe pas (ex. 31/02/2006).
+  bool get isBirthDateInvalid =>
+      draftBirthDay.isNotEmpty && draftBirthMonth.isNotEmpty && draftBirthYear.length == 4 && parsedBirthDate == null;
 
   static const int minimumAge = 15;
 
@@ -238,11 +243,6 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
   void updateSituation(QuestionnaireSituation situation) {
     draftSituation = situation;
     notifyListeners();
-  }
-
-  Future<void> selectSituationAndContinue(QuestionnaireSituation situation) async {
-    updateSituation(situation);
-    await continueStep();
   }
 
   void toggleObjectif(QuestionnaireObjectif objectif) {
@@ -354,16 +354,6 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
         return;
     }
     await _saveAnswers(savedAnswers);
-  }
-
-  Future<void> selectHabitationAndContinue(QuestionnaireCommune commune) async {
-    selectHabitation(commune);
-    await continueStep();
-  }
-
-  Future<void> selectVilleAndContinue(QuestionnaireCommune commune) async {
-    selectVilleRecherche(commune);
-    await continueStep();
   }
 
   Future<void> markDomaineUnknownAndContinue() async {

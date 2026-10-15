@@ -1,4 +1,5 @@
 import 'package:clock/clock.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -12,8 +13,10 @@ import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
+import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/drawables/app_logo.dart';
@@ -91,6 +94,7 @@ class _Scaffold extends StatelessWidget {
                   child: Center(
                     child: AppLogo(
                       width: 120,
+                      excludeFromSemantics: false,
                       color: viewModel.withThemedAppLogo ? AppColors.primary : null,
                     ),
                   ),
@@ -335,7 +339,7 @@ class _InviteAccessModalState extends State<_InviteAccessModal> {
   }
 }
 
-class _OrganismButton extends StatelessWidget {
+class _OrganismButton extends StatefulWidget {
   const _OrganismButton({
     required this.label,
     required this.logo,
@@ -347,39 +351,54 @@ class _OrganismButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   @override
+  State<_OrganismButton> createState() => _OrganismButtonState();
+}
+
+class _OrganismButtonState extends State<_OrganismButton> {
+  bool _focused = false;
+
+  @override
   Widget build(BuildContext context) {
+    final label = widget.label;
+    final logo = widget.logo;
     final borderColor = DsfrColorDecisions.borderActionHighBlueFrance(context);
     final textColor = DsfrColorDecisions.textActionHighBlueFrance(context);
     return Semantics(
       button: true,
       label: label,
-      child: Material(
-        color: DsfrColorDecisions.backgroundDefaultGrey(context),
-        child: InkWell(
-          onTap: onPressed,
-          child: ExcludeSemantics(
-            child: Container(
-              constraints: const BoxConstraints(minHeight: 68),
-              decoration: BoxDecoration(
-                border: Border.all(color: borderColor),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(logo, width: 48, height: 48, fit: BoxFit.cover),
-                  ),
-                  const SizedBox(width: Margins.spacing_s),
-                  Flexible(
-                    child: Text(
-                      label,
-                      style: DsfrTextStyle.bodyLgMedium(color: textColor),
-                      textAlign: TextAlign.center,
+      // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material.
+      child: DsfrFocusWidget(
+        isFocused: _focused,
+        child: Material(
+          color: DsfrColorDecisions.backgroundDefaultGrey(context),
+          child: InkWell(
+            onTap: widget.onPressed,
+            focusColor: DsfrColorDecisions.backgroundTransparent(context),
+            onFocusChange: (focused) => setState(() => _focused = focused),
+            child: ExcludeSemantics(
+              child: Container(
+                constraints: const BoxConstraints(minHeight: 68),
+                decoration: BoxDecoration(
+                  border: Border.all(color: borderColor),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.asset(logo, width: 48, height: 48, fit: BoxFit.cover),
                     ),
-                  ),
-                ],
+                    const SizedBox(width: Margins.spacing_s),
+                    Flexible(
+                      child: Text(
+                        label,
+                        style: DsfrTextStyle.bodyLgMedium(color: textColor),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -396,6 +415,15 @@ class _InformationsLegales extends StatefulWidget {
 
 class _InformationsLegalesState extends State<_InformationsLegales> {
   bool _isExpanded = false;
+  bool _focused = false;
+
+  static bool get _isAndroid => defaultTargetPlatform == TargetPlatform.android;
+
+  void _toggle() {
+    setState(() => _isExpanded = !_isExpanded);
+    // A11y 5.5 : TalkBack ignore `expanded`, le nouvel état est donc annoncé, comme pour les objectifs du plan.
+    if (_isAndroid) A11yUtils.announce(_isExpanded ? Strings.a11yExpanded : Strings.a11yCollapsed);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -405,45 +433,53 @@ class _InformationsLegalesState extends State<_InformationsLegales> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         divider,
+        // A11y 5.5 : sur Android, `expanded` n'est pas annoncé par TalkBack, l'état est porté par `value`.
         Semantics(
           button: true,
-          expanded: _isExpanded,
+          expanded: _isAndroid ? null : _isExpanded,
+          value: _isAndroid ? (_isExpanded ? Strings.a11yExpanded : Strings.a11yCollapsed) : null,
           label: Strings.legalInformation,
-          child: InkWell(
-            onTap: () => setState(() => _isExpanded = !_isExpanded),
-            child: ColoredBox(
-              color: _isExpanded
-                  ? DsfrColorDecisions.backgroundActionLowBlueFrance(context)
-                  : DsfrColorDecisions.backgroundTransparent(context),
-              child: ExcludeSemantics(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(minHeight: 48),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s3v),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
-                            child: Text(
-                              Strings.legalInformation,
-                              style: DsfrTextStyle.bodyMdMedium(
-                                color: DsfrColorDecisions.textActionHighBlueFrance(context),
+          // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material.
+          child: DsfrFocusWidget(
+            isFocused: _focused,
+            child: InkWell(
+              onTap: _toggle,
+              focusColor: DsfrColorDecisions.backgroundTransparent(context),
+              onFocusChange: (focused) => setState(() => _focused = focused),
+              child: ColoredBox(
+                color: _isExpanded
+                    ? DsfrColorDecisions.backgroundActionLowBlueFrance(context)
+                    : DsfrColorDecisions.backgroundTransparent(context),
+                child: ExcludeSemantics(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(minHeight: 48),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s3v),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
+                              child: Text(
+                                Strings.legalInformation,
+                                style: DsfrTextStyle.bodyMdMedium(
+                                  color: DsfrColorDecisions.textActionHighBlueFrance(context),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        AnimatedRotation(
-                          turns: _isExpanded ? -0.5 : 0,
-                          duration: Durations.short4,
-                          child: Icon(
-                            DsfrIcons.systemArrowDownSLine,
-                            size: DsfrSpacings.s2w,
-                            color: DsfrColorDecisions.textActionHighBlueFrance(context),
+                          AnimatedRotation(
+                            turns: _isExpanded ? -0.5 : 0,
+                            duration: Durations.short4,
+                            child: Icon(
+                              DsfrIcons.systemArrowDownSLine,
+                              size: DsfrSpacings.s2w,
+                              color: DsfrColorDecisions.textActionHighBlueFrance(context),
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: DsfrSpacings.s2w),
-                      ],
+                          const SizedBox(width: DsfrSpacings.s2w),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -477,42 +513,64 @@ class _InformationsLegalesState extends State<_InformationsLegales> {
   }
 }
 
-class Link extends StatelessWidget {
+class Link extends StatefulWidget {
   final String label;
   final String link;
 
   const Link(this.label, this.link, {super.key});
 
   @override
+  State<Link> createState() => _LinkState();
+}
+
+class _LinkState extends State<Link> {
+  bool _focused = false;
+
+  void _open() {
+    PassEmploiMatomoTracker.instance.trackOutlink(widget.link);
+    launchExternalUrl(widget.link);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          PassEmploiMatomoTracker.instance.trackOutlink(link);
-          launchExternalUrl(link);
-        },
-        child: Wrap(
-          crossAxisAlignment: WrapCrossAlignment.end,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 2),
-              child: Icon(
-                DsfrIcons.systemExternalLinkLine,
-                color: DsfrColorDecisions.textActionHighBlueFrance(context),
-                size: 16,
-              ),
+    final label = widget.label;
+    // A11y 5.1 : « Lien » n'est plus écrit dans le nom ; comme dans Confidentialités et données, le lien est
+    // restitué comme un bouton qui « ouvre le site dans ton navigateur » (TalkBack n'annonce pas le rôle lien).
+    return ExternalLinkSemantics(
+      label: label,
+      onTap: _open,
+      // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material.
+      child: DsfrFocusWidget(
+        isFocused: _focused,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: _open,
+            focusColor: DsfrColorDecisions.backgroundTransparent(context),
+            onFocusChange: (focused) => setState(() => _focused = focused),
+            child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 2),
+                  child: Icon(
+                    DsfrIcons.systemExternalLinkLine,
+                    color: DsfrColorDecisions.textActionHighBlueFrance(context),
+                    size: 16,
+                  ),
+                ),
+                const SizedBox(width: Margins.spacing_xs),
+                Text(
+                  label,
+                  style: DsfrTextStyle.bodySmMedium(color: DsfrColorDecisions.textActionHighBlueFrance(context))
+                      .copyWith(
+                        decoration: TextDecoration.underline,
+                        decorationColor: DsfrColorDecisions.textActionHighBlueFrance(context),
+                      ),
+                ),
+              ],
             ),
-            const SizedBox(width: Margins.spacing_xs),
-            Text(
-              label,
-              style: DsfrTextStyle.bodySmMedium(color: DsfrColorDecisions.textActionHighBlueFrance(context)).copyWith(
-                decoration: TextDecoration.underline,
-                decorationColor: DsfrColorDecisions.textActionHighBlueFrance(context),
-              ),
-            ),
-            Semantics(label: Strings.link),
-          ],
+          ),
         ),
       ),
     );

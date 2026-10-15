@@ -347,10 +347,15 @@ class DsfrStatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final badge = DsfrBadge(
-      label: label,
-      type: type,
-      size: DsfrComponentSize.sm,
+    // A11y 8.2 : à 200 %, dans une colonne trop étroite (agenda), le badge ne déborde plus de la carte : il est
+    // réduit de quelques pixels seulement si nécessaire.
+    final badge = FittedBox(
+      fit: BoxFit.scaleDown,
+      child: DsfrBadge(
+        label: label,
+        type: type,
+        size: DsfrComponentSize.sm,
+      ),
     );
     if (excludeSemantics) return ExcludeSemantics(child: badge);
     return badge;

@@ -3,7 +3,6 @@ import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/network/post_evenement_engagement.dart';
 import 'package:pass_emploi_app/pages/credentials_page.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
@@ -85,17 +84,15 @@ class _ChatTextFieldState extends State<ChatTextField> {
                     label: Strings.sendAttachmentTooltip,
                     onTap: onSelectPieceJointe,
                     excludeSemantics: true,
+                    // A11y 8.5 : sans arrondi rogné, le contour de focus du bouton DSFR redevient visible.
                     child: Tooltip(
                       message: Strings.sendAttachmentTooltip,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(Dimens.radius_s),
-                        child: DsfrButton(
-                          icon: DsfrIcons.businessAttachmentLine,
-                          iconSemanticLabel: Strings.sendAttachmentTooltip,
-                          variant: DsfrButtonVariant.primary,
-                          size: DsfrComponentSize.lg,
-                          onPressed: onSelectPieceJointe,
-                        ),
+                      child: DsfrButton(
+                        icon: DsfrIcons.businessAttachmentLine,
+                        iconSemanticLabel: Strings.sendAttachmentTooltip,
+                        variant: DsfrButtonVariant.primary,
+                        size: DsfrComponentSize.lg,
+                        onPressed: onSelectPieceJointe,
                       ),
                     ),
                   ),
@@ -105,11 +102,26 @@ class _ChatTextFieldState extends State<ChatTextField> {
                     : CrossFadeState.showFirst,
                 duration: AnimationDurations.fast,
               ),
+              // A11y 9.1 : une étiquette reste visible au-dessus du champ ; le texte indicatif disparaissait à la
+              // première lettre. Elle est fusionnée au champ pour en être le nom.
               Expanded(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () => widget.focusNode.requestFocusWithA11y(),
-                  child: input,
+                child: MergeSemantics(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        Strings.yourMessageLabel,
+                        style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textLabelGrey(context)),
+                      ),
+                      const SizedBox(height: DsfrSpacings.s1v),
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () => widget.focusNode.requestFocusWithA11y(),
+                        child: input,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               AnimatedCrossFade(
@@ -126,15 +138,12 @@ class _ChatTextFieldState extends State<ChatTextField> {
                     excludeSemantics: true,
                     child: Tooltip(
                       message: Strings.sendMessageTooltip,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(Dimens.radius_s),
-                        child: DsfrButton(
-                          icon: DsfrIcons.businessSendPlaneFill,
-                          iconSemanticLabel: Strings.sendMessageTooltip,
-                          variant: DsfrButtonVariant.primary,
-                          size: DsfrComponentSize.lg,
-                          onPressed: showSendButton ? _onSendPressed : () {},
-                        ),
+                      child: DsfrButton(
+                        icon: DsfrIcons.businessSendPlaneFill,
+                        iconSemanticLabel: Strings.sendMessageTooltip,
+                        variant: DsfrButtonVariant.primary,
+                        size: DsfrComponentSize.lg,
+                        onPressed: showSendButton ? _onSendPressed : () {},
                       ),
                     ),
                   ),

@@ -20,18 +20,33 @@ class CreateUserActionForm extends StatefulWidget {
   State<CreateUserActionForm> createState() => _CreateUserActionFormState();
 }
 
-class _CreateUserActionFormState extends State<CreateUserActionForm> {
+class _CreateUserActionFormState extends State<CreateUserActionForm> with WidgetsBindingObserver {
   late final CreateUserActionFormViewModel _viewModel;
+  bool _keyboardOpen = false;
+  // Les clés gardent la barre et l'étape (et le champ qui a le focus) quand la mise en page change.
+  final GlobalKey _appBarKey = GlobalKey();
+  final GlobalKey _formKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     _viewModel = CreateUserActionFormViewModel();
     _viewModel.addListener(_onFormStateChanged);
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  // Le clavier est lu sur la vue, à chaque changement de dimensions : la page peut être affichée sous un Scaffold
+  // qui a déjà retiré sa hauteur de MediaQuery.
+  @override
+  void didChangeMetrics() {
+    if (!mounted) return;
+    final open = A11yUtils.isKeyboardVisible(context);
+    if (open != _keyboardOpen) setState(() => _keyboardOpen = open);
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _viewModel.removeListener(_onFormStateChanged);
     _viewModel.dispose();
     super.dispose();
@@ -65,38 +80,54 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> {
 
   @override
   Widget build(BuildContext context) {
+    final keyboardOpen = _keyboardOpen || MediaQuery.viewInsetsOf(context).bottom > 0;
+    final appBar = _CreateUserActionAppBar(
+      key: _appBarKey,
+      onBackPressed: _onBack,
+      // A11y 8.2 : la hauteur suit la taille de texte choisie dans les réglages.
+      height: MediaQuery.textScalerOf(context).scale(76),
+    );
+    final form = _CreateUserActionForm(_viewModel, key: _formKey, scrollsWithPage: keyboardOpen);
+    // A11y 8.5 : les boutons ne recouvrent plus le formulaire. Le corps s'arrête au-dessus d'eux,
+    // donc le focus lecteur d'écran / clavier ne peut plus être masqué par les boutons.
+    final navButtons = _viewModel.shouldDisplayNavigationButtons
+        ? _NavButtons(
+            displayState: _viewModel.displayState,
+            onGoBackPressed: _onBack,
+            onGoForwardPressed: _viewModel.canGoForward ? _onGoForward : null,
+          )
+        : null;
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
         if (didPop) return;
         _onBack();
       },
-      child: Scaffold(
-        backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
-        resizeToAvoidBottomInset: false,
-        appBar: _CreateUserActionAppBar(
-          onBackPressed: _onBack,
-          // A11y 8.2 : la hauteur suit la taille de texte choisie dans les réglages.
-          height: MediaQuery.textScalerOf(context).scale(76),
-        ),
-        body: _CreateUserActionForm(_viewModel),
-        // A11y 8.5 : les boutons ne recouvrent plus le formulaire. Le corps s'arrête au-dessus d'eux,
-        // donc le focus lecteur d'écran / clavier ne peut plus être masqué par les boutons.
-        // Masqués quand le clavier est affiché (resizeToAvoidBottomInset: false, comportement inchangé).
-        bottomNavigationBar: _viewModel.shouldDisplayNavigationButtons && MediaQuery.viewInsetsOf(context).bottom == 0
-            ? _NavButtons(
-                displayState: _viewModel.displayState,
-                onGoBackPressed: _onBack,
-                onGoForwardPressed: _viewModel.canGoForward ? _onGoForward : null,
-              )
-            : null,
-      ),
+      // A11y 8.2 et 11.9 : clavier ouvert, la barre, l'étape et les boutons défilent d'un bloc au-dessus du
+      // clavier pour que le champ en cours de saisie reste visible ; clavier fermé, rien ne change.
+      child: keyboardOpen
+          ? Scaffold(
+              backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+              body: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [appBar, form, if (navButtons != null) navButtons],
+                ),
+              ),
+            )
+          : Scaffold(
+              backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+              resizeToAvoidBottomInset: false,
+              appBar: appBar,
+              body: form,
+              bottomNavigationBar: navButtons,
+            ),
     );
   }
 }
 
-class _CreateUserActionAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _CreateUserActionAppBar({required this.onBackPressed, required this.height});
+class _CreateUserActionAppBar extends StatefulWidget implements PreferredSizeWidget {
+  const _CreateUserActionAppBar({super.key, required this.onBackPressed, required this.height});
 
   final VoidCallback onBackPressed;
   final double height;
@@ -105,10 +136,18 @@ class _CreateUserActionAppBar extends StatelessWidget implements PreferredSizeWi
   Size get preferredSize => Size.fromHeight(height);
 
   @override
+  State<_CreateUserActionAppBar> createState() => _CreateUserActionAppBarState();
+}
+
+class _CreateUserActionAppBarState extends State<_CreateUserActionAppBar> {
+  bool _backFocused = false;
+
+  @override
   Widget build(BuildContext context) {
+    final onBackPressed = widget.onBackPressed;
     final backColor = DsfrColorDecisions.textTitleGrey(context);
     return AppBar(
-      toolbarHeight: preferredSize.height,
+      toolbarHeight: widget.preferredSize.height,
       backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
       surfaceTintColor: Colors.transparent,
       elevation: 0,
@@ -128,20 +167,26 @@ class _CreateUserActionAppBar extends StatelessWidget implements PreferredSizeWi
             label: Strings.back,
             onTap: onBackPressed,
             excludeSemantics: true,
-            child: InkWell(
-              onTap: onBackPressed,
-              child: Padding(
-                padding: const EdgeInsets.only(left: DsfrSpacings.s1w, right: DsfrSpacings.s3v),
-                child: Row(
-                  children: [
-                    Icon(DsfrIcons.systemArrowLeftSLine, color: backColor, size: 32),
-                    Expanded(
-                      child: Text(
-                        Strings.back,
-                        style: DsfrTextStyle.bodyMdBold(color: backColor),
+            // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material.
+            child: DsfrFocusWidget(
+              isFocused: _backFocused,
+              child: InkWell(
+                onTap: onBackPressed,
+                focusColor: DsfrColorDecisions.backgroundTransparent(context),
+                onFocusChange: (focused) => setState(() => _backFocused = focused),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: DsfrSpacings.s1w, right: DsfrSpacings.s3v),
+                  child: Row(
+                    children: [
+                      Icon(DsfrIcons.systemArrowLeftSLine, color: backColor, size: 32),
+                      Expanded(
+                        child: Text(
+                          Strings.back,
+                          style: DsfrTextStyle.bodyMdBold(color: backColor),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -216,59 +261,76 @@ class _NavButtons extends StatelessWidget {
 }
 
 class _CreateUserActionForm extends StatelessWidget {
-  const _CreateUserActionForm(this.formState);
+  const _CreateUserActionForm(this.formState, {super.key, required this.scrollsWithPage});
 
   final CreateUserActionFormViewModel formState;
 
+  /// Clavier ouvert : la page entière défile, l'étape prend sa hauteur naturelle.
+  final bool scrollsWithPage;
+
   @override
   Widget build(BuildContext context) {
+    final step = AnimatedSwitcher(
+      duration: AnimationDurations.fast,
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: switch (formState.displayState) {
+          CreateUserActionDisplayState.step1 => CreateUserActionFormStep1(
+            onActionTypeSelected: (type) => formState.userActionTypeSelected(type),
+          ),
+          CreateUserActionDisplayState.step2 => CreateUserActionFormStep2(
+            actionType: formState.step1.actionCategory!,
+            viewModel: formState.step2,
+            onTitleChanged: (titleSource) => formState.titleChanged(titleSource),
+            onDescriptionChanged: (description) => formState.descriptionChanged(description),
+          ),
+          CreateUserActionDisplayState.step3 => CreateUserActionFormStep3(
+            actionType: formState.step1.actionCategory!,
+            viewModel: formState.step3,
+            onDateChanged: (id, dateSource) => formState.duplicateUserActionDateChanged(id, dateSource),
+            onDescriptionChanged: (id, description) => formState.duplicateUserActionDescriptionChanged(id, description),
+            onDelete: (id) => formState.deleteDuplicatedUserAction(id),
+            onAddDuplicatedUserAction: () => formState.addDuplicatedUserAction(),
+            titleSource: formState.step2.titleSource,
+          ),
+          _ => const SizedBox.shrink(),
+        },
+      ),
+    );
     return Column(
+      mainAxisSize: scrollsWithPage ? MainAxisSize.min : MainAxisSize.max,
       children: [
         const SizedBox(height: DsfrSpacings.s2w),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
           child: AutoFocusA11y(
             key: ValueKey(formState.displayState),
-            child: DsfrStepper(
-              currentStep: formState.displayState.stepIndex + 1,
-              stepsCount: CreateUserActionDisplayState.stepCount,
-              stepTitle: _stepTitle,
-            ),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
-            child: AnimatedSwitcher(
-              duration: AnimationDurations.fast,
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: switch (formState.displayState) {
-                  CreateUserActionDisplayState.step1 => CreateUserActionFormStep1(
-                    onActionTypeSelected: (type) => formState.userActionTypeSelected(type),
-                  ),
-                  CreateUserActionDisplayState.step2 => CreateUserActionFormStep2(
-                    actionType: formState.step1.actionCategory!,
-                    viewModel: formState.step2,
-                    onTitleChanged: (titleSource) => formState.titleChanged(titleSource),
-                    onDescriptionChanged: (description) => formState.descriptionChanged(description),
-                  ),
-                  CreateUserActionDisplayState.step3 => CreateUserActionFormStep3(
-                    actionType: formState.step1.actionCategory!,
-                    viewModel: formState.step3,
-                    onDateChanged: (id, dateSource) => formState.duplicateUserActionDateChanged(id, dateSource),
-                    onDescriptionChanged: (id, description) =>
-                        formState.duplicateUserActionDescriptionChanged(id, description),
-                    onDelete: (id) => formState.deleteDuplicatedUserAction(id),
-                    onAddDuplicatedUserAction: () => formState.addDuplicatedUserAction(),
-                    titleSource: formState.step2.titleSource,
-                  ),
-                  _ => const SizedBox.shrink(),
-                },
+            // A11y 7.1 : « Étape X sur 3, titre » restitué en un seul en-tête.
+            child: Semantics(
+              header: true,
+              label: Strings.onboardingQuestionnaireStepA11y(
+                formState.displayState.stepIndex + 1,
+                CreateUserActionDisplayState.stepCount,
+                _stepTitle,
+              ),
+              excludeSemantics: true,
+              child: DsfrStepper(
+                currentStep: formState.displayState.stepIndex + 1,
+                stepsCount: CreateUserActionDisplayState.stepCount,
+                stepTitle: _stepTitle,
               ),
             ),
           ),
         ),
+        if (scrollsWithPage)
+          step
+        else
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+              child: step,
+            ),
+          ),
       ],
     );
   }

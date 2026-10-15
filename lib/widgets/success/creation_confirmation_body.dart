@@ -44,10 +44,14 @@ class CreationConfirmationBody extends StatelessWidget {
                       tag!,
                       const SizedBox(height: DsfrSpacings.s3v),
                     ],
-                    Text(
-                      title,
-                      textAlign: TextAlign.center,
-                      style: DsfrTextStyle.headline3(color: titleColor),
+                    // A11y 7.1 : « Bravo ! » est le titre de la confirmation.
+                    Semantics(
+                      header: true,
+                      child: Text(
+                        title,
+                        textAlign: TextAlign.center,
+                        style: DsfrTextStyle.headline3(color: titleColor),
+                      ),
                     ),
                     const SizedBox(height: DsfrSpacings.s1w),
                     Text(

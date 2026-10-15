@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/success/success_dialog_app_bar.dart';
 import 'package:pass_emploi_app/widgets/success/success_illustration.dart';
 
@@ -20,7 +21,10 @@ class GenericSuccessPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
-      appBar: SuccessDialogAppBar(title: title),
+      appBar: SuccessDialogAppBar(
+        title: title,
+        height: MediaQuery.textScalerOf(context).scale(PrimaryAppBar.toolBarHeight),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),

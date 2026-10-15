@@ -53,23 +53,29 @@ class TagGroupState<T extends CheckboxValueViewModel> extends State<TagGroup> {
   }
 
   Widget _buildTag(BuildContext context, T viewModel, bool isSelected) {
-    final tag = DsfrTag(
-      label: viewModel.label,
-      size: DsfrComponentSize.md,
-      isSelected: isSelected,
-      onSelectionChanged: (value) {
-        setState(() {
-          _optionsSelectionStatus[viewModel] = value;
-          widget.onSelectedOptionsUpdated(_listOfSelectedOptions());
-        });
-      },
-    );
+    void onSelectionChanged(bool value) {
+      setState(() {
+        _optionsSelectionStatus[viewModel] = value;
+        widget.onSelectedOptionsUpdated(_listOfSelectedOptions());
+      });
+    }
 
-    if (viewModel.helpText == null) return tag;
-
+    // A11y 5.1 : DsfrTag n'expose qu'un état « sélectionné », sans rôle. Les filtres se cochent et se décochent :
+    // chacun est restitué comme une case à cocher, avec son état et son aide. L'étiquette garde son apparence
+    // et son focus clavier.
     return Semantics(
+      container: true,
+      checked: isSelected,
+      label: viewModel.label,
       hint: viewModel.helpText,
-      child: tag,
+      onTap: () => onSelectionChanged(!isSelected),
+      excludeSemantics: true,
+      child: DsfrTag(
+        label: viewModel.label,
+        size: DsfrComponentSize.md,
+        isSelected: isSelected,
+        onSelectionChanged: onSelectionChanged,
+      ),
     );
   }
 
