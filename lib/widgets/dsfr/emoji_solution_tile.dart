@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/widgets/dsfr/emoji_tile.dart';
 
 class EmojiSolutionGrid extends StatelessWidget {
@@ -68,6 +69,8 @@ class EmojiSolutionTile extends StatelessWidget {
     final titleStyle = DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleBlueFrance(context));
     final subtitleStyle = DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context));
 
+    // A11y 8.2 : texte agrandi, les libellés ne sont ni tronqués ni limités en lignes, la tuile grandit en hauteur.
+    final withTextScale = A11yUtils.withTextScale(context);
     final semanticsLabel = (subtitle == null || subtitle!.isEmpty) ? title : '$title. $subtitle';
     // A11y : un seul nœud bouton ; les textes affichés sont exclus pour éviter la double restitution.
     return Semantics(
@@ -106,26 +109,26 @@ class EmojiSolutionTile extends StatelessWidget {
                         ),
                         const SizedBox(height: DsfrSpacings.s1w),
                         SizedBox(
-                          height: _linesHeight(context, titleStyle, _titleMaxLines),
+                          height: withTextScale ? null : _linesHeight(context, titleStyle, _titleMaxLines),
                           width: double.infinity,
                           child: Text(
                             title,
                             textAlign: textAlign,
-                            maxLines: _titleMaxLines,
-                            overflow: TextOverflow.ellipsis,
+                            maxLines: withTextScale ? null : _titleMaxLines,
+                            overflow: withTextScale ? TextOverflow.visible : TextOverflow.ellipsis,
                             style: titleStyle,
                           ),
                         ),
                         if (subtitle != null && subtitle!.isNotEmpty) ...[
                           const SizedBox(height: DsfrSpacings.s1v),
                           SizedBox(
-                            height: _linesHeight(context, subtitleStyle, _subtitleMaxLines),
+                            height: withTextScale ? null : _linesHeight(context, subtitleStyle, _subtitleMaxLines),
                             width: double.infinity,
                             child: Text(
                               subtitle!,
                               textAlign: textAlign,
-                              maxLines: _subtitleMaxLines,
-                              overflow: TextOverflow.ellipsis,
+                              maxLines: withTextScale ? null : _subtitleMaxLines,
+                              overflow: withTextScale ? TextOverflow.visible : TextOverflow.ellipsis,
                               style: subtitleStyle,
                             ),
                           ),

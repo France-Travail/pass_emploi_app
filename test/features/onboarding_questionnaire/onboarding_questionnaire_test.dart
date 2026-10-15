@@ -218,9 +218,13 @@ void main() {
     expect(states.whereType<ActionPlanLoadingState>(), isEmpty);
   });
 
-  test('when the plan no longer exists on server, clears the local plan and forces the questionnaire', () async {
+  test('when the plan no longer exists on server, a plan was expected (answers can generate one), clears the local plan and forces the questionnaire', () async {
     var finished = true;
-    when(() => repository.getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers(prenom: 'Léa'));
+    when(() => repository.getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers(
+        prenom: 'Léa',
+        situation: QuestionnaireSituation.lycee,
+        objectifs: {QuestionnaireObjectif.emploi},
+      ));
     when(() => repository.isFinished()).thenAnswer((_) async => finished);
     when(() => repository.hasEverFinished()).thenAnswer((_) async => true);
     when(() => repository.setFinished(false)).thenAnswer((_) async { finished = false; });
@@ -247,6 +251,30 @@ void main() {
     expect(state.actionPlanState, isA<ActionPlanEmptyState>());
     verify(() => repository.setFinished(false)).called(1);
     verify(() => actionPlanRepository.clear()).called(1);
+  });
+
+  test('when no plan exists on server and the answers cannot generate one (all steps skipped), keeps the questionnaire finished', () async {
+    when(() => repository.getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers(prenom: 'Léa'));
+    when(() => repository.isFinished()).thenAnswer((_) async => true);
+    when(() => repository.hasEverFinished()).thenAnswer((_) async => true);
+    when(() => actionPlanRepository.fetch(any())).thenAnswer((_) async => ActionPlanFetchNotFound());
+
+    final factory = TestStoreFactory()
+      ..onboardingQuestionnaireRepository = repository
+      ..actionPlanRepository = actionPlanRepository;
+    final store = factory.initializeReduxStore(
+      initialState: givenState().loggedInMiloUser().withOnboardingQuestionnaire(finished: true),
+    );
+    final success = store.onChange.firstWhere(
+      (s) => s.actionPlanState is ActionPlanEmptyState && s.onboardingQuestionnaireState is OnboardingQuestionnaireSuccessState,
+    );
+
+    store.dispatch(FonctionnalitesSuccessAction({Fonctionnalite.planAction}));
+
+    final state = await success;
+    expect((state.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState).finished, isTrue);
+    verifyNever(() => repository.setFinished(any()));
+    verifyNever(() => actionPlanRepository.clear());
   });
 
   test('when refreshing the plan fails after the questionnaire is loaded, fails action plan and keeps the questionnaire finished', () async {
@@ -535,5 +563,76 @@ void main() {
     final state = (await success).onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState;
     expect(state.finished, isFalse);
     expect(state.everFinished, isTrue);
+  });
+
+  test('resuming the questionnaire flags it as resumed from the app', () async {
+    when(() => repository.hasEverFinished()).thenAnswer((_) async => true);
+
+    final factory = TestStoreFactory()
+      ..onboardingQuestionnaireRepository = repository
+      ..actionPlanRepository = actionPlanRepository;
+    final store = factory.initializeReduxStore(initialState: AppState.initialState());
+    final success = store.onChange.firstWhere(
+      (s) => s.onboardingQuestionnaireState is OnboardingQuestionnaireSuccessState,
+    );
+
+    store.dispatch(OnboardingQuestionnaireResumeAction());
+
+    final state = (await success).onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState;
+    expect(state.resumedFromApp, isTrue);
+  });
+
+  test('answers updated while resumed keep the resumed flag', () async {
+    when(() => repository.saveAnswers(any())).thenAnswer((_) async {});
+
+    final factory = TestStoreFactory()
+      ..onboardingQuestionnaireRepository = repository
+      ..actionPlanRepository = actionPlanRepository;
+    final store = factory.initializeReduxStore(
+      initialState: AppState.initialState().copyWith(
+        onboardingQuestionnaireState: OnboardingQuestionnaireSuccessState(
+          finished: false,
+          resumedFromApp: true,
+          answers: const OnboardingQuestionnaireAnswers(),
+        ),
+      ),
+    );
+    final success = store.onChange.firstWhere(
+      (s) => (s.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState).answers.prenom == 'Léa',
+    );
+
+    store.dispatch(OnboardingQuestionnaireAnswersUpdatedAction(const OnboardingQuestionnaireAnswers(prenom: 'Léa')));
+
+    final state = (await success).onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState;
+    expect(state.resumedFromApp, isTrue);
+    expect(state.finished, isFalse);
+  });
+
+  test('closing a resumed questionnaire restores the finished state and keeps the answers', () async {
+    when(() => repository.getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers(prenom: 'Léa'));
+    when(() => repository.hasEverFinished()).thenAnswer((_) async => true);
+
+    final factory = TestStoreFactory()
+      ..onboardingQuestionnaireRepository = repository
+      ..actionPlanRepository = actionPlanRepository;
+    final store = factory.initializeReduxStore(
+      initialState: AppState.initialState().copyWith(
+        onboardingQuestionnaireState: OnboardingQuestionnaireSuccessState(
+          finished: false,
+          resumedFromApp: true,
+          answers: const OnboardingQuestionnaireAnswers(prenom: 'Léa'),
+        ),
+      ),
+    );
+    final success = store.onChange.firstWhere(
+      (s) => (s.onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState).finished,
+    );
+
+    store.dispatch(OnboardingQuestionnaireCloseResumedAction());
+
+    final state = (await success).onboardingQuestionnaireState as OnboardingQuestionnaireSuccessState;
+    expect(state.resumedFromApp, isFalse);
+    expect(state.answers.prenom, 'Léa');
+    verify(() => repository.setFinished(true)).called(1);
   });
 }

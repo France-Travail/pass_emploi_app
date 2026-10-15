@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
+import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 
 class ExternalLink extends StatelessWidget {
   final String label;
@@ -19,12 +20,9 @@ class ExternalLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // A11y 5.1 : rôle lien explicite plutôt qu'un libellé « Lien » ajouté au texte.
-    return Semantics(
-      container: true,
-      link: true,
+    return ExternalLinkSemantics(
       label: label,
       onTap: () => launchExternalUrl(url),
-      excludeSemantics: true,
       child: InkWell(
         onTap: () => launchExternalUrl(url),
         splashColor: AppColors.primaryLighten,

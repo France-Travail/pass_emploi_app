@@ -55,37 +55,59 @@ class _PastDateChoiceState extends State<PastDateChoice> {
           runSpacing: DsfrSpacings.s1w,
           children: [
             for (final suggestion in suggestions)
-              DsfrButton(
-                label: suggestion.date.isToday() ? Strings.dateSuggestionAujourdhui : Strings.dateSuggestionHier,
-                variant: _isSuggestionSelected(suggestion) ? DsfrButtonVariant.primary : DsfrButtonVariant.secondary,
-                size: DsfrComponentSize.sm,
-                onPressed: () => _selectSuggestion(suggestion),
+              Semantics(
+                button: true,
+                // A11y 5.5 : état sélectionné restitué, et nom lu une seule fois.
+                selected: _isSuggestionSelected(suggestion),
+                label: suggestion.a11yLabel,
+                onTap: () => _selectSuggestion(suggestion),
+                excludeSemantics: true,
+                child: DsfrButton(
+                  label: suggestion.date.isToday() ? Strings.dateSuggestionAujourdhui : Strings.dateSuggestionHier,
+                  variant: _isSuggestionSelected(suggestion) ? DsfrButtonVariant.primary : DsfrButtonVariant.secondary,
+                  size: DsfrComponentSize.sm,
+                  onPressed: () => _selectSuggestion(suggestion),
+                ),
               ),
           ],
         ),
         const SizedBox(height: DsfrSpacings.s2w),
-        Text(
-          Strings.otherDate,
-          style: DsfrTextStyle.bodyMd(
-            color: DsfrColorDecisions.textLabelGrey(context),
+        // A11y 9.2 : le libellé et l'aide visibles sont restitués comme nom et description du champ.
+        Semantics(
+          label: Strings.otherDate,
+          hint: aide,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ExcludeSemantics(
+                child: Text(
+                  Strings.otherDate,
+                  style: DsfrTextStyle.bodyMd(
+                    color: DsfrColorDecisions.textLabelGrey(context),
+                  ),
+                ),
+              ),
+              const SizedBox(height: DsfrSpacings.s1v),
+              if (aide != null) ...[
+                ExcludeSemantics(
+                  child: Text(
+                    aide,
+                    style: DsfrTextStyle.bodyXs(
+                      color: DsfrColorDecisions.textMentionGrey(context),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: DsfrSpacings.s1w),
+              ],
+              DsfrInputHeadless(
+                controller: _dateController,
+                isDatePicker: true,
+                lastDate: DateTime.now(),
+                locale: const Locale('fr', 'FR'),
+                onDateChanged: (date) => _setDate(DateFromPicker(date)),
+              ),
+            ],
           ),
-        ),
-        const SizedBox(height: DsfrSpacings.s1v),
-        if (aide != null) ...[
-          Text(
-            aide,
-            style: DsfrTextStyle.bodyXs(
-              color: DsfrColorDecisions.textMentionGrey(context),
-            ),
-          ),
-          const SizedBox(height: DsfrSpacings.s1w),
-        ],
-        DsfrInputHeadless(
-          controller: _dateController,
-          isDatePicker: true,
-          lastDate: DateTime.now(),
-          locale: const Locale('fr', 'FR'),
-          onDateChanged: (date) => _setDate(DateFromPicker(date)),
         ),
       ],
     );

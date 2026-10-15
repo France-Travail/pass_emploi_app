@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/ui/external_links.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
+import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
 
 class ActionPlanFeedbackBottomSheet extends StatelessWidget {
@@ -37,9 +38,15 @@ class ActionPlanFeedbackBottomSheet extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                Strings.actionPlanFeedbackTitle,
-                style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textTitleGrey(context)),
+              // A11y 7.1 / 10.2 : titre de la feuille, en-tête, qui reçoit le focus à l'ouverture.
+              AutoFocusA11y(
+                child: Semantics(
+                  header: true,
+                  child: Text(
+                    Strings.actionPlanFeedbackTitle,
+                    style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textTitleGrey(context)),
+                  ),
+                ),
               ),
               const SizedBox(height: DsfrSpacings.s2w),
               Column(

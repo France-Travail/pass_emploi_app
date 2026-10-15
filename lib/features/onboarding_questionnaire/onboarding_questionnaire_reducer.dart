@@ -6,13 +6,20 @@ OnboardingQuestionnaireState onboardingQuestionnaireReducer(OnboardingQuestionna
     return OnboardingQuestionnaireSuccessState(
       finished: action.finished,
       everFinished: action.everFinished,
+      resumedFromApp: action.resumedFromApp,
       answers: action.answers,
     );
   }
   if (action is OnboardingQuestionnaireAnswersUpdatedAction) {
     final finished = current is OnboardingQuestionnaireSuccessState ? current.finished : false;
     final everFinished = current is OnboardingQuestionnaireSuccessState ? current.everFinished : false;
-    return OnboardingQuestionnaireSuccessState(finished: finished, everFinished: everFinished, answers: action.answers);
+    final resumedFromApp = current is OnboardingQuestionnaireSuccessState ? current.resumedFromApp : false;
+    return OnboardingQuestionnaireSuccessState(
+      finished: finished,
+      everFinished: everFinished,
+      resumedFromApp: resumedFromApp,
+      answers: action.answers,
+    );
   }
   return current;
 }

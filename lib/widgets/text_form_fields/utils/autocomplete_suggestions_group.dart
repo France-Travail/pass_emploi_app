@@ -35,6 +35,8 @@ class AutocompleteSuggestionsGroup extends StatelessWidget {
                 ],
                 Expanded(
                   child: Semantics(
+                    // A11y 5.1 : container pour ne pas fusionner le titre avec les suggestions
+                    container: true,
                     header: true,
                     child: Text(
                       title!,
@@ -86,6 +88,8 @@ class AutocompleteSuggestionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyle = DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textActionHighBlueFrance(context));
     return Semantics(
+      // A11y 7.1 : container pour que chaque suggestion reste un bouton distinct du titre
+      container: true,
       button: true,
       child: Material(
         color: Colors.transparent,

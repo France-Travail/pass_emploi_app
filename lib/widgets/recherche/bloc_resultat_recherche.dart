@@ -62,6 +62,7 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
       converter: (store) => BlocResultatRechercheViewModel.create(store, widget.rechercheState),
       onDidChange: (previousViewModel, viewModel) {
         _trackSearchResults(viewModel, previousViewModel, context);
+        _announceStatusChange(viewModel, previousViewModel);
       },
       distinct: true,
     );
@@ -95,6 +96,8 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
         return Semantics(
           label: Strings.listOffres,
           child: GestureDetector(
+            // A11y 5.1 : le toucher sur la liste estompée ne fait pas de la liste un élément activable.
+            excludeFromSemantics: true,
             onTapDown: (_) => viewModel.onListWithOpacityTouch(),
             child: AnimatedOpacity(
               opacity: disabled ? 0.2 : 1,
@@ -102,6 +105,8 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
               child: AbsorbPointer(
                 absorbing: disabled,
                 child: Focus(
+                  // A11y 10.1 : la liste n'est pas un arrêt de tabulation, seules ses offres le sont.
+                  canRequestFocus: false,
                   onFocusChange: (hasFocus) {
                     if (hasFocus) {
                       // A11y - to close bandeau recherche when focus goes to the list
@@ -134,6 +139,34 @@ class _BlocResultatRechercheState<Result> extends State<BlocResultatRecherche<Re
         ],
       ],
     );
+  }
+
+  // A11y 5.4 : annonce les changements de statut de la recherche, une seule fois par transition d'état.
+  // Le "charger plus" (results -> results) n'est volontairement pas annoncé : le focus reste sur la liste.
+  void _announceStatusChange(
+    BlocResultatRechercheViewModel<Result> viewModel,
+    BlocResultatRechercheViewModel<Result>? previousViewModel,
+  ) {
+    final previousState = previousViewModel?.displayState;
+    final state = viewModel.displayState;
+    if (previousState == state) return;
+
+    switch (state) {
+      case BlocResultatRechercheDisplayState.loading:
+        A11yUtils.announce(Strings.rechercheLoadingAnnouncement);
+      case BlocResultatRechercheDisplayState.failure:
+        A11yUtils.announce(Strings.genericError);
+      case BlocResultatRechercheDisplayState.empty:
+        A11yUtils.announce(widget.emptyTitle);
+      case BlocResultatRechercheDisplayState.results:
+        // Pas d'annonce en revenant de l'édition des critères (editRecherche -> results).
+        if (previousState != BlocResultatRechercheDisplayState.editRecherche) {
+          A11yUtils.announce(widget.resultsCountLabel(viewModel.items.length));
+        }
+      case BlocResultatRechercheDisplayState.recherche:
+      case BlocResultatRechercheDisplayState.editRecherche:
+        break;
+    }
   }
 
   void _trackSearchResults(

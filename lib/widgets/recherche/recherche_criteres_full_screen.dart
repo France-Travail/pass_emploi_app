@@ -133,9 +133,13 @@ class _RecentSearches<Result> extends StatelessWidget {
                   ),
                   const SizedBox(width: DsfrSpacings.s1w),
                   Expanded(
-                    child: Text(
-                      Strings.rechercheRecentesTitle,
-                      style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                    // A11y 7.1 : titre de section déclaré comme titre
+                    child: Semantics(
+                      header: true,
+                      child: Text(
+                        Strings.rechercheRecentesTitle,
+                        style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                      ),
                     ),
                   ),
                 ],

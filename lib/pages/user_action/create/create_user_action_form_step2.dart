@@ -266,12 +266,12 @@ class _UserActionDescriptionFieldState extends State<UserActionDescriptionField>
   @override
   Widget build(BuildContext context) {
     final errorMessage = _errorText ?? (widget.isInvalid ? Strings.descriptionMandatory : null);
-    return Semantics(
-      container: true,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Expanded(
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(
+          // A11y 9.9 : le message d'erreur est fusionné dans le nœud du champ (annoncé avec lui).
+          child: MergeSemantics(
             child: DsfrInput(
               key: widget.descriptionKey,
               label: widget.label ?? Strings.userActionDescriptionTextfieldStep2,
@@ -292,8 +292,13 @@ class _UserActionDescriptionFieldState extends State<UserActionDescriptionField>
               },
             ),
           ),
-          const SizedBox(width: DsfrSpacings.s1w),
-          Column(
+        ),
+        const SizedBox(width: DsfrSpacings.s1w),
+        // A11y 5.1 : nœuds séparés pour « Effacer le texte » et « Dicter », lus après le champ.
+        Semantics(
+          container: true,
+          explicitChildNodes: true,
+          child: Column(
             children: [
               if (widget.descriptionController.text.isNotEmpty)
                 DsfrButton(
@@ -318,8 +323,8 @@ class _UserActionDescriptionFieldState extends State<UserActionDescriptionField>
               ),
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

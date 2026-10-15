@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 
 class DsfrProfilCard extends StatelessWidget {
   const DsfrProfilCard({
@@ -10,6 +11,7 @@ class DsfrProfilCard extends StatelessWidget {
     this.onTap,
     this.showChevron,
     this.semanticsLink = false,
+    this.semanticsLinkDestination = LinkDestination.website,
     this.semanticsLabel,
   });
 
@@ -19,6 +21,7 @@ class DsfrProfilCard extends StatelessWidget {
   final VoidCallback? onTap;
   final bool? showChevron;
   final bool semanticsLink;
+  final LinkDestination semanticsLinkDestination;
   final String? semanticsLabel;
 
   bool get _showChevron => showChevron ?? onTap != null;
@@ -43,54 +46,66 @@ class DsfrProfilCard extends StatelessWidget {
       side: BorderSide(color: DsfrColorDecisions.borderDefaultGrey(context)),
     );
 
-    return Semantics(
-      container: true,
-      button: _isTappable && !_isLink,
-      link: _isLink,
-      label: _resolvedSemanticsLabel,
-      onTap: onTap,
-      child: ExcludeSemantics(
-        child: Material(
-          color: DsfrColorDecisions.backgroundDefaultGrey(context),
-          shape: shape,
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: onTap,
-            customBorder: shape,
-            child: Padding(
-              padding: const EdgeInsets.all(DsfrSpacings.s3v),
-              child: Row(
-                children: [
-                  leading,
-                  const SizedBox(width: DsfrSpacings.s3v),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+    final card = ExcludeSemantics(
+      child: Material(
+        color: DsfrColorDecisions.backgroundDefaultGrey(context),
+        shape: shape,
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          customBorder: shape,
+          child: Padding(
+            padding: const EdgeInsets.all(DsfrSpacings.s3v),
+            child: Row(
+              children: [
+                leading,
+                const SizedBox(width: DsfrSpacings.s3v),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+                      ),
+                      if (description != null)
                         Text(
-                          title,
-                          style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+                          description!,
+                          style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textTitleGrey(context)),
                         ),
-                        if (description != null)
-                          Text(
-                            description!,
-                            style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textTitleGrey(context)),
-                          ),
-                      ],
-                    ),
+                    ],
                   ),
-                  if (_showChevron)
-                    Icon(
-                      DsfrIcons.systemArrowRightSLine,
-                      size: 16,
-                      color: DsfrColorDecisions.textTitleBlueFrance(context),
-                    ),
-                ],
-              ),
+                ),
+                if (_showChevron)
+                  Icon(
+                    DsfrIcons.systemArrowRightSLine,
+                    size: 16,
+                    color: DsfrColorDecisions.textTitleBlueFrance(context),
+                  ),
+              ],
             ),
           ),
         ),
       ),
+    );
+
+    // A11y 5.1 : un lien est exposé via ExternalLinkSemantics (rôle bouton + indication sur Android).
+    if (_isLink) {
+      return ExternalLinkSemantics(
+        label: _resolvedSemanticsLabel,
+        onTap: onTap,
+        destination: semanticsLinkDestination,
+        excludeSemantics: false,
+        child: card,
+      );
+    }
+
+    return Semantics(
+      container: true,
+      button: _isTappable,
+      label: _resolvedSemanticsLabel,
+      onTap: onTap,
+      child: card,
     );
   }
 }

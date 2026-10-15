@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
+import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/buttons/focused_border_builder.dart';
 
@@ -77,8 +79,13 @@ class PrimaryActionButton extends StatelessWidget {
   }
 
   Widget _buildContent(TextStyle textStyle, Color foregroundColor) {
+    // A11y 5.1 : sur Android, le rôle lien n'est pas annoncé ; on expose un bouton avec indication de site externe.
+    final isAndroid = defaultTargetPlatform == TargetPlatform.android;
+    final isLink = semanticsRoleLink == true;
     return Semantics(
-      link: semanticsRoleLink,
+      link: isLink ? !isAndroid : semanticsRoleLink,
+      button: isLink && isAndroid ? true : null,
+      hint: isLink && isAndroid ? Strings.a11yOpensExternalSite : null,
       child: Wrap(
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [

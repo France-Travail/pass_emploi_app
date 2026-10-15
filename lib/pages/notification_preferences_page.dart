@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/preferences/notification_preferences_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_profil_tile.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
@@ -155,6 +156,7 @@ class _Content extends StatelessWidget {
               iconBackgroundColor: DsfrColors.greenEmeraude950,
               title: Strings.openNotificationsSettings,
               semanticsLink: true,
+              semanticsLinkDestination: LinkDestination.appSettings,
               onTap: viewModel.onOpenAppSettings,
             ),
           ],

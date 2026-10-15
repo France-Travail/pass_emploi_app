@@ -11,6 +11,7 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/utils/platform.dart';
+import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_profil_tile.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
@@ -69,6 +70,7 @@ class _Body extends StatelessWidget {
           iconBackgroundColor: DsfrColors.greenEmeraude950,
           title: Strings.rateAppOnStoresLabel,
           semanticsLink: true,
+          semanticsLinkDestination: LinkDestination.appStore,
           onTap: () => _sendStoreReview(context, viewModel),
         ),
         const SizedBox(height: DsfrSpacings.s3w),

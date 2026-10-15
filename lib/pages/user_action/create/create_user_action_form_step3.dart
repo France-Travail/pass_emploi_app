@@ -240,19 +240,22 @@ class _DuplicateUserActionItemState extends State<_DuplicateUserActionItem> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                DsfrDateInput(
-                  label: Strings.datePickerTitle,
-                  controller: dateController,
-                  firstDate: DateTime(2020),
-                  lastDate: DateTime(2101),
-                  initialDate: widget.duplicatedUserAction.dateSource.isValid
-                      ? widget.duplicatedUserAction.dateSource.selectedDate
-                      : DateTime.now(),
-                  locale: const Locale('fr', 'FR'),
-                  composantState: showDateError
-                      ? DsfrComponentState.error(errorMessage: Strings.dateMandatory)
-                      : const DsfrComponentState.none(),
-                  onChanged: (date) => widget.onDateChanged(DateFromPicker(date)),
+                // A11y 9.9 : fusionne le message d'erreur avec le champ date pour qu'il soit annoncé avec lui.
+                MergeSemantics(
+                  child: DsfrDateInput(
+                    label: Strings.datePickerTitle,
+                    controller: dateController,
+                    firstDate: DateTime(2020),
+                    lastDate: DateTime(2101),
+                    initialDate: widget.duplicatedUserAction.dateSource.isValid
+                        ? widget.duplicatedUserAction.dateSource.selectedDate
+                        : DateTime.now(),
+                    locale: const Locale('fr', 'FR'),
+                    composantState: showDateError
+                        ? DsfrComponentState.error(errorMessage: Strings.dateMandatory)
+                        : const DsfrComponentState.none(),
+                    onChanged: (date) => widget.onDateChanged(DateFromPicker(date)),
+                  ),
                 ),
                 const SizedBox(height: DsfrSpacings.s1w),
                 DsfrDateSuggestions(

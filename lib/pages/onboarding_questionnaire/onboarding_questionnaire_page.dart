@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
@@ -23,6 +25,7 @@ import 'package:pass_emploi_app/repositories/communes_repository.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 
 class OnboardingQuestionnairePage extends StatefulWidget {
@@ -43,6 +46,7 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
   late final CommunesRepository _communesRepository;
   late final OnboardingQuestionnaireTracker _tracker;
   bool _formInitialized = false;
+  OnboardingQuestionnaireStep? _lastAnnouncedStep;
 
   @override
   void initState() {
@@ -80,6 +84,7 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
         }
       },
     );
+    _form.addListener(_announceStepIfChanged);
     _form.init();
   }
 
@@ -87,6 +92,24 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
   void dispose() {
     if (_formInitialized) _form.dispose();
     super.dispose();
+  }
+
+  // A11y 10.2 : sur Android, le focus TalkBack ne bouge pas tout seul (AutoFocusA11y sans effet) :
+  // l'ouverture et chaque vraie transition d'étape sont donc annoncées.
+  void _announceStepIfChanged() {
+    final step = _form.step;
+    if (_form.isLoading || step.isLoader || step == _lastAnnouncedStep) return;
+    _lastAnnouncedStep = step;
+    if (defaultTargetPlatform != TargetPlatform.android) return;
+    final annonce = Strings.onboardingQuestionnaireStepA11y(
+      step.questionnaireIndex,
+      OnboardingQuestionnaireStep.questionnaireCount,
+      _stepTitle(step),
+    );
+    // Laisse TalkBack finir de lire le nouveau focus (« Retour ») avant d'annoncer l'étape.
+    Future.delayed(AnimationDurations.slow, () {
+      if (mounted && _form.step == step) A11yUtils.announce(annonce);
+    });
   }
 
   @override
@@ -134,11 +157,95 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
     );
     if (widget.editMode) {
       Navigator.of(context).maybePop();
+      return;
+    }
+    final store = StoreProvider.of<AppState>(context);
+    final questionnaireState = store.state.onboardingQuestionnaireState;
+    // A11y 5.3 : rouvert depuis l'Accueil, le questionnaire se ferme sans déconnecter l'utilisateur.
+    if (questionnaireState is OnboardingQuestionnaireSuccessState && questionnaireState.resumedFromApp) {
+      store.dispatch(OnboardingQuestionnaireCloseResumedAction());
     } else {
-      StoreProvider.of<AppState>(context).dispatch(RequestLogoutAction(LogoutReason.userLogout));
+      _confirmLogout(store);
     }
   }
+
+  // Parcours obligatoire : revenir en arrière déconnecte, on demande donc confirmation avant.
+  Future<void> _confirmLogout(Store<AppState> store) async {
+    final confirmed = await showModalBottomSheet<bool>(
+      context: context,
+      backgroundColor: DsfrColorDecisions.backgroundTransparent(context),
+      barrierColor: DsfrColorDecisions.backgroundOverlayGrey(context),
+      barrierLabel: Strings.bottomSheetBarrierLabel,
+      elevation: 0,
+      shape: const RoundedRectangleBorder(),
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => Theme(
+        data: Theme.of(context).brightness == Brightness.dark ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        child: DsfrModal(
+          isDismissible: true,
+          closeLabel: Strings.close,
+          child: const _LogoutConfirmation(),
+        ),
+      ),
+    );
+    if (confirmed == true) store.dispatch(RequestLogoutAction(LogoutReason.userLogout));
+  }
 }
+
+class _LogoutConfirmation extends StatelessWidget {
+  const _LogoutConfirmation();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // A11y : le titre est un en-tête et reçoit le focus du lecteur d'écran à l'ouverture.
+        AutoFocusA11y(
+          child: Semantics(
+            header: true,
+            child: Text(
+              Strings.onboardingQuestionnaireLogoutTitle,
+              style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+            ),
+          ),
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        Text(
+          Strings.onboardingQuestionnaireLogoutContent,
+          style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+        ),
+        const SizedBox(height: DsfrSpacings.s4w),
+        DsfrButton(
+          label: Strings.onboardingQuestionnaireLogoutConfirm,
+          variant: DsfrButtonVariant.primary,
+          size: DsfrComponentSize.lg,
+          onPressed: () => Navigator.pop(context, true),
+        ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        DsfrButton(
+          label: Strings.onboardingQuestionnaireLogoutCancel,
+          variant: DsfrButtonVariant.secondary,
+          size: DsfrComponentSize.lg,
+          onPressed: () => Navigator.pop(context, false),
+        ),
+      ],
+    );
+  }
+}
+
+String _stepTitle(OnboardingQuestionnaireStep step) => switch (step) {
+  OnboardingQuestionnaireStep.prenom => Strings.onboardingQuestionnairePrenomTitle,
+  OnboardingQuestionnaireStep.dateNaissance => Strings.onboardingQuestionnaireBirthdateTitle,
+  OnboardingQuestionnaireStep.habitation => Strings.onboardingQuestionnaireHabitationTitle,
+  OnboardingQuestionnaireStep.situation => Strings.onboardingQuestionnaireSituationTitle,
+  OnboardingQuestionnaireStep.objectifs => Strings.onboardingQuestionnaireObjectifsTitle,
+  OnboardingQuestionnaireStep.domaine => Strings.onboardingQuestionnaireDomaineTitle,
+  OnboardingQuestionnaireStep.villeRecherche => Strings.onboardingQuestionnaireVilleTitle,
+  OnboardingQuestionnaireStep.freins => Strings.onboardingQuestionnaireFreinsTitle,
+  OnboardingQuestionnaireStep.loader => '',
+};
 
 class _QuestionnaireBody extends StatelessWidget {
   const _QuestionnaireBody({
@@ -160,6 +267,8 @@ class _QuestionnaireBody extends StatelessWidget {
           // « Continuer » pour aller sur le titre de la nouvelle étape.
           child: AutoFocusA11y(
             key: ValueKey(form.step),
+            // Sur Android, l'étape est annoncée par la page (voir _announceStepIfChanged).
+            enabled: defaultTargetPlatform != TargetPlatform.android,
             duration: AnimationDurations.slow,
             // A11y 10.2.3 : « Étape X sur Y, titre » restitué en un seul en-tête.
             child: Semantics(
@@ -217,18 +326,6 @@ class _QuestionnaireBody extends StatelessWidget {
       ],
     );
   }
-
-  String _stepTitle(OnboardingQuestionnaireStep step) => switch (step) {
-    OnboardingQuestionnaireStep.prenom => Strings.onboardingQuestionnairePrenomTitle,
-    OnboardingQuestionnaireStep.dateNaissance => Strings.onboardingQuestionnaireBirthdateTitle,
-    OnboardingQuestionnaireStep.habitation => Strings.onboardingQuestionnaireHabitationTitle,
-    OnboardingQuestionnaireStep.situation => Strings.onboardingQuestionnaireSituationTitle,
-    OnboardingQuestionnaireStep.objectifs => Strings.onboardingQuestionnaireObjectifsTitle,
-    OnboardingQuestionnaireStep.domaine => Strings.onboardingQuestionnaireDomaineTitle,
-    OnboardingQuestionnaireStep.villeRecherche => Strings.onboardingQuestionnaireVilleTitle,
-    OnboardingQuestionnaireStep.freins => Strings.onboardingQuestionnaireFreinsTitle,
-    OnboardingQuestionnaireStep.loader => '',
-  };
 }
 
 class _BottomActions extends StatelessWidget {

@@ -48,8 +48,9 @@ class PassEmploiMaterialApp extends MaterialApp {
            GlobalWidgetsLocalizations.delegate,
            GlobalCupertinoLocalizations.delegate,
          ],
+         // A11y 6.1 : contenu 100 % français, les libellés système (« Boîte de dialogue »…) le sont aussi
+         // quelle que soit la langue du téléphone.
          supportedLocales: [
-           Locale('en'),
            Locale('fr'),
          ],
        );

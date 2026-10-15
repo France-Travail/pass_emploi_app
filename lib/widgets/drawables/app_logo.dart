@@ -10,13 +10,12 @@ class AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ExcludeSemantics(
-      child: SvgPicture.asset(
-        Drawables.appLogo,
-        semanticsLabel: Strings.logoDescription,
-        width: width,
-        colorFilter: color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
-      ),
+    final logo = SvgPicture.asset(
+      Drawables.appLogo,
+      semanticsLabel: Strings.logoDescription,
+      width: width,
+      colorFilter: color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
     );
+    return ExcludeSemantics(child: logo);
   }
 }

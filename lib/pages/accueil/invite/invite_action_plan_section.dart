@@ -11,6 +11,7 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
+import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 import 'package:pass_emploi_app/widgets/onboarding/onboarding_showcase.dart';
 
 class InviteActionPlanSection extends StatelessWidget {
@@ -84,6 +85,8 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion>
   static const _initialVisible = 5;
   static const _animationCurve = Curves.ease;
 
+  bool get _isAndroid => defaultTargetPlatform == TargetPlatform.android;
+
   @override
   Widget build(BuildContext context) {
     final objective = widget.objective;
@@ -96,6 +99,8 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion>
       final willExpand = !_expanded;
       setState(() => _expanded = willExpand);
       if (willExpand) widget.onExpanded?.call();
+      // A11y 5.5 : TalkBack ignore `expanded`, le nouvel état est donc annoncé explicitement.
+      if (_isAndroid) A11yUtils.announce(willExpand ? Strings.a11yExpanded : Strings.a11yCollapsed);
       ActionPlanTrackingEvent(
         willExpand
             ? AnalyticsEventNames.actionPlanObjectiveExpandedAction
@@ -106,10 +111,12 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion>
     }
 
     // A11y : un seul nœud bouton, avec l'état déplié/replié et la progression explicitée.
+    // A11y 5.5 : sur Android, `expanded` n'est pas annoncé par TalkBack, l'état est porté par `value`.
     final header = Semantics(
       container: true,
       button: true,
-      expanded: _expanded,
+      expanded: _isAndroid ? null : _expanded,
+      value: _isAndroid ? (_expanded ? Strings.a11yExpanded : Strings.a11yCollapsed) : null,
       label:
           '${objective.title}, ${Strings.inviteAccueilProgressA11y(objective.doneCount, objective.totalCount)}',
       onTap: toggle,
@@ -340,12 +347,10 @@ class InviteActionPlanActionTile extends StatelessWidget {
                         ),
                       ),
                       if (_hasLink)
-                        Semantics(
-                          container: true,
-                          link: true,
+                        // A11y 5.1 : rôle et indication de site externe audibles sur Android.
+                        ExternalLinkSemantics(
                           label: action.serviceName ?? action.label,
                           onTap: _openLink,
-                          excludeSemantics: true,
                           child: _serviceName(context),
                         )
                       else if (action.serviceName != null)

@@ -9,6 +9,7 @@ import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
+import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
@@ -124,8 +125,10 @@ class _InformationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Focus(
-      child: Semantics(
-        link: true,
+      // A11y 5.1 : le libellé est celui du contenu de la carte.
+      child: ExternalLinkSemantics(
+        excludeSemantics: false,
+        onTap: () => _launchExternalRedirect(),
         child: GestureDetector(
           onTap: () => _launchExternalRedirect(),
           child: CardContainer(
@@ -165,8 +168,10 @@ class _VerbatimCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Focus(
-      child: Semantics(
-        link: true,
+      // A11y 5.1 : le libellé est celui du contenu de la carte.
+      child: ExternalLinkSemantics(
+        excludeSemantics: false,
+        onTap: () => _launchExternalRedirect(),
         child: GestureDetector(
           onTap: () => _launchExternalRedirect(),
           child: CardContainer(

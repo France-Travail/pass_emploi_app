@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/presentation/comptage_des_heures_card_view_model
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 
 class ComptageDesHeuresCard extends StatelessWidget {
   const ComptageDesHeuresCard({super.key});
@@ -83,6 +84,7 @@ class _Content extends StatelessWidget {
               child: _HourStat(
                 hours: '${viewModel.heuresDeclarees}h',
                 label: Strings.declaredHours,
+                semanticsLabel: Strings.a11yHeuresRealisees(viewModel.heuresDeclarees),
                 type: DsfrBadgeType.information,
               ),
             ),
@@ -91,6 +93,7 @@ class _Content extends StatelessWidget {
               child: _HourStat(
                 hours: '${viewModel.heuresValidees}h',
                 label: Strings.realizedHours,
+                semanticsLabel: Strings.a11yHeuresValidees(viewModel.heuresValidees),
                 type: DsfrBadgeType.success,
               ),
             ),
@@ -105,30 +108,52 @@ class _HourStat extends StatelessWidget {
   const _HourStat({
     required this.hours,
     required this.label,
+    required this.semanticsLabel,
     required this.type,
   });
 
   final String hours;
   final String label;
+  final String semanticsLabel;
   final DsfrBadgeType type;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        DsfrBadge(
-          label: hours,
-          type: type,
-          size: DsfrComponentSize.md,
-        ),
-        const SizedBox(width: DsfrSpacings.s3v),
-        Flexible(
-          child: Text(
-            label,
-            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
-          ),
-        ),
-      ],
+    final badge = DsfrBadge(
+      label: hours,
+      type: type,
+      size: DsfrComponentSize.md,
+    );
+    final text = Text(
+      label,
+      style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
+    );
+
+    // A11y 8.2 : texte agrandi, le libellé passe sous le badge pour que les mots ne soient pas coupés.
+    final content = A11yUtils.withTextScale(context)
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              badge,
+              const SizedBox(height: DsfrSpacings.s1v),
+              // Le mot est réduit si besoin plutôt que coupé.
+              FittedBox(fit: BoxFit.scaleDown, child: text),
+            ],
+          )
+        : Row(
+            children: [
+              badge,
+              const SizedBox(width: DsfrSpacings.s3v),
+              Flexible(child: text),
+            ],
+          );
+
+    // A11y : une seule annonce par statistique (ex. « 20 heures réalisées »).
+    return Semantics(
+      container: true,
+      label: semanticsLabel,
+      excludeSemantics: true,
+      child: content,
     );
   }
 }

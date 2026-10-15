@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 
 const _pictoColumnWidth = 82.0;
 const _leadingSize = 40.0;
@@ -16,6 +17,7 @@ class DsfrTuileCard extends StatelessWidget {
     this.onDismiss,
     this.dismissSemanticLabel,
     this.semanticsLink = false,
+    this.semanticsLinkDestination = LinkDestination.website,
     this.semanticsLabel,
   });
 
@@ -26,6 +28,7 @@ class DsfrTuileCard extends StatelessWidget {
   final VoidCallback? onDismiss;
   final String? dismissSemanticLabel;
   final bool semanticsLink;
+  final LinkDestination semanticsLinkDestination;
   final String? semanticsLabel;
 
   bool get _isTappable => onTap != null;
@@ -48,55 +51,75 @@ class DsfrTuileCard extends StatelessWidget {
       side: BorderSide(color: DsfrColorDecisions.borderDefaultGrey(context)),
     );
 
-    return Semantics(
-      container: true,
-      button: _isTappable && !_isLink,
-      link: _isLink,
-      label: _resolvedSemanticsLabel,
-      onTap: onTap,
-      child: ExcludeSemantics(
-        child: Material(
-          color: DsfrColorDecisions.backgroundDefaultGrey(context),
-          shape: shape,
-          clipBehavior: Clip.antiAlias,
-          child: IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _PictoColumn(child: leading),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(DsfrSpacings.s2w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        if (onDismiss != null) ...[
-                          DsfrButton(
-                            label: Strings.close,
-                            icon: DsfrIcons.systemCloseLine,
-                            iconLocation: DsfrButtonIconLocation.right,
-                            iconSemanticLabel: dismissSemanticLabel,
-                            variant: DsfrButtonVariant.tertiaryWithoutBorder,
-                            size: DsfrComponentSize.sm,
-                            onPressed: onDismiss,
-                          ),
-                          const SizedBox(height: DsfrSpacings.s3v),
-                        ],
-                        _Content(
-                          title: title,
-                          description: description,
-                          onTap: onTap,
-                          shape: shape,
+    final card = Material(
+      color: DsfrColorDecisions.backgroundDefaultGrey(context),
+      shape: shape,
+      clipBehavior: Clip.antiAlias,
+      child: IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ExcludeSemantics(child: _PictoColumn(child: leading)),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(DsfrSpacings.s2w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    if (onDismiss != null) ...[
+                      // A11y 5.1 : le bouton de fermeture reste un élément distinct, atteignable au lecteur
+                      // d'écran, et son nom précise ce qu'il ferme.
+                      Semantics(
+                        container: true,
+                        button: true,
+                        label: dismissSemanticLabel ?? Strings.close,
+                        onTap: onDismiss,
+                        excludeSemantics: true,
+                        child: DsfrButton(
+                          label: Strings.close,
+                          icon: DsfrIcons.systemCloseLine,
+                          iconLocation: DsfrButtonIconLocation.right,
+                          variant: DsfrButtonVariant.tertiaryWithoutBorder,
+                          size: DsfrComponentSize.sm,
+                          onPressed: onDismiss,
                         ),
-                      ],
+                      ),
+                      const SizedBox(height: DsfrSpacings.s3v),
+                    ],
+                    ExcludeSemantics(
+                      child: _Content(
+                        title: title,
+                        description: description,
+                        onTap: onTap,
+                        shape: shape,
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
+    );
+
+    // A11y 5.1 : un lien est exposé via ExternalLinkSemantics (rôle bouton + indication sur Android).
+    if (_isLink) {
+      return ExternalLinkSemantics(
+        label: _resolvedSemanticsLabel,
+        onTap: onTap,
+        destination: semanticsLinkDestination,
+        excludeSemantics: false,
+        child: card,
+      );
+    }
+
+    return Semantics(
+      container: true,
+      button: _isTappable,
+      label: _resolvedSemanticsLabel,
+      onTap: onTap,
+      child: card,
     );
   }
 }

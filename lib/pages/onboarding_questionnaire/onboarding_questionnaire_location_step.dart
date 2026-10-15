@@ -148,22 +148,46 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
         ],
         if (!widget.isHabitation) ...[
           const SizedBox(height: Margins.spacing_l),
-          DsfrSlider(
+          // A11y : le Slider du DSFR restitue sa valeur en pourcentage ; on expose un seul composant
+          // ajustable avec libellé, valeur en kilomètres et bornes min/max.
+          Semantics(
+            container: true,
+            slider: true,
             label: Strings.onboardingQuestionnaireRayonLabel,
-            description: Strings.onboardingQuestionnaireRayonDescription(form.draftRayonKm),
-            value: form.draftRayonKm.toDouble(),
-            min: 10,
-            max: 100,
-            divisions: 9,
-            size: DsfrComponentSize.md,
-            valueLabelBuilder: (value) => Strings.onboardingQuestionnaireRayonValue(value.round()),
-            showMinMaxLabels: true,
-            onChanged: form.updateRayon,
+            value: Strings.searchRadiusA11yValue(form.draftRayonKm),
+            increasedValue: Strings.searchRadiusA11yValue(_nextRayon(form.draftRayonKm, 1)),
+            decreasedValue: Strings.searchRadiusA11yValue(_nextRayon(form.draftRayonKm, -1)),
+            hint: Strings.searchRadiusA11yHint(_rayonMin, _rayonMax),
+            onIncrease: form.draftRayonKm < _rayonMax
+                ? () => form.updateRayon(_nextRayon(form.draftRayonKm, 1).toDouble())
+                : null,
+            onDecrease: form.draftRayonKm > _rayonMin
+                ? () => form.updateRayon(_nextRayon(form.draftRayonKm, -1).toDouble())
+                : null,
+            excludeSemantics: true,
+            child: DsfrSlider(
+              label: Strings.onboardingQuestionnaireRayonLabel,
+              description: Strings.onboardingQuestionnaireRayonDescription(form.draftRayonKm),
+              value: form.draftRayonKm.toDouble(),
+              min: _rayonMin.toDouble(),
+              max: _rayonMax.toDouble(),
+              divisions: 9,
+              size: DsfrComponentSize.md,
+              valueLabelBuilder: (value) => Strings.onboardingQuestionnaireRayonValue(value.round()),
+              showMinMaxLabels: true,
+              onChanged: form.updateRayon,
+            ),
           ),
         ],
       ],
     );
   }
+
+  static const int _rayonMin = 10;
+  static const int _rayonMax = 100;
+  static const int _rayonStep = 10;
+
+  int _nextRayon(int current, int direction) => (current + direction * _rayonStep).clamp(_rayonMin, _rayonMax);
 
   void _clearQuery() {
     _debounce?.cancel();

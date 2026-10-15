@@ -74,6 +74,8 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
             offreId: idOffre,
             withBorder: false,
             from: OffrePage.serviceCiviqueDetails,
+            // A11y 5.1 : le nom de l'offre complète l'intitulé du bouton.
+            a11yLabel: title ?? ' ',
             onFavoriRemoved: popPageWhenFavoriIsRemoved ? () => Navigator.pop(context) : null,
             icon: DsfrIcons.systemStarLine,
             iconActive: DsfrIcons.systemStarFill,

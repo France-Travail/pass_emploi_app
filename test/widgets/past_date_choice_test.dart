@@ -48,4 +48,28 @@ void main() {
 
     expect(find.text('X'), findsOneWidget);
   });
+
+  testWidgets('A11y 5.5 : la suggestion choisie est restituée comme sélectionnée', (tester) async {
+    final semantics = tester.ensureSemantics();
+    await pump(tester);
+    final hier = find.bySemanticsLabel(RegExp('^${Strings.dateSuggestionHier} \\('));
+
+    expect(tester.getSemantics(hier), containsSemantics(isButton: true, hasSelectedState: true, isSelected: false));
+
+    await tester.tap(find.text(Strings.dateSuggestionHier));
+    await tester.pump();
+
+    expect(tester.getSemantics(hier), containsSemantics(isButton: true, hasSelectedState: true, isSelected: true));
+    semantics.dispose();
+  });
+
+  testWidgets('A11y 9.2 : le champ « Autre date » porte son libellé et son aide', (tester) async {
+    final semantics = tester.ensureSemantics();
+    await pump(tester, aide: Strings.cannotFinishActionInFuture);
+
+    final champ = tester.getSemantics(find.byType(TextField));
+    expect(champ.label, Strings.otherDate);
+    expect(champ.hint, Strings.cannotFinishActionInFuture);
+    semantics.dispose();
+  });
 }

@@ -192,8 +192,25 @@ class _Content extends StatelessWidget {
 
   const _Content(this.viewModel);
 
+  /// Hauteur minimale, à taille de texte normale, pour garder la carte d'objectif fixée en haut de l'agenda.
+  static const double _minHeightToPinComptage = 400;
+
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // A11y 8.2 / 11.9 : en paysage ou avec un texte agrandi, la carte d'objectif fixée en haut ne laisse
+        // plus de place à l'agenda. Elle défile alors avec la liste.
+        final pinComptage = constraints.maxHeight >= _minHeightToPinComptage * A11yUtils.textScaleFactor(context);
+        return _column(
+          withPinnedComptage: viewModel.withComptageDesHeures && pinComptage,
+          withComptageInList: viewModel.withComptageDesHeures && !pinComptage,
+        );
+      },
+    );
+  }
+
+  Widget _column({required bool withPinnedComptage, required bool withComptageInList}) {
     return Column(
       children: [
         if (viewModel.withWarningOnWrongPoleEmploiDataRetrieval) ...[
@@ -226,8 +243,8 @@ class _Content extends StatelessWidget {
           const SizedBox(height: DsfrSpacings.s1w),
           _UserActionsPendingCard(viewModel.pendingActionCreations),
         ],
-        if (viewModel.withComptageDesHeures) const _ScrollAwareComptageDesHeures(),
-        Expanded(child: _TodayCenteredMonSuiviList(viewModel)),
+        if (withPinnedComptage) const _ScrollAwareComptageDesHeures(),
+        Expanded(child: _TodayCenteredMonSuiviList(viewModel, withComptageDesHeures: withComptageInList)),
       ],
     );
   }
@@ -370,10 +387,11 @@ class _UserActionsPendingCard extends StatelessWidget {
 
 class _TodayCenteredMonSuiviList extends StatelessWidget {
   final MonSuiviViewModel viewModel;
+  final bool withComptageDesHeures;
   final List<MonSuiviItem> pastItems;
   final List<MonSuiviItem> presentAndFutureItems;
 
-  _TodayCenteredMonSuiviList(this.viewModel)
+  _TodayCenteredMonSuiviList(this.viewModel, {required this.withComptageDesHeures})
     : pastItems = viewModel.items
           .sublist(0, viewModel.indexOfTodayItem)
           .reversed
@@ -427,8 +445,17 @@ class _TodayCenteredMonSuiviList extends StatelessWidget {
               return pastItems[index].toWidget();
             },
           ),
+          // La carte d'objectif, quand elle n'est pas fixée, ouvre la liste au niveau d'aujourd'hui.
+          if (withComptageDesHeures)
+            SliverToBoxAdapter(
+              key: _StateProvider.maybeOf(context)?.centerKey,
+              child: const Padding(
+                padding: EdgeInsets.only(top: DsfrSpacings.s1w),
+                child: ComptageDesHeuresCard(),
+              ),
+            ),
           SliverList.separated(
-            key: _StateProvider.maybeOf(context)?.centerKey,
+            key: withComptageDesHeures ? null : _StateProvider.maybeOf(context)?.centerKey,
             separatorBuilder: (context, index) =>
                 const SizedBox(height: DsfrSpacings.s3v),
             itemCount: presentAndFutureItems.length + 1,
@@ -739,15 +766,17 @@ class _Day extends StatelessWidget {
   Widget build(BuildContext context) {
     final textColor = DsfrColorDecisions.textTitleGrey(context);
 
-    // A11y 8.2 : la colonne s'élargit avec la taille de texte au lieu de réduire le nom du jour.
+    final nameStyle = DsfrTextStyle.bodyXs(color: textColor);
+
+    // A11y 8.2 : la colonne s'élargit avec la taille de texte au lieu de couper le nom du jour.
     return SizedBox(
-      width: MediaQuery.textScalerOf(context).scale(DsfrSpacings.s8w),
+      width: DsfrSpacings.s8w * A11yUtils.textScaleFactor(context, fontSize: nameStyle.fontSize!),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             day.name,
-            style: DsfrTextStyle.bodyXs(color: textColor),
+            style: nameStyle,
             textAlign: TextAlign.center,
           ),
           Text(

@@ -203,10 +203,13 @@ class _FirstScreenCopy extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          Strings.firstLaunchOnboardingTagline,
-          style: DsfrTextStyle.headline5(
-            color: DsfrColorDecisions.textDefaultGrey(context),
+        Semantics(
+          header: true,
+          child: Text(
+            Strings.firstLaunchOnboardingTagline,
+            style: DsfrTextStyle.headline5(
+              color: DsfrColorDecisions.textDefaultGrey(context),
+            ),
           ),
         ),
         const SizedBox(height: Margins.spacing_base),

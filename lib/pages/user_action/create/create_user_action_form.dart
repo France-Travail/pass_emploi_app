@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/pages/user_action/create/create_user_action_form
 import 'package:pass_emploi_app/presentation/user_action/creation_form/create_user_action_form_view_model.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 
 class CreateUserActionForm extends StatefulWidget {
@@ -55,6 +56,13 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> {
     _viewModel.viewChangedBackward();
   }
 
+  void _onGoForward() {
+    final wasLastStep = _viewModel.displayState == CreateUserActionDisplayState.step3;
+    _viewModel.viewChangedForward();
+    // A11y 5.4 / 9.9 : l'erreur affichée quand on valide un formulaire incomplet est annoncée.
+    if (wasLastStep && !_viewModel.isSubmitted) A11yUtils.announce(Strings.fillAllFields);
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -71,22 +79,17 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> {
           // A11y 8.2 : la hauteur suit la taille de texte choisie dans les réglages.
           height: MediaQuery.textScalerOf(context).scale(76),
         ),
-        body: Stack(
-          children: [
-            _CreateUserActionForm(_viewModel),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Visibility(
-                visible: _viewModel.shouldDisplayNavigationButtons && MediaQuery.viewInsetsOf(context).bottom == 0,
-                child: _NavButtons(
-                  displayState: _viewModel.displayState,
-                  onGoBackPressed: _onBack,
-                  onGoForwardPressed: _viewModel.canGoForward ? () => _viewModel.viewChangedForward() : null,
-                ),
-              ),
-            ),
-          ],
-        ),
+        body: _CreateUserActionForm(_viewModel),
+        // A11y 8.5 : les boutons ne recouvrent plus le formulaire. Le corps s'arrête au-dessus d'eux,
+        // donc le focus lecteur d'écran / clavier ne peut plus être masqué par les boutons.
+        // Masqués quand le clavier est affiché (resizeToAvoidBottomInset: false, comportement inchangé).
+        bottomNavigationBar: _viewModel.shouldDisplayNavigationButtons && MediaQuery.viewInsetsOf(context).bottom == 0
+            ? _NavButtons(
+                displayState: _viewModel.displayState,
+                onGoBackPressed: _onBack,
+                onGoForwardPressed: _viewModel.canGoForward ? _onGoForward : null,
+              )
+            : null,
       ),
     );
   }

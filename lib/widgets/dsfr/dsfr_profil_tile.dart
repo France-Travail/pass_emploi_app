@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_profil_card.dart';
 
 class DsfrProfilTile extends StatelessWidget {
@@ -11,6 +12,7 @@ class DsfrProfilTile extends StatelessWidget {
     this.onTap,
     this.showChevron,
     this.semanticsLink = false,
+    this.semanticsLinkDestination = LinkDestination.website,
     this.semanticsLabel,
   });
 
@@ -21,6 +23,7 @@ class DsfrProfilTile extends StatelessWidget {
   final VoidCallback? onTap;
   final bool? showChevron;
   final bool semanticsLink;
+  final LinkDestination semanticsLinkDestination;
   final String? semanticsLabel;
 
   @override
@@ -32,6 +35,7 @@ class DsfrProfilTile extends StatelessWidget {
       onTap: onTap,
       showChevron: showChevron,
       semanticsLink: semanticsLink,
+      semanticsLinkDestination: semanticsLinkDestination,
       semanticsLabel: semanticsLabel,
     );
   }
