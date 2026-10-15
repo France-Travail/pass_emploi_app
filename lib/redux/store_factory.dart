@@ -100,6 +100,7 @@ import 'package:pass_emploi_app/features/communications/communications_middlewar
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_middleware.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_middleware.dart';
 import 'package:pass_emploi_app/features/fonctionnalites/fonctionnalites_middleware.dart';
+import 'package:pass_emploi_app/features/reprise_compte_invite/reprise_compte_invite_middleware.dart';
 /*AUTOGENERATE-REDUX-STOREFACTORY-IMPORT-MIDDLEWARE*/
 import 'package:pass_emploi_app/models/immersion.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
@@ -188,6 +189,7 @@ import 'package:pass_emploi_app/repositories/communications_repository.dart';
 import 'package:pass_emploi_app/repositories/onboarding_questionnaire_repository.dart';
 import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
 import 'package:pass_emploi_app/repositories/fonctionnalites_repository.dart';
+import 'package:pass_emploi_app/repositories/reprise_compte_invite_repository.dart';
 /*AUTOGENERATE-REDUX-STOREFACTORY-IMPORT-REPOSITORY*/
 import 'package:redux/redux.dart' as redux;
 
@@ -279,6 +281,7 @@ class StoreFactory {
   final OnboardingQuestionnaireRepository onboardingQuestionnaireRepository;
   final ActionPlanRepository actionPlanRepository;
   final FonctionnalitesRepository fonctionnalitesRepository;
+  final RepriseCompteInviteRepository repriseCompteInviteRepository;
   /*AUTOGENERATE-REDUX-STOREFACTORY-PROPERTY-REPOSITORY*/
 
   StoreFactory(
@@ -369,6 +372,7 @@ class StoreFactory {
     this.onboardingQuestionnaireRepository,
     this.actionPlanRepository,
     this.fonctionnalitesRepository,
+    this.repriseCompteInviteRepository,
     /*AUTOGENERATE-REDUX-STOREFACTORY-CONSTRUCTOR-REPOSITORY*/
   );
 
@@ -482,6 +486,13 @@ class StoreFactory {
         OnboardingQuestionnaireMiddleware(onboardingQuestionnaireRepository, actionPlanRepository).call,
         ActionPlanMiddleware(actionPlanRepository).call,
         FonctionnalitesMiddleware(fonctionnalitesRepository).call,
+        RepriseCompteInviteMiddleware(
+          repriseCompteInviteRepository,
+          authenticator,
+          actionPlanRepository,
+          onboardingQuestionnaireRepository,
+          tutorialRepository,
+        ).call,
         /*AUTOGENERATE-REDUX-STOREFACTORY-ADD-MIDDLEWARE*/
         ..._debugMiddlewares(),
         ..._stagingMiddlewares(initialState.configurationState.getFlavor()),

@@ -118,6 +118,28 @@ void main() {
     expect(viewModel.displayLogoutAndSuppressionCompte, isFalse);
   });
 
+  test("create when user is invite should display login", () {
+    // Given
+    final store = givenState().loggedInUser(loginMode: LoginMode.INVITE).store();
+
+    // When
+    final viewModel = ProfilPageViewModel.create(store);
+
+    // Then
+    expect(viewModel.displayLogin, isTrue);
+  });
+
+  test("create when user is not invite should not display login", () {
+    // Given
+    final store = givenState().loggedIn().store();
+
+    // When
+    final viewModel = ProfilPageViewModel.create(store);
+
+    // Then
+    expect(viewModel.displayLogin, isFalse);
+  });
+
   test("create when user is not invite should display mon compte and partage activite", () {
     // Given
     final store = givenState().loggedIn().store();

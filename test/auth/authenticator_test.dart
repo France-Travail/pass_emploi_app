@@ -9,6 +9,7 @@ import 'package:pass_emploi_app/auth/authenticator.dart';
 import 'package:pass_emploi_app/crashlytics/crashlytics.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/models/brand.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/repositories/auth/logout_repository.dart';
 import 'package:pass_emploi_app/repositories/installation_id_repository.dart';
 
@@ -74,6 +75,33 @@ void main() {
 
       // Then
       expect(result, isA<SuccessAuthenticatorResponse>());
+      expect(await secureStorage.read(key: "idToken"), authTokenResponse().idToken);
+      expect(await secureStorage.read(key: "accessToken"), authTokenResponse().accessToken);
+      expect(await secureStorage.read(key: "refreshToken"), authTokenResponse().refreshToken);
+    });
+
+    test('loginWithoutSaving returns the tokens without replacing the current session', () async {
+      // Given
+      await secureStorage.write(key: "refreshToken", value: "refreshTokenInvite");
+      when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async => authTokenResponse());
+
+      // When
+      final result = await authenticator.loginWithoutSaving(AuthenticationMode.GENERIC);
+
+      // Then
+      expect((result as SuccessAuthenticatorResponse).tokens, authTokenResponse());
+      expect(await secureStorage.read(key: "refreshToken"), "refreshTokenInvite");
+      expect(await secureStorage.read(key: "accessToken"), isNull);
+    });
+
+    test('saveTokens replaces the current session', () async {
+      // Given
+      await secureStorage.write(key: "refreshToken", value: "refreshTokenInvite");
+
+      // When
+      await authenticator.saveTokens(authTokenResponse());
+
+      // Then
       expect(await secureStorage.read(key: "idToken"), authTokenResponse().idToken);
       expect(await secureStorage.read(key: "accessToken"), authTokenResponse().accessToken);
       expect(await secureStorage.read(key: "refreshToken"), authTokenResponse().refreshToken);
@@ -237,9 +265,9 @@ void main() {
 
       // Then
       verify(() => crashlytics.setCustomKey('interrupted_login_mode', 'SIMILO')).called(1);
-      final elapsed = verify(() => crashlytics.setCustomKey('interrupted_login_elapsed_seconds', captureAny()))
-          .captured
-          .single as String;
+      final elapsed =
+          verify(() => crashlytics.setCustomKey('interrupted_login_elapsed_seconds', captureAny())).captured.single
+              as String;
       expect(int.parse(elapsed), inInclusiveRange(90, 92));
       verify(() => crashlytics.recordNonNetworkException(any(), any())).called(1);
       expect(await secureStorage.read(key: 'loginInProgress'), isNull);
@@ -342,7 +370,7 @@ void main() {
       await authenticator.login(AuthenticationMode.GENERIC);
 
       // When
-      final result = await authenticator.performRefreshToken();
+      final result = await authenticator.refreshStoredSession();
 
       // Then
       expect(result, RefreshTokenStatus.SUCCESSFUL);
@@ -359,7 +387,7 @@ void main() {
       await authenticator.login(AuthenticationMode.GENERIC);
 
       // When
-      final result = await authenticator.performRefreshToken();
+      final result = await authenticator.refreshStoredSession();
 
       // Then
       expect(result, RefreshTokenStatus.NETWORK_UNREACHABLE);
@@ -375,7 +403,7 @@ void main() {
         await authenticator.login(AuthenticationMode.GENERIC);
 
         // When
-        final result = await authenticator.performRefreshToken();
+        final result = await authenticator.refreshStoredSession();
 
         // Then
         expect(result, RefreshTokenStatus.EXPIRED_REFRESH_TOKEN);
@@ -399,7 +427,7 @@ void main() {
       });
 
       // When
-      final result = await authenticator.performRefreshToken();
+      final result = await authenticator.refreshStoredSession();
 
       // Then
       expect(result, RefreshTokenStatus.SUCCESSFUL);
@@ -418,7 +446,7 @@ void main() {
         await authenticator.login(AuthenticationMode.GENERIC);
 
         // When
-        final result = await authenticator.performRefreshToken();
+        final result = await authenticator.refreshStoredSession();
 
         // Then
         expect(result, RefreshTokenStatus.GENERIC_ERROR);
@@ -429,11 +457,21 @@ void main() {
       // Given user not logged in
 
       // When
-      final result = await authenticator.performRefreshToken();
+      final result = await authenticator.refreshStoredSession();
 
       // Then
       expect(result, RefreshTokenStatus.USER_NOT_LOGGED_IN);
       expect(await authenticator.isLoggedIn(), false);
+    });
+  });
+
+  group('LoginMode.toAuthenticationMode', () {
+    test('maps each login mode to its authentication mode', () {
+      expect(LoginMode.MILO.toAuthenticationMode(), AuthenticationMode.SIMILO);
+      expect(LoginMode.POLE_EMPLOI.toAuthenticationMode(), AuthenticationMode.POLE_EMPLOI);
+      expect(LoginMode.INVITE.toAuthenticationMode(), AuthenticationMode.INVITE);
+      expect(LoginMode.DEMO_MILO.toAuthenticationMode(), AuthenticationMode.DEMO);
+      expect(LoginMode.DEMO_PE.toAuthenticationMode(), AuthenticationMode.DEMO);
     });
   });
 
@@ -580,12 +618,12 @@ AuthTokenRequest _tokenRequest({
   );
 }
 
-AuthRefreshTokenRequest _refreshTokenRequest() {
+AuthRefreshTokenRequest _refreshTokenRequest({String refreshToken = 'refreshToken'}) {
   return AuthRefreshTokenRequest(
     configuration().authClientId,
     configuration().authLoginRedirectUrl,
     configuration().authIssuer,
-    'refreshToken',
+    refreshToken,
     configuration().authClientSecret,
   );
 }

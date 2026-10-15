@@ -355,6 +355,7 @@ class Strings {
   static String invitePrenomUpdated(String prenom) => "Enregistré. Bonjour $prenom !";
   static String invitePrenomNextSteps = "La suite du parcours invité reste à développer.";
   static String logoutAction = "Me déconnecter";
+  static String inviteLoginAction = "Me connecter";
 
   // Onboarding invité
   static String onboardingQuestionnaireBack = "Retour";

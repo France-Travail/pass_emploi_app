@@ -13,6 +13,7 @@ import 'package:pass_emploi_app/features/developer_option/activation/developer_o
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/pages/cv/cv_list_page.dart';
+import 'package:pass_emploi_app/pages/login_page.dart';
 import 'package:pass_emploi_app/pages/notification_preferences_page.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_page.dart';
@@ -161,6 +162,17 @@ class _Scaffold extends StatelessWidget {
                     variant: DsfrButtonVariant.secondary,
                     size: DsfrComponentSize.lg,
                     onPressed: () => context.dispatch(RequestLogoutAction(LogoutReason.userLogout)),
+                  ),
+                  const SizedBox(height: DsfrSpacings.s4w),
+                ],
+                if (viewModel.displayLogin) ...[
+                  const SizedBox(height: DsfrSpacings.s4w),
+                  DsfrButton(
+                    label: Strings.inviteLoginAction,
+                    icon: DsfrIcons.userUserLine,
+                    variant: DsfrButtonVariant.primary,
+                    size: DsfrComponentSize.lg,
+                    onPressed: () => Navigator.push(context, LoginPage.repriseCompteInviteMaterialPageRoute()),
                   ),
                   const SizedBox(height: DsfrSpacings.s4w),
                 ],

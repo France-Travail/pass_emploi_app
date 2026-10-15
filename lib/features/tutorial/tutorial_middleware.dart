@@ -68,13 +68,15 @@ class TutorialMiddleware extends MiddlewareClass<AppState> {
   Future<void> _showGenericTutorial(Store<AppState> store) async {
     final loginState = store.state.loginState;
     if (loginState is! LoginSuccessState ||
-        !await _repository.shouldShowTutorial())
+        !await _repository.shouldShowTutorial()) {
       return;
+    }
     final loginMode = loginState.user.loginMode;
     List<TutorialPage> pages = [];
     if (_requestMiloTutorial(loginMode)) pages = _repository.getMiloTutorial();
-    if (_requestPoleEmploiTutorial(loginMode))
+    if (_requestPoleEmploiTutorial(loginMode)) {
       pages = _repository.getPoleEmploiTutorial();
+    }
     if (pages.isNotEmpty) store.dispatch(TutorialSuccessAction(pages));
   }
 

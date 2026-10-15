@@ -64,7 +64,7 @@ class LoginMiddleware extends MiddlewareClass<AppState> {
     } else {
       _matomoTracker.setOptOut(optOut: false);
       _modeDemoRepository.setModeDemo(false);
-      final authenticatorResponse = await _authenticator.login(_getAuthenticationMode(mode));
+      final authenticatorResponse = await _authenticator.login(mode.toAuthenticationMode());
       if (authenticatorResponse is SuccessAuthenticatorResponse) {
         _dispatchLoginSuccess(store);
       } else if (authenticatorResponse is FailureAuthenticatorResponse) {
@@ -109,15 +109,5 @@ class LoginMiddleware extends MiddlewareClass<AppState> {
     store.dispatch(UnsubscribeFromConnectivityUpdatesAction());
     store.dispatch(BootstrapAction());
     _firebaseAuthWrapper.signOut();
-  }
-
-  AuthenticationMode _getAuthenticationMode(LoginMode mode) {
-    return switch (mode) {
-      LoginMode.MILO => AuthenticationMode.SIMILO,
-      LoginMode.POLE_EMPLOI => AuthenticationMode.POLE_EMPLOI,
-      LoginMode.INVITE => AuthenticationMode.INVITE,
-      LoginMode.DEMO_MILO => AuthenticationMode.DEMO,
-      LoginMode.DEMO_PE => AuthenticationMode.DEMO,
-    };
   }
 }

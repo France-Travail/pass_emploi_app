@@ -13,6 +13,7 @@ class ActionPlanAction extends Equatable {
   final bool done;
   final bool declarationRequise;
   final String? categorie;
+  final String? idSolution;
 
   const ActionPlanAction({
     required this.id,
@@ -25,6 +26,7 @@ class ActionPlanAction extends Equatable {
     this.done = false,
     this.declarationRequise = false,
     this.categorie,
+    this.idSolution,
   });
 
   ActionPlanAction copyWith({bool? done}) {
@@ -39,6 +41,7 @@ class ActionPlanAction extends Equatable {
       done: done ?? this.done,
       declarationRequise: declarationRequise,
       categorie: categorie,
+      idSolution: idSolution,
     );
   }
 
@@ -57,6 +60,7 @@ class ActionPlanAction extends Equatable {
       done: json['done'] as bool? ?? false,
       declarationRequise: json['declarationRequise'] as bool? ?? false,
       categorie: json['categorie'] as String?,
+      idSolution: json['idSolution'] as String?,
     );
   }
 
@@ -77,6 +81,7 @@ class ActionPlanAction extends Equatable {
       done: json['terminee'] as bool? ?? false,
       declarationRequise: json['declarationRequise'] as bool? ?? false,
       categorie: json['categorie'] as String?,
+      idSolution: json['idSolution'] as String?,
     );
   }
 
@@ -91,6 +96,7 @@ class ActionPlanAction extends Equatable {
     'done': done,
     'declarationRequise': declarationRequise,
     if (categorie != null) 'categorie': categorie,
+    if (idSolution != null) 'idSolution': idSolution,
   };
 
   @override
@@ -105,6 +111,7 @@ class ActionPlanAction extends Equatable {
     done,
     declarationRequise,
     categorie,
+    idSolution,
   ];
 }
 
@@ -391,6 +398,34 @@ class ActionPlan extends Equatable {
     if (generator != null) 'generator': generator,
     if (model != null) 'model': model,
   };
+
+  Map<String, dynamic>? toApiReprise() {
+    final nonEmptyObjectives = objectives
+        .where((objective) => objective.actions.isNotEmpty)
+        .toList();
+
+    if (nonEmptyObjectives.isEmpty) return null;
+
+    for (final objective in nonEmptyObjectives) {
+      for (final action in objective.actions) {
+        if (action.idSolution == null) return null;
+      }
+    }
+
+    return {
+      'id': id,
+      'objectives': nonEmptyObjectives.map((objective) => {
+        'id': objective.id,
+        'titre': objective.title,
+        'theme': objective.theme,
+        'actions': objective.actions.map((action) => {
+          'id': action.id,
+          'idSolution': action.idSolution,
+          'terminee': action.done,
+        }).toList(),
+      }).toList(),
+    };
+  }
 
   @override
   List<Object?> get props => [
