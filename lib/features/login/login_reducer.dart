@@ -7,5 +7,6 @@ LoginState loginReducer(LoginState current, dynamic action) {
   if (action is LoginFailureAction) return LoginGenericFailureState(action.message);
   if (action is LoginWrongDeviceClockAction) return LoginWrongDeviceClockState();
   if (action is LoginSuccessAction) return LoginSuccessState(action.user);
+  if (action is UserUpdatedAction && current is LoginSuccessState) return LoginSuccessState(action.user);
   return current;
 }

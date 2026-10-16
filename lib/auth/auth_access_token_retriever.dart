@@ -40,6 +40,7 @@ class AuthAccessTokenRetriever {
     switch (refreshTokenStatus) {
       case RefreshTokenStatus.SUCCESSFUL:
         await _resetFailureCount();
+        _store.dispatch(SessionRefreshedAction());
         return (await _authenticator.accessToken())!;
       case RefreshTokenStatus.NETWORK_UNREACHABLE:
         throw Exception(
