@@ -26,6 +26,7 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> with Widget
   // Les clés gardent la barre et l'étape (et le champ qui a le focus) quand la mise en page change.
   final GlobalKey _appBarKey = GlobalKey();
   final GlobalKey _formKey = GlobalKey();
+  final GlobalKey _stepKey = GlobalKey();
 
   @override
   void initState() {
@@ -87,7 +88,7 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> with Widget
       // A11y 8.2 : la hauteur suit la taille de texte choisie dans les réglages.
       height: MediaQuery.textScalerOf(context).scale(76),
     );
-    final form = _CreateUserActionForm(_viewModel, key: _formKey, scrollsWithPage: keyboardOpen);
+    final form = _CreateUserActionForm(_viewModel, key: _formKey, stepKey: _stepKey, scrollsWithPage: keyboardOpen);
     // A11y 8.5 : les boutons ne recouvrent plus le formulaire. Le corps s'arrête au-dessus d'eux,
     // donc le focus lecteur d'écran / clavier ne peut plus être masqué par les boutons.
     final navButtons = _viewModel.shouldDisplayNavigationButtons
@@ -109,6 +110,9 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> with Widget
           ? Scaffold(
               backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
               body: SingleChildScrollView(
+                // Le défilement de l'étape garde le contrôleur principal : s'il le perdait, il serait reconstruit
+                // avec tout son contenu et le champ touché perdrait le focus.
+                primary: false,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [appBar, form, if (navButtons != null) navButtons],
@@ -261,9 +265,13 @@ class _NavButtons extends StatelessWidget {
 }
 
 class _CreateUserActionForm extends StatelessWidget {
-  const _CreateUserActionForm(this.formState, {super.key, required this.scrollsWithPage});
+  const _CreateUserActionForm(this.formState, {super.key, required this.stepKey, required this.scrollsWithPage});
 
   final CreateUserActionFormViewModel formState;
+
+  /// Garde l'étape quand elle sort de son [Expanded] : sans elle, l'étape serait recréée à l'ouverture du clavier,
+  /// le champ touché perdrait le focus et le clavier se refermerait aussitôt.
+  final GlobalKey stepKey;
 
   /// Clavier ouvert : la page entière défile, l'étape prend sa hauteur naturelle.
   final bool scrollsWithPage;
@@ -271,6 +279,7 @@ class _CreateUserActionForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final step = AnimatedSwitcher(
+      key: stepKey,
       duration: AnimationDurations.fast,
       child: Align(
         alignment: Alignment.topCenter,
