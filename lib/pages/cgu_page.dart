@@ -90,7 +90,7 @@ class _BodyState extends State<_Body> {
   @override
   Widget build(BuildContext context) {
     final bool neverAccepted = widget.viewModel.displayState is CguNeverAcceptedDisplayState;
-    final switchParts = neverAccepted ? Strings.cguNeverAcceptedSwitch : Strings.cguUpdateRequiredSwitch;
+    final switchLabel = neverAccepted ? Strings.cguNeverAcceptedSwitch : Strings.cguUpdateRequiredSwitch;
     final hasError = shouldHighlightError();
 
     return Column(
@@ -106,19 +106,10 @@ class _BodyState extends State<_Body> {
                 const SizedBox(height: DsfrSpacings.s3w),
                 const DsfrDivider(),
                 const SizedBox(height: DsfrSpacings.s3w),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: DsfrLink(
-                    label: switchParts[1],
-                    icon: DsfrIcons.systemExternalLinkLine,
-                    onTap: _launchExternalRedirect,
-                  ),
-                ),
-                const SizedBox(height: DsfrSpacings.s2w),
                 Semantics(
                   label: Strings.cguSwitchLabel(_cguAccepted),
                   child: DsfrToggleSwitch(
-                    label: switchParts[0].trim(),
+                    label: switchLabel,
                     labelLocation: DsfrToggleSwitchLabelLocation.left,
                     value: _cguAccepted,
                     status: _cguAccepted
