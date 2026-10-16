@@ -96,6 +96,7 @@ class _CreateDemarcheFormState extends State<CreateDemarcheForm> with WidgetsBin
   // Les clés gardent la barre et l'étape (et le champ qui a le focus) quand la mise en page change.
   final GlobalKey _appBarKey = GlobalKey();
   final GlobalKey _bodyKey = GlobalKey();
+  final GlobalKey _stepKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +108,7 @@ class _CreateDemarcheFormState extends State<CreateDemarcheForm> with WidgetsBin
       // A11y 8.2 : la hauteur suit la taille de texte choisie dans les réglages.
       height: MediaQuery.textScalerOf(context).scale(76),
     );
-    final body = _Body(_changeNotifier, key: _bodyKey, scrollsWithPage: keyboardOpen);
+    final body = _Body(_changeNotifier, key: _bodyKey, stepKey: _stepKey, scrollsWithPage: keyboardOpen);
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
@@ -120,6 +121,9 @@ class _CreateDemarcheFormState extends State<CreateDemarcheForm> with WidgetsBin
           ? Scaffold(
               backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
               body: SingleChildScrollView(
+                // Le défilement de l'étape garde le contrôleur principal : s'il le perdait, il serait reconstruit
+                // avec tout son contenu et le champ touché perdrait le focus.
+                primary: false,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [appBar, body],
@@ -234,15 +238,20 @@ class _CreateDemarcheAppBarState extends State<_CreateDemarcheAppBar> {
 class _Body extends StatelessWidget {
   final CreateDemarcheFormChangeNotifier changeNotifier;
 
+  /// Garde l'étape quand elle sort de son [Expanded] : sans elle, l'étape serait recréée à l'ouverture du clavier,
+  /// le champ touché perdrait le focus et le clavier se refermerait aussitôt.
+  final GlobalKey stepKey;
+
   /// Clavier ouvert : la page entière défile, l'étape prend sa hauteur naturelle.
   final bool scrollsWithPage;
 
-  const _Body(this.changeNotifier, {super.key, required this.scrollsWithPage});
+  const _Body(this.changeNotifier, {super.key, required this.stepKey, required this.scrollsWithPage});
 
   @override
   Widget build(BuildContext context) {
     final currentStepIndex = changeNotifier.displayState.index();
     final step = AnimatedSwitcher(
+      key: stepKey,
       duration: AnimationDurations.fast,
       child: Align(
         alignment: Alignment.topCenter,
