@@ -5,7 +5,9 @@ import 'package:pass_emploi_app/auth/authenticator.dart';
 import 'package:pass_emploi_app/configuration/configuration.dart';
 import 'package:pass_emploi_app/features/bootstrap/bootstrap_action.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
+import 'package:pass_emploi_app/features/login/login_middleware.dart';
 import 'package:pass_emploi_app/features/login/login_state.dart';
+import 'package:pass_emploi_app/features/mode_demo/is_mode_demo_repository.dart';
 import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/user.dart';
@@ -15,6 +17,7 @@ import 'package:redux/redux.dart';
 import '../../doubles/dummies.dart';
 import '../../doubles/fixtures.dart';
 import '../../doubles/mocks.dart';
+import '../../doubles/spies.dart';
 import '../../dsl/app_state_dsl.dart';
 import '../../dsl/matchers.dart';
 import '../../dsl/sut_redux.dart';
@@ -382,6 +385,95 @@ void main() {
       expect(store.state.loginState is LoginNotInitializedState, isTrue);
       expect(store.state.configurationState.getFlavor(), Flavor.PROD);
       verify(() => authenticator.logout('id', LogoutReason.apiResponse401)).called(1);
+    });
+  });
+
+  group('On session refreshed…', () {
+    late StoreSpy store;
+
+    Future<void> whenSessionIsRefreshedWith(String structure) async {
+      when(() => authenticator.idToken()).thenAnswer((_) async => authIdToken(structure));
+      final middleware =
+          LoginMiddleware(authenticator, DummyFirebaseAuthWrapper(), ModeDemoRepository(), matomoTracker);
+      middleware.call(store, SessionRefreshedAction(), (_) {});
+      await Future<void>.delayed(Duration.zero);
+    }
+
+    setUp(() {
+      final loggedInUser = user(LoginMode.POLE_EMPLOI, Accompagnement.cej);
+      store = givenState().copyWith(loginState: LoginSuccessState(loggedInUser)).spyStore();
+    });
+
+    test('nothing is dispatched when structure is unchanged', () async {
+      // When
+      await whenSessionIsRefreshedWith('POLE_EMPLOI');
+
+      // Then
+      expect(store.dispatchedActions, isEmpty);
+    });
+
+    test('user is updated without login side effects when accompagnement changes within the same login mode',
+        () async {
+      // When
+      await whenSessionIsRefreshedWith('FT_ACCOMPAGNEMENT_INTENSIF');
+
+      // Then
+      final action = store.dispatchedActions.single as UserUpdatedAction;
+      expect(action.user, user(LoginMode.POLE_EMPLOI, Accompagnement.accompagnementIntensif));
+    });
+
+    test('user is logged out when login mode changes', () async {
+      // When
+      await whenSessionIsRefreshedWith('MILO');
+
+      // Then
+      final action = store.dispatchedActions.single as RequestLogoutAction;
+      expect(action.reason, LogoutReason.loginModeChanged);
+    });
+
+    test('nothing is dispatched when structure is unknown', () async {
+      // When
+      await whenSessionIsRefreshedWith('STRUCTURE_INCONNUE');
+
+      // Then
+      expect(store.dispatchedActions, isEmpty);
+    });
+
+    test('nothing is dispatched when user is not logged in', () async {
+      // Given
+      store = givenState().spyStore();
+
+      // When
+      await whenSessionIsRefreshedWith('POLE_EMPLOI');
+
+      // Then
+      expect(store.dispatchedActions, isEmpty);
+    });
+  });
+
+  group('On user updated…', () {
+    final updatedUser = user(LoginMode.POLE_EMPLOI, Accompagnement.accompagnementGlobal);
+
+    sut.whenDispatchingAction(() => UserUpdatedAction(updatedUser));
+
+    test('logged in user is replaced', () async {
+      // Given
+      sut.givenStore = givenState().loggedInUser(loginMode: LoginMode.POLE_EMPLOI).store();
+
+      // Then
+      sut.thenExpectChangingStatesThroughOrder([
+        _shouldBeLoggedInWith(mode: LoginMode.POLE_EMPLOI, accompagnement: Accompagnement.accompagnementGlobal),
+      ]);
+    });
+
+    test('user stays logged out', () async {
+      // Given
+      sut.givenStore = givenState().store();
+
+      // Then
+      sut.thenExpectNever(
+        _shouldBeLoggedInWith(mode: LoginMode.POLE_EMPLOI, accompagnement: Accompagnement.accompagnementGlobal),
+      );
     });
   });
 }

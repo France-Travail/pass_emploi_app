@@ -21,7 +21,9 @@ class TrackingMatomoSetupMiddleware extends MiddlewareClass<AppState> {
     if (action is BootstrapAction) {
       _trackUserType();
     } else if (action is LoginSuccessAction) {
-      _trackStructureAndAccompagnement(store, action);
+      _trackStructureAndAccompagnement(store, action.user);
+    } else if (action is UserUpdatedAction) {
+      _trackStructureAndAccompagnement(store, action.user);
     } else if (action is ConnectivityUpdatedAction) {
       _trackConnexionStatus(store, action);
     }
@@ -31,11 +33,11 @@ class TrackingMatomoSetupMiddleware extends MiddlewareClass<AppState> {
     _tracker.setDimension(AnalyticsCustomDimensions.userTypeId, AnalyticsCustomDimensions.appUserType);
   }
 
-  void _trackStructureAndAccompagnement(Store<AppState> store, LoginSuccessAction action) {
-    _tracker.setDimension(AnalyticsCustomDimensions.structureId, action.user.structureName());
+  void _trackStructureAndAccompagnement(Store<AppState> store, User user) {
+    _tracker.setDimension(AnalyticsCustomDimensions.structureId, user.structureName());
     final configuration = store.state.configurationState.configuration;
     if (configuration != null) {
-      _tracker.setDimension(configuration.matomoDimensionProduitId, action.user.accompagnementName());
+      _tracker.setDimension(configuration.matomoDimensionProduitId, user.accompagnementName());
     }
   }
 

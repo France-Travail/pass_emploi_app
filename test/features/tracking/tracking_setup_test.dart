@@ -29,6 +29,24 @@ void main() {
     });
   });
 
+  group('on user updated', () {
+    test('should properly update structure and produit dimension', () async {
+      // Given
+      final store = givenState(configuration()).store((f) => f.matomoTracker = tracker);
+
+      // When
+      await store.dispatch(
+        UserUpdatedAction(
+          mockUser(loginMode: LoginMode.POLE_EMPLOI, accompagnement: Accompagnement.accompagnementIntensif),
+        ),
+      );
+
+      // Then
+      verify(() => tracker.setDimension('2', 'Pôle emploi')).called(1);
+      verify(() => tracker.setDimension('matomoDimensionProduitId', 'Accompagnement intensif')).called(1);
+    });
+  });
+
   group('on login', () {
     test('with MILO user should properly set structure and produit dimension', () async {
       // Given

@@ -42,6 +42,8 @@ class LoginMiddleware extends MiddlewareClass<AppState> {
       _logUser(store, action.mode);
     } else if (action is RequestLogoutAction) {
       _logout(store, userId, action.reason);
+    } else if (action is SessionRefreshedAction) {
+      _updateUserFromStoredIdToken(store);
     }
   }
 
@@ -90,7 +92,36 @@ class LoginMiddleware extends MiddlewareClass<AppState> {
 
   void _dispatchLoginSuccess(Store<AppState> store) async {
     final AuthIdToken idToken = (await _authenticator.idToken())!;
-    final user = User(
+    store.dispatch(LoginSuccessAction(_userFrom(idToken)));
+  }
+
+  void _updateUserFromStoredIdToken(Store<AppState> store) async {
+    final currentUser = store.state.user();
+    final refreshedUser = await _userFromStoredIdTokenOrNull();
+    if (currentUser == null || refreshedUser == null || refreshedUser == currentUser) return;
+    if (_requiresReconnection(currentUser, refreshedUser)) {
+      store.dispatch(RequestLogoutAction(LogoutReason.loginModeChanged));
+    } else {
+      store.dispatch(UserUpdatedAction(refreshedUser));
+    }
+  }
+
+  Future<User?> _userFromStoredIdTokenOrNull() async {
+    final idToken = await _authenticator.idToken();
+    if (idToken == null) return null;
+    try {
+      return _userFrom(idToken);
+    } on Exception {
+      return null;
+    }
+  }
+
+  bool _requiresReconnection(User currentUser, User refreshedUser) {
+    return currentUser.loginMode != refreshedUser.loginMode;
+  }
+
+  User _userFrom(AuthIdToken idToken) {
+    return User(
       id: idToken.userId,
       firstName: idToken.firstName,
       lastName: idToken.lastName,
@@ -98,7 +129,6 @@ class LoginMiddleware extends MiddlewareClass<AppState> {
       loginMode: idToken.getLoginMode(),
       accompagnement: idToken.getAccompagnement(),
     );
-    store.dispatch(LoginSuccessAction(user));
   }
 
   void _logout(Store<AppState> store, String? userId, LogoutReason reason) async {
