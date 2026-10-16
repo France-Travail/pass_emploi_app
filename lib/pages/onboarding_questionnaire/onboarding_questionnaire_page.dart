@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux/redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
@@ -27,6 +26,7 @@ import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
+import 'package:redux/redux.dart';
 
 class OnboardingQuestionnairePage extends StatefulWidget {
   final bool editMode;
@@ -324,7 +324,8 @@ class _QuestionnaireBodyState extends State<_QuestionnaireBody> {
           children: [
             // A11y : l'étape précédente, encore affichée pendant le fondu, ne doit plus être
             // atteignable par le lecteur d'écran.
-            ...previousChildren.map((child) => ExcludeSemantics(child: child)),
+            // La clé conserve l'élément de l'étape sortante : sans elle, elle serait reconstruite avec la nouvelle étape.
+            ...previousChildren.map((child) => ExcludeSemantics(key: child.key, child: child)),
             if (currentChild != null) currentChild,
           ],
         );
@@ -341,7 +342,7 @@ class _QuestionnaireBodyState extends State<_QuestionnaireBody> {
       },
       child: KeyedSubtree(
         key: ValueKey(form.step),
-        child: _StepContent(form: form, communesRepository: widget.communesRepository),
+        child: _StepContent(step: form.step, form: form, communesRepository: widget.communesRepository),
       ),
     );
     final actions = _BottomActions(key: _actionsKey, form: form);
@@ -425,16 +426,18 @@ class _BottomActions extends StatelessWidget {
 
 class _StepContent extends StatelessWidget {
   const _StepContent({
+    required this.step,
     required this.form,
     required this.communesRepository,
   });
 
+  final OnboardingQuestionnaireStep step;
   final OnboardingQuestionnaireFormChangeNotifier form;
   final CommunesRepository communesRepository;
 
   @override
   Widget build(BuildContext context) {
-    return switch (form.step) {
+    return switch (step) {
       OnboardingQuestionnaireStep.prenom => OnboardingQuestionnairePrenomStep(form: form),
       OnboardingQuestionnaireStep.dateNaissance => OnboardingQuestionnaireBirthdateStep(form: form),
       OnboardingQuestionnaireStep.habitation => OnboardingQuestionnaireLocationStep(

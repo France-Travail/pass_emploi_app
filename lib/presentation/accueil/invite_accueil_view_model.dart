@@ -99,8 +99,7 @@ class InviteAccueilViewModel extends Equatable {
     // A plan restored from the server comes without the questionnaire answers: it is shown anyway,
     // as well as its loading failure.
     final hasRestoredPlan = plan != null && plan.objectives.isNotEmpty;
-    final showPlanSection =
-        mode != InviteAccueilMode.incomplet || hasRestoredPlan || (isPlanPersisted && isFailure);
+    final showPlanSection = mode != InviteAccueilMode.incomplet || hasRestoredPlan || (isPlanPersisted && isFailure);
     final displayState = !showPlanSection
         ? DisplayState.CONTENT
         : switch (actionPlanState) {
@@ -148,7 +147,7 @@ class InviteAccueilViewModel extends Equatable {
       planEmptyKind: planEmptyKind,
 
       // showConseillerCta: mode == InviteAccueilMode.complet && store.state.isInviteLoginMode(),
-      showConseillerCta: false, // TODO: NOT IMPLEMENTED YET
+      showConseillerCta: false, // NOT IMPLEMENTED YET
       showModifierButton: mode == InviteAccueilMode.complet && !isFailure,
       showExplorerTip: isQuestionnaireResolved && mode == InviteAccueilMode.incomplet,
       showRetry: showPlanEmptyState && isFailure && (isPlanPersisted || answers.canGenerateActionPlan),
