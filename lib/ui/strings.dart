@@ -2042,32 +2042,26 @@ class Strings {
   static List<String> cguNeverAcceptedDescription = Brand.isPassEmploi()
       ? [
           "L’utilisation de notre service est soumise à l’acceptation préalable de nos ",
-          "↗ Conditions Générales d’Utilisation",
+          "Conditions Générales d’Utilisation",
           ". Ces conditions définissent ",
           "vos droits et obligations en tant qu'utilisateur ",
           "de notre application.",
         ]
       : [
-          "L’utilisation de notre service est soumise à l’acception préalable de nos ",
-          "↗ Conditions Générales d’Utilisation",
+          "L’utilisation de notre service est soumise à l’acceptation préalable de nos ",
+          "Conditions Générales d’Utilisation",
           ". Ces conditions définissent ",
           "tes droits et obligations en tant qu'utilisateur ",
           "de notre application.",
         ];
   static List<String> cguUpdateRequiredDescription = [
     "Nous avons mis à jour nos CGU le ",
-    ". L’utilisation de notre service est soumise à l’acception préalable de nos ",
-    "↗ CGU.",
+    ". L’utilisation de notre service est soumise à l’acceptation préalable de nos ",
+    "CGU.",
     "\n\nPoints clés de la mise à jour :\n",
   ];
-  static List<String> cguNeverAcceptedSwitch = [
-    "J’ai lu et j’accepte les",
-    " ↗ Conditions Générales d’Utilisation",
-  ];
-  static List<String> cguUpdateRequiredSwitch = [
-    "J’ai lu et j’accepte les nouvelles",
-    " ↗ CGU",
-  ];
+  static String cguNeverAcceptedSwitch = "J’ai lu et j’accepte les Conditions Générales d’Utilisation";
+  static String cguUpdateRequiredSwitch = "J’ai lu et j’accepte les nouvelles CGU";
   static String cguSwitchError = Brand.isPassEmploi()
       ? "Acceptez les Conditions Générales d’Utilisation pour utiliser l’application."
       : "Accepte les Conditions Générales d’Utilisation pour utiliser l’application.";
