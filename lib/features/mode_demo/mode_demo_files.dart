@@ -69,7 +69,8 @@ extension UrlExtensions on String {
         !contains('/docnums/') &&
         !contains('/idp-token') &&
         !contains('/actions/') &&
-        !contains('/plan-action');
+        !contains('/plan-action') &&
+        !contains('/questionnaire');
   }
 
   String removeLastPath() => substring(0, lastIndexOf('/'));

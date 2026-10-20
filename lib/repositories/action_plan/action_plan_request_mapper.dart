@@ -16,6 +16,54 @@ class ActionPlanRequestMapper {
     };
   }
 
+  /// Corps du PUT /jeunes/:id/questionnaire. `domaine` absent = question non répondue, `null` = « je ne sais pas ».
+  Map<String, dynamic> toQuestionnaireRequest(
+    OnboardingQuestionnaireAnswers answers, {
+    required String etapeCourante,
+    DateTime? now,
+  }) {
+    final age = answers.dateNaissance == null ? null : _age(answers.dateNaissance!, now ?? DateTime.now());
+    return {
+      'etapeCourante': etapeCourante,
+      if (age != null) 'age': age,
+      if (answers.situation != null) 'situation': _mapSituation(answers.situation!),
+      'goals': answers.objectifs.map(_mapObjectif).toList(),
+      if (answers.domaineInconnu || answers.isDomaineAnswered) 'domaine': _mapDomaine(answers),
+      'obstacles': _mapFreins(answers.freins),
+    };
+  }
+
+  /// Reporte sur [local] les réponses du GET /jeunes/:id/questionnaire. L'API ne connaît ni prénom, ni date de
+  /// naissance (seulement l'âge), ni habitation, ni ville de recherche : ces réponses locales sont conservées.
+  OnboardingQuestionnaireAnswers fromQuestionnaireResponse(
+    Map<String, dynamic> json,
+    OnboardingQuestionnaireAnswers local,
+  ) {
+    final situation = QuestionnaireSituation.values.where((e) => _mapSituation(e) == json['situation']).firstOrNull;
+    final goals = json['goals'];
+    final obstacles = json['obstacles'];
+    final domaine = json['domaine'] as String?;
+    return local.copyWith(
+      situation: situation,
+      clearSituation: situation == null,
+      objectifs: goals is List
+          ? QuestionnaireObjectif.values.where((e) => goals.contains(_mapObjectif(e))).toSet()
+          : <QuestionnaireObjectif>{},
+      domaine: domaine,
+      clearDomaine: domaine == null,
+      domaineInconnu: json.containsKey('domaine') && domaine == null,
+      freins: obstacles is List
+          ? QuestionnaireFrein.values.where((e) => obstacles.contains(_mapFrein(e))).toSet()
+          : <QuestionnaireFrein>{},
+    );
+  }
+
+  static int _age(DateTime dateNaissance, DateTime now) {
+    final hadBirthday =
+        now.month > dateNaissance.month || (now.month == dateNaissance.month && now.day >= dateNaissance.day);
+    return now.year - dateNaissance.year - (hadBirthday ? 0 : 1);
+  }
+
   static String? _mapDomaine(OnboardingQuestionnaireAnswers answers) {
     if (answers.domaineInconnu) return null;
     final domaine = answers.domaine?.trim();

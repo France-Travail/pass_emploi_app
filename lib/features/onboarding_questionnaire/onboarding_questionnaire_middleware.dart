@@ -9,6 +9,7 @@ import 'package:pass_emploi_app/models/criteres_recherche_utilisateur.dart';
 import 'package:pass_emploi_app/models/fonctionnalite.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
+import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_form_change_notifier.dart';
 import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_tracker.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
@@ -81,8 +82,10 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
       case ActionPlanFetchFound(:final plan):
         await _repository.setFinished(true);
         store.dispatch(ActionPlanSuccessAction(plan));
+        await _restoreAnswers(userId);
         await _load(store);
       case ActionPlanFetchNotFound():
+        await _restoreAnswers(userId);
         // Un plan était attendu (les réponses sauvegardées permettent d'en générer un) mais il manque côté
         // serveur : on rejoue le questionnaire. Sans plan attendu (étapes toutes passées), il reste terminé.
         if (await _repository.isFinished() && (await _repository.getAnswers()).canGenerateActionPlan) {
@@ -96,12 +99,31 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
     }
   }
 
+  // Les réponses du serveur ne remplacent jamais des réponses locales déjà données (ex. envoi échoué plus tôt) :
+  // elles ne servent qu'à un appareil sans réponses (reconnexion, nouveau téléphone, réinstallation).
+  // Une erreur ou un 404 laissent les réponses locales telles quelles et ne bloquent pas l'affichage du plan.
+  Future<void> _restoreAnswers(String userId) async {
+    final local = await _repository.getAnswers();
+    final hasLocalAnswers =
+        local.isSituationAnswered || local.isObjectifsAnswered || local.isDomaineAnswered || local.isFreinsAnswered;
+    if (hasLocalAnswers) return;
+    final restored = await _actionPlanRepository.fetchQuestionnaire(userId, local);
+    if (restored != null) await _repository.saveAnswers(restored);
+  }
+
   Future<void> _complete(Store<AppState> store, OnboardingQuestionnaireAnswers answers) async {
     final tracker = OnboardingQuestionnaireTracker(isUpdate: await _repository.hasEverFinished());
     await _repository.saveAnswers(answers);
+    final userId = store.state.userId();
+    if (userId != null && !store.state.isInviteLoginMode()) {
+      await _actionPlanRepository.saveQuestionnaire(
+        userId,
+        answers,
+        etapeCourante: OnboardingQuestionnaireStep.freins.name,
+      );
+    }
     _persistRechercheCriteres(store, answers);
     if (answers.canGenerateActionPlan) {
-      final userId = store.state.userId();
       if (userId == null) {
         store.dispatch(ActionPlanLoadingAction());
         store.dispatch(ActionPlanFailureAction());

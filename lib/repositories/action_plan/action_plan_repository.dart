@@ -63,6 +63,38 @@ class ActionPlanRepository {
     }
   }
 
+  /// Best effort : une erreur ne doit jamais empêcher la génération du plan.
+  Future<void> saveQuestionnaire(
+    String userId,
+    OnboardingQuestionnaireAnswers answers, {
+    required String etapeCourante,
+  }) async {
+    final url = '/jeunes/$userId/questionnaire';
+    try {
+      await _httpClient.put(url, data: _mapper.toQuestionnaireRequest(answers, etapeCourante: etapeCourante));
+    } catch (e, stack) {
+      _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
+    }
+  }
+
+  /// Renvoie [local] complété des réponses du serveur, ou null s'il n'y en a pas (404) ou en cas d'erreur.
+  Future<OnboardingQuestionnaireAnswers?> fetchQuestionnaire(
+    String userId,
+    OnboardingQuestionnaireAnswers local,
+  ) async {
+    final url = '/jeunes/$userId/questionnaire';
+    try {
+      final response = await _httpClient.get(url);
+      final data = response.data;
+      if (data is! Map<String, dynamic>) return null;
+      return _mapper.fromQuestionnaireResponse(data, local);
+    } catch (e, stack) {
+      if (e is DioException && e.response?.statusCode == 404) return null;
+      _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
+      return null;
+    }
+  }
+
   Future<ActionPlan> _mergeAndPersist(ActionPlan plan) async {
     final previous = await _loadState();
     final doneIds = previous?.doneIds ?? await _readDoneActionIds();
