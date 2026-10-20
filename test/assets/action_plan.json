@@ -21,7 +21,7 @@
           "id": "c-alternance-1",
           "libelle": "Je consulte les offres d'alternance",
           "type": "NAVIGATION",
-          "destination": "OFFRES_ALTERNANCE"
+          "ecranApp": "OFFRES_ALTERNANCE"
         },
         {
           "id": "p-139",

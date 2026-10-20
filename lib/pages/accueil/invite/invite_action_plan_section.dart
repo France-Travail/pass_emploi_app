@@ -1,9 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_tracking.dart';
+import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
+import 'package:pass_emploi_app/models/deep_link.dart';
+import 'package:pass_emploi_app/pages/recherche/recherche_offre_emploi_page.dart';
+import 'package:pass_emploi_app/pages/recherche/recherche_offre_immersion_page.dart';
+import 'package:pass_emploi_app/pages/recherche/recherche_offre_service_civique_page.dart';
+import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/external_links.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
@@ -342,6 +349,8 @@ class _InviteActionPlanActionTileState extends State<InviteActionPlanActionTile>
     return _hasLink ? null : action.serviceName;
   }
 
+  bool get _hasScreen => action.screen != null;
+
   bool get _hasLink => action.kind == ActionPlanActionKind.link && action.url != null && action.url!.isNotEmpty;
 
   @override
@@ -361,7 +370,11 @@ class _InviteActionPlanActionTileState extends State<InviteActionPlanActionTile>
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: _hasLink ? _openLink : null,
+            onTap: _hasLink
+                ? _openLink
+                : _hasScreen
+                ? _openScreen
+                : null,
             // A11y : l'action de lien est portée par le nœud « lien » dédié ci-dessous.
             excludeFromSemantics: true,
             borderRadius: BorderRadius.circular(8),
@@ -413,6 +426,17 @@ class _InviteActionPlanActionTileState extends State<InviteActionPlanActionTile>
                       ],
                     ),
                   ),
+                  if (_hasScreen)
+                    Semantics(
+                      button: true,
+                      label: Strings.actionPlanOuvrirEcranA11y(action.label),
+                      onTap: _openScreen,
+                      excludeSemantics: true,
+                      child: Icon(
+                        DsfrIcons.systemArrowRightSLine,
+                        color: DsfrColorDecisions.textActionHighBlueFrance(context),
+                      ),
+                    ),
                   DsfrFocusWidget(
                     isFocused: _deleteFocused,
                     child: Focus(
@@ -477,6 +501,32 @@ class _InviteActionPlanActionTileState extends State<InviteActionPlanActionTile>
         ],
       ],
     );
+  }
+
+  Future<void> _openScreen() async {
+    ActionPlanTrackingEvent(
+      AnalyticsEventNames.actionPlanActionOpenedAction,
+      name: action.label,
+    ).send();
+    // Navigator et store capturés avant le changement d'onglet, le context n'étant plus garanti ensuite.
+    final navigator = Navigator.of(context);
+    final store = StoreProvider.of<AppState>(context);
+    void goTo(DeepLink deepLink) => store.dispatch(HandleDeepLinkAction(deepLink, DeepLinkOrigin.inAppNavigation));
+
+    // Les pages de recherche s'ouvrent sans lancer de recherche : l'utilisateur renseigne ou ajuste ses critères.
+    final route = switch (action.screen!) {
+      ActionPlanScreen.evenements => null,
+      ActionPlanScreen.offresEmploi => RechercheOffreEmploiPage.materialPageRoute(onlyAlternance: false),
+      ActionPlanScreen.offresAlternance => RechercheOffreEmploiPage.materialPageRoute(onlyAlternance: true),
+      ActionPlanScreen.offresServiceCivique => RechercheOffreServiceCiviquePage.materialPageRoute(),
+      ActionPlanScreen.offresImmersions => RechercheOffreImmersionPage.materialPageRoute(),
+    };
+    goTo(route == null ? EventListDeepLink() : RechercheDeepLink());
+    if (route == null) return;
+    // Le changement d'onglet ferme tous les écrans empilés (RouterPage._removeAllScreensAboveRouterPage) :
+    // on attend qu'il soit passé avant de pousser la page de recherche.
+    await Future<void>.delayed(Duration.zero);
+    navigator.push(route);
   }
 
   void _openLink() {

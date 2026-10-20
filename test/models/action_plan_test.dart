@@ -2,6 +2,30 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 
 void main() {
+  group('ActionPlanAction.screen', () {
+    ActionPlanAction fromApi(String type, String? ecranApp) => ActionPlanAction.fromApiJson({
+      'id': 'a',
+      'libelle': 'label',
+      'type': type,
+      if (ecranApp != null) 'ecranApp': ecranApp,
+    });
+
+    test('maps every known ecranApp', () {
+      expect(fromApi('NAVIGATION', 'OFFRES_EMPLOI').screen, ActionPlanScreen.offresEmploi);
+      expect(fromApi('NAVIGATION', 'OFFRES_ALTERNANCE').screen, ActionPlanScreen.offresAlternance);
+      expect(fromApi('NAVIGATION', 'OFFRES_SERVICE_CIVIQUE').screen, ActionPlanScreen.offresServiceCivique);
+      expect(fromApi('NAVIGATION', 'OFFRES_IMMERSIONS').screen, ActionPlanScreen.offresImmersions);
+      expect(fromApi('NAVIGATION', 'EVENEMENTS').screen, ActionPlanScreen.evenements);
+    });
+
+    test('ignores ALLER_VERS, unknown values and non navigation actions', () {
+      expect(fromApi('NAVIGATION', 'ALLER_VERS').screen, isNull);
+      expect(fromApi('NAVIGATION', 'INCONNU').screen, isNull);
+      expect(fromApi('NAVIGATION', null).screen, isNull);
+      expect(fromApi('LIEN', 'EVENEMENTS').screen, isNull);
+    });
+  });
+
   group('ActionPlan.keepActionsFrom', () {
     test(
       'keeps previous actions when the objective theme is still present',
