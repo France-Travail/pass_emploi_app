@@ -635,4 +635,199 @@ void main() {
     expect(state.answers.prenom, 'Léa');
     verify(() => repository.setFinished(true)).called(1);
   });
+
+  group('remote questionnaire', () {
+    const restoredAnswers = OnboardingQuestionnaireAnswers(
+      situation: QuestionnaireSituation.lycee,
+      objectifs: {QuestionnaireObjectif.emploi},
+    );
+
+    test('complete for a non invite jeune saves questionnaire once, then generates the plan', () async {
+      const answers = OnboardingQuestionnaireAnswers(
+        situation: QuestionnaireSituation.lycee,
+        objectifs: {QuestionnaireObjectif.emploi},
+      );
+      when(() => repository.saveAnswers(any())).thenAnswer((_) async {});
+      when(() => repository.setFinished(true)).thenAnswer((_) async {});
+      when(
+        () => actionPlanRepository.generate(any(), any(), keepLocalProgress: any(named: 'keepLocalProgress')),
+      ).thenAnswer((_) async => const ActionPlan(id: 'p1', greeting: '', objectives: []));
+
+      final factory = TestStoreFactory()
+        ..onboardingQuestionnaireRepository = repository
+        ..actionPlanRepository = actionPlanRepository;
+      final store = factory.initializeReduxStore(initialState: givenState().loggedInMiloUser());
+      final generated = store.onChange.firstWhere((s) => s.actionPlanState is ActionPlanSuccessState);
+
+      store.dispatch(OnboardingQuestionnaireCompleteAction(answers));
+
+      await generated;
+      verifyInOrder([
+        () => actionPlanRepository.saveQuestionnaire(any(), answers, etapeCourante: 'freins'),
+        () => actionPlanRepository.generate(any(), answers, keepLocalProgress: false),
+      ]);
+    });
+
+    test('complete with every step skipped still saves the (empty) questionnaire', () async {
+      const answers = OnboardingQuestionnaireAnswers();
+      when(() => repository.saveAnswers(any())).thenAnswer((_) async {});
+      when(() => repository.setFinished(true)).thenAnswer((_) async {});
+
+      final factory = TestStoreFactory()
+        ..onboardingQuestionnaireRepository = repository
+        ..actionPlanRepository = actionPlanRepository;
+      final store = factory.initializeReduxStore(initialState: givenState().loggedInMiloUser());
+      final done = store.onChange.firstWhere((s) => s.onboardingQuestionnaireState is OnboardingQuestionnaireSuccessState);
+
+      store.dispatch(OnboardingQuestionnaireCompleteAction(answers));
+
+      await done;
+      verify(() => actionPlanRepository.saveQuestionnaire(any(), answers, etapeCourante: 'freins')).called(1);
+    });
+
+    test('complete for an invite never calls the API questionnaire', () async {
+      const answers = OnboardingQuestionnaireAnswers();
+      when(() => repository.saveAnswers(any())).thenAnswer((_) async {});
+      when(() => repository.setFinished(true)).thenAnswer((_) async {});
+
+      final factory = TestStoreFactory()
+        ..onboardingQuestionnaireRepository = repository
+        ..actionPlanRepository = actionPlanRepository;
+      final store = factory.initializeReduxStore(initialState: givenState().loggedInUser(loginMode: LoginMode.INVITE));
+      final done = store.onChange.firstWhere((s) => s.onboardingQuestionnaireState is OnboardingQuestionnaireSuccessState);
+
+      store.dispatch(OnboardingQuestionnaireCompleteAction(answers));
+
+      await done;
+      verifyNever(() => actionPlanRepository.saveQuestionnaire(any(), any(), etapeCourante: any(named: 'etapeCourante')));
+    });
+
+    test('a failing save does not block plan generation', () async {
+      const answers = OnboardingQuestionnaireAnswers(
+        situation: QuestionnaireSituation.lycee,
+        objectifs: {QuestionnaireObjectif.emploi},
+      );
+      when(() => repository.saveAnswers(any())).thenAnswer((_) async {});
+      when(() => repository.setFinished(true)).thenAnswer((_) async {});
+      when(
+        () => actionPlanRepository.saveQuestionnaire(any(), any(), etapeCourante: any(named: 'etapeCourante')),
+      ).thenAnswer((_) async {}); // the repository swallows API errors
+      when(
+        () => actionPlanRepository.generate(any(), any(), keepLocalProgress: any(named: 'keepLocalProgress')),
+      ).thenAnswer((_) async => const ActionPlan(id: 'p1', greeting: '', objectives: []));
+
+      final factory = TestStoreFactory()
+        ..onboardingQuestionnaireRepository = repository
+        ..actionPlanRepository = actionPlanRepository;
+      final store = factory.initializeReduxStore(initialState: givenState().loggedInMiloUser());
+      final generated = store.onChange.firstWhere((s) => s.actionPlanState is ActionPlanSuccessState);
+
+      store.dispatch(OnboardingQuestionnaireCompleteAction(answers));
+
+      expect((await generated).actionPlanState, isA<ActionPlanSuccessState>());
+    });
+
+    test('on a device without answers, a plan on server restores the answers saved on server', () async {
+      when(() => repository.getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers());
+      when(() => repository.isFinished()).thenAnswer((_) async => true);
+      when(() => repository.hasEverFinished()).thenAnswer((_) async => true);
+      when(() => repository.setFinished(true)).thenAnswer((_) async {});
+      when(() => repository.saveAnswers(any())).thenAnswer((_) async {});
+      when(() => actionPlanRepository.fetch(any())).thenAnswer(
+        (_) async => ActionPlanFetchFound(const ActionPlan(id: 'p1', greeting: '', objectives: [])),
+      );
+      when(() => actionPlanRepository.fetchQuestionnaire(any(), any())).thenAnswer((_) async => restoredAnswers);
+
+      final factory = TestStoreFactory()
+        ..onboardingQuestionnaireRepository = repository
+        ..actionPlanRepository = actionPlanRepository;
+      final store = factory.initializeReduxStore(initialState: givenState().loggedInMiloUser());
+      final success = store.onChange.firstWhere((s) => s.onboardingQuestionnaireState is OnboardingQuestionnaireSuccessState);
+
+      store.dispatch(FonctionnalitesSuccessAction({Fonctionnalite.planAction}));
+
+      await success;
+      verify(() => repository.saveAnswers(restoredAnswers)).called(1);
+    });
+
+    test('with no plan on server, the saved answers are restored so the questionnaire resumes', () async {
+      when(() => repository.getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers());
+      when(() => repository.isFinished()).thenAnswer((_) async => false);
+      when(() => repository.hasEverFinished()).thenAnswer((_) async => false);
+      when(() => repository.saveAnswers(any())).thenAnswer((_) async {});
+      when(() => actionPlanRepository.fetch(any())).thenAnswer((_) async => ActionPlanFetchNotFound());
+      when(() => actionPlanRepository.fetchQuestionnaire(any(), any())).thenAnswer((_) async => restoredAnswers);
+
+      final factory = TestStoreFactory()
+        ..onboardingQuestionnaireRepository = repository
+        ..actionPlanRepository = actionPlanRepository;
+      final store = factory.initializeReduxStore(initialState: givenState().loggedInMiloUser());
+      final success = store.onChange.firstWhere((s) => s.onboardingQuestionnaireState is OnboardingQuestionnaireSuccessState);
+
+      store.dispatch(FonctionnalitesSuccessAction({Fonctionnalite.planAction}));
+
+      await success;
+      verify(() => repository.saveAnswers(restoredAnswers)).called(1);
+    });
+
+    test('local answers are never overwritten by the server ones', () async {
+      when(() => repository.getAnswers()).thenAnswer((_) async => restoredAnswers);
+      when(() => repository.isFinished()).thenAnswer((_) async => true);
+      when(() => repository.hasEverFinished()).thenAnswer((_) async => true);
+      when(() => repository.setFinished(true)).thenAnswer((_) async {});
+      when(() => actionPlanRepository.fetch(any())).thenAnswer(
+        (_) async => ActionPlanFetchFound(const ActionPlan(id: 'p1', greeting: '', objectives: [])),
+      );
+
+      final factory = TestStoreFactory()
+        ..onboardingQuestionnaireRepository = repository
+        ..actionPlanRepository = actionPlanRepository;
+      final store = factory.initializeReduxStore(initialState: givenState().loggedInMiloUser());
+      final success = store.onChange.firstWhere((s) => s.onboardingQuestionnaireState is OnboardingQuestionnaireSuccessState);
+
+      store.dispatch(FonctionnalitesSuccessAction({Fonctionnalite.planAction}));
+
+      await success;
+      verifyNever(() => actionPlanRepository.fetchQuestionnaire(any(), any()));
+      verifyNever(() => repository.saveAnswers(any()));
+    });
+
+    test('when the questionnaire is unavailable on server, the plan is still displayed with local answers', () async {
+      const plan = ActionPlan(id: 'p1', greeting: '', objectives: []);
+      when(() => repository.getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers());
+      when(() => repository.isFinished()).thenAnswer((_) async => true);
+      when(() => repository.hasEverFinished()).thenAnswer((_) async => true);
+      when(() => repository.setFinished(true)).thenAnswer((_) async {});
+      when(() => actionPlanRepository.fetch(any())).thenAnswer((_) async => ActionPlanFetchFound(plan));
+      when(() => actionPlanRepository.fetchQuestionnaire(any(), any())).thenAnswer((_) async => null);
+
+      final factory = TestStoreFactory()
+        ..onboardingQuestionnaireRepository = repository
+        ..actionPlanRepository = actionPlanRepository;
+      final store = factory.initializeReduxStore(initialState: givenState().loggedInMiloUser());
+      final success = store.onChange.firstWhere((s) => s.onboardingQuestionnaireState is OnboardingQuestionnaireSuccessState);
+
+      store.dispatch(FonctionnalitesSuccessAction({Fonctionnalite.planAction}));
+
+      final state = await success;
+      expect(state.actionPlanState, ActionPlanSuccessState(plan));
+      verifyNever(() => repository.saveAnswers(any()));
+    });
+
+    test('when the plan fails to load, the questionnaire is not fetched', () async {
+      when(() => repository.getAnswers()).thenAnswer((_) async => const OnboardingQuestionnaireAnswers());
+      when(() => actionPlanRepository.fetch(any())).thenAnswer((_) async => ActionPlanFetchFailure());
+
+      final factory = TestStoreFactory()
+        ..onboardingQuestionnaireRepository = repository
+        ..actionPlanRepository = actionPlanRepository;
+      final store = factory.initializeReduxStore(initialState: givenState().loggedInMiloUser());
+      final failure = store.onChange.firstWhere((s) => s.actionPlanState is ActionPlanFailureState);
+
+      store.dispatch(FonctionnalitesSuccessAction({Fonctionnalite.planAction}));
+
+      await failure;
+      verifyNever(() => actionPlanRepository.fetchQuestionnaire(any(), any()));
+    });
+  });
 }

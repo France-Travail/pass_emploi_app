@@ -143,6 +143,75 @@ void main() {
         });
       });
     });
+
+    group('saveQuestionnaire', () {
+      const answers = OnboardingQuestionnaireAnswers(
+        situation: QuestionnaireSituation.lycee,
+        objectifs: {QuestionnaireObjectif.alternance},
+      );
+
+      sut.when((repository) => repository.saveQuestionnaire('userId', answers, etapeCourante: 'freins'));
+
+      group('when response is valid', () {
+        sut.givenResponseCode(204);
+
+        test('request should be valid', () async {
+          await sut.expectRequestBody(
+            method: HttpMethod.put,
+            url: '/jeunes/userId/questionnaire',
+            rawBody: {
+              'etapeCourante': 'freins',
+              'situation': 'LYCEE',
+              'goals': ['ALTERNANCE'],
+              'obstacles': <String>[],
+            },
+          );
+        });
+      });
+
+      group('when request fails', () {
+        sut.givenResponseCode(500);
+
+        test('error is ignored', () async {
+          await sut.expectResult<void>((_) {});
+        });
+      });
+    });
+
+    group('fetchQuestionnaire', () {
+      sut.when((repository) => repository.fetchQuestionnaire('userId', const OnboardingQuestionnaireAnswers()));
+
+      group('when response is valid', () {
+        sut.givenJsonResponse(fromJson: 'questionnaire.json');
+
+        test('request should be valid', () async {
+          await sut.expectRequestBody(method: HttpMethod.get, url: '/jeunes/userId/questionnaire');
+        });
+
+        test('response should be mapped to answers', () async {
+          await sut.expectResult<OnboardingQuestionnaireAnswers?>((result) {
+            expect(result?.situation, QuestionnaireSituation.lycee);
+            expect(result?.objectifs, {QuestionnaireObjectif.alternance});
+          });
+        });
+      });
+
+      group('when jeune has no questionnaire', () {
+        sut.givenResponseCode(404);
+
+        test('result is null', () async {
+          await sut.expectResult<OnboardingQuestionnaireAnswers?>((result) => expect(result, isNull));
+        });
+      });
+
+      group('when request fails', () {
+        sut.givenResponseCode(500);
+
+        test('result is null', () async {
+          await sut.expectResult<OnboardingQuestionnaireAnswers?>((result) => expect(result, isNull));
+        });
+      });
+    });
   });
 
   group('ActionPlanRepository remote sync', () {

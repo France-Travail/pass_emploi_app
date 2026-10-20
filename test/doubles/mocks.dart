@@ -414,6 +414,10 @@ class MockActionPlanRepository extends Mock implements ActionPlanRepository {
       () => generate(any(), any(), keepLocalProgress: any(named: 'keepLocalProgress')),
     ).thenAnswer((_) async => null);
     when(() => fetch(any())).thenAnswer((_) async => ActionPlanFetchNotFound());
+    when(() => fetchQuestionnaire(any(), any())).thenAnswer((_) async => null);
+    when(
+      () => saveQuestionnaire(any(), any(), etapeCourante: any(named: 'etapeCourante')),
+    ).thenAnswer((_) async {});
     when(() => getStoredPlan()).thenAnswer((_) async => null);
     when(() => toggleDone(any())).thenAnswer((_) async => null);
     when(() => deleteAction(any())).thenAnswer((_) async => null);

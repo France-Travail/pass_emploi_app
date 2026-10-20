@@ -12,11 +12,17 @@ void main() {
         dateNaissance: DateTime(2006, 4, 12),
         habitation: const QuestionnaireCommune(code: '76540', nom: 'Rouen'),
         situation: QuestionnaireSituation.lycee,
-        objectifs: {QuestionnaireObjectif.alternance, QuestionnaireObjectif.decouvrirMetiers},
+        objectifs: {
+          QuestionnaireObjectif.alternance,
+          QuestionnaireObjectif.decouvrirMetiers,
+        },
         domaine: 'mécanique',
         villeRecherche: const QuestionnaireCommune(code: '76540', nom: 'Rouen'),
         rayonKm: 30,
-        freins: {QuestionnaireFrein.pasDeTransport, QuestionnaireFrein.manqueConfiance},
+        freins: {
+          QuestionnaireFrein.pasDeTransport,
+          QuestionnaireFrein.manqueConfiance,
+        },
       ),
     );
 
@@ -49,7 +55,10 @@ void main() {
       const OnboardingQuestionnaireAnswers(
         situation: QuestionnaireSituation.autre,
         objectifs: {QuestionnaireObjectif.emploi},
-        freins: {QuestionnaireFrein.rienNeMeBloque, QuestionnaireFrein.pasDePermis},
+        freins: {
+          QuestionnaireFrein.rienNeMeBloque,
+          QuestionnaireFrein.pasDePermis,
+        },
       ),
     );
 
@@ -118,5 +127,112 @@ void main() {
         ],
       },
     );
+  });
+
+  group('questionnaire', () {
+    test(
+      'maps answers to questionnaire request body, age computed from date of birth',
+      () {
+        final request = mapper.toQuestionnaireRequest(
+          OnboardingQuestionnaireAnswers(
+            prenom: 'Malik',
+            dateNaissance: DateTime(2006, 4, 12),
+            situation: QuestionnaireSituation.lycee,
+            objectifs: {QuestionnaireObjectif.alternance},
+            domaine: 'mécanique',
+            freins: {QuestionnaireFrein.pasDeTransport},
+          ),
+          etapeCourante: 'freins',
+          now: DateTime(2026, 4, 11),
+        );
+
+        expect(request, {
+          'etapeCourante': 'freins',
+          'age': 19,
+          'situation': 'LYCEE',
+          'goals': ['ALTERNANCE'],
+          'domaine': 'mécanique',
+          'obstacles': ['PAS_DE_TRANSPORT'],
+        });
+      },
+    );
+
+    test('empty answers are sent as empty, domaine omitted', () {
+      final request = mapper.toQuestionnaireRequest(
+        const OnboardingQuestionnaireAnswers(),
+        etapeCourante: 'freins',
+      );
+
+      expect(request, {
+        'etapeCourante': 'freins',
+        'goals': <String>[],
+        'obstacles': <String>[],
+      });
+    });
+
+    test(
+      '"je ne sais pas" domaine is sent as null, unlike an unanswered one',
+      () {
+        final request = mapper.toQuestionnaireRequest(
+          const OnboardingQuestionnaireAnswers(domaineInconnu: true),
+          etapeCourante: 'freins',
+        );
+
+        expect(request.containsKey('domaine'), isTrue);
+        expect(request['domaine'], isNull);
+      },
+    );
+
+    test(
+      'restores contract answers and keeps local ones unknown to the API',
+      () {
+        final restored = mapper.fromQuestionnaireResponse(
+          {
+            'dateMiseAJour': '2026-10-20T10:00:00.000Z',
+            'age': 19,
+            'situation': 'EMPLOI',
+            'goals': ['EMPLOI', 'FORMER'],
+            'domaine': null,
+            'obstacles': ['RIEN_NE_ME_BLOQUE'],
+          },
+          const OnboardingQuestionnaireAnswers(prenom: 'Malik', rayonKm: 30),
+        );
+
+        expect(
+          restored,
+          const OnboardingQuestionnaireAnswers(
+            prenom: 'Malik',
+            rayonKm: 30,
+            situation: QuestionnaireSituation.emploi,
+            objectifs: {
+              QuestionnaireObjectif.emploi,
+              QuestionnaireObjectif.former,
+            },
+            domaineInconnu: true,
+            freins: {QuestionnaireFrein.rienNeMeBloque},
+          ),
+        );
+      },
+    );
+
+    test('restores a domaine and an absent one stays unanswered', () {
+      final withDomaine = mapper.fromQuestionnaireResponse(
+        {
+          'situation': 'LYCEE',
+          'goals': <String>[],
+          'domaine': 'mécanique',
+          'obstacles': <String>[],
+        },
+        const OnboardingQuestionnaireAnswers(),
+      );
+      final withoutDomaine = mapper.fromQuestionnaireResponse(
+        {'situation': 'LYCEE', 'goals': <String>[], 'obstacles': <String>[]},
+        const OnboardingQuestionnaireAnswers(),
+      );
+
+      expect(withDomaine.domaine, 'mécanique');
+      expect(withDomaine.domaineInconnu, isFalse);
+      expect(withoutDomaine.isDomaineAnswered, isFalse);
+    });
   });
 }
