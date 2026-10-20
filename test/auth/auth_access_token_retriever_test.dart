@@ -37,14 +37,18 @@ void main() {
     expect(await tokenRetriever.accessToken(), "Access token");
   });
 
-  test("Returns access token when id token is invalid but refresh token is SUCCESSFUL", () async {
+  test("Returns access token and notifies session refresh when id token is invalid but refresh token is SUCCESSFUL",
+      () async {
     // Given
+    final store = StoreSpy();
     when(() => authenticator.idToken()).thenAnswer((_) async => invalidIdToken());
     when(() => authenticator.refreshStoredSession()).thenAnswer((_) async => RefreshTokenStatus.SUCCESSFUL);
     when(() => authenticator.accessToken()).thenAnswer((_) async => "Access token");
+    tokenRetriever.setStore(store);
 
     // When-Then
     expect(await tokenRetriever.accessToken(), "Access token");
+    expect(store.dispatchedAction, isA<SessionRefreshedAction>());
   });
 
   test("Throws WITHOUT logout on a SINGLE GENERIC_ERROR (hoquet transitoire toléré)", () async {
