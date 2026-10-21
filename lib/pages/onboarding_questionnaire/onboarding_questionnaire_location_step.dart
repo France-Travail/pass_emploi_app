@@ -25,10 +25,12 @@ class OnboardingQuestionnaireLocationStep extends StatefulWidget {
   final bool isHabitation;
 
   @override
-  State<OnboardingQuestionnaireLocationStep> createState() => _OnboardingQuestionnaireLocationStepState();
+  State<OnboardingQuestionnaireLocationStep> createState() =>
+      _OnboardingQuestionnaireLocationStepState();
 }
 
-class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestionnaireLocationStep> {
+class _OnboardingQuestionnaireLocationStepState
+    extends State<OnboardingQuestionnaireLocationStep> {
   List<QuestionnaireCommune> _suggestions = [];
   int? _focusedSuggestion;
   Timer? _debounce;
@@ -44,7 +46,9 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
   }
 
   @override
-  void didUpdateWidget(covariant OnboardingQuestionnaireLocationStep oldWidget) {
+  void didUpdateWidget(
+    covariant OnboardingQuestionnaireLocationStep oldWidget,
+  ) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.isHabitation != widget.isHabitation) {
       _controller.text = _currentQuery;
@@ -61,7 +65,8 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
     super.dispose();
   }
 
-  String get _currentQuery => widget.isHabitation ? form.draftHabitationQuery : form.draftVilleQuery;
+  String get _currentQuery =>
+      widget.isHabitation ? form.draftHabitationQuery : form.draftVilleQuery;
 
   void _onControllerChanged() => setState(() {});
 
@@ -77,7 +82,9 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
           widget.isHabitation
               ? Strings.onboardingQuestionnaireHabitationSubtitle
               : Strings.onboardingQuestionnaireVilleSubtitle,
-          style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+          style: DsfrTextStyle.bodyMdBold(
+            color: DsfrColorDecisions.textTitleGrey(context),
+          ),
         ),
         const SizedBox(height: Margins.spacing_base),
         MergeSemantics(
@@ -86,7 +93,9 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
             children: [
               Text(
                 label,
-                style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
+                style: DsfrTextStyle.bodyMd(
+                  color: DsfrColorDecisions.textLabelGrey(context),
+                ),
               ),
               const SizedBox(height: DsfrSpacings.s1w),
               // A11y 5.1 : fusionné au champ, le bouton d'effacement le faisait passer pour un bouton.
@@ -101,17 +110,24 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
                   controller: _controller,
                   onChanged: _onQueryChanged,
                   // A11y 9.12 : la commune d'habitation peut être proposée par le téléphone.
-                  autofillHints: widget.isHabitation ? const [AutofillHints.addressCity] : null,
+                  autofillHints: widget.isHabitation
+                      ? const [AutofillHints.addressCity]
+                      : null,
                   suffixIcon: _controller.text.isNotEmpty
                       ? ExcludeSemantics(
                           child: IconButton(
                             tooltip: Strings.clear,
                             padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                            constraints: const BoxConstraints(
+                              minWidth: 40,
+                              minHeight: 40,
+                            ),
                             icon: Icon(
                               DsfrIcons.systemCloseLine,
                               size: 16,
-                              color: DsfrColorDecisions.textDefaultGrey(context),
+                              color: DsfrColorDecisions.textDefaultGrey(
+                                context,
+                              ),
                             ),
                             onPressed: _clearQuery,
                           ),
@@ -140,7 +156,9 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
                 }),
                 title: Text(
                   entry.$2.displayLabel,
-                  style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
+                  style: DsfrTextStyle.bodyMd(
+                    color: DsfrColorDecisions.textTitleGrey(context),
+                  ),
                 ),
                 onTap: () => _onCommuneSelected(entry.$2),
               ),
@@ -152,7 +170,9 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
           Text(
             Strings.onboardingQuestionnaireVilleOr,
             textAlign: TextAlign.center,
-            style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+            style: DsfrTextStyle.bodyMdBold(
+              color: DsfrColorDecisions.textTitleGrey(context),
+            ),
           ),
         ],
         const SizedBox(height: Margins.spacing_base),
@@ -167,7 +187,9 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
           const SizedBox(height: Margins.spacing_s),
           Text(
             form.geolocationError!,
-            style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultError(context)),
+            style: DsfrTextStyle.bodySm(
+              color: DsfrColorDecisions.textDefaultError(context),
+            ),
           ),
         ],
         if (!widget.isHabitation) ...[
@@ -179,25 +201,36 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
             slider: true,
             label: Strings.onboardingQuestionnaireRayonLabel,
             value: Strings.searchRadiusA11yValue(form.draftRayonKm),
-            increasedValue: Strings.searchRadiusA11yValue(_nextRayon(form.draftRayonKm, 1)),
-            decreasedValue: Strings.searchRadiusA11yValue(_nextRayon(form.draftRayonKm, -1)),
+            increasedValue: Strings.searchRadiusA11yValue(
+              _nextRayon(form.draftRayonKm, 1),
+            ),
+            decreasedValue: Strings.searchRadiusA11yValue(
+              _nextRayon(form.draftRayonKm, -1),
+            ),
             hint: Strings.searchRadiusA11yHint(_rayonMin, _rayonMax),
             onIncrease: form.draftRayonKm < _rayonMax
-                ? () => form.updateRayon(_nextRayon(form.draftRayonKm, 1).toDouble())
+                ? () => form.updateRayon(
+                    _nextRayon(form.draftRayonKm, 1).toDouble(),
+                  )
                 : null,
             onDecrease: form.draftRayonKm > _rayonMin
-                ? () => form.updateRayon(_nextRayon(form.draftRayonKm, -1).toDouble())
+                ? () => form.updateRayon(
+                    _nextRayon(form.draftRayonKm, -1).toDouble(),
+                  )
                 : null,
             excludeSemantics: true,
             child: DsfrSlider(
               label: Strings.onboardingQuestionnaireRayonLabel,
-              description: Strings.onboardingQuestionnaireRayonDescription(form.draftRayonKm),
+              description: Strings.onboardingQuestionnaireRayonDescription(
+                form.draftRayonKm,
+              ),
               value: form.draftRayonKm.toDouble(),
               min: _rayonMin.toDouble(),
               max: _rayonMax.toDouble(),
               divisions: 9,
               size: DsfrComponentSize.md,
-              valueLabelBuilder: (value) => Strings.onboardingQuestionnaireRayonValue(value.round()),
+              valueLabelBuilder: (value) =>
+                  Strings.onboardingQuestionnaireRayonValue(value.round()),
               showMinMaxLabels: true,
               onChanged: form.updateRayon,
             ),
@@ -211,7 +244,8 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
   static const int _rayonMax = 100;
   static const int _rayonStep = 10;
 
-  int _nextRayon(int current, int direction) => (current + direction * _rayonStep).clamp(_rayonMin, _rayonMax);
+  int _nextRayon(int current, int direction) =>
+      (current + direction * _rayonStep).clamp(_rayonMin, _rayonMax);
 
   void _clearQuery() {
     _debounce?.cancel();
@@ -239,7 +273,10 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
         _focusedSuggestion = null;
       });
       // A11y 5.4 : la liste apparaît sous le champ, son arrivée est annoncée.
-      if (results.isNotEmpty) A11yUtils.announce(Strings.onboardingQuestionnaireCommunesA11y(results.length));
+      if (results.isNotEmpty)
+        A11yUtils.announce(
+          Strings.onboardingQuestionnaireCommunesA11y(results.length),
+        );
     });
   }
 
@@ -255,7 +292,9 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
     } else {
       form.selectVilleRecherche(commune);
     }
-    A11yUtils.announce(Strings.onboardingQuestionnaireCommuneSelectedA11y(commune.displayLabel));
+    A11yUtils.announce(
+      Strings.onboardingQuestionnaireCommuneSelectedA11y(commune.displayLabel),
+    );
   }
 
   // A11y 5.4 : l'erreur de géolocalisation s'affiche sous le bouton et est annoncée.
@@ -269,15 +308,20 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
     try {
       final serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        _failGeolocation(OnboardingQuestionnaireGeolocationFailure.serviceDesactive);
+        _failGeolocation(
+          OnboardingQuestionnaireGeolocationFailure.serviceDesactive,
+        );
         return;
       }
       var permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
       }
-      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
-        _failGeolocation(OnboardingQuestionnaireGeolocationFailure.permissionRefusee);
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        _failGeolocation(
+          OnboardingQuestionnaireGeolocationFailure.permissionRefusee,
+        );
         return;
       }
       final position = await Geolocator.getCurrentPosition();
@@ -286,7 +330,9 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
         longitude: position.longitude,
       );
       if (commune == null) {
-        _failGeolocation(OnboardingQuestionnaireGeolocationFailure.aucuneCommune);
+        _failGeolocation(
+          OnboardingQuestionnaireGeolocationFailure.aucuneCommune,
+        );
         return;
       }
       setState(() => _suggestions = []);
@@ -297,9 +343,15 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
         form.selectVilleRecherche(commune);
       }
       form.succeedGeolocation();
-      A11yUtils.announce(Strings.onboardingQuestionnaireCommuneSelectedA11y(commune.displayLabel));
+      A11yUtils.announce(
+        Strings.onboardingQuestionnaireCommuneSelectedA11y(
+          commune.displayLabel,
+        ),
+      );
     } catch (_) {
-      _failGeolocation(OnboardingQuestionnaireGeolocationFailure.positionIntrouvable);
+      _failGeolocation(
+        OnboardingQuestionnaireGeolocationFailure.positionIntrouvable,
+      );
     }
   }
 }

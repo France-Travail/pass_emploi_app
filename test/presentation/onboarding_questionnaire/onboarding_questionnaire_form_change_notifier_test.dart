@@ -28,57 +28,84 @@ void main() {
       expect(form.isLoading, false);
     });
 
-    test('starts at first incomplete step with prefilled saved answers', () async {
-      storedAnswers = const OnboardingQuestionnaireAnswers(prenom: 'Léa');
+    test(
+      'starts at first incomplete step with prefilled saved answers',
+      () async {
+        storedAnswers = const OnboardingQuestionnaireAnswers(prenom: 'Léa');
 
-      await form.init();
+        await form.init();
 
-      expect(form.step, OnboardingQuestionnaireStep.dateNaissance);
-      expect(form.draftPrenom, 'Léa');
-      expect(form.isLoading, false);
-    });
+        expect(form.step, OnboardingQuestionnaireStep.dateNaissance);
+        expect(form.draftPrenom, 'Léa');
+        expect(form.isLoading, false);
+      },
+    );
 
-    test('starts at dateNaissance when only birthdate is missing among early steps', () async {
-      storedAnswers = OnboardingQuestionnaireAnswers(
-        prenom: 'Léa',
-        habitation: const QuestionnaireCommune(code: '59350', nom: 'Lille', codePostal: '59000'),
-        situation: QuestionnaireSituation.lycee,
-        objectifs: {QuestionnaireObjectif.emploi},
-        domaine: 'Commerce',
-        villeRecherche: const QuestionnaireCommune(code: '59350', nom: 'Lille', codePostal: '59000'),
-        freins: {QuestionnaireFrein.rienNeMeBloque},
-      );
+    test(
+      'starts at dateNaissance when only birthdate is missing among early steps',
+      () async {
+        storedAnswers = OnboardingQuestionnaireAnswers(
+          prenom: 'Léa',
+          habitation: const QuestionnaireCommune(
+            code: '59350',
+            nom: 'Lille',
+            codePostal: '59000',
+          ),
+          situation: QuestionnaireSituation.lycee,
+          objectifs: {QuestionnaireObjectif.emploi},
+          domaine: 'Commerce',
+          villeRecherche: const QuestionnaireCommune(
+            code: '59350',
+            nom: 'Lille',
+            codePostal: '59000',
+          ),
+          freins: {QuestionnaireFrein.rienNeMeBloque},
+        );
 
-      await form.init();
+        await form.init();
 
-      expect(form.step, OnboardingQuestionnaireStep.dateNaissance);
-    });
+        expect(form.step, OnboardingQuestionnaireStep.dateNaissance);
+      },
+    );
 
-    test('starts at objectifs when profile is complete so user can update action plan', () async {
-      storedAnswers = OnboardingQuestionnaireAnswers(
-        prenom: 'Léa',
-        dateNaissance: DateTime(2005, 1, 1),
-        habitation: const QuestionnaireCommune(code: '59350', nom: 'Lille', codePostal: '59000'),
-        situation: QuestionnaireSituation.lycee,
-        objectifs: {QuestionnaireObjectif.emploi},
-        domaine: 'Commerce',
-        villeRecherche: const QuestionnaireCommune(code: '59350', nom: 'Lille', codePostal: '59000'),
-        freins: {QuestionnaireFrein.rienNeMeBloque},
-      );
+    test(
+      'starts at objectifs when profile is complete so user can update action plan',
+      () async {
+        storedAnswers = OnboardingQuestionnaireAnswers(
+          prenom: 'Léa',
+          dateNaissance: DateTime(2005, 1, 1),
+          habitation: const QuestionnaireCommune(
+            code: '59350',
+            nom: 'Lille',
+            codePostal: '59000',
+          ),
+          situation: QuestionnaireSituation.lycee,
+          objectifs: {QuestionnaireObjectif.emploi},
+          domaine: 'Commerce',
+          villeRecherche: const QuestionnaireCommune(
+            code: '59350',
+            nom: 'Lille',
+            codePostal: '59000',
+          ),
+          freins: {QuestionnaireFrein.rienNeMeBloque},
+        );
 
-      await form.init();
+        await form.init();
 
-      expect(form.step, OnboardingQuestionnaireStep.objectifs);
-      expect(form.step.questionnaireIndex, 5);
-      expect(form.draftObjectifs, {QuestionnaireObjectif.emploi});
-      expect(form.draftPrenom, 'Léa');
-    });
+        expect(form.step, OnboardingQuestionnaireStep.objectifs);
+        expect(form.step.questionnaireIndex, 5);
+        expect(form.draftObjectifs, {QuestionnaireObjectif.emploi});
+        expect(form.draftPrenom, 'Léa');
+      },
+    );
   });
 
   group('firstIncompleteStep', () {
     test('returns each step when it is the first missing answer', () {
       expect(
-        OnboardingQuestionnaireFormChangeNotifier.firstIncompleteStep(const OnboardingQuestionnaireAnswers()),
+        OnboardingQuestionnaireFormChangeNotifier.firstIncompleteStep(
+          const OnboardingQuestionnaireAnswers(),
+        ),
         OnboardingQuestionnaireStep.prenom,
       );
       expect(
@@ -89,7 +116,10 @@ void main() {
       );
       expect(
         OnboardingQuestionnaireFormChangeNotifier.firstIncompleteStep(
-          OnboardingQuestionnaireAnswers(prenom: 'Léa', dateNaissance: DateTime(2005, 1, 1)),
+          OnboardingQuestionnaireAnswers(
+            prenom: 'Léa',
+            dateNaissance: DateTime(2005, 1, 1),
+          ),
         ),
         OnboardingQuestionnaireStep.habitation,
       );
@@ -111,23 +141,32 @@ void main() {
       );
     });
 
-    test('returns objectifs when all answers are filled (modifier le plan)', () {
-      expect(
-        OnboardingQuestionnaireFormChangeNotifier.firstIncompleteStep(
-          OnboardingQuestionnaireAnswers(
-            prenom: 'Léa',
-            dateNaissance: DateTime(2005, 1, 1),
-            habitation: const QuestionnaireCommune(code: '59350', nom: 'Lille'),
-            situation: QuestionnaireSituation.lycee,
-            objectifs: {QuestionnaireObjectif.emploi},
-            domaine: 'Commerce',
-            villeRecherche: const QuestionnaireCommune(code: '59350', nom: 'Lille'),
-            freins: {QuestionnaireFrein.rienNeMeBloque},
+    test(
+      'returns objectifs when all answers are filled (modifier le plan)',
+      () {
+        expect(
+          OnboardingQuestionnaireFormChangeNotifier.firstIncompleteStep(
+            OnboardingQuestionnaireAnswers(
+              prenom: 'Léa',
+              dateNaissance: DateTime(2005, 1, 1),
+              habitation: const QuestionnaireCommune(
+                code: '59350',
+                nom: 'Lille',
+              ),
+              situation: QuestionnaireSituation.lycee,
+              objectifs: {QuestionnaireObjectif.emploi},
+              domaine: 'Commerce',
+              villeRecherche: const QuestionnaireCommune(
+                code: '59350',
+                nom: 'Lille',
+              ),
+              freins: {QuestionnaireFrein.rienNeMeBloque},
+            ),
           ),
-        ),
-        OnboardingQuestionnaireStep.objectifs,
-      );
-    });
+          OnboardingQuestionnaireStep.objectifs,
+        );
+      },
+    );
   });
 
   group('continue / skip / back', () {
@@ -270,11 +309,62 @@ void main() {
     });
   });
 
+  group('maximum age', () {
+    final today = DateTime(2026, 9, 17, 10, 30);
+
+    bool isOverMaximumAge(DateTime birthDate) {
+      return OnboardingQuestionnaireFormChangeNotifier.isOverMaximumAge(
+        birthDate,
+        today,
+      );
+    }
+
+    test('30th birthday today is over maximum age', () {
+      expect(isOverMaximumAge(DateTime(1996, 9, 17)), true);
+    });
+
+    test('30th birthday tomorrow is not over maximum age', () {
+      expect(isOverMaximumAge(DateTime(1996, 9, 18)), false);
+    });
+
+    test('older than 30 is over maximum age', () {
+      expect(isOverMaximumAge(DateTime(1980, 1, 1)), true);
+    });
+
+    test('between 15 and 29 is not over maximum age', () {
+      expect(isOverMaximumAge(DateTime(2001, 9, 17)), false);
+      expect(isOverMaximumAge(DateTime(2011, 9, 17)), false);
+    });
+
+    test('over maximum age does not save nor advance', () async {
+      await form.init();
+      form.step = OnboardingQuestionnaireStep.dateNaissance;
+
+      await withClock(Clock.fixed(today), () async {
+        form.updateBirthDay('17');
+        form.updateBirthMonth('09');
+        form.updateBirthYear('1996');
+
+        expect(form.canContinue, true);
+        expect(form.isBirthDateOverMaximumAge, true);
+
+        await form.continueStep();
+
+        expect(form.step, OnboardingQuestionnaireStep.dateNaissance);
+        expect(form.savedAnswers.dateNaissance, isNull);
+        expect(savedCalls, isEmpty);
+      });
+    });
+  });
+
   group('minimum age', () {
     final today = DateTime(2026, 9, 17, 10, 30);
 
     bool isUnderMinimumAge(DateTime birthDate) {
-      return OnboardingQuestionnaireFormChangeNotifier.isUnderMinimumAge(birthDate, today);
+      return OnboardingQuestionnaireFormChangeNotifier.isUnderMinimumAge(
+        birthDate,
+        today,
+      );
     }
 
     test('15th birthday today is not under minimum age', () {
@@ -297,8 +387,20 @@ void main() {
     test('born on February 29 turns 15 on March 1 of a non-leap year', () {
       final birthDate = DateTime(2012, 2, 29);
 
-      expect(OnboardingQuestionnaireFormChangeNotifier.isUnderMinimumAge(birthDate, DateTime(2027, 2, 28)), true);
-      expect(OnboardingQuestionnaireFormChangeNotifier.isUnderMinimumAge(birthDate, DateTime(2027, 3, 1)), false);
+      expect(
+        OnboardingQuestionnaireFormChangeNotifier.isUnderMinimumAge(
+          birthDate,
+          DateTime(2027, 2, 28),
+        ),
+        true,
+      );
+      expect(
+        OnboardingQuestionnaireFormChangeNotifier.isUnderMinimumAge(
+          birthDate,
+          DateTime(2027, 3, 1),
+        ),
+        false,
+      );
     });
 
     group('on birthdate step', () {
@@ -307,23 +409,26 @@ void main() {
         form.step = OnboardingQuestionnaireStep.dateNaissance;
       });
 
-      test('under minimum age keeps continue enabled but does not save nor advance', () async {
-        await withClock(Clock.fixed(today), () async {
-          form.updateBirthDay('18');
-          form.updateBirthMonth('09');
-          form.updateBirthYear('2011');
+      test(
+        'under minimum age keeps continue enabled but does not save nor advance',
+        () async {
+          await withClock(Clock.fixed(today), () async {
+            form.updateBirthDay('18');
+            form.updateBirthMonth('09');
+            form.updateBirthYear('2011');
 
-          expect(form.canContinue, true);
-          expect(form.isBirthDateUnderMinimumAge, true);
+            expect(form.canContinue, true);
+            expect(form.isBirthDateUnderMinimumAge, true);
 
-          await form.continueStep();
+            await form.continueStep();
 
-          expect(form.step, OnboardingQuestionnaireStep.dateNaissance);
-          expect(form.savedAnswers.dateNaissance, isNull);
-          expect(savedCalls, isEmpty);
-          expect(form.parsedBirthDate, DateTime(2011, 9, 18));
-        });
-      });
+            expect(form.step, OnboardingQuestionnaireStep.dateNaissance);
+            expect(form.savedAnswers.dateNaissance, isNull);
+            expect(savedCalls, isEmpty);
+            expect(form.parsedBirthDate, DateTime(2011, 9, 18));
+          });
+        },
+      );
 
       test('another birth date after being blocked continues', () async {
         await withClock(Clock.fixed(today), () async {
@@ -370,19 +475,26 @@ void main() {
       expect(savedCalls, isEmpty);
     });
 
-    test('continue saves the selected situation and goes to objectifs', () async {
-      form.updateSituation(QuestionnaireSituation.lycee);
+    test(
+      'continue saves the selected situation and goes to objectifs',
+      () async {
+        form.updateSituation(QuestionnaireSituation.lycee);
 
-      await form.continueStep();
+        await form.continueStep();
 
-      expect(form.savedAnswers.situation, QuestionnaireSituation.lycee);
-      expect(form.step, OnboardingQuestionnaireStep.objectifs);
-      expect(savedCalls, hasLength(1));
-    });
+        expect(form.savedAnswers.situation, QuestionnaireSituation.lycee);
+        expect(form.step, OnboardingQuestionnaireStep.objectifs);
+        expect(savedCalls, hasLength(1));
+      },
+    );
   });
 
   group('ville prefill from habitation', () {
-    const habitation = QuestionnaireCommune(code: '59350', nom: 'Lille', codePostal: '59000');
+    const habitation = QuestionnaireCommune(
+      code: '59350',
+      nom: 'Lille',
+      codePostal: '59000',
+    );
 
     setUp(() async {
       await form.init();
@@ -403,48 +515,55 @@ void main() {
   });
 
   group('finish without generation', () {
-    test('skipping last step without situation/objectifs finishes without loader', () async {
-      OnboardingQuestionnaireAnswers? finishedAnswers;
-      form = OnboardingQuestionnaireFormChangeNotifier(
-        loadAnswers: () async => storedAnswers,
-        saveAnswers: (answers) async {
-          storedAnswers = answers;
-          savedCalls.add(answers);
-        },
-        onFinishWithoutGeneration: (answers) => finishedAnswers = answers,
-      );
-      await form.init();
-      form.step = OnboardingQuestionnaireStep.freins;
+    test(
+      'skipping last step without situation/objectifs finishes without loader',
+      () async {
+        OnboardingQuestionnaireAnswers? finishedAnswers;
+        form = OnboardingQuestionnaireFormChangeNotifier(
+          loadAnswers: () async => storedAnswers,
+          saveAnswers: (answers) async {
+            storedAnswers = answers;
+            savedCalls.add(answers);
+          },
+          onFinishWithoutGeneration: (answers) => finishedAnswers = answers,
+        );
+        await form.init();
+        form.step = OnboardingQuestionnaireStep.freins;
 
-      await form.skipStep();
+        await form.skipStep();
 
-      expect(form.step, OnboardingQuestionnaireStep.freins);
-      expect(finishedAnswers, isNotNull);
-      expect(finishedAnswers!.canGenerateActionPlan, isFalse);
-    });
+        expect(form.step, OnboardingQuestionnaireStep.freins);
+        expect(finishedAnswers, isNotNull);
+        expect(finishedAnswers!.canGenerateActionPlan, isFalse);
+      },
+    );
 
-    test('continuing last step with situation and objectifs goes to loader', () async {
-      var finishWithoutGenerationCalled = false;
-      form = OnboardingQuestionnaireFormChangeNotifier(
-        loadAnswers: () async => storedAnswers,
-        saveAnswers: (answers) async {
-          storedAnswers = answers;
-          savedCalls.add(answers);
-        },
-        onFinishWithoutGeneration: (_) => finishWithoutGenerationCalled = true,
-      );
-      await form.init();
-      form.step = OnboardingQuestionnaireStep.freins;
-      form.draftFreins = {QuestionnaireFrein.rienNeMeBloque};
-      form.savedAnswers = const OnboardingQuestionnaireAnswers(
-        situation: QuestionnaireSituation.lycee,
-        objectifs: {QuestionnaireObjectif.emploi},
-      );
+    test(
+      'continuing last step with situation and objectifs goes to loader',
+      () async {
+        var finishWithoutGenerationCalled = false;
+        form = OnboardingQuestionnaireFormChangeNotifier(
+          loadAnswers: () async => storedAnswers,
+          saveAnswers: (answers) async {
+            storedAnswers = answers;
+            savedCalls.add(answers);
+          },
+          onFinishWithoutGeneration: (_) =>
+              finishWithoutGenerationCalled = true,
+        );
+        await form.init();
+        form.step = OnboardingQuestionnaireStep.freins;
+        form.draftFreins = {QuestionnaireFrein.rienNeMeBloque};
+        form.savedAnswers = const OnboardingQuestionnaireAnswers(
+          situation: QuestionnaireSituation.lycee,
+          objectifs: {QuestionnaireObjectif.emploi},
+        );
 
-      await form.continueStep();
+        await form.continueStep();
 
-      expect(form.step, OnboardingQuestionnaireStep.loader);
-      expect(finishWithoutGenerationCalled, isFalse);
-    });
+        expect(form.step, OnboardingQuestionnaireStep.loader);
+        expect(finishWithoutGenerationCalled, isFalse);
+      },
+    );
   });
 }

@@ -18,10 +18,12 @@ class OnboardingQuestionnaireLoaderStep extends StatefulWidget {
   final OnboardingQuestionnaireAnswers answers;
 
   @override
-  State<OnboardingQuestionnaireLoaderStep> createState() => _OnboardingQuestionnaireLoaderStepState();
+  State<OnboardingQuestionnaireLoaderStep> createState() =>
+      _OnboardingQuestionnaireLoaderStepState();
 }
 
-class _OnboardingQuestionnaireLoaderStepState extends State<OnboardingQuestionnaireLoaderStep>
+class _OnboardingQuestionnaireLoaderStepState
+    extends State<OnboardingQuestionnaireLoaderStep>
     with SingleTickerProviderStateMixin {
   static const _maxFakeProgress = 0.95;
   static const _timeConstantSeconds = 2.5;
@@ -56,7 +58,10 @@ class _OnboardingQuestionnaireLoaderStepState extends State<OnboardingQuestionna
 
   void _onTick() {
     if (!mounted || _completionStarted) return;
-    final actionPlanState = StoreProvider.of<AppState>(context, listen: false).state.actionPlanState;
+    final actionPlanState = StoreProvider.of<AppState>(
+      context,
+      listen: false,
+    ).state.actionPlanState;
     if (!_isGenerationDone(actionPlanState)) {
       _seenNonTerminalState = true;
     } else if (_seenNonTerminalState) {
@@ -72,7 +77,9 @@ class _OnboardingQuestionnaireLoaderStepState extends State<OnboardingQuestionna
   }
 
   bool _isGenerationDone(ActionPlanState state) {
-    return state is ActionPlanSuccessState || state is ActionPlanEmptyState || state is ActionPlanFailureState;
+    return state is ActionPlanSuccessState ||
+        state is ActionPlanEmptyState ||
+        state is ActionPlanFailureState;
   }
 
   Future<void> _completeToFull() async {
@@ -80,7 +87,10 @@ class _OnboardingQuestionnaireLoaderStepState extends State<OnboardingQuestionna
     _completionStarted = true;
     _tickTimer?.cancel();
 
-    final controller = AnimationController(vsync: this, duration: AnimationDurations.medium);
+    final controller = AnimationController(
+      vsync: this,
+      duration: AnimationDurations.medium,
+    );
     _completeController = controller;
     final animation = Tween<double>(begin: _progress, end: 1).animate(
       CurvedAnimation(parent: controller, curve: Curves.easeOut),
@@ -94,7 +104,9 @@ class _OnboardingQuestionnaireLoaderStepState extends State<OnboardingQuestionna
 
     await Future<void>.delayed(AnimationDurations.medium);
     if (!mounted) return;
-    StoreProvider.of<AppState>(context).dispatch(OnboardingQuestionnaireFinishAction(widget.answers));
+    StoreProvider.of<AppState>(
+      context,
+    ).dispatch(OnboardingQuestionnaireFinishAction(widget.answers));
   }
 
   @override
@@ -112,14 +124,18 @@ class _OnboardingQuestionnaireLoaderStepState extends State<OnboardingQuestionna
             child: Text(
               Strings.onboardingQuestionnaireLoaderTitle,
               textAlign: TextAlign.center,
-              style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context)),
+              style: DsfrTextStyle.bodyXlBold(
+                color: DsfrColorDecisions.textTitleGrey(context),
+              ),
             ),
           ),
           const SizedBox(height: Margins.spacing_s),
           Text(
             Strings.onboardingQuestionnaireLoaderSubtitle,
             textAlign: TextAlign.center,
-            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+            style: DsfrTextStyle.bodyMd(
+              color: DsfrColorDecisions.textDefaultGrey(context),
+            ),
           ),
           const SizedBox(height: Margins.spacing_base),
           _LoaderProgressBar(progress: _progress),
@@ -133,7 +149,10 @@ class _OnboardingQuestionnaireLoaderStepState extends State<OnboardingQuestionna
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(width: 4, color: DsfrColorDecisions.borderDefaultBlueFrance(context)),
+                  Container(
+                    width: 4,
+                    color: DsfrColorDecisions.borderDefaultBlueFrance(context),
+                  ),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.all(Margins.spacing_base),
@@ -142,27 +161,41 @@ class _OnboardingQuestionnaireLoaderStepState extends State<OnboardingQuestionna
                         children: [
                           Text(
                             Strings.onboardingQuestionnaireLoaderProfil,
-                            style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                            style: DsfrTextStyle.bodyXlBold(
+                              color: DsfrColorDecisions.textTitleGrey(context),
+                            ),
                           ),
                           const SizedBox(height: Margins.spacing_s),
                           if (answers.prenom != null)
-                            _ProfilRow(label: Strings.onboardingQuestionnaireLoaderPrenom, value: answers.prenom!),
+                            _ProfilRow(
+                              label:
+                                  Strings.onboardingQuestionnaireLoaderPrenom,
+                              value: answers.prenom!,
+                            ),
                           if (answers.situation != null)
                             _ProfilRow(
-                              label: Strings.onboardingQuestionnaireLoaderSituation,
+                              label: Strings
+                                  .onboardingQuestionnaireLoaderSituation,
                               value: answers.situation!.label,
                             ),
-                          if (answers.domaine != null && answers.domaine!.isNotEmpty)
-                            _ProfilRow(label: Strings.onboardingQuestionnaireLoaderDomaine, value: answers.domaine!),
+                          if (answers.domaine != null &&
+                              answers.domaine!.isNotEmpty)
+                            _ProfilRow(
+                              label:
+                                  Strings.onboardingQuestionnaireLoaderDomaine,
+                              value: answers.domaine!,
+                            ),
                           if (answers.villeRecherche != null)
                             _ProfilRow(
                               label: Strings.onboardingQuestionnaireLoaderZone,
-                              value: Strings.onboardingQuestionnaireLoaderZoneValue(
-                                answers.villeRecherche!.nom,
-                                answers.rayonKm,
-                              ),
+                              value:
+                                  Strings.onboardingQuestionnaireLoaderZoneValue(
+                                    answers.villeRecherche!.nom,
+                                    answers.rayonKm,
+                                  ),
                             ),
-                          if (answers.objectifs.isNotEmpty || answers.freins.isNotEmpty) ...[
+                          if (answers.objectifs.isNotEmpty ||
+                              answers.freins.isNotEmpty) ...[
                             const SizedBox(height: Margins.spacing_s),
                             Wrap(
                               spacing: 8,
@@ -173,16 +206,24 @@ class _OnboardingQuestionnaireLoaderStepState extends State<OnboardingQuestionna
                                   // sélectionne pas ; elle est restituée comme un simple texte.
                                   Semantics(
                                     container: true,
-                                    label: Strings.onboardingQuestionnaireLoaderObjectifsCount(
-                                      answers.objectifs.length,
-                                    ),
+                                    label:
+                                        Strings.onboardingQuestionnaireLoaderObjectifsCount(
+                                          answers.objectifs.length,
+                                        ),
                                     excludeSemantics: true,
                                     child: DsfrTag(
-                                      backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
-                                      textColor: DsfrColorDecisions.textTitleGrey(context),
-                                      label: Strings.onboardingQuestionnaireLoaderObjectifsCount(
-                                        answers.objectifs.length,
-                                      ),
+                                      backgroundColor:
+                                          DsfrColorDecisions.backgroundContrastGrey(
+                                            context,
+                                          ),
+                                      textColor:
+                                          DsfrColorDecisions.textTitleGrey(
+                                            context,
+                                          ),
+                                      label:
+                                          Strings.onboardingQuestionnaireLoaderObjectifsCount(
+                                            answers.objectifs.length,
+                                          ),
                                       size: DsfrComponentSize.sm,
                                     ),
                                   ),
@@ -198,10 +239,22 @@ class _OnboardingQuestionnaireLoaderStepState extends State<OnboardingQuestionna
             ),
           ),
           const SizedBox(height: Margins.spacing_l),
-          _LoaderProgressLine(label: Strings.onboardingQuestionnaireLoaderStepRead, done: true),
-          _LoaderProgressLine(label: Strings.onboardingQuestionnaireLoaderStepSolutions, done: true),
-          _LoaderProgressLine(label: Strings.onboardingQuestionnaireLoaderStepBuild, done: false),
-          _LoaderProgressLine(label: Strings.onboardingQuestionnaireLoaderStepOrder, done: false),
+          _LoaderProgressLine(
+            label: Strings.onboardingQuestionnaireLoaderStepRead,
+            done: true,
+          ),
+          _LoaderProgressLine(
+            label: Strings.onboardingQuestionnaireLoaderStepSolutions,
+            done: true,
+          ),
+          _LoaderProgressLine(
+            label: Strings.onboardingQuestionnaireLoaderStepBuild,
+            done: false,
+          ),
+          _LoaderProgressLine(
+            label: Strings.onboardingQuestionnaireLoaderStepOrder,
+            done: false,
+          ),
         ],
       ),
     );
@@ -232,7 +285,9 @@ class _LoaderProgressBar extends StatelessWidget {
         children: [
           Text(
             Strings.onboardingQuestionnaireLoaderProgression,
-            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
+            style: DsfrTextStyle.bodyMd(
+              color: DsfrColorDecisions.textLabelGrey(context),
+            ),
           ),
           const SizedBox(height: Margins.spacing_xs),
           SizedBox(
@@ -305,7 +360,9 @@ class _LoaderProgressBar extends StatelessWidget {
           const SizedBox(height: Margins.spacing_s),
           Center(
             child: DsfrBadge(
-              label: Strings.onboardingQuestionnaireLoaderProgressPercent(percent),
+              label: Strings.onboardingQuestionnaireLoaderProgressPercent(
+                percent,
+              ),
               type: DsfrBadgeType.information,
               size: DsfrComponentSize.md,
             ),
@@ -333,13 +390,17 @@ class _ProfilRow extends StatelessWidget {
             width: 88,
             child: Text(
               label,
-              style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textMentionGrey(context)),
+              style: DsfrTextStyle.bodySm(
+                color: DsfrColorDecisions.textMentionGrey(context),
+              ),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textTitleGrey(context)),
+              style: DsfrTextStyle.bodySm(
+                color: DsfrColorDecisions.textTitleGrey(context),
+              ),
             ),
           ),
         ],
@@ -358,7 +419,9 @@ class _LoaderProgressLine extends StatelessWidget {
   Widget build(BuildContext context) {
     // A11y 2.2 : le gris « désactivé » (3,1:1) passe au gris de mention DSFR, au-dessus de 4,5:1 ;
     // l'icône (coche ou horloge) continue de distinguer les étapes faites et à venir.
-    final textColor = done ? DsfrColorDecisions.textTitleGrey(context) : DsfrColorDecisions.textMentionGrey(context);
+    final textColor = done
+        ? DsfrColorDecisions.textTitleGrey(context)
+        : DsfrColorDecisions.textMentionGrey(context);
     // A11y 1.2 et 8.1 : l'état de l'étape, donné par l'icône, est restitué avec son libellé.
     return Semantics(
       container: true,

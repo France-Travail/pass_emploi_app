@@ -20,7 +20,9 @@ class OnboardingQuestionnaireFreinsStep extends StatelessWidget {
       children: [
         Text(
           Strings.onboardingQuestionnaireFreinsSubtitle,
-          style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+          style: DsfrTextStyle.bodyMdBold(
+            color: DsfrColorDecisions.textTitleGrey(context),
+          ),
         ),
         const SizedBox(height: Margins.spacing_base),
         ...QuestionnaireFrein.values.map(
@@ -56,13 +58,18 @@ class OnboardingQuestionnaireFreinsStep extends StatelessWidget {
   }
 }
 
-void _selectExclusiveFrein(OnboardingQuestionnaireFormChangeNotifier form, QuestionnaireFrein frein) {
+void _selectExclusiveFrein(
+  OnboardingQuestionnaireFormChangeNotifier form,
+  QuestionnaireFrein frein,
+) {
   final uncheckedLabels = QuestionnaireFrein.values
       .where((other) => !other.isExclusive && form.draftFreins.contains(other))
       .map((other) => other.label)
       .toList();
   form.toggleFrein(frein);
   if (uncheckedLabels.isNotEmpty && form.draftFreins.contains(frein)) {
-    A11yUtils.announce(Strings.onboardingQuestionnaireFreinsUncheckedA11y(uncheckedLabels));
+    A11yUtils.announce(
+      Strings.onboardingQuestionnaireFreinsUncheckedA11y(uncheckedLabels),
+    );
   }
 }

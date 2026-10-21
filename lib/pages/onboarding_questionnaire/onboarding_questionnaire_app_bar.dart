@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 
-class OnboardingQuestionnaireAppBar extends StatefulWidget implements PreferredSizeWidget {
+class OnboardingQuestionnaireAppBar extends StatefulWidget
+    implements PreferredSizeWidget {
   const OnboardingQuestionnaireAppBar({super.key, required this.onBack});
 
   final VoidCallback onBack;
@@ -11,10 +12,12 @@ class OnboardingQuestionnaireAppBar extends StatefulWidget implements PreferredS
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
-  State<OnboardingQuestionnaireAppBar> createState() => _OnboardingQuestionnaireAppBarState();
+  State<OnboardingQuestionnaireAppBar> createState() =>
+      _OnboardingQuestionnaireAppBarState();
 }
 
-class _OnboardingQuestionnaireAppBarState extends State<OnboardingQuestionnaireAppBar> {
+class _OnboardingQuestionnaireAppBarState
+    extends State<OnboardingQuestionnaireAppBar> {
   bool _backFocused = false;
 
   @override

@@ -43,26 +43,44 @@ class OnboardingQuestionnaireTracker {
 
   const OnboardingQuestionnaireTracker({required this.isUpdate});
 
-  String get category =>
-      isUpdate ? AnalyticsEventNames.questionnaireUpdateCategory : AnalyticsEventNames.questionnaireFirstPassCategory;
+  String get category => isUpdate
+      ? AnalyticsEventNames.questionnaireUpdateCategory
+      : AnalyticsEventNames.questionnaireFirstPassCategory;
 
   void trackStepScreen(OnboardingQuestionnaireStep step) {
-    trackScreen('/questionnaire/${isUpdate ? 'mise-a-jour' : 'premier-passage'}/${step.trackingSlug}');
+    trackScreen(
+      '/questionnaire/${isUpdate ? 'mise-a-jour' : 'premier-passage'}/${step.trackingSlug}',
+    );
   }
 
   void trackStepEvent(String action, OnboardingQuestionnaireStep step) {
-    trackEvent(action, name: step.trackingLabel, value: step.questionnaireIndex);
+    trackEvent(
+      action,
+      name: step.trackingLabel,
+      value: step.questionnaireIndex,
+    );
   }
 
   void trackOpening(OnboardingQuestionnaireEntryPoint entryPoint) {
-    trackEvent(AnalyticsEventNames.questionnaireOpenedAction, name: entryPoint.label);
+    trackEvent(
+      AnalyticsEventNames.questionnaireOpenedAction,
+      name: entryPoint.label,
+    );
   }
 
-  void trackGenerationOutcome(OnboardingQuestionnaireGenerationOutcome outcome, {int? objectivesCount}) {
-    trackEvent(AnalyticsEventNames.questionnaireGenerationOutcomeAction, name: outcome.label, value: objectivesCount);
+  void trackGenerationOutcome(
+    OnboardingQuestionnaireGenerationOutcome outcome, {
+    int? objectivesCount,
+  }) {
+    trackEvent(
+      AnalyticsEventNames.questionnaireGenerationOutcomeAction,
+      name: outcome.label,
+      value: objectivesCount,
+    );
   }
 
-  void trackScreen(String name) => PassEmploiMatomoTracker.instance.trackScreen(name);
+  void trackScreen(String name) =>
+      PassEmploiMatomoTracker.instance.trackScreen(name);
 
   void trackEvent(String action, {String? name, int? value}) {
     PassEmploiMatomoTracker.instance.trackEvent(

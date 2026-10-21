@@ -17,7 +17,9 @@ class OnboardingQuestionnairePrenomStep extends StatelessWidget {
       children: [
         Text(
           Strings.onboardingQuestionnairePrenomSubtitle,
-          style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+          style: DsfrTextStyle.bodyMdBold(
+            color: DsfrColorDecisions.textTitleGrey(context),
+          ),
         ),
         const SizedBox(height: Margins.spacing_base),
         DsfrInput(

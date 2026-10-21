@@ -19,7 +19,9 @@ class OnboardingQuestionnaireObjectifsStep extends StatelessWidget {
       children: [
         Text(
           Strings.onboardingQuestionnaireObjectifsSubtitle,
-          style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+          style: DsfrTextStyle.bodyMdBold(
+            color: DsfrColorDecisions.textTitleGrey(context),
+          ),
         ),
         const SizedBox(height: Margins.spacing_base),
         ...QuestionnaireObjectif.values.map(

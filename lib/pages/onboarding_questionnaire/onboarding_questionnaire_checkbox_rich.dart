@@ -22,10 +22,12 @@ class OnboardingQuestionnaireCheckboxRich extends StatefulWidget {
   final bool enabled;
 
   @override
-  State<OnboardingQuestionnaireCheckboxRich> createState() => _OnboardingQuestionnaireCheckboxRichState();
+  State<OnboardingQuestionnaireCheckboxRich> createState() =>
+      _OnboardingQuestionnaireCheckboxRichState();
 }
 
-class _OnboardingQuestionnaireCheckboxRichState extends State<OnboardingQuestionnaireCheckboxRich>
+class _OnboardingQuestionnaireCheckboxRichState
+    extends State<OnboardingQuestionnaireCheckboxRich>
     with MaterialStateMixin<OnboardingQuestionnaireCheckboxRich> {
   @override
   Widget build(BuildContext context) {
@@ -83,8 +85,12 @@ class _OnboardingQuestionnaireCheckboxRichState extends State<OnboardingQuestion
                                 label,
                                 style: DsfrTextStyle.bodyMd(
                                   color: enabled
-                                      ? DsfrColorDecisions.textLabelGrey(context)
-                                      : DsfrColorDecisions.textDisabledGrey(context),
+                                      ? DsfrColorDecisions.textLabelGrey(
+                                          context,
+                                        )
+                                      : DsfrColorDecisions.textDisabledGrey(
+                                          context,
+                                        ),
                                 ),
                               ),
                             ),

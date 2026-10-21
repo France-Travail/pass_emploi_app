@@ -13,10 +13,12 @@ class OnboardingQuestionnaireBirthdateStep extends StatefulWidget {
   final OnboardingQuestionnaireFormChangeNotifier form;
 
   @override
-  State<OnboardingQuestionnaireBirthdateStep> createState() => _OnboardingQuestionnaireBirthdateStepState();
+  State<OnboardingQuestionnaireBirthdateStep> createState() =>
+      _OnboardingQuestionnaireBirthdateStepState();
 }
 
-class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestionnaireBirthdateStep> {
+class _OnboardingQuestionnaireBirthdateStepState
+    extends State<OnboardingQuestionnaireBirthdateStep> {
   final FocusNode _dayFocus = FocusNode();
   final FocusNode _monthFocus = FocusNode();
   final FocusNode _yearFocus = FocusNode();
@@ -32,7 +34,8 @@ class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestio
 
   // A11y 9.9 : une date impossible affiche un message, annoncé une fois à son apparition.
   void _announceInvalidDate(bool invalid) {
-    if (invalid && !_invalidAnnounced) A11yUtils.announce(Strings.onboardingQuestionnaireBirthdateInvalid);
+    if (invalid && !_invalidAnnounced)
+      A11yUtils.announce(Strings.onboardingQuestionnaireBirthdateInvalid);
     _invalidAnnounced = invalid;
   }
 
@@ -46,18 +49,24 @@ class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestio
       children: [
         Text(
           Strings.onboardingQuestionnaireBirthdateGreeting(form.draftPrenom),
-          style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+          style: DsfrTextStyle.bodyMdBold(
+            color: DsfrColorDecisions.textTitleGrey(context),
+          ),
         ),
         const SizedBox(height: Margins.spacing_s),
         Text(
           Strings.onboardingQuestionnaireBirthdateSubtitle,
-          style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+          style: DsfrTextStyle.bodyMdBold(
+            color: DsfrColorDecisions.textTitleGrey(context),
+          ),
         ),
         const SizedBox(height: Margins.spacing_base),
         ExcludeSemantics(
           child: Text(
             Strings.onboardingQuestionnaireBirthdateLabel,
-            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
+            style: DsfrTextStyle.bodyMd(
+              color: DsfrColorDecisions.textLabelGrey(context),
+            ),
           ),
         ),
         const SizedBox(height: DsfrSpacings.s1v),
@@ -65,12 +74,15 @@ class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestio
         ExcludeSemantics(
           child: Text(
             Strings.onboardingQuestionnaireBirthdateHint,
-            style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textMentionGrey(context)),
+            style: DsfrTextStyle.bodyXs(
+              color: DsfrColorDecisions.textMentionGrey(context),
+            ),
           ),
         ),
         const SizedBox(height: Margins.spacing_s),
         Semantics(
-          label: '${Strings.onboardingQuestionnaireBirthdateLabel}, ${Strings.onboardingQuestionnaireBirthdateHint}',
+          label:
+              '${Strings.onboardingQuestionnaireBirthdateLabel}, ${Strings.onboardingQuestionnaireBirthdateHint}',
           container: true,
           explicitChildNodes: true,
           // A11y 5.3 : le curseur ne passe pas seul au champ suivant ; la touche « suivant » du clavier le fait.
@@ -136,7 +148,9 @@ class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestio
         if (invalid) ...[
           const SizedBox(height: DsfrSpacings.s1w),
           DsfrComponentStateWidget(
-            componentState: DsfrComponentState.error(errorMessage: Strings.onboardingQuestionnaireBirthdateInvalid),
+            componentState: DsfrComponentState.error(
+              errorMessage: Strings.onboardingQuestionnaireBirthdateInvalid,
+            ),
           ),
         ],
       ],

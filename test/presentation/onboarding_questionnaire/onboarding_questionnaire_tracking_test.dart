@@ -8,7 +8,8 @@ void main() {
   late _TrackerSpy tracker;
 
   OnboardingQuestionnaireFormChangeNotifier givenForm({
-    OnboardingQuestionnaireAnswers answers = const OnboardingQuestionnaireAnswers(),
+    OnboardingQuestionnaireAnswers answers =
+        const OnboardingQuestionnaireAnswers(),
     bool isUpdate = false,
     bool startAtFirstStep = false,
   }) {
@@ -23,18 +24,34 @@ void main() {
     );
   }
 
-  const lille = QuestionnaireCommune(code: '59350', nom: 'Lille', codePostal: '59000');
-  const roubaix = QuestionnaireCommune(code: '59512', nom: 'Roubaix', codePostal: '59100');
+  const lille = QuestionnaireCommune(
+    code: '59350',
+    nom: 'Lille',
+    codePostal: '59000',
+  );
+  const roubaix = QuestionnaireCommune(
+    code: '59512',
+    nom: 'Roubaix',
+    codePostal: '59100',
+  );
 
-  test('sends a screen view for the entry step only, even when it is not step 1', () async {
-    final form = givenForm(
-      answers: OnboardingQuestionnaireAnswers(prenom: 'Léa', dateNaissance: DateTime(2005, 5, 5)),
-    );
+  test(
+    'sends a screen view for the entry step only, even when it is not step 1',
+    () async {
+      final form = givenForm(
+        answers: OnboardingQuestionnaireAnswers(
+          prenom: 'Léa',
+          dateNaissance: DateTime(2005, 5, 5),
+        ),
+      );
 
-    await form.init();
+      await form.init();
 
-    expect(tracker.screens, ['/questionnaire/premier-passage/etape-3-habitation']);
-  });
+      expect(tracker.screens, [
+        '/questionnaire/premier-passage/etape-3-habitation',
+      ]);
+    },
+  );
 
   test('typing does not send another screen view', () async {
     final form = givenForm();
@@ -69,22 +86,45 @@ void main() {
     form.updatePrenom('Léa');
     await form.continueStep();
 
-    expect(tracker.events, [(AnalyticsEventNames.questionnaireStepValidatedAction, 'Étape 1 - Prénom', 1)]);
+    expect(tracker.events, [
+      (
+        AnalyticsEventNames.questionnaireStepValidatedAction,
+        'Étape 1 - Prénom',
+        1,
+      ),
+    ]);
   });
 
-  test('going back sends "Retour en arrière" and the previous step screen', () async {
-    final form = givenForm(answers: const OnboardingQuestionnaireAnswers(prenom: 'Léa'));
-    await form.init();
+  test(
+    'going back sends "Retour en arrière" and the previous step screen',
+    () async {
+      final form = givenForm(
+        answers: const OnboardingQuestionnaireAnswers(prenom: 'Léa'),
+      );
+      await form.init();
 
-    form.goBack();
+      form.goBack();
 
-    expect(tracker.events, [(AnalyticsEventNames.questionnaireStepBackAction, 'Étape 2 - Date de naissance', 2)]);
-    expect(tracker.screens.last, '/questionnaire/premier-passage/etape-1-prenom');
-  });
+      expect(tracker.events, [
+        (
+          AnalyticsEventNames.questionnaireStepBackAction,
+          'Étape 2 - Date de naissance',
+          2,
+        ),
+      ]);
+      expect(
+        tracker.screens.last,
+        '/questionnaire/premier-passage/etape-1-prenom',
+      );
+    },
+  );
 
   test('habitation is sent as its département only', () async {
     final form = givenForm(
-      answers: OnboardingQuestionnaireAnswers(prenom: 'Léa', dateNaissance: DateTime(2005, 5, 5)),
+      answers: OnboardingQuestionnaireAnswers(
+        prenom: 'Léa',
+        dateNaissance: DateTime(2005, 5, 5),
+      ),
     );
     await form.init();
 
@@ -92,23 +132,37 @@ void main() {
     await form.continueStep();
 
     expect(tracker.events, [
-      (AnalyticsEventNames.questionnaireStepValidatedAction, 'Étape 3 - Habitation', 3),
+      (
+        AnalyticsEventNames.questionnaireStepValidatedAction,
+        'Étape 3 - Habitation',
+        3,
+      ),
       (AnalyticsEventNames.questionnaireDepartementAction, '59', null),
     ]);
   });
 
   test('skipping objectifs sends "Étape passée" and no objectif', () async {
-    final form = givenForm(answers: _answersUntil(OnboardingQuestionnaireStep.objectifs));
+    final form = givenForm(
+      answers: _answersUntil(OnboardingQuestionnaireStep.objectifs),
+    );
     await form.init();
     form.toggleObjectif(QuestionnaireObjectif.emploi);
 
     await form.skipStep();
 
-    expect(tracker.events, [(AnalyticsEventNames.questionnaireStepSkippedAction, 'Étape 5 - Objectifs', 5)]);
+    expect(tracker.events, [
+      (
+        AnalyticsEventNames.questionnaireStepSkippedAction,
+        'Étape 5 - Objectifs',
+        5,
+      ),
+    ]);
   });
 
   test('validating objectifs sends each objectif and their count', () async {
-    final form = givenForm(answers: _answersUntil(OnboardingQuestionnaireStep.objectifs));
+    final form = givenForm(
+      answers: _answersUntil(OnboardingQuestionnaireStep.objectifs),
+    );
     await form.init();
     form.toggleObjectif(QuestionnaireObjectif.emploi);
     form.toggleObjectif(QuestionnaireObjectif.former);
@@ -116,16 +170,30 @@ void main() {
     await form.continueStep();
 
     expect(tracker.events, [
-      (AnalyticsEventNames.questionnaireStepValidatedAction, 'Étape 5 - Objectifs', 5),
-      (AnalyticsEventNames.questionnaireObjectifAction, QuestionnaireObjectif.emploi.label, null),
-      (AnalyticsEventNames.questionnaireObjectifAction, QuestionnaireObjectif.former.label, null),
+      (
+        AnalyticsEventNames.questionnaireStepValidatedAction,
+        'Étape 5 - Objectifs',
+        5,
+      ),
+      (
+        AnalyticsEventNames.questionnaireObjectifAction,
+        QuestionnaireObjectif.emploi.label,
+        null,
+      ),
+      (
+        AnalyticsEventNames.questionnaireObjectifAction,
+        QuestionnaireObjectif.former.label,
+        null,
+      ),
       (AnalyticsEventNames.questionnaireObjectifsCountAction, null, 2),
     ]);
   });
 
   test('validating "Autre situation" with a precision sends it', () async {
     final form = givenForm(
-      answers: _answersUntil(OnboardingQuestionnaireStep.situation).copyWith(clearSituation: true),
+      answers: _answersUntil(
+        OnboardingQuestionnaireStep.situation,
+      ).copyWith(clearSituation: true),
     );
     await form.init();
     form.updateSituation(QuestionnaireSituation.autre);
@@ -134,27 +202,49 @@ void main() {
     await form.continueStep();
 
     expect(tracker.events, [
-      (AnalyticsEventNames.questionnaireStepValidatedAction, 'Étape 4 - Situation', 4),
-      (AnalyticsEventNames.questionnaireSituationAction, QuestionnaireSituation.autre.label, null),
-      (AnalyticsEventNames.questionnaireSituationAutreAction, 'En service civique', null),
+      (
+        AnalyticsEventNames.questionnaireStepValidatedAction,
+        'Étape 4 - Situation',
+        4,
+      ),
+      (
+        AnalyticsEventNames.questionnaireSituationAction,
+        QuestionnaireSituation.autre.label,
+        null,
+      ),
+      (
+        AnalyticsEventNames.questionnaireSituationAutreAction,
+        'En service civique',
+        null,
+      ),
     ]);
   });
 
-  test('validating "Autre situation" without precision sends no free text', () async {
-    final form = givenForm(
-      answers: _answersUntil(OnboardingQuestionnaireStep.situation).copyWith(clearSituation: true),
-    );
-    await form.init();
-    form.updateSituation(QuestionnaireSituation.autre);
+  test(
+    'validating "Autre situation" without precision sends no free text',
+    () async {
+      final form = givenForm(
+        answers: _answersUntil(
+          OnboardingQuestionnaireStep.situation,
+        ).copyWith(clearSituation: true),
+      );
+      await form.init();
+      form.updateSituation(QuestionnaireSituation.autre);
 
-    await form.continueStep();
+      await form.continueStep();
 
-    expect(tracker.events.map((e) => e.$1), isNot(contains(AnalyticsEventNames.questionnaireSituationAutreAction)));
-  });
+      expect(
+        tracker.events.map((e) => e.$1),
+        isNot(contains(AnalyticsEventNames.questionnaireSituationAutreAction)),
+      );
+    },
+  );
 
   test('precision typed then another situation chosen is not sent', () async {
     final form = givenForm(
-      answers: _answersUntil(OnboardingQuestionnaireStep.situation).copyWith(clearSituation: true),
+      answers: _answersUntil(
+        OnboardingQuestionnaireStep.situation,
+      ).copyWith(clearSituation: true),
     );
     await form.init();
     form.updateSituation(QuestionnaireSituation.autre);
@@ -163,69 +253,117 @@ void main() {
 
     await form.continueStep();
 
-    expect(tracker.events.map((e) => e.$1), isNot(contains(AnalyticsEventNames.questionnaireSituationAutreAction)));
+    expect(
+      tracker.events.map((e) => e.$1),
+      isNot(contains(AnalyticsEventNames.questionnaireSituationAutreAction)),
+    );
     expect(form.savedAnswers.situationAutre, isNull);
   });
 
   test('domaine typed is never sent', () async {
-    final form = givenForm(answers: _answersUntil(OnboardingQuestionnaireStep.domaine));
+    final form = givenForm(
+      answers: _answersUntil(OnboardingQuestionnaireStep.domaine),
+    );
     await form.init();
     form.updateDomaine('Boulanger chez Dupont 06 12 34 56 78');
 
     await form.continueStep();
 
     expect(tracker.events, [
-      (AnalyticsEventNames.questionnaireStepValidatedAction, 'Étape 6 - Domaine', 6),
+      (
+        AnalyticsEventNames.questionnaireStepValidatedAction,
+        'Étape 6 - Domaine',
+        6,
+      ),
       (AnalyticsEventNames.questionnaireDomaineAction, 'métier saisi', null),
     ]);
   });
 
   test('"je ne sais pas encore" validates the domaine step', () async {
-    final form = givenForm(answers: _answersUntil(OnboardingQuestionnaireStep.domaine));
+    final form = givenForm(
+      answers: _answersUntil(OnboardingQuestionnaireStep.domaine),
+    );
     await form.init();
 
     await form.markDomaineUnknownAndContinue();
 
     expect(tracker.events, [
-      (AnalyticsEventNames.questionnaireStepValidatedAction, 'Étape 6 - Domaine', 6),
-      (AnalyticsEventNames.questionnaireDomaineAction, 'je ne sais pas encore', null),
+      (
+        AnalyticsEventNames.questionnaireStepValidatedAction,
+        'Étape 6 - Domaine',
+        6,
+      ),
+      (
+        AnalyticsEventNames.questionnaireDomaineAction,
+        'je ne sais pas encore',
+        null,
+      ),
     ]);
   });
 
   test('skipping domaine sends "étape passée" as answer', () async {
-    final form = givenForm(answers: _answersUntil(OnboardingQuestionnaireStep.domaine));
+    final form = givenForm(
+      answers: _answersUntil(OnboardingQuestionnaireStep.domaine),
+    );
     await form.init();
 
     await form.skipStep();
 
     expect(tracker.events, [
-      (AnalyticsEventNames.questionnaireStepSkippedAction, 'Étape 6 - Domaine', 6),
+      (
+        AnalyticsEventNames.questionnaireStepSkippedAction,
+        'Étape 6 - Domaine',
+        6,
+      ),
       (AnalyticsEventNames.questionnaireDomaineAction, 'étape passée', null),
     ]);
   });
 
-  test('zone de recherche prefilled with habitation is "zone inchangée"', () async {
-    final form = givenForm(answers: _answersUntil(OnboardingQuestionnaireStep.villeRecherche, habitation: lille));
-    await form.init();
+  test(
+    'zone de recherche prefilled with habitation is "zone inchangée"',
+    () async {
+      final form = givenForm(
+        answers: _answersUntil(
+          OnboardingQuestionnaireStep.villeRecherche,
+          habitation: lille,
+        ),
+      );
+      await form.init();
 
-    await form.continueStep();
+      await form.continueStep();
 
-    expect(tracker.events.last, (AnalyticsEventNames.questionnaireZoneAction, 'zone inchangée', 20));
-  });
+      expect(tracker.events.last, (
+        AnalyticsEventNames.questionnaireZoneAction,
+        'zone inchangée',
+        20,
+      ));
+    },
+  );
 
   test('zone de recherche changed is "zone modifiée"', () async {
-    final form = givenForm(answers: _answersUntil(OnboardingQuestionnaireStep.villeRecherche, habitation: lille));
+    final form = givenForm(
+      answers: _answersUntil(
+        OnboardingQuestionnaireStep.villeRecherche,
+        habitation: lille,
+      ),
+    );
     await form.init();
     form.updateRayon(30);
 
     form.selectVilleRecherche(roubaix);
     await form.continueStep();
 
-    expect(tracker.events.last, (AnalyticsEventNames.questionnaireZoneAction, 'zone modifiée', 30));
+    expect(tracker.events.last, (
+      AnalyticsEventNames.questionnaireZoneAction,
+      'zone modifiée',
+      30,
+    ));
   });
 
   test('"Rien ne me bloque" is sent alone with a count of 1', () async {
-    final form = givenForm(answers: _answersUntil(OnboardingQuestionnaireStep.freins));
+    final form = givenForm(
+      answers: _answersUntil(OnboardingQuestionnaireStep.freins),
+    );
     await form.init();
     form.toggleFrein(QuestionnaireFrein.pasDePermis);
     form.toggleFrein(QuestionnaireFrein.rienNeMeBloque);
@@ -233,15 +371,26 @@ void main() {
     await form.continueStep();
 
     expect(tracker.events, [
-      (AnalyticsEventNames.questionnaireStepValidatedAction, 'Étape 8 - Freins', 8),
-      (AnalyticsEventNames.questionnaireFreinAction, QuestionnaireFrein.rienNeMeBloque.label, null),
+      (
+        AnalyticsEventNames.questionnaireStepValidatedAction,
+        'Étape 8 - Freins',
+        8,
+      ),
+      (
+        AnalyticsEventNames.questionnaireFreinAction,
+        QuestionnaireFrein.rienNeMeBloque.label,
+        null,
+      ),
       (AnalyticsEventNames.questionnaireFreinsCountAction, null, 1),
     ]);
   });
 
   test('geolocation success does not validate the step', () async {
     final form = givenForm(
-      answers: OnboardingQuestionnaireAnswers(prenom: 'Léa', dateNaissance: DateTime(2005, 5, 5)),
+      answers: OnboardingQuestionnaireAnswers(
+        prenom: 'Léa',
+        dateNaissance: DateTime(2005, 5, 5),
+      ),
     );
     await form.init();
 
@@ -250,33 +399,61 @@ void main() {
     form.succeedGeolocation();
 
     expect(tracker.events, [
-      (AnalyticsEventNames.questionnaireGeolocationRequestedAction, 'Étape 3 - Habitation', 3),
-      (AnalyticsEventNames.questionnaireGeolocationSucceededAction, 'Étape 3 - Habitation', 3),
+      (
+        AnalyticsEventNames.questionnaireGeolocationRequestedAction,
+        'Étape 3 - Habitation',
+        3,
+      ),
+      (
+        AnalyticsEventNames.questionnaireGeolocationSucceededAction,
+        'Étape 3 - Habitation',
+        3,
+      ),
     ]);
   });
 
   test('geolocation failure is sent with its cause', () async {
     final form = givenForm(
-      answers: OnboardingQuestionnaireAnswers(prenom: 'Léa', dateNaissance: DateTime(2005, 5, 5)),
+      answers: OnboardingQuestionnaireAnswers(
+        prenom: 'Léa',
+        dateNaissance: DateTime(2005, 5, 5),
+      ),
     );
     await form.init();
 
-    form.failGeolocation(OnboardingQuestionnaireGeolocationFailure.permissionRefusee);
+    form.failGeolocation(
+      OnboardingQuestionnaireGeolocationFailure.permissionRefusee,
+    );
 
-    expect(tracker.events, [(AnalyticsEventNames.questionnaireGeolocationFailedAction, 'Permission refusée', 3)]);
+    expect(tracker.events, [
+      (
+        AnalyticsEventNames.questionnaireGeolocationFailedAction,
+        'Permission refusée',
+        3,
+      ),
+    ]);
     expect(form.geolocationError, isNotNull);
   });
 
   test('commune département handles overseas and Corsica', () {
-    expect(const QuestionnaireCommune(code: '97411', nom: 'Saint-Denis').departement, '974');
-    expect(const QuestionnaireCommune(code: '2A004', nom: 'Ajaccio').departement, '2A');
+    expect(
+      const QuestionnaireCommune(code: '97411', nom: 'Saint-Denis').departement,
+      '974',
+    );
+    expect(
+      const QuestionnaireCommune(code: '2A004', nom: 'Ajaccio').departement,
+      '2A',
+    );
     expect(lille.departement, '59');
   });
 }
 
 OnboardingQuestionnaireAnswers _answersUntil(
   OnboardingQuestionnaireStep step, {
-  QuestionnaireCommune habitation = const QuestionnaireCommune(code: '75056', nom: 'Paris'),
+  QuestionnaireCommune habitation = const QuestionnaireCommune(
+    code: '75056',
+    nom: 'Paris',
+  ),
 }) {
   final index = step.index;
   return OnboardingQuestionnaireAnswers(
@@ -284,9 +461,15 @@ OnboardingQuestionnaireAnswers _answersUntil(
     dateNaissance: DateTime(2005, 5, 5),
     habitation: habitation,
     situation: QuestionnaireSituation.lycee,
-    objectifs: index > OnboardingQuestionnaireStep.objectifs.index ? {QuestionnaireObjectif.emploi} : {},
-    domaine: index > OnboardingQuestionnaireStep.domaine.index ? 'Commerce' : null,
-    villeRecherche: index > OnboardingQuestionnaireStep.villeRecherche.index ? habitation : null,
+    objectifs: index > OnboardingQuestionnaireStep.objectifs.index
+        ? {QuestionnaireObjectif.emploi}
+        : {},
+    domaine: index > OnboardingQuestionnaireStep.domaine.index
+        ? 'Commerce'
+        : null,
+    villeRecherche: index > OnboardingQuestionnaireStep.villeRecherche.index
+        ? habitation
+        : null,
   );
 }
 
@@ -300,5 +483,6 @@ class _TrackerSpy extends OnboardingQuestionnaireTracker {
   void trackScreen(String name) => screens.add(name);
 
   @override
-  void trackEvent(String action, {String? name, int? value}) => events.add((action, name, value));
+  void trackEvent(String action, {String? name, int? value}) =>
+      events.add((action, name, value));
 }

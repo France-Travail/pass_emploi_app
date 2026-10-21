@@ -11,7 +11,9 @@ class OnboardingQuestionnaireUnderAgePage extends StatelessWidget {
   const OnboardingQuestionnaireUnderAgePage({super.key});
 
   static MaterialPageRoute<void> materialPageRoute() {
-    return MaterialPageRoute(builder: (_) => const OnboardingQuestionnaireUnderAgePage());
+    return MaterialPageRoute(
+      builder: (_) => const OnboardingQuestionnaireUnderAgePage(),
+    );
   }
 
   @override
@@ -23,7 +25,9 @@ class OnboardingQuestionnaireUnderAgePage extends StatelessWidget {
         builder: (context) {
           return Scaffold(
             backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
-            appBar: OnboardingQuestionnaireAppBar(onBack: () => Navigator.of(context).pop()),
+            appBar: OnboardingQuestionnaireAppBar(
+              onBack: () => Navigator.of(context).pop(),
+            ),
             body: SafeArea(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(Margins.spacing_base),
@@ -50,7 +54,9 @@ class OnboardingQuestionnaireUnderAgePage extends StatelessWidget {
                         child: Text(
                           Strings.onboardingQuestionnaireUnderAgeTitle,
                           textAlign: TextAlign.center,
-                          style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textTitleGrey(context)),
+                          style: DsfrTextStyle.headline5(
+                            color: DsfrColorDecisions.textTitleGrey(context),
+                          ),
                         ),
                       ),
                     ),
@@ -58,12 +64,15 @@ class OnboardingQuestionnaireUnderAgePage extends StatelessWidget {
                     Text(
                       Strings.onboardingQuestionnaireUnderAgeDescription,
                       textAlign: TextAlign.center,
-                      style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+                      style: DsfrTextStyle.bodyMd(
+                        color: DsfrColorDecisions.textDefaultGrey(context),
+                      ),
                     ),
                     const SizedBox(height: Margins.spacing_m),
                     DsfrNotice(
                       titre: Strings.onboardingQuestionnaireUnderAgeNoticeTitle,
-                      description: Strings.onboardingQuestionnaireUnderAgeNoticeDescription,
+                      description: Strings
+                          .onboardingQuestionnaireUnderAgeNoticeDescription,
                     ),
                     const SizedBox(height: Margins.spacing_xl),
                     DsfrButton(
