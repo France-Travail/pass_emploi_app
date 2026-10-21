@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/accueil/accueil_actions.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
+import 'package:pass_emploi_app/features/communications/communications_actions.dart';
 import 'package:pass_emploi_app/features/date_consultation_notification/date_consultation_notification_actions.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_actions.dart';
@@ -64,6 +65,7 @@ class _AccueilPageState extends State<AccueilPage> {
         onInit: (store) {
           if (store.state.hasPlanAction()) {
             store.dispatch(ActionPlanRequestAction());
+            store.dispatch(CommunicationsRequestAction());
             return;
           }
           store.dispatch(AccueilRequestAction());

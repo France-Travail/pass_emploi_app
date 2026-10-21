@@ -4,9 +4,11 @@ import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_tracking.dart';
+import 'package:pass_emploi_app/features/communications/communications_state.dart';
 import 'package:pass_emploi_app/features/onboarding/onboarding_actions.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
+import 'package:pass_emploi_app/models/accueil/message_informatif.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
@@ -40,6 +42,7 @@ class InviteAccueilViewModel extends Equatable {
   final bool showRetry;
   final bool shouldShowAllowNotifications;
   final ActionPlanTrackingEvent? planDisplayEvent;
+  final MessageInformatif? messageInformatif;
   final VoidCallback retryLoad;
   final void Function(OnboardingQuestionnaireEntryPoint entryPoint) resumeOnboarding;
   final VoidCallback retry;
@@ -70,6 +73,7 @@ class InviteAccueilViewModel extends Equatable {
     required this.showRetry,
     required this.shouldShowAllowNotifications,
     required this.planDisplayEvent,
+    required this.messageInformatif,
     required this.retryLoad,
     required this.resumeOnboarding,
     required this.retry,
@@ -155,6 +159,10 @@ class InviteAccueilViewModel extends Equatable {
       planDisplayEvent: showPlanSection && displayState == DisplayState.CONTENT
           ? _planDisplayEvent(isFailure: isFailure, plan: plan)
           : null,
+      messageInformatif: switch (store.state.communicationsState) {
+        final CommunicationsSuccessState state => state.messageInformatif,
+        _ => null,
+      },
       retryLoad: () => store.dispatch(ActionPlanRequestAction()),
       resumeOnboarding: (entryPoint) {
         final isUpdate = inviteState is OnboardingQuestionnaireSuccessState && inviteState.everFinished;
@@ -197,6 +205,7 @@ class InviteAccueilViewModel extends Equatable {
     showRetry,
     shouldShowAllowNotifications,
     planDisplayEvent,
+    messageInformatif,
   ];
 }
 

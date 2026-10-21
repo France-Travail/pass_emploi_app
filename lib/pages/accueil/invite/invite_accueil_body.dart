@@ -4,6 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_tracking.dart';
+import 'package:pass_emploi_app/pages/accueil/accueil_message_informatif.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/invite_action_plan_empty_state.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/invite_action_plan_section.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/invite_discovery_tile.dart';
@@ -104,6 +105,10 @@ class _Content extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (viewModel.messageInformatif case final messageInformatif?) ...[
+            AccueilMessageInformatif(messageInformatif: messageInformatif),
+            const SizedBox(height: Margins.spacing_s),
+          ],
           if (viewModel.showDiscoveryTile) ...[
             InviteDiscoveryTile(
               progressPercent: viewModel.discoveryProgressPercent,

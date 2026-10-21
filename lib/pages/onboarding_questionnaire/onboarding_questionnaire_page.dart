@@ -171,7 +171,8 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
       value: _form.step.questionnaireIndex,
     );
     if (widget.editMode) {
-      Navigator.of(context).maybePop();
+      // pop() et non maybePop() : le PopScope (canPop: false) renverrait vers _onBack, en boucle.
+      Navigator.of(context).pop();
       return;
     }
     final store = StoreProvider.of<AppState>(context);
