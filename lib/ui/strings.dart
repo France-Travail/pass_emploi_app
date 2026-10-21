@@ -33,7 +33,7 @@ class _CejStrings {
   static String warningInformationParagraph2 =
       "La suppression de ton compte sur l’application CEJ n'entraîne pas la suppression de ton accompagnement.";
   static String accountDeletionSuccess = "Ton compte a bien été supprimé de l’application CEJ";
-  static String modeDemoExplicationPremierPoint3 = " l’application CEJ utilisée par tes bénéficiaires.";
+  static String modeDemoExplicationPremierPoint3 = " l’application CEJ utilisée par vos bénéficiaires.";
   static String legalNoticeUrl = "https://doc.pass-emploi.beta.gouv.fr/legal/mobile_mentions_legales";
   static String privacyPolicyUrl =
       "https://travail-emploi.gouv.fr/application-contrat-dengagement-jeune-cej-traitement-des-donnees-personnelles";
@@ -1825,18 +1825,15 @@ class Strings {
   static String passerEnDemo = "Passer en mode démo";
   static String modeDemoAppBarLabel = "Version démo conseiller";
   static String modeDemoExplicationTitre = "Espace démo conseiller";
-  static String modeDemoExplicationPremierPoint1 = Brand.isPassEmploi()
-      ? "→ Cette version vous "
-      : "→ Cette version te ";
+  static String modeDemoExplicationPremierPoint1 = "→ Cette version vous ";
   static String modeDemoExplicationPremierPoint2 = "permet d’explorer";
   static String modeDemoExplicationPremierPoint3 = Brand.isCej()
       ? _CejStrings.modeDemoExplicationPremierPoint3
       : _PassEmploiStrings.modeDemoExplicationPremierPoint3;
   static String modeDemoExplicationSecondPoint1 = "→ Les données présentées ";
   static String modeDemoExplicationSecondPoint2 = "sont factices.";
-  static String modeDemoExplicationTroisiemePoint1 = Brand.isPassEmploi()
-      ? "→ Vous pourrez naviguer dans l'application, rédiger des messages (sans les envoyer) et effectuer des recherches. Les résultats alors affichés sont "
-      : "→ Tu pourras naviguer dans l'application, rédiger des messages (sans les envoyer) et effectuer des recherches. Les résultats alors affichés sont ";
+  static String modeDemoExplicationTroisiemePoint1 =
+      "→ Vous pourrez naviguer dans l'application, rédiger des messages (sans les envoyer) et effectuer des recherches. Les résultats alors affichés sont ";
   static String modeDemoExplicationTroisiemePoint2 =
       "donnés à titre d’exemples et ne correspondent pas aux recherches effectuées.";
   static String modeDemoExplicationChoix = "Accéder au mode démo";
