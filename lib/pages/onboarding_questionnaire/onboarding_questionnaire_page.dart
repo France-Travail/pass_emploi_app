@@ -314,6 +314,8 @@ class _QuestionnaireBodyState extends State<_QuestionnaireBody> {
   final GlobalKey _headerKey = GlobalKey();
   final GlobalKey _contentKey = GlobalKey();
   final GlobalKey _actionsKey = GlobalKey();
+  // Garde la position de défilement quand la mise en page change (sinon la page repart en haut à la fermeture du clavier).
+  final GlobalKey _scrollKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -389,6 +391,7 @@ class _QuestionnaireBodyState extends State<_QuestionnaireBody> {
     // place entre l'en-tête et les boutons fixes. Tout défile alors d'un bloc et le champ reste visible.
     if (widget.keyboardOpen) {
       return SingleChildScrollView(
+        key: _scrollKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -408,6 +411,7 @@ class _QuestionnaireBodyState extends State<_QuestionnaireBody> {
         header,
         Expanded(
           child: SingleChildScrollView(
+            key: _scrollKey,
             padding: const EdgeInsets.all(Margins.spacing_base),
             child: content,
           ),

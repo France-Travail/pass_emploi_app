@@ -16,11 +16,37 @@ class OnboardingQuestionnaireSituationStep extends StatefulWidget {
   State<OnboardingQuestionnaireSituationStep> createState() => _OnboardingQuestionnaireSituationStepState();
 }
 
-class _OnboardingQuestionnaireSituationStepState extends State<OnboardingQuestionnaireSituationStep> {
+class _OnboardingQuestionnaireSituationStepState extends State<OnboardingQuestionnaireSituationStep>
+    with WidgetsBindingObserver {
   final _autreFieldKey = GlobalKey();
   late bool _wasAutreSelected = widget.form.draftSituation == QuestionnaireSituation.autre;
 
   OnboardingQuestionnaireFormChangeNotifier get form => widget.form;
+
+  bool _wasKeyboardOpen = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  // The page swaps its scroll view when the keyboard closes, so the scroll goes back to the top: scroll to the field
+  // again. The keyboard is read from the view, as the page does (the root Scaffold may already remove it from MediaQuery).
+  @override
+  void didChangeMetrics() {
+    if (!mounted) return;
+    final isKeyboardOpen = View.of(context).viewInsets.bottom > 0;
+    final hasKeyboardJustClosed = _wasKeyboardOpen && !isKeyboardOpen;
+    _wasKeyboardOpen = isKeyboardOpen;
+    if (hasKeyboardJustClosed && _wasAutreSelected) _scrollToAutreField();
+  }
 
   @override
   void didUpdateWidget(covariant OnboardingQuestionnaireSituationStep oldWidget) {
@@ -30,18 +56,22 @@ class _OnboardingQuestionnaireSituationStepState extends State<OnboardingQuestio
     _wasAutreSelected = isAutreSelected;
   }
 
-  // The field appears below the fold: bring it into view once it is laid out.
+  // The field appears below the fold: bring it into view once it is laid out, then again once the keyboard animation
+  // (which keeps resizing the viewport) is over. Scrolling to a field that is already visible does nothing.
   void _scrollToAutreField() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final fieldContext = _autreFieldKey.currentContext;
-      if (!mounted || fieldContext == null || !fieldContext.mounted) return;
-      Scrollable.ensureVisible(
-        fieldContext,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
-      );
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _ensureAutreFieldVisible());
+    Future<void>.delayed(const Duration(milliseconds: 400), _ensureAutreFieldVisible);
+  }
+
+  void _ensureAutreFieldVisible() {
+    final fieldContext = _autreFieldKey.currentContext;
+    if (!mounted || fieldContext == null || !fieldContext.mounted) return;
+    Scrollable.ensureVisible(
+      fieldContext,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+    );
   }
 
   @override
