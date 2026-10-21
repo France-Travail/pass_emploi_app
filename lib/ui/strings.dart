@@ -1,3 +1,4 @@
+import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/utils/date_extensions.dart';
 
@@ -528,7 +529,13 @@ class Strings {
       "Ton conseiller en est informé. Tu pourras en discuter lors de ton prochain rendez-vous\u{00A0}!";
   static String actionPlanDeclarationVoirAgenda = "Voir mon agenda";
   static String actionPlanDeclarationOuvreFormulaireA11y = "Ouvre le formulaire de déclaration";
-  static String actionPlanOuvrirEcranA11y(String label) => "Ouvrir : $label";
+  static String actionPlanEcranLabel(ActionPlanScreen screen) => switch (screen) {
+    ActionPlanScreen.evenements => "Voir les évènements",
+    ActionPlanScreen.offresImmersions => "Voir les offres d'immersion",
+    ActionPlanScreen.offresAlternance => "Voir les offres d'alternance",
+    ActionPlanScreen.offresEmploi => "Voir les offres d'emploi",
+    ActionPlanScreen.offresServiceCivique => "Voir les offres de services civiques",
+  };
   static String actionPlanDeclarationRetourPlan = "Retour au plan d’action";
   static String inviteAccueilExplorerTipTitle = "💡 Pas envie de répondre maintenant?";
   static String inviteAccueilExplorerTipBody = "Tu peux explorer librement les offres et les événements depuis le menu";

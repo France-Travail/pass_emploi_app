@@ -423,20 +423,17 @@ class _InviteActionPlanActionTileState extends State<InviteActionPlanActionTile>
                           )
                         else if (action.serviceName != null)
                           ExcludeSemantics(child: _serviceName(context)),
+                        if (_hasScreen)
+                          Semantics(
+                            button: true,
+                            label: Strings.actionPlanEcranLabel(action.screen!),
+                            onTap: _openScreen,
+                            excludeSemantics: true,
+                            child: _screenLink(context),
+                          ),
                       ],
                     ),
                   ),
-                  if (_hasScreen)
-                    Semantics(
-                      button: true,
-                      label: Strings.actionPlanOuvrirEcranA11y(action.label),
-                      onTap: _openScreen,
-                      excludeSemantics: true,
-                      child: Icon(
-                        DsfrIcons.systemArrowRightSLine,
-                        color: DsfrColorDecisions.textActionHighBlueFrance(context),
-                      ),
-                    ),
                   DsfrFocusWidget(
                     isFocused: _deleteFocused,
                     child: Focus(
@@ -460,6 +457,25 @@ class _InviteActionPlanActionTileState extends State<InviteActionPlanActionTile>
           ),
         ),
       ),
+    );
+  }
+
+  Widget _screenLink(BuildContext context) {
+    final color = DsfrColorDecisions.textActionHighBlueFrance(context);
+    return Row(
+      children: [
+        Flexible(
+          child: Text(
+            Strings.actionPlanEcranLabel(action.screen!),
+            style: DsfrTextStyle.bodySm(color: color).copyWith(
+              decoration: TextDecoration.underline,
+              decorationColor: color,
+            ),
+          ),
+        ),
+        const SizedBox(width: Margins.spacing_xs),
+        Icon(DsfrIcons.systemArrowRightSLine, size: 16, color: color),
+      ],
     );
   }
 
