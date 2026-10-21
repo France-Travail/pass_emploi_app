@@ -139,8 +139,72 @@ void main() {
       },
     );
 
-    final result = await repository.findByCoordinates(latitude: 50.6, longitude: 3.0);
+    final result = await repository.findByCoordinates(
+      latitude: 50.6,
+      longitude: 3.0,
+    );
 
     expect(result?.nom, 'Lille');
+  });
+
+  group('arrondissements', () {
+    void givenParis([String query = 'Paris']) {
+      adapter.onGet(
+        '/communes',
+        (server) => server.reply(200, [
+          {
+            'nom': 'Paris',
+            'code': '75056',
+            'codesPostaux': ['75001', '75014'],
+          },
+        ]),
+        queryParameters: {
+          'nom': query,
+          'boost': 'population',
+          'limit': 8,
+          'fields': 'nom,code,codesPostaux,centre',
+        },
+      );
+      adapter.onGet(
+        '/communes',
+        (server) => server.reply(200, [
+          {
+            'nom': 'Paris 14e Arrondissement',
+            'code': '75114',
+            'codesPostaux': ['75014'],
+          },
+          {
+            'nom': 'Paris 2e Arrondissement',
+            'code': '75102',
+            'codesPostaux': ['75002'],
+          },
+        ]),
+        queryParameters: {
+          'nom': 'Paris',
+          'type': 'arrondissement-municipal',
+          'limit': 20,
+          'fields': 'nom,code,codesPostaux,centre',
+        },
+      );
+    }
+
+    test('searchByName adds the arrondissements after Paris', () async {
+      givenParis();
+
+      final result = await repository.searchByName('Paris');
+
+      expect(result.map((c) => c.code), ['75056', '75102', '75114']);
+    });
+
+    test(
+      'searchByName keeps only the requested arrondissement when a number is typed',
+      () async {
+        givenParis('Paris 14');
+
+        final result = await repository.searchByName('Paris 14');
+
+        expect(result.map((c) => c.code), ['75056', '75114']);
+      },
+    );
   });
 }
