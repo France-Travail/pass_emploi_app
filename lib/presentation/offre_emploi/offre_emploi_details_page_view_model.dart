@@ -213,6 +213,8 @@ bool _shouldShowOffreSuivieBottomSheet(Store<AppState> store, OffreEmploi offre)
 }
 
 bool _shouldShowOffreSuiviForm(Store<AppState> store, OffreEmploi offre) {
+  if (store.state.isInviteLoginMode()) return false;
+
   final isFavoriNonPostule = store.state.offreEmploiFavorisIdsState.isFavoriNonPostule(offre.id);
   final confirmationFavoris = store.state.favoriUpdateState.confirmationOffre?.offreId == offre.id;
   if (isFavoriNonPostule || confirmationFavoris) {
@@ -235,6 +237,8 @@ DateTime? _datePostulation(Store<AppState> store, String offreId) {
 
 extension on Store<AppState> {
   bool shouldShowOffreSuivieBottomSheet(OffreEmploi offre) {
+    if (state.isInviteLoginMode()) return false;
+
     final offresSuiviesState = state.offresSuiviesState;
     final isOffreSuivie = offresSuiviesState.isPresent(offre.id);
 

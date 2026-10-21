@@ -7,10 +7,42 @@ import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 
-class OnboardingQuestionnaireSituationStep extends StatelessWidget {
+class OnboardingQuestionnaireSituationStep extends StatefulWidget {
   const OnboardingQuestionnaireSituationStep({super.key, required this.form});
 
   final OnboardingQuestionnaireFormChangeNotifier form;
+
+  @override
+  State<OnboardingQuestionnaireSituationStep> createState() => _OnboardingQuestionnaireSituationStepState();
+}
+
+class _OnboardingQuestionnaireSituationStepState extends State<OnboardingQuestionnaireSituationStep> {
+  final _autreFieldKey = GlobalKey();
+  late bool _wasAutreSelected = widget.form.draftSituation == QuestionnaireSituation.autre;
+
+  OnboardingQuestionnaireFormChangeNotifier get form => widget.form;
+
+  @override
+  void didUpdateWidget(covariant OnboardingQuestionnaireSituationStep oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final isAutreSelected = form.draftSituation == QuestionnaireSituation.autre;
+    if (isAutreSelected && !_wasAutreSelected) _scrollToAutreField();
+    _wasAutreSelected = isAutreSelected;
+  }
+
+  // The field appears below the fold: bring it into view once it is laid out.
+  void _scrollToAutreField() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final fieldContext = _autreFieldKey.currentContext;
+      if (!mounted || fieldContext == null || !fieldContext.mounted) return;
+      Scrollable.ensureVisible(
+        fieldContext,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +79,7 @@ class OnboardingQuestionnaireSituationStep extends StatelessWidget {
         if (form.draftSituation == QuestionnaireSituation.autre) ...[
           const SizedBox(height: Margins.spacing_s),
           DsfrInput(
+            key: _autreFieldKey,
             label: Strings.onboardingQuestionnaireSituationAutreLabel,
             hintText: Strings.onboardingQuestionnaireSituationAutreHint,
             initialValue: form.draftSituationAutre,
