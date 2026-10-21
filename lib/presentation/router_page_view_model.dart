@@ -59,6 +59,9 @@ class RouterPageViewModel extends Equatable {
 }
 
 String? _storeUrl(Store<AppState> store, Platform platform) {
+  if (store.getDeepLinkAs<OuvrirStoreCejDeepLink>() != null) {
+    return platform.getAppStoreUrl(Brand.cej);
+  }
   final Brand brand = store.state.configurationState.configuration?.brand ?? Brand.brand;
   final lastVersion = store.getDeepLinkAs<NouvellesFonctionnalitesDeepLink>()?.lastVersion;
   if (lastVersion != null) {

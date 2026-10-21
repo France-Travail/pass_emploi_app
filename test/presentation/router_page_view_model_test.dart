@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/features/deep_link/deep_link_state.dart';
 import 'package:pass_emploi_app/features/login/login_state.dart';
 import 'package:pass_emploi_app/features/tutorial/tutorial_state.dart';
 import 'package:pass_emploi_app/models/accompagnement.dart';
+import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/models/cgu.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
@@ -568,6 +569,26 @@ void main() {
       final store = givenState(
         configuration(version: Version(1, 0, 0)),
       ).withHandleDeepLink(NouvellesFonctionnalitesDeepLink(lastVersion: Version(2, 1, 2))).store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.storeUrl, 'itms-apps://itunes.apple.com/app/apple-store/id1581603519');
+    });
+
+    test("on open CEJ store deep link, it redirects to the CEJ android store whatever the brand", () {
+      final store = givenState(
+        configuration(brand: Brand.passEmploi),
+      ).withHandleDeepLink(OuvrirStoreCejDeepLink()).store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.ANDROID);
+
+      expect(viewModel.storeUrl, 'market://details?id=fr.fabrique.social.gouv.passemploi');
+    });
+
+    test("on open CEJ store deep link, it redirects to the CEJ ios store whatever the brand", () {
+      final store = givenState(
+        configuration(brand: Brand.passEmploi),
+      ).withHandleDeepLink(OuvrirStoreCejDeepLink()).store();
 
       final viewModel = RouterPageViewModel.create(store, Platform.IOS);
 

@@ -50,6 +50,8 @@ class NouvellesFonctionnalitesDeepLink extends DeepLink {
 
 class MigrationParcoursEmploiDeepLink extends DeepLink {}
 
+class OuvrirStoreCejDeepLink extends DeepLink {}
+
 class AlerteDeepLink extends DeepLink {
   final String idAlerte;
 

@@ -129,6 +129,12 @@ void main() {
         );
 
         assertStateWithJson(
+          {"type": "OUVRIR_STORE_CEJ"},
+          OuvrirStoreCejDeepLink(),
+          DeepLinkOrigin.pushNotification,
+        );
+
+        assertStateWithJson(
           {"type": "MIGRATION_PARCOURS_EMPLOI"},
           MigrationParcoursEmploiDeepLink(),
           DeepLinkOrigin.pushNotification,
