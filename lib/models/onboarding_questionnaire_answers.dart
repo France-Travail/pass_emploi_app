@@ -268,6 +268,7 @@ class OnboardingQuestionnaireAnswers extends Equatable {
   final DateTime? dateNaissance;
   final QuestionnaireCommune? habitation;
   final QuestionnaireSituation? situation;
+  final String? situationAutre;
   final Set<QuestionnaireObjectif> objectifs;
   final String? domaine;
   final bool domaineInconnu;
@@ -280,6 +281,7 @@ class OnboardingQuestionnaireAnswers extends Equatable {
     this.dateNaissance,
     this.habitation,
     this.situation,
+    this.situationAutre,
     this.objectifs = const {},
     this.domaine,
     this.domaineInconnu = false,
@@ -297,6 +299,8 @@ class OnboardingQuestionnaireAnswers extends Equatable {
     bool clearHabitation = false,
     QuestionnaireSituation? situation,
     bool clearSituation = false,
+    String? situationAutre,
+    bool clearSituationAutre = false,
     Set<QuestionnaireObjectif>? objectifs,
     String? domaine,
     bool clearDomaine = false,
@@ -311,6 +315,7 @@ class OnboardingQuestionnaireAnswers extends Equatable {
       dateNaissance: clearDateNaissance ? null : (dateNaissance ?? this.dateNaissance),
       habitation: clearHabitation ? null : (habitation ?? this.habitation),
       situation: clearSituation ? null : (situation ?? this.situation),
+      situationAutre: clearSituationAutre ? null : (situationAutre ?? this.situationAutre),
       objectifs: objectifs ?? this.objectifs,
       domaine: clearDomaine ? null : (domaine ?? this.domaine),
       domaineInconnu: domaineInconnu ?? this.domaineInconnu,
@@ -325,6 +330,7 @@ class OnboardingQuestionnaireAnswers extends Equatable {
     if (dateNaissance != null) 'dateNaissance': dateNaissance!.toIso8601String(),
     if (habitation != null) 'habitation': habitation!.toJson(),
     if (situation != null) 'situation': situation!.storageValue,
+    if (situationAutre != null) 'situationAutre': situationAutre,
     'objectifs': objectifs.map((e) => e.storageValue).toList(),
     if (domaine != null) 'domaine': domaine,
     'domaineInconnu': domaineInconnu,
@@ -343,6 +349,7 @@ class OnboardingQuestionnaireAnswers extends Equatable {
           ? QuestionnaireCommune.fromStorageJson(json['habitation'] as Map<String, dynamic>)
           : null,
       situation: QuestionnaireSituation.fromStorage(json['situation'] as String?),
+      situationAutre: json['situationAutre'] as String?,
       objectifs: objectifsJson is List
           ? objectifsJson
                 .map((e) => QuestionnaireObjectif.fromStorage(e as String))
@@ -408,6 +415,7 @@ class OnboardingQuestionnaireAnswers extends Equatable {
     dateNaissance,
     habitation,
     situation,
+    situationAutre,
     objectifs,
     domaine,
     domaineInconnu,

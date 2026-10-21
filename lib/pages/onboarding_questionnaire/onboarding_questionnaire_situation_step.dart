@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_emoji_illustration.dart';
@@ -41,6 +42,17 @@ class OnboardingQuestionnaireSituationStep extends StatelessWidget {
             ),
           ),
         ),
+        if (form.draftSituation == QuestionnaireSituation.autre) ...[
+          const SizedBox(height: Margins.spacing_s),
+          DsfrInput(
+            label: Strings.onboardingQuestionnaireSituationAutreLabel,
+            hintText: Strings.onboardingQuestionnaireSituationAutreHint,
+            initialValue: form.draftSituationAutre,
+            // Avoid maxLength: broken DSFR UI, see https://github.com/Octo-Open-Source/flutter-dsfr/issues/150
+            inputFormatters: [LengthLimitingTextInputFormatter(256)],
+            onChanged: form.updateSituationAutre,
+          ),
+        ],
       ],
     );
   }

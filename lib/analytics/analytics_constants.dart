@@ -309,6 +309,7 @@ class AnalyticsEventNames {
   static const questionnaireStepBackAction = "Retour en arrière";
   static const questionnaireDepartementAction = "Réponse - Département d'habitation";
   static const questionnaireSituationAction = "Réponse - Situation";
+  static const questionnaireSituationAutreAction = "Réponse - Situation autre précisée";
   static const questionnaireObjectifAction = "Réponse - Objectif";
   static const questionnaireObjectifsCountAction = "Réponse - Nombre d'objectifs";
   static const questionnaireDomaineAction = "Réponse - Domaine";

@@ -55,6 +55,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
   QuestionnaireCommune? draftHabitation;
   String draftHabitationQuery = '';
   QuestionnaireSituation? draftSituation;
+  String draftSituationAutre = '';
   Set<QuestionnaireObjectif> draftObjectifs = {};
   String draftDomaine = '';
   QuestionnaireCommune? draftVilleRecherche;
@@ -118,6 +119,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     draftHabitation = savedAnswers.habitation;
     draftHabitationQuery = savedAnswers.habitation?.displayLabel ?? '';
     draftSituation = savedAnswers.situation;
+    draftSituationAutre = savedAnswers.situationAutre ?? '';
     draftObjectifs = Set.of(savedAnswers.objectifs);
     draftDomaine = savedAnswers.domaine ?? '';
     _prefillVilleFromHabitation();
@@ -144,6 +146,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
         draftHabitationQuery = savedAnswers.habitation?.displayLabel ?? '';
       case OnboardingQuestionnaireStep.situation:
         draftSituation = savedAnswers.situation;
+        draftSituationAutre = savedAnswers.situationAutre ?? '';
       case OnboardingQuestionnaireStep.objectifs:
         draftObjectifs = Set.of(savedAnswers.objectifs);
       case OnboardingQuestionnaireStep.domaine:
@@ -245,6 +248,11 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateSituationAutre(String value) {
+    draftSituationAutre = value.length > 256 ? value.substring(0, 256) : value;
+    notifyListeners();
+  }
+
   void toggleObjectif(QuestionnaireObjectif objectif) {
     final next = Set<QuestionnaireObjectif>.of(draftObjectifs);
     if (next.contains(objectif)) {
@@ -336,7 +344,8 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
         savedAnswers = savedAnswers.copyWith(clearHabitation: true);
       case OnboardingQuestionnaireStep.situation:
         draftSituation = null;
-        savedAnswers = savedAnswers.copyWith(clearSituation: true);
+        draftSituationAutre = '';
+        savedAnswers = savedAnswers.copyWith(clearSituation: true, clearSituationAutre: true);
       case OnboardingQuestionnaireStep.objectifs:
         draftObjectifs = {};
         savedAnswers = savedAnswers.copyWith(objectifs: {});
@@ -376,6 +385,11 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
         }
       case OnboardingQuestionnaireStep.situation:
         tracker.trackEvent(AnalyticsEventNames.questionnaireSituationAction, name: savedAnswers.situation?.label);
+        // Free text on purpose: lets the team review whether the predefined situations are relevant after the pilot.
+        final situationAutre = savedAnswers.situationAutre;
+        if (situationAutre != null) {
+          tracker.trackEvent(AnalyticsEventNames.questionnaireSituationAutreAction, name: situationAutre);
+        }
       case OnboardingQuestionnaireStep.objectifs:
         for (final objectif in savedAnswers.objectifs) {
           tracker.trackEvent(AnalyticsEventNames.questionnaireObjectifAction, name: objectif.label);
@@ -419,7 +433,13 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
           draftVilleQuery = draftHabitation!.displayLabel;
         }
       case OnboardingQuestionnaireStep.situation:
-        savedAnswers = savedAnswers.copyWith(situation: draftSituation);
+        final situationAutre = draftSituationAutre.trim();
+        final isAutreSpecified = draftSituation == QuestionnaireSituation.autre && situationAutre.isNotEmpty;
+        savedAnswers = savedAnswers.copyWith(
+          situation: draftSituation,
+          situationAutre: isAutreSpecified ? situationAutre : null,
+          clearSituationAutre: !isAutreSpecified,
+        );
       case OnboardingQuestionnaireStep.objectifs:
         savedAnswers = savedAnswers.copyWith(objectifs: Set.of(draftObjectifs));
       case OnboardingQuestionnaireStep.domaine:

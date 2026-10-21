@@ -413,6 +413,8 @@ class Strings {
   static String onboardingQuestionnaireSituationEtudes = "En études supérieures";
   static String onboardingQuestionnaireSituationEmploi = "En emploi";
   static String onboardingQuestionnaireSituationAutre = "Autre situation";
+  static String onboardingQuestionnaireSituationAutreLabel = "Précise ta situation (facultatif)";
+  static String onboardingQuestionnaireSituationAutreHint = "Exemple : en service civique, en recherche d'emploi…";
 
   static String onboardingQuestionnaireObjectifsTitle = "Comment peut-on t'aider ?";
   static String onboardingQuestionnaireObjectifsSubtitle =

@@ -123,6 +123,50 @@ void main() {
     ]);
   });
 
+  test('validating "Autre situation" with a precision sends it', () async {
+    final form = givenForm(
+      answers: _answersUntil(OnboardingQuestionnaireStep.situation).copyWith(clearSituation: true),
+    );
+    await form.init();
+    form.updateSituation(QuestionnaireSituation.autre);
+    form.updateSituationAutre('  En service civique ');
+
+    await form.continueStep();
+
+    expect(tracker.events, [
+      (AnalyticsEventNames.questionnaireStepValidatedAction, 'Étape 4 - Situation', 4),
+      (AnalyticsEventNames.questionnaireSituationAction, QuestionnaireSituation.autre.label, null),
+      (AnalyticsEventNames.questionnaireSituationAutreAction, 'En service civique', null),
+    ]);
+  });
+
+  test('validating "Autre situation" without precision sends no free text', () async {
+    final form = givenForm(
+      answers: _answersUntil(OnboardingQuestionnaireStep.situation).copyWith(clearSituation: true),
+    );
+    await form.init();
+    form.updateSituation(QuestionnaireSituation.autre);
+
+    await form.continueStep();
+
+    expect(tracker.events.map((e) => e.$1), isNot(contains(AnalyticsEventNames.questionnaireSituationAutreAction)));
+  });
+
+  test('precision typed then another situation chosen is not sent', () async {
+    final form = givenForm(
+      answers: _answersUntil(OnboardingQuestionnaireStep.situation).copyWith(clearSituation: true),
+    );
+    await form.init();
+    form.updateSituation(QuestionnaireSituation.autre);
+    form.updateSituationAutre('En service civique');
+    form.updateSituation(QuestionnaireSituation.lycee);
+
+    await form.continueStep();
+
+    expect(tracker.events.map((e) => e.$1), isNot(contains(AnalyticsEventNames.questionnaireSituationAutreAction)));
+    expect(form.savedAnswers.situationAutre, isNull);
+  });
+
   test('domaine typed is never sent', () async {
     final form = givenForm(answers: _answersUntil(OnboardingQuestionnaireStep.domaine));
     await form.init();
