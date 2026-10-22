@@ -177,7 +177,8 @@ jobs:
           -t lib/cej_main.dart \
           --flavor cejStaging \
           --release \
-          --build-number=${{ needs.pre-build.outputs.date }}
+          --build-number=${{ needs.pre-build.outputs.date }} \
+          --dart-define-from-file=env/.env.staging
 
       - name: CEJ - Deploy Android apk to Firebase App Distribution
         run: |
@@ -195,7 +196,8 @@ jobs:
           -t lib/brsa_main.dart \
           --flavor brsaStaging \
           --release \
-          --build-number=${{ needs.pre-build.outputs.date }}
+          --build-number=${{ needs.pre-build.outputs.date }} \
+          --dart-define-from-file=env/.env.staging
 
       - name: BRSA - Deploy Android apk to Firebase App Distribution
         run: |
@@ -369,7 +371,8 @@ jobs:
           --release \
           --build-number=${{ needs.pre-build.outputs.date }} \
           --export-options-plist=ios/staging_export_options.plist \
-          --no-pub
+          --no-pub \
+          --dart-define-from-file=env/.env.staging
 
       - name: CEJ - Upload dSYMs to Crashlytics
         shell: bash
@@ -429,7 +432,8 @@ jobs:
           --build-number=${{ needs.pre-build.outputs.date }} \
           --export-options-plist=ios/staging_export_options.plist \
           --no-pub \
-          --verbose
+          --verbose \
+          --dart-define-from-file=env/.env.staging
 
       - name: BRSA - Upload dSYMs to Crashlytics
         shell: bash
