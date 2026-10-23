@@ -9,7 +9,6 @@ import 'package:pass_emploi_app/features/communications/communications_actions.d
 import 'package:pass_emploi_app/features/date_consultation_notification/date_consultation_notification_actions.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_actions.dart';
-import 'package:pass_emploi_app/features/soft_update/soft_update_actions.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_alertes.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_cette_semaine.dart';
@@ -41,7 +40,6 @@ import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/notifications_bottom_sheet.dart';
-import 'package:pass_emploi_app/widgets/bottom_sheets/soft_update_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_tuile_card.dart';
@@ -55,7 +53,6 @@ class AccueilPage extends StatefulWidget {
 
 class _AccueilPageState extends State<AccueilPage> {
   bool _onboardingShown = false;
-  bool _softUpdateShown = false;
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +68,6 @@ class _AccueilPageState extends State<AccueilPage> {
           store.dispatch(AccueilRequestAction());
           store.dispatch(InAppNotificationsRequestAction());
           store.dispatch(DateConsultationNotificationRequestAction());
-          store.dispatch(SoftUpdateCheckAction());
         },
         converter: (store) => AccueilViewModel.create(store),
         builder: _builder,
@@ -79,7 +75,6 @@ class _AccueilPageState extends State<AccueilPage> {
           if (StoreProvider.of<AppState>(context).state.hasPlanAction()) {
             return;
           }
-          _handleSoftUpdateBottomSheet(viewModel);
           _handleNotificationsBottomSheet(viewModel);
           _handleDeeplink(previousViewModel, viewModel);
         },
@@ -96,7 +91,9 @@ class _AccueilPageState extends State<AccueilPage> {
         builder: (context) {
           if (StoreProvider.of<AppState>(context).state.hasPlanAction()) {
             return Scaffold(
-              backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+              backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(
+                context,
+              ),
               body: ConnectivityContainer(child: InviteAccueilBody()),
             );
           }
@@ -210,13 +207,6 @@ class _AccueilPageState extends State<AccueilPage> {
     );
   }
 
-  void _handleSoftUpdateBottomSheet(AccueilViewModel viewModel) {
-    if (viewModel.shouldShowSoftUpdate && !_softUpdateShown) {
-      _softUpdateShown = true;
-      SoftUpdateBottomSheet.show(context);
-    }
-  }
-
   void _handleNotificationsBottomSheet(AccueilViewModel viewModel) {
     final context = this.context;
     if (viewModel.shouldShowAllowNotifications && !_onboardingShown) {
@@ -268,15 +258,23 @@ class _Blocs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final visibleItems = viewModel.items.where((item) => item is! AccueilColorSeparatorItem).toList();
+    final visibleItems = viewModel.items
+        .where((item) => item is! AccueilColorSeparatorItem)
+        .toList();
     return Padding(
-      padding: const EdgeInsets.fromLTRB(DsfrSpacings.s2w, DsfrSpacings.s2w, DsfrSpacings.s2w, DsfrSpacings.s4w),
+      padding: const EdgeInsets.fromLTRB(
+        DsfrSpacings.s2w,
+        DsfrSpacings.s2w,
+        DsfrSpacings.s2w,
+        DsfrSpacings.s4w,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           for (int i = 0; i < visibleItems.length; i++) ...[
             _buildItem(visibleItems[i]),
-            if (i < visibleItems.length - 1) const SizedBox(height: DsfrSpacings.s2w),
+            if (i < visibleItems.length - 1)
+              const SizedBox(height: DsfrSpacings.s2w),
           ],
         ],
       ),
@@ -285,11 +283,15 @@ class _Blocs extends StatelessWidget {
 
   Widget _buildItem(AccueilItem item) {
     return switch (item) {
-      final AccueilMessageInformatifItem item => AccueilMessageInformatif(messageInformatif: item.messageInformatif),
+      final AccueilMessageInformatifItem item => AccueilMessageInformatif(
+        messageInformatif: item.messageInformatif,
+      ),
       final AccueilZenithMessageItem item => DsfrAlert(
         type: DsfrAlertType.info,
         title: item.accueilZenithMessage.title,
-        description: DsfrAlertDescriptionText(item.accueilZenithMessage.description),
+        description: DsfrAlertDescriptionText(
+          item.accueilZenithMessage.description,
+        ),
       ),
       final ErrorDegradeeItem item => DsfrAlert(
         type: DsfrAlertType.warning,
@@ -308,8 +310,10 @@ class _Blocs extends StatelessWidget {
         description: item.description,
       ),
       final AccueilCetteSemaineItem item => AccueilCetteSemaine(item),
-      final AccueilProchainRendezvousItem item => AccueilProchainRendezVous.fromRendezVous(item.rendezvousId),
-      final AccueilProchaineSessionMiloItem item => AccueilProchainRendezVous.fromSession(item.sessionId),
+      final AccueilProchainRendezvousItem item =>
+        AccueilProchainRendezVous.fromRendezVous(item.rendezvousId),
+      final AccueilProchaineSessionMiloItem item =>
+        AccueilProchainRendezVous.fromSession(item.sessionId),
       final AccueilEvenementsItem item => AccueilEvenements(item),
       final AccueilAlertesItem item => AccueilAlertes(item),
       final AccueilSuiviDesOffresItem item => AccueilSuiviDesOffres(item),
@@ -331,7 +335,8 @@ class _CampagneCard extends StatelessWidget {
       leading: DsfrTuileCardImage(imageAsset: Drawables.evalImage),
       title: title,
       description: description,
-      onTap: () => Navigator.push(context, CampagneQuestionPage.materialPageRoute(0)),
+      onTap: () =>
+          Navigator.push(context, CampagneQuestionPage.materialPageRoute(0)),
     );
   }
 }

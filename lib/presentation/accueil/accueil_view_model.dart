@@ -8,7 +8,6 @@ import 'package:pass_emploi_app/features/deep_link/deep_link_state.dart';
 import 'package:pass_emploi_app/features/in_app_notifications/in_app_notifications_state.dart';
 import 'package:pass_emploi_app/features/rating/rating_state.dart';
 import 'package:pass_emploi_app/features/remote_campagne_accueil/remote_campagne_accueil_actions.dart';
-import 'package:pass_emploi_app/features/soft_update/soft_update_state.dart';
 import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
@@ -29,7 +28,6 @@ class AccueilViewModel extends Equatable {
   final bool shouldResetDeeplink;
   final bool withNewNotifications;
   final bool shouldShowAllowNotifications;
-  final bool shouldShowSoftUpdate;
   final Function() resetDeeplink;
   final Function() retry;
 
@@ -41,7 +39,6 @@ class AccueilViewModel extends Equatable {
     required this.shouldResetDeeplink,
     required this.withNewNotifications,
     required this.shouldShowAllowNotifications,
-    required this.shouldShowSoftUpdate,
     required this.resetDeeplink,
     required this.retry,
   });
@@ -56,7 +53,6 @@ class AccueilViewModel extends Equatable {
         shouldResetDeeplink: false,
         withNewNotifications: false,
         shouldShowAllowNotifications: false,
-        shouldShowSoftUpdate: false,
         resetDeeplink: () {},
         retry: () {},
       );
@@ -69,21 +65,27 @@ class AccueilViewModel extends Equatable {
       shouldResetDeeplink: _shouldResetDeeplink(store),
       withNewNotifications: _withNewNotifications(store),
       shouldShowAllowNotifications: _shouldShowAllowNotifications(store),
-      shouldShowSoftUpdate: store.state.softUpdateState is ShowSoftUpdateState,
       resetDeeplink: () => store.dispatch(ResetDeeplinkAction()),
       retry: () => store.dispatch(AccueilRequestAction(forceRefresh: true)),
     );
   }
 
   @override
-  List<Object?> get props => [displayState, items, greeting, deepLink, withNewNotifications, shouldShowSoftUpdate];
+  List<Object?> get props => [
+    displayState,
+    items,
+    greeting,
+    deepLink,
+    withNewNotifications,
+  ];
 }
 
 DisplayState _displayState(Store<AppState> store) {
   return switch (store.state.accueilState) {
     AccueilSuccessState _ => DisplayState.CONTENT,
     AccueilFailureState _ => DisplayState.FAILURE,
-    AccueilLoadingState _ || AccueilNotInitializedState _ => DisplayState.LOADING,
+    AccueilLoadingState _ ||
+    AccueilNotInitializedState _ => DisplayState.LOADING,
   };
 }
 
@@ -114,7 +116,9 @@ List<AccueilItem> _items(Store<AppState> store) {
     _campagneEvaluationItem(store.state),
     _offreSuivies(store),
     _cetteSemaineItem(user, accueilState),
-    ...[AccueilColorSeparatorItem()], // divide home colors from gradient and gray
+    ...[
+      AccueilColorSeparatorItem(),
+    ], // divide home colors from gradient and gray
     _prochainRendezvousItem(user, accueilState),
     _alertesItem(accueilState),
     _suiviDesOffresItem(),
@@ -131,7 +135,8 @@ AccueilItem? _messageInformatifItem(AppState state) {
 }
 
 AccueilItem? _accueilZenithMessageItem(AppState state) {
-  final accueilZenithMessage = state.featureFlipState.featureFlip.accueilZenithMessage;
+  final accueilZenithMessage =
+      state.featureFlipState.featureFlip.accueilZenithMessage;
   if (accueilZenithMessage == null) return null;
   return AccueilZenithMessageItem(accueilZenithMessage);
 }
@@ -141,7 +146,8 @@ AccueilItem? _cetteSemaineItem(User user, AccueilSuccessState successState) {
   final cetteSemaine = successState.accueil.cetteSemaine;
   if (cetteSemaine == null) return null;
   final bool withRendezvousCount =
-      user.accompagnement != Accompagnement.rsaConseilsDepartementaux || cetteSemaine.nombreRendezVous != 0;
+      user.accompagnement != Accompagnement.rsaConseilsDepartementaux ||
+      cetteSemaine.nombreRendezVous != 0;
 
   return AccueilCetteSemaineItem.from(
     loginMode: user.loginMode,
@@ -150,12 +156,18 @@ AccueilItem? _cetteSemaineItem(User user, AccueilSuccessState successState) {
   );
 }
 
-AccueilItem? _prochainRendezvousItem(User user, AccueilSuccessState successState) {
+AccueilItem? _prochainRendezvousItem(
+  User user,
+  AccueilSuccessState successState,
+) {
   if (user.accompagnement == Accompagnement.avenirPro) return null;
   final prochainRendezVous = successState.accueil.prochainRendezVous;
   final prochaineSessionMilo = successState.accueil.prochaineSessionMilo;
 
-  return switch ((prochainRendezVous?.date, prochaineSessionMilo?.dateDeDebut)) {
+  return switch ((
+    prochainRendezVous?.date,
+    prochaineSessionMilo?.dateDeDebut,
+  )) {
     (null, null) => null,
     (null, _) => AccueilProchaineSessionMiloItem(prochaineSessionMilo!.id),
     (_, null) => AccueilProchainRendezvousItem(prochainRendezVous!.id),
@@ -176,10 +188,15 @@ AccueilItem? _evenementsItem(AccueilSuccessState successState) {
       .map((e) => (e.id, e.dateDeDebut, AccueilEvenementsType.sessionMilo))
       .toList();
 
-  final events = [
-    ...animations,
-    ...sessions,
-  ].sorted((a, b) => a.$2.compareTo(b.$2)).take(3).map((e) => (e.$1, e.$3)).toList();
+  final events =
+      [
+            ...animations,
+            ...sessions,
+          ]
+          .sorted((a, b) => a.$2.compareTo(b.$2))
+          .take(3)
+          .map((e) => (e.$1, e.$3))
+          .toList();
 
   return events.isNotEmpty ? AccueilEvenementsItem(events) : null;
 }
@@ -194,23 +211,33 @@ AccueilItem? _suiviDesOffresItem() {
 }
 
 AccueilItem? _offreSuivies(Store<AppState> store) {
-  final nonPostuledOffreIds = store.state.favoriListState.nonPostuledOffreIdsAfter(Duration(days: 3));
-  final blacklistedOffreIds = store.state.offresSuiviesState.blackListedOffreIds;
+  final nonPostuledOffreIds = store.state.favoriListState
+      .nonPostuledOffreIdsAfter(Duration(days: 3));
+  final blacklistedOffreIds =
+      store.state.offresSuiviesState.blackListedOffreIds;
 
-  final offreFavorisIds = nonPostuledOffreIds.where((id) => !blacklistedOffreIds.contains(id)).toList();
+  final offreFavorisIds = nonPostuledOffreIds
+      .where((id) => !blacklistedOffreIds.contains(id))
+      .toList();
   final offreSuiviesState = store.state.offresSuiviesState;
   final updateFavorisState = store.state.favoriUpdateState;
 
   if (offreSuiviesState.confirmationOffre != null) {
-    return OffreSuivieAccueilItem(offreId: offreSuiviesState.confirmationOffre!.offreId);
+    return OffreSuivieAccueilItem(
+      offreId: offreSuiviesState.confirmationOffre!.offreId,
+    );
   }
 
   if (updateFavorisState.confirmationOffre != null) {
-    return OffreSuivieAccueilItem(offreId: updateFavorisState.confirmationOffre!.offreId);
+    return OffreSuivieAccueilItem(
+      offreId: updateFavorisState.confirmationOffre!.offreId,
+    );
   }
 
   if (offreSuiviesState.offresSuivies.isNotEmpty) {
-    return OffreSuivieAccueilItem(offreId: offreSuiviesState.offresSuivies.first.offreDto.id);
+    return OffreSuivieAccueilItem(
+      offreId: offreSuiviesState.offresSuivies.first.offreDto.id,
+    );
   }
 
   if (offreFavorisIds.isNotEmpty) {
@@ -229,14 +256,19 @@ AccueilItem? _onboardingItem(AppState state) {
   final onboarding = state.onboardingState.onboarding;
   if (onboarding != null && onboarding.showOnboarding) {
     return OnboardingItem(
-      completedSteps: onboarding.completedSteps(state.onboardingStepsVisibility()),
+      completedSteps: onboarding.completedSteps(
+        state.onboardingStepsVisibility(),
+      ),
       totalSteps: onboarding.totalSteps(state.onboardingStepsVisibility()),
     );
   }
   return null;
 }
 
-List<AccueilItem?> _remoteCampagneAccueilItems(Store<AppState> store, AppState state) {
+List<AccueilItem?> _remoteCampagneAccueilItems(
+  Store<AppState> store,
+  AppState state,
+) {
   final brand = state.configurationState.configuration?.brand;
   final accompagnement = state.user()?.accompagnement;
 
@@ -248,7 +280,8 @@ List<AccueilItem?> _remoteCampagneAccueilItems(Store<AppState> store, AppState s
       title: campagne.title,
       cta: campagne.cta,
       url: campagne.url,
-      onDismissed: () => store.dispatch(RemoteCampagneAccueilDismissAction(campagne.id)),
+      onDismissed: () =>
+          store.dispatch(RemoteCampagneAccueilDismissAction(campagne.id)),
     );
   }).toList();
 }
@@ -260,14 +293,18 @@ AccueilItem? _ratingAppItem(AppState state) {
 AccueilItem? _campagneEvaluationItem(AppState state) {
   final campagne = state.campagneState.campagne;
   if (campagne != null) {
-    return CampagneEvaluationItem(titre: campagne.titre, description: campagne.description);
+    return CampagneEvaluationItem(
+      titre: campagne.titre,
+      description: campagne.description,
+    );
   }
   return null;
 }
 
 bool _withNewNotifications(Store<AppState> store) {
   final inAppNotificationsState = store.state.inAppNotificationsState;
-  final dateDerniereConsultation = store.state.dateConsultationNotificationState.date;
+  final dateDerniereConsultation =
+      store.state.dateConsultationNotificationState.date;
 
   if (inAppNotificationsState is! InAppNotificationsSuccessState) {
     return false;
@@ -279,7 +316,9 @@ bool _withNewNotifications(Store<AppState> store) {
     return false;
   }
 
-  final isNew = dateDerniereConsultation != null ? notification.date.isAfter(dateDerniereConsultation) : true;
+  final isNew = dateDerniereConsultation != null
+      ? notification.date.isAfter(dateDerniereConsultation)
+      : true;
   return isNew;
 }
 

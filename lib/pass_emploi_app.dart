@@ -12,6 +12,7 @@ import 'package:pass_emploi_app/widgets/onboarding/onboarding_showcase.dart';
 import 'package:pass_emploi_app/widgets/onboarding_notifier_wrapper.dart';
 import 'package:pass_emploi_app/widgets/pass_emploi_material_app.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
+import 'package:pass_emploi_app/widgets/soft_update_wrapper.dart';
 import 'package:redux/redux.dart';
 
 class PassEmploiApp extends StatelessWidget {
@@ -40,7 +41,11 @@ class PassEmploiApp extends StatelessWidget {
             home: Scaffold(
               backgroundColor: context.bg,
               body: OnboardingNotifierWrapper(
-                child: ShowcaseWrapper(child: FtIaShowcaseWrapper(child: RouterPage())),
+                child: SoftUpdateWrapper(
+                  child: ShowcaseWrapper(
+                    child: FtIaShowcaseWrapper(child: RouterPage()),
+                  ),
+                ),
               ),
             ),
           ),
