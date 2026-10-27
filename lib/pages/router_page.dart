@@ -19,10 +19,10 @@ import 'package:pass_emploi_app/push/deep_link_factory.dart';
 import 'package:pass_emploi_app/push/push_notification_manager.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
-import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/utils/platform.dart';
+import 'package:pass_emploi_app/widgets/bottom_sheets/soft_update_bottom_sheet.dart';
 
 class RouterPage extends StatefulWidget {
   @override
@@ -123,7 +123,10 @@ class _RouterPageState extends State<RouterPage> with WidgetsBindingObserver {
 
   void _removeAllScreensAboveRouterPage() {
     if (Navigator.canPop(context)) {
-      Navigator.of(context).popAll();
+      Navigator.of(context).popUntil(
+        (route) =>
+            route.settings.name == Navigator.defaultRouteName || route.settings.name == SoftUpdateBottomSheet.routeName,
+      );
     }
   }
 

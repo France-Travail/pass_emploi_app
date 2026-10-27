@@ -11,10 +11,14 @@ import 'package:pass_emploi_app/utils/platform.dart';
 class SoftUpdateBottomSheet extends StatelessWidget {
   const SoftUpdateBottomSheet({super.key});
 
+  /// Nom de la route, pour qu'elle survive au `popAll` du RouterPage.
+  static const String routeName = 'soft-update-bottom-sheet';
+
   static Future<void> show(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return showModalBottomSheet<bool>(
       context: context,
+      routeSettings: const RouteSettings(name: routeName),
       backgroundColor: DsfrColorDecisions.backgroundTransparent(context),
       barrierColor: DsfrColorDecisions.backgroundOverlayGrey(context),
       barrierLabel: Strings.bottomSheetBarrierLabel,
