@@ -1,8 +1,18 @@
 {
-  "dateMiseAJour": "2026-10-20T10:00:00.000Z",
   "situation": "LYCEE",
   "goals": [
-    "ALTERNANCE"
+    "DECOUVRIR_METIERS"
   ],
-  "obstacles": []
+  "obstacles": [],
+  "dateNaissance": "2008-03-15",
+  "habitation": {
+    "codeInsee": "75056",
+    "nom": "Paris"
+  },
+  "villeRecherche": {
+    "codeInsee": "75056",
+    "nom": "Paris"
+  },
+  "domaine": "informatique",
+  "rayonKm": 10
 }

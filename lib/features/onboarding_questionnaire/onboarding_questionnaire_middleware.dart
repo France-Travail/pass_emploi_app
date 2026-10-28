@@ -9,7 +9,6 @@ import 'package:pass_emploi_app/models/criteres_recherche_utilisateur.dart';
 import 'package:pass_emploi_app/models/fonctionnalite.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
-import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_form_change_notifier.dart';
 import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_tracker.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
@@ -55,12 +54,20 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
   }
 
   Future<void> _load(Store<AppState> store) async {
-    final answers = await _repository.getAnswers();
+    final answers = await _getAnswers(store);
     final finished = await _repository.isFinished();
     final everFinished = await _repository.hasEverFinished();
     store.dispatch(
       OnboardingQuestionnaireSuccessAction(finished: finished, everFinished: everFinished, answers: answers),
     );
+  }
+
+  // Le jeune connecté n'a pas d'étape prénom : son questionnaire prend toujours le prénom de son compte.
+  Future<OnboardingQuestionnaireAnswers> _getAnswers(Store<AppState> store) async {
+    final answers = await _repository.getAnswers();
+    final firstName = store.state.user()?.firstName.trim() ?? '';
+    if (store.state.isInviteLoginMode() || firstName.isEmpty) return answers;
+    return answers.copyWith(prenom: firstName);
   }
 
   bool _isQuestionnaireInProgress(Store<AppState> store) {
@@ -85,7 +92,6 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
         await _restoreAnswers(userId);
         await _load(store);
       case ActionPlanFetchNotFound():
-        await _restoreAnswers(userId);
         // Un plan était attendu (les réponses sauvegardées permettent d'en générer un) mais il manque côté
         // serveur : on rejoue le questionnaire. Sans plan attendu (étapes toutes passées), il reste terminé.
         if (await _repository.isFinished() && (await _repository.getAnswers()).canGenerateActionPlan) {
@@ -99,14 +105,14 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
     }
   }
 
-  // Les réponses du serveur ne remplacent jamais des réponses locales déjà données (ex. envoi échoué plus tôt) :
+  // Le serveur enregistre le questionnaire avec le plan qu'il a généré : il n'est cherché que si un plan existe.
+  // Les réponses du serveur ne remplacent jamais des réponses locales déjà données (ex. génération échouée plus tôt) :
   // elles ne servent qu'à un appareil sans réponses (reconnexion, nouveau téléphone, réinstallation).
-  // Une erreur ou un 404 laissent les réponses locales telles quelles et ne bloquent pas l'affichage du plan.
+  // Le prénom, inconnu du serveur et pris du compte, n'est pas compté. Une erreur ou un 404 (plan généré avant
+  // l'enregistrement du questionnaire) laissent les réponses locales telles quelles et ne bloquent pas l'affichage du plan.
   Future<void> _restoreAnswers(String userId) async {
     final local = await _repository.getAnswers();
-    final hasLocalAnswers =
-        local.isSituationAnswered || local.isObjectifsAnswered || local.isDomaineAnswered || local.isFreinsAnswered;
-    if (hasLocalAnswers) return;
+    if (local.answeredStepsCount(withPrenom: false) > 0) return;
     final restored = await _actionPlanRepository.fetchQuestionnaire(userId, local);
     if (restored != null) await _repository.saveAnswers(restored);
   }
@@ -114,16 +120,9 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
   Future<void> _complete(Store<AppState> store, OnboardingQuestionnaireAnswers answers) async {
     final tracker = OnboardingQuestionnaireTracker(isUpdate: await _repository.hasEverFinished());
     await _repository.saveAnswers(answers);
-    final userId = store.state.userId();
-    if (userId != null && !store.state.isInviteLoginMode()) {
-      await _actionPlanRepository.saveQuestionnaire(
-        userId,
-        answers,
-        etapeCourante: OnboardingQuestionnaireStep.freins.name,
-      );
-    }
     _persistRechercheCriteres(store, answers);
     if (answers.canGenerateActionPlan) {
+      final userId = store.state.userId();
       if (userId == null) {
         store.dispatch(ActionPlanLoadingAction());
         store.dispatch(ActionPlanFailureAction());
@@ -166,7 +165,7 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
   }
 
   Future<void> _resume(Store<AppState> store) async {
-    final answers = await _repository.getAnswers();
+    final answers = await _getAnswers(store);
     await _repository.setFinished(false);
     final everFinished = await _repository.hasEverFinished();
     store.dispatch(
@@ -181,7 +180,7 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
 
   // Le questionnaire rouvert depuis l'app est refermé : l'état « terminé » d'avant la reprise est rétabli, les réponses sont conservées.
   Future<void> _closeResumed(Store<AppState> store) async {
-    final answers = await _repository.getAnswers();
+    final answers = await _getAnswers(store);
     await _repository.setFinished(true);
     final everFinished = await _repository.hasEverFinished();
     store.dispatch(OnboardingQuestionnaireSuccessAction(finished: true, everFinished: everFinished, answers: answers));

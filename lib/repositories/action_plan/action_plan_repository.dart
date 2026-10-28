@@ -63,20 +63,7 @@ class ActionPlanRepository {
     }
   }
 
-  /// Best effort : une erreur ne doit jamais empêcher la génération du plan.
-  Future<void> saveQuestionnaire(
-    String userId,
-    OnboardingQuestionnaireAnswers answers, {
-    required String etapeCourante,
-  }) async {
-    final url = '/jeunes/$userId/questionnaire';
-    try {
-      await _httpClient.put(url, data: _mapper.toQuestionnaireRequest(answers, etapeCourante: etapeCourante));
-    } catch (e, stack) {
-      _crashlytics?.recordNonNetworkExceptionUrl(e, stack, url);
-    }
-  }
-
+  /// Le questionnaire est enregistré côté serveur par la génération du plan (POST /plan-action), jamais seul.
   /// Renvoie [local] complété des réponses du serveur, ou null s'il n'y en a pas (404) ou en cas d'erreur.
   Future<OnboardingQuestionnaireAnswers?> fetchQuestionnaire(
     String userId,

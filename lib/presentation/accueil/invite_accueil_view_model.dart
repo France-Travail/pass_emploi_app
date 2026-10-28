@@ -26,7 +26,8 @@ class InviteAccueilViewModel extends Equatable {
   final DisplayState displayState;
   final InviteAccueilMode mode;
   final String greeting;
-  final OnboardingQuestionnaireAnswers answers;
+  final int questionnaireAnsweredSteps;
+  final int questionnaireStepsCount;
   final ActionPlan? plan;
   final String planSubtitle;
   final bool showDiscoveryTile;
@@ -57,7 +58,8 @@ class InviteAccueilViewModel extends Equatable {
     required this.displayState,
     required this.mode,
     required this.greeting,
-    required this.answers,
+    required this.questionnaireAnsweredSteps,
+    required this.questionnaireStepsCount,
     required this.plan,
     required this.planSubtitle,
     required this.showDiscoveryTile,
@@ -91,7 +93,9 @@ class InviteAccueilViewModel extends Equatable {
     final answers = inviteState is OnboardingQuestionnaireSuccessState
         ? inviteState.answers
         : const OnboardingQuestionnaireAnswers();
-    final mode = switch (answers.completeness) {
+    // Le prénom n'est demandé qu'à l'invité : le jeune connecté a celui de son compte.
+    final withPrenom = store.state.isInviteLoginMode();
+    final mode = switch (answers.completeness(withPrenom: withPrenom)) {
       OnboardingQuestionnaireCompleteness.incomplet => InviteAccueilMode.incomplet,
       OnboardingQuestionnaireCompleteness.partiel => InviteAccueilMode.partiel,
       OnboardingQuestionnaireCompleteness.complet => InviteAccueilMode.complet,
@@ -135,7 +139,8 @@ class InviteAccueilViewModel extends Equatable {
       displayState: displayState,
       mode: mode,
       greeting: Strings.inviteAccueilGreeting(prenom),
-      answers: answers,
+      questionnaireAnsweredSteps: answers.answeredStepsCount(withPrenom: withPrenom),
+      questionnaireStepsCount: OnboardingQuestionnaireAnswers.totalStepsCount(withPrenom: withPrenom),
       plan: plan,
       planSubtitle: switch (mode) {
         InviteAccueilMode.incomplet => Strings.inviteAccueilPlanSubtitleIncomplet,
@@ -189,7 +194,8 @@ class InviteAccueilViewModel extends Equatable {
     displayState,
     mode,
     greeting,
-    answers,
+    questionnaireAnsweredSteps,
+    questionnaireStepsCount,
     plan,
     planSubtitle,
     showDiscoveryTile,

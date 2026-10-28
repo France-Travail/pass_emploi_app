@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
-import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 
 class OnboardingQuestionnaireProgressCard extends StatelessWidget {
   const OnboardingQuestionnaireProgressCard({
     super.key,
-    required this.answers,
+    required this.answeredSteps,
+    required this.stepsCount,
     required this.onResume,
     this.description,
   });
 
-  final OnboardingQuestionnaireAnswers answers;
+  final int answeredSteps;
+  final int stepsCount;
   final VoidCallback onResume;
   final String? description;
 
   @override
   Widget build(BuildContext context) {
-    final current = answers.answeredStepsCount;
-    final total = OnboardingQuestionnaireAnswers.totalStepsCount;
+    final current = answeredSteps;
+    final total = stepsCount;
     final progress = total == 0 ? 0.0 : current / total;
 
     return DecoratedBox(

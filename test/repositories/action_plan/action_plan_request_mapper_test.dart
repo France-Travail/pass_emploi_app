@@ -130,109 +130,135 @@ void main() {
   });
 
   group('questionnaire', () {
-    test(
-      'maps answers to questionnaire request body, age computed from date of birth',
-      () {
-        final request = mapper.toQuestionnaireRequest(
-          OnboardingQuestionnaireAnswers(
-            prenom: 'Malik',
-            dateNaissance: DateTime(2006, 4, 12),
-            situation: QuestionnaireSituation.lycee,
-            objectifs: {QuestionnaireObjectif.alternance},
-            domaine: 'mécanique',
-            freins: {QuestionnaireFrein.pasDeTransport},
-          ),
-          etapeCourante: 'freins',
-          now: DateTime(2026, 4, 11),
-        );
-
-        expect(request, {
-          'etapeCourante': 'freins',
-          'age': 19,
-          'situation': 'LYCEE',
-          'goals': ['ALTERNANCE'],
-          'domaine': 'mécanique',
-          'obstacles': ['PAS_DE_TRANSPORT'],
-        });
-      },
-    );
-
-    test('empty answers are sent as empty, domaine omitted', () {
-      final request = mapper.toQuestionnaireRequest(
-        const OnboardingQuestionnaireAnswers(),
-        etapeCourante: 'freins',
+    test('restores every answer known to the API and keeps the local prenom', () {
+      final restored = mapper.fromQuestionnaireResponse(
+        {
+          'situation': 'EMPLOI',
+          'goals': ['EMPLOI', 'ORIENTER'],
+          'obstacles': ['PAS_DE_PERMIS'],
+          'dateNaissance': '2005-03-14',
+          'habitation': {'codeInsee': '75056', 'nom': 'Paris'},
+          'villeRecherche': {'codeInsee': '69123', 'nom': 'Lyon'},
+          'domaine': 'Informatique',
+          'rayonKm': 10,
+        },
+        const OnboardingQuestionnaireAnswers(prenom: 'Malik'),
       );
 
-      expect(request, {
-        'etapeCourante': 'freins',
-        'goals': <String>[],
-        'obstacles': <String>[],
-      });
+      expect(
+        restored,
+        OnboardingQuestionnaireAnswers(
+          prenom: 'Malik',
+          dateNaissance: DateTime(2005, 3, 14),
+          habitation: const QuestionnaireCommune(code: '75056', nom: 'Paris'),
+          situation: QuestionnaireSituation.emploi,
+          objectifs: {QuestionnaireObjectif.emploi, QuestionnaireObjectif.orienter},
+          domaine: 'Informatique',
+          villeRecherche: const QuestionnaireCommune(code: '69123', nom: 'Lyon'),
+          rayonKm: 10,
+          freins: {QuestionnaireFrein.pasDePermis},
+        ),
+      );
     });
 
-    test(
-      '"je ne sais pas" domaine is sent as null, unlike an unanswered one',
-      () {
-        final request = mapper.toQuestionnaireRequest(
-          const OnboardingQuestionnaireAnswers(domaineInconnu: true),
-          etapeCourante: 'freins',
-        );
-
-        expect(request.containsKey('domaine'), isTrue);
-        expect(request['domaine'], isNull);
-      },
-    );
-
-    test(
-      'restores contract answers and keeps local ones unknown to the API',
-      () {
-        final restored = mapper.fromQuestionnaireResponse(
-          {
-            'dateMiseAJour': '2026-10-20T10:00:00.000Z',
-            'age': 19,
-            'situation': 'EMPLOI',
-            'goals': ['EMPLOI', 'FORMER'],
-            'domaine': null,
-            'obstacles': ['RIEN_NE_ME_BLOQUE'],
-          },
-          const OnboardingQuestionnaireAnswers(prenom: 'Malik', rayonKm: 30),
-        );
-
-        expect(
-          restored,
-          const OnboardingQuestionnaireAnswers(
-            prenom: 'Malik',
-            rayonKm: 30,
-            situation: QuestionnaireSituation.emploi,
-            objectifs: {
-              QuestionnaireObjectif.emploi,
-              QuestionnaireObjectif.former,
-            },
-            domaineInconnu: true,
-            freins: {QuestionnaireFrein.rienNeMeBloque},
-          ),
-        );
-      },
-    );
-
-    test('restores a domaine and an absent one stays unanswered', () {
-      final withDomaine = mapper.fromQuestionnaireResponse(
+    test('optional answers absent from the API stay unanswered', () {
+      final restored = mapper.fromQuestionnaireResponse(
         {
           'situation': 'LYCEE',
-          'goals': <String>[],
-          'domaine': 'mécanique',
+          'goals': ['ALTERNANCE'],
           'obstacles': <String>[],
         },
         const OnboardingQuestionnaireAnswers(),
       );
-      final withoutDomaine = mapper.fromQuestionnaireResponse(
-        {'situation': 'LYCEE', 'goals': <String>[], 'obstacles': <String>[]},
+
+      expect(
+        restored,
+        const OnboardingQuestionnaireAnswers(
+          situation: QuestionnaireSituation.lycee,
+          objectifs: {QuestionnaireObjectif.alternance},
+        ),
+      );
+      expect(restored.isDomaineAnswered, isFalse);
+    });
+
+    test('maps back what the plan generation request sends', () {
+      final answers = OnboardingQuestionnaireAnswers(
+        dateNaissance: DateTime(2006, 4, 12),
+        habitation: const QuestionnaireCommune(code: '76540', nom: 'Rouen'),
+        situation: QuestionnaireSituation.lycee,
+        objectifs: {QuestionnaireObjectif.alternance},
+        domaine: 'mécanique',
+        villeRecherche: const QuestionnaireCommune(code: '76540', nom: 'Rouen'),
+        rayonKm: 30,
+        freins: {QuestionnaireFrein.pasDeTransport},
+      );
+
+      final restored = mapper.fromQuestionnaireResponse(
+        mapper.toRequest(answers),
         const OnboardingQuestionnaireAnswers(),
       );
 
-      expect(withDomaine.domaine, 'mécanique');
-      expect(withDomaine.domaineInconnu, isFalse);
-      expect(withoutDomaine.isDomaineAnswered, isFalse);
+      expect(restored, answers);
+    });
+  });
+
+  group('précision de la situation « Autre »', () {
+    const autre = OnboardingQuestionnaireAnswers(
+      situation: QuestionnaireSituation.autre,
+      situationAutre: 'En service civique',
+      objectifs: {QuestionnaireObjectif.orienter},
+    );
+
+    test('is sent with the situation AUTRE', () {
+      final request = mapper.toRequest(autre);
+
+      expect(request['situation'], 'AUTRE');
+      expect(request['precisionAutre'], 'En service civique');
+    });
+
+    test('is not sent without precision, nor with another situation', () {
+      final sansPrecision = mapper.toRequest(autre.copyWith(clearSituationAutre: true));
+      final autreSituation = mapper.toRequest(autre.copyWith(situation: QuestionnaireSituation.lycee));
+
+      expect(sansPrecision.containsKey('precisionAutre'), isFalse);
+      expect(autreSituation.containsKey('precisionAutre'), isFalse);
+    });
+
+    test('is restored from the questionnaire saved on server', () {
+      final restored = mapper.fromQuestionnaireResponse(
+        {
+          'situation': 'AUTRE',
+          'precisionAutre': 'En service civique',
+          'goals': ['ORIENTER'],
+          'obstacles': <String>[],
+        },
+        const OnboardingQuestionnaireAnswers(),
+      );
+
+      expect(restored, autre);
+    });
+
+    test('is ignored with another situation, and absent when the server has none', () {
+      final autreSituation = mapper.fromQuestionnaireResponse(
+        {
+          'situation': 'LYCEE',
+          'precisionAutre': 'En service civique',
+          'goals': ['ORIENTER'],
+          'obstacles': <String>[],
+        },
+        const OnboardingQuestionnaireAnswers(),
+      );
+      final sansPrecision = mapper.fromQuestionnaireResponse(
+        {
+          'situation': 'AUTRE',
+          'goals': ['ORIENTER'],
+          'obstacles': <String>[],
+        },
+        const OnboardingQuestionnaireAnswers(situationAutre: 'Ancienne précision'),
+      );
+
+      expect(autreSituation.situationAutre, isNull);
+      expect(sansPrecision.situationAutre, isNull);
     });
   });
 }

@@ -4,18 +4,22 @@ import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
+import 'package:pass_emploi_app/features/login/login_state.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_page.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 
+import '../../doubles/fixtures.dart';
 import '../../doubles/spies.dart';
 
 void main() {
-  AppState state({required bool resumedFromApp}) {
+  AppState state({required bool resumedFromApp, LoginMode loginMode = LoginMode.INVITE}) {
     return AppState.initialState().copyWith(
+      loginState: LoginSuccessState(mockUser(loginMode: loginMode)),
       onboardingQuestionnaireState: OnboardingQuestionnaireSuccessState(
         finished: false,
         resumedFromApp: resumedFromApp,
@@ -136,6 +140,17 @@ void main() {
 
       expect(annonces, hasLength(2));
       expect(annonces.last, startsWith('Étape 2 sur 8, '));
+      debugDefaultTargetPlatformOverride = null;
+    });
+
+    testWidgets("Android : le jeune connecté, sans étape prénom, commence à l'étape 1 sur 7", (tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final annonces = captureAnnonces(tester);
+
+      await pump(tester, state(resumedFromApp: true, loginMode: LoginMode.MILO));
+      await tester.pump(const Duration(seconds: 1));
+
+      expect(annonces, [Strings.onboardingQuestionnaireStepA11y(1, 7, Strings.onboardingQuestionnaireBirthdateTitle)]);
       debugDefaultTargetPlatformOverride = null;
     });
 

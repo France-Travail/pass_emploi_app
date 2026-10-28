@@ -144,40 +144,6 @@ void main() {
       });
     });
 
-    group('saveQuestionnaire', () {
-      const answers = OnboardingQuestionnaireAnswers(
-        situation: QuestionnaireSituation.lycee,
-        objectifs: {QuestionnaireObjectif.alternance},
-      );
-
-      sut.when((repository) => repository.saveQuestionnaire('userId', answers, etapeCourante: 'freins'));
-
-      group('when response is valid', () {
-        sut.givenResponseCode(204);
-
-        test('request should be valid', () async {
-          await sut.expectRequestBody(
-            method: HttpMethod.put,
-            url: '/jeunes/userId/questionnaire',
-            rawBody: {
-              'etapeCourante': 'freins',
-              'situation': 'LYCEE',
-              'goals': ['ALTERNANCE'],
-              'obstacles': <String>[],
-            },
-          );
-        });
-      });
-
-      group('when request fails', () {
-        sut.givenResponseCode(500);
-
-        test('error is ignored', () async {
-          await sut.expectResult<void>((_) {});
-        });
-      });
-    });
-
     group('fetchQuestionnaire', () {
       sut.when((repository) => repository.fetchQuestionnaire('userId', const OnboardingQuestionnaireAnswers()));
 
@@ -190,8 +156,18 @@ void main() {
 
         test('response should be mapped to answers', () async {
           await sut.expectResult<OnboardingQuestionnaireAnswers?>((result) {
-            expect(result?.situation, QuestionnaireSituation.lycee);
-            expect(result?.objectifs, {QuestionnaireObjectif.alternance});
+            expect(
+              result,
+              OnboardingQuestionnaireAnswers(
+                dateNaissance: DateTime(2008, 3, 15),
+                habitation: const QuestionnaireCommune(code: '75056', nom: 'Paris'),
+                situation: QuestionnaireSituation.lycee,
+                objectifs: {QuestionnaireObjectif.decouvrirMetiers},
+                domaine: 'informatique',
+                villeRecherche: const QuestionnaireCommune(code: '75056', nom: 'Paris'),
+                rayonKm: 10,
+              ),
+            );
           });
         });
       });
