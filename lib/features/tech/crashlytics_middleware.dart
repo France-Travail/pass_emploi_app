@@ -50,6 +50,7 @@ class CrashlyticsMiddleware extends MiddlewareClass<AppState> {
       case LogoutReason.userLogout:
       case LogoutReason.accountSuppression:
       case LogoutReason.cguRefused:
+      case LogoutReason.loginModeChanged:
         return false;
       case LogoutReason.apiResponse401:
       case LogoutReason.expiredRefreshToken:

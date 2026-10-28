@@ -9,6 +9,7 @@ enum LogoutReason {
   cguRefused,
   tooMany401,
   tooManyRefreshGenericErrors,
+  loginModeChanged,
 }
 
 extension LoginModeModeExtension on LoginMode {
@@ -35,6 +36,14 @@ class LoginSuccessAction {
   final User user;
 
   LoginSuccessAction(this.user);
+}
+
+class SessionRefreshedAction {}
+
+class UserUpdatedAction {
+  final User user;
+
+  UserUpdatedAction(this.user);
 }
 
 class LoginFailureAction {
