@@ -81,7 +81,7 @@ class _Body extends StatelessWidget {
     if (viewModel.apiPeKo) return _ApiPeKo(viewModel);
     return switch (viewModel.displayState) {
       DisplayState.LOADING => const _LoadingIndicator(),
-      DisplayState.CONTENT => _Content(viewModel),
+      DisplayState.CONTENT => _Content(viewModel, insideBottomSheet),
       DisplayState.EMPTY => _EmptyListPlaceholder(insideBottomSheet),
       DisplayState.FAILURE => Retry(Strings.cvError, () => viewModel.retry()),
     };
@@ -90,8 +90,9 @@ class _Body extends StatelessWidget {
 
 class _Content extends StatelessWidget {
   final CvViewModel viewModel;
+  final bool insideBottomSheet;
 
-  const _Content(this.viewModel);
+  const _Content(this.viewModel, this.insideBottomSheet);
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +100,7 @@ class _Content extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          Strings.cvListPageSubtitle,
+          insideBottomSheet ? Strings.postulerSubtitle : Strings.cvListPageSubtitle,
           style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
         ),
         const SizedBox(height: DsfrSpacings.s2w),
@@ -167,11 +168,11 @@ class _CvCard extends StatelessWidget {
             const SizedBox(height: DsfrSpacings.s2w),
             Semantics(
               button: true,
-              label: '${Strings.cvDownload} ${cv.titre}',
+              label: '${Strings.cvConsultButton} ${cv.titre}',
               child: ExcludeSemantics(
                 child: DsfrButton(
-                  label: Strings.cvDownload,
-                  icon: DsfrIcons.systemDownloadLine,
+                  label: Strings.cvConsultButton,
+                  icon: DsfrIcons.systemEyeLine,
                   variant: DsfrButtonVariant.secondary,
                   size: DsfrComponentSize.lg,
                   onPressed: onDownload,
