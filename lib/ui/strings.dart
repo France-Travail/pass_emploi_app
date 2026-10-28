@@ -1896,8 +1896,8 @@ class Strings {
       ? "Votre conseiller depuis le $date"
       : "Ton conseiller depuis le $date";
   static String cvTileSubtitle = Brand.isPassEmploi()
-      ? "Télécharger vos CV France Travail"
-      : "Télécharger tes CV France Travail";
+      ? "Consultez vos CV France Travail"
+      : "Consulte tes CV France Travail";
   static String privacyAndDataLabel = "Confidentialités et données";
   static String privacyAndDataSubtitle = "RGAA, RGPD, données stockées";
 
@@ -2337,13 +2337,11 @@ class Strings {
 
   // CV
   static String cvCardTitle = "CV";
-  static String cvCardSubtitle =
-      "Prépare tes prochaines candidatures en téléchargeant tes CV France Travail directement sur ton téléphone.";
   static String cvCadCaption = "Voir";
   static String cvListPageTitle = "CV";
   static String cvListPageSubtitle = Brand.isPassEmploi()
-      ? "Téléchargez vos CV France Travail sur votre téléphone pour préparer votre candidature"
-      : "Télécharge tes CV France Travail sur ton téléphone pour préparer ta candidature";
+      ? "Consultez vos CV France Travail sur votre téléphone pour préparer vos candidatures"
+      : "Consulte tes CV France Travail sur ton téléphone pour préparer tes candidatures";
   static String cvError =
       "Erreur lors de la récupération des CVs France Travail";
   static String cvListEmptyTitle = Brand.isPassEmploi()
@@ -2353,7 +2351,7 @@ class Strings {
       ? "Déposez votre CV dans votre espace France Travail pour le récupérer automatiquement quand vous postulerez à des offres"
       : "Dépose ton CV dans ton espace France Travail pour le récupérer automatiquement quand tu postuleras à des offres";
   static String cvEmptyButton = "Mon espace France Travail";
-  static String cvDownload = "Télécharger";
+  static String cvConsultButton = "Consulter";
   static String cvErrorApiPeKoMessage = Brand.isPassEmploi()
       ? "Impossible de se synchroniser avec votre espace France Travail"
       : "Impossible de se synchroniser avec ton espace France Travail";
@@ -2364,6 +2362,9 @@ class Strings {
   static String postulerTitle = Brand.isPassEmploi()
       ? "Récupérez votre CV sur votre téléphone"
       : "Récupère ton CV sur ton téléphone";
+  static String postulerSubtitle = Brand.isPassEmploi()
+      ? "Consultez vos CV France Travail sur votre téléphone pour préparer votre candidature"
+      : "Consulte tes CV France Travail sur ton téléphone pour préparer ta candidature";
   static String postulerContinueButton = Brand.isPassEmploi()
       ? "Continuez vers l’offre"
       : "Continue vers l’offre";
