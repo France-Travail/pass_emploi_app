@@ -11,7 +11,6 @@ import 'package:pass_emploi_app/presentation/recherche/recherche_home_page_view_
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/dsfr/emoji_solution_tile.dart';
-import 'package:pass_emploi_app/widgets/mes_outils_card.dart';
 import 'package:pass_emploi_app/widgets/onboarding/onboarding_showcase.dart';
 
 class RechercheHomePage extends StatefulWidget {
@@ -42,8 +41,6 @@ class _RechercheHomePageState extends State<RechercheHomePage> {
             _CriteresUtilisateur(metierLabel: viewModel.metierLabel, lieuLabel: viewModel.lieuLabel),
             const SizedBox(height: DsfrSpacings.s3v),
             _NosOffres(viewModel: viewModel),
-            const SizedBox(height: DsfrSpacings.s2w),
-            const MesOutilsCard(),
             const SizedBox(height: DsfrSpacings.s3w),
           ],
         ),

@@ -91,10 +91,6 @@ class AnalyticsScreenNames {
   static const serviceCiviqueFiltres = "recherche/service_civique/search_results/filters";
   static const serviceCiviqueCreateAlert = "/saved_searches/service_civique/create";
 
-  static const toolbox = "recherche/boite_a_outils";
-  static const benevolat = "benevolat";
-  static const laBonneAlternance = "la_bonne_alternance";
-  static const ressourceFormation = "mes_ressources_formation";
   static const immersionBoulanger = "immersion_boulanger";
 
   static const eventList = "events/list";
@@ -324,9 +320,6 @@ class AnalyticsEventNames {
   static const accueilCategory = "Accueil";
   static const accueilDetailSemainePressed = "Clic sur le détail de la semaine";
   static const acceuilClicSurSuiviDesOffres = "Clic sur le suivi des offres";
-
-  static const mesOutilsCategory = "Mes outils";
-  static const mesOutilsAction = "Clic sur mes outils";
 
   static const alerteCategory = "Alertes";
   static const alerteCardPressed = "Clic sur une alerte";

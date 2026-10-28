@@ -139,18 +139,6 @@ void main() {
           MigrationParcoursEmploiDeepLink(),
           DeepLinkOrigin.pushNotification,
         );
-
-        assertStateWithJson(
-          {"type": "BENEVOLAT"},
-          BenevolatDeepLink(),
-          DeepLinkOrigin.pushNotification,
-        );
-
-        assertStateWithJson(
-          {"type": "LA_BONNE_ALTERNANCE"},
-          LaBonneAlternanceDeepLink(),
-          DeepLinkOrigin.pushNotification,
-        );
       });
 
       group('In app', () {
@@ -182,12 +170,6 @@ void main() {
           {"type": "OFFRES_ENREGISTREES"},
           OffresEnregistreesDeepLink(),
           DeepLinkOrigin.pushNotification,
-        );
-
-        assertStateWithJson(
-          {"type": "OUTILS"},
-          OutilsDeepLink(),
-          DeepLinkOrigin.inAppNavigation,
         );
       });
 

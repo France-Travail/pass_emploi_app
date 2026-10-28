@@ -330,7 +330,6 @@ class Strings {
   static String evenementOnboardingSection = Brand.isPassEmploi()
       ? "Recherchez un événement"
       : "Recherche un événement";
-  static String outilsOnboardingSection = "Consulte les outils";
 
   static String skipOnboarding = "Passer le tutoriel";
   static String skipOnboardingContent = Brand.isPassEmploi()
@@ -349,7 +348,6 @@ class Strings {
       : "Explore les événements en lien avec ton projet pro";
   static String onboardingShowcasePlanActionTitle =
       "Tes suggestions t’attendent";
-  static String onboardingShowcaseOutilsTitle = "Besoin d’un coup de pouce?";
   static String onboardingShowcaseMessageDescription = Brand.isPassEmploi()
       ? "Envoyez-lui un premier message “Bonjour ! j’ai bien téléchargé l’application, j’ai hâte de commencer !”"
       : "Envoie-lui un premier message “Bonjour ! j’ai bien téléchargé l’application, j’ai hâte de commencer !”";
@@ -364,17 +362,11 @@ class Strings {
       : "Participe à des salons, forums, ateliers pour faire avancer ton projet pro";
   static String onboardingShowcasePlanActionDescription =
       "Ouvre une catégorie pour découvrir les suggestions d’action.";
-  static String onboardingShowcaseOutilsDescription =
-      "Retrouve les bons outils pour te guider à chaque étapes";
 
   static String onboardingStepFinished = Brand.isPassEmploi()
       ? "🎉 Bravo, vous avez validé une étape du tutoriel !"
       : "🎉 Bravo, tu as validé une étape du tutoriel !";
 
-  static String mesOutils = "Mes outils";
-  static String mesOutilsDescription = Brand.isPassEmploi()
-      ? "Trouver l’aide adaptée à votre projet professionnel"
-      : "Trouver l’aide adaptée à ton projet professionel";
   static String decouvrirLeService = "Découvrir le service";
 
   // Login organisms
@@ -769,10 +761,6 @@ class Strings {
       : "Crée des alertes lors de tes recherches et reçois les offres qui te correspondent";
   static String accueilPasDalerteBouton = "Commencer une recherche";
   static String accueilOffresEnregistreesSection = "Mon suivi des offres";
-  static String accueilOutilsSection = "Outils";
-  static String accueilOutilsSectionDescription =
-      "Découvre des outils pour t'aider dans tes projets";
-  static String accueilVoirLesOutils = "Voir tous les outils";
 
   // Comptage des heures
   static String comptageDesHeures0To5 =

@@ -25,9 +25,6 @@ enum InAppNotificationType {
   offresEnregistrees,
   savedSearches,
   recherche,
-  outils,
-  benevolat,
-  laBonneAlternance,
   unknown;
 
   static InAppNotificationType fromString(String type) {
@@ -55,9 +52,6 @@ enum InAppNotificationType {
       "OFFRES_ENREGISTREES" => offresEnregistrees,
       "SAVED_SEARCHES" => savedSearches,
       "RECHERCHE" => recherche,
-      "OUTILS" => outils,
-      "BENEVOLAT" => benevolat,
-      "LA_BONNE_ALTERNANCE" => laBonneAlternance,
       _ => unknown,
     };
   }

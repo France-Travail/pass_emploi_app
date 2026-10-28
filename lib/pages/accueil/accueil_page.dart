@@ -21,11 +21,8 @@ import 'package:pass_emploi_app/pages/accueil/accueil_rating_app.dart';
 import 'package:pass_emploi_app/pages/accueil/accueil_suivi_des_offres.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/invite_accueil_body.dart';
 import 'package:pass_emploi_app/pages/accueil/remote_campagne_accueil_card.dart';
-import 'package:pass_emploi_app/pages/benevolat_page.dart';
-import 'package:pass_emploi_app/pages/boite_a_outils_page.dart';
 import 'package:pass_emploi_app/pages/campagne/campagne_question_page.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche_form_page.dart';
-import 'package:pass_emploi_app/pages/la_bonne_alternance_page.dart';
 import 'package:pass_emploi_app/pages/rendezvous/rendezvous_details_page.dart';
 import 'package:pass_emploi_app/pages/user_action/create/create_user_action_form_page.dart';
 import 'package:pass_emploi_app/pages/user_action/user_action_detail_page.dart';
@@ -114,10 +111,6 @@ class _AccueilPageState extends State<AccueilPage> {
       await _handleRappelCreationDemarcheDeeplink();
     } else if (newViewModel.deepLink is CreationActionDeepLink) {
       await _handleRappelCreationActionDeeplink();
-    } else if (newViewModel.deepLink is BenevolatDeepLink) {
-      await _handleBenevolatDeeplink();
-    } else if (newViewModel.deepLink is LaBonneAlternanceDeepLink) {
-      await _handleLaBonneAlternanceDeeplink();
     } else {
       switch (newViewModel.deepLink) {
         case final RendezvousDeepLink deeplink:
@@ -138,8 +131,6 @@ class _AccueilPageState extends State<AccueilPage> {
             deeplink.idAction,
             UserActionStateSource.noSource,
           );
-        case OutilsDeepLink():
-          await Navigator.push(context, BoiteAOutilsPage.materialPageRoute());
         case CampagneDeepLink():
           await Navigator.push(
             context,
@@ -150,32 +141,6 @@ class _AccueilPageState extends State<AccueilPage> {
       }
       if (newViewModel.shouldResetDeeplink) newViewModel.resetDeeplink();
     }
-  }
-
-  Future<void> _handleBenevolatDeeplink() async {
-    // Navigator must be captured before state changes as context may no longer be available after tab switch.
-    final navigator = Navigator.of(context);
-    await _displaySolutionsPage();
-    if (mounted) {
-      navigator.push(BoiteAOutilsPage.materialPageRoute());
-      navigator.push(BenevolatPage.materialPageRoute());
-    }
-  }
-
-  Future<void> _handleLaBonneAlternanceDeeplink() async {
-    // Navigator must be captured before state changes as context may no longer be available after tab switch.
-    final navigator = Navigator.of(context);
-    await _displaySolutionsPage();
-    if (mounted) {
-      navigator.push(BoiteAOutilsPage.materialPageRoute());
-      navigator.push(LaBonneAlternancePage.materialPageRoute());
-    }
-  }
-
-  dynamic _displaySolutionsPage() {
-    StoreProvider.of<AppState>(context).dispatch(
-      HandleDeepLinkAction(RechercheDeepLink(), DeepLinkOrigin.inAppNavigation),
-    );
   }
 
   Future<void> _handleRappelCreationDemarcheDeeplink() async {

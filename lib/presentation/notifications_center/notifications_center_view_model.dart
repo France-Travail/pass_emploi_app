@@ -86,9 +86,6 @@ DeepLink? _fromInAppNotification(InAppNotificationType type, String? idObjet) {
     InAppNotificationType.offresEnregistrees => OffresEnregistreesDeepLink(),
     InAppNotificationType.savedSearches => AlertesDeepLink(),
     InAppNotificationType.recherche => RechercheDeepLink(),
-    InAppNotificationType.outils => OutilsDeepLink(),
-    InAppNotificationType.benevolat => BenevolatDeepLink(),
-    InAppNotificationType.laBonneAlternance => LaBonneAlternanceDeepLink(),
     InAppNotificationType.unknown => null,
   };
 }

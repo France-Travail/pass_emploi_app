@@ -68,12 +68,6 @@ class RechercheDeepLink extends DeepLink {}
 
 class OffresEnregistreesDeepLink extends DeepLink {}
 
-class OutilsDeepLink extends DeepLink {}
-
-class BenevolatDeepLink extends DeepLink {}
-
-class LaBonneAlternanceDeepLink extends DeepLink {}
-
 class CreationDemarcheDeepLink extends DeepLink {}
 
 class CreationActionDeepLink extends DeepLink {}
