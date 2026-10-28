@@ -12,11 +12,17 @@ void main() {
         dateNaissance: DateTime(2006, 4, 12),
         habitation: const QuestionnaireCommune(code: '76540', nom: 'Rouen'),
         situation: QuestionnaireSituation.lycee,
-        objectifs: {QuestionnaireObjectif.alternance, QuestionnaireObjectif.decouvrirMetiers},
+        objectifs: {
+          QuestionnaireObjectif.alternance,
+          QuestionnaireObjectif.decouvrirMetiers,
+        },
         domaine: 'mécanique',
         villeRecherche: const QuestionnaireCommune(code: '76540', nom: 'Rouen'),
         rayonKm: 30,
-        freins: {QuestionnaireFrein.pasDeTransport, QuestionnaireFrein.manqueConfiance},
+        freins: {
+          QuestionnaireFrein.pasDeTransport,
+          QuestionnaireFrein.manqueConfiance,
+        },
       ),
     );
 
@@ -49,7 +55,10 @@ void main() {
       const OnboardingQuestionnaireAnswers(
         situation: QuestionnaireSituation.autre,
         objectifs: {QuestionnaireObjectif.emploi},
-        freins: {QuestionnaireFrein.rienNeMeBloque, QuestionnaireFrein.pasDePermis},
+        freins: {
+          QuestionnaireFrein.rienNeMeBloque,
+          QuestionnaireFrein.pasDePermis,
+        },
       ),
     );
 
@@ -118,5 +127,138 @@ void main() {
         ],
       },
     );
+  });
+
+  group('questionnaire', () {
+    test('restores every answer known to the API and keeps the local prenom', () {
+      final restored = mapper.fromQuestionnaireResponse(
+        {
+          'situation': 'EMPLOI',
+          'goals': ['EMPLOI', 'ORIENTER'],
+          'obstacles': ['PAS_DE_PERMIS'],
+          'dateNaissance': '2005-03-14',
+          'habitation': {'codeInsee': '75056', 'nom': 'Paris'},
+          'villeRecherche': {'codeInsee': '69123', 'nom': 'Lyon'},
+          'domaine': 'Informatique',
+          'rayonKm': 10,
+        },
+        const OnboardingQuestionnaireAnswers(prenom: 'Malik'),
+      );
+
+      expect(
+        restored,
+        OnboardingQuestionnaireAnswers(
+          prenom: 'Malik',
+          dateNaissance: DateTime(2005, 3, 14),
+          habitation: const QuestionnaireCommune(code: '75056', nom: 'Paris'),
+          situation: QuestionnaireSituation.emploi,
+          objectifs: {QuestionnaireObjectif.emploi, QuestionnaireObjectif.orienter},
+          domaine: 'Informatique',
+          villeRecherche: const QuestionnaireCommune(code: '69123', nom: 'Lyon'),
+          rayonKm: 10,
+          freins: {QuestionnaireFrein.pasDePermis},
+        ),
+      );
+    });
+
+    test('optional answers absent from the API stay unanswered', () {
+      final restored = mapper.fromQuestionnaireResponse(
+        {
+          'situation': 'LYCEE',
+          'goals': ['ALTERNANCE'],
+          'obstacles': <String>[],
+        },
+        const OnboardingQuestionnaireAnswers(),
+      );
+
+      expect(
+        restored,
+        const OnboardingQuestionnaireAnswers(
+          situation: QuestionnaireSituation.lycee,
+          objectifs: {QuestionnaireObjectif.alternance},
+        ),
+      );
+      expect(restored.isDomaineAnswered, isFalse);
+    });
+
+    test('maps back what the plan generation request sends', () {
+      final answers = OnboardingQuestionnaireAnswers(
+        dateNaissance: DateTime(2006, 4, 12),
+        habitation: const QuestionnaireCommune(code: '76540', nom: 'Rouen'),
+        situation: QuestionnaireSituation.lycee,
+        objectifs: {QuestionnaireObjectif.alternance},
+        domaine: 'mécanique',
+        villeRecherche: const QuestionnaireCommune(code: '76540', nom: 'Rouen'),
+        rayonKm: 30,
+        freins: {QuestionnaireFrein.pasDeTransport},
+      );
+
+      final restored = mapper.fromQuestionnaireResponse(
+        mapper.toRequest(answers),
+        const OnboardingQuestionnaireAnswers(),
+      );
+
+      expect(restored, answers);
+    });
+  });
+
+  group('précision de la situation « Autre »', () {
+    const autre = OnboardingQuestionnaireAnswers(
+      situation: QuestionnaireSituation.autre,
+      situationAutre: 'En service civique',
+      objectifs: {QuestionnaireObjectif.orienter},
+    );
+
+    test('is sent with the situation AUTRE', () {
+      final request = mapper.toRequest(autre);
+
+      expect(request['situation'], 'AUTRE');
+      expect(request['precisionAutre'], 'En service civique');
+    });
+
+    test('is not sent without precision, nor with another situation', () {
+      final sansPrecision = mapper.toRequest(autre.copyWith(clearSituationAutre: true));
+      final autreSituation = mapper.toRequest(autre.copyWith(situation: QuestionnaireSituation.lycee));
+
+      expect(sansPrecision.containsKey('precisionAutre'), isFalse);
+      expect(autreSituation.containsKey('precisionAutre'), isFalse);
+    });
+
+    test('is restored from the questionnaire saved on server', () {
+      final restored = mapper.fromQuestionnaireResponse(
+        {
+          'situation': 'AUTRE',
+          'precisionAutre': 'En service civique',
+          'goals': ['ORIENTER'],
+          'obstacles': <String>[],
+        },
+        const OnboardingQuestionnaireAnswers(),
+      );
+
+      expect(restored, autre);
+    });
+
+    test('is ignored with another situation, and absent when the server has none', () {
+      final autreSituation = mapper.fromQuestionnaireResponse(
+        {
+          'situation': 'LYCEE',
+          'precisionAutre': 'En service civique',
+          'goals': ['ORIENTER'],
+          'obstacles': <String>[],
+        },
+        const OnboardingQuestionnaireAnswers(),
+      );
+      final sansPrecision = mapper.fromQuestionnaireResponse(
+        {
+          'situation': 'AUTRE',
+          'goals': ['ORIENTER'],
+          'obstacles': <String>[],
+        },
+        const OnboardingQuestionnaireAnswers(situationAutre: 'Ancienne précision'),
+      );
+
+      expect(autreSituation.situationAutre, isNull);
+      expect(sansPrecision.situationAutre, isNull);
+    });
   });
 }

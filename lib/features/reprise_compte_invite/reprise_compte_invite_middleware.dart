@@ -61,6 +61,7 @@ class RepriseCompteInviteMiddleware extends MiddlewareClass<AppState> {
       idInvite: idInvite,
       jetonConnecte: tokens.accessToken,
       plan: planLocal?.toApiReprise(),
+      questionnaire: await _onboardingQuestionnaireRepository.getAnswers(),
     );
 
     if (!succeeded) {

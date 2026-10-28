@@ -4,9 +4,11 @@ class ActionPlanRequestMapper {
   const ActionPlanRequestMapper();
 
   Map<String, dynamic> toRequest(OnboardingQuestionnaireAnswers answers) {
+    final precisionAutre = _mapPrecisionAutre(answers);
     return {
       if (answers.dateNaissance != null) 'dateNaissance': _formatDate(answers.dateNaissance!),
       'situation': _mapSituation(answers.situation!),
+      if (precisionAutre != null) 'precisionAutre': precisionAutre,
       'goals': answers.objectifs.map(_mapObjectif).toList(),
       'domaine': _mapDomaine(answers),
       if (answers.habitation != null) 'habitation': _mapCommune(answers.habitation!),
@@ -14,6 +16,64 @@ class ActionPlanRequestMapper {
       if (answers.villeRecherche != null) 'rayonKm': answers.rayonKm,
       'obstacles': _mapFreins(answers.freins),
     };
+  }
+
+  /// Reporte sur [local] les réponses du GET /jeunes/:id/questionnaire. L'API ne connaît pas le prénom : la réponse
+  /// locale est conservée. « Je ne sais pas » au domaine n'est pas enregistré côté serveur : il revient non répondu.
+  OnboardingQuestionnaireAnswers fromQuestionnaireResponse(
+    Map<String, dynamic> json,
+    OnboardingQuestionnaireAnswers local,
+  ) {
+    final situation = QuestionnaireSituation.values.where((e) => _mapSituation(e) == json['situation']).firstOrNull;
+    final precisionAutre = situation == QuestionnaireSituation.autre ? _nonEmpty(json['precisionAutre']) : null;
+    final goals = json['goals'];
+    final obstacles = json['obstacles'];
+    final dateNaissance = json['dateNaissance'] is String ? DateTime.tryParse(json['dateNaissance'] as String) : null;
+    final habitation = _parseCommune(json['habitation']);
+    final villeRecherche = _parseCommune(json['villeRecherche']);
+    final domaine = json['domaine'] as String?;
+    return local.copyWith(
+      dateNaissance: dateNaissance,
+      clearDateNaissance: dateNaissance == null,
+      habitation: habitation,
+      clearHabitation: habitation == null,
+      situation: situation,
+      clearSituation: situation == null,
+      situationAutre: precisionAutre,
+      clearSituationAutre: precisionAutre == null,
+      objectifs: goals is List
+          ? QuestionnaireObjectif.values.where((e) => goals.contains(_mapObjectif(e))).toSet()
+          : <QuestionnaireObjectif>{},
+      domaine: domaine,
+      clearDomaine: domaine == null,
+      domaineInconnu: false,
+      villeRecherche: villeRecherche,
+      clearVilleRecherche: villeRecherche == null,
+      rayonKm: (json['rayonKm'] as num?)?.toInt(),
+      freins: obstacles is List
+          ? QuestionnaireFrein.values.where((e) => obstacles.contains(_mapFrein(e))).toSet()
+          : <QuestionnaireFrein>{},
+    );
+  }
+
+  static QuestionnaireCommune? _parseCommune(dynamic json) {
+    if (json is! Map<String, dynamic>) return null;
+    final code = json['codeInsee'];
+    final nom = json['nom'];
+    if (code is! String || nom is! String) return null;
+    return QuestionnaireCommune(code: code, nom: nom);
+  }
+
+  // La précision n'a de sens qu'avec la situation « Autre ».
+  static String? _mapPrecisionAutre(OnboardingQuestionnaireAnswers answers) {
+    if (answers.situation != QuestionnaireSituation.autre) return null;
+    return _nonEmpty(answers.situationAutre);
+  }
+
+  static String? _nonEmpty(dynamic value) {
+    if (value is! String) return null;
+    final trimmed = value.trim();
+    return trimmed.isEmpty ? null : trimmed;
   }
 
   static String? _mapDomaine(OnboardingQuestionnaireAnswers answers) {

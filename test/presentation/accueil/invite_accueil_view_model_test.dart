@@ -147,6 +147,67 @@ void main() {
     expect(viewModel.showPlanEmptyState, isFalse);
   });
 
+  test('for a jeune connecté, 7 steps without prenom make the questionnaire complet', () {
+    final answers = OnboardingQuestionnaireAnswers(
+      dateNaissance: DateTime(2005, 5, 5),
+      habitation: const QuestionnaireCommune(code: '75056', nom: 'Paris'),
+      situation: QuestionnaireSituation.lycee,
+      objectifs: {QuestionnaireObjectif.emploi},
+      domaineInconnu: true,
+      villeRecherche: const QuestionnaireCommune(code: '75056', nom: 'Paris'),
+      freins: {QuestionnaireFrein.rienNeMeBloque},
+    );
+    final store = givenState()
+        .loggedInMiloUser()
+        .withOnboardingQuestionnaire(finished: true, answers: answers)
+        .withActionPlanSuccess(
+          ActionPlan(
+            id: 'plan-1',
+            greeting: 'Salut',
+            objectives: [
+              ActionPlanObjective(
+                id: 'obj-1',
+                title: 'Trouver un emploi',
+                theme: 'job',
+                actions: [
+                  ActionPlanAction(id: 'a-1', label: 'Je cherche', kind: ActionPlanActionKind.advice),
+                ],
+              ),
+            ],
+          ),
+        )
+        .store();
+
+    final viewModel = InviteAccueilViewModel.create(store);
+
+    expect(viewModel.mode, InviteAccueilMode.complet);
+    expect(viewModel.showQuestionnaireCard, isFalse);
+    expect(viewModel.showModifierButton, isTrue);
+  });
+
+  test('questionnaire card counts 7 steps for a jeune connecté and 8 for an invité', () {
+    const answers = OnboardingQuestionnaireAnswers(
+      prenom: 'Léa',
+      situation: QuestionnaireSituation.lycee,
+      objectifs: {QuestionnaireObjectif.emploi},
+    );
+
+    final connecte = InviteAccueilViewModel.create(
+      givenState().loggedInMiloUser().withOnboardingQuestionnaire(finished: true, answers: answers).store(),
+    );
+    final invite = InviteAccueilViewModel.create(
+      givenState()
+          .loggedInUser(loginMode: LoginMode.INVITE)
+          .withOnboardingQuestionnaire(finished: true, answers: answers)
+          .store(),
+    );
+
+    expect(connecte.questionnaireAnsweredSteps, 2);
+    expect(connecte.questionnaireStepsCount, 7);
+    expect(invite.questionnaireAnsweredSteps, 3);
+    expect(invite.questionnaireStepsCount, 8);
+  });
+
   test('complet mode hides conseiller CTA for a jeune of the pilot region, who already has one', () {
     final answers = OnboardingQuestionnaireAnswers(
       prenom: 'Léa',

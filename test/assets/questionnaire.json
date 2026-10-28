@@ -1,0 +1,18 @@
+{
+  "situation": "LYCEE",
+  "goals": [
+    "DECOUVRIR_METIERS"
+  ],
+  "obstacles": [],
+  "dateNaissance": "2008-03-15",
+  "habitation": {
+    "codeInsee": "75056",
+    "nom": "Paris"
+  },
+  "villeRecherche": {
+    "codeInsee": "75056",
+    "nom": "Paris"
+  },
+  "domaine": "informatique",
+  "rayonKm": 10
+}

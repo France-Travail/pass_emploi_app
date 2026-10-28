@@ -119,7 +119,8 @@ class _Content extends StatelessWidget {
           ],
           if (viewModel.showQuestionnaireCard && viewModel.mode == InviteAccueilMode.incomplet) ...[
             OnboardingQuestionnaireProgressCard(
-              answers: viewModel.answers,
+              answeredSteps: viewModel.questionnaireAnsweredSteps,
+              stepsCount: viewModel.questionnaireStepsCount,
               onResume: () => viewModel.resumeOnboarding(OnboardingQuestionnaireEntryPoint.accueilIncomplet),
               description: questionnaireDescription,
             ),
@@ -169,7 +170,8 @@ class _Content extends StatelessWidget {
           if (viewModel.showQuestionnaireCard && viewModel.mode == InviteAccueilMode.partiel) ...[
             const SizedBox(height: Margins.spacing_base),
             OnboardingQuestionnaireProgressCard(
-              answers: viewModel.answers,
+              answeredSteps: viewModel.questionnaireAnsweredSteps,
+              stepsCount: viewModel.questionnaireStepsCount,
               onResume: () => viewModel.resumeOnboarding(OnboardingQuestionnaireEntryPoint.accueilPartiel),
               description: questionnaireDescription,
             ),

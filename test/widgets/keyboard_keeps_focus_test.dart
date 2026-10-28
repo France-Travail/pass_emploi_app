@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pass_emploi_app/features/login/login_state.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
 import 'package:pass_emploi_app/features/thematiques_demarche/thematiques_demarche_state.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/models/user_action_type.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche/widgets/create_demarche_form.dart';
@@ -13,6 +15,7 @@ import 'package:pass_emploi_app/pages/user_action/create/create_user_action_form
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 
+import '../doubles/fixtures.dart';
 import '../doubles/spies.dart';
 
 // A11y 8.2 et 11.9 : clavier ouvert, ces écrans passent en défilement d'un bloc. Le champ touché doit garder le focus
@@ -146,8 +149,10 @@ void main() {
     group(underRootScaffold ? 'Questionnaire au premier lancement' : 'Questionnaire', () {
       Future<void> pumpQuestionnaire(WidgetTester tester, {int skippedSteps = 0}) async {
         phoneSize(tester);
+        // Invité : seul parcours avec l'étape prénom.
         final store = StoreSpy.withState(
           AppState.initialState().copyWith(
+            loginState: LoginSuccessState(mockUser(loginMode: LoginMode.INVITE)),
             onboardingQuestionnaireState: OnboardingQuestionnaireSuccessState(
               finished: false,
               resumedFromApp: false,

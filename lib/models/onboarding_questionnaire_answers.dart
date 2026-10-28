@@ -386,9 +386,10 @@ class OnboardingQuestionnaireAnswers extends Equatable {
 
   bool get isFreinsAnswered => freins.isNotEmpty;
 
-  int get answeredStepsCount {
+  /// [withPrenom] : le prénom n'est demandé qu'à l'invité, le jeune connecté a celui de son compte.
+  int answeredStepsCount({required bool withPrenom}) {
     var count = 0;
-    if (isPrenomAnswered) count++;
+    if (withPrenom && isPrenomAnswered) count++;
     if (isDateNaissanceAnswered) count++;
     if (isHabitationAnswered) count++;
     if (isSituationAnswered) count++;
@@ -399,13 +400,15 @@ class OnboardingQuestionnaireAnswers extends Equatable {
     return count;
   }
 
-  static const int totalStepsCount = 8;
+  static int totalStepsCount({required bool withPrenom}) => withPrenom ? 8 : 7;
 
-  bool get isProfileComplete => answeredStepsCount == totalStepsCount;
+  bool isProfileComplete({required bool withPrenom}) {
+    return answeredStepsCount(withPrenom: withPrenom) == totalStepsCount(withPrenom: withPrenom);
+  }
 
-  OnboardingQuestionnaireCompleteness get completeness {
+  OnboardingQuestionnaireCompleteness completeness({required bool withPrenom}) {
     if (!canGenerateActionPlan) return OnboardingQuestionnaireCompleteness.incomplet;
-    if (!isProfileComplete) return OnboardingQuestionnaireCompleteness.partiel;
+    if (!isProfileComplete(withPrenom: withPrenom)) return OnboardingQuestionnaireCompleteness.partiel;
     return OnboardingQuestionnaireCompleteness.complet;
   }
 

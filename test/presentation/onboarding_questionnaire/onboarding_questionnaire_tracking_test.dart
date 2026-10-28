@@ -12,6 +12,7 @@ void main() {
         const OnboardingQuestionnaireAnswers(),
     bool isUpdate = false,
     bool startAtFirstStep = false,
+    bool withPrenomStep = true,
   }) {
     var stored = answers;
     tracker = _TrackerSpy(isUpdate: isUpdate);
@@ -20,6 +21,7 @@ void main() {
       saveAnswers: (answers) async => stored = answers,
       onFinishWithoutGeneration: (_) {},
       startAtFirstStep: startAtFirstStep,
+      withPrenomStep: withPrenomStep,
       tracker: tracker,
     );
   }
@@ -48,6 +50,21 @@ void main() {
       await form.init();
 
       expect(tracker.screens, [
+        '/questionnaire/premier-passage/etape-3-habitation',
+      ]);
+    },
+  );
+
+  test(
+    'without prenom step (jeune connecté), steps keep the same tracking names as for an invité',
+    () async {
+      final form = givenForm(withPrenomStep: false);
+
+      await form.init();
+      await form.skipStep();
+
+      expect(tracker.screens, [
+        '/questionnaire/premier-passage/etape-2-date-de-naissance',
         '/questionnaire/premier-passage/etape-3-habitation',
       ]);
     },

@@ -25,19 +25,8 @@ enum OnboardingQuestionnaireStep {
 
   bool get isLoader => this == OnboardingQuestionnaireStep.loader;
 
+  /// Numéro dans le questionnaire de l'invité, prénom compris : identique pour tous, il sert au suivi.
   int get questionnaireIndex => index + 1;
-
-  static const int questionnaireCount = 8;
-
-  OnboardingQuestionnaireStep? get previous {
-    if (index == 0) return null;
-    return OnboardingQuestionnaireStep.values[index - 1];
-  }
-
-  OnboardingQuestionnaireStep? get next {
-    if (index >= OnboardingQuestionnaireStep.values.length - 1) return null;
-    return OnboardingQuestionnaireStep.values[index + 1];
-  }
 }
 
 class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
@@ -47,9 +36,18 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
   _onFinishWithoutGeneration;
   final bool startAtFirstStep;
   final bool skipActionPlanGeneration;
+  // Le prénom n'est demandé qu'à l'invité : le jeune connecté a celui de son compte.
+  final bool withPrenomStep;
   final OnboardingQuestionnaireTracker? _tracker;
 
-  OnboardingQuestionnaireStep step = OnboardingQuestionnaireStep.prenom;
+  late final List<OnboardingQuestionnaireStep> _steps =
+      OnboardingQuestionnaireStep.values
+          .where(
+            (step) =>
+                withPrenomStep || step != OnboardingQuestionnaireStep.prenom,
+          )
+          .toList();
+  late OnboardingQuestionnaireStep step = _steps.first;
   OnboardingQuestionnaireAnswers savedAnswers =
       const OnboardingQuestionnaireAnswers();
 
@@ -78,6 +76,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     OnboardingQuestionnaireFinishWithoutGeneration? onFinishWithoutGeneration,
     this.startAtFirstStep = false,
     this.skipActionPlanGeneration = false,
+    this.withPrenomStep = true,
     OnboardingQuestionnaireTracker? tracker,
   }) : _loadAnswers = loadAnswers,
        _saveAnswers = saveAnswers,
@@ -90,19 +89,27 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     savedAnswers = await _loadAnswers();
     _hydrateDraftsFromSaved();
     step = startAtFirstStep
-        ? OnboardingQuestionnaireStep.prenom
-        : firstIncompleteStep(savedAnswers);
+        ? _steps.first
+        : firstIncompleteStep(savedAnswers, withPrenomStep: withPrenomStep);
     _tracker?.trackStepScreen(step);
     isLoading = false;
     notifyListeners();
   }
 
-  /// Première étape sans réponse ; si tout est rempli (ex. modifier le plan), repart de l'étape 5 (objectifs).
+  /// Numéro de l'étape affiché au jeune, et nombre d'étapes (7 sans l'étape prénom).
+  int get stepNumber => _steps.indexOf(step) + 1;
+
+  int get stepsCount => _steps.where((step) => !step.isLoader).length;
+
+  /// Première étape sans réponse ; si tout est rempli (ex. modifier le plan), repart de l'étape objectifs.
   @visibleForTesting
   static OnboardingQuestionnaireStep firstIncompleteStep(
-    OnboardingQuestionnaireAnswers answers,
-  ) {
-    if (!answers.isPrenomAnswered) return OnboardingQuestionnaireStep.prenom;
+    OnboardingQuestionnaireAnswers answers, {
+    required bool withPrenomStep,
+  }) {
+    if (withPrenomStep && !answers.isPrenomAnswered) {
+      return OnboardingQuestionnaireStep.prenom;
+    }
     if (!answers.isDateNaissanceAnswered)
       return OnboardingQuestionnaireStep.dateNaissance;
     if (!answers.isHabitationAnswered)
@@ -551,8 +558,18 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     await _saveAnswers(savedAnswers);
   }
 
+  OnboardingQuestionnaireStep? get _previousStep {
+    final index = _steps.indexOf(step);
+    return index > 0 ? _steps[index - 1] : null;
+  }
+
+  OnboardingQuestionnaireStep? get _nextStep {
+    final index = _steps.indexOf(step);
+    return index >= 0 && index < _steps.length - 1 ? _steps[index + 1] : null;
+  }
+
   void _goNext() {
-    final next = step.next;
+    final next = _nextStep;
     if (next == null) return;
     // Loader is only useful while generate() runs; otherwise finish immediately.
     if (next == OnboardingQuestionnaireStep.loader &&
@@ -582,7 +599,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
   /// Returns true if the form should close (logout).
   bool goBack() {
     if (step == OnboardingQuestionnaireStep.loader) return false;
-    final previous = step.previous;
+    final previous = _previousStep;
     if (previous == null) return true;
     _tracker?.trackStepEvent(
       AnalyticsEventNames.questionnaireStepBackAction,

@@ -96,6 +96,7 @@ class _OnboardingQuestionnairePageState
       },
       startAtFirstStep: widget.editMode,
       skipActionPlanGeneration: widget.editMode,
+      withPrenomStep: store.state.isInviteLoginMode(),
       tracker: _tracker,
       onFinishWithoutGeneration: (answers) {
         store.dispatch(OnboardingQuestionnaireCompleteAction(answers));
@@ -124,8 +125,8 @@ class _OnboardingQuestionnairePageState
     _lastAnnouncedStep = step;
     if (defaultTargetPlatform != TargetPlatform.android) return;
     final annonce = Strings.onboardingQuestionnaireStepA11y(
-      step.questionnaireIndex,
-      OnboardingQuestionnaireStep.questionnaireCount,
+      _form.stepNumber,
+      _form.stepsCount,
       _stepTitle(step),
     );
     // Laisse TalkBack finir de lire le nouveau focus (« Retour ») avant d'annoncer l'étape.
@@ -334,14 +335,14 @@ class _QuestionnaireBodyState extends State<_QuestionnaireBody> {
         child: Semantics(
           header: true,
           label: Strings.onboardingQuestionnaireStepA11y(
-            form.step.questionnaireIndex,
-            OnboardingQuestionnaireStep.questionnaireCount,
+            form.stepNumber,
+            form.stepsCount,
             _stepTitle(form.step),
           ),
           excludeSemantics: true,
           child: DsfrStepper(
-            currentStep: form.step.questionnaireIndex,
-            stepsCount: OnboardingQuestionnaireStep.questionnaireCount,
+            currentStep: form.stepNumber,
+            stepsCount: form.stepsCount,
             stepTitle: _stepTitle(form.step),
           ),
         ),

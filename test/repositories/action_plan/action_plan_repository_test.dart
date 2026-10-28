@@ -143,6 +143,51 @@ void main() {
         });
       });
     });
+
+    group('fetchQuestionnaire', () {
+      sut.when((repository) => repository.fetchQuestionnaire('userId', const OnboardingQuestionnaireAnswers()));
+
+      group('when response is valid', () {
+        sut.givenJsonResponse(fromJson: 'questionnaire.json');
+
+        test('request should be valid', () async {
+          await sut.expectRequestBody(method: HttpMethod.get, url: '/jeunes/userId/questionnaire');
+        });
+
+        test('response should be mapped to answers', () async {
+          await sut.expectResult<OnboardingQuestionnaireAnswers?>((result) {
+            expect(
+              result,
+              OnboardingQuestionnaireAnswers(
+                dateNaissance: DateTime(2008, 3, 15),
+                habitation: const QuestionnaireCommune(code: '75056', nom: 'Paris'),
+                situation: QuestionnaireSituation.lycee,
+                objectifs: {QuestionnaireObjectif.decouvrirMetiers},
+                domaine: 'informatique',
+                villeRecherche: const QuestionnaireCommune(code: '75056', nom: 'Paris'),
+                rayonKm: 10,
+              ),
+            );
+          });
+        });
+      });
+
+      group('when jeune has no questionnaire', () {
+        sut.givenResponseCode(404);
+
+        test('result is null', () async {
+          await sut.expectResult<OnboardingQuestionnaireAnswers?>((result) => expect(result, isNull));
+        });
+      });
+
+      group('when request fails', () {
+        sut.givenResponseCode(500);
+
+        test('result is null', () async {
+          await sut.expectResult<OnboardingQuestionnaireAnswers?>((result) => expect(result, isNull));
+        });
+      });
+    });
   });
 
   group('ActionPlanRepository remote sync', () {

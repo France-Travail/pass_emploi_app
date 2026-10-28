@@ -25,6 +25,8 @@ void main() {
       await form.init();
 
       expect(form.step, OnboardingQuestionnaireStep.prenom);
+      expect(form.stepNumber, 1);
+      expect(form.stepsCount, 8);
       expect(form.isLoading, false);
     });
 
@@ -105,12 +107,14 @@ void main() {
       expect(
         OnboardingQuestionnaireFormChangeNotifier.firstIncompleteStep(
           const OnboardingQuestionnaireAnswers(),
+          withPrenomStep: true,
         ),
         OnboardingQuestionnaireStep.prenom,
       );
       expect(
         OnboardingQuestionnaireFormChangeNotifier.firstIncompleteStep(
           const OnboardingQuestionnaireAnswers(prenom: 'Léa'),
+          withPrenomStep: true,
         ),
         OnboardingQuestionnaireStep.dateNaissance,
       );
@@ -120,6 +124,7 @@ void main() {
             prenom: 'Léa',
             dateNaissance: DateTime(2005, 1, 1),
           ),
+          withPrenomStep: true,
         ),
         OnboardingQuestionnaireStep.habitation,
       );
@@ -136,6 +141,7 @@ void main() {
             objectifs: {QuestionnaireObjectif.emploi},
             domaineInconnu: true,
           ),
+          withPrenomStep: true,
         ),
         OnboardingQuestionnaireStep.villeRecherche,
       );
@@ -162,6 +168,7 @@ void main() {
               ),
               freins: {QuestionnaireFrein.rienNeMeBloque},
             ),
+            withPrenomStep: true,
           ),
           OnboardingQuestionnaireStep.objectifs,
         );
@@ -233,6 +240,75 @@ void main() {
     test('prenom is truncated to 256 chars', () {
       form.updatePrenom('a' * 300);
       expect(form.draftPrenom.length, 256);
+    });
+  });
+
+  group('without prenom step (jeune connecté)', () {
+    setUp(() {
+      form = OnboardingQuestionnaireFormChangeNotifier(
+        loadAnswers: () async => storedAnswers,
+        saveAnswers: (answers) async {
+          storedAnswers = answers;
+          savedCalls.add(answers);
+        },
+        withPrenomStep: false,
+      );
+    });
+
+    test(
+      'starts at dateNaissance, numbered 1 out of 7, even without a prenom',
+      () async {
+        await form.init();
+
+        expect(form.step, OnboardingQuestionnaireStep.dateNaissance);
+        expect(form.stepNumber, 1);
+        expect(form.stepsCount, 7);
+      },
+    );
+
+    test('numbers the following steps from the dateNaissance step', () async {
+      await form.init();
+
+      await form.skipStep();
+
+      expect(form.step, OnboardingQuestionnaireStep.habitation);
+      expect(form.stepNumber, 2);
+    });
+
+    test(
+      'back from dateNaissance closes the questionnaire instead of showing prenom',
+      () async {
+        await form.init();
+
+        expect(form.goBack(), true);
+        expect(form.step, OnboardingQuestionnaireStep.dateNaissance);
+      },
+    );
+
+    test(
+      'starting at the first step (modifier mes informations) starts at dateNaissance',
+      () async {
+        form = OnboardingQuestionnaireFormChangeNotifier(
+          loadAnswers: () async => storedAnswers,
+          saveAnswers: (answers) async => storedAnswers = answers,
+          startAtFirstStep: true,
+          withPrenomStep: false,
+        );
+
+        await form.init();
+
+        expect(form.step, OnboardingQuestionnaireStep.dateNaissance);
+      },
+    );
+
+    test('firstIncompleteStep ignores a missing prenom', () {
+      expect(
+        OnboardingQuestionnaireFormChangeNotifier.firstIncompleteStep(
+          const OnboardingQuestionnaireAnswers(),
+          withPrenomStep: false,
+        ),
+        OnboardingQuestionnaireStep.dateNaissance,
+      );
     });
   });
 

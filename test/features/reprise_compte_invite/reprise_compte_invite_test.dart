@@ -11,6 +11,7 @@ import 'package:pass_emploi_app/features/reprise_compte_invite/reprise_compte_in
 import 'package:pass_emploi_app/features/reprise_compte_invite/reprise_compte_invite_state.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
+import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 
 import '../../doubles/fixtures.dart';
@@ -76,6 +77,7 @@ void main() {
           idInvite: any(named: 'idInvite'),
           jetonConnecte: any(named: 'jetonConnecte'),
           plan: any(named: 'plan'),
+          questionnaire: any(named: 'questionnaire'),
         ),
       ).thenAnswer((_) async => succeeds);
     }
@@ -86,6 +88,7 @@ void main() {
           idInvite: any(named: 'idInvite'),
           jetonConnecte: any(named: 'jetonConnecte'),
           plan: any(named: 'plan'),
+          questionnaire: any(named: 'questionnaire'),
         ),
       );
     }
@@ -108,6 +111,7 @@ void main() {
             idInvite: 'id-invite',
             jetonConnecte: 'access-token-milo',
             plan: null,
+            questionnaire: any(named: 'questionnaire'),
           ),
           () => authenticator.saveTokens(_tokensMilo),
         ]);
@@ -259,6 +263,40 @@ void main() {
             idInvite: 'id-invite',
             jetonConnecte: 'access-token-milo',
             plan: localPlan.toApiReprise(),
+            questionnaire: any(named: 'questionnaire'),
+          ),
+        ).called(1);
+      });
+
+      test('should send the local questionnaire that generated the plan', () async {
+        // Given
+        const answers = OnboardingQuestionnaireAnswers(
+          situation: QuestionnaireSituation.emploi,
+          objectifs: {QuestionnaireObjectif.emploi},
+        );
+        final localPlan = _planWith(
+          const ActionPlanAction(
+            id: 'action-1',
+            label: 'Faire un CV',
+            kind: ActionPlanActionKind.advice,
+            idSolution: 'solution-123',
+          ),
+        );
+        when(() => actionPlanRepository.getStoredPlan()).thenAnswer((_) async => localPlan);
+        when(() => onboardingQuestionnaireRepository.getAnswers()).thenAnswer((_) async => answers);
+        givenMiloLogin(SuccessAuthenticatorResponse(tokens: _tokensMilo));
+        givenReprise(succeeds: true);
+        givenInviteStore();
+
+        // Then
+        await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldBeLoggedInAsMiloUser()]);
+        await untilCalled(() => authenticator.saveTokens(any()));
+        verify(
+          () => repository.reprendre(
+            idInvite: 'id-invite',
+            jetonConnecte: 'access-token-milo',
+            plan: localPlan.toApiReprise(),
+            questionnaire: answers,
           ),
         ).called(1);
       });
@@ -280,6 +318,7 @@ void main() {
             idInvite: 'id-invite',
             jetonConnecte: 'access-token-milo',
             plan: null,
+            questionnaire: any(named: 'questionnaire'),
           ),
         ).called(1);
       });
