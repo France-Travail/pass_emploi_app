@@ -24,7 +24,7 @@ class DemarcheCard extends StatelessWidget {
   }
 
   Widget _builder(BuildContext context, DemarcheCardViewModel viewModel) {
-    final (badgeType, badgeLabel) = viewModel.pillule.toDemarcheDsfrBadge();
+    final (_, badgeLabel) = viewModel.pillule.toDemarcheDsfrBadge();
 
     // A11y : to read "Démarche" + category + title + status
     return Semantics(
@@ -38,9 +38,9 @@ class DemarcheCard extends StatelessWidget {
             children: [
               if (viewModel.categoryText != null)
                 DsfrCategoryTag.emploiCategory(label: viewModel.categoryText!),
-              DsfrStatusBadge(
-                label: badgeLabel,
-                type: badgeType,
+              DsfrStatusBadge.fromPillule(
+                pillule: viewModel.pillule,
+                forDemarche: true,
                 excludeSemantics: true,
               ),
             ],

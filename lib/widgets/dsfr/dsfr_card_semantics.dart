@@ -296,13 +296,22 @@ class DsfrStatusBadge extends StatelessWidget {
   final String label;
   final DsfrBadgeType type;
   final bool excludeSemantics;
+  final bool _isTodo;
 
   const DsfrStatusBadge({
     super.key,
     required this.label,
     required this.type,
     this.excludeSemantics = false,
-  });
+  }) : _isTodo = false;
+
+  /// Badge jaune « À réaliser » : plus visible que le bleu des statuts en cours.
+  const DsfrStatusBadge.todo({
+    super.key,
+    required this.label,
+    this.excludeSemantics = false,
+  }) : type = DsfrBadgeType.custom,
+       _isTodo = true;
 
   factory DsfrStatusBadge.fromPillule({
     required CardPilluleType pillule,
@@ -310,6 +319,9 @@ class DsfrStatusBadge extends StatelessWidget {
     bool excludeSemantics = false,
   }) {
     final (type, label) = forDemarche ? pillule.toDemarcheDsfrBadge() : pillule.toActionDsfrBadge();
+    if (forDemarche && pillule == CardPilluleType.todo) {
+      return DsfrStatusBadge.todo(label: label, excludeSemantics: excludeSemantics);
+    }
     return DsfrStatusBadge(label: label, type: type, excludeSemantics: excludeSemantics);
   }
 
@@ -355,9 +367,21 @@ class DsfrStatusBadge extends StatelessWidget {
         label: label,
         type: type,
         size: DsfrComponentSize.sm,
+        backgroundCustomColor: _isTodo ? _todoBackground(context) : null,
+        textCustomColor: _isTodo ? _todoForeground(context) : null,
       ),
     );
     if (excludeSemantics) return ExcludeSemantics(child: badge);
     return badge;
+  }
+
+  static Color _todoBackground(BuildContext context) {
+    return DsfrColorDecisions.isLightMode(context) ? DsfrColors.yellowTournesol925 : DsfrColors.yellowTournesol200;
+  }
+
+  static Color _todoForeground(BuildContext context) {
+    return DsfrColorDecisions.isLightMode(context)
+        ? DsfrColors.yellowTournesolSun407
+        : DsfrColors.yellowTournesolMoon922;
   }
 }

@@ -23,7 +23,11 @@ class CreateDemarchePersonnaliseeStep3Page extends StatelessWidget {
               viewModel.dateDemarchePersonnaliseeChanged(date);
               if (!date.isNone) {
                 Future.delayed(const Duration(milliseconds: 50), () {
-                  if (context.mounted) FocusScope.of(context).nextFocus();
+                  if (!context.mounted) return;
+                  // Sans champ focalisé (ex. après la fermeture du sélecteur de date), nextFocus() part du début de la
+                  // page et fait apparaître le focus sur le bouton Retour de l'appbar.
+                  final focused = FocusManager.instance.primaryFocus;
+                  if (focused != null && focused is! FocusScopeNode) FocusScope.of(context).nextFocus();
                 });
               }
             },

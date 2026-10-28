@@ -361,7 +361,9 @@ class _InviteActionPlanActionTileState extends State<InviteActionPlanActionTile>
       borderRadius: BorderRadius.circular(8),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: DsfrColorDecisions.backgroundDefaultGrey(context),
+          color: action.done
+              ? DsfrColorDecisions.artworkDecorativeBlueFrance(context)
+              : DsfrColorDecisions.backgroundDefaultGrey(context),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: DsfrColorDecisions.borderDefaultGrey(context),
