@@ -1,8 +1,11 @@
 import 'package:clock/clock.dart';
+import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription_actions.dart';
+import 'package:pass_emploi_app/features/auto_inscription/auto_inscription_actions.dart';
 import 'package:pass_emploi_app/features/demarche/create/create_demarche_actions.dart';
 import 'package:pass_emploi_app/features/demarche/create_demarche_batch/create_demarche_batch_actions.dart';
 import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_actions.dart';
 import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_state.dart';
+import 'package:pass_emploi_app/features/push_notification/register/register_push_notification_token_actions.dart';
 import 'package:pass_emploi_app/features/user_action/create/user_action_create_actions.dart';
 import 'package:pass_emploi_app/models/date/interval.dart';
 import 'package:pass_emploi_app/models/mon_suivi.dart';
@@ -93,6 +96,9 @@ class MonSuiviMiddleware extends MiddlewareClass<AppState> {
       UserActionCreateSuccessAction _ => true,
       CreateDemarcheSuccessAction _ => true,
       CreateDemarcheBatchSuccessAction _ => true,
+      AutoInscriptionSuccessAction _ => true,
+      AutoDesinscriptionSuccessAction _ => true,
+      ConfigureApplicationOnForegroundAction _ => true,
       _ => false,
     };
   }

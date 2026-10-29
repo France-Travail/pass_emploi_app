@@ -1,8 +1,11 @@
 import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription_actions.dart';
+import 'package:pass_emploi_app/features/auto_inscription/auto_inscription_actions.dart';
 import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_actions.dart';
 import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_state.dart';
+import 'package:pass_emploi_app/features/push_notification/register/register_push_notification_token_actions.dart';
 import 'package:pass_emploi_app/features/user_action/create/user_action_create_actions.dart';
 import 'package:pass_emploi_app/models/date/interval.dart';
 import 'package:pass_emploi_app/models/demarche.dart';
@@ -267,6 +270,43 @@ void main() {
         });
       });
     });
+
+    for (final (description, action) in [
+      ('app comes back to foreground', () => ConfigureApplicationOnForegroundAction()),
+      ('user subscribes to a session', () => AutoInscriptionSuccessAction()),
+      ('user unsubscribes from a session', () => AutoDesinscriptionSuccessAction(true)),
+    ]) {
+      group("when $description", () {
+        sut.whenDispatchingAction(action);
+
+        test('should re-fetch mon suivi when it is loaded', () {
+          withClock(Clock.fixed(mercredi14Fevrier12h00), () {
+            when(() => monSuiviRepository.getMonSuiviMilo('id', currentPeriodIntervalMilo))
+                .thenAnswer((_) async => currentPeriodSuiviMilo);
+
+            sut.givenStore = givenState() //
+                .loggedIn()
+                .monSuivi(interval: currentPeriodIntervalMilo, monSuivi: currentPeriodSuiviMilo)
+                .store((f) => {f.monSuiviRepository = monSuiviRepository});
+
+            sut.thenExpectChangingStatesThroughOrder([
+              _shouldSucceedForMiloOnCurrentPeriod(),
+              _shouldReset(),
+              _shouldLoad(),
+              _shouldSucceedForMiloOnCurrentPeriod(),
+            ]);
+          });
+        });
+
+        test('should not fetch mon suivi when it is not loaded', () {
+          sut.givenStore = givenState() //
+              .loggedIn()
+              .store((f) => {f.monSuiviRepository = monSuiviRepository});
+
+          sut.thenExpectNever(_shouldLoad());
+        });
+      });
+    }
   });
 }
 
