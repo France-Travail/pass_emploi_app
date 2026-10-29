@@ -42,6 +42,7 @@ void main() {
               'situation': 'LYCEE',
               'goals': ['ALTERNANCE'],
               'domaine': 'mécanique',
+              'domaineInconnu': false,
               'obstacles': <String>[],
             },
           );

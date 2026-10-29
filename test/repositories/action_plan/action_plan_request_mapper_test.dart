@@ -31,6 +31,7 @@ void main() {
       'situation': 'LYCEE',
       'goals': ['ALTERNANCE', 'DECOUVRIR_METIERS'],
       'domaine': 'mécanique',
+      'domaineInconnu': false,
       'habitation': {'codeInsee': '76540', 'nom': 'Rouen'},
       'villeRecherche': {'codeInsee': '76540', 'nom': 'Rouen'},
       'rayonKm': 30,
@@ -38,7 +39,7 @@ void main() {
     });
   });
 
-  test('maps domaine inconnu to null', () {
+  test('maps domaine inconnu to null domaine and domaineInconnu true', () {
     final request = mapper.toRequest(
       const OnboardingQuestionnaireAnswers(
         situation: QuestionnaireSituation.autre,
@@ -48,6 +49,7 @@ void main() {
     );
 
     expect(request['domaine'], isNull);
+    expect(request['domaineInconnu'], isTrue);
   });
 
   test('maps rienNeMeBloque as exclusive obstacle', () {
@@ -114,6 +116,7 @@ void main() {
           'VIE_QUOTIDIENNE',
         ],
         'domaine': null,
+        'domaineInconnu': false,
         'obstacles': [
           'PAS_DE_PERMIS',
           'PAS_DE_LOGEMENT',
@@ -130,6 +133,23 @@ void main() {
   });
 
   group('questionnaire', () {
+    test('restores domaine inconnu', () {
+      final restored = mapper.fromQuestionnaireResponse(
+        {
+          'situation': 'LYCEE',
+          'goals': ['ALTERNANCE'],
+          'obstacles': <String>[],
+          'domaine': null,
+          'domaineInconnu': true,
+        },
+        const OnboardingQuestionnaireAnswers(domaine: 'ancien'),
+      );
+
+      expect(restored.domaineInconnu, isTrue);
+      expect(restored.domaine, isNull);
+      expect(restored.isDomaineAnswered, isTrue);
+    });
+
     test('restores every answer known to the API and keeps the local prenom', () {
       final restored = mapper.fromQuestionnaireResponse(
         {

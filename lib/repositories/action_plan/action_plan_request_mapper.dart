@@ -11,6 +11,7 @@ class ActionPlanRequestMapper {
       if (precisionAutre != null) 'precisionAutre': precisionAutre,
       'goals': answers.objectifs.map(_mapObjectif).toList(),
       'domaine': _mapDomaine(answers),
+      'domaineInconnu': answers.domaineInconnu,
       if (answers.habitation != null) 'habitation': _mapCommune(answers.habitation!),
       if (answers.villeRecherche != null) 'villeRecherche': _mapCommune(answers.villeRecherche!),
       if (answers.villeRecherche != null) 'rayonKm': answers.rayonKm,
@@ -19,7 +20,7 @@ class ActionPlanRequestMapper {
   }
 
   /// Reporte sur [local] les réponses du GET /jeunes/:id/questionnaire. L'API ne connaît pas le prénom : la réponse
-  /// locale est conservée. « Je ne sais pas » au domaine n'est pas enregistré côté serveur : il revient non répondu.
+  /// locale est conservée.
   OnboardingQuestionnaireAnswers fromQuestionnaireResponse(
     Map<String, dynamic> json,
     OnboardingQuestionnaireAnswers local,
@@ -31,7 +32,8 @@ class ActionPlanRequestMapper {
     final dateNaissance = json['dateNaissance'] is String ? DateTime.tryParse(json['dateNaissance'] as String) : null;
     final habitation = _parseCommune(json['habitation']);
     final villeRecherche = _parseCommune(json['villeRecherche']);
-    final domaine = json['domaine'] as String?;
+    final domaineInconnu = json['domaineInconnu'] as bool? ?? false;
+    final domaine = domaineInconnu ? null : json['domaine'] as String?;
     return local.copyWith(
       dateNaissance: dateNaissance,
       clearDateNaissance: dateNaissance == null,
@@ -46,7 +48,7 @@ class ActionPlanRequestMapper {
           : <QuestionnaireObjectif>{},
       domaine: domaine,
       clearDomaine: domaine == null,
-      domaineInconnu: false,
+      domaineInconnu: domaineInconnu,
       villeRecherche: villeRecherche,
       clearVilleRecherche: villeRecherche == null,
       rayonKm: (json['rayonKm'] as num?)?.toInt(),

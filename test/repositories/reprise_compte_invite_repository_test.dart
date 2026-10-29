@@ -111,6 +111,7 @@ void main() {
                 "situation": "EMPLOI",
                 "goals": ["EMPLOI"],
                 "domaine": "Informatique",
+                "domaineInconnu": false,
                 "habitation": {"codeInsee": "75056", "nom": "Paris"},
                 "villeRecherche": {"codeInsee": "69123", "nom": "Lyon"},
                 "rayonKm": 10,
