@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:pass_emploi_app/features/comptage_des_heures/comptage_des_heures_actions.dart';
 import 'package:pass_emploi_app/presentation/comptage_des_heures_card_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -15,7 +14,6 @@ class ComptageDesHeuresCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreConnector<AppState, ComptageDesHeuresCardViewModel>(
       converter: (store) => ComptageDesHeuresCardViewModel.create(store),
-      onInit: (store) => store.dispatch(ComptageDesHeuresRequestAction()),
       distinct: true,
       builder: (context, viewModel) {
         return DecoratedBox(
