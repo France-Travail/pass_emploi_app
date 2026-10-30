@@ -21,12 +21,14 @@ class RechercheHomePageViewModel extends Equatable {
   final String? metierLabel;
   final String? lieuLabel;
   final void Function(OffreType) onOffreTypeTap;
+  final bool afficherPocOffres;
 
   RechercheHomePageViewModel({
     required this.offreTypes,
     required this.metierLabel,
     required this.lieuLabel,
     required this.onOffreTypeTap,
+    this.afficherPocOffres = false,
   });
 
   factory RechercheHomePageViewModel.create(Store<AppState> store) {
@@ -44,11 +46,12 @@ class RechercheHomePageViewModel extends Equatable {
       metierLabel: criteres.metier?.label,
       lieuLabel: _lieuLabel(criteres),
       onOffreTypeTap: (offreType) => _onOffreTypeTap(store, offreType),
+      afficherPocOffres: store.state.demoState,
     );
   }
 
   @override
-  List<Object?> get props => [offreTypes, metierLabel, lieuLabel];
+  List<Object?> get props => [offreTypes, metierLabel, lieuLabel, afficherPocOffres];
 }
 
 String? _lieuLabel(CriteresRechercheUtilisateur criteres) {
