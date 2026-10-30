@@ -5,12 +5,9 @@ import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_tracker.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 
-typedef OnboardingQuestionnaireAnswersLoader =
-    Future<OnboardingQuestionnaireAnswers> Function();
-typedef OnboardingQuestionnaireAnswersSaver =
-    Future<void> Function(OnboardingQuestionnaireAnswers answers);
-typedef OnboardingQuestionnaireFinishWithoutGeneration =
-    void Function(OnboardingQuestionnaireAnswers answers);
+typedef OnboardingQuestionnaireAnswersLoader = Future<OnboardingQuestionnaireAnswers> Function();
+typedef OnboardingQuestionnaireAnswersSaver = Future<void> Function(OnboardingQuestionnaireAnswers answers);
+typedef OnboardingQuestionnaireFinishWithoutGeneration = void Function(OnboardingQuestionnaireAnswers answers);
 
 enum OnboardingQuestionnaireStep {
   prenom,
@@ -32,24 +29,20 @@ enum OnboardingQuestionnaireStep {
 class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
   final OnboardingQuestionnaireAnswersLoader _loadAnswers;
   final OnboardingQuestionnaireAnswersSaver _saveAnswers;
-  final OnboardingQuestionnaireFinishWithoutGeneration?
-  _onFinishWithoutGeneration;
+  final OnboardingQuestionnaireFinishWithoutGeneration? _onFinishWithoutGeneration;
   final bool startAtFirstStep;
   final bool skipActionPlanGeneration;
   // Le prénom n'est demandé qu'à l'invité : le jeune connecté a celui de son compte.
   final bool withPrenomStep;
   final OnboardingQuestionnaireTracker? _tracker;
 
-  late final List<OnboardingQuestionnaireStep> _steps =
-      OnboardingQuestionnaireStep.values
-          .where(
-            (step) =>
-                withPrenomStep || step != OnboardingQuestionnaireStep.prenom,
-          )
-          .toList();
+  late final List<OnboardingQuestionnaireStep> _steps = OnboardingQuestionnaireStep.values
+      .where(
+        (step) => withPrenomStep || step != OnboardingQuestionnaireStep.prenom,
+      )
+      .toList();
   late OnboardingQuestionnaireStep step = _steps.first;
-  OnboardingQuestionnaireAnswers savedAnswers =
-      const OnboardingQuestionnaireAnswers();
+  OnboardingQuestionnaireAnswers savedAnswers = const OnboardingQuestionnaireAnswers();
 
   String draftPrenom = '';
   String draftBirthDay = '';
@@ -88,9 +81,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     notifyListeners();
     savedAnswers = await _loadAnswers();
     _hydrateDraftsFromSaved();
-    step = startAtFirstStep
-        ? _steps.first
-        : firstIncompleteStep(savedAnswers, withPrenomStep: withPrenomStep);
+    step = startAtFirstStep ? _steps.first : firstIncompleteStep(savedAnswers, withPrenomStep: withPrenomStep);
     _tracker?.trackStepScreen(step);
     isLoading = false;
     notifyListeners();
@@ -110,17 +101,12 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     if (withPrenomStep && !answers.isPrenomAnswered) {
       return OnboardingQuestionnaireStep.prenom;
     }
-    if (!answers.isDateNaissanceAnswered)
-      return OnboardingQuestionnaireStep.dateNaissance;
-    if (!answers.isHabitationAnswered)
-      return OnboardingQuestionnaireStep.habitation;
-    if (!answers.isSituationAnswered)
-      return OnboardingQuestionnaireStep.situation;
-    if (!answers.isObjectifsAnswered)
-      return OnboardingQuestionnaireStep.objectifs;
+    if (!answers.isDateNaissanceAnswered) return OnboardingQuestionnaireStep.dateNaissance;
+    if (!answers.isHabitationAnswered) return OnboardingQuestionnaireStep.habitation;
+    if (!answers.isSituationAnswered) return OnboardingQuestionnaireStep.situation;
+    if (!answers.isObjectifsAnswered) return OnboardingQuestionnaireStep.objectifs;
     if (!answers.isDomaineAnswered) return OnboardingQuestionnaireStep.domaine;
-    if (!answers.isVilleRechercheAnswered)
-      return OnboardingQuestionnaireStep.villeRecherche;
+    if (!answers.isVilleRechercheAnswered) return OnboardingQuestionnaireStep.villeRecherche;
     if (!answers.isFreinsAnswered) return OnboardingQuestionnaireStep.freins;
     return OnboardingQuestionnaireStep.objectifs;
   }
@@ -204,17 +190,13 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     if (day == null || month == null || year == null) return null;
     if (month < 1 || month > 12 || day < 1 || day > 31) return null;
     final date = DateTime(year, month, day);
-    if (date.year != year || date.month != month || date.day != day)
-      return null;
+    if (date.year != year || date.month != month || date.day != day) return null;
     return date;
   }
 
   /// A11y 9.9 : jour, mois et année saisis, mais la date n'existe pas (ex. 31/02/2006).
   bool get isBirthDateInvalid =>
-      draftBirthDay.isNotEmpty &&
-      draftBirthMonth.isNotEmpty &&
-      draftBirthYear.length == 4 &&
-      parsedBirthDate == null;
+      draftBirthDay.isNotEmpty && draftBirthMonth.isNotEmpty && draftBirthYear.length == 4 && parsedBirthDate == null;
 
   static const int minimumAge = 15;
 
@@ -320,8 +302,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
 
   void updateVilleQuery(String value) {
     draftVilleQuery = value;
-    if (draftVilleRecherche != null &&
-        draftVilleRecherche!.displayLabel != value) {
+    if (draftVilleRecherche != null && draftVilleRecherche!.displayLabel != value) {
       draftVilleRecherche = null;
     }
     geolocationError = null;
@@ -383,8 +364,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
       AnalyticsEventNames.questionnaireStepSkippedAction,
       step,
     );
-    if (step == OnboardingQuestionnaireStep.domaine)
-      _trackDomaine("étape passée");
+    if (step == OnboardingQuestionnaireStep.domaine) _trackDomaine("étape passée");
     _goNext();
   }
 
@@ -485,8 +465,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
       case OnboardingQuestionnaireStep.domaine:
         _trackDomaine("métier saisi");
       case OnboardingQuestionnaireStep.villeRecherche:
-        final unchanged =
-            savedAnswers.villeRecherche?.code == savedAnswers.habitation?.code;
+        final unchanged = savedAnswers.villeRecherche?.code == savedAnswers.habitation?.code;
         tracker.trackEvent(
           AnalyticsEventNames.questionnaireZoneAction,
           name: unchanged ? "zone inchangée" : "zone modifiée",
@@ -530,9 +509,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
         }
       case OnboardingQuestionnaireStep.situation:
         final situationAutre = draftSituationAutre.trim();
-        final isAutreSpecified =
-            draftSituation == QuestionnaireSituation.autre &&
-            situationAutre.isNotEmpty;
+        final isAutreSpecified = draftSituation == QuestionnaireSituation.autre && situationAutre.isNotEmpty;
         savedAnswers = savedAnswers.copyWith(
           situation: draftSituation,
           situationAutre: isAutreSpecified ? situationAutre : null,
@@ -587,10 +564,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
   }
 
   void _prefillVilleFromHabitation() {
-    final suggested =
-        savedAnswers.villeRecherche ??
-        savedAnswers.habitation ??
-        draftHabitation;
+    final suggested = savedAnswers.villeRecherche ?? savedAnswers.habitation ?? draftHabitation;
     draftVilleRecherche = suggested;
     draftVilleQuery = suggested?.displayLabel ?? '';
     draftRayonKm = savedAnswers.rayonKm;

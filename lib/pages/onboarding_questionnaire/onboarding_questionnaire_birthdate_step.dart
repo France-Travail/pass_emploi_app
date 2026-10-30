@@ -13,12 +13,10 @@ class OnboardingQuestionnaireBirthdateStep extends StatefulWidget {
   final OnboardingQuestionnaireFormChangeNotifier form;
 
   @override
-  State<OnboardingQuestionnaireBirthdateStep> createState() =>
-      _OnboardingQuestionnaireBirthdateStepState();
+  State<OnboardingQuestionnaireBirthdateStep> createState() => _OnboardingQuestionnaireBirthdateStepState();
 }
 
-class _OnboardingQuestionnaireBirthdateStepState
-    extends State<OnboardingQuestionnaireBirthdateStep> {
+class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestionnaireBirthdateStep> {
   final FocusNode _dayFocus = FocusNode();
   final FocusNode _monthFocus = FocusNode();
   final FocusNode _yearFocus = FocusNode();
@@ -34,8 +32,7 @@ class _OnboardingQuestionnaireBirthdateStepState
 
   // A11y 9.9 : une date impossible affiche un message, annoncé une fois à son apparition.
   void _announceInvalidDate(bool invalid) {
-    if (invalid && !_invalidAnnounced)
-      A11yUtils.announce(Strings.onboardingQuestionnaireBirthdateInvalid);
+    if (invalid && !_invalidAnnounced) A11yUtils.announce(Strings.onboardingQuestionnaireBirthdateInvalid);
     _invalidAnnounced = invalid;
   }
 
@@ -81,8 +78,7 @@ class _OnboardingQuestionnaireBirthdateStepState
         ),
         const SizedBox(height: Margins.spacing_s),
         Semantics(
-          label:
-              '${Strings.onboardingQuestionnaireBirthdateLabel}, ${Strings.onboardingQuestionnaireBirthdateHint}',
+          label: '${Strings.onboardingQuestionnaireBirthdateLabel}, ${Strings.onboardingQuestionnaireBirthdateHint}',
           container: true,
           explicitChildNodes: true,
           // A11y 5.3 : le curseur ne passe pas seul au champ suivant ; la touche « suivant » du clavier le fait.
