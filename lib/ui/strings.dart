@@ -1174,7 +1174,6 @@ class Strings {
       "Ajoutée par $creator le $date";
   static String youLowercase = "tu";
   static String youStressedLowercase = Brand.isPassEmploi() ? "vous" : "toi";
-  static String you = "Tu";
   static String yourConseillerLowercase = Brand.isPassEmploi()
       ? "votre conseiller"
       : "ton conseiller";
@@ -1248,18 +1247,6 @@ class Strings {
   // Duplicate user action
   static String duplicateUserAction = "Dupliquer l'action";
   static String duplicateUserActionConfirmationTitle = "Action dupliquée";
-
-  // Commentaires d'action
-  static String actionCommentsTitle = "Commentaire de l’action";
-  static String lastComment = "Dernier commentaire";
-  static String noComments = "Tu n’as pas encore de commentaire";
-
-  static String createdByAdvisor(String advisor) => "Ton conseiller $advisor";
-  static String addComment = "Ajouter un commentaire";
-
-  static String seeNComments(String n) => "Voir les $n commentaires";
-  static String commentsUnavailableOffline =
-      "Les commentaires de l'action ne sont pas disponibles hors connexion.";
 
   // Demarches
   static String demarcheDoneButton = "Terminer ma démarche";

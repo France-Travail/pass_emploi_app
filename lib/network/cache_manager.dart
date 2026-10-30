@@ -1,5 +1,4 @@
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
-import 'package:pass_emploi_app/repositories/action_commentaire_repository.dart';
 import 'package:pass_emploi_app/repositories/suggestions_recherche_repository.dart';
 import 'package:uuid/uuid.dart';
 
@@ -25,10 +24,6 @@ class PassEmploiCacheManager {
     await _delete(CachedResource.favorisEmploi.toString());
     await _delete(CachedResource.favorisImmersion.toString());
     await _delete(CachedResource.favorisServiceCivique.toString());
-  }
-
-  Future<void> removeActionCommentaireResource(String actionId) async {
-    await _delete(_baseUrl + ActionCommentaireRepository.getCommentairesUrl(actionId: actionId));
   }
 
   Future<void> removeSuggestionsRechercheResource({required String userId}) async {

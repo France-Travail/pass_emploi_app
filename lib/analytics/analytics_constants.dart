@@ -187,7 +187,6 @@ class AnalyticsActionNames {
 
   static const contactEmailSent = "/contact/email-sent";
 
-  static const accessToActionComments = "/actions/detail/comments/add";
 }
 
 class AnalyticsEventNames {

@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:pass_emploi_app/features/user_action/commentaire/list/action_commentaire_list_state.dart';
 import 'package:pass_emploi_app/features/user_action/delete/user_action_delete_actions.dart';
 import 'package:pass_emploi_app/features/user_action/delete/user_action_delete_state.dart';
 import 'package:pass_emploi_app/features/user_action/details/user_action_details_actions.dart';
@@ -38,7 +37,6 @@ class UserActionDetailsViewModel extends Equatable {
   final bool withUnfinishedButton;
   final bool withUpdateButton;
   final String creationDetails;
-  final bool withComments;
   final bool withOfflineBehavior;
   final Function(String actionId) onDelete;
   final Function() resetUpdateStatus;
@@ -61,7 +59,6 @@ class UserActionDetailsViewModel extends Equatable {
     required this.withUnfinishedButton,
     required this.withUpdateButton,
     required this.creationDetails,
-    required this.withComments,
     required this.withOfflineBehavior,
     required this.onDelete,
     required this.resetUpdateStatus,
@@ -86,8 +83,6 @@ class UserActionDetailsViewModel extends Equatable {
       );
     }
 
-    final commentsState = store.state.actionCommentaireListState;
-    final hasComments = commentsState is ActionCommentaireListSuccessState ? commentsState.comments.isNotEmpty : false;
     return UserActionDetailsViewModel._(
       displayState: DisplayState.CONTENT,
       id: userAction.id,
@@ -102,7 +97,6 @@ class UserActionDetailsViewModel extends Equatable {
       withUnfinishedButton: _withUnfinishedButton(userAction),
       withUpdateButton: _withUpdateButton(userAction),
       creationDetails: _creationDetails(userAction),
-      withComments: hasComments,
       withOfflineBehavior: store.state.connectivityState.isOffline(),
       onDelete: (actionId) => store.dispatch(UserActionDeleteRequestAction(actionId)),
       onRetry: () => {},
@@ -145,7 +139,6 @@ class UserActionDetailsViewModel extends Equatable {
       withUnfinishedButton: false,
       withUpdateButton: false,
       creationDetails: '',
-      withComments: false,
       withOfflineBehavior: false,
       onDelete: (actionId) {},
       onRetry: () => store.dispatch(UserActionDetailsRequestAction(userActionId)),

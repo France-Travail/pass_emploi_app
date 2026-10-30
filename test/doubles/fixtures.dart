@@ -25,7 +25,6 @@ import 'package:pass_emploi_app/models/chat/message.dart' as message;
 import 'package:pass_emploi_app/models/chat/message_important.dart';
 import 'package:pass_emploi_app/models/chat/offre_partagee.dart';
 import 'package:pass_emploi_app/models/chat/sender.dart';
-import 'package:pass_emploi_app/models/commentaire.dart';
 import 'package:pass_emploi_app/models/comptage_des_heures.dart';
 import 'package:pass_emploi_app/models/conseiller.dart';
 import 'package:pass_emploi_app/models/cv_pole_emploi.dart';
@@ -775,23 +774,6 @@ Preferences mockPreferences({
     pushNotificationActuMilo: pushNotificationActuMilo,
   );
 }
-
-List<Commentaire> mockCommentaires() => [
-  Commentaire(
-    id: "8392839",
-    content: "Premier commentaire",
-    creationDate: parseDateTimeUtcWithCurrentTimeZone("2022-07-23T12:08:10.000"),
-    createdByAdvisor: true,
-    creatorName: "Nils Tavernier",
-  ),
-  Commentaire(
-    id: "8802034",
-    content: "Deuxieme commentaire",
-    creationDate: parseDateTimeUtcWithCurrentTimeZone("2022-07-23T17:08:10.000"),
-    createdByAdvisor: false,
-    creatorName: null,
-  ),
-];
 
 List<Demarche> mockDemarches() {
   return [

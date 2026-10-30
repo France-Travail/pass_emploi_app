@@ -85,7 +85,6 @@ import 'package:pass_emploi_app/features/top_demarche/top_demarche_middleware.da
 import 'package:pass_emploi_app/features/tracking/tracking_evenement_engagement_middleware.dart';
 import 'package:pass_emploi_app/features/tracking/tracking_matomo_setup_middleware.dart';
 import 'package:pass_emploi_app/features/tutorial/tutorial_middleware.dart';
-import 'package:pass_emploi_app/features/user_action/commentaire/list/action_commentaire_list_middleware.dart';
 import 'package:pass_emploi_app/features/user_action/create/pending/user_action_create_pending_middleware.dart';
 import 'package:pass_emploi_app/features/user_action/create/user_action_create_middleware.dart';
 import 'package:pass_emploi_app/features/user_action/delete/user_action_delete_middleware.dart';
@@ -110,7 +109,6 @@ import 'package:pass_emploi_app/push/push_notification_manager.dart';
 import 'package:pass_emploi_app/redux/app_reducer.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/accueil_repository.dart';
-import 'package:pass_emploi_app/repositories/action_commentaire_repository.dart';
 import 'package:pass_emploi_app/repositories/alerte/alerte_delete_repository.dart';
 import 'package:pass_emploi_app/repositories/alerte/get_alerte_repository.dart';
 import 'package:pass_emploi_app/repositories/alerte/immersion_alerte_repository.dart';
@@ -240,7 +238,6 @@ class StoreFactory {
   final TutorialRepository tutorialRepository;
   final PreferencesRepository preferencesRepository;
   final RatingRepository ratingRepository;
-  final ActionCommentaireRepository actionCommentaireRepository;
   final SuggestionsRechercheRepository suggestionsRechercheRepository;
   final AnimationsCollectivesRepository animationsCollectivesRepository;
   final SessionMiloRepository sessionMiloRepository;
@@ -331,7 +328,6 @@ class StoreFactory {
     this.tutorialRepository,
     this.preferencesRepository,
     this.ratingRepository,
-    this.actionCommentaireRepository,
     this.suggestionsRechercheRepository,
     this.animationsCollectivesRepository,
     this.sessionMiloRepository,
@@ -437,7 +433,6 @@ class StoreFactory {
         PreferencesMiddleware(preferencesRepository).call,
         PreferencesUpdateMiddleware(preferencesRepository).call,
         RatingMiddleware(ratingRepository, detailsJeuneRepository).call,
-        ActionCommentaireListMiddleware(actionCommentaireRepository).call,
         SuggestionsRechercheMiddleware(suggestionsRechercheRepository).call,
         TraiterSuggestionRechercheMiddleware(suggestionsRechercheRepository).call,
         EventListMiddleware(animationsCollectivesRepository, sessionMiloRepository).call,

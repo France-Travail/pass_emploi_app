@@ -29,7 +29,6 @@ import 'package:pass_emploi_app/push/push_notification_manager.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/redux/store_factory.dart';
 import 'package:pass_emploi_app/repositories/accueil_repository.dart';
-import 'package:pass_emploi_app/repositories/action_commentaire_repository.dart';
 import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
 import 'package:pass_emploi_app/repositories/actualite_mission_locale_repository.dart';
 import 'package:pass_emploi_app/repositories/alerte/alerte_delete_repository.dart';
@@ -295,7 +294,6 @@ class AppInitializer {
       TutorialRepository(securedPreferences),
       PreferencesRepository(dioClient, crashlytics),
       RatingRepository(securedPreferences),
-      ActionCommentaireRepository(dioClient, requestCacheManager, crashlytics),
       SuggestionsRechercheRepository(dioClient, requestCacheManager, crashlytics),
       AnimationsCollectivesRepository(dioClient, crashlytics),
       SessionMiloRepository(dioClient, crashlytics),

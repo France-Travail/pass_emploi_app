@@ -11,7 +11,6 @@ import 'package:pass_emploi_app/models/demarche.dart';
 import 'package:pass_emploi_app/models/demarche_du_referentiel.dart';
 import 'package:pass_emploi_app/network/cache_manager.dart';
 import 'package:pass_emploi_app/repositories/accueil_repository.dart';
-import 'package:pass_emploi_app/repositories/action_commentaire_repository.dart';
 import 'package:pass_emploi_app/repositories/alerte/alerte_delete_repository.dart';
 import 'package:pass_emploi_app/repositories/alerte/get_alerte_repository.dart';
 import 'package:pass_emploi_app/repositories/alerte/immersion_alerte_repository.dart';
@@ -256,9 +255,6 @@ class DummyPassEmploiCacheManager extends PassEmploiCacheManager {
   Future<void> removeAllFavorisResources() async {}
 
   @override
-  Future<void> removeActionCommentaireResource(String actionId) async {}
-
-  @override
   Future<void> removeSuggestionsRechercheResource({
     required String userId,
   }) async {}
@@ -317,11 +313,6 @@ class DummyDemarcheDuReferentielRepository extends SearchDemarcheRepository {
 
 class DummyRatingRepository extends RatingRepository {
   DummyRatingRepository() : super(MockFlutterSecureStorage());
-}
-
-class DummyActionCommentaireRepository extends ActionCommentaireRepository {
-  DummyActionCommentaireRepository()
-    : super(DioMock(), DummyPassEmploiCacheManager());
 }
 
 class DummySuggestionsRechercheRepository

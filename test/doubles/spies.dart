@@ -129,9 +129,6 @@ class SpyPassEmploiCacheManager extends PassEmploiCacheManager {
   }
 
   @override
-  Future<void> removeActionCommentaireResource(String actionId) async {}
-
-  @override
   Future<void> removeSuggestionsRechercheResource({required String userId}) async {
     removeSuggestionsRechercheResourceWasCalled = true;
   }

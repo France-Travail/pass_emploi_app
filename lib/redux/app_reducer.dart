@@ -75,7 +75,6 @@ import 'package:pass_emploi_app/features/suppression_compte/suppression_compte_r
 import 'package:pass_emploi_app/features/thematiques_demarche/thematiques_demarche_reducer.dart';
 import 'package:pass_emploi_app/features/top_demarche/top_demarche_reducer.dart';
 import 'package:pass_emploi_app/features/tutorial/tutorial_reducer.dart';
-import 'package:pass_emploi_app/features/user_action/commentaire/list/action_commentaire_list_reducer.dart';
 import 'package:pass_emploi_app/features/user_action/create/pending/user_action_create_pending_reducer.dart';
 import 'package:pass_emploi_app/features/user_action/create/user_action_create_reducer.dart';
 import 'package:pass_emploi_app/features/user_action/delete/user_action_delete_reducer.dart';
@@ -169,7 +168,6 @@ AppState reducer(AppState current, dynamic action) {
     preferencesState: preferencesReducer(current.preferencesState, action),
     preferencesUpdateState: preferencesUpdateReducer(current.preferencesUpdateState, action),
     ratingState: ratingReducer(current.ratingState, action),
-    actionCommentaireListState: actionCommentaireListReducer(current.actionCommentaireListState, action),
     suggestionsRechercheState: suggestionsRechercheReducer(current.suggestionsRechercheState, action),
     traiterSuggestionRechercheState: traiterSuggestionRechercheReducer(current.traiterSuggestionRechercheState, action),
     eventListState: eventListReducer(current.eventListState, action),

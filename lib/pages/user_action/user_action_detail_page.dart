@@ -6,17 +6,14 @@ import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_actions.dart';
 import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_state.dart';
-import 'package:pass_emploi_app/features/user_action/commentaire/list/action_commentaire_list_actions.dart';
 import 'package:pass_emploi_app/features/user_action/delete/user_action_delete_actions.dart';
 import 'package:pass_emploi_app/features/user_action/details/user_action_details_actions.dart';
 import 'package:pass_emploi_app/features/user_action/update/user_action_update_actions.dart';
 import 'package:pass_emploi_app/models/user_action.dart';
 import 'package:pass_emploi_app/pages/generic_success_page.dart';
-import 'package:pass_emploi_app/pages/user_action/action_commentaires_page.dart';
 import 'package:pass_emploi_app/pages/user_action/user_action_detail_bottom_sheet.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/model/date_input_source.dart';
-import 'package:pass_emploi_app/presentation/user_action/commentaires/action_commentaire_view_model.dart';
 import 'package:pass_emploi_app/presentation/user_action/user_action_details_view_model.dart';
 import 'package:pass_emploi_app/presentation/user_action/user_action_done_bottom_sheet_view_model.dart';
 import 'package:pass_emploi_app/presentation/user_action/user_action_state_source.dart';
@@ -25,7 +22,6 @@ import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
-import 'package:pass_emploi_app/widgets/comment.dart';
 import 'package:pass_emploi_app/widgets/confetti_wrapper.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
 import 'package:pass_emploi_app/widgets/date_pickers/past_date_choice.dart';
@@ -327,17 +323,6 @@ class _Content extends StatelessWidget {
             color: DsfrColorDecisions.textMentionGrey(context),
           ),
         ),
-        // TODO: Remove this section
-        if (viewModel.withComments) ...[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s2w),
-            child: Divider(
-              height: 1,
-              color: DsfrColorDecisions.borderDefaultGrey(context),
-            ),
-          ),
-          _CommentSection(viewModel),
-        ],
         if (viewModel.withFinishedButton) ...[
           Padding(
             padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s2w),
@@ -397,135 +382,6 @@ class _FinishActionSectionState extends State<_FinishActionSection> {
           variant: DsfrButtonVariant.secondary,
           size: DsfrComponentSize.md,
           onPressed: () => Navigator.of(context).pop(),
-        ),
-      ],
-    );
-  }
-}
-
-class _CommentSection extends StatelessWidget {
-  const _CommentSection(this.viewModel);
-
-  final UserActionDetailsViewModel viewModel;
-
-  @override
-  Widget build(BuildContext context) {
-    if (viewModel.withOfflineBehavior) {
-      return const _UnavailableCommentsOffline();
-    } else {
-      return _CommentCard(actionId: viewModel.id, actionTitle: viewModel.title);
-    }
-  }
-}
-
-class _CommentCard extends StatelessWidget {
-  final String actionId;
-  final String actionTitle;
-
-  const _CommentCard({required this.actionId, required this.actionTitle});
-
-  @override
-  Widget build(BuildContext context) {
-    return StoreConnector<AppState, ActionCommentaireViewModel>(
-      onInit: (store) => store.dispatch(ActionCommentaireListRequestAction(actionId)),
-      converter: (store) => ActionCommentaireViewModel.create(store, actionId),
-      builder: (context, viewModel) => _build(context, viewModel),
-      distinct: true,
-    );
-  }
-
-  Widget _build(BuildContext context, ActionCommentaireViewModel viewModel) {
-    return switch (viewModel.displayState) {
-      DisplayState.CONTENT => _content(
-        context,
-        viewModel,
-        actionId,
-        actionTitle,
-      ),
-      DisplayState.FAILURE => Retry(
-        Strings.miscellaneousErrorRetry,
-        () => viewModel.onRetry(),
-      ),
-      _ => const Center(child: CircularProgressIndicator()),
-    };
-  }
-
-  Widget _content(
-    BuildContext context,
-    ActionCommentaireViewModel viewModel,
-    String actionId,
-    String actionTitle,
-  ) {
-    final commentsNumber = viewModel.comments.length;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          Strings.lastComment,
-          style: DsfrTextStyle.bodyMdBold(
-            color: DsfrColorDecisions.textTitleGrey(context),
-          ),
-        ),
-        const SizedBox(height: DsfrSpacings.s2w),
-        if (viewModel.lastComment != null) Comment(comment: viewModel.lastComment!),
-        if (viewModel.lastComment == null)
-          Text(
-            Strings.noComments,
-            style: DsfrTextStyle.bodyMd(
-              color: DsfrColorDecisions.textDefaultGrey(context),
-            ),
-          ),
-        const SizedBox(height: DsfrSpacings.s3w),
-        DsfrButton(
-          onPressed: () => _onCommentClick(context, actionId, actionTitle),
-          label: commentsNumber < 1 ? Strings.addComment : Strings.seeNComments(commentsNumber.toString()),
-          variant: DsfrButtonVariant.secondary,
-          size: DsfrComponentSize.md,
-        ),
-      ],
-    );
-  }
-
-  void _onCommentClick(
-    BuildContext context,
-    String actionId,
-    String actionTitle,
-  ) {
-    PassEmploiMatomoTracker.instance.trackScreen(
-      AnalyticsActionNames.accessToActionComments,
-    );
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ActionCommentairesPage(
-          actionId: actionId,
-          actionTitle: actionTitle,
-        ),
-      ),
-    );
-  }
-}
-
-class _UnavailableCommentsOffline extends StatelessWidget {
-  const _UnavailableCommentsOffline();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          Strings.lastComment,
-          style: DsfrTextStyle.bodyMdBold(
-            color: DsfrColorDecisions.textTitleGrey(context),
-          ),
-        ),
-        const SizedBox(height: DsfrSpacings.s2w),
-        Text(
-          Strings.commentsUnavailableOffline,
-          style: DsfrTextStyle.bodyMd(
-            color: DsfrColorDecisions.textDefaultGrey(context),
-          ),
         ),
       ],
     );

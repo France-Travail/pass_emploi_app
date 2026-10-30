@@ -51,7 +51,6 @@ import 'package:pass_emploi_app/features/suggestions_recherche/traiter/traiter_s
 import 'package:pass_emploi_app/features/thematiques_demarche/thematiques_demarche_state.dart';
 import 'package:pass_emploi_app/features/top_demarche/top_demarche_state.dart';
 import 'package:pass_emploi_app/features/tutorial/tutorial_state.dart';
-import 'package:pass_emploi_app/features/user_action/commentaire/list/action_commentaire_list_state.dart';
 import 'package:pass_emploi_app/features/user_action/create/pending/user_action_create_pending_state.dart';
 import 'package:pass_emploi_app/features/user_action/delete/user_action_delete_state.dart';
 import 'package:pass_emploi_app/features/user_action/details/user_action_details_state.dart';
@@ -265,26 +264,6 @@ extension AppStateDSL on AppState {
 
   AppState dontShowRating() {
     return copyWith(ratingState: RatingNotInitializedState());
-  }
-
-  AppState actionWithComments() {
-    return copyWith(actionCommentaireListState: ActionCommentaireListSuccessState(mockCommentaires()));
-  }
-
-  AppState actionWithoutComments() {
-    return copyWith(actionCommentaireListState: ActionCommentaireListSuccessState([]));
-  }
-
-  AppState actionCommentsFailureState() {
-    return copyWith(actionCommentaireListState: ActionCommentaireListFailureState());
-  }
-
-  AppState actionCommentsLoadingState() {
-    return copyWith(actionCommentaireListState: ActionCommentaireListLoadingState());
-  }
-
-  AppState actionCommentsNotInitState() {
-    return copyWith(actionCommentaireListState: ActionCommentaireListNotInitializedState());
   }
 
   AppState monSuivi({Interval? interval, MonSuivi? monSuivi}) {

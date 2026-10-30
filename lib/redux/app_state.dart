@@ -77,7 +77,6 @@ import 'package:pass_emploi_app/features/thematiques_demarche/thematiques_demarc
 import 'package:pass_emploi_app/features/theme/theme_state.dart';
 import 'package:pass_emploi_app/features/top_demarche/top_demarche_state.dart';
 import 'package:pass_emploi_app/features/tutorial/tutorial_state.dart';
-import 'package:pass_emploi_app/features/user_action/commentaire/list/action_commentaire_list_state.dart';
 import 'package:pass_emploi_app/features/user_action/create/pending/user_action_create_pending_state.dart';
 import 'package:pass_emploi_app/features/user_action/create/user_action_create_state.dart';
 import 'package:pass_emploi_app/features/user_action/delete/user_action_delete_state.dart';
@@ -143,7 +142,6 @@ class AppState extends Equatable {
   final PreferencesState preferencesState;
   final PreferencesUpdateState preferencesUpdateState;
   final RatingState ratingState;
-  final ActionCommentaireListState actionCommentaireListState;
   final SuggestionsRechercheState suggestionsRechercheState;
   final TraiterSuggestionRechercheState traiterSuggestionRechercheState;
   final EventListState eventListState;
@@ -238,7 +236,6 @@ class AppState extends Equatable {
     required this.preferencesState,
     required this.preferencesUpdateState,
     required this.ratingState,
-    required this.actionCommentaireListState,
     required this.suggestionsRechercheState,
     required this.traiterSuggestionRechercheState,
     required this.eventListState,
@@ -334,7 +331,6 @@ class AppState extends Equatable {
     final PreferencesState? preferencesState,
     final PreferencesUpdateState? preferencesUpdateState,
     final RatingState? ratingState,
-    final ActionCommentaireListState? actionCommentaireListState,
     final SuggestionsRechercheState? suggestionsRechercheState,
     final TraiterSuggestionRechercheState? traiterSuggestionRechercheState,
     final EventListState? eventListState,
@@ -429,7 +425,6 @@ class AppState extends Equatable {
       preferencesState: preferencesState ?? this.preferencesState,
       preferencesUpdateState: preferencesUpdateState ?? this.preferencesUpdateState,
       ratingState: ratingState ?? this.ratingState,
-      actionCommentaireListState: actionCommentaireListState ?? this.actionCommentaireListState,
       suggestionsRechercheState: suggestionsRechercheState ?? this.suggestionsRechercheState,
       traiterSuggestionRechercheState: traiterSuggestionRechercheState ?? this.traiterSuggestionRechercheState,
       eventListState: eventListState ?? this.eventListState,
@@ -528,7 +523,6 @@ class AppState extends Equatable {
       preferencesState: PreferencesNotInitializedState(),
       preferencesUpdateState: PreferencesUpdateNotInitializedState(),
       ratingState: RatingNotInitializedState(),
-      actionCommentaireListState: ActionCommentaireListNotInitializedState(),
       suggestionsRechercheState: SuggestionsRechercheNotInitializedState(),
       traiterSuggestionRechercheState: TraiterSuggestionRechercheNotInitializedState(),
       eventListState: EventListNotInitializedState(),
@@ -619,7 +613,6 @@ class AppState extends Equatable {
     preferencesState,
     preferencesUpdateState,
     ratingState,
-    actionCommentaireListState,
     suggestionsRechercheState,
     traiterSuggestionRechercheState,
     eventListState,

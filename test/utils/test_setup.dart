@@ -8,7 +8,6 @@ import 'package:pass_emploi_app/push/push_notification_manager.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/redux/store_factory.dart';
 import 'package:pass_emploi_app/repositories/accueil_repository.dart';
-import 'package:pass_emploi_app/repositories/action_commentaire_repository.dart';
 import 'package:pass_emploi_app/repositories/actualite_mission_locale_repository.dart';
 import 'package:pass_emploi_app/repositories/alerte/alerte_delete_repository.dart';
 import 'package:pass_emploi_app/repositories/alerte/get_alerte_repository.dart';
@@ -142,7 +141,6 @@ class TestStoreFactory {
   TutorialRepository tutorialRepository = DummyTutorialRepository();
   PreferencesRepository preferencesRepository = MockPreferencesRepository();
   RatingRepository ratingRepository = DummyRatingRepository();
-  ActionCommentaireRepository actionCommentaireRepository = DummyActionCommentaireRepository();
   SuggestionsRechercheRepository suggestionsRechercheRepository = DummySuggestionsRechercheRepository();
   AnimationsCollectivesRepository animationsCollectivesRepository = DummyAnimationsCollectivesRepository();
   SessionMiloRepository sessionMiloRepository = DummySessionMiloRepository();
@@ -236,7 +234,6 @@ class TestStoreFactory {
       tutorialRepository,
       preferencesRepository,
       ratingRepository,
-      actionCommentaireRepository,
       suggestionsRechercheRepository,
       animationsCollectivesRepository,
       sessionMiloRepository,

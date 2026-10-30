@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:pass_emploi_app/features/mode_demo/is_mode_demo_repository.dart';
 import 'package:pass_emploi_app/models/chat/message.dart';
 import 'package:pass_emploi_app/models/chat/offre_partagee.dart';
-import 'package:pass_emploi_app/models/commentaire.dart';
 import 'package:pass_emploi_app/models/conseiller_messages_info.dart';
 import 'package:pass_emploi_app/models/demarche.dart';
-import 'package:pass_emploi_app/repositories/action_commentaire_repository.dart';
 import 'package:pass_emploi_app/repositories/chat_repository.dart';
 import 'package:pass_emploi_app/repositories/demarche/update_demarche_repository.dart';
 import 'package:pass_emploi_app/repositories/piece_jointe_repository.dart';
@@ -113,24 +111,6 @@ class PieceJointeRepositoryUnavailableStub extends PieceJointeRepository {
   @override
   Future<String?> downloadFromId({required String fileId, required String fileName}) async {
     return "ERROR: 410";
-  }
-}
-
-class ActionCommentaireRepositorySuccessStub extends ActionCommentaireRepository {
-  ActionCommentaireRepositorySuccessStub() : super(DioMock(), DummyPassEmploiCacheManager());
-
-  @override
-  Future<List<Commentaire>?> getCommentaires(String actionId) async {
-    return mockCommentaires();
-  }
-}
-
-class ActionCommentaireRepositoryFailureStub extends ActionCommentaireRepository {
-  ActionCommentaireRepositoryFailureStub() : super(DioMock(), DummyPassEmploiCacheManager());
-
-  @override
-  Future<List<Commentaire>?> getCommentaires(String actionId) async {
-    return null;
   }
 }
 
