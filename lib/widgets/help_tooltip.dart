@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 
 class HelpTooltip extends StatelessWidget {
   final String message;
@@ -25,19 +24,17 @@ class HelpTooltip extends StatelessWidget {
           // A11y 8.7 : l'infobulle reste affichée jusqu'à ce que l'utilisateur touche ailleurs.
           showDuration: Duration(minutes: 5),
           exitDuration: Duration(seconds: 3),
-          textStyle: TextStyles.textSRegular(color: context.content),
+          // Apparence de l'infobulle DSFR (DsfrTooltip), sans changer le nom lu ni la durée d'affichage.
+          textStyle: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textDefaultGrey(context)),
           margin: EdgeInsets.symmetric(horizontal: 16),
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: context.bg,
-            borderRadius: const BorderRadius.all(Radius.circular(4)),
-            border: Border.all(
-              color: AppColors.primary,
-            ),
+            color: DsfrColorDecisions.backgroundOverlapGrey(context),
+            border: Border.all(color: DsfrColorDecisions.borderDefaultGrey(context)),
           ),
           child: Icon(
             icon,
-            color: AppColorsSpecifics.primaryToLighten(context),
+            color: DsfrColorDecisions.textActionHighBlueFrance(context),
           ),
         ),
       ),

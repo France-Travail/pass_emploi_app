@@ -8,7 +8,6 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_details_view_model.dart';
 import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/utils/platform.dart';
 import 'package:redux/redux.dart';
 
@@ -161,7 +160,7 @@ void main() {
 
         // Then
         expect(viewModel.conseillerPresenceLabel, 'Ton conseiller sera présent');
-        expect(viewModel.conseillerPresenceColor, AppColors.success);
+        expect(viewModel.isConseillerPresent, isTrue);
         expect(viewModel.withConseillerPresencePart, isTrue);
       });
 
@@ -179,7 +178,7 @@ void main() {
 
         // Then
         expect(viewModel.conseillerPresenceLabel, 'Ton conseiller ne sera pas présent');
-        expect(viewModel.conseillerPresenceColor, AppColors.warning);
+        expect(viewModel.isConseillerPresent, isFalse);
         expect(viewModel.withConseillerPresencePart, isTrue);
       });
 
@@ -1076,7 +1075,7 @@ void main() {
             date: '01 mars 2022',
             hourAndDuration: '00h - 00h30',
             conseillerPresenceLabel: 'Ton conseiller sera présent',
-            conseillerPresenceColor: AppColors.success,
+            isConseillerPresent: true,
             isInscrit: false,
             isComplet: false,
             isAnnule: false,
@@ -1148,7 +1147,7 @@ void main() {
             date: '01 mars 2022',
             hourAndDuration: '00h',
             conseillerPresenceLabel: 'Ton conseiller ne sera pas présent',
-            conseillerPresenceColor: AppColors.warning,
+            isConseillerPresent: false,
             isInscrit: true,
             isComplet: false,
             isAnnule: false,

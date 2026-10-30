@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/presentation/onboarding_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_profil_tile.dart';
@@ -26,7 +27,7 @@ class OnboardingPage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.onboardingAccueil,
       child: Theme(
-        data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
         child: StoreConnector<AppState, OnboardingViewModel>(
           converter: (store) => OnboardingViewModel.create(store),
           builder: (context, viewModel) {
@@ -250,7 +251,7 @@ class _SkipOnboardingDialog extends StatelessWidget {
       isScrollControlled: true,
       useSafeArea: true,
       builder: (context) => Theme(
-        data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
         child: DsfrModal(
           isDismissible: true,
           closeLabel: Strings.close,

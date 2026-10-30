@@ -16,6 +16,7 @@ import 'package:pass_emploi_app/presentation/solutions_tabs_page_view_model.dart
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
@@ -98,7 +99,7 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
       isScrollControlled: true,
       useSafeArea: true,
       builder: (context) => Theme(
-        data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
         child: DsfrModal(
           isDismissible: true,
           closeLabel: Strings.close,

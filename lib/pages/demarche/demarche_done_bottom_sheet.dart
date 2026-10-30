@@ -11,7 +11,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/widgets/date_pickers/date_picker_suggestions.dart';
+import 'package:pass_emploi_app/widgets/date_pickers/past_date_choice.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 
@@ -30,8 +30,7 @@ class DemarcheDoneBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, DemarcheDoneBottomSheetViewModel>(
-      converter: (store) =>
-          DemarcheDoneBottomSheetViewModel.create(store, demarcheId),
+      converter: (store) => DemarcheDoneBottomSheetViewModel.create(store, demarcheId),
       onDispose: (store) => store.dispatch(UpdateDemarcheResetAction()),
       builder: (context, viewModel) {
         return DsfrBottomSheet(
@@ -100,25 +99,21 @@ class _FormState extends State<_Form> {
           ),
         ),
         const SizedBox(height: DsfrSpacings.s2w),
-        DatePickerSuggestions(
+        PastDateChoice(
           title: Strings.dateShortMandatory,
           firstDate: widget.viewModel.firstDate,
-          isForPastSuggestions: true,
           onDateChanged: (selectedDate) {
             setState(() {
               date = selectedDate;
             });
           },
-          dateSource: date,
         ),
         const SizedBox(height: DsfrSpacings.s2w),
         DsfrButton(
           label: Strings.jeValide,
           variant: DsfrButtonVariant.primary,
           size: DsfrComponentSize.md,
-          onPressed: date.isValid
-              ? () => widget.viewModel.onDemarcheDone(date.selectedDate)
-              : null,
+          onPressed: date.isValid ? () => widget.viewModel.onDemarcheDone(date.selectedDate) : null,
         ),
       ],
     );

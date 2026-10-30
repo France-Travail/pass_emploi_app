@@ -10,6 +10,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/shadows.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
@@ -76,7 +77,7 @@ class _TutorialPageState extends State<TutorialPage> {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final page = viewModel.pages[_currentPage];
     return Theme(
-      data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+      data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
       child: Scaffold(
         backgroundColor: DsfrColorDecisions.backgroundContrastBlueFrance(
           context,

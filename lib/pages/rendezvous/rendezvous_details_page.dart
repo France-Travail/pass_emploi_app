@@ -444,7 +444,9 @@ class _ConseillerPart extends StatelessWidget {
           Text(
             viewModel.conseillerPresenceLabel,
             style: DsfrTextStyle.bodyMdBold(
-              color: viewModel.conseillerPresenceColor,
+              color: viewModel.isConseillerPresent
+                  ? DsfrColorDecisions.textDefaultSuccess(context)
+                  : DsfrColorDecisions.textDefaultError(context),
             ),
           ),
         if (viewModel.dateLimiteAnnulation != null) ...[

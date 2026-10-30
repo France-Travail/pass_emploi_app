@@ -8,10 +8,11 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/service_civique/service_civique_filtres_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/date_extensions.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/filtres_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/buttons/filter_button.dart';
-import 'package:pass_emploi_app/widgets/date_pickers/date_picker.dart';
 import 'package:pass_emploi_app/widgets/radio_list_tile.dart';
 import 'package:pass_emploi_app/widgets/slider/distance_slider.dart';
 import 'package:pass_emploi_app/widgets/toggles/date_toggle.dart';
@@ -35,7 +36,7 @@ class _ServiceCiviqueFiltresPageState extends State<ServiceCiviqueFiltresPage> {
     return Tracker(
       tracking: AnalyticsScreenNames.serviceCiviqueFiltres,
       child: Theme(
-        data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
         child: StoreConnector<AppState, ServiceCiviqueFiltresViewModel>(
           converter: (store) => ServiceCiviqueFiltresViewModel.create(store),
           builder: (context, viewModel) => _scaffold(context, viewModel),
@@ -217,7 +218,7 @@ class _FiltersState extends State<_Filters> {
   }
 }
 
-class _StartDateFilters extends StatelessWidget {
+class _StartDateFilters extends StatefulWidget {
   final Function(bool) onIsActiveChange;
   final Function(DateTime) onDateChange;
   final DateTime? initialDateValue;
@@ -231,6 +232,36 @@ class _StartDateFilters extends StatelessWidget {
   });
 
   @override
+  State<_StartDateFilters> createState() => _StartDateFiltersState();
+}
+
+class _StartDateFiltersState extends State<_StartDateFilters> {
+  late final TextEditingController _dateController;
+
+  @override
+  void initState() {
+    super.initState();
+    _dateController = TextEditingController(text: _dateText());
+  }
+
+  @override
+  void didUpdateWidget(covariant _StartDateFilters oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final dateText = _dateText();
+    if (_dateController.text != dateText) {
+      _dateController.text = dateText;
+    }
+  }
+
+  @override
+  void dispose() {
+    _dateController.dispose();
+    super.dispose();
+  }
+
+  String _dateText() => widget.initialDateValue?.toDay() ?? '';
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -241,14 +272,19 @@ class _StartDateFilters extends StatelessWidget {
         ),
         const SizedBox(height: DsfrSpacings.s1w),
         DateToggle(
-          onIsActiveChange: onIsActiveChange,
-          isActiveDate: isActiveDate,
+          onIsActiveChange: widget.onIsActiveChange,
+          isActiveDate: widget.isActiveDate,
         ),
         const SizedBox(height: DsfrSpacings.s1w),
-        DatePicker(
-          onDateSelected: onDateChange,
-          initialDateValue: initialDateValue,
-          isActiveDate: isActiveDate,
+        DsfrDateInput(
+          label: Strings.selectDateTooltip,
+          controller: _dateController,
+          enabled: widget.isActiveDate,
+          firstDate: DateTime(2020),
+          lastDate: DateTime(2101),
+          initialDate: widget.initialDateValue ?? DateTime.now(),
+          locale: const Locale('fr', 'FR'),
+          onChanged: widget.onDateChange,
         ),
       ],
     );

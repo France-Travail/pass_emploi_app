@@ -24,7 +24,7 @@ class ChatMessageContainer extends StatelessWidget {
     super.key,
     required this.content,
     required this.caption,
-    required this.captionColor,
+    required this.isCaptionError,
     required this.isMyMessage,
     required this.isPj,
     this.captionSuffixIcon,
@@ -32,13 +32,16 @@ class ChatMessageContainer extends StatelessWidget {
 
   final Widget content;
   final String caption;
-  final Color? captionColor;
+  final bool isCaptionError;
   final bool isMyMessage;
   final bool isPj;
   final IconData? captionSuffixIcon;
 
   @override
   Widget build(BuildContext context) {
+    final captionColor = isCaptionError
+        ? DsfrColorDecisions.textDefaultError(context)
+        : DsfrColorDecisions.textDefaultGrey(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s1v),
       child: Column(
@@ -54,13 +57,13 @@ class ChatMessageContainer extends StatelessWidget {
             mainAxisAlignment: isMyMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _Caption(caption, captionColor ?? DsfrColorDecisions.textDefaultGrey(context)),
+              _Caption(caption, captionColor),
               if (captionSuffixIcon != null) ...[
                 SizedBox(width: DsfrSpacings.s1w),
                 Icon(
                   captionSuffixIcon,
                   size: DsfrSpacings.s2w,
-                  color: captionColor ?? DsfrColorDecisions.textDefaultGrey(context),
+                  color: captionColor,
                 ),
               ],
             ],

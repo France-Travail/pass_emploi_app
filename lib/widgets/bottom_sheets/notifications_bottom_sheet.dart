@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/onboarding/onboarding_actions.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/dsfr/emoji_tile.dart';
 
@@ -24,7 +25,7 @@ class NotificationsBottomSheet extends StatelessWidget {
       useSafeArea: true,
       routeSettings: const RouteSettings(name: AnalyticsScreenNames.onboardingPushNotificationPermission),
       builder: (context) => Theme(
-        data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
         child: DsfrModal(
           isDismissible: true,
           closeLabel: Strings.close,

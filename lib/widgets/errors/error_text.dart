@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 
+/// Message d'erreur DSFR : icône d'erreur et texte en rouge d'erreur.
 class ErrorText extends StatelessWidget {
   final String text;
 
@@ -11,11 +11,24 @@ class ErrorText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          style: TextStyles.textSRegular(color: AppColors.warning),
+        padding: const EdgeInsets.all(DsfrSpacings.s1w),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(top: 2),
+              child: DsfrComponentStateIcon(state: DsfrComponentStateEnum.error),
+            ),
+            const SizedBox(width: DsfrSpacings.s1v),
+            Flexible(
+              child: Text(
+                text,
+                textAlign: TextAlign.center,
+                style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultError(context)),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -13,6 +13,7 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/chat/chat_day_section.dart';
@@ -27,7 +28,7 @@ class ActualiteMissionLocalePage extends StatelessWidget {
     return Tracker(
       tracking: AnalyticsScreenNames.actualiteMissionLocale,
       child: Theme(
-        data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
         child: Builder(
           builder: (context) => ColoredBox(
             color: DsfrColorDecisions.backgroundDefaultGrey(context),
@@ -229,7 +230,7 @@ class _ExternalUrlAlertDialog extends StatelessWidget {
       isScrollControlled: true,
       useSafeArea: true,
       builder: (context) => Theme(
-        data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
         child: DsfrModal(
           isDismissible: true,
           closeLabel: Strings.close,

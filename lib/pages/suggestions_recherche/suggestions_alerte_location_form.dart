@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/models/location.dart';
 import 'package:pass_emploi_app/models/offre_type.dart';
 import 'package:pass_emploi_app/presentation/suggestions/suggestion_alerte_location_form_view_model.dart';
@@ -6,7 +7,6 @@ import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/apparition_animation.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/slider/distance_slider.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/location_autocomplete.dart';
@@ -90,8 +90,10 @@ class _SubmitButton extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_m),
       child: SizedBox(
         width: double.infinity,
-        child: PrimaryActionButton(
+        child: DsfrButton(
           label: Strings.suggestionLocalisationAddAlerteButton,
+          variant: DsfrButtonVariant.primary,
+          size: DsfrComponentSize.lg,
           onPressed: onPressed,
         ),
       ),

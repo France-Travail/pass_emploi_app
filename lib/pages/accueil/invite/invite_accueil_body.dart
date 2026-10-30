@@ -15,6 +15,7 @@ import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/action_plan_declaration_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/action_plan_feedback_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/notifications_bottom_sheet.dart';
@@ -33,7 +34,7 @@ class _InviteAccueilBodyState extends State<InviteAccueilBody> {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Theme(
-      data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+      data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
       child: StoreConnector<AppState, InviteAccueilViewModel>(
         onInit: (store) => store.dispatch(ActionPlanRequestAction()),
         converter: InviteAccueilViewModel.create,

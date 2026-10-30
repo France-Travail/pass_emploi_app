@@ -13,7 +13,6 @@ import 'package:pass_emploi_app/presentation/chat/chat_page_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_reducer.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:redux/redux.dart';
 
 import '../../doubles/fixtures.dart';
@@ -233,7 +232,7 @@ void main() {
         message: null,
         filename: "a.pdf",
         caption: "12:30 · Envoi en cours",
-        captionColor: null,
+        isCaptionError: false,
         shouldAnimate: false,
       ),
     ]);
@@ -269,7 +268,7 @@ void main() {
         pieceJointeId: "1",
         pieceJointeName: "a.png",
         caption: "12:30 · Envoyé",
-        captionColor: null,
+        isCaptionError: false,
         shouldAnimate: false,
       ),
     ]);
@@ -306,7 +305,7 @@ void main() {
         imagePath: "path",
         showLoading: true,
         caption: "12:30 · Envoi en cours",
-        captionColor: null,
+        isCaptionError: false,
         shouldAnimate: true,
       ),
     ]);
@@ -343,7 +342,7 @@ void main() {
         showLoading: true,
         fileName: "a.pdf",
         caption: "12:30 · Envoi en cours",
-        captionColor: null,
+        isCaptionError: false,
         shouldAnimate: true,
       ),
     ]);
@@ -801,7 +800,7 @@ void main() {
       final messageItem = viewModel.items[1] as TextMessageItem;
       expect(messageItem.shouldAnimate, true);
       expect(messageItem.caption.contains("Envoi en cours"), true);
-      expect(messageItem.captionColor, null);
+      expect(messageItem.isCaptionError, isFalse);
     });
 
     test('when status is sent should display sent captions', () {
@@ -817,7 +816,7 @@ void main() {
       final messageItem = viewModel.items[1] as TextMessageItem;
       expect(messageItem.shouldAnimate, false);
       expect(messageItem.caption.contains("Envoyé"), true);
-      expect(messageItem.captionColor, null);
+      expect(messageItem.isCaptionError, isFalse);
     });
 
     test('when status is failed should display failed captions', () {
@@ -833,7 +832,7 @@ void main() {
       final messageItem = viewModel.items[1] as TextMessageItem;
       expect(messageItem.shouldAnimate, false);
       expect(messageItem.caption.contains("L'envoi a échoué"), true);
-      expect(messageItem.captionColor, AppColors.warning);
+      expect(messageItem.isCaptionError, isTrue);
     });
   });
 
@@ -1097,9 +1096,9 @@ void main() {
         viewModel.items[1],
         isA<PieceJointeItem>()
             .having(
-              (e) => e.captionColor,
-              "captionColor",
-              AppColors.warning,
+              (e) => e.isCaptionError,
+              "isCaptionError",
+              isTrue,
             )
             .having(
               (e) => e.caption,
@@ -1134,9 +1133,9 @@ void main() {
         viewModel.items[1],
         isA<PieceJointeItem>()
             .having(
-              (e) => e.captionColor,
-              "captionColor",
-              AppColors.warning,
+              (e) => e.isCaptionError,
+              "isCaptionError",
+              isTrue,
             )
             .having(
               (e) => e.caption,

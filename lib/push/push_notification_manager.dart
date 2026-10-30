@@ -4,12 +4,12 @@ import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/push/deep_link_factory.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/utils/log.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:redux/redux.dart';
@@ -91,7 +91,7 @@ class PushNotificationManager {
           notification.title,
           notification.body,
           NotificationDetails(
-            android: AndroidNotificationDetails(_channelId, _channelName, color: AppColors.primary),
+            android: AndroidNotificationDetails(_channelId, _channelName, color: DsfrColors.blueFranceSun113),
           ),
           payload: jsonEncode(message.data),
         );

@@ -7,13 +7,13 @@ class ChatTextMessageParams {
   final Sender sender;
   final String content;
   final String caption;
-  final Color? captionColor;
+  final bool isCaptionError;
 
   ChatTextMessageParams({
     required this.sender,
     required this.content,
     required this.caption,
-    required this.captionColor,
+    required this.isCaptionError,
   });
 }
 
@@ -35,7 +35,7 @@ class ChatTextMessage extends StatelessWidget {
       isPj: false,
       isMyMessage: isMyMessage,
       caption: params.caption,
-      captionColor: params.captionColor,
+      isCaptionError: params.isCaptionError,
     );
   }
 }

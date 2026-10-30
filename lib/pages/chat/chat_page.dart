@@ -11,6 +11,7 @@ import 'package:pass_emploi_app/presentation/chat/chat_item.dart';
 import 'package:pass_emploi_app/presentation/chat/chat_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/apparition_animation.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/chat_message_bottom_sheet.dart';
@@ -100,7 +101,7 @@ class ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     _controller = (_controller != null) ? _controller : TextEditingController(text: viewModel.brouillon);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Theme(
-      data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+      data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
       child: ChatScaffold(
         displayState: viewModel.displayState,
         onRetry: viewModel.onRetry,
@@ -218,7 +219,7 @@ extension on PieceJointeMessageItem {
       filename: filename,
       caption: caption,
       content: message,
-      captionColor: captionColor,
+      isCaptionError: isCaptionError,
     );
   }
 }
@@ -229,7 +230,7 @@ extension on TextMessageItem {
       sender: sender,
       content: content,
       caption: caption,
-      captionColor: captionColor,
+      isCaptionError: isCaptionError,
     );
   }
 }

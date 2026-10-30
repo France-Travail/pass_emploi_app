@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 
 class ChatEditMessagePage extends StatelessWidget {
@@ -18,7 +19,7 @@ class ChatEditMessagePage extends StatelessWidget {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = DsfrColorDecisions.backgroundDefaultGrey(context);
     return Theme(
-      data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+      data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
       child: Scaffold(
         backgroundColor: backgroundColor,
         appBar: SecondaryAppBar(title: Strings.chatEditMessageAppBar),
