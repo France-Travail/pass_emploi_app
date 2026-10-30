@@ -25,6 +25,7 @@ class _FormationsMetierPageState extends State<FormationsMetierPage> {
   late final _motsCles = motsClesFormation(widget.fiche);
   Location? _lieu;
   bool _toutLeTerritoire = false;
+  bool _modeDemo = false;
   bool _lieuInitialise = false;
   Future<List<FormationInserJeunes>>? _formations;
 
@@ -33,17 +34,20 @@ class _FormationsMetierPageState extends State<FormationsMetierPage> {
     super.didChangeDependencies();
     if (_lieuInitialise) return;
     _lieuInitialise = true;
-    _lieu = StoreProvider.of<AppState>(context).getLastLocationSelected(allowDepartment: true);
+    final store = StoreProvider.of<AppState>(context);
+    _lieu = store.getLastLocationSelected(allowDepartment: true);
+    _modeDemo = store.state.demoState;
     _charger();
   }
 
   void _charger() {
     final departement = departementDe(_lieu);
-    _formations = departement == null && !_toutLeTerritoire
+    _formations = departement == null && !_toutLeTerritoire && !_modeDemo
         ? null
         : InserJeunesClient.instance.formations(
             motsCles: _motsCles,
             departement: _toutLeTerritoire ? null : departement,
+            modeDemo: _modeDemo,
           );
   }
 

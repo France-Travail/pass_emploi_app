@@ -2,6 +2,10 @@ import 'package:pass_emploi_app/models/date/interval.dart';
 import 'package:pass_emploi_app/utils/log.dart';
 
 String? getDemoFileName(String url, String query) {
+  if (url.endsWith('/referentiels/rome/centres-interet')) return 'poc_orientation_centres_interet';
+  if (url.contains('/referentiels/rome/centres-interet/')) return 'poc_orientation_metiers_centre_interet';
+  if (url.endsWith('/referentiels/rome/metiers')) return 'poc_orientation_metiers';
+  if (url.contains('/referentiels/rome/metiers/')) return 'poc_orientation_fiche_metier';
   if (url.contains('/milo/accueil')) return 'accueil_mission_locale';
   if (url.contains('/pole-emploi/accueil')) return 'accueil_pole_emploi';
   if (url.endsWith('/favoris/offres-immersion')) return 'favoris_ids_immersion';

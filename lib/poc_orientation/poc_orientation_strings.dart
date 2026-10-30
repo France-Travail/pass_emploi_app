@@ -1,6 +1,6 @@
 class PocOrientationStrings {
   static String prototype = "Prototype";
-  static String sourceRome = "Source : ROME 4.0 de France Travail (environnement de recette)";
+  static String sourceRome = "Source : ROME 4.0, France Travail";
   static String chargement = "Chargement";
   static String erreur = "Impossible de joindre le service. Vérifie ta connexion et réessaie.";
   static String reessayer = "Réessayer";
@@ -99,7 +99,7 @@ class PocOrientationStrings {
   static String ficheReglemente = "Métier réglementé";
   static String ficheTransitionEcologique = "Transition écologique";
   static String ficheTransitionNumerique = "Numérique";
-  static String ficheSource(String code) => "Source : fiche ROME $code, France Travail (environnement de recette)";
+  static String ficheSource(String code) => "Source : fiche ROME $code, France Travail";
 
   static String formationsTitre = "Se former";
   static String formationsIntro =
