@@ -96,7 +96,8 @@ jobs:
           flutter build appbundle \
           -t lib/cej_main.dart \
           --flavor cejProd \
-          --build-number=${{ needs.pre-build.outputs.date }}
+          --build-number=${{ needs.pre-build.outputs.date }} \
+          --dart-define-from-file=env/.env.prod
 
       - name: CEJ - Save Android appbundle
         uses: actions/upload-artifact@v4
@@ -111,7 +112,8 @@ jobs:
           flutter build appbundle \
           -t lib/brsa_main.dart \
           --flavor brsaProd \
-          --build-number=${{ needs.pre-build.outputs.date }}
+          --build-number=${{ needs.pre-build.outputs.date }} \
+          --dart-define-from-file=env/.env.prod
 
       - name: BRSA - Save Android appbundle
         uses: actions/upload-artifact@v4
@@ -266,7 +268,9 @@ jobs:
           --release \
           --build-number=${{ needs.pre-build.outputs.date }} \
           --export-options-plist=ios/prod_export_options.plist \
-          --no-pub
+          --no-pub \
+          --dart-define-from-file=env/.env.prod
+          
 
       - name: CEJ - Upload dSYMs to Crashlytics
         shell: bash
@@ -328,7 +332,8 @@ jobs:
           --build-number=${{ needs.pre-build.outputs.date }} \
           --export-options-plist=ios/prod_export_options.plist \
           --no-pub \
-          --verbose
+          --verbose \
+          --dart-define-from-file=env/.env.prod
 
       - name: BRSA - Upload dSYMs to Crashlytics
         shell: bash
