@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/models/offre_type.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_emploi_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_immersion_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_service_civique_page.dart';
+import 'package:pass_emploi_app/poc_offres/widgets/poc_offres_tuiles.dart';
 import 'package:pass_emploi_app/presentation/recherche/recherche_home_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -115,6 +116,7 @@ class _NosOffres extends StatelessWidget {
                 subtitle: Strings.rechercheHomeOffresServiceCiviqueSubtitle,
                 onTap: () => _onOffreTypeTap(context, OffreType.serviceCivique),
               ),
+            if (viewModel.afficherPocOffres) ...pocOffresTuiles(context),
           ],
         ),
       ],
