@@ -42,13 +42,10 @@ class OnboardingQuestionnairePage extends StatefulWidget {
   }
 
   @override
-  State<OnboardingQuestionnairePage> createState() =>
-      _OnboardingQuestionnairePageState();
+  State<OnboardingQuestionnairePage> createState() => _OnboardingQuestionnairePageState();
 }
 
-class _OnboardingQuestionnairePageState
-    extends State<OnboardingQuestionnairePage>
-    with WidgetsBindingObserver {
+class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePage> with WidgetsBindingObserver {
   late final OnboardingQuestionnaireFormChangeNotifier _form;
   late final CommunesRepository _communesRepository;
   late final OnboardingQuestionnaireTracker _tracker;
@@ -81,15 +78,14 @@ class _OnboardingQuestionnairePageState
     final store = StoreProvider.of<AppState>(context);
     final questionnaireState = store.state.onboardingQuestionnaireState;
     _tracker = OnboardingQuestionnaireTracker(
-      isUpdate:
-          questionnaireState is OnboardingQuestionnaireSuccessState &&
-          questionnaireState.everFinished,
+      isUpdate: questionnaireState is OnboardingQuestionnaireSuccessState && questionnaireState.everFinished,
     );
     _form = OnboardingQuestionnaireFormChangeNotifier(
       loadAnswers: () async {
         final questionnaireState = store.state.onboardingQuestionnaireState;
-        if (questionnaireState is OnboardingQuestionnaireSuccessState)
+        if (questionnaireState is OnboardingQuestionnaireSuccessState) {
           return questionnaireState.answers;
+        }
         return const OnboardingQuestionnaireAnswers();
       },
       saveAnswers: (answers) async {
@@ -155,9 +151,7 @@ class _OnboardingQuestionnairePageState
               backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(
                 context,
               ),
-              appBar: _form.step.isLoader
-                  ? null
-                  : OnboardingQuestionnaireAppBar(onBack: _onBack),
+              appBar: _form.step.isLoader ? null : OnboardingQuestionnaireAppBar(onBack: _onBack),
               body: SafeArea(
                 child: _form.isLoading
                     ? const Center(child: CircularProgressIndicator())
@@ -195,8 +189,7 @@ class _OnboardingQuestionnairePageState
     final store = StoreProvider.of<AppState>(context);
     final questionnaireState = store.state.onboardingQuestionnaireState;
     // A11y 5.3 : rouvert depuis l'Accueil, le questionnaire se ferme sans déconnecter l'utilisateur.
-    if (questionnaireState is OnboardingQuestionnaireSuccessState &&
-        questionnaireState.resumedFromApp) {
+    if (questionnaireState is OnboardingQuestionnaireSuccessState && questionnaireState.resumedFromApp) {
       store.dispatch(OnboardingQuestionnaireCloseResumedAction());
     } else {
       _confirmLogout(store);
@@ -225,8 +218,7 @@ class _OnboardingQuestionnairePageState
         ),
       ),
     );
-    if (confirmed == true)
-      store.dispatch(RequestLogoutAction(LogoutReason.userLogout));
+    if (confirmed == true) store.dispatch(RequestLogoutAction(LogoutReason.userLogout));
   }
 }
 
@@ -277,22 +269,14 @@ class _LogoutConfirmation extends StatelessWidget {
 }
 
 String _stepTitle(OnboardingQuestionnaireStep step) => switch (step) {
-  OnboardingQuestionnaireStep.prenom =>
-    Strings.onboardingQuestionnairePrenomTitle,
-  OnboardingQuestionnaireStep.dateNaissance =>
-    Strings.onboardingQuestionnaireBirthdateTitle,
-  OnboardingQuestionnaireStep.habitation =>
-    Strings.onboardingQuestionnaireHabitationTitle,
-  OnboardingQuestionnaireStep.situation =>
-    Strings.onboardingQuestionnaireSituationTitle,
-  OnboardingQuestionnaireStep.objectifs =>
-    Strings.onboardingQuestionnaireObjectifsTitle,
-  OnboardingQuestionnaireStep.domaine =>
-    Strings.onboardingQuestionnaireDomaineTitle,
-  OnboardingQuestionnaireStep.villeRecherche =>
-    Strings.onboardingQuestionnaireVilleTitle,
-  OnboardingQuestionnaireStep.freins =>
-    Strings.onboardingQuestionnaireFreinsTitle,
+  OnboardingQuestionnaireStep.prenom => Strings.onboardingQuestionnairePrenomTitle,
+  OnboardingQuestionnaireStep.dateNaissance => Strings.onboardingQuestionnaireBirthdateTitle,
+  OnboardingQuestionnaireStep.habitation => Strings.onboardingQuestionnaireHabitationTitle,
+  OnboardingQuestionnaireStep.situation => Strings.onboardingQuestionnaireSituationTitle,
+  OnboardingQuestionnaireStep.objectifs => Strings.onboardingQuestionnaireObjectifsTitle,
+  OnboardingQuestionnaireStep.domaine => Strings.onboardingQuestionnaireDomaineTitle,
+  OnboardingQuestionnaireStep.villeRecherche => Strings.onboardingQuestionnaireVilleTitle,
+  OnboardingQuestionnaireStep.freins => Strings.onboardingQuestionnaireFreinsTitle,
   OnboardingQuestionnaireStep.loader => '',
 };
 
@@ -463,15 +447,13 @@ class _BottomActions extends StatelessWidget {
   }
 
   void _onContinue(BuildContext context) {
-    if (form.step == OnboardingQuestionnaireStep.dateNaissance &&
-        form.isBirthDateUnderMinimumAge) {
+    if (form.step == OnboardingQuestionnaireStep.dateNaissance && form.isBirthDateUnderMinimumAge) {
       Navigator.of(
         context,
       ).push(OnboardingQuestionnaireUnderAgePage.materialPageRoute());
       return;
     }
-    if (form.step == OnboardingQuestionnaireStep.dateNaissance &&
-        form.isBirthDateOverMaximumAge) {
+    if (form.step == OnboardingQuestionnaireStep.dateNaissance && form.isBirthDateOverMaximumAge) {
       Navigator.of(
         context,
       ).push(OnboardingQuestionnaireOverAgePage.materialPageRoute());
@@ -498,27 +480,22 @@ class _StepContent extends StatelessWidget {
       OnboardingQuestionnaireStep.prenom => OnboardingQuestionnairePrenomStep(
         form: form,
       ),
-      OnboardingQuestionnaireStep.dateNaissance =>
-        OnboardingQuestionnaireBirthdateStep(form: form),
-      OnboardingQuestionnaireStep.habitation =>
-        OnboardingQuestionnaireLocationStep(
-          form: form,
-          communesRepository: communesRepository,
-          isHabitation: true,
-        ),
-      OnboardingQuestionnaireStep.situation =>
-        OnboardingQuestionnaireSituationStep(form: form),
-      OnboardingQuestionnaireStep.objectifs =>
-        OnboardingQuestionnaireObjectifsStep(form: form),
+      OnboardingQuestionnaireStep.dateNaissance => OnboardingQuestionnaireBirthdateStep(form: form),
+      OnboardingQuestionnaireStep.habitation => OnboardingQuestionnaireLocationStep(
+        form: form,
+        communesRepository: communesRepository,
+        isHabitation: true,
+      ),
+      OnboardingQuestionnaireStep.situation => OnboardingQuestionnaireSituationStep(form: form),
+      OnboardingQuestionnaireStep.objectifs => OnboardingQuestionnaireObjectifsStep(form: form),
       OnboardingQuestionnaireStep.domaine => OnboardingQuestionnaireDomaineStep(
         form: form,
       ),
-      OnboardingQuestionnaireStep.villeRecherche =>
-        OnboardingQuestionnaireLocationStep(
-          form: form,
-          communesRepository: communesRepository,
-          isHabitation: false,
-        ),
+      OnboardingQuestionnaireStep.villeRecherche => OnboardingQuestionnaireLocationStep(
+        form: form,
+        communesRepository: communesRepository,
+        isHabitation: false,
+      ),
       OnboardingQuestionnaireStep.freins => OnboardingQuestionnaireFreinsStep(
         form: form,
       ),

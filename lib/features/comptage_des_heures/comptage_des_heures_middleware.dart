@@ -1,4 +1,6 @@
 import 'package:pass_emploi_app/features/comptage_des_heures/comptage_des_heures_actions.dart';
+import 'package:pass_emploi_app/features/comptage_des_heures/comptage_des_heures_state.dart';
+import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_actions.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/comptage_des_heures_repository.dart';
 import 'package:redux/redux.dart';
@@ -13,7 +15,8 @@ class ComptageDesHeuresMiddleware extends MiddlewareClass<AppState> {
     next(action);
     final userId = store.state.userId();
     if (userId == null) return;
-    if (action is ComptageDesHeuresRequestAction && store.state.isMiloLoginMode()) {
+    if (!store.state.isMiloLoginMode()) return;
+    if (action is ComptageDesHeuresRequestAction || _shouldLoadWithMonSuivi(store, action)) {
       final result = await _repository.get(userId: userId);
       if (result != null) {
         store.dispatch(ComptageDesHeuresSuccessAction(result));
@@ -21,5 +24,13 @@ class ComptageDesHeuresMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(ComptageDesHeuresFailureAction());
       }
     }
+  }
+
+  // Une seule fois par session : l'API garde le comptage 5 h en cache, le rappeler renverrait la même valeur.
+  bool _shouldLoadWithMonSuivi(Store<AppState> store, dynamic action) {
+    return action is MonSuiviSuccessAction &&
+        action.period.isCurrent &&
+        action.monSuivi.peutVoirLeComptageDesHeures &&
+        store.state.comptageDesHeuresState is! ComptageDesHeuresSuccessState;
   }
 }

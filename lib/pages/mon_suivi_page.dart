@@ -5,6 +5,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_actions.dart';
+import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_state.dart';
 import 'package:pass_emploi_app/network/post_evenement_engagement.dart';
 import 'package:pass_emploi_app/pages/demarche/create_demarche_form_page.dart';
 import 'package:pass_emploi_app/pages/demarche/demarche_detail_bottom_sheet.dart';
@@ -49,14 +50,19 @@ class _MonSuiviPageState extends State<MonSuiviPage> {
         tracking: AnalyticsScreenNames.monSuivi,
         child: _StateProvider(
           child: StoreConnector<AppState, MonSuiviViewModel>(
-            onInit: (store) => store.dispatch(MonSuiviRequestAction(MonSuiviPeriod.current)),
+            // L'état est conservé d'un passage sur l'onglet à l'autre : il est rechargé au retour au premier plan.
+            onInit: (store) {
+              final state = store.state.monSuiviState;
+              if (state is MonSuiviNotInitializedState || state is MonSuiviFailureState) {
+                store.dispatch(MonSuiviRequestAction(MonSuiviPeriod.current));
+              }
+            },
             converter: (store) => MonSuiviViewModel.create(store),
             builder: (_, viewModel) => _Scaffold(
               body: _Body(viewModel),
               withCreateButton: viewModel.withCreateButton,
               ctaType: viewModel.ctaType,
             ),
-            onDispose: (store) => store.dispatch(MonSuiviResetAction()),
             distinct: true,
           ),
         ),

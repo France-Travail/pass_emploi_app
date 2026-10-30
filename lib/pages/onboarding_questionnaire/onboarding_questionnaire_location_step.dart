@@ -25,12 +25,10 @@ class OnboardingQuestionnaireLocationStep extends StatefulWidget {
   final bool isHabitation;
 
   @override
-  State<OnboardingQuestionnaireLocationStep> createState() =>
-      _OnboardingQuestionnaireLocationStepState();
+  State<OnboardingQuestionnaireLocationStep> createState() => _OnboardingQuestionnaireLocationStepState();
 }
 
-class _OnboardingQuestionnaireLocationStepState
-    extends State<OnboardingQuestionnaireLocationStep> {
+class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestionnaireLocationStep> {
   List<QuestionnaireCommune> _suggestions = [];
   int? _focusedSuggestion;
   Timer? _debounce;
@@ -65,8 +63,7 @@ class _OnboardingQuestionnaireLocationStepState
     super.dispose();
   }
 
-  String get _currentQuery =>
-      widget.isHabitation ? form.draftHabitationQuery : form.draftVilleQuery;
+  String get _currentQuery => widget.isHabitation ? form.draftHabitationQuery : form.draftVilleQuery;
 
   void _onControllerChanged() => setState(() {});
 
@@ -110,9 +107,7 @@ class _OnboardingQuestionnaireLocationStepState
                   controller: _controller,
                   onChanged: _onQueryChanged,
                   // A11y 9.12 : la commune d'habitation peut être proposée par le téléphone.
-                  autofillHints: widget.isHabitation
-                      ? const [AutofillHints.addressCity]
-                      : null,
+                  autofillHints: widget.isHabitation ? const [AutofillHints.addressCity] : null,
                   suffixIcon: _controller.text.isNotEmpty
                       ? ExcludeSemantics(
                           child: IconButton(
@@ -229,8 +224,7 @@ class _OnboardingQuestionnaireLocationStepState
               max: _rayonMax.toDouble(),
               divisions: 9,
               size: DsfrComponentSize.md,
-              valueLabelBuilder: (value) =>
-                  Strings.onboardingQuestionnaireRayonValue(value.round()),
+              valueLabelBuilder: (value) => Strings.onboardingQuestionnaireRayonValue(value.round()),
               showMinMaxLabels: true,
               onChanged: form.updateRayon,
             ),
@@ -244,8 +238,7 @@ class _OnboardingQuestionnaireLocationStepState
   static const int _rayonMax = 100;
   static const int _rayonStep = 10;
 
-  int _nextRayon(int current, int direction) =>
-      (current + direction * _rayonStep).clamp(_rayonMin, _rayonMax);
+  int _nextRayon(int current, int direction) => (current + direction * _rayonStep).clamp(_rayonMin, _rayonMax);
 
   void _clearQuery() {
     _debounce?.cancel();
@@ -273,10 +266,11 @@ class _OnboardingQuestionnaireLocationStepState
         _focusedSuggestion = null;
       });
       // A11y 5.4 : la liste apparaît sous le champ, son arrivée est annoncée.
-      if (results.isNotEmpty)
+      if (results.isNotEmpty) {
         A11yUtils.announce(
           Strings.onboardingQuestionnaireCommunesA11y(results.length),
         );
+      }
     });
   }
 
@@ -317,8 +311,7 @@ class _OnboardingQuestionnaireLocationStepState
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
       }
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
+      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
         _failGeolocation(
           OnboardingQuestionnaireGeolocationFailure.permissionRefusee,
         );

@@ -3,7 +3,9 @@ import 'package:mocktail/mocktail.dart';
 import 'package:pass_emploi_app/features/auto_inscription/auto_inscription_actions.dart';
 import 'package:pass_emploi_app/features/comptage_des_heures/comptage_des_heures_actions.dart';
 import 'package:pass_emploi_app/features/comptage_des_heures/comptage_des_heures_state.dart';
+import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_actions.dart';
 import 'package:pass_emploi_app/features/user_action/create/user_action_create_actions.dart';
+import 'package:pass_emploi_app/models/date/interval.dart';
 
 import '../../doubles/fixtures.dart';
 import '../../doubles/mocks.dart';
@@ -56,6 +58,71 @@ void main() {
             .store((f) => {f.comptageDesHeuresRepository = repository});
 
         sut.thenExpectChangingStatesThroughOrder([]);
+      });
+    });
+
+    group("when current period of mon suivi is loaded", () {
+      final monSuiviAvecComptage = mockMonSuivi(peutVoirLeComptageDesHeures: true);
+      final interval = Interval(DateTime(2024, 1, 29), DateTime(2024, 3, 3));
+
+      group("and user can see comptage des heures", () {
+        sut.whenDispatchingAction(() => MonSuiviSuccessAction(MonSuiviPeriod.current, interval, monSuiviAvecComptage));
+
+        test('should load comptage des heures', () {
+          when(() => repository.get(userId: any(named: "userId"))).thenAnswer((_) async => mockComptageDesHeures());
+
+          sut.givenStore = givenState() //
+              .loggedInMiloUser()
+              .store((f) => {f.comptageDesHeuresRepository = repository});
+
+          sut.thenExpectChangingStatesThroughOrder([_shouldSucceed()]);
+        });
+
+        test('should load comptage des heures again after a failure', () {
+          when(() => repository.get(userId: any(named: "userId"))).thenAnswer((_) async => mockComptageDesHeures());
+
+          sut.givenStore = givenState() //
+              .loggedInMiloUser()
+              .withComptageDesHeuresFailure()
+              .store((f) => {f.comptageDesHeuresRepository = repository});
+
+          sut.thenExpectChangingStatesThroughOrder([_shouldSucceed()]);
+        });
+      });
+
+      test('should not load comptage des heures again once loaded', () async {
+        final repository = MockComptageDesHeuresRepository();
+        final store = givenState() //
+            .loggedInMiloUser()
+            .withComptageDesHeuresSuccess(comptageDesHeures: mockComptageDesHeures())
+            .store((f) => {f.comptageDesHeuresRepository = repository});
+
+        await store.dispatch(MonSuiviSuccessAction(MonSuiviPeriod.current, interval, monSuiviAvecComptage));
+
+        verifyNever(() => repository.get(userId: any(named: "userId")));
+      });
+
+      test('should not load comptage des heures when user cannot see it', () async {
+        final repository = MockComptageDesHeuresRepository();
+        final store = givenState() //
+            .loggedInMiloUser()
+            .store((f) => {f.comptageDesHeuresRepository = repository});
+
+        await store.dispatch(MonSuiviSuccessAction(MonSuiviPeriod.current, interval, mockMonSuivi()));
+
+        verifyNever(() => repository.get(userId: any(named: "userId")));
+      });
+
+      test('should not load comptage des heures when another period is loaded', () async {
+        final repository = MockComptageDesHeuresRepository();
+        final store = givenState() //
+            .loggedInMiloUser()
+            .monSuivi(interval: interval, monSuivi: monSuiviAvecComptage)
+            .store((f) => {f.comptageDesHeuresRepository = repository});
+
+        await store.dispatch(MonSuiviSuccessAction(MonSuiviPeriod.next, interval, monSuiviAvecComptage));
+
+        verifyNever(() => repository.get(userId: any(named: "userId")));
       });
     });
 
