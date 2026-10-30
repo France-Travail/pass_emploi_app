@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/features/alerte/delete/alerte_delete_actions.dar
 import 'package:pass_emploi_app/presentation/alerte/alerte_delete_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 
 enum AlerteType { EMPLOI, ALTERNANCE, IMMERSION, SERVICE_CIVIQUE }
@@ -30,7 +31,7 @@ class AlerteDeleteDialog extends StatelessWidget {
       useSafeArea: true,
       routeSettings: RouteSettings(name: _screenName(type)),
       builder: (context) => Theme(
-        data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
         child: DsfrModal(
           isDismissible: true,
           closeLabel: Strings.close,

@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/pages/demarche/create_demarche/create_demarche_s
 import 'package:pass_emploi_app/presentation/user_action/postuler_confirmation_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/create_user_action_confirmation_offre_suivi_page.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
@@ -29,7 +30,7 @@ class PostulerConfirmationPage extends StatelessWidget {
         final isDarkMode = Theme.of(context).brightness == Brightness.dark;
         final backgroundColor = DsfrColorDecisions.backgroundDefaultGrey(context);
         return Theme(
-          data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+          data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
           child: Scaffold(
             backgroundColor: backgroundColor,
             appBar: SecondaryAppBar(title: Strings.offrePostuleeConfirmationAppBar, backgroundColor: backgroundColor),

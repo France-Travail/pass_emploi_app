@@ -33,7 +33,7 @@ class PartageMessage extends StatelessWidget {
       isPj: false,
       isMyMessage: item.sender == Sender.jeune,
       caption: item.caption,
-      captionColor: item.captionColor,
+      isCaptionError: item.isCaptionError,
     );
   }
 }

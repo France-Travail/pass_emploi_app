@@ -11,11 +11,12 @@ import 'package:pass_emploi_app/pages/demarche/demarche_detail_bottom_sheet.dart
 import 'package:pass_emploi_app/pages/demarche/demarche_done_bottom_sheet.dart';
 import 'package:pass_emploi_app/presentation/demarche/demarche_detail_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
+import 'package:pass_emploi_app/presentation/model/formatted_text.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/confetti_wrapper.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
-import 'package:pass_emploi_app/widgets/date_echeance_in_detail.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/loading_overlay.dart';
@@ -175,12 +176,7 @@ class _Body extends StatelessWidget {
           _Attributs(viewModel.attributs),
         ],
         const SizedBox(height: DsfrSpacings.s2w),
-        DateEcheanceInDetail(
-          icons: viewModel.dateIcons,
-          formattedTexts: viewModel.dateFormattedTexts,
-          backgroundColor: viewModel.dateBackgroundColor,
-          textColor: viewModel.dateTextColor,
-        ),
+        _DateEcheance(viewModel.dateFormattedTexts),
         const SizedBox(height: DsfrSpacings.s2w),
         Divider(
           height: 1,
@@ -224,6 +220,23 @@ class _AttributItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: DsfrSpacings.s2w),
       child: DsfrDetailIconLine(icon: DsfrIcons.mapMapPin2Line, text: label),
+    );
+  }
+}
+
+/// Même présentation que la date du détail d'une action : le retard est signalé par le badge « En retard ».
+class _DateEcheance extends StatelessWidget {
+  final List<FormattedText> formattedTexts;
+
+  const _DateEcheance(this.formattedTexts);
+
+  @override
+  Widget build(BuildContext context) {
+    final text = formattedTexts.map((formattedText) => formattedText.value).join();
+    return DsfrDetailIconLine(
+      icon: DsfrIcons.businessCalendarEventLine,
+      text: text,
+      semanticsLabel: text.toDateForScreenReaders(),
     );
   }
 }

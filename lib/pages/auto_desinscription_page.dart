@@ -10,6 +10,7 @@ import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_state_source.
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
@@ -41,7 +42,7 @@ class DesinscriptionPage extends StatelessWidget {
         final isDarkMode = Theme.of(context).brightness == Brightness.dark;
         final backgroundColor = DsfrColorDecisions.backgroundDefaultGrey(context);
         return Theme(
-          data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+          data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
           child: Scaffold(
             backgroundColor: backgroundColor,
             appBar: SecondaryAppBar(

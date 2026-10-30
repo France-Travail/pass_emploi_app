@@ -12,7 +12,7 @@ class ChatLocalFile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChatMessageContainer(
       caption: message.caption,
-      captionColor: message.captionColor,
+      isCaptionError: message.isCaptionError,
       captionSuffixIcon: message.captionSuffixIcon,
       isMyMessage: true,
       isPj: true,

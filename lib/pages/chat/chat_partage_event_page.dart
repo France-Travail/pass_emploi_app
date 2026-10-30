@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/presentation/chat/chat_partage_event_view_model.
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/widgets/confetti_wrapper.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
@@ -54,7 +55,7 @@ class _Builder extends StatelessWidget {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = DsfrColorDecisions.backgroundDefaultGrey(context);
     return Theme(
-      data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+      data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
       child: Scaffold(
         backgroundColor: backgroundColor,
         appBar: SecondaryAppBar(

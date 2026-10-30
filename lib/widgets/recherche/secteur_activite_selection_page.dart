@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/models/evenement_emploi/secteur_activite.dart';
 import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/radio_list_tile.dart';
 import 'package:pass_emploi_app/widgets/text_form_fields/utils/multiline_app_bar.dart';
 
@@ -70,8 +70,10 @@ class _SecteurActiviteSelectionPageState extends State<SecteurActiviteSelectionP
         width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
-          child: PrimaryActionButton(
+          child: DsfrButton(
             label: Strings.validateButtonTitle,
+            variant: DsfrButtonVariant.primary,
+            size: DsfrComponentSize.lg,
             onPressed: () => Navigator.pop(context, _selectedValue),
           ),
         ),

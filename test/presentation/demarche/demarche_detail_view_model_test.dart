@@ -5,8 +5,6 @@ import 'package:pass_emploi_app/models/demarche.dart';
 import 'package:pass_emploi_app/presentation/demarche/demarche_detail_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/model/formatted_text.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
 
 import '../../doubles/fixtures.dart';
 import '../../doubles/spies.dart';
@@ -52,9 +50,6 @@ void main() {
           FormattedText("28/04/2032", bold: true),
         ],
       );
-      expect(viewModel.dateBackgroundColor, AppColors.accent3Lighten);
-      expect(viewModel.dateTextColor, AppColors.accent2);
-      expect(viewModel.dateIcons, [AppIcons.schedule_rounded]);
       expect(viewModel.label, "label");
       expect(viewModel.titreDetail, "titre");
       expect(viewModel.creationDate, "23/12/2022");
@@ -80,9 +75,6 @@ void main() {
           FormattedText("28/04/2021", bold: true),
         ],
       );
-      expect(viewModel.dateBackgroundColor, AppColors.warningLighten);
-      expect(viewModel.dateTextColor, AppColors.warning);
-      expect(viewModel.dateIcons, [AppIcons.schedule_rounded]);
     });
 
     test("not up to date", () {

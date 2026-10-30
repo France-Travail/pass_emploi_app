@@ -18,6 +18,7 @@ import 'package:pass_emploi_app/presentation/recherche/bloc_resultat_recherche_v
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/recherche/actions_recherche.dart';
@@ -86,7 +87,7 @@ class _RechercheOffrePageState<Result> extends State<RechercheOffrePage<Result>>
     return Tracker(
       tracking: AnalyticsScreenNames.rechercheInitiale(widget.analyticsType()),
       child: Theme(
-        data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
         child: Builder(
           builder: (context) {
             final backgroundColor = DsfrColorDecisions.backgroundDefaultGrey(context);

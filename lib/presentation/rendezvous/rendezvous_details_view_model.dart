@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/auto_inscription/auto_inscription_actions.dart';
 import 'package:pass_emploi_app/features/chat/messages/chat_actions.dart';
@@ -17,7 +16,6 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_state_source.dart';
 import 'package:pass_emploi_app/presentation/rendezvous/rendezvous_store_extension.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/date_extensions.dart';
 import 'package:pass_emploi_app/utils/platform.dart';
@@ -34,7 +32,7 @@ class RendezvousDetailsViewModel extends Equatable {
   final String date;
   final String hourAndDuration;
   final String conseillerPresenceLabel;
-  final Color conseillerPresenceColor;
+  final bool isConseillerPresent;
   final bool isAnnule;
   final bool isInscrit;
   final bool isComplet;
@@ -73,7 +71,7 @@ class RendezvousDetailsViewModel extends Equatable {
     required this.date,
     required this.hourAndDuration,
     required this.conseillerPresenceLabel,
-    required this.conseillerPresenceColor,
+    required this.isConseillerPresent,
     required this.isInscrit,
     required this.isComplet,
     required this.isAnnule,
@@ -139,9 +137,7 @@ class RendezvousDetailsViewModel extends Equatable {
       conseillerPresenceLabel: isConseillerPresent
           ? Strings.conseillerIsPresent
           : Strings.conseillerIsNotPresent,
-      conseillerPresenceColor: isConseillerPresent
-          ? AppColors.success
-          : AppColors.warning,
+      isConseillerPresent: isConseillerPresent,
       isInscrit: isInscrit,
       isComplet: _isComplet(rdv, isInscrit),
       isAnnule: rdv.isAnnule,
@@ -191,7 +187,7 @@ class RendezvousDetailsViewModel extends Equatable {
       date: '',
       hourAndDuration: '',
       conseillerPresenceLabel: '',
-      conseillerPresenceColor: AppColors.transparent,
+      isConseillerPresent: false,
       isInscrit: false,
       isComplet: false,
       isAnnule: false,
@@ -220,7 +216,7 @@ class RendezvousDetailsViewModel extends Equatable {
       date,
       hourAndDuration,
       conseillerPresenceLabel,
-      conseillerPresenceColor,
+      isConseillerPresent,
       isInscrit,
       isComplet,
       isAnnule,

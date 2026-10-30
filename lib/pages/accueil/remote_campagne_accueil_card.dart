@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/presentation/accueil/accueil_item.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
-import 'package:pass_emploi_app/widgets/pressed_tip.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_dismissible_tile.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_tuile_card.dart';
 
 class RemoteCampagneAccueilCard extends StatelessWidget {
   const RemoteCampagneAccueilCard(this.item);
@@ -16,51 +13,17 @@ class RemoteCampagneAccueilCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      child: CardContainer(
-        padding: EdgeInsets.zero,
-        onTap: () {
-          PassEmploiMatomoTracker.instance.trackOutlink(item.url);
-          launchExternalUrl(item.url);
-        },
-        child: Stack(
-          children: [
-            Padding(
-              padding: EdgeInsets.all(Margins.spacing_base),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          item.title,
-                          style: TextStyles.textBaseBold.copyWith(color: context.content),
-                        ),
-                      ),
-                      SizedBox(width: Margins.spacing_m),
-                    ],
-                  ),
-                  SizedBox(height: Margins.spacing_s),
-                  PressedTip.externalLink(
-                    item.cta,
-                    textColor: context.content,
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              top: 0,
-              right: 0,
-              child: IconButton(
-                tooltip: "${Strings.closeDialog} ${item.title}",
-                onPressed: item.onDismissed,
-                icon: Icon(AppIcons.close_rounded, color: context.content),
-              ),
-            ),
-          ],
-        ),
-      ),
+    return DsfrDismissibleTile(
+      title: item.title,
+      description: item.cta,
+      leading: DsfrTuileCardIcon(icon: DsfrIcons.systemExternalLinkLine),
+      onTap: () {
+        PassEmploiMatomoTracker.instance.trackOutlink(item.url);
+        launchExternalUrl(item.url);
+      },
+      onDismiss: item.onDismissed,
+      dismissSemanticLabel: "${Strings.closeDialog} ${item.title}",
+      semanticsLink: true,
     );
   }
 }

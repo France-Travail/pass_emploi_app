@@ -12,6 +12,7 @@ import 'package:pass_emploi_app/presentation/user_action/user_action_create_view
 import 'package:pass_emploi_app/presentation/user_action/user_action_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 
 class DuplicateUserActionPage extends StatelessWidget {
@@ -85,7 +86,7 @@ class _Body extends StatelessWidget {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = DsfrColorDecisions.backgroundDefaultGrey(context);
     return Theme(
-      data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+      data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
       child: Stack(
         children: [
           Scaffold(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
@@ -7,16 +9,11 @@ import 'package:pass_emploi_app/features/module_feedback/module_feedback_actions
 import 'package:pass_emploi_app/models/feedback_activation.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/media_sizes.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
-import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
-import 'package:pass_emploi_app/widgets/text_form_fields/base_text_form_field.dart';
 
 // THEME
 enum _Feedback {
@@ -53,6 +50,8 @@ enum _Feedback {
   const _Feedback({required this.icon, required this.semantics, required this.analyticsEvent});
 }
 
+const _commentaireMaxLength = 255;
+
 enum _WidgetState {
   feedback,
   commentaire,
@@ -64,7 +63,6 @@ class InAppFeedback extends StatefulWidget {
   final String feature;
   final String label;
   final EdgeInsetsGeometry padding;
-  final Color backgroundColor;
   final Widget? disabledPlaceholder;
   final List<String>? responses;
 
@@ -72,7 +70,6 @@ class InAppFeedback extends StatefulWidget {
     required this.feature,
     required this.label,
     this.padding = EdgeInsets.zero,
-    this.backgroundColor = AppColors.primaryLighten,
     this.disabledPlaceholder,
     this.responses,
   });
@@ -123,7 +120,6 @@ class _InAppFeedbackState extends State<InAppFeedback> with TickerProviderStateM
           feature: widget.feature,
           label: widget.label,
           padding: widget.padding,
-          backgroundColor: widget.backgroundColor,
           commentaireEnabled: activation?.commentaireEnabled ?? false,
           dismissable: activation?.dismissable ?? true,
           onDismiss: activation?.dismissable ?? true ? () => _shouldDismiss = true : () {},
@@ -140,7 +136,6 @@ class _InAppFeedbackWidget extends StatefulWidget {
   final String feature;
   final String label;
   final EdgeInsetsGeometry padding;
-  final Color backgroundColor;
   final bool commentaireEnabled;
   final bool dismissable;
   final VoidCallback onDismiss;
@@ -150,7 +145,6 @@ class _InAppFeedbackWidget extends StatefulWidget {
     required this.feature,
     required this.label,
     required this.padding,
-    required this.backgroundColor,
     required this.commentaireEnabled,
     required this.dismissable,
     required this.onDismiss,
@@ -165,6 +159,12 @@ class _InAppFeedbackWidgetState extends State<_InAppFeedbackWidget> {
   _WidgetState state = _WidgetState.feedback;
   _Feedback? selectedFeedback;
   final TextEditingController _commentaireController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _commentaireController.addListener(() => setState(() {}));
+  }
 
   @override
   void dispose() {
@@ -204,13 +204,11 @@ class _InAppFeedbackWidgetState extends State<_InAppFeedbackWidget> {
           child: Stack(
             children: [
               _BorderedContainer(
-                backgroundColor: widget.backgroundColor,
                 child: Column(
                   children: [
-                    _Description(icon: AppIcons.help, label: widget.label),
+                    _Description(icon: DsfrIcons.systemQuestionLine, label: widget.label),
                     SizedBox(height: Margins.spacing_m),
                     _FeedbackOptionsGroup(
-                      backgroundColor: widget.backgroundColor,
                       tracking: widget.feature,
                       onOptionTap: (feedback) {
                         selectedFeedback = feedback;
@@ -259,21 +257,42 @@ class _InAppFeedbackWidgetState extends State<_InAppFeedbackWidget> {
           child: Stack(
             children: [
               _BorderedContainer(
-                backgroundColor: widget.backgroundColor,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _Description(label: Strings.feedbackCommentaire),
-                    SizedBox(height: Margins.spacing_m),
-                    BaseTextField(
-                      controller: _commentaireController,
-                      maxLength: 255,
-                      maxLines: 3,
+                    // Comme DsfrInput : la question est le nom du champ pour les lecteurs d'écran.
+                    MergeSemantics(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _Description(label: Strings.feedbackCommentaire),
+                          SizedBox(height: Margins.spacing_m),
+                          DsfrInputHeadless(
+                            controller: _commentaireController,
+                            keyboardType: TextInputType.multiline,
+                            textCapitalization: TextCapitalization.sentences,
+                            minLines: 3,
+                            maxLines: 3,
+                            // Pas de maxLength : rendu DSFR cassé, voir https://github.com/Octo-Open-Source/flutter-dsfr/issues/150
+                            inputFormatters: [LengthLimitingTextInputFormatter(_commentaireMaxLength)],
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: DsfrSpacings.s1v),
+                    ExcludeSemantics(
+                      child: Text(
+                        '${_commentaireController.text.length}/$_commentaireMaxLength',
+                        textAlign: TextAlign.end,
+                        style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textMentionGrey(context)),
+                      ),
                     ),
                     SizedBox(height: Margins.spacing_base),
-                    PrimaryActionButton(
+                    DsfrButton(
                       onPressed: _submitFeedback,
                       label: Strings.submitFeedback,
+                      variant: DsfrButtonVariant.primary,
+                      size: DsfrComponentSize.md,
                     ),
                   ],
                 ),
@@ -290,7 +309,6 @@ class _InAppFeedbackWidgetState extends State<_InAppFeedbackWidget> {
           key: ValueKey<String>('${widget.feature}-2'),
           padding: widget.padding,
           child: _Thanks(
-            backgroundColor: widget.backgroundColor,
             onPressed: () => setState(() => state = _WidgetState.closed),
           ),
         ),
@@ -308,12 +326,13 @@ class _Description extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color = DsfrColorDecisions.textTitleBlueFrance(context);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (icon != null) ...[Icon(icon, color: AppColors.primary), SizedBox(width: Margins.spacing_s)],
+        if (icon != null) ...[Icon(icon, color: color), SizedBox(width: Margins.spacing_s)],
         Flexible(
-          child: Text(label, style: TextStyles.textSBold.copyWith(color: AppColors.primary)),
+          child: Text(label, style: DsfrTextStyle.bodySmBold(color: color)),
         ),
         // Extra margin is added to avoid the close button to be too close to the text
         SizedBox(width: 30),
@@ -323,11 +342,10 @@ class _Description extends StatelessWidget {
 }
 
 class _FeedbackOptionsGroup extends StatelessWidget {
-  final Color backgroundColor;
   final Function(_Feedback) onOptionTap;
   final String tracking;
 
-  const _FeedbackOptionsGroup({required this.backgroundColor, required this.onOptionTap, required this.tracking});
+  const _FeedbackOptionsGroup({required this.onOptionTap, required this.tracking});
 
   @override
   Widget build(BuildContext context) {
@@ -340,27 +358,22 @@ class _FeedbackOptionsGroup extends StatelessWidget {
           children: [
             _FeedbackOption(
               feedback: _Feedback.feedback1,
-              backgroundColor: backgroundColor,
               onTap: () => onOptionTap(_Feedback.feedback1),
             ),
             _FeedbackOption(
               feedback: _Feedback.feedback2,
-              backgroundColor: backgroundColor,
               onTap: () => onOptionTap(_Feedback.feedback2),
             ),
             _FeedbackOption(
               feedback: _Feedback.feedback3,
-              backgroundColor: backgroundColor,
               onTap: () => onOptionTap(_Feedback.feedback3),
             ),
             _FeedbackOption(
               feedback: _Feedback.feedback4,
-              backgroundColor: backgroundColor,
               onTap: () => onOptionTap(_Feedback.feedback4),
             ),
             _FeedbackOption(
               feedback: _Feedback.feedback5,
-              backgroundColor: backgroundColor,
               onTap: () => onOptionTap(_Feedback.feedback5),
             ),
           ],
@@ -370,40 +383,46 @@ class _FeedbackOptionsGroup extends StatelessWidget {
   }
 }
 
-class _FeedbackOption extends StatelessWidget {
+class _FeedbackOption extends StatefulWidget {
   final _Feedback feedback;
-  final Color backgroundColor;
   final VoidCallback onTap;
 
   const _FeedbackOption({
     required this.feedback,
-    required this.backgroundColor,
     required this.onTap,
   });
 
   @override
+  State<_FeedbackOption> createState() => _FeedbackOptionState();
+}
+
+class _FeedbackOptionState extends State<_FeedbackOption> {
+  bool _focused = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Focus(
-      child: Semantics(
-        label: feedback.semantics,
-        button: true,
+    final color = DsfrColorDecisions.textActionHighBlueFrance(context);
+    return Semantics(
+      label: widget.feedback.semantics,
+      button: true,
+      // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material.
+      child: DsfrFocusWidget(
+        isFocused: _focused,
         child: Material(
-          color: backgroundColor,
-          clipBehavior: Clip.hardEdge,
-          borderRadius: BorderRadius.circular(Dimens.radius_base),
+          color: DsfrColorDecisions.backgroundAltBlueFrance(context),
           child: InkWell(
-            splashColor: AppColors.primary,
-            onTap: onTap,
+            onTap: widget.onTap,
+            onFocusChange: (focused) => setState(() => _focused = focused),
+            focusColor: DsfrColorDecisions.backgroundTransparent(context),
             child: DecoratedBox(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(Dimens.radius_base),
-                border: Border.all(color: AppColors.primary),
+                border: Border.all(color: DsfrColorDecisions.borderActionHighBlueFrance(context)),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_s, vertical: Margins.spacing_base),
                 child: Icon(
-                  feedback.icon,
-                  color: AppColors.primary,
+                  widget.feedback.icon,
+                  color: color,
                   size: 32,
                 ),
               ),
@@ -431,7 +450,10 @@ class _FeedbackCaption extends StatelessWidget {
             alignment: Alignment.topLeft,
             child: SizedBox(
               width: maxWidthForLargeTextScale,
-              child: Text(responses[0], style: TextStyles.textSMedium(color: context.grey800)),
+              child: Text(
+                responses[0],
+                style: DsfrTextStyle.bodySmMedium(color: DsfrColorDecisions.textDefaultGrey(context)),
+              ),
             ),
           ),
           Align(
@@ -440,7 +462,10 @@ class _FeedbackCaption extends StatelessWidget {
               width: maxWidthForLargeTextScale,
               child: Align(
                 alignment: Alignment.topCenter,
-                child: Text(responses[1], style: TextStyles.textSMedium(color: context.grey800)),
+                child: Text(
+                  responses[1],
+                  style: DsfrTextStyle.bodySmMedium(color: DsfrColorDecisions.textDefaultGrey(context)),
+                ),
               ),
             ),
           ),
@@ -450,7 +475,10 @@ class _FeedbackCaption extends StatelessWidget {
               width: maxWidthForLargeTextScale,
               child: Align(
                 alignment: Alignment.topRight,
-                child: Text(responses[2], style: TextStyles.textSMedium(color: context.grey800)),
+                child: Text(
+                  responses[2],
+                  style: DsfrTextStyle.bodySmMedium(color: DsfrColorDecisions.textDefaultGrey(context)),
+                ),
               ),
             ),
           ),
@@ -471,9 +499,11 @@ class _CloseButton extends StatelessWidget {
       alignment: Alignment.topRight,
       child: Padding(
         padding: const EdgeInsets.all(Margins.spacing_xs),
-        child: IconButton(
-          icon: Icon(AppIcons.close_rounded, color: context.content),
-          tooltip: Strings.close,
+        child: DsfrButton(
+          icon: DsfrIcons.systemCloseLine,
+          iconSemanticLabel: Strings.close,
+          variant: DsfrButtonVariant.tertiaryWithoutBorder,
+          size: DsfrComponentSize.md,
           onPressed: onPressed,
         ),
       ),
@@ -482,18 +512,16 @@ class _CloseButton extends StatelessWidget {
 }
 
 class _Thanks extends StatelessWidget {
-  final Color backgroundColor;
   final VoidCallback onPressed;
 
-  const _Thanks({required this.backgroundColor, required this.onPressed});
+  const _Thanks({required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         _BorderedContainer(
-          backgroundColor: backgroundColor,
-          child: _Description(icon: AppIcons.check_circle_outline_rounded, label: Strings.feedbackThanks),
+          child: _Description(icon: DsfrIcons.systemCheckboxCircleLine, label: Strings.feedbackThanks),
         ),
         _CloseButton(onPressed: onPressed),
       ],
@@ -503,17 +531,13 @@ class _Thanks extends StatelessWidget {
 
 class _BorderedContainer extends StatelessWidget {
   final Widget child;
-  final Color backgroundColor;
 
-  const _BorderedContainer({required this.child, required this.backgroundColor});
+  const _BorderedContainer({required this.child});
 
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(Dimens.radius_base),
-      ),
+      decoration: BoxDecoration(color: DsfrColorDecisions.backgroundAltBlueFrance(context)),
       child: Padding(
         padding: const EdgeInsets.all(Margins.spacing_base),
         child: child,

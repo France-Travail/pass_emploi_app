@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
-import 'package:pass_emploi_app/ui/margins.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 
 final GlobalKey<ScaffoldMessengerState> snackBarKey = GlobalKey<ScaffoldMessengerState>();
@@ -11,55 +8,30 @@ final GlobalKey<ScaffoldMessengerState> modeDemoSnackBarKey = GlobalKey<Scaffold
 
 @Deprecated('Do not use snackbar for a11y reasons')
 void showSnackBarWithSuccess(BuildContext context, String label, [VoidCallback? onActionTap]) {
-  _showSnackBar(
-    context: context,
-    icon: AppIcons.check_circle_rounded,
-    label: label,
-    backgroundColor: AppColors.successLighten,
-    textColor: AppColors.success,
-    onActionTap: onActionTap,
-  );
+  _showSnackBar(context: context, type: DsfrAlertType.success, label: label, onActionTap: onActionTap);
 }
 
 void showSnackBarWithInformation(BuildContext context, String label) {
-  _showSnackBar(
-    context: context,
-    icon: AppIcons.info_rounded,
-    label: label,
-    backgroundColor: AppColors.primaryLighten,
-    textColor: AppColors.primary,
-    onActionTap: null,
-  );
+  _showSnackBar(context: context, type: DsfrAlertType.info, label: label, onActionTap: null);
 }
 
 void showSnackBarWithSystemError(BuildContext context, [String? label]) {
   _showSnackBar(
     context: context,
-    icon: AppIcons.highlight_off,
+    type: DsfrAlertType.error,
     label: label ?? Strings.miscellaneousErrorRetry,
-    backgroundColor: AppColors.disabled,
-        textColor: AppColors.contentOnPrimary,
     onActionTap: null,
   );
 }
 
 void showSnackBarWithUserError(BuildContext context, String label) {
-  _showSnackBar(
-    context: context,
-    icon: AppIcons.error_rounded,
-    label: label,
-    backgroundColor: AppColors.warningLighten,
-    textColor: AppColors.warning,
-    onActionTap: null,
-  );
+  _showSnackBar(context: context, type: DsfrAlertType.error, label: label, onActionTap: null);
 }
 
 void _showSnackBar({
   required BuildContext context,
-  required IconData icon,
+  required DsfrAlertType type,
   required String label,
-  required Color backgroundColor,
-  required Color textColor,
   required VoidCallback? onActionTap,
 }) {
   clearAllSnackBars();
@@ -68,41 +40,54 @@ void _showSnackBar({
       // a11y : 11.1 - bloquant: Le message de succès disparaît automatiquement après quelques secondes
       duration: Duration(minutes: 60),
       behavior: SnackBarBehavior.floating,
-      backgroundColor: backgroundColor,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      padding: EdgeInsets.zero,
+      // AutoFocusA11y pose un Semantics(container: true, explicitChildNodes: true) : sans lui, la snackbar fusionne
+      // le message et la croix en un seul bouton pour le lecteur d'écran.
       content: AutoFocusA11y(
         // a11y : 11.1 - bloquant: Pour s'assurer que le focus reste sur la snackbar même en cas de changement d'écran
         duration: Duration(milliseconds: 500),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, color: textColor),
-            SizedBox(width: Margins.spacing_s),
-            Expanded(
-              child: Text(label, style: TextStyles.textSMedium(color: textColor)),
-            ),
-            SizedBox(width: Margins.spacing_s),
-            if (onActionTap == null)
-              IconButton(
-                icon: Icon(AppIcons.close_rounded, color: textColor, semanticLabel: Strings.closeInformationMessage),
-                onPressed: () => clearAllSnackBars(),
-                alignment: Alignment.topRight,
-                padding: EdgeInsets.zero,
-              ),
-          ],
+        child: ColoredBox(
+          color: DsfrColorDecisions.backgroundDefaultGrey(context),
+          child: DsfrAlert(
+            type: type,
+            description: onActionTap == null
+                ? DsfrAlertDescriptionText(label)
+                : DsfrAlertDescriptionWidget(_SnackBarDescriptionWithAction(label: label, onActionTap: onActionTap)),
+            semanticCloseLabel: Strings.closeInformationMessage,
+            onClose: onActionTap == null ? clearAllSnackBars : null,
+          ),
         ),
       ),
-      action: onActionTap != null
-          ? SnackBarAction(
-              label: Strings.consulter,
-              textColor: textColor,
-              onPressed: () {
-                clearAllSnackBars();
-                onActionTap.call();
-              },
-            )
-          : null,
     ),
   );
+}
+
+class _SnackBarDescriptionWithAction extends StatelessWidget {
+  const _SnackBarDescriptionWithAction({required this.label, required this.onActionTap});
+
+  final String label;
+  final VoidCallback onActionTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context))),
+        const SizedBox(height: DsfrSpacings.s1w),
+        DsfrLink(
+          label: Strings.consulter,
+          size: DsfrComponentSize.md,
+          onTap: () {
+            clearAllSnackBars();
+            onActionTap();
+          },
+        ),
+      ],
+    );
+  }
 }
 
 void clearAllSnackBars() {

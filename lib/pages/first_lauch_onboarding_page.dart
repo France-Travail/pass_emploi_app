@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/media_sizes.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/drawables/app_logo.dart';
@@ -32,7 +33,7 @@ class _FirstLaunchOnboardingPageState extends State<FirstLaunchOnboardingPage> {
     return Tracker(
       tracking: AnalyticsScreenNames.onboardingFirstLaunch,
       child: Theme(
-        data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
         child: AnimatedSwitcher(
           duration: AnimationDurations.medium,
           child: _firstScreen

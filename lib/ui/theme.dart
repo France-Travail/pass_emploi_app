@@ -1,70 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 
+/// Thème de l'application, aligné sur le DSFR en clair et en sombre.
+///
+/// Les DsfrColorDecisions demandent un BuildContext : chaque couleur reprend donc les jetons de la décision citée.
+/// Roues de chargement, calendrier, curseur et poignées de sélection prennent `colorScheme.primary` (bleu France).
 class PassEmploiTheme {
-  static final data = ThemeData(
-    // colorScheme is particularly useful to theme Android DatePicker dialogs
-    colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
-    checkboxTheme: _checkboxes(),
-    sliderTheme: _sliders(),
-    progressIndicatorTheme: _progress(),
-    radioTheme: RadioThemeData(
-      fillColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-        return states.contains(WidgetState.selected) ? AppColors.primary : null;
-      }),
-    ),
-    switchTheme: SwitchThemeData(
-      thumbColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) => AppColors.contentOnPrimary),
-      trackColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-        if (states.contains(WidgetState.disabled)) return AppColors.grey700Light;
-        if (states.contains(WidgetState.selected)) return AppColors.success;
-        return null;
-      }),
-    ),
-  );
+  static final data = _theme(Brightness.light);
+  static final darkData = _theme(Brightness.dark);
 
-  static final darkData = ThemeData(
-    brightness: Brightness.dark,
-    colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary, brightness: Brightness.dark),
-    checkboxTheme: _checkboxes(),
-    sliderTheme: _sliders(),
-    progressIndicatorTheme: _progress(),
-    radioTheme: RadioThemeData(
-      fillColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-        return states.contains(WidgetState.selected) ? AppColors.primary : null;
-      }),
-    ),
-    switchTheme: SwitchThemeData(
-      thumbColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) => AppColors.contentOnPrimary),
-      trackColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-        if (states.contains(WidgetState.disabled)) return AppColors.grey700Dark;
-        if (states.contains(WidgetState.selected)) return AppColors.success;
-        return null;
-      }),
-    ),
-  );
+  static ThemeData _theme(Brightness brightness) {
+    Color pick(Color light, Color dark) => brightness == Brightness.light ? light : dark;
 
-  static CheckboxThemeData _checkboxes() {
-    return CheckboxThemeData(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-      side: BorderSide(color: AppColors.contentLight, width: 2),
-    );
-  }
+    // backgroundActionHighBlueFrance, textActionHighBlueFrance
+    final blueFrance = pick(DsfrColors.blueFranceSun113, DsfrColors.blueFrance625);
+    // textInvertedBlueFrance
+    final onBlueFrance = pick(DsfrColors.blueFrance975, DsfrColors.blueFranceSun113);
+    // backgroundActionLowBlueFrance
+    final blueFranceLow = pick(DsfrColors.blueFrance925, DsfrColors.blueFrance125);
+    // textDefaultError
+    final error = pick(DsfrColors.error425, DsfrColors.error625);
+    // backgroundDefaultGrey
+    final background = pick(DsfrColors.grey1000, DsfrColors.grey50);
+    // backgroundRaisedGrey
+    final raised = pick(DsfrColors.grey1000, DsfrColors.grey75);
 
-  static SliderThemeData _sliders() {
-    return SliderThemeData(
-      trackHeight: 6.0,
-      activeTrackColor: AppColors.primary,
-      inactiveTrackColor: AppColors.grey800Light,
-      thumbColor: AppColors.primary,
-      activeTickMarkColor: AppColors.primary,
-      inactiveTickMarkColor: AppColors.grey800Light,
-    );
-  }
-
-  static ProgressIndicatorThemeData _progress() {
-    return ProgressIndicatorThemeData(
-      color: AppColors.primary,
+    return ThemeData(
+      brightness: brightness,
+      scaffoldBackgroundColor: background,
+      colorScheme: ColorScheme(
+        brightness: brightness,
+        primary: blueFrance,
+        onPrimary: onBlueFrance,
+        primaryContainer: blueFranceLow,
+        onPrimaryContainer: blueFrance,
+        secondary: blueFrance,
+        onSecondary: onBlueFrance,
+        secondaryContainer: blueFranceLow,
+        onSecondaryContainer: blueFrance,
+        error: error,
+        // textInvertedGrey
+        onError: pick(DsfrColors.grey1000, DsfrColors.grey50),
+        // backgroundContrastError
+        errorContainer: pick(DsfrColors.error950, DsfrColors.error100),
+        onErrorContainer: error,
+        surface: background,
+        // textTitleGrey
+        onSurface: pick(DsfrColors.grey50, DsfrColors.grey1000),
+        // textDefaultGrey
+        onSurfaceVariant: pick(DsfrColors.grey200, DsfrColors.grey850),
+        surfaceContainerLow: raised,
+        surfaceContainer: raised,
+        // backgroundOverlapGrey : fond des fenêtres et du calendrier
+        surfaceContainerHigh: pick(DsfrColors.grey1000, DsfrColors.grey100),
+        // backgroundContrastGrey
+        surfaceContainerHighest: pick(DsfrColors.grey950, DsfrColors.grey100),
+        // textMentionGrey
+        outline: pick(DsfrColors.grey425, DsfrColors.grey625),
+        // borderDefaultGrey
+        outlineVariant: pick(DsfrColors.grey900, DsfrColors.grey175),
+        inverseSurface: pick(DsfrColors.grey200, DsfrColors.grey850),
+        onInverseSurface: background,
+        inversePrimary: pick(DsfrColors.blueFrance625, DsfrColors.blueFranceSun113),
+        surfaceTint: Colors.transparent,
+      ),
     );
   }
 }

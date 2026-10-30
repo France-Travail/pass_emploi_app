@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
@@ -8,6 +7,7 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/immersion/immersion_filtres_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/filtres_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/buttons/filter_button.dart';
@@ -33,7 +33,7 @@ class _ImmersionFiltresPageState extends State<ImmersionFiltresPage> {
     return Tracker(
       tracking: AnalyticsScreenNames.immersionFiltres,
       child: Theme(
-        data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
         child: StoreConnector<AppState, ImmersionFiltresViewModel>(
           converter: (store) => ImmersionFiltresViewModel.create(store),
           builder: (context, viewModel) => _scaffold(viewModel),

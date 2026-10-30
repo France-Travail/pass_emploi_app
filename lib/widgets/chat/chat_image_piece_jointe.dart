@@ -45,7 +45,7 @@ class _Body extends StatelessWidget {
       isPj: true,
       isMyMessage: true,
       caption: item.caption,
-      captionColor: item.captionColor,
+      isCaptionError: item.isCaptionError,
     );
   }
 }

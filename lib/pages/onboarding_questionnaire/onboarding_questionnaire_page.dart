@@ -25,6 +25,7 @@ import 'package:pass_emploi_app/repositories/communes_repository.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:redux/redux.dart';
@@ -140,7 +141,7 @@ class _OnboardingQuestionnairePageState
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final keyboardOpen = _keyboardOpen;
     return Theme(
-      data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+      data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
       child: ListenableBuilder(
         listenable: _form,
         builder: (context, _) {
@@ -215,8 +216,8 @@ class _OnboardingQuestionnairePageState
       useSafeArea: true,
       builder: (context) => Theme(
         data: Theme.of(context).brightness == Brightness.dark
-            ? DsfrThemeData.dark()
-            : DsfrThemeData.light(),
+            ? PassEmploiTheme.darkData
+            : PassEmploiTheme.data,
         child: DsfrModal(
           isDismissible: true,
           closeLabel: Strings.close,

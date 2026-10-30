@@ -3,6 +3,7 @@ import 'package:flutter_dsfr/flutter_dsfr.dart' hide DsfrNotice;
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_app_bar.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_notice.dart';
 import 'package:pass_emploi_app/widgets/dsfr/emoji_tile.dart';
@@ -20,7 +21,7 @@ class OnboardingQuestionnaireUnderAgePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Theme(
-      data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+      data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
       child: Builder(
         builder: (context) {
           return Scaffold(

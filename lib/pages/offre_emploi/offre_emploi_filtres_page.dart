@@ -9,6 +9,7 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/offre_emploi/offre_emploi_filtres_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/filtres_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/buttons/filter_button.dart';
@@ -39,7 +40,7 @@ class _OffreEmploiFiltresPageState extends State<OffreEmploiFiltresPage> {
     return Tracker(
       tracking: widget.fromAlternance ? AnalyticsScreenNames.alternanceFiltres : AnalyticsScreenNames.emploiFiltres,
       child: Theme(
-        data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
         child: StoreConnector<AppState, OffreEmploiFiltresViewModel>(
           converter: (store) => OffreEmploiFiltresViewModel.create(store),
           builder: (context, viewModel) => _scaffold(viewModel),

@@ -261,7 +261,6 @@ class _AlertePageState extends State<AlertePage> {
       }
     });
   }
-
 }
 
 class _AlerteLoading extends StatelessWidget {

@@ -7,10 +7,13 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/date_extensions.dart';
 
 class PastDateChoice extends StatefulWidget {
-  const PastDateChoice({super.key, required this.title, required this.onDateChanged, this.aide});
+  const PastDateChoice({super.key, required this.title, required this.onDateChanged, this.aide, this.firstDate});
 
   final String title;
   final String? aide;
+
+  /// Date la plus ancienne proposée (suggestions et calendrier). Par défaut, un an avant aujourd'hui.
+  final DateTime? firstDate;
   final void Function(DateInputSource) onDateChanged;
 
   @override
@@ -36,7 +39,7 @@ class _PastDateChoiceState extends State<PastDateChoice> {
   @override
   Widget build(BuildContext context) {
     final aide = widget.aide;
-    final suggestions = DateSuggestionListViewModel.createPast(DateTime.now(), null).suggestions;
+    final suggestions = DateSuggestionListViewModel.createPast(DateTime.now(), widget.firstDate).suggestions;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -107,6 +110,7 @@ class _PastDateChoiceState extends State<PastDateChoice> {
               DsfrInputHeadless(
                 controller: _dateController,
                 isDatePicker: true,
+                firstDate: _firstDate(DateTime.now()),
                 lastDate: DateTime.now(),
                 locale: const Locale('fr', 'FR'),
                 onDateChanged: (date) => _setDate(DateFromPicker(date)),
@@ -125,13 +129,15 @@ class _PastDateChoiceState extends State<PastDateChoice> {
       context: context,
       locale: const Locale('fr', 'FR'),
       initialDate: now,
-      firstDate: now.subtract(const Duration(days: 365)),
+      firstDate: _firstDate(now),
       lastDate: now,
     );
     if (picked == null || !mounted) return;
     _dateController.text = DateFormat('dd/MM/yyyy').format(picked);
     _setDate(DateFromPicker(picked));
   }
+
+  DateTime _firstDate(DateTime now) => widget.firstDate ?? now.subtract(const Duration(days: 365));
 
   bool _isSuggestionSelected(DateSuggestionViewModel suggestion) {
     return switch (_date) {

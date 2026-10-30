@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/presentation/profil/suppression_compte_view_mode
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 
@@ -29,7 +30,7 @@ class DeleteAlertDialog extends StatefulWidget {
       builder: (context) => Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
         child: Theme(
-          data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+          data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
           child: DsfrModal(
             isDismissible: true,
             closeLabel: Strings.close,

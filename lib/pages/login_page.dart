@@ -13,11 +13,11 @@ import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
-import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/drawables/app_logo.dart';
 import 'package:pass_emploi_app/widgets/dsfr/bloc_marque.dart';
@@ -73,7 +73,7 @@ class _Scaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Theme(
-      data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+      data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
       child: Scaffold(
         backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
         appBar: viewModel.withBackButton ? const BackAppBar() : null,
@@ -273,7 +273,7 @@ class _InviteAccessModal extends StatefulWidget {
       isScrollControlled: true,
       useSafeArea: true,
       builder: (context) => Theme(
-        data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+        data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
         child: Padding(
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: DsfrModal(
@@ -599,19 +599,10 @@ class _ErrorBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: CardContainer(
-        backgroundColor: AppColors.warningLighten,
-        withShadow: false,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(title, style: DsfrTextStyle.bodySmBold(color: AppColors.warning)),
-            const SizedBox(height: Margins.spacing_s),
-            Text(description, style: DsfrTextStyle.bodyXs(color: AppColors.warning)),
-          ],
-        ),
-      ),
+    return DsfrAlert(
+      type: DsfrAlertType.error,
+      title: title,
+      description: DsfrAlertDescriptionText(description),
     );
   }
 }

@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/configuration/configuration.dart';
 import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/presentation/force_update_view_model.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/platform.dart';
 import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
@@ -38,7 +39,7 @@ class ForceUpdatePage extends StatelessWidget {
         builder: (context) {
           final isDarkMode = Theme.of(context).brightness == Brightness.dark;
           return Theme(
-            data: isDarkMode ? DsfrThemeData.dark() : DsfrThemeData.light(),
+            data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
             child: Tracker(
               tracking: AnalyticsScreenNames.forceUpdate,
               child: Scaffold(

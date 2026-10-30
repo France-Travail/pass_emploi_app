@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:pass_emploi_app/features/chat/messages/chat_actions.dart';
 import 'package:pass_emploi_app/features/chat/messages/chat_state.dart';
 import 'package:pass_emploi_app/features/chat/status/chat_status_state.dart';
@@ -13,7 +12,6 @@ import 'package:pass_emploi_app/network/post_evenement_engagement.dart';
 import 'package:pass_emploi_app/presentation/chat/chat_item.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/date_extensions.dart';
@@ -130,7 +128,7 @@ ChatItem _chatActionItem(Message message, DateTime lastConseillerReading) {
     content: message.content,
     sender: message.sentBy,
     caption: _caption(message, lastConseillerReading),
-    captionColor: _captionColor(message),
+    isCaptionError: _isCaptionError(message),
     shouldAnimate: _shouldAnimate(message),
     idPartage: message.action?.id ?? "",
     titrePartage: message.action?.titre ?? "",
@@ -145,7 +143,7 @@ ChatItem _sessionMiloItem(Message message, DateTime lastConseillerReading) {
     titrePartage: message.sessionMilo?.titre ?? "",
     sender: message.sentBy,
     caption: _caption(message, lastConseillerReading),
-    captionColor: _captionColor(message),
+    isCaptionError: _isCaptionError(message),
     shouldAnimate: _shouldAnimate(message),
   );
 }
@@ -158,7 +156,7 @@ ChatItem _evenementEmploiItem(Message message, DateTime lastConseillerReading) {
     titrePartage: message.evenementEmploi?.titre ?? "",
     sender: message.sentBy,
     caption: _caption(message, lastConseillerReading),
-    captionColor: _captionColor(message),
+    isCaptionError: _isCaptionError(message),
     shouldAnimate: _shouldAnimate(message),
   );
 }
@@ -172,7 +170,7 @@ ChatItem _offreMessageItem(Message message, DateTime lastConseillerReading) {
     type: message.offre?.type ?? OffreType.inconnu,
     sender: message.sentBy,
     caption: _caption(message, lastConseillerReading),
-    captionColor: _captionColor(message),
+    isCaptionError: _isCaptionError(message),
     shouldAnimate: _shouldAnimate(message),
   );
 }
@@ -185,7 +183,7 @@ ChatItem _eventMessageItem(Message message, DateTime lastConseillerReading) {
     titrePartage: message.event?.titre ?? "",
     sender: message.sentBy,
     caption: _caption(message, lastConseillerReading),
-    captionColor: _captionColor(message),
+    isCaptionError: _isCaptionError(message),
     shouldAnimate: _shouldAnimate(message),
   );
 }
@@ -199,7 +197,7 @@ ChatItem _pieceJointeItem(Message message, DateTime lastConseillerReading) {
       pieceJointeId: message.pieceJointes[0].id,
       pieceJointeName: message.pieceJointes[0].nom,
       caption: _caption(message, lastConseillerReading),
-      captionColor: _captionColor(message),
+      isCaptionError: _isCaptionError(message),
       shouldAnimate: _shouldAnimate(message),
     );
   }
@@ -211,7 +209,7 @@ ChatItem _pieceJointeItem(Message message, DateTime lastConseillerReading) {
     message: message.sentBy.isJeune ? null : message.content,
     filename: message.pieceJointes.first.nom,
     caption: _caption(message, lastConseillerReading),
-    captionColor: _captionColor(message),
+    isCaptionError: _isCaptionError(message),
     shouldAnimate: _shouldAnimate(message),
   );
 }
@@ -223,7 +221,7 @@ ChatItem _localImagePieceJointeItem(Message message) {
     showLoading: message.sendingStatus == MessageSendingStatus.sending,
     caption: _caption(message, minDateTime),
     captionSuffixIcon: message.sendingStatus == MessageSendingStatus.failed ? AppIcons.error_rounded : null,
-    captionColor: _captionColor(message),
+    isCaptionError: _isCaptionError(message),
     shouldAnimate: _shouldAnimate(message),
   );
 }
@@ -235,21 +233,21 @@ ChatItem _localFilePieceJointeItem(Message message) {
     showLoading: message.sendingStatus == MessageSendingStatus.sending,
     caption: _caption(message, minDateTime),
     captionSuffixIcon: message.sendingStatus == MessageSendingStatus.failed ? AppIcons.error_rounded : null,
-    captionColor: _captionColor(message),
+    isCaptionError: _isCaptionError(message),
     shouldAnimate: _shouldAnimate(message),
   );
 }
 
-Color? _captionColor(Message message) {
+bool _isCaptionError(Message message) {
   if ([PieceJointeAnalyseStatut.nonValide, PieceJointeAnalyseStatut.erreur]
       .contains(message.pieceJointes.firstOrNull?.analyseStatut)) {
-    return AppColors.warning;
+    return true;
   }
 
   return switch (message.sendingStatus) {
-    MessageSendingStatus.sending => null,
-    MessageSendingStatus.sent => null,
-    MessageSendingStatus.failed => AppColors.warning,
+    MessageSendingStatus.sending => false,
+    MessageSendingStatus.sent => false,
+    MessageSendingStatus.failed => true,
   };
 }
 
@@ -292,7 +290,7 @@ TextMessageItem _buildMessageItem(Message message, DateTime lastConseillerReadin
     content: message.content,
     caption: _caption(message, lastConseillerReading),
     sender: message.sentBy,
-    captionColor: _captionColor(message),
+    isCaptionError: _isCaptionError(message),
     shouldAnimate: _shouldAnimate(message),
   );
 }

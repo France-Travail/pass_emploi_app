@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/features/ft_ia_tutorial/ft_ia_tutorial_actions.dart';
 import 'package:pass_emploi_app/presentation/ft_ia_tutorial_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/ui/text_styles.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class FtIaShowcaseWrapper extends StatelessWidget {
@@ -57,9 +56,11 @@ class _FtIaShowcaseState extends State<FtIaShowcase> {
           tooltipPosition: TooltipPosition.top,
           title: Strings.iaFtShowcaseTitle,
           description: null,
-          tooltipBackgroundColor: context.bg,
-          titleTextStyle: TextStyles.textMBold.copyWith(color: AppColorsSpecifics.primaryToLighten(context)),
-          descTextStyle: TextStyles.textBaseRegular.copyWith(color: AppColorsSpecifics.primaryToLighten(context)),
+          // Même bulle que OnboardingShowcase.
+          tooltipBackgroundColor: DsfrColorDecisions.backgroundActionHighBlueFrance(context),
+          tooltipBorderRadius: BorderRadius.zero,
+          titleTextStyle: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textInvertedBlueFrance(context)),
+          descTextStyle: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textInvertedBlueFrance(context)),
           key: key,
           titleAlignment: Alignment.centerLeft,
           descriptionAlignment: Alignment.centerLeft,
