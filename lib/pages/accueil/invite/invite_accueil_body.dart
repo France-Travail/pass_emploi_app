@@ -9,6 +9,8 @@ import 'package:pass_emploi_app/pages/accueil/invite/invite_action_plan_empty_st
 import 'package:pass_emploi_app/pages/accueil/invite/invite_action_plan_section.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/invite_discovery_tile.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/onboarding_questionnaire_progress_card.dart';
+import 'package:pass_emploi_app/poc_orientation/poc_orientation_config.dart';
+import 'package:pass_emploi_app/poc_orientation/widgets/poc_explorer_metiers_card.dart';
 import 'package:pass_emploi_app/presentation/accueil/invite_accueil_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_tracker.dart';
@@ -108,6 +110,10 @@ class _Content extends StatelessWidget {
         children: [
           if (viewModel.messageInformatif case final messageInformatif?) ...[
             AccueilMessageInformatif(messageInformatif: messageInformatif),
+            const SizedBox(height: Margins.spacing_s),
+          ],
+          if (PocOrientationConfig.isEnabled) ...[
+            const PocExplorerMetiersCard(),
             const SizedBox(height: Margins.spacing_s),
           ],
           if (viewModel.showDiscoveryTile) ...[

@@ -26,6 +26,8 @@ import 'package:pass_emploi_app/pages/demarche/create_demarche_form_page.dart';
 import 'package:pass_emploi_app/pages/rendezvous/rendezvous_details_page.dart';
 import 'package:pass_emploi_app/pages/user_action/create/create_user_action_form_page.dart';
 import 'package:pass_emploi_app/pages/user_action/user_action_detail_page.dart';
+import 'package:pass_emploi_app/poc_orientation/poc_orientation_config.dart';
+import 'package:pass_emploi_app/poc_orientation/widgets/poc_explorer_metiers_card.dart';
 import 'package:pass_emploi_app/presentation/accueil/accueil_item.dart';
 import 'package:pass_emploi_app/presentation/accueil/accueil_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
@@ -237,6 +239,10 @@ class _Blocs extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (PocOrientationConfig.isEnabled) ...[
+            const PocExplorerMetiersCard(),
+            const SizedBox(height: DsfrSpacings.s2w),
+          ],
           for (int i = 0; i < visibleItems.length; i++) ...[
             _buildItem(visibleItems[i]),
             if (i < visibleItems.length - 1)
