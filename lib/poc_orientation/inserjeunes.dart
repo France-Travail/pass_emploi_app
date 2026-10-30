@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:pass_emploi_app/models/location.dart';
 import 'package:pass_emploi_app/poc_orientation/rome_models.dart';
+import 'package:pass_emploi_app/utils/asset_bundle_extensions.dart';
 
 class FormationInserJeunes {
   final String uai;
@@ -223,7 +227,12 @@ class InserJeunesClient {
 
   final _dio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 15), receiveTimeout: const Duration(seconds: 30)));
 
-  Future<List<FormationInserJeunes>> formations({required List<String> motsCles, required String? departement}) async {
+  Future<List<FormationInserJeunes>> formations({
+    required List<String> motsCles,
+    required String? departement,
+    required bool modeDemo,
+  }) async {
+    if (modeDemo) return _formationsDeDemo();
     if (motsCles.isEmpty) return [];
     final recherche = motsCles.map((mot) => 'search(libelle_formation, "${mot.replaceAll('"', '')}")').join(' or ');
     final filtre = [
@@ -242,11 +251,24 @@ class InserJeunesClient {
       '$_jeuxDeDonnees/$jeuDeDonnees/records',
       queryParameters: {'where': filtre, 'order_by': 'annee desc', 'limit': 100},
     );
+    return _dernierePromotion(response.data!['results'] as List<dynamic>, apprentissage: apprentissage);
+  }
+
+  // En mode démo, aucun appel : les formations de boulanger en Seine-Maritime, quels que soient le métier et le lieu.
+  Future<List<FormationInserJeunes>> _formationsDeDemo() async {
+    final json = jsonDecode(await rootBundle.loadDemoAsset('poc_orientation_formations'));
+    return [
+      ..._dernierePromotion(json['apprentissage'] as List<dynamic>, apprentissage: true),
+      ..._dernierePromotion(json['lycee_pro'] as List<dynamic>, apprentissage: false),
+    ];
+  }
+
+  // Résultats du plus récent au plus ancien : on garde la dernière promotion connue de chaque formation.
+  static List<FormationInserJeunes> _dernierePromotion(List<dynamic> resultats, {required bool apprentissage}) {
     final dejaVues = <String>{};
     final formations = <FormationInserJeunes>[];
-    for (final json in response.data!['results'] as List<dynamic>) {
+    for (final json in resultats) {
       final formation = FormationInserJeunes.fromJson(json, apprentissage: apprentissage);
-      // Résultats du plus récent au plus ancien : on garde la dernière promotion connue de chaque formation.
       if (dejaVues.add(formation._cle)) formations.add(formation);
     }
     return formations;
