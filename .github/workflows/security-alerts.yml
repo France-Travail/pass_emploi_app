@@ -3,7 +3,7 @@ name: Security Alerts
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */3 * * *' # Toutes les 3 heures
+    - cron: '0 */3 * * *'
 
 jobs:
   security-alerts:

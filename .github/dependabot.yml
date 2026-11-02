@@ -1,9 +1,6 @@
 version: 2
 
 updates:
-  # ===========================================
-  # Pub (Flutter/Dart)
-  # ===========================================
   - package-ecosystem: pub
     directory: /
     schedule:
@@ -13,30 +10,20 @@ updates:
     open-pull-requests-limit: 15
     commit-message:
       prefix: 'chore(deps):'
-    allow:
-      - update-types:
-          - version-update:semver-patch
-          - version-update:semver-minor
     groups:
-      # Production dependencies - patch and minor
       prod-minor-patch:
         applies-to: version-updates
         dependency-type: production
         update-types:
           - patch
           - minor
-      # Development dependencies - patch and minor
       dev-minor-patch:
         applies-to: version-updates
         dependency-type: development
         update-types:
           - patch
           - minor
-      # Majors : pas de groupe, chaque dépendance a sa propre PR
 
-  # ===========================================
-  # Gradle (Android)
-  # ===========================================
   - package-ecosystem: gradle
     directory: /android
     schedule:
@@ -46,21 +33,13 @@ updates:
     open-pull-requests-limit: 10
     commit-message:
       prefix: 'chore(deps):'
-    allow:
-      - update-types:
-          - version-update:semver-patch
-          - version-update:semver-minor
     groups:
-      # Dependencies - patch and minor
       gradle-minor-patch:
         applies-to: version-updates
         update-types:
           - patch
           - minor
 
-  # ===========================================
-  # GitHub Actions
-  # ===========================================
   - package-ecosystem: github-actions
     directory: /
     schedule:
@@ -70,10 +49,8 @@ updates:
     commit-message:
       prefix: 'ci(deps):'
     groups:
-      # GitHub Actions - patch and minor
       actions-minor-patch:
         applies-to: version-updates
         update-types:
           - patch
           - minor
-      # Majors : pas de groupe, chaque action a sa propre PR
