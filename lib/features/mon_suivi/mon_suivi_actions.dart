@@ -12,7 +12,10 @@ enum MonSuiviPeriod {
 class MonSuiviRequestAction {
   final MonSuiviPeriod period;
 
-  MonSuiviRequestAction(this.period);
+  /// Rafraîchit en gardant les données affichées : ni chargement, ni échec (ex. retour au premier plan hors ligne).
+  final bool silent;
+
+  MonSuiviRequestAction(this.period, {this.silent = false});
 }
 
 class MonSuiviLoadingAction {}

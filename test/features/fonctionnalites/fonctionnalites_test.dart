@@ -83,6 +83,19 @@ void main() {
         sut.thenExpectChangingStatesThroughOrder([_shouldSucceedWithPlanAction()]);
       });
 
+      test('should keep known fonctionnalites when refresh fails (offline)', () {
+        final repository = MockFonctionnalitesRepository();
+        when(() => repository.get(any())).thenAnswer((_) async => null);
+
+        sut.givenStore =
+            givenState() //
+                .loggedInUser()
+                .withPlanActionFonctionnalite()
+                .store((f) => {f.fonctionnalitesRepository = repository});
+
+        sut.thenExpectNever(_shouldFail());
+      });
+
       test('should not go through loading, so the jeune is not sent back to the splash screen', () {
         final repository = MockFonctionnalitesRepository();
         when(() => repository.get(any())).thenAnswer((_) async => {Fonctionnalite.planAction});

@@ -29,14 +29,17 @@ class MonSuiviMiddleware extends MiddlewareClass<AppState> {
     final userId = store.state.userId();
     if (userId == null) return;
     if (action is MonSuiviRequestAction) {
-      if (action.period.isCurrent) store.dispatch(MonSuiviLoadingAction());
+      if (action.period.isCurrent && !action.silent) store.dispatch(MonSuiviLoadingAction());
       final interval = _getInterval(store, action);
       final result = await _getMonSuivi(store, userId, interval);
       if (result != null) {
         store.dispatch(MonSuiviSuccessAction(action.period, interval, result));
-      } else if (action.period.isCurrent) {
+      } else if (action.period.isCurrent && !action.silent) {
         store.dispatch(MonSuiviFailureAction());
       }
+    }
+    if (action is ConfigureApplicationOnForegroundAction && store.state.monSuiviState is MonSuiviSuccessState) {
+      store.dispatch(MonSuiviRequestAction(MonSuiviPeriod.current, silent: true));
     }
     if (_needUpdatingMonSuivi(store, action)) {
       store.dispatch(MonSuiviResetAction());
@@ -100,7 +103,6 @@ class MonSuiviMiddleware extends MiddlewareClass<AppState> {
       ActionPlanDeclarationSuccessAction _ => true,
       AutoInscriptionSuccessAction _ => true,
       AutoDesinscriptionSuccessAction _ => true,
-      ConfigureApplicationOnForegroundAction _ => true,
       _ => false,
     };
   }

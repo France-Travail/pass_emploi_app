@@ -1,4 +1,5 @@
 import 'package:pass_emploi_app/features/fonctionnalites/fonctionnalites_actions.dart';
+import 'package:pass_emploi_app/features/fonctionnalites/fonctionnalites_state.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/features/push_notification/register/register_push_notification_token_actions.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -29,7 +30,8 @@ class FonctionnalitesMiddleware extends MiddlewareClass<AppState> {
     final actives = await _repository.get(userId);
     if (actives != null) {
       store.dispatch(FonctionnalitesSuccessAction(actives));
-    } else {
+    } else if (withLoading || store.state.fonctionnalitesState is! FonctionnalitesSuccessState) {
+      // Un rafraîchissement raté (ex. hors ligne) garde les fonctionnalités déjà connues.
       store.dispatch(FonctionnalitesFailureAction());
     }
   }

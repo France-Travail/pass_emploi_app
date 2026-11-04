@@ -272,8 +272,49 @@ void main() {
       });
     });
 
+    group("when app comes back to foreground", () {
+      sut.whenDispatchingAction(() => ConfigureApplicationOnForegroundAction());
+
+      test('should refresh mon suivi without going through reset nor loading', () {
+        withClock(Clock.fixed(mercredi14Fevrier12h00), () {
+          when(() => monSuiviRepository.getMonSuiviMilo('id', currentPeriodIntervalMilo))
+              .thenAnswer((_) async => currentPeriodSuiviMilo);
+
+          sut.givenStore = givenState() //
+              .loggedIn()
+              .monSuivi(interval: currentPeriodIntervalMilo, monSuivi: currentPeriodSuiviMilo)
+              .store((f) => {f.monSuiviRepository = monSuiviRepository});
+
+          sut.thenExpectNever(_shouldReset());
+          sut.thenExpectNever(_shouldLoad());
+        });
+      });
+
+      test('should keep displayed data when refresh fails (offline)', () {
+        withClock(Clock.fixed(mercredi14Fevrier12h00), () {
+          when(() => monSuiviRepository.getMonSuiviMilo('id', currentPeriodIntervalMilo))
+              .thenAnswer((_) async => null);
+
+          sut.givenStore = givenState() //
+              .loggedIn()
+              .monSuivi(interval: currentPeriodIntervalMilo, monSuivi: currentPeriodSuiviMilo)
+              .store((f) => {f.monSuiviRepository = monSuiviRepository});
+
+          sut.thenExpectNever(_shouldFail());
+          sut.thenExpectNever(_shouldReset());
+        });
+      });
+
+      test('should not fetch mon suivi when it is not loaded', () {
+        sut.givenStore = givenState() //
+            .loggedIn()
+            .store((f) => {f.monSuiviRepository = monSuiviRepository});
+
+        sut.thenExpectNever(_shouldLoad());
+      });
+    });
+
     for (final (description, action) in [
-      ('app comes back to foreground', () => ConfigureApplicationOnForegroundAction()),
       ('action plan declaration succeeds', () => ActionPlanDeclarationSuccessAction('id')),
       ('user subscribes to a session', () => AutoInscriptionSuccessAction()),
       ('user unsubscribes from a session', () => AutoDesinscriptionSuccessAction(true)),
