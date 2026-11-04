@@ -25,7 +25,7 @@ class RepriseCompteInviteRepository {
         url,
         data: {
           "jetonConnecte": jetonConnecte,
-          if (plan != null) "plan": plan,
+          "plan": ?plan,
           if (withQuestionnaire) "questionnaire": _mapper.toRequest(questionnaire),
         },
       );

@@ -61,7 +61,7 @@ class CreateDemarcheStep3ViewModel extends Equatable {
       quoi: '',
       isCommentMandatory: false,
       comments: _comments([]),
-      onCreateDemarche: (_, __) => {},
+      onCreateDemarche: (_, _) => {},
     );
   }
 

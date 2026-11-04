@@ -45,7 +45,7 @@ class ChatInitializerMiddleware extends MiddlewareClass<AppState> {
   }
 
   Future<void> _handleChatInitialization(
-      action, LoginState loginState, Store<AppState> store, NextDispatcher next) async {
+      dynamic action, LoginState loginState, Store<AppState> store, NextDispatcher next) async {
     if (action is TryConnectChatAgainAction && loginState is LoginSuccessState) {
       if (DateTime.now().isAfter(lastTry.add(Duration(seconds: 10)))) {
         lastTry = DateTime.now();

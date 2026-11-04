@@ -58,7 +58,7 @@ class EvenementEmploiRepository
       'codePostal': request.criteres.location.codePostal ?? request.criteres.location.code,
       if (secteur != null) 'secteurActivite': _secteurActiviteQueryMapper.getQueryParamValue(secteur),
       if (type != null) 'typeEvenement': _typeQueryMapper.getQueryParamValue(type),
-      if (modaliteQueryParamValue != null) 'modalite': modaliteQueryParamValue,
+      'modalite': ?modaliteQueryParamValue,
       if (request.filtres.dateDebut != null) 'dateDebut': request.filtres.dateDebut!.toStartOfDay().toIso8601String(),
       if (request.filtres.dateFin != null) 'dateFin': request.filtres.dateFin!.toEndOfDay().toIso8601String(),
     };

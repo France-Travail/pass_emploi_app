@@ -123,7 +123,7 @@ class _CvListView extends StatelessWidget {
       itemCount: cvList.length,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      separatorBuilder: (_, __) => const SizedBox(height: DsfrSpacings.s2w),
+      separatorBuilder: (_, _) => const SizedBox(height: DsfrSpacings.s2w),
       itemBuilder: (context, index) {
         final cv = cvList[index];
         final isLoading = viewModel.downloadStatus(cv.url).isLoading();

@@ -65,16 +65,16 @@ class Accueil extends Equatable {
   }
 
   Accueil copyWith({
-    final DateTime? dateDerniereMiseAJour,
-    final AccueilCetteSemaine? cetteSemaine,
-    final Rendezvous? prochainRendezVous,
-    final SessionMilo? prochaineSessionMilo,
-    final List<Rendezvous>? animationsCollectives,
-    final List<SessionMilo>? sessionsMiloAVenir,
-    final List<Alerte>? alertes,
-    final List<Favori>? favoris,
-    final String? accueilErreur,
-    final bool? peutVoirLeComptageDesHeures,
+    DateTime? dateDerniereMiseAJour,
+    AccueilCetteSemaine? cetteSemaine,
+    Rendezvous? prochainRendezVous,
+    SessionMilo? prochaineSessionMilo,
+    List<Rendezvous>? animationsCollectives,
+    List<SessionMilo>? sessionsMiloAVenir,
+    List<Alerte>? alertes,
+    List<Favori>? favoris,
+    String? accueilErreur,
+    bool? peutVoirLeComptageDesHeures,
   }) {
     return Accueil(
       dateDerniereMiseAJour: dateDerniereMiseAJour ?? this.dateDerniereMiseAJour,

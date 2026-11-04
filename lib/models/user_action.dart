@@ -85,15 +85,15 @@ class UserAction extends Equatable {
   }
 
   UserAction copyWith({
-    final String? id,
-    final String? content,
-    final String? comment,
-    final UserActionStatus? status,
-    final DateTime? dateEcheance,
-    final DateTime? creationDate,
-    final UserActionCreator? creator,
-    final UserActionQualificationStatus? qualificationStatus,
-    final UserActionReferentielType? type,
+    String? id,
+    String? content,
+    String? comment,
+    UserActionStatus? status,
+    DateTime? dateEcheance,
+    DateTime? creationDate,
+    UserActionCreator? creator,
+    UserActionQualificationStatus? qualificationStatus,
+    UserActionReferentielType? type,
   }) {
     return UserAction(
       id: id ?? this.id,

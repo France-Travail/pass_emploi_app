@@ -6,7 +6,10 @@ class A11yUtils {
     // delay is needed to avoid the enouncement to be cut by voiceover
     Future.delayed(
       Duration(milliseconds: 100),
-      () => SemanticsService.announce(text, TextDirection.ltr),
+      () {
+        final view = WidgetsBinding.instance.platformDispatcher.implicitView;
+        if (view != null) SemanticsService.sendAnnouncement(view, text, TextDirection.ltr);
+      },
     );
   }
 

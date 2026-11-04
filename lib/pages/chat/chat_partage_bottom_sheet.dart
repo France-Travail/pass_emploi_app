@@ -46,7 +46,7 @@ class ChatPartageBottomSheetState extends State<ChatPartageBottomSheet> {
         onDidChange: (oldVm, newVm) {
           // a11y : 5.4
           if (oldVm?.snackbarState == DisplayState.CONTENT && newVm.snackbarState == DisplayState.LOADING) {
-            SemanticsService.announce(Strings.loadingAnnouncement, TextDirection.ltr);
+            SemanticsService.sendAnnouncement(View.of(context), Strings.loadingAnnouncement, TextDirection.ltr);
           }
         },
       ),

@@ -64,17 +64,14 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
   String? geolocationError;
 
   OnboardingQuestionnaireFormChangeNotifier({
-    required OnboardingQuestionnaireAnswersLoader loadAnswers,
-    required OnboardingQuestionnaireAnswersSaver saveAnswers,
-    OnboardingQuestionnaireFinishWithoutGeneration? onFinishWithoutGeneration,
+    required this._loadAnswers,
+    required this._saveAnswers,
+    this._onFinishWithoutGeneration,
     this.startAtFirstStep = false,
     this.skipActionPlanGeneration = false,
     this.withPrenomStep = true,
-    OnboardingQuestionnaireTracker? tracker,
-  }) : _loadAnswers = loadAnswers,
-       _saveAnswers = saveAnswers,
-       _onFinishWithoutGeneration = onFinishWithoutGeneration,
-       _tracker = tracker;
+    this._tracker,
+  });
 
   Future<void> init() async {
     isLoading = true;

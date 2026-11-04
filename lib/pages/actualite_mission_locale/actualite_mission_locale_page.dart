@@ -97,7 +97,7 @@ class _Body extends StatelessWidget {
       padding: const EdgeInsets.all(DsfrSpacings.s2w),
       itemCount: viewModel.actualites.length,
       reverse: true,
-      separatorBuilder: (_, __) => const SizedBox(height: DsfrSpacings.s1w),
+      separatorBuilder: (_, _) => const SizedBox(height: DsfrSpacings.s1w),
       itemBuilder: (context, index) => switch (viewModel.actualites[index]) {
         final ActualiteMissionLocaleItemSupprimeViewModel actualite => _ActualiteItemSupprime(actualite),
         final ActualiteMissionLocaleItemViewModel actualite => _ActualiteItem(actualite),

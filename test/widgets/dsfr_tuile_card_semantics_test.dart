@@ -26,7 +26,7 @@ void main() {
 
     expect(
       tester.getSemantics(find.bySemanticsLabel('Es-tu satisfait ?. Je donne mon avis')),
-      containsSemantics(isButton: true, hasTapAction: true),
+      isSemantics(isButton: true, hasTapAction: true),
     );
     semantics.dispose();
   });
@@ -37,7 +37,7 @@ void main() {
     await pump(tester, onDismiss: () => dismissed = true);
 
     final fermer = find.bySemanticsLabel('Fermer : Es-tu satisfait ?');
-    expect(tester.getSemantics(fermer), containsSemantics(isButton: true, hasTapAction: true));
+    expect(tester.getSemantics(fermer), isSemantics(isButton: true, hasTapAction: true));
 
     tester.semantics.tap(find.semantics.byLabel('Fermer : Es-tu satisfait ?'));
     expect(dismissed, isTrue);

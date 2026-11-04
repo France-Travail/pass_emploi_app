@@ -62,7 +62,7 @@ void main() {
     ]);
     expect(
       tester.getSemantics(find.byKey(ValueKey(Strings.onboardingQuestionnaireFreinRienNeMeBloque))),
-      containsSemantics(isInMutuallyExclusiveGroup: true, isChecked: true),
+      isSemantics(isInMutuallyExclusiveGroup: true, isChecked: true),
     );
   });
 

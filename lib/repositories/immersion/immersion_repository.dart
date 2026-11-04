@@ -38,8 +38,8 @@ class ImmersionRepository
     final appellationCode = request.criteres.appellationCode;
     final codeRome = request.criteres.metier?.codeRome;
     return {
-      if (appellationCode != null) 'appellationCode': appellationCode,
-      if (codeRome != null) 'rome': codeRome,
+      'appellationCode': ?appellationCode,
+      'rome': ?codeRome,
       'lat': request.criteres.location.latitude,
       'lon': request.criteres.location.longitude,
       if (request.filtres.distance != null) 'distance': request.filtres.distance,

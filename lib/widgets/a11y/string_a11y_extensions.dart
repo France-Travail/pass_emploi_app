@@ -56,6 +56,7 @@ extension A11yStringExtensions on String {
 
 // © ® ™ font partie de Extended_Pictographic mais ne sont pas décoratifs : on les conserve.
 final _emojiRegExp = RegExp(
+  // ignore: valid_regexps, false positive: Unicode property escapes are supported at runtime with unicode: true
   r'(?![©®™])\p{Extended_Pictographic}|\p{Emoji_Modifier}|[\u{FE0F}\u{200D}\u{20E3}]',
   unicode: true,
 );

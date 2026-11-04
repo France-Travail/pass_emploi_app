@@ -59,7 +59,8 @@ class _RechercheCriteresFullScreenState<Result> extends State<RechercheCriteresF
                     widget.buildCriteresContentWidget(
                       onNumberOfCriteresChanged: (number) {
                         setState(() => _criteresActifsCount = number);
-                        SemanticsService.announce(
+                        SemanticsService.sendAnnouncement(
+                          View.of(context),
                           intl.Intl.plural(
                             _criteresActifsCount ?? 0,
                             zero: Strings.rechercheCriteresActifsZero,

@@ -168,7 +168,7 @@ class _Logo extends StatelessWidget {
             final PartenaireOrigin partenaire => Image.network(
               partenaire.logoUrl,
               fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) => _FallbackLogo(),
+              errorBuilder: (_, _, _) => _FallbackLogo(),
             ),
             FranceTravailOrigin() => Image.asset(Drawables.franceTravailLogo, fit: BoxFit.contain),
             null => _FallbackLogo(),

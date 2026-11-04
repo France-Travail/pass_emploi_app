@@ -92,7 +92,7 @@ class DsfrBottomSheet extends StatelessWidget {
                   crossAxisAlignment: WrapCrossAlignment.center,
                   runSpacing: DsfrSpacings.s1w,
                   children: [
-                    if (leading != null) leading!,
+                    ?leading,
                     if (isDismissible)
                       DsfrButton(
                         label: closeLabel ?? Strings.close,

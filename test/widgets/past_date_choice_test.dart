@@ -58,12 +58,12 @@ void main() {
     await pump(tester);
     final hier = find.bySemanticsLabel(RegExp('^${Strings.dateSuggestionHier} \\('));
 
-    expect(tester.getSemantics(hier), containsSemantics(isButton: true, hasSelectedState: true, isSelected: false));
+    expect(tester.getSemantics(hier), isSemantics(isButton: true, hasSelectedState: true, isSelected: false));
 
     await tester.tap(find.text(Strings.dateSuggestionHier));
     await tester.pump();
 
-    expect(tester.getSemantics(hier), containsSemantics(isButton: true, hasSelectedState: true, isSelected: true));
+    expect(tester.getSemantics(hier), isSemantics(isButton: true, hasSelectedState: true, isSelected: true));
     semantics.dispose();
   });
 
@@ -71,7 +71,7 @@ void main() {
     final semantics = tester.ensureSemantics();
     await pump(tester);
 
-    expect(tester.getSemantics(find.text('Quand ?')), isNot(containsSemantics(isHeader: true)));
+    expect(tester.getSemantics(find.text('Quand ?')), isNot(isSemantics(isHeader: true)));
     expect(find.bySemanticsLabel(RegExp('^${Strings.dateSuggestionHier} \\(.*\\), Quand \\?\$')), findsOneWidget);
     expect(find.bySemanticsLabel(RegExp('^${Strings.dateSuggestionAujourdhui} \\(.*\\), Quand \\?\$')), findsOneWidget);
     semantics.dispose();
@@ -86,7 +86,7 @@ void main() {
     final champ = tester.getSemantics(find.byType(OtherDateButton));
     expect(champ.label, '${Strings.otherDate}, Quand ?');
     expect(champ.hint, Strings.cannotFinishActionInFuture);
-    expect(champ, containsSemantics(isButton: true, hasTapAction: true));
+    expect(champ, isSemantics(isButton: true, hasTapAction: true));
     expect(find.byType(TextField), findsNothing);
     semantics.dispose();
   });

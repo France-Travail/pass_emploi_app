@@ -13,9 +13,8 @@ class CommunesRepository {
   final Dio _httpClient;
   final Crashlytics? _crashlytics;
 
-  CommunesRepository({Dio? httpClient, Crashlytics? crashlytics})
-    : _httpClient = httpClient ?? Dio(BaseOptions(baseUrl: _baseUrl)),
-      _crashlytics = crashlytics;
+  CommunesRepository({Dio? httpClient, this._crashlytics})
+    : _httpClient = httpClient ?? Dio(BaseOptions(baseUrl: _baseUrl));
 
   Future<List<QuestionnaireCommune>> search(
     String query, {
@@ -109,7 +108,7 @@ class CommunesRepository {
           .whereType<Map<String, dynamic>>()
           .map(QuestionnaireCommune.fromJson)
           .toList();
-      return _withArrondissements(communes, query: trimmed);
+      return await _withArrondissements(communes, query: trimmed);
     } catch (e, stack) {
       _crashlytics?.recordNonNetworkExceptionUrl(e, stack, '$_baseUrl$path');
       return [];
@@ -143,7 +142,7 @@ class CommunesRepository {
             ),
           )
           .toList();
-      return _withArrondissements(communes, codePostal: trimmed);
+      return await _withArrondissements(communes, codePostal: trimmed);
     } catch (e, stack) {
       _crashlytics?.recordNonNetworkExceptionUrl(e, stack, '$_baseUrl$path');
       return [];

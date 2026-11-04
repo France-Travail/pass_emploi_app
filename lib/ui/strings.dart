@@ -130,9 +130,9 @@ class Strings {
   static String voirOffre = "Voir l'offre";
   static String voirEvent = "Voir l'événement";
 
-  static String chatWith(firstName) => "Discuter avec $firstName";
+  static String chatWith(String firstName) => "Discuter avec $firstName";
 
-  static String simpleDayFormat(day) => "Le $day";
+  static String simpleDayFormat(String day) => "Le $day";
   static String open = "Ouvrir";
   static String fileNotAvailableError = "ERROR: 410";
   static String fileNotAvailableTitle = "Le fichier n'est plus disponible";
@@ -1781,7 +1781,7 @@ class Strings {
       ? "Vous recevrez des notifications pour être alerté des nouvelles offres liées aux critères de votre recherche."
       : "Tu recevras des notifications pour être alerté des nouvelles offres liées aux critères de ta recherche.";
 
-  static String alerteTitleField(metier, localisation) => "$metier - $localisation";
+  static String alerteTitleField(Object? metier, Object? localisation) => "$metier - $localisation";
   static String alerteSuccessfullyCreated = Brand.isPassEmploi()
       ? "Votre recherche a bien été enregistrée. Retrouvez-la dans la section Mes Alertes sur votre page d'accueil."
       : "Ta recherche a bien été enregistrée. Retrouve-la dans la section Mes Alertes sur ta page d'accueil.";

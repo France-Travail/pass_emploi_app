@@ -225,10 +225,10 @@ class DataCard<T> extends StatelessWidget {
       if (sousTitre?.isNotEmpty == true) sousTitre!,
       if (category?.isNotEmpty == true) category!,
       if (lieu?.isNotEmpty == true) lieu!,
-      if (contractLabel != null) contractLabel,
+      ?contractLabel,
       if (secteurActivite?.isNotEmpty == true) secteurActivite!,
       if (date?.isNotEmpty == true) date!,
-      if (mention != null) mention,
+      ?mention,
     ].join('. ');
   }
 }
@@ -254,7 +254,7 @@ class _Logo extends StatelessWidget {
             final NetworkImageSource network => Image.network(
               network.url,
               fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) => const _FallbackLogo(),
+              errorBuilder: (_, _, _) => const _FallbackLogo(),
             ),
             final AssetsImageSource asset => Image.asset(asset.path, fit: BoxFit.contain),
             null => const _FallbackLogo(),

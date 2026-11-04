@@ -8,7 +8,7 @@ class ActionPlanRequestMapper {
     return {
       if (answers.dateNaissance != null) 'dateNaissance': _formatDate(answers.dateNaissance!),
       'situation': _mapSituation(answers.situation!),
-      if (precisionAutre != null) 'precisionAutre': precisionAutre,
+      'precisionAutre': ?precisionAutre,
       'goals': answers.objectifs.map(_mapObjectif).toList(),
       'domaine': _mapDomaine(answers),
       'domaineInconnu': answers.domaineInconnu,

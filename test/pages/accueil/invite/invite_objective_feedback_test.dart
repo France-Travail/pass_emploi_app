@@ -157,7 +157,7 @@ void main() {
         );
         expect(
           yes,
-          containsSemantics(
+          isSemantics(
             label: Strings.inviteAccueilObjectiveFeedbackYes,
             isButton: true,
           ),
@@ -167,7 +167,7 @@ void main() {
         );
         expect(
           no,
-          containsSemantics(
+          isSemantics(
             label: Strings.inviteAccueilObjectiveFeedbackNo,
             hint: Strings.inviteAccueilObjectiveFeedbackNoA11y,
             isLink: true,

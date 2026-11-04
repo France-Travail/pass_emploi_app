@@ -71,7 +71,7 @@ void main() {
     final linkFinder = find.bySemanticsLabel(RegExp(Strings.voirResultatsSuggestion));
     expect(linkFinder, findsOneWidget);
     final link = tester.getSemantics(linkFinder);
-    expect(link, containsSemantics(isLink: true, hasTapAction: true));
+    expect(link, isSemantics(isLink: true, hasTapAction: true));
     expect(link.label, isNot(contains(Strings.suggestionRechercheAjouteeDescription)));
     expect(link.label, isNot(contains('Fermer')));
     expect(_hasLiveRegionAncestor(link), isTrue);
@@ -102,7 +102,7 @@ void _expectCloseButton(WidgetTester tester, String label) {
   expect(finder, findsOneWidget);
   final node = tester.getSemantics(finder);
   expect(node.label, label);
-  expect(node, containsSemantics(isButton: true, hasTapAction: true));
+  expect(node, isSemantics(isButton: true, hasTapAction: true));
   expect(node.rect.size, const Size(48, 48));
   expect(_hasLiveRegionAncestor(node), isTrue);
 }
@@ -111,7 +111,7 @@ void _expectTextNode(WidgetTester tester, String text) {
   final finder = find.bySemanticsLabel(text);
   expect(finder, findsOneWidget);
   final node = tester.getSemantics(finder);
-  expect(node, containsSemantics(isButton: false, hasTapAction: false));
+  expect(node, isSemantics(isButton: false, hasTapAction: false));
   expect(_hasLiveRegionAncestor(node), isTrue);
 }
 

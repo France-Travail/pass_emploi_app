@@ -84,12 +84,12 @@ class BaseCard extends StatelessWidget {
                         spacing: Margins.spacing_s,
                         runSpacing: Margins.spacing_s,
                         children: [
-                          if (tag != null) tag!,
-                          if (pillule != null) pillule!,
+                          ?tag,
+                          ?pillule,
                         ],
                       ),
                     if (!isSimpleCard && iconButton != null) ...[
-                      if (tag != null) tag!,
+                      ?tag,
                       SizedBox(height: Margins.spacing_s),
                     ],
                     if (leading != null) ...[

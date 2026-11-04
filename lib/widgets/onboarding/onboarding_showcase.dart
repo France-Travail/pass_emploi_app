@@ -17,8 +17,9 @@ class ShowcaseWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: deprecated_member_use, TODO: migrate to ShowcaseView.register() before showcaseview 6
     return ShowCaseWidget(
-      onStart: (index, __) {},
+      onStart: (index, _) {},
       onFinish: () {
         StoreProvider.of<AppState>(context).dispatch(ResetOnboardingShowcaseAction());
       },
@@ -85,6 +86,7 @@ class _OnboardingShowcaseState extends State<OnboardingShowcase> {
               A11yUtils.announce('$title. $description'.removeEmojisForScreenReaders());
               StoreProvider.of<AppState>(context).dispatch(ResetOnboardingShowcaseAction());
             } else {
+              // ignore: deprecated_member_use, TODO: migrate to ShowcaseView.get() before showcaseview 6
               ShowCaseWidget.of(context).startShowCase([key]);
             }
           }
