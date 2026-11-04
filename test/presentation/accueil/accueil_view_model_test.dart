@@ -305,6 +305,25 @@ void main() {
         expect(viewModel.shouldResetDeeplink, isFalse);
       });
     });
+
+    group('should ignore creation deeplink and reset it when accompagnement is Avenir Pro', () {
+      for (final deepLink in [CreationDemarcheDeepLink(), CreationActionDeepLink()]) {
+        test('${deepLink.runtimeType} > creation form is not opened', () {
+          // Given
+          final store = givenState()
+              .loggedInUser(loginMode: LoginMode.POLE_EMPLOI, accompagnement: Accompagnement.avenirPro)
+              .withHandleDeepLink(deepLink)
+              .store();
+
+          // When
+          final viewModel = AccueilViewModel.create(store);
+
+          // Then
+          expect(viewModel.deepLink, isNull);
+          expect(viewModel.shouldResetDeeplink, isTrue);
+        });
+      }
+    });
   });
 
   test('should retry', () {

@@ -108,9 +108,11 @@ void main() {
     });
   });
 
-  test('should display all tabs when accompagnement is Avenir Pro', () {
+  test('should display messages but not agenda when accompagnement is Avenir Pro', () {
     // Given
-    final store = givenState().loggedInUser(accompagnement: Accompagnement.avenirPro).store();
+    final store = givenState()
+        .loggedInUser(loginMode: LoginMode.POLE_EMPLOI, accompagnement: Accompagnement.avenirPro)
+        .store();
 
     // When
     final viewModel = MainPageViewModel.create(store);
@@ -118,7 +120,6 @@ void main() {
     // Then
     expect(viewModel.tabs, [
       MainTab.accueil,
-      MainTab.monSuivi,
       MainTab.solutions,
       MainTab.evenements,
       MainTab.chat,

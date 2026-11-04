@@ -61,7 +61,7 @@ class AccueilViewModel extends Equatable {
       displayState: _displayState(store),
       items: _items(store),
       greeting: Strings.inviteAccueilGreeting(store.state.user()?.firstName),
-      deepLink: store.getDeepLink(),
+      deepLink: _isCreationDeepLinkForbidden(store) ? null : store.getDeepLink(),
       shouldResetDeeplink: _shouldResetDeeplink(store),
       withNewNotifications: _withNewNotifications(store),
       shouldShowAllowNotifications: _shouldShowAllowNotifications(store),
@@ -88,9 +88,17 @@ DisplayState _displayState(Store<AppState> store) {
   };
 }
 
+// Un Avenir Pro ne peut pas créer de démarche : un rappel de création ne doit pas ouvrir le formulaire.
+bool _isCreationDeepLinkForbidden(Store<AppState> store) {
+  final deepLink = store.getDeepLink();
+  final isCreationDeepLink = deepLink is CreationDemarcheDeepLink || deepLink is CreationActionDeepLink;
+  return isCreationDeepLink && store.state.accompagnement() == Accompagnement.avenirPro;
+}
+
 bool _shouldResetDeeplink(Store<AppState> store) {
   final deeplinkState = store.state.deepLinkState;
   if (deeplinkState is! HandleDeepLinkState) return false;
+  if (_isCreationDeepLinkForbidden(store)) return true;
 
   return switch (deeplinkState.deepLink) {
     AlerteDeepLink() => false,
