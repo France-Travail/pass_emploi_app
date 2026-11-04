@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class FtIaShowcaseWrapper extends StatelessWidget {
@@ -47,8 +48,16 @@ class _FtIaShowcaseState extends State<FtIaShowcase> {
       builder: (context, vm) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (vm.isVisible && !shown) {
-            ShowCaseWidget.of(context).startShowCase([key]);
             shown = true;
+            // A11y 5.1 / 10.2 (audit RAAM du 15/10/2026) : le calque de mise en avant (showcaseview) laisse la page
+            // accessible derrière lui et pose sur la cible une zone tactile sans nom ni rôle. Avec un lecteur d'écran,
+            // la nouveauté est annoncée et le bouton reste utilisable directement, sans calque.
+            if (A11yUtils.withScreenReader(context)) {
+              A11yUtils.announce(Strings.iaFtShowcaseTitle);
+              vm.onSeen();
+            } else {
+              ShowCaseWidget.of(context).startShowCase([key]);
+            }
           }
         });
         return Showcase(

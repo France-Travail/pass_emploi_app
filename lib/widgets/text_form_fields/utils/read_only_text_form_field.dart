@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
+import 'package:pass_emploi_app/widgets/buttons/clear_field_button.dart';
 
 class ReadOnlyTextFormField extends StatefulWidget {
   final String title;
@@ -157,16 +158,12 @@ class _ReadOnlyTextFormFieldState extends State<ReadOnlyTextFormField> {
                   top: 0,
                   bottom: 0,
                   right: 0,
+                  // A11y 8.5 : prise de focus visible (contour DSFR) sur le bouton de suppression.
                   child: Center(
-                    child: IconButton(
+                    child: ClearFieldButton(
                       onPressed: _onDelete,
                       tooltip: widget.a11ySuppressionLabel,
-                      constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-                      icon: Icon(
-                        DsfrIcons.systemCloseLine,
-                        size: 16,
-                        color: DsfrColorDecisions.textDefaultGrey(context),
-                      ),
+                      size: 44,
                     ),
                   ),
                 ),

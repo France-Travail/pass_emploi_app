@@ -256,6 +256,8 @@ class _TypeFiltreState extends State<_TypeFiltre> {
               .map(
                 (type) => CustomRadioGroup<EvenementEmploiType?>(
                   title: type?.label ?? Strings.evenementEmploiTypeAll,
+                  // A11y 9.6 : chaque choix reprend le nom du groupe.
+                  groupLabel: Strings.evenementEmploiFiltresType,
                   value: type,
                   groupValue: _currentValue,
                   onChanged: (value) {

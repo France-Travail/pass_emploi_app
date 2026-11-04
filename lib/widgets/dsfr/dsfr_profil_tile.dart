@@ -13,6 +13,7 @@ class DsfrProfilTile extends StatelessWidget {
     this.showChevron,
     this.semanticsLink = false,
     this.semanticsLinkDestination = LinkDestination.website,
+    this.semanticsLinkUrl,
     this.semanticsLabel,
   });
 
@@ -24,6 +25,7 @@ class DsfrProfilTile extends StatelessWidget {
   final bool? showChevron;
   final bool semanticsLink;
   final LinkDestination semanticsLinkDestination;
+  final String? semanticsLinkUrl;
   final String? semanticsLabel;
 
   @override
@@ -36,6 +38,7 @@ class DsfrProfilTile extends StatelessWidget {
       showChevron: showChevron,
       semanticsLink: semanticsLink,
       semanticsLinkDestination: semanticsLinkDestination,
+      semanticsLinkUrl: semanticsLinkUrl,
       semanticsLabel: semanticsLabel,
     );
   }

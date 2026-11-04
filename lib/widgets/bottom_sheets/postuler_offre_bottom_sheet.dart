@@ -9,14 +9,15 @@ import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
 
 class PostulerOffreBottomSheet extends StatelessWidget {
   final void Function() onPostuler;
+  final String url;
 
-  PostulerOffreBottomSheet({super.key, required this.onPostuler});
+  PostulerOffreBottomSheet({super.key, required this.onPostuler, required this.url});
 
-  static Future<void> show(BuildContext context, {required VoidCallback onPostuler}) {
+  static Future<void> show(BuildContext context, {required VoidCallback onPostuler, required String url}) {
     return showDsfrBottomSheet<void>(
       context: context,
       name: AnalyticsScreenNames.cvListPage,
-      builder: (context) => PostulerOffreBottomSheet(onPostuler: onPostuler),
+      builder: (context) => PostulerOffreBottomSheet(onPostuler: onPostuler, url: url),
     );
   }
 
@@ -30,7 +31,7 @@ class PostulerOffreBottomSheet extends StatelessWidget {
           const SizedBox(height: DsfrSpacings.s2w),
           CvList(insideBottomSheet: true),
           const SizedBox(height: DsfrSpacings.s2w),
-          _ContinueButton(onPostuler: onPostuler),
+          _ContinueButton(onPostuler: onPostuler, url: url),
         ],
       ),
     );
@@ -53,14 +54,16 @@ class _Title extends StatelessWidget {
 }
 
 class _ContinueButton extends StatelessWidget {
-  const _ContinueButton({required this.onPostuler});
+  const _ContinueButton({required this.onPostuler, required this.url});
 
   final VoidCallback onPostuler;
+  final String url;
 
   @override
   Widget build(BuildContext context) {
     return ExternalLinkSemantics(
       label: Strings.postulerContinueButton,
+      url: url,
       onTap: onPostuler,
       child: DsfrButton(
         label: Strings.postulerContinueButton,

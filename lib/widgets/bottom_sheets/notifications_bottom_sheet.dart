@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
+import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/dsfr/emoji_tile.dart';
 
 class NotificationsBottomSheet extends StatelessWidget {
@@ -64,10 +65,16 @@ class NotificationsBottomSheet extends StatelessWidget {
           ),
         ),
         const SizedBox(height: DsfrSpacings.s4w),
-        Text(
-          Strings.notificationsBottomSheetTitle,
-          style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context)),
-          textAlign: TextAlign.center,
+        // A11y 7.1 / 10.2 : titre de la fenêtre, qui reçoit le focus du lecteur d'écran à l'ouverture.
+        AutoFocusA11y(
+          child: Semantics(
+            header: true,
+            child: Text(
+              Strings.notificationsBottomSheetTitle,
+              style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context)),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ),
         const SizedBox(height: DsfrSpacings.s2w),
         Text(

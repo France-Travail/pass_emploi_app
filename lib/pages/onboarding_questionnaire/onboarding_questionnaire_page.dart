@@ -114,13 +114,15 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
     super.dispose();
   }
 
-  // A11y 10.2 : sur Android, le focus TalkBack ne bouge pas tout seul (AutoFocusA11y sans effet) :
-  // l'ouverture et chaque vraie transition d'étape sont donc annoncées.
+  // A11y 10.2 : à l'ouverture, TalkBack se place d'abord sur « Retour » et ne suit pas AutoFocusA11y : l'étape est
+  // donc annoncée. Aux changements d'étape, les boutons sont recréés et le focus va sur le titre de la nouvelle étape
+  // (AutoFocusA11y) : une annonce le doublerait.
   void _announceStepIfChanged() {
     final step = _form.step;
     if (_form.isLoading || step.isLoader || step == _lastAnnouncedStep) return;
+    final isOpening = _lastAnnouncedStep == null;
     _lastAnnouncedStep = step;
-    if (defaultTargetPlatform != TargetPlatform.android) return;
+    if (!isOpening || defaultTargetPlatform != TargetPlatform.android) return;
     final annonce = Strings.onboardingQuestionnaireStepA11y(
       _form.stepNumber,
       _form.stepsCount,
@@ -151,7 +153,10 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
               backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(
                 context,
               ),
-              appBar: _form.step.isLoader ? null : OnboardingQuestionnaireAppBar(onBack: _onBack),
+              appBar: _form.step.isLoader
+                  ? null
+                  // A11y 10.2 : recréé à chaque étape, comme les boutons du bas (voir _BottomActions).
+                  : OnboardingQuestionnaireAppBar(key: ValueKey(_form.step), onBack: _onBack),
               body: SafeArea(
                 child: _form.isLoading
                     ? const Center(child: CircularProgressIndicator())
@@ -310,11 +315,9 @@ class _QuestionnaireBodyState extends State<_QuestionnaireBody> {
       key: _headerKey,
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
       // A11y 10.2 : à chaque changement d'étape, le focus du lecteur d'écran part du bouton
-      // « Continuer » pour aller sur le titre de la nouvelle étape.
+      // « Continuer » pour aller sur le titre de la nouvelle étape (Android compris : voir _BottomActions).
       child: AutoFocusA11y(
         key: ValueKey(form.step),
-        // Sur Android, l'étape est annoncée par la page (voir _announceStepIfChanged).
-        enabled: defaultTargetPlatform != TargetPlatform.android,
         duration: AnimationDurations.slow,
         // A11y 10.2.3 : « Étape X sur Y, titre » restitué en un seul en-tête.
         child: Semantics(
@@ -423,7 +426,11 @@ class _BottomActions extends StatelessWidget {
         Margins.spacing_base,
         Margins.spacing_base,
       ),
+      // A11y 10.2 (audit RAAM du 15/10/2026) : les boutons sont recréés à chaque étape. TalkBack ne suit le focus
+      // demandé (titre de la nouvelle étape, AutoFocusA11y) que si l'élément qu'il lisait disparaît ; sinon il restait
+      // sur « Continuer », désactivé à l'étape suivante.
       child: Column(
+        key: ValueKey(form.step),
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           DsfrButton(

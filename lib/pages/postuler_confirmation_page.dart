@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/create_user_action_confirmation_offre_suivi_page.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/success/bottom_actions.dart';
@@ -57,6 +58,9 @@ class PostulerConfirmationPage extends StatelessWidget {
                             const SizedBox(height: DsfrSpacings.s1w),
                             Text(
                               Strings.offreSuivieConfirmationPageDescription,
+                              // A11y 1.1 : l'emoji « 👏 » est décoratif.
+                              semanticsLabel: Strings.offreSuivieConfirmationPageDescription
+                                  .removeEmojisForScreenReaders(),
                               textAlign: TextAlign.center,
                               style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
                             ),

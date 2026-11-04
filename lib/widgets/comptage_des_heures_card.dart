@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 
 class ComptageDesHeuresCard extends StatelessWidget {
   const ComptageDesHeuresCard({super.key});
@@ -31,6 +32,8 @@ class ComptageDesHeuresCard extends StatelessWidget {
                 children: [
                   Text(
                     Strings.comptageDesHeuresError,
+                    // A11y 1.1 : l'emoji est décoratif.
+                    semanticsLabel: Strings.comptageDesHeuresError.removeEmojisForScreenReaders(),
                     style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
                     textAlign: TextAlign.center,
                   ),
@@ -72,6 +75,8 @@ class _Content extends StatelessWidget {
         ],
         Text(
           viewModel.title,
+          // A11y 1.1 : les emojis d'encouragement (« 💪 », « 👏 »…) sont décoratifs.
+          semanticsLabel: viewModel.title.removeEmojisForScreenReaders(),
           style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
           textAlign: TextAlign.center,
         ),

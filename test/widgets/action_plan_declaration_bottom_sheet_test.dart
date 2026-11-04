@@ -10,6 +10,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/action_plan_declaration_bottom_sheet.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:redux/redux.dart';
 
 import '../doubles/spies.dart';
@@ -228,8 +229,10 @@ void main() {
       ]);
 
       final prenom = milo().user()!.firstName;
+      // A11y 1.1 : l'emoji « 🎉 » du titre n'est pas annoncé.
       expect(annonces, [
-        '${Strings.userActionConfirmationTitle(prenom)} ${Strings.actionPlanDeclarationSuccesEnregistree}',
+        '${Strings.userActionConfirmationTitle(prenom).removeEmojisForScreenReaders()} '
+            '${Strings.actionPlanDeclarationSuccesEnregistree}',
       ]);
     });
   });

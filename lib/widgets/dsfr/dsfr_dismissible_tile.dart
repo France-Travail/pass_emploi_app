@@ -13,6 +13,7 @@ class DsfrDismissibleTile extends StatelessWidget {
     required this.dismissSemanticLabel,
     this.semanticsLink = false,
     this.semanticsLinkDestination = LinkDestination.website,
+    this.semanticsLinkUrl,
   });
 
   final String title;
@@ -23,6 +24,7 @@ class DsfrDismissibleTile extends StatelessWidget {
   final String dismissSemanticLabel;
   final bool semanticsLink;
   final LinkDestination semanticsLinkDestination;
+  final String? semanticsLinkUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,7 @@ class DsfrDismissibleTile extends StatelessWidget {
       dismissSemanticLabel: dismissSemanticLabel,
       semanticsLink: semanticsLink,
       semanticsLinkDestination: semanticsLinkDestination,
+      semanticsLinkUrl: semanticsLinkUrl,
     );
   }
 }

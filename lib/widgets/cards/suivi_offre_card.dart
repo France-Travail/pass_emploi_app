@@ -5,6 +5,8 @@ import 'package:pass_emploi_app/models/offre_type.dart';
 import 'package:pass_emploi_app/pages/offre_page.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_information_badge.dart';
 import 'package:pass_emploi_app/widgets/favori_heart.dart';
 
 class SuiviOffreCard<T> extends StatelessWidget {
@@ -96,12 +98,8 @@ class SuiviOffreCard<T> extends StatelessWidget {
                                   ],
                                   if (showCandidatureBadge) ...[
                                     const SizedBox(height: DsfrSpacings.s1v),
-                                    DsfrBadge(
-                                      label: Strings.candidatureEnvoyee.toUpperCase(),
-                                      type: DsfrBadgeType.information,
-                                      size: DsfrComponentSize.sm,
-                                      withIcon: true,
-                                    ),
+                                    // A11y 8.2 : le libellé passe à la ligne quand le texte est agrandi.
+                                    DsfrInformationBadge(label: Strings.candidatureEnvoyee),
                                   ],
                                 ],
                               ),
@@ -115,7 +113,7 @@ class SuiviOffreCard<T> extends StatelessWidget {
               ),
               FavoriHeart<T>(
                 offreId: id,
-                a11yLabel: title,
+                a11yLabel: title.toOffreTitleForScreenReaders(),
                 withBorder: false,
                 from: OffrePage.offreFavoris,
                 icon: DsfrIcons.systemStarLine,
@@ -132,7 +130,8 @@ class SuiviOffreCard<T> extends StatelessWidget {
   String _semanticsLabel(String subtitle) {
     final parts = [
       _typeLabel(offreType),
-      title,
+      // A11y 8.1 : « H/F » explicité.
+      title.toOffreTitleForScreenReaders(),
       if (subtitle.isNotEmpty) subtitle,
       if (showCandidatureBadge) Strings.candidatureEnvoyee,
     ];

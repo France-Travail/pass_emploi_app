@@ -191,7 +191,7 @@ class _ProgressBadge extends StatelessWidget {
         ? 0
         : ((viewModel.completedSteps / viewModel.totalSteps) * 100).round();
     return Semantics(
-      label: '${viewModel.completedSteps} sur ${viewModel.totalSteps}',
+      label: Strings.discoveryProgressA11y(viewModel.completedSteps, viewModel.totalSteps, progressPercent),
       child: ExcludeSemantics(
         child: DsfrBadge(
           label: Strings.inviteAccueilDiscoveryProgress(progressPercent),

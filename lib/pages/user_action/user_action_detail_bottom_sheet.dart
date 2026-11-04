@@ -39,9 +39,7 @@ class UserActionDetailsBottomSheet extends StatelessWidget {
       builder: (context, viewModel) {
         return DsfrBottomSheet(
           shrinkWrap: true,
-          leading: DsfrBottomSheetMoreActionsButton(
-            onPressed: () => Navigator.pop(context),
-          ),
+          leading: const DsfrBottomSheetMoreActionsTitle(),
           actions: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

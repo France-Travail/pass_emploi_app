@@ -146,7 +146,7 @@ void main() {
     );
 
     testWidgets(
-      '« Pas vraiment » annonce l’ouverture du navigateur au lecteur d’écran',
+      'A11y 5.1 : « Pas vraiment » est un lien, qui précise ouvrir un formulaire',
       (tester) async {
         final semantics = tester.ensureSemantics();
         await _pumpSection(tester, _plan(actionsCount: 2));
@@ -170,7 +170,8 @@ void main() {
           containsSemantics(
             label: Strings.inviteAccueilObjectiveFeedbackNo,
             hint: Strings.inviteAccueilObjectiveFeedbackNoA11y,
-            isButton: true,
+            isLink: true,
+            isButton: false,
             hasTapAction: true,
           ),
         );

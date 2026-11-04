@@ -9,8 +9,12 @@ class CustomRadioGroup<T> extends StatefulWidget {
     required this.value,
     required this.groupValue,
     required this.onChanged,
+    this.groupLabel,
   });
   final String title;
+
+  /// Légende du groupe de choix, reprise dans le nom accessible de chaque choix (A11y 9.6).
+  final String? groupLabel;
   final T value;
   final T? groupValue;
   final void Function(T?) onChanged;
@@ -35,7 +39,10 @@ class _CustomRadioGroupState<T> extends State<CustomRadioGroup<T>> {
       child: Semantics(
         button: true,
         selected: isSelected,
-        label: '${isSelected ? Strings.selectedRadioButton : Strings.unselectedRadioButton} : $title',
+        label: [
+          '${isSelected ? Strings.selectedRadioButton : Strings.unselectedRadioButton} : $title',
+          if (widget.groupLabel != null) widget.groupLabel!,
+        ].join(', '),
         // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material.
         child: DsfrFocusWidget(
           isFocused: _focused,

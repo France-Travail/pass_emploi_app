@@ -75,10 +75,10 @@ class ForceUpdatePage extends StatelessWidget {
                       ),
                       if (viewModel.withCallToAction) ...[
                         const SizedBox(height: DsfrSpacings.s3w),
-                        // A11y 5.1 : lien vers la page de l'application sur le store.
                         ExternalLinkSemantics(
                           label: Strings.updateButton,
                           destination: LinkDestination.appStore,
+                          url: viewModel.storeUrl,
                           onTap: () => launchExternalUrl(viewModel.storeUrl),
                           child: SizedBox(
                             width: double.infinity,

@@ -16,10 +16,13 @@ import 'package:pass_emploi_app/pages/offre_page.dart';
 import 'package:pass_emploi_app/presentation/chat/chat_partage_bottom_sheet_view_model.dart';
 import 'package:pass_emploi_app/presentation/offre_emploi/offre_emploi_details_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
+import 'package:pass_emploi_app/widgets/a11y/a11y_bullet_list.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/offre_suivie_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/postuler_offre_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/buttons/delete_favori_button.dart';
@@ -35,7 +38,6 @@ import 'package:pass_emploi_app/widgets/offre_details/offre_details_section_titl
 import 'package:pass_emploi_app/widgets/offre_details/offre_details_tag.dart';
 import 'package:pass_emploi_app/widgets/offre_emploi_origin.dart';
 import 'package:pass_emploi_app/widgets/offre_suivie_form.dart';
-import 'package:pass_emploi_app/ui/app_icons.dart';
 
 class OffreEmploiDetailsPage extends StatelessWidget {
   final String _offreId;
@@ -107,7 +109,7 @@ class OffreEmploiDetailsPage extends StatelessWidget {
               withBorder: false,
               from: _fromAlternance ? OffrePage.alternanceDetails : OffrePage.emploiDetails,
               // A11y 5.1 : le nom de l'offre complète l'intitulé du bouton.
-              a11yLabel: title ?? ' ',
+              a11yLabel: title?.toOffreTitleForScreenReaders() ?? ' ',
               onFavoriRemoved: popPageWhenFavoriIsRemoved ? () => Navigator.pop(context) : null,
               icon: DsfrIcons.systemStarLine,
               iconActive: DsfrIcons.systemStarFill,
@@ -149,7 +151,10 @@ class OffreEmploiDetailsPage extends StatelessWidget {
         OffreDetailsAction(
           label: Strings.postulerButtonTitle,
           icon: viewModel.shouldShowCvBottomSheet ? null : DsfrIcons.systemExternalLinkLine,
-          semanticsLink: true,
+          // A11y 5.1 : avec des CV, « Je postule » ouvre une fenêtre de l'application : c'est un bouton.
+          // Sinon, il ouvre l'offre sur le site du recruteur : c'est un lien.
+          semanticsLink: !viewModel.shouldShowCvBottomSheet,
+          semanticsLinkUrl: url,
           onPressed: () => _onPostulerPressed(context, viewModel),
         ),
       );
@@ -256,21 +261,33 @@ class OffreEmploiDetailsPage extends StatelessWidget {
     if (description == null) return const SizedBox.shrink();
 
     final paragraphs = description.split("\n").where((paragraph) => paragraph.trim().isNotEmpty).toList();
+    // A11y 7.2 : les lignes consécutives à puces ou à tirets forment une liste, restituée comme telle.
+    final blocks = DescriptionBlock.fromParagraphs(paragraphs);
+
+    Widget paragraphText(String paragraph) => Padding(
+      padding: const EdgeInsets.only(bottom: DsfrSpacings.s1w),
+      child: Text(
+        paragraph,
+        style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+      ),
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         OffreDetailsSectionTitle(Strings.offreDetailsTitle),
         const SizedBox(height: DsfrSpacings.s2w),
-        ...paragraphs.map(
-          (paragraph) => Padding(
-            padding: const EdgeInsets.only(bottom: DsfrSpacings.s1w),
-            child: Text(
-              paragraph,
-              style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
-            ),
-          ),
-        ),
+        for (final block in blocks)
+          if (block.isList)
+            for (var i = 0; i < block.lines.length; i++)
+              A11yListItem(
+                index: i,
+                count: block.lines.length,
+                text: block.items[i],
+                child: paragraphText(block.lines[i]),
+              )
+          else
+            paragraphText(block.lines.single),
         const SizedBox(height: DsfrSpacings.s2w),
       ],
     );
@@ -291,7 +308,13 @@ class OffreEmploiDetailsPage extends StatelessWidget {
         OffreDetailsSectionTitle(Strings.experienceTitle, size: OffreDetailsSectionTitleSize.headline6),
         const SizedBox(height: DsfrSpacings.s1w),
         if (experience != null)
-          _setRequiredElement(context: context, element: experience, criteria: viewModel.requiredExperience),
+          _setRequiredElement(
+            context: context,
+            element: experience,
+            criteria: viewModel.requiredExperience,
+            index: 0,
+            count: 1,
+          ),
         const SizedBox(height: DsfrSpacings.s2w),
         if (skills != null) skills,
         if (softSkills != null) softSkills,
@@ -340,8 +363,14 @@ class OffreEmploiDetailsPage extends StatelessWidget {
       children: [
         OffreDetailsSectionTitle(Strings.skillsTitle, size: OffreDetailsSectionTitleSize.headline5),
         const SizedBox(height: DsfrSpacings.s1w),
-        for (final skill in skills)
-          _setRequiredElement(context: context, element: skill.description, criteria: skill.requirement),
+        for (final (index, skill) in skills.indexed)
+          _setRequiredElement(
+            context: context,
+            element: skill.description,
+            criteria: skill.requirement,
+            index: index,
+            count: skills.length,
+          ),
         const SizedBox(height: DsfrSpacings.s2w),
       ],
     );
@@ -354,7 +383,8 @@ class OffreEmploiDetailsPage extends StatelessWidget {
       children: [
         OffreDetailsSectionTitle(Strings.softSkillsTitle, size: OffreDetailsSectionTitleSize.headline6),
         const SizedBox(height: DsfrSpacings.s1w),
-        for (final soft in softSkills) _listItem(context: context, text: soft),
+        for (final (index, soft) in softSkills.indexed)
+          _listItem(context: context, text: soft, index: index, count: softSkills.length),
         const SizedBox(height: DsfrSpacings.s2w),
       ],
     );
@@ -367,8 +397,14 @@ class OffreEmploiDetailsPage extends StatelessWidget {
       children: [
         OffreDetailsSectionTitle(Strings.educationTitle, size: OffreDetailsSectionTitleSize.headline6),
         const SizedBox(height: DsfrSpacings.s1w),
-        for (final education in educations)
-          _setRequiredElement(context: context, element: education.label, criteria: education.requirement),
+        for (final (index, education) in educations.indexed)
+          _setRequiredElement(
+            context: context,
+            element: education.label,
+            criteria: education.requirement,
+            index: index,
+            count: educations.length,
+          ),
         const SizedBox(height: DsfrSpacings.s2w),
       ],
     );
@@ -381,8 +417,14 @@ class OffreEmploiDetailsPage extends StatelessWidget {
       children: [
         OffreDetailsSectionTitle(Strings.languageTitle, size: OffreDetailsSectionTitleSize.headline6),
         const SizedBox(height: DsfrSpacings.s1w),
-        for (final language in languages)
-          _setRequiredElement(context: context, element: language.type, criteria: language.requirement),
+        for (final (index, language) in languages.indexed)
+          _setRequiredElement(
+            context: context,
+            element: language.type,
+            criteria: language.requirement,
+            index: index,
+            count: languages.length,
+          ),
         const SizedBox(height: DsfrSpacings.s2w),
       ],
     );
@@ -395,66 +437,85 @@ class OffreEmploiDetailsPage extends StatelessWidget {
       children: [
         OffreDetailsSectionTitle(Strings.driverLicenceTitle, size: OffreDetailsSectionTitleSize.headline6),
         const SizedBox(height: DsfrSpacings.s1w),
-        for (final licence in driverLicences)
-          _setRequiredElement(context: context, element: licence.category, criteria: licence.requirement),
+        for (final (index, licence) in driverLicences.indexed)
+          _setRequiredElement(
+            context: context,
+            element: licence.category,
+            criteria: licence.requirement,
+            index: index,
+            count: driverLicences.length,
+          ),
         const SizedBox(height: DsfrSpacings.s2w),
       ],
     );
   }
 
-  Widget _setRequiredElement({required BuildContext context, required String element, required String? criteria}) {
+  Widget _setRequiredElement({
+    required BuildContext context,
+    required String element,
+    required String? criteria,
+    required int index,
+    required int count,
+  }) {
     return _require(criteria)
-        ? _requiredElement(context: context, requiredText: element)
-        : _listItem(context: context, text: element);
+        ? _requiredElement(context: context, requiredText: element, index: index, count: count)
+        : _listItem(context: context, text: element, index: index, count: count);
   }
 
   bool _require(String? criteria) => criteria != null && criteria == "E";
 
-  Widget _listItem({required BuildContext context, required String text}) {
+  // A11y 7.2 : élément de liste restitué comme tel (« Liste de N éléments », « 1 sur N ») ; la puce n'est pas lue.
+  Widget _listItem({required BuildContext context, required String text, required int index, required int count}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: DsfrSpacings.s1w),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // A11y 7.2 : la puce décorative n'est pas lue séparément.
-          ExcludeSemantics(
-            child: Text(
-              '•',
-              style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context)),
-            ),
-          ),
-          const SizedBox(width: DsfrSpacings.s1w),
-          Expanded(
-            child: Text(
-              text,
-              style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
-            ),
-          ),
-        ],
+      child: A11yListItem(
+        index: index,
+        count: count,
+        text: text,
+        child: _bulletText(context, text),
       ),
     );
   }
 
-  Widget _requiredElement({required BuildContext context, required String requiredText}) {
+  Widget _bulletText(BuildContext context, String text) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '•',
+          style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context)),
+        ),
+        const SizedBox(width: DsfrSpacings.s1w),
+        Expanded(
+          child: Text(
+            text,
+            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _requiredElement({
+    required BuildContext context,
+    required String requiredText,
+    required int index,
+    required int count,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: DsfrSpacings.s1w),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // A11y 7.2 : la puce décorative n'est pas lue séparément.
-          ExcludeSemantics(
-            child: Text(
-              '•',
-              style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context)),
-            ),
-          ),
-          const SizedBox(width: DsfrSpacings.s1w),
           Expanded(
-            child: Text(
-              requiredText,
-              style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
+            child: A11yListItem(
+              index: index,
+              count: count,
+              text: requiredText,
+              child: _bulletText(context, requiredText),
             ),
           ),
+          // Interactif : laissé hors de l'élément de liste pour rester atteignable.
           HelpTooltip(message: Strings.requiredIcon, icon: AppIcons.error_rounded),
         ],
       ),
@@ -485,7 +546,8 @@ class OffreEmploiDetailsPage extends StatelessWidget {
     if (shouldShowCvBottomSheet) {
       PostulerOffreBottomSheet.show(
         context,
-        onPostuler: () => _applyToOffer(context, url!, shouldShowOffreSuiviBottomSheet, onPostuler),
+        url: url!,
+        onPostuler: () => _applyToOffer(context, url, shouldShowOffreSuiviBottomSheet, onPostuler),
       );
     } else {
       _applyToOffer(context, url!, shouldShowOffreSuiviBottomSheet, onPostuler);

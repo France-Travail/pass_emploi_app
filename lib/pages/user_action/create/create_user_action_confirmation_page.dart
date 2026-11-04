@@ -10,6 +10,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/errors/error_text.dart';
 
@@ -148,6 +149,10 @@ class _Body extends StatelessWidget {
                       header: true,
                       child: Text(
                         Strings.userActionConfirmationTitle(viewModel.firstName),
+                        // A11y 1.1 : l'emoji « 🎉 » est décoratif.
+                        semanticsLabel: Strings.userActionConfirmationTitle(
+                          viewModel.firstName,
+                        ).removeEmojisForScreenReaders(),
                         textAlign: TextAlign.center,
                         style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context)),
                       ),

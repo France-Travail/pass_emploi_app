@@ -41,6 +41,9 @@ class DsfrBottomNavigation extends StatelessWidget {
                 child: _DsfrBottomNavigationTile(
                   item: items[i],
                   selected: i == currentIndex,
+                  // A11y 5.1 (audit RAAM du 15/10/2026) : chaque onglet indique qu'il fait partie de la barre
+                  // d'onglets et sa position (« Agenda, Onglet 2 sur 5 »), comme la NavigationBar Material.
+                  tabLabel: MaterialLocalizations.of(context).tabLabel(tabIndex: i + 1, tabCount: items.length),
                   onTap: () => onTap(i),
                 ),
               ),
@@ -71,11 +74,13 @@ class _DsfrBottomNavigationTile extends StatefulWidget {
   const _DsfrBottomNavigationTile({
     required this.item,
     required this.selected,
+    required this.tabLabel,
     required this.onTap,
   });
 
   final DsfrBottomNavigationItem item;
   final bool selected;
+  final String tabLabel;
   final VoidCallback onTap;
 
   @override
@@ -122,9 +127,8 @@ class _DsfrBottomNavigationTileState extends State<_DsfrBottomNavigationTile>
     }
 
     Widget tile = Semantics(
-      button: true,
       selected: selected,
-      label: item.label,
+      label: '${item.label}, ${widget.tabLabel}',
       child: InkWell(
         onTap: widget.onTap,
         onFocusChange: updateMaterialState(WidgetState.focused),

@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/pages/notifications_center/notifications_center_
 import 'package:pass_emploi_app/pages/profil/profil_page.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_notice.dart';
 
 class PrimarySliverAppbar extends StatelessWidget {
@@ -28,16 +29,29 @@ class PrimarySliverAppbar extends StatelessWidget {
       backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
       titleSpacing: DsfrSpacings.s2w,
       title: AutoFocusA11y(
-        child: Semantics(
-          header: true,
-          child: Tooltip(
-            message: title,
-            excludeFromSemantics: true,
-            child: Text(
-              title,
-              style: DsfrTextStyle.headline6(color: DsfrColorDecisions.textTitleGrey(context)),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+        child: Builder(
+          builder: (context) => Semantics(
+            header: true,
+            // A11y 10.2 (audit RAAM du 15/10/2026) : l'en-tête épinglé fait partie de la zone qui défile. En remontant
+            // par balayage, le lecteur d'écran l'atteint sans faire défiler le contenu, et la lecture reprenait au milieu
+            // de la page. Quand le titre reçoit le focus du lecteur d'écran, la page revient donc en haut.
+            onDidGainAccessibilityFocus: () {
+              final position = Scrollable.maybeOf(context)?.position;
+              if (position != null && position.pixels > position.minScrollExtent) {
+                position.jumpTo(position.minScrollExtent);
+              }
+            },
+            child: Tooltip(
+              message: title,
+              excludeFromSemantics: true,
+              child: Text(
+                title,
+                // A11y 1.1 : l'emoji de salutation (« 👋 ») est décoratif.
+                semanticsLabel: title.removeEmojisForScreenReaders(),
+                style: DsfrTextStyle.headline6(color: DsfrColorDecisions.textTitleGrey(context)),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ),
         ),

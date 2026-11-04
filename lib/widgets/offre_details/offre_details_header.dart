@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/offre_details/offre_details_tag.dart';
 
 class OffreDetailsHeader extends StatelessWidget {
@@ -61,6 +62,8 @@ class OffreDetailsHeader extends StatelessWidget {
                         header: true,
                         child: Text(
                           title,
+                          // A11y 8.1 : « H/F » explicité.
+                          semanticsLabel: title.toOffreTitleForScreenReaders(),
                           style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
                         ),
                       ),

@@ -100,6 +100,8 @@ class _SecteurActiviteListTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: Margins.spacing_base),
       child: CustomRadioGroup<SecteurActivite?>(
         title: secteurActivite?.label ?? Strings.secteurActiviteAll,
+        // A11y 9.6 : chaque choix reprend le nom du groupe.
+        groupLabel: Strings.secteurActiviteLabel,
         value: secteurActivite,
         groupValue: selectedValue,
         onChanged: onChanged,

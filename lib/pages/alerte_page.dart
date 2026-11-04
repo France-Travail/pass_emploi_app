@@ -31,6 +31,7 @@ import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/store_extensions.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/alerte_card.dart';
 import 'package:pass_emploi_app/widgets/animated_list_loader.dart';
 import 'package:pass_emploi_app/widgets/cards/alerte_deletable_card.dart';
@@ -142,6 +143,8 @@ class _AlertePageState extends State<AlertePage> {
                 const SizedBox(height: DsfrSpacings.s3v),
                 Text(
                   Strings.alertesCreationHint,
+                  // A11y 1.1 : l'emoji « 💡 » est décoratif.
+                  semanticsLabel: Strings.alertesCreationHint.removeEmojisForScreenReaders(),
                   style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textTitleGrey(context)),
                 ),
               ],
@@ -388,29 +391,40 @@ class _SuggestionCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Wrap(
-              spacing: DsfrSpacings.s1w,
-              runSpacing: DsfrSpacings.s1v,
-              children: [
-                DsfrTag(
-                  label: _suggestionTypeLabel(viewModel.type),
-                  size: DsfrComponentSize.sm,
-                  backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
-                  textColor: DsfrColorDecisions.textLabelGrey(context),
-                ),
-                if (source != null)
+            ExcludeSemantics(
+              child: Wrap(
+                spacing: DsfrSpacings.s1w,
+                runSpacing: DsfrSpacings.s1v,
+                children: [
                   DsfrTag(
-                    label: source,
+                    label: _suggestionTypeLabel(viewModel.type),
                     size: DsfrComponentSize.sm,
                     backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
                     textColor: DsfrColorDecisions.textLabelGrey(context),
                   ),
-              ],
+                  if (source != null)
+                    DsfrTag(
+                      label: source,
+                      size: DsfrComponentSize.sm,
+                      backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
+                      textColor: DsfrColorDecisions.textLabelGrey(context),
+                    ),
+                ],
+              ),
             ),
             const SizedBox(height: DsfrSpacings.s1w),
-            Text(
-              viewModel.titre,
-              style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+            Semantics(
+              header: true,
+              label: [
+                viewModel.titre.toOffreTitleForScreenReaders(),
+                _suggestionTypeLabel(viewModel.type),
+                if (source != null) source,
+              ].join(', '),
+              excludeSemantics: true,
+              child: Text(
+                viewModel.titre,
+                style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+              ),
             ),
             if (localisation != null && localisation.isNotEmpty) ...[
               const SizedBox(height: DsfrSpacings.s1v),
@@ -433,6 +447,7 @@ class _SuggestionCard extends StatelessWidget {
             ],
             const SizedBox(height: DsfrSpacings.s2w),
             _SuggestionButtons(
+              titre: viewModel.titre.toOffreTitleForScreenReaders(),
               onTapAjouter: () => _onAjouter(context, viewModel),
               onTapRefuser: viewModel.refuserSuggestion,
             ),
@@ -459,30 +474,45 @@ class _SuggestionCard extends StatelessWidget {
 }
 
 class _SuggestionButtons extends StatelessWidget {
+  final String titre;
   final VoidCallback onTapAjouter;
   final VoidCallback onTapRefuser;
 
-  const _SuggestionButtons({required this.onTapAjouter, required this.onTapRefuser});
+  const _SuggestionButtons({required this.titre, required this.onTapAjouter, required this.onTapRefuser});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(
-          child: DsfrButton(
-            label: Strings.refuserLabel,
-            variant: DsfrButtonVariant.secondary,
-            size: DsfrComponentSize.md,
-            onPressed: onTapRefuser,
+          child: Semantics(
+            container: true,
+            button: true,
+            label: Strings.refuserSuggestionA11y(titre),
+            onTap: onTapRefuser,
+            excludeSemantics: true,
+            child: DsfrButton(
+              label: Strings.refuserLabel,
+              variant: DsfrButtonVariant.secondary,
+              size: DsfrComponentSize.md,
+              onPressed: onTapRefuser,
+            ),
           ),
         ),
         const SizedBox(width: DsfrSpacings.s2w),
         Expanded(
-          child: DsfrButton(
-            label: Strings.ajouter,
-            variant: DsfrButtonVariant.primary,
-            size: DsfrComponentSize.md,
-            onPressed: onTapAjouter,
+          child: Semantics(
+            container: true,
+            button: true,
+            label: Strings.ajouterSuggestionA11y(titre),
+            onTap: onTapAjouter,
+            excludeSemantics: true,
+            child: DsfrButton(
+              label: Strings.ajouter,
+              variant: DsfrButtonVariant.primary,
+              size: DsfrComponentSize.md,
+              onPressed: onTapAjouter,
+            ),
           ),
         ),
       ],
@@ -514,7 +544,6 @@ void _displaySuccessSnackbar(
       backgroundColor: Colors.transparent,
       elevation: 0,
       padding: EdgeInsets.zero,
-      // A11y : sans cela, la snackbar fusionne le message et la croix en un seul bouton pour le lecteur d'écran.
       content: Semantics(
         container: true,
         explicitChildNodes: true,

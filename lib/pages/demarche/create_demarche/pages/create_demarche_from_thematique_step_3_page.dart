@@ -64,9 +64,13 @@ class CreateDemarcheFromThematiqueStep3Page extends StatelessWidget {
                 ),
                 if (storeVm.isCommentMandatory) ...[
                   const SizedBox(height: DsfrSpacings.s3w),
-                  Text(
-                    Strings.selectMoyen,
-                    style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                  // A11y 7.1 : titre de la liste des moyens, comme « Sélectionne la démarche » à l'étape 2.
+                  Semantics(
+                    header: true,
+                    child: Text(
+                      Strings.selectMoyen,
+                      style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                    ),
                   ),
                   const SizedBox(height: DsfrSpacings.s2w),
                   _MoyensList(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/presentation/model/date_input_source.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
@@ -9,6 +11,8 @@ void main() {
     final changes = <DateInputSource>[];
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
+        supportedLocales: const [Locale('fr', 'FR')],
         home: Scaffold(
           body: PastDateChoice(title: 'Quand ?', aide: aide, onDateChanged: changes.add),
         ),
@@ -63,14 +67,63 @@ void main() {
     semantics.dispose();
   });
 
-  testWidgets('A11y 9.2 et 5.1 : le champ « Autre date » porte son libellé, son aide et un rôle de bouton', (tester) async {
+  testWidgets('A11y 9.6 : la légende n’est pas un titre et chaque choix reprend la légende du groupe', (tester) async {
+    final semantics = tester.ensureSemantics();
+    await pump(tester);
+
+    expect(tester.getSemantics(find.text('Quand ?')), isNot(containsSemantics(isHeader: true)));
+    expect(find.bySemanticsLabel(RegExp('^${Strings.dateSuggestionHier} \\(.*\\), Quand \\?\$')), findsOneWidget);
+    expect(find.bySemanticsLabel(RegExp('^${Strings.dateSuggestionAujourdhui} \\(.*\\), Quand \\?\$')), findsOneWidget);
+    semantics.dispose();
+  });
+
+  testWidgets('A11y 9.2 et 5.1 : « Autre date » est un bouton nommé par son étiquette, avec la légende et l’aide', (
+    tester,
+  ) async {
     final semantics = tester.ensureSemantics();
     await pump(tester, aide: Strings.cannotFinishActionInFuture);
 
-    final champ = tester.getSemantics(find.byType(TextField));
-    expect(champ.label, Strings.otherDate);
+    final champ = tester.getSemantics(find.byType(OtherDateButton));
+    expect(champ.label, '${Strings.otherDate}, Quand ?');
     expect(champ.hint, Strings.cannotFinishActionInFuture);
     expect(champ, containsSemantics(isButton: true, hasTapAction: true));
+    expect(find.byType(TextField), findsNothing);
     semantics.dispose();
+  });
+
+  testWidgets('A11y 9.2 : la date choisie est restituée comme valeur de « Autre date »', (tester) async {
+    final semantics = tester.ensureSemantics();
+    await pump(tester);
+
+    await tester.tap(find.text(Strings.dateSuggestionHier));
+    await tester.pump();
+
+    final champ = tester.getSemantics(find.byType(OtherDateButton));
+    expect(champ.value, isNotEmpty);
+    expect(champ.value, isNot(contains('/')));
+    semantics.dispose();
+  });
+
+  testWidgets('A11y 5.2 : « Autre date » s’atteint et s’active au clavier', (tester) async {
+    await pump(tester);
+
+    // Tab : Aujourd'hui, Hier, puis Autre date.
+    for (var i = 0; i < 3; i++) {
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+    }
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(DatePickerDialog), findsOneWidget);
+  });
+
+  testWidgets('toucher l’étiquette « Autre date » ouvre le calendrier', (tester) async {
+    await pump(tester);
+
+    await tester.tap(find.text(Strings.otherDate));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(DatePickerDialog), findsOneWidget);
   });
 }

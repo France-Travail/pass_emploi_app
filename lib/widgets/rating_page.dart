@@ -69,8 +69,10 @@ class _Body extends StatelessWidget {
           icon: DsfrIcons.systemExternalLinkLine,
           iconBackgroundColor: DsfrColors.greenEmeraude950,
           title: Strings.rateAppOnStoresLabel,
+          // A11y 5.1 : lien vers la fiche de l'application sur le store, restitué comme un lien.
           semanticsLink: true,
           semanticsLinkDestination: LinkDestination.appStore,
+          semanticsLinkUrl: PlatformUtils.getPlatform.getAppStoreUrl(Brand.brand),
           onTap: () => _sendStoreReview(context, viewModel),
         ),
         const SizedBox(height: DsfrSpacings.s3w),
@@ -80,6 +82,7 @@ class _Body extends StatelessWidget {
           title: Strings.proposeIdeaLabel,
           description: Strings.proposeIdeaSubtitle,
           semanticsLink: true,
+          semanticsLinkUrl: ExternalLinks.proposerUneIdee,
           onTap: () => _proposeIdea(context),
         ),
       ],

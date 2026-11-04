@@ -22,6 +22,7 @@ class ExternalLink extends StatelessWidget {
     // A11y 5.1 : rôle lien explicite plutôt qu'un libellé « Lien » ajouté au texte.
     return ExternalLinkSemantics(
       label: label,
+      url: url,
       onTap: () => launchExternalUrl(url),
       child: InkWell(
         onTap: () => launchExternalUrl(url),

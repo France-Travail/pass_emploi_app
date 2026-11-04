@@ -38,4 +38,28 @@ extension A11yStringExtensions on String {
   String removeIconsForScreenReaders() {
     return replaceAll('↗', '');
   }
+
+  /// A11y 8.1 : l'abréviation « H/F » (ou « F/H ») des intitulés d'offre est lue « H F » ; elle est explicitée.
+  String toOffreTitleForScreenReaders() {
+    return replaceAllMapped(_genderAbbreviationRegExp, (match) {
+      final first = match.group(1)!.toUpperCase();
+      return first == 'H' ? Strings.a11yHommesEtFemmes : Strings.a11yFemmesEtHommes;
+    });
+  }
+
+  /// A11y 1.1 : les emojis accolés à un texte sont décoratifs (« 👋 », « 🎉 », « 💡 »…) ;
+  /// sans ce filtre, TalkBack et VoiceOver les lisent (« signe de la main », « cornet à confetti »…).
+  String removeEmojisForScreenReaders() {
+    return replaceAll(_emojiRegExp, '').replaceAll(_doubleSpacesRegExp, ' ').trim();
+  }
 }
+
+// © ® ™ font partie de Extended_Pictographic mais ne sont pas décoratifs : on les conserve.
+final _emojiRegExp = RegExp(
+  r'(?![©®™])\p{Extended_Pictographic}|\p{Emoji_Modifier}|[\u{FE0F}\u{200D}\u{20E3}]',
+  unicode: true,
+);
+final _doubleSpacesRegExp = RegExp(r'[  ]{2,}');
+
+// « H/F », « (H/F) », « F / H », « h/f »… isolés (pas au milieu d'un mot).
+final _genderAbbreviationRegExp = RegExp(r'\(?\b([HF])\s*/\s*([FH])\b\)?', caseSensitive: false);

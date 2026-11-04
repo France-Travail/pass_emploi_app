@@ -302,6 +302,7 @@ class _FranceTravailLinkButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ExternalLinkSemantics(
       label: Strings.cvEmptyButton,
+      url: ExternalLinks.espaceCandidats,
       onTap: _launchAndTrackExternalLink,
       child: DsfrButton(
         label: Strings.cvEmptyButton,

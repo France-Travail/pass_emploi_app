@@ -124,6 +124,7 @@ class ImmersionDetailsPage extends StatelessWidget {
               variant: DsfrButtonVariant.secondary,
               semanticsLink: true,
               semanticsLinkDestination: LinkDestination.fromUri(cta.uri),
+              semanticsLinkUrl: cta.uri.toString(),
               onPressed: () {
                 context.trackEvenementEngagement(cta.eventType);
                 launchExternalUrl(cta.uri.toString());

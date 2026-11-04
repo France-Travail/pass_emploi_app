@@ -144,7 +144,8 @@ class _PartageFavorisState extends State<_PartageFavoris> {
   Widget build(BuildContext context) {
     return DsfrToggleSwitch(
       label: Strings.shareFavoriteLabel,
-      labelLocation: DsfrToggleSwitchLabelLocation.left,
+      // A11y 5.1 : l'interrupteur est accolé à son étiquette (repérable en cas de fort zoom).
+      labelLocation: DsfrToggleSwitchLabelLocation.right,
       value: _partageFavorisEnabled,
       status: _partageFavorisEnabled ? Strings.notificationsToggleEnabled : Strings.notificationsToggleDisabled,
       enabled: widget.updatedState != DisplayState.LOADING,

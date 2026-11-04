@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/theme.dart';
+import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 
 Future<T?> showDsfrBottomSheet<T>({
   required BuildContext context,
@@ -161,6 +162,30 @@ class DsfrBottomSheetMoreActionsButton extends StatelessWidget {
       variant: DsfrButtonVariant.tertiaryWithoutBorder,
       size: DsfrComponentSize.sm,
       onPressed: onPressed,
+    );
+  }
+}
+
+/// Titre d'une fenêtre de menu ouverte par [DsfrBottomSheetMoreActionsButton].
+///
+/// A11y 5.1 / 7.1 (audit RAAM du 15/10/2026) : la fenêtre ne répète plus un bouton « Plus d'actions » qui ne faisait
+/// que la fermer (« Fermer » le fait déjà) ; l'intitulé devient le titre de la fenêtre et reçoit le focus à l'ouverture.
+class DsfrBottomSheetMoreActionsTitle extends StatelessWidget {
+  const DsfrBottomSheetMoreActionsTitle({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s1w),
+      child: AutoFocusA11y(
+        child: Semantics(
+          header: true,
+          child: Text(
+            Strings.moreActions,
+            style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+          ),
+        ),
+      ),
     );
   }
 }

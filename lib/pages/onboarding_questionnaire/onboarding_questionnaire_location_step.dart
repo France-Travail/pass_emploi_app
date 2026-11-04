@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
@@ -11,6 +10,8 @@ import 'package:pass_emploi_app/repositories/communes_repository.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
+import 'package:pass_emploi_app/widgets/buttons/clear_field_button.dart';
+import 'package:pass_emploi_app/widgets/slider/slider_focus_outline.dart';
 
 class OnboardingQuestionnaireLocationStep extends StatefulWidget {
   const OnboardingQuestionnaireLocationStep({
@@ -84,54 +85,48 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
           ),
         ),
         const SizedBox(height: Margins.spacing_base),
-        MergeSemantics(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                label,
-                style: DsfrTextStyle.bodyMd(
-                  color: DsfrColorDecisions.textLabelGrey(context),
+        // A11y 5.1 : le bouton d'effacement est posé par-dessus le champ, hors du nœud fusionné « étiquette + champ » :
+        // c'est un bouton distinct, nommé, que TalkBack et VoiceOver atteignent par balayage comme au clavier.
+        Stack(
+          children: [
+            MergeSemantics(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    label,
+                    style: DsfrTextStyle.bodyMd(
+                      color: DsfrColorDecisions.textLabelGrey(context),
+                    ),
+                  ),
+                  const SizedBox(height: DsfrSpacings.s1w),
+                  Semantics(
+                    identifier: label,
+                    child: DsfrInputHeadless(
+                      key: ValueKey(widget.isHabitation ? 'habitation' : 'ville'),
+                      controller: _controller,
+                      onChanged: _onQueryChanged,
+                      // A11y 9.12 : nature de la saisie identifiée : type « adresse » (inputType Android) et commune
+                      // proposée par le remplissage automatique.
+                      keyboardType: TextInputType.streetAddress,
+                      autofillHints: const [AutofillHints.addressCity],
+                      // Réserve la place du bouton d'effacement.
+                      suffixIcon: _controller.text.isNotEmpty ? const SizedBox.square(dimension: 40) : null,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (_controller.text.isNotEmpty)
+              Positioned(
+                right: DsfrSpacings.s1v,
+                bottom: DsfrSpacings.s1v,
+                child: ClearFieldButton(
+                  tooltip: Strings.a11yClearField(label),
+                  onPressed: _clearQuery,
                 ),
               ),
-              const SizedBox(height: DsfrSpacings.s1w),
-              // A11y 5.1 : fusionné au champ, le bouton d'effacement le faisait passer pour un bouton.
-              // Il reste visible et atteignable au clavier ; pour le lecteur d'écran, il devient une action du champ.
-              Semantics(
-                identifier: label,
-                customSemanticsActions: _controller.text.isNotEmpty
-                    ? {CustomSemanticsAction(label: Strings.clear): _clearQuery}
-                    : null,
-                child: DsfrInputHeadless(
-                  key: ValueKey(widget.isHabitation ? 'habitation' : 'ville'),
-                  controller: _controller,
-                  onChanged: _onQueryChanged,
-                  // A11y 9.12 : la commune d'habitation peut être proposée par le téléphone.
-                  autofillHints: widget.isHabitation ? const [AutofillHints.addressCity] : null,
-                  suffixIcon: _controller.text.isNotEmpty
-                      ? ExcludeSemantics(
-                          child: IconButton(
-                            tooltip: Strings.clear,
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(
-                              minWidth: 40,
-                              minHeight: 40,
-                            ),
-                            icon: Icon(
-                              DsfrIcons.systemCloseLine,
-                              size: 16,
-                              color: DsfrColorDecisions.textDefaultGrey(
-                                context,
-                              ),
-                            ),
-                            onPressed: _clearQuery,
-                          ),
-                        )
-                      : null,
-                ),
-              ),
-            ],
-          ),
+          ],
         ),
         if (_suggestions.isNotEmpty) ...[
           const SizedBox(height: Margins.spacing_s),
@@ -214,19 +209,22 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
                   )
                 : null,
             excludeSemantics: true,
-            child: DsfrSlider(
-              label: Strings.onboardingQuestionnaireRayonLabel,
-              description: Strings.onboardingQuestionnaireRayonDescription(
-                form.draftRayonKm,
+            // A11y 8.5 : prise de focus visible (contour DSFR).
+            child: SliderFocusOutline(
+              child: DsfrSlider(
+                label: Strings.onboardingQuestionnaireRayonLabel,
+                description: Strings.onboardingQuestionnaireRayonDescription(
+                  form.draftRayonKm,
+                ),
+                value: form.draftRayonKm.toDouble(),
+                min: _rayonMin.toDouble(),
+                max: _rayonMax.toDouble(),
+                divisions: 9,
+                size: DsfrComponentSize.md,
+                valueLabelBuilder: (value) => Strings.onboardingQuestionnaireRayonValue(value.round()),
+                showMinMaxLabels: true,
+                onChanged: form.updateRayon,
               ),
-              value: form.draftRayonKm.toDouble(),
-              min: _rayonMin.toDouble(),
-              max: _rayonMax.toDouble(),
-              divisions: 9,
-              size: DsfrComponentSize.md,
-              valueLabelBuilder: (value) => Strings.onboardingQuestionnaireRayonValue(value.round()),
-              showMinMaxLabels: true,
-              onChanged: form.updateRayon,
             ),
           ),
         ],
