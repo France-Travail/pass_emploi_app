@@ -59,7 +59,7 @@ dependencies:
   share_plus: ^11.1.0
   open_filex: ^4.7.0
   in_app_review: ^2.0.10
-  flutter_timezone: ^4.1.1
+  flutter_timezone: ^5.1.1
   connectivity_plus: ^6.1.5
   image_picker: ^1.1.2
   flutter_image_compress: ^2.4.0
