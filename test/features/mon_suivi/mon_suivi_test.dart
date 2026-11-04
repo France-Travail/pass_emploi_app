@@ -1,6 +1,7 @@
 import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
 import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription_actions.dart';
 import 'package:pass_emploi_app/features/auto_inscription/auto_inscription_actions.dart';
 import 'package:pass_emploi_app/features/mon_suivi/mon_suivi_actions.dart';
@@ -273,6 +274,7 @@ void main() {
 
     for (final (description, action) in [
       ('app comes back to foreground', () => ConfigureApplicationOnForegroundAction()),
+      ('action plan declaration succeeds', () => ActionPlanDeclarationSuccessAction('id')),
       ('user subscribes to a session', () => AutoInscriptionSuccessAction()),
       ('user unsubscribes from a session', () => AutoDesinscriptionSuccessAction(true)),
     ]) {

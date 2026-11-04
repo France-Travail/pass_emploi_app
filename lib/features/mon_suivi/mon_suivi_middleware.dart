@@ -1,4 +1,5 @@
 import 'package:clock/clock.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
 import 'package:pass_emploi_app/features/auto_desinscription/auto_desinscription_actions.dart';
 import 'package:pass_emploi_app/features/auto_inscription/auto_inscription_actions.dart';
 import 'package:pass_emploi_app/features/demarche/create/create_demarche_actions.dart';
@@ -96,6 +97,7 @@ class MonSuiviMiddleware extends MiddlewareClass<AppState> {
       UserActionCreateSuccessAction _ => true,
       CreateDemarcheSuccessAction _ => true,
       CreateDemarcheBatchSuccessAction _ => true,
+      ActionPlanDeclarationSuccessAction _ => true,
       AutoInscriptionSuccessAction _ => true,
       AutoDesinscriptionSuccessAction _ => true,
       ConfigureApplicationOnForegroundAction _ => true,
