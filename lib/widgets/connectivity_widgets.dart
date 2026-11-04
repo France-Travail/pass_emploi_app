@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart' show DsfrNoticeType;
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/presentation/connectivity/connectivity_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -32,6 +33,6 @@ class ConnectivityContainer extends StatelessWidget {
 class ConnectivityBandeau extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return DsfrNotice(titre: Strings.notConnected);
+    return DsfrNotice(titre: Strings.notConnected, type: DsfrNoticeType.genericAlert);
   }
 }
