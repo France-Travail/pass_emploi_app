@@ -27,9 +27,13 @@ class CreateDemarcheFromThematiqueStep2Page extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: DsfrSpacings.s2w),
-          Text(
-            Strings.selectDemarche,
-            style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textDefaultGrey(context)),
+          // A11y 7.1 : titre de l'étape.
+          Semantics(
+            header: true,
+            child: Text(
+              Strings.selectDemarche,
+              style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textDefaultGrey(context)),
+            ),
           ),
           const SizedBox(height: DsfrSpacings.s2w),
           _ThematiqueDemarcheList(

@@ -103,4 +103,50 @@ void main() {
       expect("Le 01/12/2024".toDateForScreenReaders(), "Le 01 décembre 2024");
     });
   });
+
+  group('removeEmojisForScreenReaders', () {
+    test('should remove a trailing emoji', () {
+      expect("Bonjour\nToni 👋".removeEmojisForScreenReaders(), "Bonjour\nToni");
+      expect("Bravo, Léa ! 🎉".removeEmojisForScreenReaders(), "Bravo, Léa !");
+    });
+
+    test('should remove a leading emoji', () {
+      expect(
+        "💡 Pas envie de répondre maintenant?".removeEmojisForScreenReaders(),
+        "Pas envie de répondre maintenant?",
+      );
+    });
+
+    test('should remove emojis with variation selector, zero width joiner or skin tone', () {
+      expect("Vol ✈️ prévu".removeEmojisForScreenReaders(), "Vol prévu");
+      expect("Entretien 🧑‍💼".removeEmojisForScreenReaders(), "Entretien");
+      expect("Merci 👍🏽".removeEmojisForScreenReaders(), "Merci");
+    });
+
+    test('should remove an emoji preceded by a non-breaking space', () {
+      expect("Objectif dépassé ! Bravo\u{00A0}👏".removeEmojisForScreenReaders(), "Objectif dépassé ! Bravo");
+    });
+
+    test('should keep accents, punctuation, digits and legal symbols', () {
+      const text = "Ville ou code postal : Lille (59000) – 33 % © ®";
+      expect(text.removeEmojisForScreenReaders(), text);
+    });
+  });
+
+  group('toOffreTitleForScreenReaders', () {
+    test('should spell out H/F', () {
+      expect("Vendeur H/F".toOffreTitleForScreenReaders(), "Vendeur hommes et femmes");
+      expect("Vendeur (H/F)".toOffreTitleForScreenReaders(), "Vendeur hommes et femmes");
+      expect("Vendeur h / f - CDI".toOffreTitleForScreenReaders(), "Vendeur hommes et femmes - CDI");
+    });
+
+    test('should spell out F/H', () {
+      expect("Aide-soignante F/H".toOffreTitleForScreenReaders(), "Aide-soignante femmes et hommes");
+    });
+
+    test('should leave other slashes untouched', () {
+      expect("Boulanger / Pâtissier".toOffreTitleForScreenReaders(), "Boulanger / Pâtissier");
+      expect("CHF/HT".toOffreTitleForScreenReaders(), "CHF/HT");
+    });
+  });
 }

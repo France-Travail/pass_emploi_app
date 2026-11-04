@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/slider/slider_focus_outline.dart';
 
 class DistanceSlider extends StatefulWidget {
   final double initialDistanceValue;
@@ -47,17 +48,20 @@ class _DistanceSliderState extends State<DistanceSlider> {
       onIncrease: value < _maxValue ? () => _onValueChange((value + _step).clamp(0, _maxValue)) : null,
       onDecrease: value > 0 ? () => _onValueChange((value - _step).clamp(0, _maxValue)) : null,
       excludeSemantics: true,
-      child: DsfrSlider(
-        label: widget.label,
-        description: widget.descriptionBuilder(value.round()),
-        value: value,
-        min: 0,
-        max: _maxValue,
-        divisions: _divisions,
-        size: DsfrComponentSize.md,
-        valueLabelBuilder: (v) => widget.valueLabelBuilder(v.round()),
-        showMinMaxLabels: true,
-        onChanged: _onValueChange,
+      // A11y 8.5 : prise de focus visible (contour DSFR).
+      child: SliderFocusOutline(
+        child: DsfrSlider(
+          label: widget.label,
+          description: widget.descriptionBuilder(value.round()),
+          value: value,
+          min: 0,
+          max: _maxValue,
+          divisions: _divisions,
+          size: DsfrComponentSize.md,
+          valueLabelBuilder: (v) => widget.valueLabelBuilder(v.round()),
+          showMinMaxLabels: true,
+          onChanged: _onValueChange,
+        ),
       ),
     );
   }

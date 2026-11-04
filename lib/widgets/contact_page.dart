@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/mail_handler.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
+import 'package:pass_emploi_app/widgets/a11y/a11y_bullet_list.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
 
@@ -55,7 +56,7 @@ class _Body extends StatelessWidget {
             Text(Strings.contactPageBody1, style: textStyle),
             const SizedBox(height: DsfrSpacings.s3w),
             Text(Strings.contactPageBody2, style: textStyle),
-            _ListedItems(
+            A11yBulletList(
               items: [
                 Strings.contactPageBodyBullet1,
                 Strings.contactPageBodyBullet2,
@@ -69,37 +70,6 @@ class _Body extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _ListedItems extends StatelessWidget {
-  final List<String> items;
-
-  const _ListedItems({required this.items});
-
-  @override
-  Widget build(BuildContext context) {
-    final textStyle = DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context));
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (final item in items)
-          Semantics(
-            container: true,
-            child: Padding(
-              padding: const EdgeInsets.only(left: DsfrSpacings.s3w, bottom: DsfrSpacings.s1v),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ExcludeSemantics(child: Text('•', style: textStyle)),
-                  const SizedBox(width: DsfrSpacings.s1w),
-                  Expanded(child: Text(item, style: textStyle)),
-                ],
-              ),
-            ),
-          ),
-      ],
     );
   }
 }

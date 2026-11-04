@@ -27,9 +27,7 @@ class DemarcheDetailsBottomSheet extends StatelessWidget {
           DemarcheDetailBottomSheetViewModel.create(store, demarcheId),
       builder: (context, viewModel) => DsfrBottomSheet(
         shrinkWrap: true,
-        leading: DsfrBottomSheetMoreActionsButton(
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: const DsfrBottomSheetMoreActionsTitle(),
         actions: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

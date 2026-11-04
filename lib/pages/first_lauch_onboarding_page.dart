@@ -305,7 +305,7 @@ class _PageViewScreenState extends State<_PageViewScreen> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const AppLogo(width: 120),
+                        const AppLogo(width: 120, excludeFromSemantics: false),
                         const SizedBox(height: Margins.spacing_base),
                         SizedBox(
                           height: _pageViewHeight,
@@ -459,11 +459,9 @@ class _DiscoveryCard extends StatelessWidget {
             padding: const EdgeInsets.all(Margins.spacing_m),
             child: Builder(
               builder: (context) {
-                // A11y : la clé de focus doit viser un nœud sémantique propre (container).
                 final text = Semantics(
                   key: globalKey,
                   container: true,
-                  header: true,
                   child: Text(
                     title,
                     style: DsfrTextStyle.bodyMdBold(

@@ -71,11 +71,12 @@ void main() {
       expect(find.ancestor(of: find.text(label), matching: find.byType(FittedBox)), findsNothing, reason: label);
       expect(tester.getSize(find.text(label)).width, lessThanOrEqualTo(360 / labels.length), reason: label);
       // L'état sélectionné et le libellé restent restitués par un seul nœud.
-      expect(find.bySemanticsLabel(label), findsOneWidget, reason: label);
+      expect(find.bySemanticsLabel(RegExp('^${RegExp.escape(label)}, ')), findsOneWidget, reason: label);
     }
+    // A11y 5.1 (audit RAAM du 15/10/2026) : chaque onglet indique sa position dans la barre d'onglets.
     expect(
-      tester.getSemantics(find.bySemanticsLabel(Strings.menuAccueil)),
-      containsSemantics(label: Strings.menuAccueil, isButton: true, isSelected: true),
+      tester.getSemantics(find.bySemanticsLabel(RegExp('^${Strings.menuAccueil}, '))),
+      containsSemantics(label: '${Strings.menuAccueil}, Tab 1 of 5', isSelected: true, hasTapAction: true),
     );
     semantics.dispose();
   });

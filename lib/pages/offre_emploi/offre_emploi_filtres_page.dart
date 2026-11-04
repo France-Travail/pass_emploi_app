@@ -313,7 +313,8 @@ class _FiltreDebutantState extends State<_FiltreDebutant> {
               label: Strings.experienceSectionEnabled(_debutantOnlyEnabled),
               child: DsfrToggleSwitch(
                 label: Strings.experienceSectionDescription,
-                labelLocation: DsfrToggleSwitchLabelLocation.left,
+                // A11y 5.1 : l'interrupteur est accolé à son étiquette (repérable en cas de fort zoom).
+                labelLocation: DsfrToggleSwitchLabelLocation.right,
                 value: _debutantOnlyEnabled,
                 status: _debutantOnlyEnabled ? Strings.yes : Strings.no,
                 onChanged: _onDebutantOnlyValueChange,

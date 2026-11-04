@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/pages/onboarding_page.dart';
 import 'package:pass_emploi_app/presentation/accueil/accueil_item.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 
 class AccueilOnboardingTile extends StatelessWidget {
   const AccueilOnboardingTile(this.onboardingItem);
@@ -24,8 +25,9 @@ class AccueilOnboardingTile extends StatelessWidget {
     return Semantics(
       button: true,
       label: isCompleted
-          ? Strings.onboardingAccueilTitleCompleted
-          : '${Strings.onboardingAccueilTitle}. ${onboardingItem.completedSteps} sur ${onboardingItem.totalSteps}',
+          ? Strings.onboardingAccueilTitleCompleted.removeEmojisForScreenReaders()
+          : '${Strings.onboardingAccueilTitle}. '
+                '${Strings.discoveryProgressA11y(onboardingItem.completedSteps, onboardingItem.totalSteps, progressPercent)}',
       onTap: () {
         if (isCompleted) {
           StoreProvider.of<AppState>(context).dispatch(OnboardingHideAction());

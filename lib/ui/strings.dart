@@ -69,6 +69,8 @@ class Strings {
   static String no = "Non";
   static String or = "ou";
   static String ajouter = "Ajouter";
+  static String ajouterSuggestionA11y(String titre) => "Ajouter l’alerte $titre";
+  static String refuserSuggestionA11y(String titre) => "Refuser la suggestion d’alerte $titre";
   static String cancelLabel = "Annuler";
   static String confirmLabel = "Confirmer";
   static String suppressionLabel = "Supprimer";
@@ -659,7 +661,7 @@ class Strings {
   static String inviteAccueilObjectiveFeedbackYes = "Oui";
   static String inviteAccueilObjectiveFeedbackNo = "Pas vraiment";
   static String inviteAccueilObjectiveFeedbackNoA11y =
-      "Ouvre un formulaire dans ton navigateur";
+      "Ouvre un formulaire de retour";
   static String inviteAccueilObjectiveFeedbackThanks =
       "Merci pour ton retour !";
   static String inviteAccueilRetryPlan = "Réessayer de générer mes suggestions";
@@ -687,6 +689,8 @@ class Strings {
   static String inviteAccueilDeleteConfirmTitle = "Supprimer l'action\u{00A0}?";
   static String inviteAccueilPlanLoadingA11y =
       "Chargement de tes pistes à explorer";
+  static String discoveryProgressA11y(int done, int total, int percent) =>
+      "Progression : $done ${done > 1 ? "étapes terminées" : "étape terminée"} sur $total, soit $percent %";
   static String inviteAccueilDiscoveryProgressA11y(int percent) =>
       "Découverte de l'application : $percent % terminé";
   static String inviteAccueilDiscoveryHideA11y =
@@ -1954,11 +1958,11 @@ class Strings {
           "tes recherches et offres sauvegardées",
         ];
   static String lastWarningBeforeSuppression = Brand.isPassEmploi()
-      ? "Tapez “supprimer” pour confirmer la suppression de votre compte."
-      : "Tape “supprimer” pour confirmer la suppression de ton compte.";
+      ? "Tapez le mot “supprimer” pour confirmer la suppression de votre compte (majuscules et minuscules acceptées)."
+      : "Tape le mot “supprimer” pour confirmer la suppression de ton compte (majuscules et minuscules acceptées).";
   static String mandatorySuppressionLabelError = Brand.isPassEmploi()
-      ? "Champ invalide. Vérifiez que vous avez bien tapé “supprimer”"
-      : "Champs invalide. Vérifie que tu as bien tapé “supprimer”";
+      ? "Champ invalide. Vérifiez que vous avez bien tapé “supprimer”."
+      : "Champ invalide. Vérifie que tu as bien tapé “supprimer”.";
   static String accountDeletionSuccess = Brand.isCej()
       ? _CejStrings.accountDeletionSuccess
       : _PassEmploiStrings.accountDeletionSuccess;
@@ -2474,6 +2478,11 @@ class Strings {
   static String chosenValue = "Valeur choisie :";
   // A11y 5.1 : le rôle « bouton » est annoncé par le lecteur d'écran, il ne doit pas figurer dans le libellé.
   static String bottomSheetBarrierLabel = closeDialog;
+  static String a11yListIntro(int count) => count > 1 ? "Liste de $count éléments" : "Liste de $count élément";
+  static String a11yListPosition(int position, int count) => "$position sur $count";
+  static String a11yClearField(String fieldLabel) => "Effacer le champ « $fieldLabel »";
+  static String a11yHommesEtFemmes = "hommes et femmes";
+  static String a11yFemmesEtHommes = "femmes et hommes";
   static String a11yExpanded = "développé";
   static String a11yCollapsed = "réduit";
   static String a11yOpensExternalSite = Brand.isPassEmploi()

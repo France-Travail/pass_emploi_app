@@ -7,6 +7,8 @@ import 'package:pass_emploi_app/ui/dimens.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class ShowcaseWrapper extends StatelessWidget {
@@ -59,29 +61,39 @@ class _OnboardingShowcaseState extends State<OnboardingShowcase> {
       builder: (context, show) {
         if (!show) return widget.child;
 
+        final title = switch (widget.source) {
+          ShowcaseSource.message => Strings.onboardingShowcaseMessageTitle,
+          ShowcaseSource.action => Strings.onboardingShowcaseActionTitle,
+          ShowcaseSource.offre => Strings.onboardingShowcaseOffreTitle,
+          ShowcaseSource.evenement => Strings.onboardingShowcaseEvenementTitle,
+          ShowcaseSource.planAction => Strings.onboardingShowcasePlanActionTitle,
+        };
+        final description = switch (widget.source) {
+          ShowcaseSource.message => Strings.onboardingShowcaseMessageDescription,
+          ShowcaseSource.action => Strings.onboardingShowcaseActionDescription,
+          ShowcaseSource.offre => Strings.onboardingShowcaseOffreDescription,
+          ShowcaseSource.evenement => Strings.onboardingShowcaseEvenementDescription,
+          ShowcaseSource.planAction => Strings.onboardingShowcasePlanActionDescription,
+        };
+
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (show && !shown) {
-            ShowCaseWidget.of(context).startShowCase([key]);
             shown = true;
+            // A11y 5.1 / 10.2 : avec un lecteur d'écran, pas de calque de mise en avant (page accessible derrière lui,
+            // cible sans nom ni rôle) : son contenu est annoncé et l'étape est marquée comme vue.
+            if (A11yUtils.withScreenReader(context)) {
+              A11yUtils.announce('$title. $description'.removeEmojisForScreenReaders());
+              StoreProvider.of<AppState>(context).dispatch(ResetOnboardingShowcaseAction());
+            } else {
+              ShowCaseWidget.of(context).startShowCase([key]);
+            }
           }
         });
         return Showcase(
           targetBorderRadius: BorderRadius.circular(Dimens.radius_base),
           tooltipPosition: widget.bottom ? TooltipPosition.bottom : TooltipPosition.top,
-          title: switch (widget.source) {
-            ShowcaseSource.message => Strings.onboardingShowcaseMessageTitle,
-            ShowcaseSource.action => Strings.onboardingShowcaseActionTitle,
-            ShowcaseSource.offre => Strings.onboardingShowcaseOffreTitle,
-            ShowcaseSource.evenement => Strings.onboardingShowcaseEvenementTitle,
-            ShowcaseSource.planAction => Strings.onboardingShowcasePlanActionTitle,
-          },
-          description: switch (widget.source) {
-            ShowcaseSource.message => Strings.onboardingShowcaseMessageDescription,
-            ShowcaseSource.action => Strings.onboardingShowcaseActionDescription,
-            ShowcaseSource.offre => Strings.onboardingShowcaseOffreDescription,
-            ShowcaseSource.evenement => Strings.onboardingShowcaseEvenementDescription,
-            ShowcaseSource.planAction => Strings.onboardingShowcasePlanActionDescription,
-          },
+          title: title,
+          description: description,
           tooltipBackgroundColor: DsfrColorDecisions.backgroundActionHighBlueFrance(context),
           tooltipBorderRadius: BorderRadius.zero,
           titleTextStyle: TextStyles.textMBold.copyWith(

@@ -5,6 +5,7 @@ import 'package:pass_emploi_app/models/onboarding.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/confetti_wrapper.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
 
@@ -99,7 +100,14 @@ class _OnboardingNotifierWrapperState extends State<OnboardingNotifierWrapper> {
                           data: Theme.of(context).copyWith(focusColor: Colors.transparent),
                           child: DsfrAlert(
                             type: DsfrAlertType.success,
-                            description: DsfrAlertDescriptionText(message),
+                            // A11y 1.1 : l'emoji « 🎉 » du message est décoratif.
+                            description: DsfrAlertDescriptionWidget(
+                              Text(
+                                message,
+                                semanticsLabel: message.removeEmojisForScreenReaders(),
+                                style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+                              ),
+                            ),
                             onClose: () => _closeBanner(previousFocus),
                           ),
                         ),
@@ -115,7 +123,7 @@ class _OnboardingNotifierWrapperState extends State<OnboardingNotifierWrapper> {
     );
     // A11y 5.4 : en bas, la SnackBar Material était une région annoncée ; le bandeau du haut ne l'est pas. Le message
     // est donc annoncé à son apparition, sans l'émoji (que TalkBack lirait par son nom).
-    A11yUtils.announce(message.replaceAll(RegExp(r'\p{Extended_Pictographic}️?', unicode: true), '').trim());
+    A11yUtils.announce(message.removeEmojisForScreenReaders());
   }
 
   void _closeBanner(FocusNode? previousFocus) {

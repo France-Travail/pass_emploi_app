@@ -102,6 +102,7 @@ class _Content extends StatelessWidget {
           label: Strings.eventEmploiDetailsInscription,
           icon: DsfrIcons.systemExternalLinkLine,
           semanticsLink: true,
+          semanticsLinkUrl: viewModel.url,
           onPressed: () => _openInscriptionUrl(context),
         ),
       OffreDetailsAction(

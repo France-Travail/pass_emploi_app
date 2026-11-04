@@ -170,9 +170,13 @@ class _Content extends StatelessWidget {
           _OffreLien(offreId: offreId, fromAlternance: viewModel.fromAlternance, offreLien: viewModel.offreLien!),
           const SizedBox(height: DsfrSpacings.s1w),
         ],
-        Text(
-          Strings.ouEnEtesVous,
-          style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+        // A11y 7.1 : titre du bloc de suivi de l'offre.
+        Semantics(
+          header: true,
+          child: Text(
+            Strings.ouEnEtesVous,
+            style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+          ),
         ),
         const SizedBox(height: DsfrSpacings.s1w),
         _Options(viewModel, trackingSource),

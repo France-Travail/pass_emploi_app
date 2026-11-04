@@ -19,6 +19,7 @@ import 'package:pass_emploi_app/ui/app_icons.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/buttons/primary_action_button.dart';
 import 'package:pass_emploi_app/widgets/buttons/secondary_button.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/base_card.dart';
@@ -227,6 +228,7 @@ class _Card extends StatelessWidget {
       ],
       actions: [
         _Buttons(
+          titre: viewModel.titre.toOffreTitleForScreenReaders(),
           onTapAjouter: () async {
             if (viewModel.withLocationForm) {
               await _selectLocationAndRayon(
@@ -261,18 +263,39 @@ class _Card extends StatelessWidget {
 }
 
 class _Buttons extends StatelessWidget {
+  final String titre;
   final Function() onTapAjouter;
   final Function() onTapRefuser;
 
-  _Buttons({required this.onTapAjouter, required this.onTapRefuser});
+  _Buttons({required this.titre, required this.onTapAjouter, required this.onTapRefuser});
 
   @override
   Widget build(BuildContext context) {
+    // A11y 5.1 : le nom des boutons reprend l'intitulé de la suggestion, pour les distinguer d'une carte à l'autre ;
+    // il commence par le libellé visible.
     return Row(
       children: [
-        Expanded(child: _Refuser(onTapRefuser: onTapRefuser)),
+        Expanded(
+          child: Semantics(
+            container: true,
+            button: true,
+            label: Strings.refuserSuggestionA11y(titre),
+            onTap: onTapRefuser,
+            excludeSemantics: true,
+            child: _Refuser(onTapRefuser: onTapRefuser),
+          ),
+        ),
         SizedBox(width: Margins.spacing_base),
-        Expanded(child: _Ajouter(onTapAjouter: onTapAjouter)),
+        Expanded(
+          child: Semantics(
+            container: true,
+            button: true,
+            label: Strings.ajouterSuggestionA11y(titre),
+            onTap: onTapAjouter,
+            excludeSemantics: true,
+            child: _Ajouter(onTapAjouter: onTapAjouter),
+          ),
+        ),
       ],
     );
   }

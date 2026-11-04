@@ -128,18 +128,24 @@ void main() {
       debugDefaultTargetPlatformOverride = null;
     });
 
-    testWidgets("Android : annonce la nouvelle étape quand on passe l'étape", (tester) async {
+    testWidgets(
+        "Android : au changement d'étape, pas d'annonce : les boutons sont recréés et le focus va sur le titre",
+        (tester) async {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       final annonces = captureAnnonces(tester);
 
       await pump(tester, state(resumedFromApp: true));
       await tester.pump(const Duration(seconds: 1));
+      final skipAvant = tester.element(find.text(Strings.onboardingQuestionnaireSkip));
       await tester.tap(find.text(Strings.onboardingQuestionnaireSkip));
       await tester.pumpAndSettle();
       await tester.pump(const Duration(seconds: 1));
 
-      expect(annonces, hasLength(2));
-      expect(annonces.last, startsWith('Étape 2 sur 8, '));
+      // Seule l'ouverture est annoncée.
+      expect(annonces, hasLength(1));
+      // A11y 10.2 : le bouton de l'étape précédente n'existe plus (TalkBack peut alors suivre le focus demandé).
+      expect(tester.element(find.text(Strings.onboardingQuestionnaireSkip)), isNot(same(skipAvant)));
+      expect(find.bySemanticsLabel(RegExp('^Étape 2 sur 8, ')), findsOneWidget);
       debugDefaultTargetPlatformOverride = null;
     });
 

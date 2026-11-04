@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/success/bottom_actions.dart';
 import 'package:pass_emploi_app/widgets/success/success_illustration.dart';
 
@@ -49,6 +50,8 @@ class CreationConfirmationBody extends StatelessWidget {
                       header: true,
                       child: Text(
                         title,
+                        // A11y 1.1 : l'emoji « 🎉 » est décoratif.
+                        semanticsLabel: title.removeEmojisForScreenReaders(),
                         textAlign: TextAlign.center,
                         style: DsfrTextStyle.headline3(color: titleColor),
                       ),

@@ -208,14 +208,14 @@ class _IdentityHighlight extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // A11y 7.1 : le nom de l'utilisateur est un texte, pas un titre de section.
                 GestureDetector(
                   onDoubleTap: viewModel.onTitleTap,
-                  child: Semantics(
-                    header: true,
-                    child: Text(
-                      viewModel.userName,
-                      style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
-                    ),
+                  // Le double appui est un raccourci de développement : il n'est pas proposé au lecteur d'écran.
+                  excludeFromSemantics: true,
+                  child: Text(
+                    viewModel.userName,
+                    style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
                   ),
                 ),
                 if (viewModel.withQuestionnaireHighlight) ...[

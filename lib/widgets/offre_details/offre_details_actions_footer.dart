@@ -10,6 +10,7 @@ class OffreDetailsAction {
     this.variant = DsfrButtonVariant.primary,
     this.semanticsLink = false,
     this.semanticsLinkDestination = LinkDestination.website,
+    this.semanticsLinkUrl,
   });
 
   final String label;
@@ -18,6 +19,9 @@ class OffreDetailsAction {
   final DsfrButtonVariant variant;
   final bool semanticsLink;
   final LinkDestination semanticsLinkDestination;
+
+  /// Adresse du lien : donne le rôle lien sur Android (voir [ExternalLinkSemantics]).
+  final String? semanticsLinkUrl;
 }
 
 class OffreDetailsActionsFooter extends StatelessWidget {
@@ -70,12 +74,12 @@ class _ActionButton extends StatelessWidget {
       onPressed: action.onPressed,
     );
     if (!action.semanticsLink) return SizedBox(width: double.infinity, child: button);
-    // A11y 5.1 : DsfrButton expose toujours un rôle bouton ; on le remplace par un rôle lien unique
-    // (bouton + indication de site externe sur Android, où le rôle lien n'est pas annoncé).
+    // A11y 5.1 : DsfrButton expose toujours un rôle bouton ; on le remplace par un rôle lien unique.
     return ExternalLinkSemantics(
       label: action.label,
       onTap: action.onPressed,
       destination: action.semanticsLinkDestination,
+      url: action.semanticsLinkUrl,
       child: SizedBox(width: double.infinity, child: button),
     );
   }

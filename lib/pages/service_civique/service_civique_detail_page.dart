@@ -125,12 +125,15 @@ class ServiceCiviqueDetailPage extends StatelessWidget {
         OffreDetailsAction(
           label: Strings.postulerButtonTitle,
           icon: viewModel.shouldShowCvBottomSheet ? null : DsfrIcons.systemExternalLinkLine,
-          semanticsLink: true,
+          // A11y 5.1 : avec des CV, « Je postule » ouvre une fenêtre de l'application : c'est un bouton.
+          semanticsLink: !viewModel.shouldShowCvBottomSheet,
+          semanticsLinkUrl: detail?.lienAnnonce,
           onPressed: () {
             final url = detail!.lienAnnonce!;
             if (viewModel.shouldShowCvBottomSheet) {
               PostulerOffreBottomSheet.show(
                 context,
+                url: url,
                 onPostuler: () => _applyToOffer(context, url),
               );
             } else {

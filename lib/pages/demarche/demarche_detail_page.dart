@@ -156,10 +156,14 @@ class _Body extends StatelessWidget {
           ),
         ],
         const SizedBox(height: DsfrSpacings.s2w),
-        Text(
-          Strings.demarcheDetails,
-          style: DsfrTextStyle.bodyMdBold(
-            color: DsfrColorDecisions.textTitleGrey(context),
+        // A11y 7.1 : titre de section de la fenêtre de détail.
+        Semantics(
+          header: true,
+          child: Text(
+            Strings.demarcheDetails,
+            style: DsfrTextStyle.bodyMdBold(
+              color: DsfrColorDecisions.textTitleGrey(context),
+            ),
           ),
         ),
         if (viewModel.promptIa != null) ...[
@@ -183,10 +187,14 @@ class _Body extends StatelessWidget {
           color: DsfrColorDecisions.borderDefaultGrey(context),
         ),
         const SizedBox(height: DsfrSpacings.s2w),
-        Text(
-          Strings.historiqueDemarche,
-          style: DsfrTextStyle.bodyMdBold(
-            color: DsfrColorDecisions.textTitleGrey(context),
+        // A11y 7.1 : titre de section de la fenêtre de détail.
+        Semantics(
+          header: true,
+          child: Text(
+            Strings.historiqueDemarche,
+            style: DsfrTextStyle.bodyMdBold(
+              color: DsfrColorDecisions.textTitleGrey(context),
+            ),
           ),
         ),
         const SizedBox(height: DsfrSpacings.s2w),

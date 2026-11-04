@@ -19,6 +19,7 @@ import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
+import 'package:pass_emploi_app/widgets/a11y/expandable_header_semantics.dart';
 import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 import 'package:pass_emploi_app/widgets/onboarding/onboarding_showcase.dart';
 
@@ -92,8 +93,6 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> with MaterialS
   static const _initialVisible = 5;
   static const _animationCurve = Curves.ease;
 
-  bool get _isAndroid => defaultTargetPlatform == TargetPlatform.android;
-
   @override
   Widget build(BuildContext context) {
     final objective = widget.objective;
@@ -104,8 +103,6 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> with MaterialS
       final willExpand = !_expanded;
       setState(() => _expanded = willExpand);
       if (willExpand) widget.onExpanded?.call();
-      // A11y 5.5 : TalkBack ignore `expanded`, le nouvel état est donc annoncé explicitement.
-      if (_isAndroid) A11yUtils.announce(willExpand ? Strings.a11yExpanded : Strings.a11yCollapsed);
       ActionPlanTrackingEvent(
         willExpand
             ? AnalyticsEventNames.actionPlanObjectiveExpandedAction
@@ -115,16 +112,11 @@ class _ObjectiveAccordionState extends State<_ObjectiveAccordion> with MaterialS
       ).send();
     }
 
-    // A11y : un seul nœud bouton, avec l'état déplié/replié et la progression explicitée.
-    // A11y 5.5 : sur Android, `expanded` n'est pas annoncé par TalkBack, l'état est porté par `value`.
-    final header = Semantics(
-      container: true,
-      button: true,
-      expanded: _isAndroid ? null : _expanded,
-      value: _isAndroid ? (_expanded ? Strings.a11yExpanded : Strings.a11yCollapsed) : null,
+    // A11y : un seul nœud bouton, avec la progression explicitée et l'état déplié/replié (A11y 5.5).
+    final header = ExpandableHeaderSemantics(
       label: '${objective.title}, ${Strings.inviteAccueilProgressA11y(objective.doneCount, objective.totalCount)}',
+      expanded: _expanded,
       onTap: toggle,
-      excludeSemantics: true,
       child: InkWell(
         onTap: toggle,
         // Le fond opaque masque le surlignage d'encre : le contour DSFR rend le focus clavier visible.
@@ -418,9 +410,10 @@ class _InviteActionPlanActionTileState extends State<InviteActionPlanActionTile>
                           ),
                         ),
                         if (_hasLink)
-                          // A11y 5.1 : rôle et indication de site externe audibles sur Android.
+                          // A11y 5.1 : rôle lien, y compris sur Android (voir ExternalLinkSemantics).
                           ExternalLinkSemantics(
                             label: action.serviceName ?? action.label,
+                            url: action.url,
                             onTap: _openLink,
                             child: _serviceName(context),
                           )
@@ -639,9 +632,13 @@ class InviteObjectiveFeedback extends StatelessWidget {
           : Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  Strings.inviteAccueilObjectiveFeedbackTitle,
-                  style: titleStyle,
+                // A11y 7.1 : titre du bloc de retour sur les actions.
+                Semantics(
+                  header: true,
+                  child: Text(
+                    Strings.inviteAccueilObjectiveFeedbackTitle,
+                    style: titleStyle,
+                  ),
                 ),
                 const SizedBox(height: DsfrSpacings.s3v),
                 Wrap(
@@ -655,17 +652,19 @@ class InviteObjectiveFeedback extends StatelessWidget {
                       size: DsfrComponentSize.md,
                       onPressed: () => _answer(useful: true),
                     ),
-                    // A11y : le bouton ouvre le navigateur, ce que son libellé ne dit pas.
-                    MergeSemantics(
-                      child: Semantics(
-                        hint: Strings.inviteAccueilObjectiveFeedbackNoA11y,
-                        child: DsfrButton(
-                          label: Strings.inviteAccueilObjectiveFeedbackNo,
-                          icon: DsfrIcons.systemThumbDownLine,
-                          variant: DsfrButtonVariant.tertiary,
-                          size: DsfrComponentSize.md,
-                          onPressed: () => _answer(useful: false),
-                        ),
+                    // A11y 5.1 : « Pas vraiment » ouvre un formulaire web : c'est un lien, dont l'indication
+                    // précise la destination que le libellé ne dit pas.
+                    ExternalLinkSemantics(
+                      label: Strings.inviteAccueilObjectiveFeedbackNo,
+                      hint: Strings.inviteAccueilObjectiveFeedbackNoA11y,
+                      url: ExternalLinks.actionPlanObjectiveFeedback,
+                      onTap: () => _answer(useful: false),
+                      child: DsfrButton(
+                        label: Strings.inviteAccueilObjectiveFeedbackNo,
+                        icon: DsfrIcons.systemThumbDownLine,
+                        variant: DsfrButtonVariant.tertiary,
+                        size: DsfrComponentSize.md,
+                        onPressed: () => _answer(useful: false),
                       ),
                     ),
                   ],

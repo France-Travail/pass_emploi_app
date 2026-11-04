@@ -111,11 +111,9 @@ class _BodyState extends State<_Body> {
                   label: Strings.cguSwitchLabel(_cguAccepted),
                   child: DsfrToggleSwitch(
                     label: switchLabel,
-                    labelLocation: DsfrToggleSwitchLabelLocation.left,
+                    labelLocation: DsfrToggleSwitchLabelLocation.right,
                     value: _cguAccepted,
-                    status: _cguAccepted
-                        ? Strings.notificationsToggleEnabled
-                        : Strings.notificationsToggleDisabled,
+                    status: _cguAccepted ? Strings.notificationsToggleEnabled : Strings.notificationsToggleDisabled,
                     componentState: hasError
                         ? DsfrComponentState.error(errorMessage: Strings.cguSwitchError)
                         : const DsfrComponentState.none(),
@@ -226,8 +224,7 @@ class _CguUpdateRequiredContent extends StatelessWidget {
           onTap: _launchExternalRedirect,
         ),
         Text(Strings.cguUpdateRequiredDescription[3], style: bodyStyle),
-        for (final change in displayState.changes)
-          Text(' • $change\n', style: bodyStyle),
+        for (final change in displayState.changes) Text(' • $change\n', style: bodyStyle),
       ],
     );
   }

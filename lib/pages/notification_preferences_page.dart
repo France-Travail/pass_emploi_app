@@ -174,7 +174,7 @@ class _Content extends StatelessWidget {
     return DsfrToggleSwitch(
       label: title,
       description: description,
-      labelLocation: DsfrToggleSwitchLabelLocation.left,
+      labelLocation: DsfrToggleSwitchLabelLocation.right,
       value: value,
       status: value ? Strings.notificationsToggleEnabled : Strings.notificationsToggleDisabled,
       onChanged: onChanged,

@@ -114,8 +114,6 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
     return _ModeDemoWrapper(
       child: Scaffold(
         backgroundColor: context.bg,
-        // A11y 10.1 : contenu et barre du bas forment deux groupes de tabulation, pour que le focus
-        // parcoure toute la page avant les onglets, au lieu d'alterner selon la position à l'écran.
         body: FocusTraversalGroup(
           child: Container(
             color: context.grey100,
@@ -209,8 +207,6 @@ class MainPageState extends State<MainPage> with WidgetsBindingObserver {
   }
 }
 
-/// Masque la barre du bas quand le clavier est ouvert sur la messagerie, sans
-/// reconstruire le corps de [MainPage] (évite la perte de focus du champ texte).
 class _ChatAwareBottomNavigationBar extends StatefulWidget {
   const _ChatAwareBottomNavigationBar({
     required this.hideWhenKeyboardVisible,
@@ -324,9 +320,9 @@ class _PopUpActualisationPe extends StatelessWidget {
           style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
         ),
         const SizedBox(height: DsfrSpacings.s4w),
-        // A11y 5.1 : un seul rôle (lien) au lieu de lien + bouton.
         ExternalLinkSemantics(
           label: Strings.actualisationPePopUpPrimaryButton,
+          url: actualisationPoleEmploiUrl,
           onTap: () => _onActualisationPressed(context),
           child: DsfrButton(
             label: Strings.actualisationPePopUpPrimaryButton,

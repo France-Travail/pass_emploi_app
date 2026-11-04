@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 
 class OnboardingQuestionnaireBirthdateStep extends StatefulWidget {
   const OnboardingQuestionnaireBirthdateStep({super.key, required this.form});
@@ -53,6 +54,8 @@ class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestio
         const SizedBox(height: Margins.spacing_s),
         Text(
           Strings.onboardingQuestionnaireBirthdateSubtitle,
+          // A11y 1.1 : l'emoji « 🎂 » est décoratif.
+          semanticsLabel: Strings.onboardingQuestionnaireBirthdateSubtitle.removeEmojisForScreenReaders(),
           style: DsfrTextStyle.bodyMdBold(
             color: DsfrColorDecisions.textTitleGrey(context),
           ),

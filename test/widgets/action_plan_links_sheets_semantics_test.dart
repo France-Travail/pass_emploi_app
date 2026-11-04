@@ -21,31 +21,47 @@ void main() {
   tearDown(() => debugDefaultTargetPlatformOverride = null);
 
   group('ExternalLinkSemantics', () {
-    Future<void> pump(WidgetTester tester) => tester.pumpWidget(
+    Future<void> pump(WidgetTester tester, {String? url = 'https://labonneboite.francetravail.fr'}) =>
+        tester.pumpWidget(
           MaterialApp(
             home: ExternalLinkSemantics(
               label: 'La Bonne Boîte',
+              url: url,
               onTap: () {},
               child: const SizedBox(width: 50, height: 50),
             ),
           ),
         );
 
-    testWidgets('Android : bouton avec indication de site externe', (tester) async {
+    testWidgets('Android : rôle lien natif (URLSpan via linkUrl), sans indication de navigateur', (tester) async {
       final handle = tester.ensureSemantics();
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       await pump(tester);
 
       final data = tester.getSemantics(find.bySemanticsLabel('La Bonne Boîte')).getSemanticsData();
-      expect(data.flagsCollection.isButton, isTrue);
-      expect(data.flagsCollection.isLink, isFalse);
-      expect(data.hint, Strings.a11yOpensExternalSite);
+      expect(data.flagsCollection.isLink, isTrue);
+      expect(data.flagsCollection.isButton, isFalse);
+      expect(data.linkUrl, Uri.parse('https://labonneboite.francetravail.fr'));
+      expect(data.hint, isEmpty);
 
       debugDefaultTargetPlatformOverride = null;
       handle.dispose();
     });
 
-    testWidgets('iOS : rôle lien conservé', (tester) async {
+    testWidgets('Android : sans adresse, repli sur un bouton', (tester) async {
+      final handle = tester.ensureSemantics();
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      await pump(tester, url: null);
+
+      final data = tester.getSemantics(find.bySemanticsLabel('La Bonne Boîte')).getSemanticsData();
+      expect(data.flagsCollection.isButton, isTrue);
+      expect(data.flagsCollection.isLink, isFalse);
+
+      debugDefaultTargetPlatformOverride = null;
+      handle.dispose();
+    });
+
+    testWidgets('iOS : rôle lien', (tester) async {
       final handle = tester.ensureSemantics();
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       await pump(tester);
@@ -58,25 +74,44 @@ void main() {
       debugDefaultTargetPlatformOverride = null;
       handle.dispose();
     });
+
+    testWidgets('indication explicite (destination non dite par le libellé)', (tester) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ExternalLinkSemantics(
+            label: 'Pas vraiment',
+            hint: 'Ouvre un formulaire de retour',
+            url: 'https://tally.so/r/x',
+            onTap: () {},
+            child: const SizedBox(width: 50, height: 50),
+          ),
+        ),
+      );
+
+      final data = tester.getSemantics(find.bySemanticsLabel('Pas vraiment')).getSemanticsData();
+      expect(data.hint, 'Ouvre un formulaire de retour');
+      handle.dispose();
+    });
   });
 
-  group('ExternalLinkSemantics : indications selon la destination', () {
-    final expected = {
-      LinkDestination.website: Strings.a11yOpensExternalSite,
-      LinkDestination.appStore: Strings.a11yOpensAppStore,
-      LinkDestination.appSettings: Strings.a11yOpensAppSettings,
-      LinkDestination.mailApp: Strings.a11yOpensMailApp,
-      LinkDestination.phoneApp: Strings.a11yOpensPhoneApp,
+  group('ExternalLinkSemantics : rôle selon la destination', () {
+    final urls = {
+      LinkDestination.website: 'https://exemple.fr',
+      LinkDestination.appStore: 'market://details?id=fr.fabrique.social.gouv.passemploi',
+      LinkDestination.mailApp: 'mailto:a@b.fr',
+      LinkDestination.phoneApp: 'tel:0102030405',
     };
 
-    for (final entry in expected.entries) {
-      testWidgets('Android : ${entry.key.name}', (tester) async {
+    for (final entry in urls.entries) {
+      testWidgets('Android : ${entry.key.name} = lien, sans indication', (tester) async {
         final handle = tester.ensureSemantics();
         debugDefaultTargetPlatformOverride = TargetPlatform.android;
         await tester.pumpWidget(
           MaterialApp(
             home: ExternalLinkSemantics(
               label: 'Lien',
+              url: entry.value,
               destination: entry.key,
               onTap: () {},
               child: const SizedBox(width: 50, height: 50),
@@ -85,13 +120,36 @@ void main() {
         );
 
         final data = tester.getSemantics(find.bySemanticsLabel('Lien')).getSemanticsData();
-        expect(data.flagsCollection.isButton, isTrue);
-        expect(data.hint, entry.value);
+        expect(data.flagsCollection.isLink, isTrue);
+        expect(data.flagsCollection.isButton, isFalse);
+        expect(data.hint, isEmpty);
 
         debugDefaultTargetPlatformOverride = null;
         handle.dispose();
       });
     }
+
+    testWidgets("Android : réglages de l'application = bouton avec indication", (tester) async {
+      final handle = tester.ensureSemantics();
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ExternalLinkSemantics(
+            label: 'Réglages',
+            destination: LinkDestination.appSettings,
+            onTap: () {},
+            child: const SizedBox(width: 50, height: 50),
+          ),
+        ),
+      );
+
+      final data = tester.getSemantics(find.bySemanticsLabel('Réglages')).getSemanticsData();
+      expect(data.flagsCollection.isButton, isTrue);
+      expect(data.hint, Strings.a11yOpensAppSettings);
+
+      debugDefaultTargetPlatformOverride = null;
+      handle.dispose();
+    });
 
     testWidgets('Android : navigation interne = bouton sans indication, iOS : lien', (tester) async {
       final handle = tester.ensureSemantics();
@@ -240,9 +298,41 @@ void main() {
           ),
         );
 
-    testWidgets("Android : l'état est porté par value et annoncé au changement", (tester) async {
+    testWidgets(
+        "Android : l'état termine le nom, dans une région live relue au changement (pas d'annonce dépréciée)",
+        (tester) async {
       final handle = tester.ensureSemantics();
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final announcements = <String>[];
+      tester.binding.defaultBinaryMessenger.setMockDecodedMessageHandler<dynamic>(SystemChannels.accessibility,
+          (message) async {
+        if (message is Map && message['type'] == 'announce') {
+          announcements.add((message['data'] as Map)['message'] as String);
+        }
+        return null;
+      });
+      await pump(tester);
+
+      var data = tester.getSemantics(headerFinder()).getSemanticsData();
+      expect(data.label, endsWith(', ${Strings.a11yCollapsed}'));
+      expect(data.flagsCollection.isLiveRegion, isTrue);
+      expect(data.flagsCollection.isButton, isTrue);
+
+      await tester.tap(headerFinder());
+      await tester.pump(const Duration(seconds: 1));
+      data = tester.getSemantics(headerFinder()).getSemanticsData();
+      expect(data.label, endsWith(', ${Strings.a11yExpanded}'));
+      expect(announcements, isEmpty);
+
+      tester.binding.defaultBinaryMessenger.setMockDecodedMessageHandler<dynamic>(SystemChannels.accessibility, null);
+      debugDefaultTargetPlatformOverride = null;
+      handle.dispose();
+    });
+
+    testWidgets("iOS : l'état est porté par value (expanded ignoré par le moteur) et annoncé au changement",
+        (tester) async {
+      final handle = tester.ensureSemantics();
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final announcements = <String>[];
       tester.binding.defaultBinaryMessenger.setMockDecodedMessageHandler<dynamic>(SystemChannels.accessibility,
           (message) async {
@@ -258,36 +348,11 @@ void main() {
 
       await tester.tap(headerFinder());
       await tester.pump(const Duration(seconds: 1));
+      // L'annonce part du nouveau rendu : on laisse passer son délai.
+      await tester.pump(const Duration(milliseconds: 200));
       data = tester.getSemantics(headerFinder()).getSemanticsData();
       expect(data.value, Strings.a11yExpanded);
       expect(announcements, [Strings.a11yExpanded]);
-
-      tester.binding.defaultBinaryMessenger.setMockDecodedMessageHandler<dynamic>(SystemChannels.accessibility, null);
-      debugDefaultTargetPlatformOverride = null;
-      handle.dispose();
-    });
-
-    testWidgets("iOS : expanded conservé, pas de value ni d'annonce", (tester) async {
-      final handle = tester.ensureSemantics();
-      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      final announcements = <Object?>[];
-      tester.binding.defaultBinaryMessenger.setMockDecodedMessageHandler<dynamic>(SystemChannels.accessibility,
-          (message) async {
-        if (message is Map && message['type'] == 'announce') announcements.add(message);
-        return null;
-      });
-      await pump(tester);
-
-      var data = tester.getSemantics(headerFinder()).getSemanticsData();
-      expect(data.value, isEmpty);
-      expect(data.flagsCollection.hasExpandedState, isTrue);
-      expect(data.flagsCollection.isExpanded, isFalse);
-
-      await tester.tap(headerFinder());
-      await tester.pump(const Duration(seconds: 1));
-      data = tester.getSemantics(headerFinder()).getSemanticsData();
-      expect(data.flagsCollection.isExpanded, isTrue);
-      expect(announcements, isEmpty);
 
       tester.binding.defaultBinaryMessenger.setMockDecodedMessageHandler<dynamic>(SystemChannels.accessibility, null);
       debugDefaultTargetPlatformOverride = null;

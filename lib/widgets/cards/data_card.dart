@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/pages/offre_page.dart';
 import 'package:pass_emploi_app/presentation/offre_emploi/offre_emploi_origin_view_model.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/date_derniere_consultation_provider.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_event_card.dart';
 import 'package:pass_emploi_app/widgets/favori_heart.dart';
 
@@ -219,7 +220,8 @@ class DataCard<T> extends StatelessWidget {
 
   String _semanticsLabel(String? contractLabel, String? mention) {
     return [
-      titre,
+      // A11y 8.1 : « H/F » explicité.
+      titre.toOffreTitleForScreenReaders(),
       if (sousTitre?.isNotEmpty == true) sousTitre!,
       if (category?.isNotEmpty == true) category!,
       if (lieu?.isNotEmpty == true) lieu!,

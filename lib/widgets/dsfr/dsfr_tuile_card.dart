@@ -18,6 +18,7 @@ class DsfrTuileCard extends StatelessWidget {
     this.dismissSemanticLabel,
     this.semanticsLink = false,
     this.semanticsLinkDestination = LinkDestination.website,
+    this.semanticsLinkUrl,
     this.semanticsLabel,
   });
 
@@ -29,6 +30,9 @@ class DsfrTuileCard extends StatelessWidget {
   final String? dismissSemanticLabel;
   final bool semanticsLink;
   final LinkDestination semanticsLinkDestination;
+
+  /// Adresse du lien : donne le rôle lien sur Android (voir [ExternalLinkSemantics]).
+  final String? semanticsLinkUrl;
   final String? semanticsLabel;
 
   bool get _isTappable => onTap != null;
@@ -103,12 +107,13 @@ class DsfrTuileCard extends StatelessWidget {
       ),
     );
 
-    // A11y 5.1 : un lien est exposé via ExternalLinkSemantics (rôle bouton + indication sur Android).
+    // A11y 5.1 : un lien est exposé via ExternalLinkSemantics (rôle lien, y compris sur Android).
     if (_isLink) {
       return ExternalLinkSemantics(
         label: _resolvedSemanticsLabel,
         onTap: onTap,
         destination: semanticsLinkDestination,
+        url: semanticsLinkUrl,
         excludeSemantics: false,
         child: card,
       );

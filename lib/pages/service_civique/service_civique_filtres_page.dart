@@ -343,6 +343,8 @@ class _DomainListState extends State<_DomainList> {
           .map(
             (domain) => CustomRadioGroup<Domaine>(
               title: domain.titre,
+              // A11y 9.6 : chaque choix reprend le nom du groupe.
+              groupLabel: Strings.domainFiltreTitle,
               value: domain,
               groupValue: _currentValue,
               onChanged: (value) {

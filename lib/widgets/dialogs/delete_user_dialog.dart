@@ -11,6 +11,7 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
+import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 
 class DeleteAlertDialog extends StatefulWidget {
   const DeleteAlertDialog();
@@ -47,12 +48,14 @@ class DeleteAlertDialog extends StatefulWidget {
 
 class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
   final TextEditingController _inputController = TextEditingController();
+  final FocusNode _inputFocusNode = FocusNode();
   String? _fieldContent;
   bool _showError = false;
 
   @override
   void dispose() {
     _inputController.dispose();
+    _inputFocusNode.dispose();
     super.dispose();
   }
 
@@ -77,28 +80,35 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
           ),
         ),
         const SizedBox(height: DsfrSpacings.s3w),
-        Semantics(
-          header: true,
-          child: Text(
-            Strings.warning,
-            style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+        // A11y 7.1 / 10.2 : titre de la fenêtre, qui reçoit le focus du lecteur d'écran à l'ouverture.
+        AutoFocusA11y(
+          child: Semantics(
+            header: true,
+            child: Text(
+              Strings.warning,
+              style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
+            ),
           ),
         ),
         const SizedBox(height: DsfrSpacings.s2w),
-        DsfrInput(
-          label: Strings.lastWarningBeforeSuppression,
-          controller: _inputController,
-          keyboardType: TextInputType.text,
-          textInputAction: TextInputAction.done,
-          componentState: _showError && _isNotValid()
-              ? DsfrComponentState.error(errorMessage: Strings.mandatorySuppressionLabelError)
-              : const DsfrComponentState.none(),
-          onChanged: (value) {
-            setState(() {
-              _fieldContent = value;
-              _showError = false;
-            });
-          },
+        // A11y 9.9 : le message d'erreur, affiché sous le champ, est restitué avec le champ (même nœud).
+        MergeSemantics(
+          child: DsfrInput(
+            label: Strings.lastWarningBeforeSuppression,
+            controller: _inputController,
+            focusNode: _inputFocusNode,
+            keyboardType: TextInputType.text,
+            textInputAction: TextInputAction.done,
+            componentState: _hasError
+                ? DsfrComponentState.error(errorMessage: Strings.mandatorySuppressionLabelError)
+                : const DsfrComponentState.none(),
+            onChanged: (value) {
+              setState(() {
+                _fieldContent = value;
+                _showError = false;
+              });
+            },
+          ),
         ),
         const SizedBox(height: DsfrSpacings.s4w),
         DsfrButton(
@@ -113,10 +123,11 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
                   Navigator.pop(context);
                 }
               : () {
-                  setState(() {
-                    _showError = true;
-                    A11yUtils.announce(Strings.mandatorySuppressionLabelError);
-                  });
+                  // A11y 9.9 / 10.2 : l'erreur est affichée, y compris champ vide, puis le focus revient sur le
+                  // champ à corriger ; l'annonce garantit que l'erreur est entendue.
+                  setState(() => _showError = true);
+                  _inputFocusNode.requestFocusWithA11y();
+                  A11yUtils.announce(Strings.mandatorySuppressionLabelError);
                 },
         ),
         const SizedBox(height: DsfrSpacings.s2w),
@@ -142,12 +153,5 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
 
   bool _isFormValid() => _fieldContent != null && _fieldContent!.isNotEmpty;
 
-  bool _isNotValid() {
-    if (_fieldContent != null) {
-      if (_fieldContent!.isEmpty) return true;
-      final stringToCheck = _fieldContent!.toLowerCase().trim();
-      return stringToCheck != Strings.suppressionLabel.toLowerCase();
-    }
-    return false;
-  }
+  bool get _hasError => _showError && !_isStringValid();
 }

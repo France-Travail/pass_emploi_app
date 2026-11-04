@@ -11,6 +11,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/date_pickers/past_date_choice.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
@@ -92,10 +93,16 @@ class _FormState extends State<_Form> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          Strings.demarcheDoneBottomSheetTitle,
-          style: DsfrTextStyle.headline5(
-            color: DsfrColorDecisions.textTitleGrey(context),
+        // A11y 7.1 / 10.2 : titre de la fenêtre, qui reçoit le focus du lecteur d'écran à l'ouverture.
+        AutoFocusA11y(
+          child: Semantics(
+            header: true,
+            child: Text(
+              Strings.demarcheDoneBottomSheetTitle,
+              style: DsfrTextStyle.headline5(
+                color: DsfrColorDecisions.textTitleGrey(context),
+              ),
+            ),
           ),
         ),
         const SizedBox(height: DsfrSpacings.s2w),

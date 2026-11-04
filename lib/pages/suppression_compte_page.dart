@@ -10,6 +10,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/theme.dart';
+import 'package:pass_emploi_app/widgets/a11y/a11y_bullet_list.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/dialogs/delete_user_dialog.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
@@ -76,12 +77,10 @@ class SuppressionComptePage extends StatelessWidget {
           children: [
             PageTitle(Strings.suppressionPageTitle),
             const SizedBox(height: DsfrSpacings.s2w),
-            Semantics(
-              header: true,
-              child: Text(
-                Strings.warning,
-                style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
-              ),
+            // A11y 7.1 : « Attention » introduit un avertissement, ce n'est pas un titre de section.
+            Text(
+              Strings.warning,
+              style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
             ),
             const SizedBox(height: DsfrSpacings.s2w),
             Text(
@@ -89,7 +88,7 @@ class SuppressionComptePage extends StatelessWidget {
               style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
             ),
             const SizedBox(height: DsfrSpacings.s3w),
-            _ListedItems(list: viewModel.warningSuppressionFeatures),
+            A11yBulletList(items: viewModel.warningSuppressionFeatures),
             const SizedBox(height: DsfrSpacings.s3w),
             Text(
               Strings.warningInformationParagraph2,
@@ -107,34 +106,6 @@ class SuppressionComptePage extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _ListedItems extends StatelessWidget {
-  final List<String> list;
-
-  const _ListedItems({required this.list});
-
-  @override
-  Widget build(BuildContext context) {
-    final textStyle = DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context));
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (final item in list)
-          Padding(
-            padding: const EdgeInsets.only(left: DsfrSpacings.s3w, bottom: DsfrSpacings.s1v),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ExcludeSemantics(child: Text('•', style: textStyle)),
-                const SizedBox(width: DsfrSpacings.s1w),
-                Expanded(child: Text(item, style: textStyle)),
-              ],
-            ),
-          ),
-      ],
     );
   }
 }

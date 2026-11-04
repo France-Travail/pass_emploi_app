@@ -16,6 +16,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/theme.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/action_plan_declaration_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/action_plan_feedback_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/notifications_bottom_sheet.dart';
@@ -200,9 +201,14 @@ class _Content extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      Strings.inviteAccueilExplorerTipTitle,
-                      style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                    // A11y 7.1 : titre de l'encart ; A11y 1.1 : l'emoji « 💡 » est décoratif.
+                    Semantics(
+                      header: true,
+                      child: Text(
+                        Strings.inviteAccueilExplorerTipTitle,
+                        semanticsLabel: Strings.inviteAccueilExplorerTipTitle.removeEmojisForScreenReaders(),
+                        style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                      ),
                     ),
                     Text(
                       Strings.inviteAccueilExplorerTipBody,

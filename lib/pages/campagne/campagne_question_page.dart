@@ -98,7 +98,7 @@ class _CampagneQuestionPageState extends State<CampagneQuestionPage> {
             const SizedBox(height: DsfrSpacings.s2w),
             Text(viewModel.question, style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context))),
             const SizedBox(height: DsfrSpacings.s2w),
-            _answerOptions(viewModel.options),
+            _answerOptions(viewModel.options, viewModel.question),
             const SizedBox(height: DsfrSpacings.s4w),
             DsfrInput(
               key: _textFieldKey,
@@ -150,13 +150,15 @@ class _CampagneQuestionPageState extends State<CampagneQuestionPage> {
     viewModel.onButtonClick(viewModel.idQuestion, _answerId!, _pourquoi);
   }
 
-  Widget _answerOptions(List<Option> options) {
+  Widget _answerOptions(List<Option> options, String question) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: options
           .map(
             (option) => CustomRadioGroup<int>(
               title: option.libelle,
+              // A11y 9.6 : chaque réponse reprend la question.
+              groupLabel: question,
               value: option.id,
               groupValue: _answerId,
               onChanged: (value) {

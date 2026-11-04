@@ -13,6 +13,7 @@ import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/date_pickers/past_date_choice.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
@@ -56,8 +57,10 @@ class _ActionPlanDeclarationBottomSheetState extends State<ActionPlanDeclaration
     if (nouveau.displayState == DisplayState.FAILURE && nouveau.messageErreur != null) {
       A11yUtils.announce(nouveau.messageErreur!);
     } else if (nouveau.displayState == DisplayState.CONTENT) {
+      // A11y 1.1 : l'emoji « 🎉 » du titre n'est pas annoncé (« cornet à confetti »).
       A11yUtils.announce(
-        '${Strings.userActionConfirmationTitle(nouveau.prenom)} ${Strings.actionPlanDeclarationSuccesEnregistree}',
+        '${Strings.userActionConfirmationTitle(nouveau.prenom).removeEmojisForScreenReaders()} '
+        '${Strings.actionPlanDeclarationSuccesEnregistree}',
       );
     }
   }
@@ -177,6 +180,8 @@ class _Succes extends StatelessWidget {
           header: true,
           child: Text(
             Strings.userActionConfirmationTitle(viewModel.prenom),
+            // A11y 1.1 : l'emoji « 🎉 » est décoratif.
+            semanticsLabel: Strings.userActionConfirmationTitle(viewModel.prenom).removeEmojisForScreenReaders(),
             textAlign: TextAlign.center,
             style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context)),
           ),

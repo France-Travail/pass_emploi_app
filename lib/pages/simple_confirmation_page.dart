@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/theme.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/success/bottom_actions.dart';
 import 'package:pass_emploi_app/widgets/success/success_illustration.dart';
@@ -50,6 +51,8 @@ class SimpleConfirmationPage extends StatelessWidget {
                         const SizedBox(height: DsfrSpacings.s1w),
                         Text(
                           Strings.offreSuivieConfirmationPageDescription,
+                          // A11y 1.1 : l'emoji « 👏 » est décoratif.
+                          semanticsLabel: Strings.offreSuivieConfirmationPageDescription.removeEmojisForScreenReaders(),
                           textAlign: TextAlign.center,
                           style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
                         ),

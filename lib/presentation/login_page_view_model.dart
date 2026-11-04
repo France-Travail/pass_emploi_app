@@ -21,6 +21,9 @@ class LoginPageViewModel extends Equatable {
   final bool withWrongDeviceClockMessage;
   final String accessibilityLevelLabel;
   final String? technicalErrorMessage;
+
+  /// Page d'authentification ouverte par les boutons d'organisme : leur donne le rôle lien (A11y 5.1).
+  final String? authenticationUrl;
   final void Function() onFranceTravailLogin;
   final void Function()? onMissionLocaleLogin;
   final void Function() onInviteLogin;
@@ -42,6 +45,7 @@ class LoginPageViewModel extends Equatable {
     required this.withWrongDeviceClockMessage,
     required this.accessibilityLevelLabel,
     required this.technicalErrorMessage,
+    this.authenticationUrl,
     required this.onFranceTravailLogin,
     required this.onMissionLocaleLogin,
     required this.onInviteLogin,
@@ -74,6 +78,7 @@ class LoginPageViewModel extends Equatable {
           : loginState is LoginWrongDeviceClockState,
       accessibilityLevelLabel: isCej ? Strings.accessibilityPartiallyConform : Strings.accessibilityNotConform,
       technicalErrorMessage: _technicalErrorMessage(store.state, repriseCompteInvite: repriseCompteInvite),
+      authenticationUrl: store.state.configurationState.configuration?.authIssuer,
       onFranceTravailLogin: () => login(LoginMode.POLE_EMPLOI),
       onMissionLocaleLogin: isCej ? () => login(LoginMode.MILO) : null,
       onInviteLogin: () => store.dispatch(RequestLoginAction(LoginMode.INVITE)),
@@ -103,5 +108,6 @@ class LoginPageViewModel extends Equatable {
         withWrongDeviceClockMessage,
         accessibilityLevelLabel,
         technicalErrorMessage,
+        authenticationUrl,
       ];
 }

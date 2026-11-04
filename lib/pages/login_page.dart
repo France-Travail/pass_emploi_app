@@ -1,5 +1,4 @@
 import 'package:clock/clock.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -14,9 +13,9 @@ import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/theme.dart';
-import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
+import 'package:pass_emploi_app/widgets/a11y/expandable_header_semantics.dart';
 import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/drawables/app_logo.dart';
@@ -133,6 +132,7 @@ class _Scaffold extends StatelessWidget {
                   _OrganismButton(
                     label: Strings.loginBottomSeetFranceTravailButton,
                     logo: Drawables.franceTravailLogoTitle,
+                    url: viewModel.authenticationUrl,
                     onPressed: viewModel.onFranceTravailLogin,
                   ),
                   if (viewModel.onMissionLocaleLogin != null) ...[
@@ -140,6 +140,7 @@ class _Scaffold extends StatelessWidget {
                     _OrganismButton(
                       label: Strings.loginBottomSeetMissionLocaleButton,
                       logo: Drawables.missionLocaleLogoTitle,
+                      url: viewModel.authenticationUrl,
                       onPressed: viewModel.onMissionLocaleLogin!,
                     ),
                   ],
@@ -343,11 +344,13 @@ class _OrganismButton extends StatefulWidget {
   const _OrganismButton({
     required this.label,
     required this.logo,
+    required this.url,
     required this.onPressed,
   });
 
   final String label;
   final String logo;
+  final String? url;
   final VoidCallback onPressed;
 
   @override
@@ -363,10 +366,10 @@ class _OrganismButtonState extends State<_OrganismButton> {
     final logo = widget.logo;
     final borderColor = DsfrColorDecisions.borderActionHighBlueFrance(context);
     final textColor = DsfrColorDecisions.textActionHighBlueFrance(context);
-    return Semantics(
-      button: true,
+    return ExternalLinkSemantics(
       label: label,
-      // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material.
+      url: widget.url,
+      onTap: widget.onPressed,
       child: DsfrFocusWidget(
         isFocused: _focused,
         child: Material(
@@ -417,13 +420,7 @@ class _InformationsLegalesState extends State<_InformationsLegales> {
   bool _isExpanded = false;
   bool _focused = false;
 
-  static bool get _isAndroid => defaultTargetPlatform == TargetPlatform.android;
-
-  void _toggle() {
-    setState(() => _isExpanded = !_isExpanded);
-    // A11y 5.5 : TalkBack ignore `expanded`, le nouvel état est donc annoncé, comme pour les objectifs du plan.
-    if (_isAndroid) A11yUtils.announce(_isExpanded ? Strings.a11yExpanded : Strings.a11yCollapsed);
-  }
+  void _toggle() => setState(() => _isExpanded = !_isExpanded);
 
   @override
   Widget build(BuildContext context) {
@@ -433,13 +430,10 @@ class _InformationsLegalesState extends State<_InformationsLegales> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         divider,
-        // A11y 5.5 : sur Android, `expanded` n'est pas annoncé par TalkBack, l'état est porté par `value`.
-        Semantics(
-          button: true,
-          expanded: _isAndroid ? null : _isExpanded,
-          value: _isAndroid ? (_isExpanded ? Strings.a11yExpanded : Strings.a11yCollapsed) : null,
+        ExpandableHeaderSemantics(
           label: Strings.legalInformation,
-          // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material.
+          expanded: _isExpanded,
+          onTap: _toggle,
           child: DsfrFocusWidget(
             isFocused: _focused,
             child: InkWell(
@@ -534,12 +528,10 @@ class _LinkState extends State<Link> {
   @override
   Widget build(BuildContext context) {
     final label = widget.label;
-    // A11y 5.1 : « Lien » n'est plus écrit dans le nom ; comme dans Confidentialités et données, le lien est
-    // restitué comme un bouton qui « ouvre le site dans ton navigateur » (TalkBack n'annonce pas le rôle lien).
     return ExternalLinkSemantics(
       label: label,
+      url: widget.link,
       onTap: _open,
-      // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material.
       child: DsfrFocusWidget(
         isFocused: _focused,
         child: Material(

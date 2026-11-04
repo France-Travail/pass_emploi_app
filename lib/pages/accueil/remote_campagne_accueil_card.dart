@@ -24,6 +24,7 @@ class RemoteCampagneAccueilCard extends StatelessWidget {
       onDismiss: item.onDismissed,
       dismissSemanticLabel: "${Strings.closeDialog} ${item.title}",
       semanticsLink: true,
+      semanticsLinkUrl: item.url,
     );
   }
 }

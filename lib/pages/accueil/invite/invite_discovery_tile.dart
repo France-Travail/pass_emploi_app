@@ -3,6 +3,7 @@ import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/pages/onboarding_page.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 
 class InviteDiscoveryTile extends StatelessWidget {
   const InviteDiscoveryTile({
@@ -25,7 +26,8 @@ class InviteDiscoveryTile extends StatelessWidget {
       button: true,
       label: [
         Strings.inviteAccueilDiscoveryProgressA11y(progressPercent),
-        title,
+        // A11y 1.1 : l'emoji « 🎉 » du titre est décoratif.
+        title.removeEmojisForScreenReaders(),
         if (isCompleted) Strings.inviteAccueilDiscoveryHideA11y,
       ].join(', '),
       onTap: () => _onTap(context),

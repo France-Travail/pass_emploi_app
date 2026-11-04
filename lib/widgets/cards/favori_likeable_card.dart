@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
 import 'package:pass_emploi_app/models/offre_type.dart';
 import 'package:pass_emploi_app/pages/offre_page.dart';
 import 'package:pass_emploi_app/presentation/offre_emploi/offre_emploi_origin_view_model.dart';
 import 'package:pass_emploi_app/utils/date_derniere_consultation_provider.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/base_card.dart';
 import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_complement.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
 import 'package:pass_emploi_app/widgets/favori_heart.dart';
 import 'package:pass_emploi_app/widgets/offre_emploi_origin.dart';
-import 'package:flutter_dsfr/flutter_dsfr.dart';
 
 class FavoriLikeableCard<T> extends StatelessWidget {
   final String id;
@@ -32,7 +33,7 @@ class FavoriLikeableCard<T> extends StatelessWidget {
     required this.onTap,
   }) : specialAction = FavoriHeart<T>(
           offreId: id,
-          a11yLabel: title,
+          a11yLabel: title.toOffreTitleForScreenReaders(),
           withBorder: false,
           from: from,
         );
