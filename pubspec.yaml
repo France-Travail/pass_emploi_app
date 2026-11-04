@@ -56,7 +56,7 @@ dependencies:
   flutter_appauth: ^9.0.1
   flutter_secure_storage: ^10.3.1
   url_launcher: ^6.3.1
-  share_plus: ^11.1.0
+  share_plus: ^12.0.2
   open_filex: ^4.7.0
   in_app_review: ^2.0.10
   flutter_timezone: ^4.1.1
