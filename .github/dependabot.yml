@@ -1,0 +1,56 @@
+version: 2
+
+updates:
+  - package-ecosystem: pub
+    directory: /
+    schedule:
+      interval: daily
+      time: '07:00'
+      timezone: Europe/Paris
+    open-pull-requests-limit: 15
+    commit-message:
+      prefix: 'chore(deps):'
+    groups:
+      prod-minor-patch:
+        applies-to: version-updates
+        dependency-type: production
+        update-types:
+          - patch
+          - minor
+      dev-minor-patch:
+        applies-to: version-updates
+        dependency-type: development
+        update-types:
+          - patch
+          - minor
+
+  - package-ecosystem: gradle
+    directory: /android
+    schedule:
+      interval: daily
+      time: '07:00'
+      timezone: Europe/Paris
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: 'chore(deps):'
+    groups:
+      gradle-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - patch
+          - minor
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+      time: '07:00'
+      timezone: Europe/Paris
+    commit-message:
+      prefix: 'ci(deps):'
+    groups:
+      actions-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - patch
+          - minor
