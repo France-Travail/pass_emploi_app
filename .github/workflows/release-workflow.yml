@@ -99,7 +99,7 @@ jobs:
           --build-number=${{ needs.pre-build.outputs.date }}
 
       - name: CEJ - Save Android appbundle
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cej-appbundle-${{ github.ref_name }}
           path: build/app/outputs/bundle/release/app.aab
@@ -114,7 +114,7 @@ jobs:
           --build-number=${{ needs.pre-build.outputs.date }}
 
       - name: BRSA - Save Android appbundle
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: brsa-appbundle-${{ github.ref_name }}
           path: build/app/outputs/bundle/release/app.aab
