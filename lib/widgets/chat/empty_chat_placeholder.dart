@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 
 class EmptyChatPlaceholder extends StatelessWidget {
@@ -11,10 +13,11 @@ class EmptyChatPlaceholder extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              DsfrIcons.communicationChat2Line,
-              size: DsfrSpacings.s8w,
-              color: DsfrColorDecisions.textMentionGrey(context),
+            SvgPicture.asset(
+              Drawables.pictogramCommunity,
+              width: 80,
+              height: 80,
+              excludeFromSemantics: true,
             ),
             const SizedBox(height: DsfrSpacings.s2w),
             Text(

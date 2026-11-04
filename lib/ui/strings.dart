@@ -1017,7 +1017,6 @@ class Strings {
   static String createDemarcheSuccess = "La démarche a bien été créée";
   static String linkDetailsRendezVous = "Voir les détails du rendez-vous";
 
-  static String dateEcheanceFormat(String formattedDate) => "À réaliser pour le $formattedDate";
   static String doneActionsTitle = "Actions terminées et annulées";
   static String rappelSwitch = 'Recevoir une notification de rappel 3 jours avant l’échéance';
 

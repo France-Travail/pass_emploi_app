@@ -441,14 +441,20 @@ class _ConseillerPart extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (viewModel.withConseillerPresencePart)
-          Text(
-            viewModel.conseillerPresenceLabel,
-            style: DsfrTextStyle.bodyMdBold(
-              color: viewModel.isConseillerPresent
-                  ? DsfrColorDecisions.textDefaultSuccess(context)
-                  : DsfrColorDecisions.textDefaultError(context),
+          if (viewModel.isConseillerPresent)
+            Text(
+              viewModel.conseillerPresenceLabel,
+              style: DsfrTextStyle.bodyMdBold(
+                color: DsfrColorDecisions.textDefaultSuccess(context),
+              ),
+            )
+          else
+            DsfrAlert(
+              type: DsfrAlertType.info,
+              description: DsfrAlertDescriptionText(
+                viewModel.conseillerPresenceLabel,
+              ),
             ),
-          ),
         if (viewModel.dateLimiteAnnulation != null) ...[
           if (viewModel.withConseillerPresencePart)
             const SizedBox(height: DsfrSpacings.s2w),

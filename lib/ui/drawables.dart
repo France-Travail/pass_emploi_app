@@ -26,6 +26,7 @@ class Drawables {
       "${_assets}dsfr/illustration_evenements_empty.svg";
   static String illustrationActualitesEmpty =
       "${_assets}dsfr/illustration_actualites_empty.svg";
+  static String pictogramCommunity = "${_assets}dsfr/pictogram_community.svg";
   static String illustrationSuccess = "${_assets}dsfr/success.svg";
   static String illustrationWarning = "${_assets}dsfr/warning.svg";
   static String illustrationThemeSystem = "${_assets}dsfr/system.svg";

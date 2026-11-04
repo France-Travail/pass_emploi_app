@@ -15,6 +15,7 @@ import 'package:pass_emploi_app/presentation/model/formatted_text.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
+import 'package:pass_emploi_app/widgets/cards/base_cards/widgets/card_pillule.dart';
 import 'package:pass_emploi_app/widgets/confetti_wrapper.dart';
 import 'package:pass_emploi_app/widgets/connectivity_widgets.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
@@ -180,7 +181,7 @@ class _Body extends StatelessWidget {
           _Attributs(viewModel.attributs),
         ],
         const SizedBox(height: DsfrSpacings.s2w),
-        _DateEcheance(viewModel.dateFormattedTexts),
+        _DateEcheance(viewModel.dateFormattedTexts, isLate: viewModel.pillule == CardPilluleType.late),
         const SizedBox(height: DsfrSpacings.s2w),
         Divider(
           height: 1,
@@ -235,8 +236,9 @@ class _AttributItem extends StatelessWidget {
 /// Même présentation que la date du détail d'une action : le retard est signalé par le badge « En retard ».
 class _DateEcheance extends StatelessWidget {
   final List<FormattedText> formattedTexts;
+  final bool isLate;
 
-  const _DateEcheance(this.formattedTexts);
+  const _DateEcheance(this.formattedTexts, {required this.isLate});
 
   @override
   Widget build(BuildContext context) {
@@ -245,6 +247,7 @@ class _DateEcheance extends StatelessWidget {
       icon: DsfrIcons.businessCalendarEventLine,
       text: text,
       semanticsLabel: text.toDateForScreenReaders(),
+      color: isLate ? DsfrColorDecisions.textDefaultError(context) : DsfrColorDecisions.textDefaultInfo(context),
     );
   }
 }

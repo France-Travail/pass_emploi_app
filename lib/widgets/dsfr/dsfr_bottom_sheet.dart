@@ -196,11 +196,15 @@ class DsfrDetailIconLine extends StatelessWidget {
     required this.icon,
     required this.text,
     this.semanticsLabel,
+    this.color,
   });
 
   final IconData icon;
   final String text;
   final String? semanticsLabel;
+
+  /// Couleur de l'icône et du texte (gris par défaut).
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -214,7 +218,7 @@ class DsfrDetailIconLine extends StatelessWidget {
             child: Icon(
               icon,
               size: 16,
-              color: DsfrColorDecisions.textDefaultGrey(context),
+              color: color ?? DsfrColorDecisions.textDefaultGrey(context),
             ),
           ),
           const SizedBox(width: DsfrSpacings.s1w),
@@ -224,7 +228,7 @@ class DsfrDetailIconLine extends StatelessWidget {
               child: Text(
                 text,
                 style: DsfrTextStyle.bodyMd(
-                  color: DsfrColorDecisions.textDefaultGrey(context),
+                  color: color ?? DsfrColorDecisions.textDefaultGrey(context),
                 ),
               ),
             ),
