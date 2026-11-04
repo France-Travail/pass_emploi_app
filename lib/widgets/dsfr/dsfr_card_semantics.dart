@@ -17,7 +17,9 @@ class DsfrCategoryStyle {
     required this.textColor,
   });
 
-  static DsfrCategoryStyle info({IconData icon = DsfrIcons.businessBriefcaseFill}) => DsfrCategoryStyle(
+  static DsfrCategoryStyle info({
+    IconData icon = DsfrIcons.businessBriefcaseFill,
+  }) => DsfrCategoryStyle(
     icon: icon,
     backgroundColor: DsfrColorDecisions.backgroundContrastInfo,
     textColor: DsfrColorDecisions.textDefaultInfo,
@@ -28,7 +30,9 @@ class DsfrCategoryStyle {
     textColor: DsfrColorDecisions.textDefaultInfo,
   );
 
-  static DsfrCategoryStyle news({IconData icon = DsfrIcons.businessCalendarEventFill}) => DsfrCategoryStyle(
+  static DsfrCategoryStyle news({
+    IconData icon = DsfrIcons.businessCalendarEventFill,
+  }) => DsfrCategoryStyle(
     icon: icon,
     backgroundColor: DsfrColorDecisionsExtension.backgroundContrastNew,
     textColor: DsfrColorDecisionsExtension.textDefaultNew,
@@ -69,9 +73,15 @@ class DsfrCategoryStyle {
 extension CardPilluleTypeDsfr on CardPilluleType {
   (DsfrBadgeType, String) toActionDsfrBadge() {
     return switch (this) {
-      CardPilluleType.todo || CardPilluleType.doing => (DsfrBadgeType.information, Strings.doingPillule),
+      CardPilluleType.todo || CardPilluleType.doing => (
+        DsfrBadgeType.information,
+        Strings.doingPillule,
+      ),
       CardPilluleType.done => (DsfrBadgeType.success, Strings.donePillule),
-      CardPilluleType.canceled => (DsfrBadgeType.warning, Strings.canceledPillule),
+      CardPilluleType.canceled => (
+        DsfrBadgeType.warning,
+        Strings.canceledPillule,
+      ),
       CardPilluleType.late => (DsfrBadgeType.error, Strings.latePillule),
     };
   }
@@ -79,10 +89,16 @@ extension CardPilluleTypeDsfr on CardPilluleType {
   (DsfrBadgeType, String) toDemarcheDsfrBadge() {
     return switch (this) {
       CardPilluleType.todo => (DsfrBadgeType.information, Strings.todoPillule),
-      CardPilluleType.doing => (DsfrBadgeType.information, Strings.doingPillule),
+      CardPilluleType.doing => (
+        DsfrBadgeType.information,
+        Strings.doingPillule,
+      ),
       CardPilluleType.done => (DsfrBadgeType.success, Strings.donePillule),
       CardPilluleType.late => (DsfrBadgeType.error, Strings.latePillule),
-      CardPilluleType.canceled => (DsfrBadgeType.warning, Strings.canceledPillule),
+      CardPilluleType.canceled => (
+        DsfrBadgeType.warning,
+        Strings.canceledPillule,
+      ),
     };
   }
 
@@ -101,13 +117,17 @@ extension RendezvousTypeCodeDsfr on RendezvousTypeCode {
   DsfrCategoryStyle get categoryStyle {
     return switch (this) {
       RendezvousTypeCode.ENTRETIEN_INDIVIDUEL_CONSEILLER ||
-      RendezvousTypeCode.ENTRETIEN_PARTENAIRE => DsfrCategoryStyle.purple(icon: DsfrIcons.userUserFill),
+      RendezvousTypeCode.ENTRETIEN_PARTENAIRE => DsfrCategoryStyle.purple(
+        icon: DsfrIcons.userUserFill,
+      ),
       RendezvousTypeCode.ATELIER ||
       RendezvousTypeCode.INFORMATION_COLLECTIVE ||
-      RendezvousTypeCode.ACTIVITE_EXTERIEURES => DsfrCategoryStyle.news(icon: DsfrIcons.businessCalendarEventFill),
-      RendezvousTypeCode.VISITE ||
-      RendezvousTypeCode.PRESTATION ||
-      RendezvousTypeCode.AUTRE => DsfrCategoryStyle.news(icon: DsfrIcons.businessCalendarEventFill),
+      RendezvousTypeCode.ACTIVITE_EXTERIEURES => DsfrCategoryStyle.news(
+        icon: DsfrIcons.businessCalendarEventFill,
+      ),
+      RendezvousTypeCode.VISITE || RendezvousTypeCode.PRESTATION || RendezvousTypeCode.AUTRE => DsfrCategoryStyle.news(
+        icon: DsfrIcons.businessCalendarEventFill,
+      ),
     };
   }
 }
@@ -206,7 +226,9 @@ class DsfrCategoryTag extends StatelessWidget {
   }) {
     return DsfrCategoryTag(
       label: label,
-      style: DsfrCategoryStyle.info(icon: icon ?? DsfrIcons.systemInformationFill),
+      style: DsfrCategoryStyle.info(
+        icon: icon ?? DsfrIcons.systemInformationFill,
+      ),
       semanticsLabel: semanticsLabel,
     );
   }
@@ -305,7 +327,6 @@ class DsfrStatusBadge extends StatelessWidget {
     this.excludeSemantics = false,
   }) : _isTodo = false;
 
-  /// Badge jaune « À réaliser » : plus visible que le bleu des statuts en cours.
   const DsfrStatusBadge.todo({
     super.key,
     required this.label,
@@ -319,10 +340,19 @@ class DsfrStatusBadge extends StatelessWidget {
     bool excludeSemantics = false,
   }) {
     final (type, label) = forDemarche ? pillule.toDemarcheDsfrBadge() : pillule.toActionDsfrBadge();
-    if (forDemarche && pillule == CardPilluleType.todo) {
-      return DsfrStatusBadge.todo(label: label, excludeSemantics: excludeSemantics);
+    final isDemarcheARealiser = forDemarche && pillule == CardPilluleType.todo;
+    final isActionAFaire = !forDemarche && (pillule == CardPilluleType.todo || pillule == CardPilluleType.doing);
+    if (isDemarcheARealiser || isActionAFaire) {
+      return DsfrStatusBadge.todo(
+        label: label,
+        excludeSemantics: excludeSemantics,
+      );
     }
-    return DsfrStatusBadge(label: label, type: type, excludeSemantics: excludeSemantics);
+    return DsfrStatusBadge(
+      label: label,
+      type: type,
+      excludeSemantics: excludeSemantics,
+    );
   }
 
   factory DsfrStatusBadge.canceled({bool excludeSemantics = false}) {

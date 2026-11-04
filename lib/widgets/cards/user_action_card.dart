@@ -31,7 +31,7 @@ class UserActionCard extends StatelessWidget {
   }
 
   Widget _builder(BuildContext context, UserActionCardViewModel viewModel) {
-    final (badgeType, badgeLabel) = viewModel.pillule.toActionDsfrBadge();
+    final (_, badgeLabel) = viewModel.pillule.toActionDsfrBadge();
 
     // A11y : to read "Action" + category + title + status
     return Semantics(
@@ -44,9 +44,9 @@ class UserActionCard extends StatelessWidget {
             runSpacing: DsfrSpacings.s1w,
             children: [
               DsfrCategoryTag.emploiCategory(label: viewModel.categoryText),
-              DsfrStatusBadge(
-                label: badgeLabel,
-                type: badgeType,
+              DsfrStatusBadge.fromPillule(
+                pillule: viewModel.pillule,
+                forDemarche: false,
                 excludeSemantics: true,
               ),
             ],
