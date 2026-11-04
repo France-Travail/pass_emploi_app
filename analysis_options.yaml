@@ -16,7 +16,10 @@ linter:
     always_use_package_imports: true
 
 analyzer:
-  exclude: [build/**]
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
   language:
     strict-casts: true
     strict-raw-types: true
