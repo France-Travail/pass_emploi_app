@@ -12,6 +12,8 @@ import 'package:pass_emploi_app/models/accueil/message_informatif.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/onboarding.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
+import 'package:pass_emploi_app/presentation/accueil/accueil_item.dart';
+import 'package:pass_emploi_app/presentation/accueil/accueil_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_tracker.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -44,6 +46,7 @@ class InviteAccueilViewModel extends Equatable {
   final bool shouldShowAllowNotifications;
   final ActionPlanTrackingEvent? planDisplayEvent;
   final MessageInformatif? messageInformatif;
+  final List<RemoteCampagneAccueilItem> remoteCampagnes;
   final VoidCallback retryLoad;
   final void Function(OnboardingQuestionnaireEntryPoint entryPoint) resumeOnboarding;
   final VoidCallback retry;
@@ -76,6 +79,7 @@ class InviteAccueilViewModel extends Equatable {
     required this.shouldShowAllowNotifications,
     required this.planDisplayEvent,
     required this.messageInformatif,
+    required this.remoteCampagnes,
     required this.retryLoad,
     required this.resumeOnboarding,
     required this.retry,
@@ -168,6 +172,7 @@ class InviteAccueilViewModel extends Equatable {
         final CommunicationsSuccessState state => state.messageInformatif,
         _ => null,
       },
+      remoteCampagnes: remoteCampagneAccueilItems(store, store.state),
       retryLoad: () => store.dispatch(ActionPlanRequestAction()),
       resumeOnboarding: (entryPoint) {
         final isUpdate = inviteState is OnboardingQuestionnaireSuccessState && inviteState.everFinished;
@@ -212,6 +217,7 @@ class InviteAccueilViewModel extends Equatable {
     shouldShowAllowNotifications,
     planDisplayEvent,
     messageInformatif,
+    remoteCampagnes,
   ];
 }
 

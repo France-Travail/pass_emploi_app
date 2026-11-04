@@ -8,11 +8,11 @@ import 'package:pass_emploi_app/presentation/user_action/create_user_action_conf
 import 'package:pass_emploi_app/presentation/user_action/user_action_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
+import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
-import 'package:pass_emploi_app/widgets/errors/error_text.dart';
 
 class CreateUserActionConfirmationPage extends StatelessWidget {
   final UserActionStateSource source;
@@ -100,7 +100,15 @@ class _Content extends StatelessWidget {
         showActionDoneTag: showActionDoneTag,
         source: source,
       ),
-      DisplayState.FAILURE => Center(child: ErrorText(Strings.genericCreationError)),
+      DisplayState.FAILURE => Padding(
+        padding: const EdgeInsets.all(Margins.spacing_base),
+        child: Center(
+          child: DsfrAlert(
+            type: DsfrAlertType.error,
+            description: DsfrAlertDescriptionText(Strings.genericCreationError),
+          ),
+        ),
+      ),
       _ => const Center(child: CircularProgressIndicator()),
     };
   }

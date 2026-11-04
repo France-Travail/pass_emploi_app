@@ -20,6 +20,7 @@ class DsfrTuileCard extends StatelessWidget {
     this.semanticsLinkDestination = LinkDestination.website,
     this.semanticsLinkUrl,
     this.semanticsLabel,
+    this.descriptionIcon = DsfrIcons.systemArrowRightSLine,
   });
 
   final Widget leading;
@@ -34,6 +35,9 @@ class DsfrTuileCard extends StatelessWidget {
   /// Adresse du lien : donne le rôle lien sur Android (voir [ExternalLinkSemantics]).
   final String? semanticsLinkUrl;
   final String? semanticsLabel;
+
+  /// Icône affichée à côté de la description (chevron par défaut).
+  final IconData descriptionIcon;
 
   bool get _isTappable => onTap != null;
 
@@ -96,6 +100,7 @@ class DsfrTuileCard extends StatelessWidget {
                         description: description,
                         onTap: onTap,
                         shape: shape,
+                        descriptionIcon: descriptionIcon,
                       ),
                     ),
                   ],
@@ -152,12 +157,14 @@ class _Content extends StatelessWidget {
     required this.description,
     required this.onTap,
     required this.shape,
+    required this.descriptionIcon,
   });
 
   final String title;
   final String? description;
   final VoidCallback? onTap;
   final ShapeBorder shape;
+  final IconData descriptionIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -189,9 +196,9 @@ class _Content extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 2),
                       child: Icon(
-                        DsfrIcons.systemArrowRightSLine,
+                        descriptionIcon,
                         size: 16,
-                        color: DsfrColorDecisions.textTitleBlueFrance(context),
+                        color: DsfrColorDecisions.textDefaultGrey(context),
                       ),
                     ),
                   ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_tuile_card.dart';
 
@@ -14,6 +15,7 @@ class DsfrDismissibleTile extends StatelessWidget {
     this.semanticsLink = false,
     this.semanticsLinkDestination = LinkDestination.website,
     this.semanticsLinkUrl,
+    this.descriptionIcon = DsfrIcons.systemArrowRightSLine,
   });
 
   final String title;
@@ -25,6 +27,7 @@ class DsfrDismissibleTile extends StatelessWidget {
   final bool semanticsLink;
   final LinkDestination semanticsLinkDestination;
   final String? semanticsLinkUrl;
+  final IconData descriptionIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +41,7 @@ class DsfrDismissibleTile extends StatelessWidget {
       semanticsLink: semanticsLink,
       semanticsLinkDestination: semanticsLinkDestination,
       semanticsLinkUrl: semanticsLinkUrl,
+      descriptionIcon: descriptionIcon,
     );
   }
 }

@@ -84,8 +84,7 @@ DisplayState _displayState(Store<AppState> store) {
   return switch (store.state.accueilState) {
     AccueilSuccessState _ => DisplayState.CONTENT,
     AccueilFailureState _ => DisplayState.FAILURE,
-    AccueilLoadingState _ ||
-    AccueilNotInitializedState _ => DisplayState.LOADING,
+    AccueilLoadingState _ || AccueilNotInitializedState _ => DisplayState.LOADING,
   };
 }
 
@@ -111,7 +110,7 @@ List<AccueilItem> _items(Store<AppState> store) {
     _accueilZenithMessageItem(store.state),
     _errorDegradeeItem(accueilState),
     _onboardingItem(store.state),
-    ..._remoteCampagneAccueilItems(store, store.state),
+    ...remoteCampagneAccueilItems(store, store.state),
     _ratingAppItem(store.state),
     _campagneEvaluationItem(store.state),
     _offreSuivies(store),
@@ -135,8 +134,7 @@ AccueilItem? _messageInformatifItem(AppState state) {
 }
 
 AccueilItem? _accueilZenithMessageItem(AppState state) {
-  final accueilZenithMessage =
-      state.featureFlipState.featureFlip.accueilZenithMessage;
+  final accueilZenithMessage = state.featureFlipState.featureFlip.accueilZenithMessage;
   if (accueilZenithMessage == null) return null;
   return AccueilZenithMessageItem(accueilZenithMessage);
 }
@@ -146,8 +144,7 @@ AccueilItem? _cetteSemaineItem(User user, AccueilSuccessState successState) {
   final cetteSemaine = successState.accueil.cetteSemaine;
   if (cetteSemaine == null) return null;
   final bool withRendezvousCount =
-      user.accompagnement != Accompagnement.rsaConseilsDepartementaux ||
-      cetteSemaine.nombreRendezVous != 0;
+      user.accompagnement != Accompagnement.rsaConseilsDepartementaux || cetteSemaine.nombreRendezVous != 0;
 
   return AccueilCetteSemaineItem.from(
     loginMode: user.loginMode,
@@ -188,15 +185,10 @@ AccueilItem? _evenementsItem(AccueilSuccessState successState) {
       .map((e) => (e.id, e.dateDeDebut, AccueilEvenementsType.sessionMilo))
       .toList();
 
-  final events =
-      [
-            ...animations,
-            ...sessions,
-          ]
-          .sorted((a, b) => a.$2.compareTo(b.$2))
-          .take(3)
-          .map((e) => (e.$1, e.$3))
-          .toList();
+  final events = [
+    ...animations,
+    ...sessions,
+  ].sorted((a, b) => a.$2.compareTo(b.$2)).take(3).map((e) => (e.$1, e.$3)).toList();
 
   return events.isNotEmpty ? AccueilEvenementsItem(events) : null;
 }
@@ -211,14 +203,10 @@ AccueilItem? _suiviDesOffresItem() {
 }
 
 AccueilItem? _offreSuivies(Store<AppState> store) {
-  final nonPostuledOffreIds = store.state.favoriListState
-      .nonPostuledOffreIdsAfter(Duration(days: 3));
-  final blacklistedOffreIds =
-      store.state.offresSuiviesState.blackListedOffreIds;
+  final nonPostuledOffreIds = store.state.favoriListState.nonPostuledOffreIdsAfter(Duration(days: 3));
+  final blacklistedOffreIds = store.state.offresSuiviesState.blackListedOffreIds;
 
-  final offreFavorisIds = nonPostuledOffreIds
-      .where((id) => !blacklistedOffreIds.contains(id))
-      .toList();
+  final offreFavorisIds = nonPostuledOffreIds.where((id) => !blacklistedOffreIds.contains(id)).toList();
   final offreSuiviesState = store.state.offresSuiviesState;
   final updateFavorisState = store.state.favoriUpdateState;
 
@@ -265,25 +253,27 @@ AccueilItem? _onboardingItem(AppState state) {
   return null;
 }
 
-List<AccueilItem?> _remoteCampagneAccueilItems(
+List<RemoteCampagneAccueilItem> remoteCampagneAccueilItems(
   Store<AppState> store,
   AppState state,
 ) {
   final brand = state.configurationState.configuration?.brand;
   final accompagnement = state.user()?.accompagnement;
 
-  return state.remoteCampagneAccueilState.campagnes.map((campagne) {
-    if (campagne.brand != null && campagne.brand != brand) return null;
-    if (!campagne.accompagnements.contains(accompagnement)) return null;
-    if (!campagne.isActive) return null;
-    return RemoteCampagneAccueilItem(
-      title: campagne.title,
-      cta: campagne.cta,
-      url: campagne.url,
-      onDismissed: () =>
-          store.dispatch(RemoteCampagneAccueilDismissAction(campagne.id)),
-    );
-  }).toList();
+  return state.remoteCampagneAccueilState.campagnes
+      .map((campagne) {
+        if (campagne.brand != null && campagne.brand != brand) return null;
+        if (!campagne.accompagnements.contains(accompagnement)) return null;
+        if (!campagne.isActive) return null;
+        return RemoteCampagneAccueilItem(
+          title: campagne.title,
+          cta: campagne.cta,
+          url: campagne.url,
+          onDismissed: () => store.dispatch(RemoteCampagneAccueilDismissAction(campagne.id)),
+        );
+      })
+      .nonNulls
+      .toList();
 }
 
 AccueilItem? _ratingAppItem(AppState state) {
@@ -303,8 +293,7 @@ AccueilItem? _campagneEvaluationItem(AppState state) {
 
 bool _withNewNotifications(Store<AppState> store) {
   final inAppNotificationsState = store.state.inAppNotificationsState;
-  final dateDerniereConsultation =
-      store.state.dateConsultationNotificationState.date;
+  final dateDerniereConsultation = store.state.dateConsultationNotificationState.date;
 
   if (inAppNotificationsState is! InAppNotificationsSuccessState) {
     return false;
@@ -316,9 +305,7 @@ bool _withNewNotifications(Store<AppState> store) {
     return false;
   }
 
-  final isNew = dateDerniereConsultation != null
-      ? notification.date.isAfter(dateDerniereConsultation)
-      : true;
+  final isNew = dateDerniereConsultation != null ? notification.date.isAfter(dateDerniereConsultation) : true;
   return isNew;
 }
 

@@ -11,11 +11,11 @@ import 'package:pass_emploi_app/pages/demarche/demarche_detail_page.dart';
 import 'package:pass_emploi_app/presentation/demarche/create_demarche_success_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/confetti_wrapper.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
-import 'package:pass_emploi_app/widgets/errors/error_text.dart';
 import 'package:pass_emploi_app/widgets/in_app_feedback.dart';
 import 'package:pass_emploi_app/widgets/success/creation_confirmation_body.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
@@ -82,7 +82,15 @@ class _Content extends StatelessWidget {
       DisplayState.CONTENT => _Body(viewModel, source),
       DisplayState.FAILURE => _Scaffold(
         appBarTitle: viewModel.appBarTitle,
-        body: Center(child: ErrorText(Strings.genericCreationError)),
+        body: Padding(
+        padding: const EdgeInsets.all(Margins.spacing_base),
+        child: Center(
+          child: DsfrAlert(
+            type: DsfrAlertType.error,
+            description: DsfrAlertDescriptionText(Strings.genericCreationError),
+          ),
+        ),
+      ),
       ),
       _ => _Scaffold(
         appBarTitle: viewModel.appBarTitle,

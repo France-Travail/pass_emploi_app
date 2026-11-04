@@ -7,11 +7,11 @@ import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/user_action/create_user_action_confirmation_view_model.dart';
 import 'package:pass_emploi_app/presentation/user_action/user_action_state_source.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_card_semantics.dart';
-import 'package:pass_emploi_app/widgets/errors/error_text.dart';
 import 'package:pass_emploi_app/widgets/success/creation_confirmation_body.dart';
 
 class CreateUserActionConfirmationOffreSuiviPage extends StatelessWidget {
@@ -65,8 +65,14 @@ class _Content extends StatelessWidget {
           ),
         ],
       ),
-      DisplayState.FAILURE => Center(
-        child: ErrorText(Strings.genericCreationError),
+      DisplayState.FAILURE => Padding(
+        padding: const EdgeInsets.all(Margins.spacing_base),
+        child: Center(
+          child: DsfrAlert(
+            type: DsfrAlertType.error,
+            description: DsfrAlertDescriptionText(Strings.genericCreationError),
+          ),
+        ),
       ),
       _ => const Center(child: CircularProgressIndicator()),
     };
