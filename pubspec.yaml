@@ -73,7 +73,7 @@ dependencies:
   package_info_plus: ^8.3.1 # Bump to 6.0.0 or greater when matomo_tracker > 4.1.1 is published.
   encrypt: ^5.0.1 # Version 5.0.3 makes 1 test crash
   logger: ^2.6.0
-  matomo_tracker: ^5.1.0
+  matomo_tracker: ^6.1.1
   speech_to_text: ^7.3.0
   gaimon: ^1.0.1
 
