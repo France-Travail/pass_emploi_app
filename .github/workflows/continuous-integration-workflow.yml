@@ -120,7 +120,7 @@ jobs:
           flutter-version: ${{ env.FLUTTER_VERSION }}
 
       - name: Check Firebase App Distribution CLI cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         id: firebase-tools-cache
         with:
           path: /usr/local/bin
@@ -255,7 +255,7 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Check Codemagic CLI cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         id: codemagic-cache
         with:
           path: /Users/runner/hostedtoolcache/Python/${{ env.PYTHON_VERSION }}/x64
@@ -268,7 +268,7 @@ jobs:
           pip3 install codemagic-cli-tools
 
       - name: Check Firebase App Distribution CLI cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         id: firebase-tools-cache
         with:
           path: /usr/local/bin
@@ -303,7 +303,7 @@ jobs:
           flutter pub get
 
       - name: Check CocoaPods cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         id: cocoapods-cache
         with:
           path: ios/Pods
