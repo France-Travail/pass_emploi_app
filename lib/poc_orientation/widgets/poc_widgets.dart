@@ -194,7 +194,7 @@ class PocMetierTuile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      label: [metier.libelle, if (detail != null) detail!].join('. '),
+      label: [metier.libelle, ?detail].join('. '),
       excludeSemantics: true,
       onTap: () => _ouvrir(context),
       child: Material(

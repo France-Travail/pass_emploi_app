@@ -156,7 +156,7 @@ class _RiasecResultatPageState extends State<RiasecResultatPage> {
                         .map((type) => type.nom)
                         .toList(),
                   ),
-                  if (metier.grandDomaine case final domaine?) domaine,
+                  ?metier.grandDomaine,
                 ].join(' · '),
               ),
           ],

@@ -166,7 +166,7 @@ class _BoutonMesMetiers extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<List<RomeMetierResume>>(
       valueListenable: MesMetiers.instance,
-      builder: (context, _, __) {
+      builder: (context, _, _) {
         final retenu = MesMetiers.instance.contient(fiche.code);
         return DsfrButton(
           label: retenu ? PocOrientationStrings.ficheRetirer : PocOrientationStrings.ficheAjouter,

@@ -270,14 +270,15 @@ class _CandidaturePageState extends State<CandidaturePage> {
 
   Future<void> _choisirFichier() async {
     try {
-      final resultat = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf', 'docx']);
-      final fichier = resultat?.files.single;
+      final fichier = await FilePicker.pickFile(type: FileType.custom, allowedExtensions: ['pdf', 'docx']);
       if (fichier == null || !mounted) return;
       final extension = fichier.extension?.toLowerCase();
+      final taille = fichier.lengthSync() ?? await fichier.length() ?? 0;
+      if (!mounted) return;
       setState(() {
         if (extension != 'pdf' && extension != 'docx') {
           _erreurCv = PocOffresStrings.erreurCvFormat;
-        } else if (fichier.size > _tailleMaxCv) {
+        } else if (taille > _tailleMaxCv) {
           _erreurCv = PocOffresStrings.erreurCvTropLourd;
         } else {
           _cv = _PocCv(fichier.name, chemin: fichier.path);

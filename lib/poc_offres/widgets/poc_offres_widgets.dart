@@ -160,9 +160,9 @@ class PocCarte extends StatelessWidget {
   Widget build(BuildContext context) {
     const radius = BorderRadius.all(Radius.circular(4));
     final semantique = [
-      if (etiquette != null) etiquette!,
+      ?etiquette,
       titre,
-      if (sousTitre != null) sousTitre!,
+      ?sousTitre,
       for (final complement in complements) complement.texte,
     ].join('. ');
     return Material(

@@ -176,7 +176,7 @@ class _PocChoixPageState<T> extends State<_PocChoixPage<T>> {
                   )
                 : ListView.separated(
                     itemCount: _choix.length,
-                    separatorBuilder: (_, __) => TextFormFieldSepLine(),
+                    separatorBuilder: (_, _) => TextFormFieldSepLine(),
                     itemBuilder: (context, index) {
                       final choix = _choix[index];
                       return Semantics(
