@@ -90,10 +90,10 @@ class PocPlanActionDemo {
       "type": tache.type,
       "terminee": _terminees.contains(tache.id),
       "declarationRequise": true,
-      if (tache.url != null) "url": tache.url,
-      if (tache.ecranApp != null) "ecranApp": tache.ecranApp,
-      if (tache.nomService != null) "nomService": tache.nomService,
-      if (categorie != null) "categorie": categorie,
+      "url": ?tache.url,
+      "ecranApp": ?tache.ecranApp,
+      "nomService": ?tache.nomService,
+      "categorie": ?categorie,
     };
   }
 }
