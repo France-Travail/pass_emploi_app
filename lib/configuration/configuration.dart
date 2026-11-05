@@ -69,7 +69,7 @@ class Configuration extends Equatable {
     final authClientSecret = getOrThrow('AUTH_CLIENT_SECRET');
     final iSRGX1CertificateForOldDevices = utf8.decode(base64Decode(getOrThrow('ISRGX1_CERT_FOR_OLD_DEVICES')));
     final actualisationPoleEmploiUrl = getOrThrow('ACTUALISATION_PE_URL');
-    final fuseauHoraire = await FlutterTimezone.getLocalTimezone();
+    final fuseauHoraire = (await FlutterTimezone.getLocalTimezone()).identifier;
     return Configuration(
       currentVersion,
       flavor,

@@ -88,7 +88,7 @@ class _Body extends StatelessWidget {
     return ListView.separated(
       itemCount: viewModel.notifications.length,
       padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
-      separatorBuilder: (_, __) => const SizedBox(height: DsfrSpacings.s3v),
+      separatorBuilder: (_, _) => const SizedBox(height: DsfrSpacings.s3v),
       itemBuilder: (context, index) {
         final notification = viewModel.notifications[index];
         return _NotificationTile(notification: notification);

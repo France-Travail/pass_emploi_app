@@ -56,7 +56,7 @@ void main() {
       final semantics = tester.ensureSemantics();
       await pump(tester);
 
-      expect(tester.getSemantics(find.text(Strings.warning)), containsSemantics(isHeader: true));
+      expect(tester.getSemantics(find.text(Strings.warning)), isSemantics(isHeader: true));
       semantics.dispose();
     });
   });
@@ -98,14 +98,14 @@ void main() {
       // Même restitution qu'un onglet Material : état sélectionné et position.
       expect(
         tester.getSemantics(find.bySemanticsLabel(RegExp('^Recherche, '))),
-        containsSemantics(label: 'Recherche, Tab 1 of 3', isSelected: true, hasTapAction: true),
+        isSemantics(label: 'Recherche, Tab 1 of 3', isSelected: true, hasTapAction: true),
       );
 
       await tester.tap(find.text('Alertes'));
       await tester.pumpAndSettle();
       expect(
         tester.getSemantics(find.bySemanticsLabel(RegExp('^Alertes, '))),
-        containsSemantics(isSelected: true),
+        isSemantics(isSelected: true),
       );
       semantics.dispose();
     });
@@ -152,7 +152,7 @@ void main() {
 
     expect(
       tester.getSemantics(find.byTooltip('Effacer le champ « Ville ou code postal »')),
-      containsSemantics(
+      isSemantics(
         tooltip: 'Effacer le champ « Ville ou code postal »',
         isButton: true,
         hasTapAction: true,

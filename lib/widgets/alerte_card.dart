@@ -33,7 +33,7 @@ class _AlerteNavigatorState extends State<AlerteNavigator> {
   Widget build(BuildContext context) {
     return StoreConnectorAware<AlerteNavigatorViewModel>(
       converter: (store) => AlerteNavigatorViewModel.create(store),
-      builder: (_, __) => widget.child,
+      builder: (_, _) => widget.child,
       onWillChange: _onWillChange,
       distinct: true,
     );

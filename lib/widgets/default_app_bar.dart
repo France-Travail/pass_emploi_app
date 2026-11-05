@@ -152,7 +152,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: false,
       actionsPadding: actionButton != null ? const EdgeInsets.only(right: DsfrSpacings.s2w) : EdgeInsets.zero,
       actions: [
-        if (actionButton != null) actionButton!,
+        ?actionButton,
       ],
     );
   }

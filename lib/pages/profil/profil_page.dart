@@ -404,6 +404,7 @@ class _DeveloperOptions extends StatelessWidget {
           iconBackgroundColor: grey,
           title: Strings.developerOptionFCM,
           onTap: () async {
+            // ignore: deprecated_member_use, register() gives a Firebase Installation ID, backend expects an FCM token
             final String? token = await FirebaseMessaging.instance.getToken();
             if (token != null) {
               await Clipboard.setData(ClipboardData(text: token));
@@ -419,6 +420,7 @@ class _DeveloperOptions extends StatelessWidget {
           iconBackgroundColor: grey,
           title: Strings.developerOptionFCMDelete,
           onTap: () async {
+            // ignore: deprecated_member_use, unregister() works with Firebase Installation ID, backend expects an FCM token
             await FirebaseMessaging.instance.deleteToken();
             if (context.mounted) {
               showSnackBarWithSystemError(context, "Token supprimé ❌");

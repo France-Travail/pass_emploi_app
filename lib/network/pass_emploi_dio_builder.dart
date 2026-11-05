@@ -13,6 +13,13 @@ import 'package:pass_emploi_app/network/interceptors/logout_after_too_many_401_i
 import 'package:pass_emploi_app/network/interceptors/monitoring_interceptor.dart';
 
 class PassEmploiDioBuilder {
+  /// Since dio_cache_interceptor 4, codes are an allow-list (formerly `hitCacheOnErrorExcept: [401, 403, 404]`).
+  /// To keep the same behaviour, we serve the cache on any non-2xx status code except those ones.
+  static final List<int> _hitCacheOnErrorCodes = [
+    for (var code = 100; code < 600; code++)
+      if ((code < 200 || code >= 300) && ![401, 403, 404].contains(code)) code,
+  ];
+
   final String baseUrl;
   final CacheStore cacheStore;
   final ModeDemoRepository modeDemoRepository;
@@ -34,9 +41,10 @@ class PassEmploiDioBuilder {
   Dio build() {
     final cacheOptions = CacheOptions(
       store: cacheStore,
-      hitCacheOnErrorExcept: [401, 403, 404],
+      hitCacheOnNetworkFailure: true,
+      hitCacheOnErrorCodes: _hitCacheOnErrorCodes,
       policy: CachePolicy.request,
-      keyBuilder: (request) => PassEmploiCacheManager.getCacheKey(request.uri.toString()),
+      keyBuilder: ({required url, headers, body}) => PassEmploiCacheManager.getCacheKey(url.toString()),
     );
     final dioClient = Dio(BaseOptions(baseUrl: baseUrl));
     dioClient.interceptors

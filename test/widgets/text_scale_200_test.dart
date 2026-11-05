@@ -76,7 +76,7 @@ void main() {
     // A11y 5.1 (audit RAAM du 15/10/2026) : chaque onglet indique sa position dans la barre d'onglets.
     expect(
       tester.getSemantics(find.bySemanticsLabel(RegExp('^${Strings.menuAccueil}, '))),
-      containsSemantics(label: '${Strings.menuAccueil}, Tab 1 of 5', isSelected: true, hasTapAction: true),
+      isSemantics(label: '${Strings.menuAccueil}, Tab 1 of 5', isSelected: true, hasTapAction: true),
     );
     semantics.dispose();
   });

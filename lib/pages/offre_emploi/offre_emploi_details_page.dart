@@ -316,11 +316,11 @@ class OffreEmploiDetailsPage extends StatelessWidget {
             count: 1,
           ),
         const SizedBox(height: DsfrSpacings.s2w),
-        if (skills != null) skills,
-        if (softSkills != null) softSkills,
-        if (educations != null) educations,
-        if (languages != null) languages,
-        if (driverLicences != null) driverLicences,
+        ?skills,
+        ?softSkills,
+        ?educations,
+        ?languages,
+        ?driverLicences,
       ],
     );
   }

@@ -289,8 +289,6 @@ class _ModeDemoWrapper extends StatelessWidget {
           removeTop: true,
           child: materialAppChild ?? Container(),
         ),
-        // required to avoid automatic top scrolling when keyboard is displayed
-        useInheritedMediaQuery: true,
         home: child,
       ),
     );

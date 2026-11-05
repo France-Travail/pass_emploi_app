@@ -16,8 +16,9 @@ class FtIaShowcaseWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: deprecated_member_use, TODO: migrate to ShowcaseView.register() before showcaseview 6
     return ShowCaseWidget(
-      onStart: (index, __) {},
+      onStart: (index, _) {},
       onFinish: () {
         StoreProvider.of<AppState>(context).dispatch(FtIaTutorialSeenAction());
       },
@@ -56,6 +57,7 @@ class _FtIaShowcaseState extends State<FtIaShowcase> {
               A11yUtils.announce(Strings.iaFtShowcaseTitle);
               vm.onSeen();
             } else {
+              // ignore: deprecated_member_use, TODO: migrate to ShowcaseView.get() before showcaseview 6
               ShowCaseWidget.of(context).startShowCase([key]);
             }
           }

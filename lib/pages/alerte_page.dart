@@ -418,7 +418,7 @@ class _SuggestionCard extends StatelessWidget {
               label: [
                 viewModel.titre.toOffreTitleForScreenReaders(),
                 _suggestionTypeLabel(viewModel.type),
-                if (source != null) source,
+                ?source,
               ].join(', '),
               excludeSemantics: true,
               child: Text(

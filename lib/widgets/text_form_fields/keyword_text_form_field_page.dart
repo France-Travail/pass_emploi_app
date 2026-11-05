@@ -21,7 +21,7 @@ class KeywordTextFormFieldPage extends StatelessWidget {
     required String title,
     required String? hint,
     required String? selectedKeyword,
-    required final String heroTag,
+    required String heroTag,
   }) {
     return MaterialPageRoute(
       fullscreenDialog: true,

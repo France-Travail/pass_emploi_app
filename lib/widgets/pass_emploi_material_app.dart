@@ -34,7 +34,6 @@ class PassEmploiMaterialApp extends MaterialApp {
     super.actions,
     super.restorationScopeId,
     super.scrollBehavior,
-    super.useInheritedMediaQuery,
     Widget Function(BuildContext, Widget?)? builder,
   }) : super(
          builder: (context, child) {

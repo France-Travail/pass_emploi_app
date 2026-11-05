@@ -7,7 +7,7 @@ void main() {
       'id': 'a',
       'libelle': 'label',
       'type': type,
-      if (ecranApp != null) 'ecranApp': ecranApp,
+      'ecranApp': ?ecranApp,
     });
 
     test('maps every known ecranApp', () {

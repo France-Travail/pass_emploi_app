@@ -215,7 +215,7 @@ addLineAboveTag "$editing_file" "AUTOGENERATE-REDUX-APP-STATE-PROPERTY" "$value"
 value="required this.${stateVariable},"
 addLineAboveTag "$editing_file" "AUTOGENERATE-REDUX-APP-STATE-CONSTRUCTOR" "$value"
 
-value="final ${stateClass}? ${stateVariable},"
+value="${stateClass}? ${stateVariable},"
 addLineAboveTag "$editing_file" "AUTOGENERATE-REDUX-APP-STATE-COPYPARAM" "$value"
 
 value="${stateVariable}: ${stateVariable} ?? this.${stateVariable},"

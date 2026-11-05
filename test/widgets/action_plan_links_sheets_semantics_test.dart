@@ -367,7 +367,7 @@ void main() {
 
     expect(
       tester.getSemantics(find.text(Strings.actionPlanFeedbackTitle)),
-      containsSemantics(label: Strings.actionPlanFeedbackTitle, isHeader: true),
+      isSemantics(label: Strings.actionPlanFeedbackTitle, isHeader: true),
     );
     handle.dispose();
   });

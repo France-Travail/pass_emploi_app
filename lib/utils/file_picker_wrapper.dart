@@ -20,13 +20,15 @@ class FilePickerWrapper {
   static const int maxFilesize = 5 * 1024 * 1024;
   static Future<FilePickerResult> pickFile() async {
     try {
-      final result = await FilePicker.platform.pickFiles(
+      final file = await FilePicker.pickFile(
         type: FileType.custom,
         allowedExtensions: ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'odt', 'ods'],
       );
-      if (result == null) return FilePickerEmptyResult();
-      final file = result.files.single;
-      return FilePickerSuccessResult(path: file.path!, isTooLarge: file.size > maxFilesize);
+      if (file == null) return FilePickerEmptyResult();
+      final path = file.path;
+      if (path == null) return FilePickerErrorResult();
+      final size = file.lengthSync() ?? await file.length() ?? 0;
+      return FilePickerSuccessResult(path: path, isTooLarge: size > maxFilesize);
     } catch (e) {
       if (e is PlatformException && e.code == "read_external_storage_denied") {
         return FilePickerPermissionErrorResult();

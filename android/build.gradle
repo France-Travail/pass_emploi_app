@@ -10,15 +10,15 @@ allprojects {
 ext {
     flutter = [
         compileSdkVersion: 36,
-        minSdkVersion: 23,
+        minSdkVersion: 24,
         targetSdkVersion: 36,
-        ndkVersion: '27.0.12077973'
+        ndkVersion: '28.2.13676358'
     ]
 }
 
-rootProject.buildDir = '../build'
+rootProject.layout.buildDirectory = file('../build')
 subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    project.layout.buildDirectory = rootProject.layout.buildDirectory.dir(project.name)
     // See https://stackoverflow.com/a/77738936
     afterEvaluate { project ->
         if (project.hasProperty('android')) {
@@ -30,7 +30,11 @@ subprojects {
         }
     }
 }
+// Flutter Gradle plugin (applied in :app) registers the `flutter` extension used by some plugins (e.g. android_file_picker)
+subprojects {
+    project.evaluationDependsOn(':app')
+}
 
 tasks.register("clean", Delete) {
-    delete rootProject.buildDir
+    delete rootProject.layout.buildDirectory
 }

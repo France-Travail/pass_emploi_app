@@ -351,7 +351,7 @@ class _QuestionnaireBodyState extends State<_QuestionnaireBody> {
             ...previousChildren.map(
               (child) => ExcludeSemantics(key: child.key, child: child),
             ),
-            if (currentChild != null) currentChild,
+            ?currentChild,
           ],
         );
       },

@@ -35,6 +35,7 @@ class PushNotificationManager {
   }
 
   Future<String?> getToken() async {
+    // ignore: deprecated_member_use, register() gives a Firebase Installation ID, backend expects an FCM token
     final String? token = await _firebaseMessaging.getToken();
     Log.d("FirebaseMessaging token: $token");
     return token;
@@ -56,6 +57,7 @@ class PushNotificationManager {
       AuthorizationStatus.authorized => true,
       AuthorizationStatus.provisional => true,
       AuthorizationStatus.denied => true,
+      AuthorizationStatus.deniedPermanently => true,
       AuthorizationStatus.notDetermined => false,
     };
   }
@@ -81,16 +83,16 @@ class PushNotificationManager {
       if (notification != null) {
         final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
         await flutterLocalNotificationsPlugin.initialize(
-          InitializationSettings(
+          settings: InitializationSettings(
             android: AndroidInitializationSettings('ic_notification'),
           ),
           onDidReceiveNotificationResponse: (response) => _onLocalNotificationOpened(response.payload, store),
         );
         flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
+          id: notification.hashCode,
+          title: notification.title,
+          body: notification.body,
+          notificationDetails: NotificationDetails(
             android: AndroidNotificationDetails(_channelId, _channelName, color: DsfrColors.blueFranceSun113),
           ),
           payload: jsonEncode(message.data),

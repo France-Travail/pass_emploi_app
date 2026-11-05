@@ -31,7 +31,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     compileSdkVersion 36
     namespace "fr.fabrique.social.gouv.pass_emploi_app"
-    ndkVersion "27.0.12077973"
+    ndkVersion "28.2.13676358"
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -42,10 +42,6 @@ android {
         coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
-    }
-
-    kotlinOptions {
-        jvmTarget = '11'
     }
 
     defaultConfig {
@@ -107,10 +103,10 @@ android {
             def bundleTaskName = "bundle${taskSuffix}"
             if (tasks.findByName(bundleTaskName)) {
                 def copyAABTask = tasks.create(name: "copyAndRenameAab${taskSuffix}", type: Copy) {
-                    def bundleBuildDir = "${buildDir}/outputs/bundle"
+                    def bundleBuildDir = layout.buildDirectory.dir("outputs/bundle").get().asFile
                     def flavorsCapitalized = variant.productFlavors.name.withIndex().collect { flavor, index -> index == 0 ? flavor : flavor.capitalize() }
                     def originalDirPath = "${flavorsCapitalized.join()}${variant.buildType.name.capitalize()}"
-                    def originalFileName = "${project.archivesBaseName}-${variant.productFlavors.name.join('-')}-${variant.buildType.name}.aab"
+                    def originalFileName = "${project.base.archivesName.get()}-${variant.productFlavors.name.join('-')}-${variant.buildType.name}.aab"
                     from "${bundleBuildDir}/${originalDirPath}/${originalFileName}"
                     into "${bundleBuildDir}/${variant.buildType.name}/"
                     rename("${originalFileName}", "app.aab")
@@ -121,13 +117,18 @@ android {
     }
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+    }
+}
+
 flutter {
     source '../..'
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:2.1.0"
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
 }
 
 

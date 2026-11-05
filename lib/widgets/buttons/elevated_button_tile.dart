@@ -32,12 +32,12 @@ class ElevatedButtonTile extends StatelessWidget {
               padding: EdgeInsets.all(Margins.spacing_m),
               child: Row(
                 children: [
-                  if (leading != null) leading!,
+                  ?leading,
                   if (leading != null) SizedBox(width: Margins.spacing_base),
                   Expanded(
                     child: Text(label, style: TextStyles.textBaseBold.copyWith(color: context.content)),
                   ),
-                  if (suffix != null) suffix!,
+                  ?suffix,
                 ],
               ),
             ),

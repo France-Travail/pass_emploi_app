@@ -115,7 +115,7 @@ class _CreateUserActionFormState extends State<CreateUserActionForm> with Widget
                 primary: false,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [appBar, form, if (navButtons != null) navButtons],
+                  children: [appBar, form, ?navButtons],
                 ),
               ),
             )

@@ -20,8 +20,8 @@ class LoggingNetworkInterceptor extends Interceptor {
     - ${response.requestOptions.method} ${response.realUri.toString()}:
     - queryParams: ${response.requestOptions.queryParameters}
     - code: ${response.statusCode}
-    - fromNetwork: ${response.extra[CacheResponse.fromNetwork]}
-    - cacheKey: ${response.extra[CacheResponse.cacheKey]}
+    - fromNetwork: ${response.extra[extraFromNetworkKey]}
+    - cacheKey: ${response.extra[extraCacheKey]}
     - data: ${response.requestOptions.data}
     - response: ${response.toString()}
     """);

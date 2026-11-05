@@ -178,7 +178,7 @@ class ActionPlanRepository {
       await _httpClient.patch(url, data: {
         'terminee': true,
         'date': date.toIso8601WithOffsetDateTime(),
-        if (commentaire != null) 'commentaire': commentaire,
+        'commentaire': ?commentaire,
       });
       return ActionPlanDeclarationSuccess();
     } catch (e, stack) {
