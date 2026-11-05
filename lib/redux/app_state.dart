@@ -693,6 +693,7 @@ extension AppStateUser on AppState {
     final user = this.user();
     if (user == null || user.loginMode.isInvite()) return false;
     if (user.accompagnement == Accompagnement.ftEspaceCandidat) return false;
+    if (user.accompagnement == Accompagnement.avenirPro) return false;
     return true;
   }
 
@@ -708,7 +709,7 @@ extension AppStateUser on AppState {
     return OnboardingStepsVisibility(
       withMessageStep: hasChat(),
       withPlanActionStep: hasPlanAction(),
-      withActionStep: hasMonSuivi() && accompagnement() != Accompagnement.avenirPro,
+      withActionStep: hasMonSuivi(),
     );
   }
 }
