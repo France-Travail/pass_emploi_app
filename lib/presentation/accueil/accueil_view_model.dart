@@ -63,7 +63,7 @@ class AccueilViewModel extends Equatable {
       greeting: Strings.inviteAccueilGreeting(store.state.user()?.firstName),
       deepLink: _isCreationDeepLinkForbidden(store) ? null : store.getDeepLink(),
       shouldResetDeeplink: _shouldResetDeeplink(store),
-      withNewNotifications: _withNewNotifications(store),
+      withNewNotifications: withNewInAppNotifications(store),
       shouldShowAllowNotifications: _shouldShowAllowNotifications(store),
       resetDeeplink: () => store.dispatch(ResetDeeplinkAction()),
       retry: () => store.dispatch(AccueilRequestAction(forceRefresh: true)),
@@ -299,7 +299,7 @@ AccueilItem? _campagneEvaluationItem(AppState state) {
   return null;
 }
 
-bool _withNewNotifications(Store<AppState> store) {
+bool withNewInAppNotifications(Store<AppState> store) {
   final inAppNotificationsState = store.state.inAppNotificationsState;
   final dateDerniereConsultation = store.state.dateConsultationNotificationState.date;
 

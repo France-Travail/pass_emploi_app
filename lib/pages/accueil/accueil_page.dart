@@ -61,6 +61,8 @@ class _AccueilPageState extends State<AccueilPage> {
           if (store.state.hasPlanAction()) {
             store.dispatch(ActionPlanRequestAction());
             store.dispatch(CommunicationsRequestAction());
+            store.dispatch(InAppNotificationsRequestAction());
+            store.dispatch(DateConsultationNotificationRequestAction());
             return;
           }
           store.dispatch(AccueilRequestAction());

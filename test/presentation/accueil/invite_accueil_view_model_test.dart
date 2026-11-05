@@ -3,6 +3,7 @@ import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_tracking.dart';
+import 'package:pass_emploi_app/features/date_consultation_notification/date_consultation_notification_state.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
@@ -11,6 +12,7 @@ import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/presentation/accueil/invite_accueil_view_model.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 
+import '../../doubles/fixtures.dart';
 import '../../doubles/spies.dart';
 import '../../dsl/app_state_dsl.dart';
 
@@ -445,6 +447,34 @@ void main() {
 
     test('une tâche sans déclaration se coche directement', () {
       expect(doitDeclarer(planAvec(done: false, declarationRequise: false)), isFalse);
+    });
+  });
+
+  group('withNewNotifications', () {
+    test('est vrai quand la dernière notification est postérieure à la dernière consultation', () {
+      final store = givenState()
+          .loggedInUser()
+          .copyWith(dateConsultationNotificationState: DateConsultationNotificationState(date: DateTime(2024)))
+          .withInAppNotificationsSuccess([mockInAppNotification(date: DateTime(2025))])
+          .store();
+
+      expect(InviteAccueilViewModel.create(store).withNewNotifications, isTrue);
+    });
+
+    test('est faux quand la dernière notification a déjà été consultée', () {
+      final store = givenState()
+          .loggedInUser()
+          .copyWith(dateConsultationNotificationState: DateConsultationNotificationState(date: DateTime(2025)))
+          .withInAppNotificationsSuccess([mockInAppNotification(date: DateTime(2024))])
+          .store();
+
+      expect(InviteAccueilViewModel.create(store).withNewNotifications, isFalse);
+    });
+
+    test('est faux tant que les notifications ne sont pas chargées', () {
+      final store = givenState().loggedInUser().withInAppNotificationsLoading().store();
+
+      expect(InviteAccueilViewModel.create(store).withNewNotifications, isFalse);
     });
   });
 }
