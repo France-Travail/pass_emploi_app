@@ -32,7 +32,7 @@ jobs:
     runs-on: macos-26
     steps:
       - name: Checkout tag
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.tag }}
 
