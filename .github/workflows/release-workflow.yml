@@ -9,7 +9,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set Environment Variables
         uses: ./.github/actions/setvars
@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: pre-build
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set Environment Variables
         uses: ./.github/actions/setvars
@@ -148,7 +148,7 @@ jobs:
     runs-on: macos-26
     needs: pre-build
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
