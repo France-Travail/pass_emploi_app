@@ -8,15 +8,25 @@ set -euo pipefail
 FLAVOR="${1:?Flavor required (e.g. cejProd or brsaProd)}"
 PROJECT_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 GOOGLE_SERVICE_PLIST="${PROJECT_ROOT}/ios/firebase-config/${FLAVOR}/GoogleService-Info.plist"
-UPLOAD_SYMBOLS="${PROJECT_ROOT}/ios/Pods/FirebaseCrashlytics/upload-symbols"
+# Firebase comes from Swift Package Manager (checked out by `flutter build` in build/ios/SourcePackages),
+# CocoaPods path kept as a fallback.
+UPLOAD_SYMBOLS=""
+for candidate in \
+  "${PROJECT_ROOT}/build/ios/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/upload-symbols" \
+  "${PROJECT_ROOT}/ios/Pods/FirebaseCrashlytics/upload-symbols"; do
+  if [ -x "$candidate" ]; then
+    UPLOAD_SYMBOLS="$candidate"
+    break
+  fi
+done
 
 if [ ! -f "$GOOGLE_SERVICE_PLIST" ]; then
   echo "Missing GoogleService-Info.plist at ${GOOGLE_SERVICE_PLIST}"
   exit 1
 fi
 
-if [ ! -x "$UPLOAD_SYMBOLS" ]; then
-  echo "Missing upload-symbols script at ${UPLOAD_SYMBOLS}. Run pod install first."
+if [ -z "$UPLOAD_SYMBOLS" ]; then
+  echo "Missing upload-symbols in build/ios/SourcePackages (Swift Package Manager) or ios/Pods. Run flutter build first."
   exit 1
 fi
 
