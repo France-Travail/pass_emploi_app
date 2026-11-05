@@ -111,6 +111,8 @@ void openAppStore(BuildContext context, [RatingViewModel? viewModel]) async {
 }
 
 void _proposeIdea(BuildContext context) {
+  // POC démo : le formulaire d'idées (Tally) ne s'ouvre pas en mode démo.
+  if (StoreProvider.of<AppState>(context, listen: false).state.demoState) return;
   final link = ExternalLinks.proposerUneIdee;
   PassEmploiMatomoTracker.instance.trackOutlink(link);
   PassEmploiMatomoTracker.instance.trackScreen(AnalyticsActionNames.proposeIdea);

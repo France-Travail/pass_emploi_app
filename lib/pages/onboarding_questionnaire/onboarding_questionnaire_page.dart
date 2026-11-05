@@ -18,6 +18,7 @@ import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questi
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_prenom_step.dart';
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_situation_step.dart';
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_under_age_page.dart';
+import 'package:pass_emploi_app/poc_plan_action/poc_demo_sans_reseau.dart';
 import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_form_change_notifier.dart';
 import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_tracker.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -56,7 +57,6 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
   @override
   void initState() {
     super.initState();
-    _communesRepository = CommunesRepository();
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -76,6 +76,7 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
     if (_formInitialized) return;
     _formInitialized = true;
     final store = StoreProvider.of<AppState>(context);
+    _communesRepository = store.state.demoState ? PocCommunesDemoRepository() : CommunesRepository();
     final questionnaireState = store.state.onboardingQuestionnaireState;
     _tracker = OnboardingQuestionnaireTracker(
       isUpdate: questionnaireState is OnboardingQuestionnaireSuccessState && questionnaireState.everFinished,

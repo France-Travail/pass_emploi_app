@@ -12,6 +12,7 @@ import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/user.dart';
+import 'package:pass_emploi_app/poc_plan_action/poc_plan_action_demo.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:redux/redux.dart';
@@ -58,6 +59,7 @@ class LoginMiddleware extends MiddlewareClass<AppState> {
     store.dispatch(PreferredLoginModeSaveAction(loginMode: mode));
     if (mode.isDemo()) {
       _modeDemoRepository.setModeDemo(true);
+      PocPlanActionDemo.instance.demarrer(missionLocale: mode == LoginMode.DEMO_MILO);
       final user = _modeDemoUser(mode);
       store.dispatch(LoginSuccessAction(user));
       _matomoTracker.setOptOut(optOut: true);

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
+import 'package:pass_emploi_app/poc_plan_action/poc_demo_sans_reseau.dart';
 import 'package:pass_emploi_app/ui/external_links.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
@@ -56,7 +56,7 @@ class ActionPlanFeedbackBottomSheet extends StatelessWidget {
                   variant: DsfrButtonVariant.primary,
                   size: DsfrComponentSize.lg,
                   icon: DsfrIcons.systemExternalLinkFill,
-                  onPressed: () => launchExternalUrl(ExternalLinks.actionPlanFeedback),
+                  onPressed: () => pocOuvrirHorsDemo(context, ExternalLinks.actionPlanFeedback),
                 ),
               ],
             ),

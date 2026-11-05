@@ -10,6 +10,7 @@ import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_emploi_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_immersion_page.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_service_civique_page.dart';
+import 'package:pass_emploi_app/poc_plan_action/poc_demo_sans_reseau.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/external_links.dart';
@@ -602,14 +603,14 @@ class InviteObjectiveFeedback extends StatelessWidget {
   final ActionPlanObjective objective;
   final VoidCallback onFeedback;
 
-  void _answer({required bool useful}) {
+  void _answer(BuildContext context, {required bool useful}) {
     ActionPlanTrackingEvent(
       useful
           ? AnalyticsEventNames.actionPlanObjectiveUsefulAction
           : AnalyticsEventNames.actionPlanObjectiveNotUsefulAction,
       name: objective.theme,
     ).send();
-    if (!useful) launchExternalUrl(ExternalLinks.actionPlanObjectiveFeedback);
+    if (!useful) pocOuvrirHorsDemo(context, ExternalLinks.actionPlanObjectiveFeedback);
     onFeedback();
     // A11y : les boutons disparaissent au profit du remerciement.
     A11yUtils.announce(Strings.inviteAccueilObjectiveFeedbackThanks);
@@ -650,7 +651,7 @@ class InviteObjectiveFeedback extends StatelessWidget {
                       icon: DsfrIcons.systemThumbUpLine,
                       variant: DsfrButtonVariant.tertiary,
                       size: DsfrComponentSize.md,
-                      onPressed: () => _answer(useful: true),
+                      onPressed: () => _answer(context, useful: true),
                     ),
                     // A11y 5.1 : « Pas vraiment » ouvre un formulaire web : c'est un lien, dont l'indication
                     // précise la destination que le libellé ne dit pas.
@@ -658,13 +659,13 @@ class InviteObjectiveFeedback extends StatelessWidget {
                       label: Strings.inviteAccueilObjectiveFeedbackNo,
                       hint: Strings.inviteAccueilObjectiveFeedbackNoA11y,
                       url: ExternalLinks.actionPlanObjectiveFeedback,
-                      onTap: () => _answer(useful: false),
+                      onTap: () => _answer(context, useful: false),
                       child: DsfrButton(
                         label: Strings.inviteAccueilObjectiveFeedbackNo,
                         icon: DsfrIcons.systemThumbDownLine,
                         variant: DsfrButtonVariant.tertiary,
                         size: DsfrComponentSize.md,
-                        onPressed: () => _answer(useful: false),
+                        onPressed: () => _answer(context, useful: false),
                       ),
                     ),
                   ],

@@ -1,5 +1,6 @@
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
+import 'package:pass_emploi_app/features/bootstrap/bootstrap_action.dart';
 import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_actions.dart';
 import 'package:pass_emploi_app/features/fonctionnalites/fonctionnalites_actions.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
@@ -9,6 +10,7 @@ import 'package:pass_emploi_app/models/criteres_recherche_utilisateur.dart';
 import 'package:pass_emploi_app/models/fonctionnalite.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
+import 'package:pass_emploi_app/poc_plan_action/poc_plan_action_demo.dart';
 import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_tracker.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
@@ -25,7 +27,10 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
   void call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
-    if (action is LoginSuccessAction && action.user.loginMode.isInvite()) {
+    if (action is BootstrapAction) {
+      // POC démo : une démo fermée sans déconnexion laisse son plan et ses réponses, que le compte suivant reprendrait.
+      if (await _actionPlanRepository.getStoredPlanId() == PocPlanActionDemo.idPlan) await _clear();
+    } else if (action is LoginSuccessAction && action.user.loginMode.isInvite()) {
       await _load(store);
     } else if (action is FonctionnalitesSuccessAction && action.actives.contains(Fonctionnalite.planAction)) {
       // Fonctionnalites are fetched at login, at launch when already logged in and back to foreground:

@@ -416,6 +416,7 @@ class MockActionPlanRepository extends Mock implements ActionPlanRepository {
     when(() => fetch(any())).thenAnswer((_) async => ActionPlanFetchNotFound());
     when(() => fetchQuestionnaire(any(), any())).thenAnswer((_) async => null);
     when(() => getStoredPlan()).thenAnswer((_) async => null);
+    when(() => getStoredPlanId()).thenAnswer((_) async => null);
     when(() => toggleDone(any())).thenAnswer((_) async => null);
     when(() => deleteAction(any())).thenAnswer((_) async => null);
     when(() => giveFeedback(any())).thenAnswer((_) async => null);
