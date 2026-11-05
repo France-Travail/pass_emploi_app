@@ -1,5 +1,18 @@
 import 'package:dio/dio.dart';
+import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/poc_plan_action/poc_plan_action_donnees.dart';
+
+// Le serveur de démo ignore les réponses et rend toujours le même plan. L'app n'envoie la demande qu'avec une situation
+// et au moins un objectif : ceux du jeune fictif remplacent les étapes passées, pour la demande seulement.
+OnboardingQuestionnaireAnswers pocReponsesPourGenerer(OnboardingQuestionnaireAnswers answers) {
+  if (answers.canGenerateActionPlan) return answers;
+  return answers.copyWith(
+    situation: answers.situation ?? QuestionnaireSituation.autre,
+    objectifs: answers.objectifs.isEmpty
+        ? {QuestionnaireObjectif.decouvrirMetiers, QuestionnaireObjectif.engager}
+        : answers.objectifs,
+  );
+}
 
 // Répond à la place de l'API du plan d'action en mode démo. Coches et suppressions restent en mémoire jusqu'à
 // la prochaine entrée en démo : rien n'est envoyé à un serveur.

@@ -1,14 +1,24 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
 import 'package:pass_emploi_app/features/bootstrap/bootstrap_action.dart';
+import 'package:pass_emploi_app/features/login/login_state.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/poc_plan_action/poc_plan_action_demo.dart';
+import 'package:pass_emploi_app/presentation/accueil/invite_accueil_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/action_plan/action_plan_request_mapper.dart';
+import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:redux/redux.dart';
 
+import '../doubles/fixtures.dart';
 import '../doubles/mocks.dart';
+import '../dsl/app_state_dsl.dart';
 import '../utils/test_setup.dart';
 
 void main() {
@@ -27,24 +37,20 @@ void main() {
 
   ActionPlan lirePlan([String methode = "GET"]) {
     return ActionPlan.fromApiJson(
-      repondre(methode, "/jeunes/SEVP/plan-action")!.data
-          as Map<String, dynamic>,
+      repondre(methode, "/jeunes/SEVP/plan-action")!.data as Map<String, dynamic>,
     );
   }
 
   String progression(ActionPlan plan) {
     return plan.objectives
         .map(
-          (objectif) =>
-              "${objectif.title} ${objectif.doneCount}/${objectif.totalCount}",
+          (objectif) => "${objectif.title} ${objectif.doneCount}/${objectif.totalCount}",
         )
         .join(" | ");
   }
 
   ActionPlanAction tache(ActionPlan plan, String libelle) {
-    return plan.objectives
-        .expand((objectif) => objectif.actions)
-        .firstWhere((action) => action.label == libelle);
+    return plan.objectives.expand((objectif) => objectif.actions).firstWhere((action) => action.label == libelle);
   }
 
   setUp(() => demo.demarrer(missionLocale: false));
@@ -98,9 +104,7 @@ void main() {
     "cocher ouvre la déclaration, avec la thématique France Travail ou la catégorie Mission Locale",
     () {
       expect(
-        lirePlan().objectives
-            .expand((objectif) => objectif.actions)
-            .every((a) => a.declarationRequise),
+        lirePlan().objectives.expand((objectif) => objectif.actions).every((a) => a.declarationRequise),
         isTrue,
       );
       expect(
@@ -165,9 +169,7 @@ void main() {
   );
 
   test("les réponses du jeune fictif rendent le questionnaire complet", () {
-    final json =
-        repondre("GET", "/jeunes/SEVP/questionnaire")!.data
-            as Map<String, dynamic>;
+    final json = repondre("GET", "/jeunes/SEVP/questionnaire")!.data as Map<String, dynamic>;
 
     final answers = const ActionPlanRequestMapper().fromQuestionnaireResponse(
       json,
@@ -208,9 +210,7 @@ void main() {
       final factory = TestStoreFactory()
         ..onboardingQuestionnaireRepository = questionnaireRepository
         ..actionPlanRepository = actionPlanRepository;
-      factory
-          .initializeReduxStore(initialState: AppState.initialState())
-          .dispatch(BootstrapAction());
+      factory.initializeReduxStore(initialState: AppState.initialState()).dispatch(BootstrapAction());
     }
 
     test(
@@ -238,6 +238,78 @@ void main() {
 
       verifyNever(() => actionPlanRepository.clear());
       verifyNever(() => questionnaireRepository.clear());
+    });
+  });
+
+  group("fin du questionnaire en démo", () {
+    late Store<AppState> store;
+
+    Future<OnboardingQuestionnaireAnswers> terminer(OnboardingQuestionnaireAnswers reponses) async {
+      final actionPlanRepository = MockActionPlanRepository();
+      final plan = ActionPlan.fromApiJson(demo.planJson());
+      when(
+        () => actionPlanRepository.generate(any(), any(), keepLocalProgress: any(named: 'keepLocalProgress')),
+      ).thenAnswer((_) async => plan);
+      final factory = TestStoreFactory()
+        ..onboardingQuestionnaireRepository = MockOnboardingQuestionnaireRepository()
+        ..actionPlanRepository = actionPlanRepository;
+      store = factory.initializeReduxStore(
+        initialState: AppState.initialState().copyWith(
+          loginState: LoginSuccessState(mockUser(id: "SEVP", loginMode: LoginMode.DEMO_PE)),
+          demoState: true,
+        ),
+      );
+      final succes = store.onChange.firstWhere((state) => state.actionPlanState is ActionPlanSuccessState);
+
+      store.dispatch(OnboardingQuestionnaireCompleteAction(reponses));
+
+      expect((await succes).actionPlanState, ActionPlanSuccessState(plan));
+      return verify(
+            () => actionPlanRepository.generate(
+              any(),
+              captureAny(),
+              keepLocalProgress: any(named: 'keepLocalProgress'),
+            ),
+          ).captured.single
+          as OnboardingQuestionnaireAnswers;
+    }
+
+    test("toutes les étapes passées : la démo rend le plan en dur et referme le questionnaire", () async {
+      final demandees = await terminer(const OnboardingQuestionnaireAnswers());
+      await Future<void>.delayed(Duration.zero);
+
+      expect(demandees.canGenerateActionPlan, isTrue);
+      expect(
+        store.state.onboardingQuestionnaireState,
+        isA<OnboardingQuestionnaireSuccessState>().having((state) => state.finished, "terminé", isTrue),
+      );
+    });
+
+    test("réponses incomplètes : l'accueil de la démo reste celui du plan complet, avec « Modifier »", () {
+      final store = givenState()
+          .loggedInUser(loginMode: LoginMode.DEMO_PE)
+          .withOnboardingQuestionnaire(finished: true)
+          .withActionPlanSuccess(ActionPlan.fromApiJson(demo.planJson()))
+          .copyWith(demoState: true)
+          .store();
+
+      final viewModel = InviteAccueilViewModel.create(store);
+
+      expect(viewModel.mode, InviteAccueilMode.complet);
+      expect(viewModel.planSubtitle, Strings.inviteAccueilPlanSubtitleComplet);
+      expect(viewModel.showModifierButton, isTrue);
+      expect(viewModel.showQuestionnaireCard, isFalse);
+    });
+
+    test("une autre ville que Lille : la demande garde les réponses du jeune", () async {
+      const lyon = QuestionnaireCommune(code: "69123", nom: "Lyon", codePostal: "69001");
+      const reponses = OnboardingQuestionnaireAnswers(
+        situation: QuestionnaireSituation.emploi,
+        objectifs: {QuestionnaireObjectif.emploi},
+        villeRecherche: lyon,
+      );
+
+      expect(await terminer(reponses), reponses);
     });
   });
 }

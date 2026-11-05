@@ -35,6 +35,7 @@ class _OnboardingQuestionnaireLoaderStepState
   double _progress = 0;
   DateTime? _startedAt;
   Timer? _tickTimer;
+  StreamSubscription<AppState>? _storeChanges;
   AnimationController? _completeController;
 
   @override
@@ -45,6 +46,11 @@ class _OnboardingQuestionnaireLoaderStepState
     _startedAt = DateTime.now();
     final store = StoreProvider.of<AppState>(context);
     _seenNonTerminalState = !_isGenerationDone(store.state.actionPlanState);
+    // Une génération plus brève qu'un tic (mode démo sans réseau, échec immédiat hors connexion) passerait inaperçue
+    // entre deux tics, et l'écran attendrait sans fin : chaque changement d'état du store est donc suivi.
+    _storeChanges = store.onChange.listen((state) {
+      if (!_isGenerationDone(state.actionPlanState)) _seenNonTerminalState = true;
+    });
     _tickTimer = Timer.periodic(_tickInterval, (_) => _onTick());
     store.dispatch(OnboardingQuestionnaireCompleteAction(widget.answers));
   }
@@ -52,6 +58,7 @@ class _OnboardingQuestionnaireLoaderStepState
   @override
   void dispose() {
     _tickTimer?.cancel();
+    _storeChanges?.cancel();
     _completeController?.dispose();
     super.dispose();
   }

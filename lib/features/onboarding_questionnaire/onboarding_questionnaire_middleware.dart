@@ -126,7 +126,9 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
     final tracker = OnboardingQuestionnaireTracker(isUpdate: await _repository.hasEverFinished());
     await _repository.saveAnswers(answers);
     _persistRechercheCriteres(store, answers);
-    if (answers.canGenerateActionPlan) {
+    // POC démo : quelles que soient les réponses, étapes passées comprises, la démo rend le plan en dur.
+    final demo = store.state.demoState;
+    if (answers.canGenerateActionPlan || demo) {
       final userId = store.state.userId();
       if (userId == null) {
         store.dispatch(ActionPlanLoadingAction());
@@ -136,7 +138,7 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(ActionPlanLoadingAction());
         final plan = await _actionPlanRepository.generate(
           userId,
-          answers,
+          demo ? pocReponsesPourGenerer(answers) : answers,
           keepLocalProgress: store.state.isInviteLoginMode(),
         );
         if (plan != null) {
@@ -154,6 +156,10 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
       }
 
       await _repository.setFinished(true);
+      // POC démo : sans situation ni objectif, le questionnaire saute l'écran de génération, qui d'habitude le referme.
+      if (!answers.canGenerateActionPlan) {
+        store.dispatch(OnboardingQuestionnaireSuccessAction(finished: true, everFinished: true, answers: answers));
+      }
     } else {
       tracker.trackGenerationOutcome(OnboardingQuestionnaireGenerationOutcome.impossible);
       store.dispatch(ActionPlanEmptyAction());
