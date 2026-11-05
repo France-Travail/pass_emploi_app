@@ -173,7 +173,7 @@ jobs:
 
       - name: CEJ - Save dSYMs artifact
         if: ${{ inputs.flavor == 'both' || inputs.flavor == 'cejProd' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cej-dsyms-${{ inputs.tag }}
           path: artifacts/cej-dsyms-${{ inputs.tag }}.zip
@@ -234,7 +234,7 @@ jobs:
 
       - name: BRSA - Save dSYMs artifact
         if: ${{ inputs.flavor == 'both' || inputs.flavor == 'brsaProd' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: brsa-dsyms-${{ inputs.tag }}
           path: artifacts/brsa-dsyms-${{ inputs.tag }}.zip
