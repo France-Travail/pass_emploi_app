@@ -1,8 +1,10 @@
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_state.dart';
+import 'package:pass_emploi_app/features/bootstrap/bootstrap_action.dart';
 import 'package:pass_emploi_app/features/criteres_recherche_persist/criteres_recherche_persist_actions.dart';
 import 'package:pass_emploi_app/features/fonctionnalites/fonctionnalites_actions.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
+import 'package:pass_emploi_app/features/mode_demo/plan_action/mode_demo_plan_action.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
 import 'package:pass_emploi_app/models/criteres_recherche_utilisateur.dart';
@@ -25,7 +27,10 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
   void call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
 
-    if (action is LoginSuccessAction && action.user.loginMode.isInvite()) {
+    if (action is BootstrapAction) {
+      // Mode démo : une démo fermée sans déconnexion laisse son plan et ses réponses, que le compte suivant reprendrait.
+      if (await _actionPlanRepository.getStoredPlanId() == ModeDemoPlanAction.planId) await _clear();
+    } else if (action is LoginSuccessAction && action.user.loginMode.isInvite()) {
       await _load(store);
     } else if (action is FonctionnalitesSuccessAction && action.actives.contains(Fonctionnalite.planAction)) {
       // Fonctionnalites are fetched at login, at launch when already logged in and back to foreground:
@@ -121,7 +126,9 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
     final tracker = OnboardingQuestionnaireTracker(isUpdate: await _repository.hasEverFinished());
     await _repository.saveAnswers(answers);
     _persistRechercheCriteres(store, answers);
-    if (answers.canGenerateActionPlan) {
+    // Mode démo : quelles que soient les réponses, étapes passées comprises, la démo rend son plan.
+    final demo = store.state.demoState;
+    if (answers.canGenerateActionPlan || demo) {
       final userId = store.state.userId();
       if (userId == null) {
         store.dispatch(ActionPlanLoadingAction());
@@ -131,7 +138,7 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(ActionPlanLoadingAction());
         final plan = await _actionPlanRepository.generate(
           userId,
-          answers,
+          demo ? answersForDemoGeneration(answers) : answers,
           keepLocalProgress: store.state.isInviteLoginMode(),
         );
         if (plan != null) {
@@ -149,6 +156,10 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
       }
 
       await _repository.setFinished(true);
+      // Mode démo : sans situation ni objectif, le questionnaire saute l'écran de génération, qui d'habitude le referme.
+      if (!answers.canGenerateActionPlan) {
+        store.dispatch(OnboardingQuestionnaireSuccessAction(finished: true, everFinished: true, answers: answers));
+      }
     } else {
       tracker.trackGenerationOutcome(OnboardingQuestionnaireGenerationOutcome.impossible);
       store.dispatch(ActionPlanEmptyAction());

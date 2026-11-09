@@ -6,6 +6,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_tracking.dart';
 import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
+import 'package:pass_emploi_app/features/mode_demo/mode_demo_offline.dart';
 import 'package:pass_emploi_app/models/action_plan/action_plan.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/pages/recherche/recherche_offre_emploi_page.dart';
@@ -621,14 +622,14 @@ class InviteObjectiveFeedback extends StatelessWidget {
   final ActionPlanObjective objective;
   final VoidCallback onFeedback;
 
-  void _answer({required bool useful}) {
+  void _answer(BuildContext context, {required bool useful}) {
     ActionPlanTrackingEvent(
       useful
           ? AnalyticsEventNames.actionPlanObjectiveUsefulAction
           : AnalyticsEventNames.actionPlanObjectiveNotUsefulAction,
       name: objective.theme,
     ).send();
-    if (!useful) launchExternalUrl(ExternalLinks.actionPlanObjectiveFeedback);
+    if (!useful) launchExternalUrlUnlessDemo(context, ExternalLinks.actionPlanObjectiveFeedback);
     onFeedback();
     // A11y : les boutons disparaissent au profit du remerciement.
     A11yUtils.announce(Strings.inviteAccueilObjectiveFeedbackThanks);
@@ -669,7 +670,7 @@ class InviteObjectiveFeedback extends StatelessWidget {
                       icon: DsfrIcons.systemThumbUpLine,
                       variant: DsfrButtonVariant.tertiary,
                       size: DsfrComponentSize.md,
-                      onPressed: () => _answer(useful: true),
+                      onPressed: () => _answer(context, useful: true),
                     ),
                     // A11y 5.1 : « Pas vraiment » ouvre un formulaire web : c'est un lien, dont l'indication
                     // précise la destination que le libellé ne dit pas.
@@ -677,13 +678,13 @@ class InviteObjectiveFeedback extends StatelessWidget {
                       label: Strings.inviteAccueilObjectiveFeedbackNo,
                       hint: Strings.inviteAccueilObjectiveFeedbackNoA11y,
                       url: ExternalLinks.actionPlanObjectiveFeedback,
-                      onTap: () => _answer(useful: false),
+                      onTap: () => _answer(context, useful: false),
                       child: DsfrButton(
                         label: Strings.inviteAccueilObjectiveFeedbackNo,
                         icon: DsfrIcons.systemThumbDownLine,
                         variant: DsfrButtonVariant.tertiary,
                         size: DsfrComponentSize.md,
-                        onPressed: () => _answer(useful: false),
+                        onPressed: () => _answer(context, useful: false),
                       ),
                     ),
                   ],

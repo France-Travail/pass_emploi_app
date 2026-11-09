@@ -32,6 +32,8 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
   final OnboardingQuestionnaireFinishWithoutGeneration? _onFinishWithoutGeneration;
   final bool startAtFirstStep;
   final bool skipActionPlanGeneration;
+  // Mode démo : la ville d'habitation et la ville de recherche sont imposées, non modifiables.
+  final QuestionnaireCommune? fixedCommune;
   // Le prénom n'est demandé qu'à l'invité : le jeune connecté a celui de son compte.
   final bool withPrenomStep;
   final OnboardingQuestionnaireTracker? _tracker;
@@ -69,6 +71,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
     this._onFinishWithoutGeneration,
     this.startAtFirstStep = false,
     this.skipActionPlanGeneration = false,
+    this.fixedCommune,
     this.withPrenomStep = true,
     this._tracker,
   });
@@ -120,8 +123,8 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
       draftBirthMonth = '';
       draftBirthYear = '';
     }
-    draftHabitation = savedAnswers.habitation;
-    draftHabitationQuery = savedAnswers.habitation?.displayLabel ?? '';
+    draftHabitation = fixedCommune ?? savedAnswers.habitation;
+    draftHabitationQuery = draftHabitation?.displayLabel ?? '';
     draftSituation = savedAnswers.situation;
     draftSituationAutre = savedAnswers.situationAutre ?? '';
     draftObjectifs = Set.of(savedAnswers.objectifs);
@@ -146,8 +149,8 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
           draftBirthYear = '';
         }
       case OnboardingQuestionnaireStep.habitation:
-        draftHabitation = savedAnswers.habitation;
-        draftHabitationQuery = savedAnswers.habitation?.displayLabel ?? '';
+        draftHabitation = fixedCommune ?? savedAnswers.habitation;
+        draftHabitationQuery = draftHabitation?.displayLabel ?? '';
       case OnboardingQuestionnaireStep.situation:
         draftSituation = savedAnswers.situation;
         draftSituationAutre = savedAnswers.situationAutre ?? '';
@@ -561,7 +564,7 @@ class OnboardingQuestionnaireFormChangeNotifier extends ChangeNotifier {
   }
 
   void _prefillVilleFromHabitation() {
-    final suggested = savedAnswers.villeRecherche ?? savedAnswers.habitation ?? draftHabitation;
+    final suggested = fixedCommune ?? savedAnswers.villeRecherche ?? savedAnswers.habitation ?? draftHabitation;
     draftVilleRecherche = suggested;
     draftVilleQuery = suggested?.displayLabel ?? '';
     draftRayonKm = savedAnswers.rayonKm;
