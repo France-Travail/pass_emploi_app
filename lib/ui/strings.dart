@@ -218,10 +218,8 @@ class Strings {
   static String loginPassEmploiSubtitle = "L'app dédiée à votre accompagnement";
   static String loginPassEmploiDescription =
       "Utilisez votre compte France Travail pour accéder à vos messages, vos démarches, offres et rendez-vous.";
-  static String loginInviteAccessTitle = "Accès invité";
-  static String loginInviteAccessPasswordLabel = "Mot de passe";
-  static String loginInviteAccessWrongPassword = "Mot de passe incorrect";
-  static String loginInviteAccessValidate = "Valider";
+  static String loginNoAccountLabel = "Je n'ai pas de compte France Travail ou Mission Locale";
+  static String loginInviteActionCta = "C’est parti, sans compte";
   static String suiviParConseillerCej =
       "Dans le cadre de mon Contrat d'Engagement Jeune, je suis suivi par un conseiller :";
   static String suiviParConseillerPassEmploi = "Je suis suivi par un conseiller :";

@@ -34,30 +34,32 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      initialIndex: viewModel.tabs._index(initialTab),
-      length: viewModel.tabs.length,
-      child: Scaffold(
-        backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
-        appBar: PrimaryAppBar(
-          title: Strings.solutionsAppBarTitle,
-          withAutofocusA11y: true,
-        ),
-        body: ConnectivityContainer(
-          child: Column(
-            children: [
+    final pages = viewModel.tabs._pages();
+    final scaffold = Scaffold(
+      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
+      appBar: PrimaryAppBar(
+        title: Strings.solutionsAppBarTitle,
+        withAutofocusA11y: true,
+      ),
+      body: ConnectivityContainer(
+        child: Column(
+          children: [
+            if (viewModel.withTabBar)
               DsfrTertiaryNavigation(
                 labels: viewModel.tabs.titles(),
               ),
-              Expanded(
-                child: TabBarView(
-                  children: viewModel.tabs._pages(),
-                ),
-              ),
-            ],
-          ),
+            Expanded(
+              child: viewModel.withTabBar ? TabBarView(children: pages) : pages.single,
+            ),
+          ],
         ),
       ),
+    );
+    if (!viewModel.withTabBar) return scaffold;
+    return DefaultTabController(
+      initialIndex: viewModel.tabs._index(initialTab),
+      length: viewModel.tabs.length,
+      child: scaffold,
     );
   }
 }

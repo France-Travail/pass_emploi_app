@@ -46,7 +46,11 @@ class _InviteAccueilBodyState extends State<InviteAccueilBody> {
         builder: (context, viewModel) {
           return CustomScrollView(
             slivers: [
-              PrimarySliverAppbar(title: viewModel.greeting, withNewNotifications: viewModel.withNewNotifications),
+              PrimarySliverAppbar(
+                title: viewModel.greeting,
+                withNewNotifications: viewModel.withNewNotifications,
+                withNotificationCenter: viewModel.withNotificationCenter,
+              ),
               SliverToBoxAdapter(child: _Content(viewModel: viewModel)),
             ],
           );

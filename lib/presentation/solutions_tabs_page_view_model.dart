@@ -12,12 +12,19 @@ class SolutionsTabPageViewModel extends Equatable {
     required this.tabs,
   });
 
+  bool get withTabBar => tabs.length > 1;
+
   factory SolutionsTabPageViewModel.create(Store<AppState> store) {
+    // Temporaire (mise en production du mode invité) : le suivi des offres et les alertes
+    // ne sont pas proposés aux invités.
+    final isInvite = store.state.isInviteLoginMode();
     return SolutionsTabPageViewModel._(
       tabs: [
         SolutionsTab.recherche,
-        SolutionsTab.offresEnregistrees,
-        SolutionsTab.alertes,
+        if (!isInvite) ...[
+          SolutionsTab.offresEnregistrees,
+          SolutionsTab.alertes,
+        ],
       ],
     );
   }

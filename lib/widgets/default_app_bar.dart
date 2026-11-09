@@ -12,7 +12,12 @@ import 'package:pass_emploi_app/widgets/dsfr/dsfr_notice.dart';
 class PrimarySliverAppbar extends StatelessWidget {
   final String title;
   final bool withNewNotifications;
-  const PrimarySliverAppbar({required this.title, required this.withNewNotifications});
+  final bool withNotificationCenter;
+  const PrimarySliverAppbar({
+    required this.title,
+    required this.withNewNotifications,
+    this.withNotificationCenter = true,
+  });
 
   static const double toolbarHeight = 64.0;
 
@@ -24,6 +29,7 @@ class PrimarySliverAppbar extends StatelessWidget {
       floating: false,
       pinned: true,
       automaticallyImplyLeading: false,
+      centerTitle: false,
       elevation: 0,
       scrolledUnderElevation: 0,
       backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
@@ -58,7 +64,7 @@ class PrimarySliverAppbar extends StatelessWidget {
       ),
       actionsPadding: const EdgeInsets.only(right: DsfrSpacings.s2w),
       actions: [
-        _CentreNotif(withNewNotifications),
+        if (withNotificationCenter) _CentreNotif(withNewNotifications),
         DsfrButton(
           icon: DsfrIcons.userAccountCircleLine,
           iconSemanticLabel: Strings.profilButtonSemanticsLabel,

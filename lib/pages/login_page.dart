@@ -82,11 +82,9 @@ class _Scaffold extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Align(
+                const Align(
                   alignment: Alignment.centerLeft,
-                  child: viewModel.withHiddenInviteAccess
-                      ? _HiddenInviteAccess(viewModel: viewModel, child: const BlocMarque())
-                      : const BlocMarque(),
+                  child: BlocMarque(),
                 ),
                 const SizedBox(height: Margins.spacing_s),
                 _ModeDemoTripleTap(
@@ -156,6 +154,25 @@ class _Scaffold extends StatelessWidget {
                     description: Strings.loginWrongDeviceClockErrorDescription,
                   ),
                 ],
+                if (viewModel.withInviteButton && viewModel.onInviteLogin != null) ...[
+                  const SizedBox(height: Margins.spacing_l),
+                  Divider(height: 1, color: DsfrColors.blueFrance950),
+                  const SizedBox(height: Margins.spacing_base),
+                  Text(
+                    Strings.loginNoAccountLabel,
+                    style: DsfrTextStyle.bodySmBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: Margins.spacing_base),
+                  DsfrButton(
+                    label: Strings.loginInviteActionCta,
+                    variant: DsfrButtonVariant.secondary,
+                    size: DsfrComponentSize.lg,
+                    icon: DsfrIcons.systemArrowRightLine,
+                    iconLocation: DsfrButtonIconLocation.right,
+                    onPressed: viewModel.onInviteLogin!,
+                  ),
+                ],
                 const SizedBox(height: Margins.spacing_l),
                 _InformationsLegales(),
                 const SizedBox(height: Margins.spacing_m),
@@ -209,133 +226,6 @@ class _ModeDemoTripleTapState extends State<_ModeDemoTripleTap> {
       onTap: _onTap,
       excludeFromSemantics: true,
       child: widget.child,
-    );
-  }
-}
-
-class _HiddenInviteAccess extends StatefulWidget {
-  const _HiddenInviteAccess({required this.viewModel, required this.child});
-
-  final LoginPageViewModel viewModel;
-  final Widget child;
-
-  @override
-  State<_HiddenInviteAccess> createState() => _HiddenInviteAccessState();
-}
-
-class _HiddenInviteAccessState extends State<_HiddenInviteAccess> {
-  static const int _requiredTaps = 5;
-  static const Duration _maxDelayBetweenTaps = Duration(seconds: 1);
-
-  int _tapCount = 0;
-  DateTime? _lastTapAt;
-
-  Future<void> _onTap() async {
-    if (widget.viewModel.withLoading) return;
-    final now = clock.now();
-    final lastTapAt = _lastTapAt;
-    final isSameSequence = lastTapAt != null && now.difference(lastTapAt) <= _maxDelayBetweenTaps;
-    _tapCount = isSameSequence ? _tapCount + 1 : 1;
-    _lastTapAt = now;
-    if (_tapCount < _requiredTaps) return;
-
-    _tapCount = 0;
-    _lastTapAt = null;
-    final isPasswordValid = await _InviteAccessModal.show(context, widget.viewModel.isInviteAccessPasswordValid);
-    if (isPasswordValid == true) widget.viewModel.onInviteLogin();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // Accès volontairement caché : non exposé aux lecteurs d'écran.
-    return GestureDetector(
-      onTap: _onTap,
-      behavior: HitTestBehavior.opaque,
-      excludeFromSemantics: true,
-      child: widget.child,
-    );
-  }
-}
-
-class _InviteAccessModal extends StatefulWidget {
-  const _InviteAccessModal({required this.isPasswordValid});
-
-  final bool Function(String password) isPasswordValid;
-
-  static Future<bool?> show(BuildContext context, bool Function(String password) isPasswordValid) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return showModalBottomSheet<bool>(
-      context: context,
-      backgroundColor: DsfrColorDecisions.backgroundTransparent(context),
-      barrierColor: DsfrColorDecisions.backgroundOverlayGrey(context),
-      barrierLabel: Strings.bottomSheetBarrierLabel,
-      elevation: 0,
-      shape: const RoundedRectangleBorder(),
-      isScrollControlled: true,
-      useSafeArea: true,
-      builder: (context) => Theme(
-        data: isDarkMode ? PassEmploiTheme.darkData : PassEmploiTheme.data,
-        child: Padding(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: DsfrModal(
-            isDismissible: true,
-            closeLabel: Strings.close,
-            child: _InviteAccessModal(isPasswordValid: isPasswordValid),
-          ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  State<_InviteAccessModal> createState() => _InviteAccessModalState();
-}
-
-class _InviteAccessModalState extends State<_InviteAccessModal> {
-  String _password = "";
-  bool _withError = false;
-
-  void _onValidate() {
-    if (widget.isPasswordValid(_password)) {
-      Navigator.pop(context, true);
-    } else {
-      setState(() => _withError = true);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          Strings.loginInviteAccessTitle,
-          style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
-        ),
-        const SizedBox(height: DsfrSpacings.s3w),
-        DsfrInput(
-          label: Strings.loginInviteAccessPasswordLabel,
-          isPasswordMode: true,
-          autofocus: true,
-          autocorrect: false,
-          textInputAction: TextInputAction.done,
-          onChanged: (value) => setState(() {
-            _password = value;
-            _withError = false;
-          }),
-          onFieldSubmitted: (_) => _onValidate(),
-          componentState: _withError
-              ? DsfrComponentState.error(errorMessage: Strings.loginInviteAccessWrongPassword)
-              : const DsfrComponentState.none(),
-        ),
-        const SizedBox(height: DsfrSpacings.s3w),
-        DsfrButton(
-          label: Strings.loginInviteAccessValidate,
-          variant: DsfrButtonVariant.primary,
-          size: DsfrComponentSize.lg,
-          onPressed: _onValidate,
-        ),
-      ],
     );
   }
 }

@@ -43,4 +43,33 @@ void main() {
     expect(position.pixels, position.minScrollExtent);
     semantics.dispose();
   });
+
+  testWidgets('le centre de notifications est masqué quand il n’est pas proposé', (tester) async {
+    final semantics = tester.ensureSemantics();
+    Future<void> pump({required bool withNotificationCenter}) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CustomScrollView(
+              slivers: [
+                PrimarySliverAppbar(
+                  title: 'Bonjour',
+                  withNewNotifications: false,
+                  withNotificationCenter: withNotificationCenter,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 200));
+    }
+
+    await pump(withNotificationCenter: true);
+    expect(find.bySemanticsLabel('Centre de notifications'), findsOneWidget);
+
+    await pump(withNotificationCenter: false);
+    expect(find.bySemanticsLabel('Centre de notifications'), findsNothing);
+    semantics.dispose();
+  });
 }

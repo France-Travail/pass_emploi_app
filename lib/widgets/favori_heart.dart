@@ -44,9 +44,13 @@ class FavoriHeart<T> extends StatelessWidget {
         store,
         context.dependOnInheritedWidgetOfExactType<FavorisStateContext<T>>()!.selectState(store),
       ),
-      builder: (context, viewModel) => _buildOffreEnregistreButton(context, viewModel),
+      builder: (context, viewModel) {
+        if (!viewModel.isVisible) return const SizedBox.shrink();
+        return _buildOffreEnregistreButton(context, viewModel);
+      },
       distinct: true,
       onDidChange: (_, viewModel) {
+        if (!viewModel.isVisible) return;
         if (viewModel.withError) {
           _displayFavoriErrorSnackbar(context);
         }

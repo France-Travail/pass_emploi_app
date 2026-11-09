@@ -59,7 +59,7 @@ class RechercheEvenementEmploiPage extends RechercheOffrePage<EvenementEmploi> {
   Widget? buildAlertBottomSheet() => null;
 
   @override
-  bool withCreateAlerte() => false;
+  bool withCreateAlerte(AppState state) => false;
 
   @override
   bool withBackButton() => false;

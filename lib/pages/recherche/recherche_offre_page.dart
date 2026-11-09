@@ -51,7 +51,7 @@ abstract class RechercheOffrePage<Result> extends StatefulWidget {
 
   Widget? buildAlertBottomSheet();
 
-  bool withCreateAlerte() => true;
+  bool withCreateAlerte(AppState state) => true;
 
   bool withBackButton() => true;
 
@@ -100,6 +100,7 @@ class _RechercheOffrePageState<Result> extends State<RechercheOffrePage<Result>>
                 return _RechercheOffreLayout(
                   showCriteresFullScreen: showCriteresFullScreen,
                   showBackAppBar: widget.withBackButton() || (showCriteresFullScreen && state.results != null),
+                  withCreateAlerte: widget.withCreateAlerte(store.state),
                 );
               },
               builder: (context, layout) {
@@ -183,7 +184,7 @@ class _RechercheOffrePageState<Result> extends State<RechercheOffrePage<Result>>
                                       placeHolderSubtitle: widget.placeHolderSubtitle(),
                                       emptyTitle: widget.emptyTitle(),
                                       resultsCountLabel: widget.resultsCountLabel(),
-                                      buildAlertBottomSheet: widget.withCreateAlerte()
+                                      buildAlertBottomSheet: layout.withCreateAlerte
                                           ? widget.buildAlertBottomSheet
                                           : null,
                                     ),
@@ -208,14 +209,16 @@ class _RechercheOffrePageState<Result> extends State<RechercheOffrePage<Result>>
 class _RechercheOffreLayout extends Equatable {
   final bool showCriteresFullScreen;
   final bool showBackAppBar;
+  final bool withCreateAlerte;
 
   const _RechercheOffreLayout({
     required this.showCriteresFullScreen,
     required this.showBackAppBar,
+    required this.withCreateAlerte,
   });
 
   @override
-  List<Object?> get props => [showCriteresFullScreen, showBackAppBar];
+  List<Object?> get props => [showCriteresFullScreen, showBackAppBar, withCreateAlerte];
 }
 
 class _RechercheBackAppBar<Result> extends StatelessWidget implements PreferredSizeWidget {

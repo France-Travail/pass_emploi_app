@@ -11,7 +11,7 @@ import 'package:redux/redux.dart';
 
 class LoginPageViewModel extends Equatable {
   final bool withBackButton;
-  final bool withHiddenInviteAccess;
+  final bool withInviteButton;
   final bool withOrganismChoice;
   final bool withThemedAppLogo;
   final String title;
@@ -26,16 +26,11 @@ class LoginPageViewModel extends Equatable {
   final String? authenticationUrl;
   final void Function() onFranceTravailLogin;
   final void Function()? onMissionLocaleLogin;
-  final void Function() onInviteLogin;
-
-  /// Accès caché au mode invité (5 taps sur le bloc marque), pour les tests utilisateurs en production.
-  /// Le mot de passe vient de Firebase Remote Config (clé `invite_access_password`) ;
-  /// sans valeur distante, l'accès est désactivé.
-  final bool Function(String password) isInviteAccessPasswordValid;
+  final void Function()? onInviteLogin;
 
   LoginPageViewModel({
     required this.withBackButton,
-    required this.withHiddenInviteAccess,
+    required this.withInviteButton,
     required this.withOrganismChoice,
     required this.withThemedAppLogo,
     required this.title,
@@ -49,7 +44,6 @@ class LoginPageViewModel extends Equatable {
     required this.onFranceTravailLogin,
     required this.onMissionLocaleLogin,
     required this.onInviteLogin,
-    required this.isInviteAccessPasswordValid,
   });
 
   /// En reprise de compte invité, l'invité déjà connecté choisit son organisme pour rattacher
@@ -58,13 +52,13 @@ class LoginPageViewModel extends Equatable {
     final loginState = store.state.loginState;
     final brand = store.state.configurationState.getBrand();
     final isCej = brand.isCej;
-    final inviteAccessPassword = store.state.featureFlipState.featureFlip.inviteAccessPassword;
+    final withInviteButton = isCej && !repriseCompteInvite;
     void login(LoginMode mode) => store.dispatch(
           repriseCompteInvite ? RepriseCompteInviteRequestAction(mode) : RequestLoginAction(mode),
         );
     return LoginPageViewModel(
       withBackButton: repriseCompteInvite,
-      withHiddenInviteAccess: !repriseCompteInvite,
+      withInviteButton: withInviteButton,
       withOrganismChoice: isCej,
       withThemedAppLogo: !isCej,
       title: isCej ? Strings.loginChooseAccountTitle : Strings.loginPassEmploiTitle,
@@ -81,8 +75,7 @@ class LoginPageViewModel extends Equatable {
       authenticationUrl: store.state.configurationState.configuration?.authIssuer,
       onFranceTravailLogin: () => login(LoginMode.POLE_EMPLOI),
       onMissionLocaleLogin: isCej ? () => login(LoginMode.MILO) : null,
-      onInviteLogin: () => store.dispatch(RequestLoginAction(LoginMode.INVITE)),
-      isInviteAccessPasswordValid: (password) => inviteAccessPassword != null && password == inviteAccessPassword,
+      onInviteLogin: withInviteButton ? () => store.dispatch(RequestLoginAction(LoginMode.INVITE)) : null,
     );
   }
 
@@ -98,7 +91,7 @@ class LoginPageViewModel extends Equatable {
   @override
   List<Object?> get props => [
         withBackButton,
-        withHiddenInviteAccess,
+        withInviteButton,
         withOrganismChoice,
         withThemedAppLogo,
         title,

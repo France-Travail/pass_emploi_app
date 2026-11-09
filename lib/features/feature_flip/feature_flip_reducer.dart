@@ -18,8 +18,5 @@ FeatureFlipState featureFlipReducer(FeatureFlipState current, dynamic action) {
       current.featureFlip.copyWith(isActualiteMissionLocaleEnabled: action.isActualiteMissionLocaleEnabled),
     );
   }
-  if (action is FeatureFlipInviteAccessPasswordAction) {
-    return FeatureFlipState(current.featureFlip.copyWith(inviteAccessPassword: action.inviteAccessPassword));
-  }
   return current;
 }

@@ -70,6 +70,9 @@ class RechercheOffreEmploiPage extends RechercheOffrePage<OffreEmploi> {
   Widget? buildAlertBottomSheet() => OffreEmploiAlerteBottomSheet(onlyAlternance: onlyAlternance);
 
   @override
+  bool withCreateAlerte(AppState state) => !state.isInviteLoginMode();
+
+  @override
   Future<bool?>? buildFiltresBottomSheet(BuildContext context) => OffreEmploiFiltresPage.show(context, onlyAlternance);
 
   @override

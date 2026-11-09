@@ -115,6 +115,7 @@ void main() {
     // Then
     expect(viewModel.displayMonCompte, isFalse);
     expect(viewModel.displayPartageActivite, isFalse);
+    expect(viewModel.displayNotifications, isFalse);
     expect(viewModel.displayLogoutAndSuppressionCompte, isFalse);
   });
 
@@ -150,6 +151,7 @@ void main() {
     // Then
     expect(viewModel.displayMonCompte, isTrue);
     expect(viewModel.displayPartageActivite, isTrue);
+    expect(viewModel.displayNotifications, isTrue);
     expect(viewModel.displayLogoutAndSuppressionCompte, isTrue);
   });
 

@@ -135,13 +135,11 @@ extension AppStateDSL on AppState {
 
   AppState withFeatureFlip({
     bool? isActualiteMissionLocaleEnabled,
-    String? inviteAccessPassword,
   }) {
     return copyWith(
       featureFlipState: FeatureFlipState(
         FeatureFlip.initial().copyWith(
           isActualiteMissionLocaleEnabled: isActualiteMissionLocaleEnabled,
-          inviteAccessPassword: inviteAccessPassword,
         ),
       ),
     );

@@ -477,4 +477,18 @@ void main() {
       expect(InviteAccueilViewModel.create(store).withNewNotifications, isFalse);
     });
   });
+
+  group('centre de notifications', () {
+    test('est masqué pour un invité', () {
+      final store = givenState().loggedInUser(loginMode: LoginMode.INVITE).store();
+
+      expect(InviteAccueilViewModel.create(store).withNotificationCenter, isFalse);
+    });
+
+    test('reste affiché pour un jeune connecté', () {
+      final store = givenState().loggedInMiloUser().store();
+
+      expect(InviteAccueilViewModel.create(store).withNotificationCenter, isTrue);
+    });
+  });
 }

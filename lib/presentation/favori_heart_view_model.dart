@@ -10,12 +10,14 @@ class FavoriHeartViewModel<T> extends Equatable {
   final bool isFavori;
   final bool withError;
   final bool withLoading;
+  final bool isVisible;
   final Function(FavoriStatus newStatus) update;
 
   FavoriHeartViewModel._({
     required this.isFavori,
     required this.withError,
     required this.withLoading,
+    required this.isVisible,
     required this.update,
   });
 
@@ -24,6 +26,9 @@ class FavoriHeartViewModel<T> extends Equatable {
       isFavori: _isFavori(offreId, favorisState),
       withError: _withError(offreId, store.state.favoriUpdateState),
       withLoading: _withLoading(offreId, store.state.favoriUpdateState),
+      // Temporaire (mise en production du mode invité) : le bouton de mise en favori
+      // n'est pas proposé sur les offres.
+      isVisible: !store.state.isInviteLoginMode(),
       update: (newStatus) => store.dispatch(FavoriUpdateRequestAction<T>(
         offreId,
         newStatus,
@@ -33,7 +38,7 @@ class FavoriHeartViewModel<T> extends Equatable {
   }
 
   @override
-  List<Object?> get props => [isFavori, withError, withLoading];
+  List<Object?> get props => [isFavori, withError, withLoading, isVisible];
 }
 
 bool _isFavori<T>(String offreId, FavoriIdsState<T> favorisState) {

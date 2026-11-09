@@ -17,7 +17,6 @@ class FeatureFlipMiddleware extends MiddlewareClass<AppState> {
     if (action is BootstrapAction) {
       _handleLogiPageFeatureFlip(store);
       _handleActualiteMissionLocaleFeatureFlip(store);
-      _handleInviteAccessPasswordFeatureFlip(store);
     }
     final userId = store.state.userId();
     if (userId == null) return;
@@ -55,13 +54,6 @@ class FeatureFlipMiddleware extends MiddlewareClass<AppState> {
     final isActualiteMissionLocaleEnabled = _remoteConfigRepository.isActualiteMissionLocaleEnabled();
     if (isActualiteMissionLocaleEnabled != null) {
       store.dispatch(FeatureFlipActualiteMissionLocaleEnabledAction(isActualiteMissionLocaleEnabled));
-    }
-  }
-
-  void _handleInviteAccessPasswordFeatureFlip(Store<AppState> store) {
-    final inviteAccessPassword = _remoteConfigRepository.inviteAccessPassword();
-    if (inviteAccessPassword != null) {
-      store.dispatch(FeatureFlipInviteAccessPasswordAction(inviteAccessPassword));
     }
   }
 }

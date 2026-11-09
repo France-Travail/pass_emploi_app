@@ -45,6 +45,7 @@ class InviteAccueilViewModel extends Equatable {
   final bool showRetry;
   final bool shouldShowAllowNotifications;
   final bool withNewNotifications;
+  final bool withNotificationCenter;
   final ActionPlanTrackingEvent? planDisplayEvent;
   final MessageInformatif? messageInformatif;
   final List<RemoteCampagneAccueilItem> remoteCampagnes;
@@ -79,6 +80,7 @@ class InviteAccueilViewModel extends Equatable {
     required this.showRetry,
     required this.shouldShowAllowNotifications,
     required this.withNewNotifications,
+    required this.withNotificationCenter,
     required this.planDisplayEvent,
     required this.messageInformatif,
     required this.remoteCampagnes,
@@ -171,6 +173,9 @@ class InviteAccueilViewModel extends Equatable {
       showRetry: showPlanEmptyState && isFailure && (isPlanPersisted || answers.canGenerateActionPlan),
       shouldShowAllowNotifications: onboarding?.showNotificationsOnboarding ?? false,
       withNewNotifications: withNewInAppNotifications(store),
+      // Temporaire (mise en production du mode invité) : le centre de notifications
+      // n'est pas proposé aux invités.
+      withNotificationCenter: !store.state.isInviteLoginMode(),
       planDisplayEvent: showPlanSection && displayState == DisplayState.CONTENT
           ? _planDisplayEvent(isFailure: isFailure, plan: plan)
           : null,
@@ -222,6 +227,7 @@ class InviteAccueilViewModel extends Equatable {
     showRetry,
     shouldShowAllowNotifications,
     withNewNotifications,
+    withNotificationCenter,
     planDisplayEvent,
     messageInformatif,
     remoteCampagnes,

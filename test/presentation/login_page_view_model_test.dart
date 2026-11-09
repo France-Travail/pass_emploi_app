@@ -24,6 +24,8 @@ void main() {
       // Then
       expect(viewModel.withOrganismChoice, false);
       expect(viewModel.onMissionLocaleLogin, isNull);
+      expect(viewModel.withInviteButton, isFalse);
+      expect(viewModel.onInviteLogin, isNull);
       expect(viewModel.withThemedAppLogo, true);
       expect(viewModel.title, "Bienvenue");
       expect(viewModel.subtitle, "L'app dédiée à votre accompagnement");
@@ -43,6 +45,8 @@ void main() {
       // Then
       expect(viewModel.withOrganismChoice, true);
       expect(viewModel.onMissionLocaleLogin, isNotNull);
+      expect(viewModel.withInviteButton, isTrue);
+      expect(viewModel.onInviteLogin, isNotNull);
       expect(viewModel.withThemedAppLogo, false);
       expect(viewModel.title, "Choisis un compte");
       expect(viewModel.subtitle, isNull);
@@ -52,28 +56,19 @@ void main() {
       );
     });
 
-    group('hidden invite access', () {
-      test('should accept only the password from remote config', () {
+    for (final flavor in [Flavor.STAGING, Flavor.PROD]) {
+      test('should display invite button for CEJ in $flavor', () {
         // Given
-        final store = givenState().withFeatureFlip(inviteAccessPassword: "remote-password!").store();
+        final store = givenState(configuration(flavor: flavor, brand: Brand.cej)).store();
+
+        // When
         final viewModel = LoginPageViewModel.create(store);
 
-        // When & Then
-        expect(viewModel.isInviteAccessPasswordValid("remote-password!"), isTrue);
-        expect(viewModel.isInviteAccessPasswordValid(""), isFalse);
-        expect(viewModel.isInviteAccessPasswordValid("remote-password"), isFalse);
-        expect(viewModel.isInviteAccessPasswordValid("REMOTE-PASSWORD!"), isFalse);
+        // Then
+        expect(viewModel.withInviteButton, isTrue);
+        expect(viewModel.onInviteLogin, isNotNull);
       });
-
-      test('should reject any password when remote config has none', () {
-        // Given
-        final viewModel = LoginPageViewModel.create(givenState().store());
-
-        // When & Then
-        expect(viewModel.isInviteAccessPasswordValid(""), isFalse);
-        expect(viewModel.isInviteAccessPasswordValid("1j1s2026!"), isFalse);
-      });
-    });
+    }
 
     test('View model displays loading when login state is loading', () {
       // Given
@@ -160,7 +155,7 @@ void main() {
         final viewModel = LoginPageViewModel.create(store);
 
         // When
-        viewModel.onInviteLogin();
+        viewModel.onInviteLogin!();
 
         // Then
         expect(store.dispatchedAction, isA<RequestLoginAction>());
@@ -169,7 +164,7 @@ void main() {
     }
 
     group('reprise compte invite', () {
-      test('should display back button and hide hidden invite access', () {
+      test('should display back button and hide invite button', () {
         // Given
         final store = givenState().loggedInUser(loginMode: LoginMode.INVITE).store();
 
@@ -178,10 +173,11 @@ void main() {
 
         // Then
         expect(viewModel.withBackButton, isTrue);
-        expect(viewModel.withHiddenInviteAccess, isFalse);
+        expect(viewModel.withInviteButton, isFalse);
+        expect(viewModel.onInviteLogin, isNull);
       });
 
-      test('should not display back button and display hidden invite access on regular login', () {
+      test('should not display back button and display invite button on regular CEJ login', () {
         // Given
         final store = givenState().store();
 
@@ -190,7 +186,8 @@ void main() {
 
         // Then
         expect(viewModel.withBackButton, isFalse);
-        expect(viewModel.withHiddenInviteAccess, isTrue);
+        expect(viewModel.withInviteButton, isTrue);
+        expect(viewModel.onInviteLogin, isNotNull);
       });
 
       test('should display loading from reprise state, not from login state', () {

@@ -123,13 +123,15 @@ class _Scaffold extends StatelessWidget {
                   themeMode: viewModel.themeMode,
                   onThemeModeChanged: viewModel.onThemeModeChanged,
                 ),
-                const SizedBox(height: DsfrSpacings.s1w),
-                DsfrProfilTile(
-                  icon: DsfrIcons.mediaNotification3Line,
-                  iconBackgroundColor: DsfrColors.greenEmeraude950,
-                  title: Strings.notificationsLabel,
-                  onTap: () => Navigator.push(context, NotificationPreferencesPage.materialPageRoute()),
-                ),
+                if (viewModel.displayNotifications) ...[
+                  const SizedBox(height: DsfrSpacings.s1w),
+                  DsfrProfilTile(
+                    icon: DsfrIcons.mediaNotification3Line,
+                    iconBackgroundColor: DsfrColors.greenEmeraude950,
+                    title: Strings.notificationsLabel,
+                    onTap: () => Navigator.push(context, NotificationPreferencesPage.materialPageRoute()),
+                  ),
+                ],
                 if (viewModel.displayPartageActivite) ...[
                   const SizedBox(height: DsfrSpacings.s1w),
                   DsfrProfilTile(

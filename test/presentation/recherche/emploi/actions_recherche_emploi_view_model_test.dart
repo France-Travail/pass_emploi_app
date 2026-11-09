@@ -2,6 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/features/recherche/emploi/emploi_criteres_recherche.dart';
 import 'package:pass_emploi_app/features/recherche/emploi/emploi_filtres_recherche.dart';
 import 'package:pass_emploi_app/features/recherche/recherche_state.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
+import 'package:pass_emploi_app/pages/recherche/recherche_offre_emploi_page.dart';
 import 'package:pass_emploi_app/presentation/recherche/emploi/actions_recherche_emploi_view_model.dart';
 
 import '../../../doubles/fixtures.dart';
@@ -51,6 +53,29 @@ void main() {
 
       // Then
       expect(viewModel.withAlertButton, isTrue);
+    });
+
+    test('when user is a guest should return false even if recherche succeeded', () {
+      // Given
+      final store = givenState().loggedInUser(loginMode: LoginMode.INVITE).successRechercheEmploiState().store();
+
+      // When
+      final viewModel = ActionsRechercheEmploiViewModel.create(store);
+
+      // Then
+      expect(viewModel.withAlertButton, isFalse);
+    });
+  });
+
+  group('withCreateAlerte', () {
+    final page = RechercheOffreEmploiPage(onlyAlternance: false);
+
+    test('is false for a guest, including the empty results screen', () {
+      expect(page.withCreateAlerte(givenState().loggedInUser(loginMode: LoginMode.INVITE)), isFalse);
+    });
+
+    test('is true for a connected user', () {
+      expect(page.withCreateAlerte(givenState().loggedInPoleEmploiUser()), isTrue);
     });
   });
 

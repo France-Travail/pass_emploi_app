@@ -271,7 +271,6 @@ class MockRemoteConfigRepository extends Mock implements RemoteConfigRepository 
     when(() => monSuiviPoleEmploiStartDateInMonths()).thenReturn(1);
     when(() => campagnesAccueil()).thenReturn([]);
     when(() => softUpdateVersion(isAndroid: any(named: 'isAndroid'))).thenReturn(null);
-    when(() => inviteAccessPassword()).thenReturn(null);
   }
 }
 

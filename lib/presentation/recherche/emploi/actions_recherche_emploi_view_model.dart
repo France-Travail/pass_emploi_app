@@ -24,7 +24,8 @@ class ActionsRechercheEmploiViewModel extends ActionsRechercheViewModel {
   factory ActionsRechercheEmploiViewModel.create(Store<AppState> store) {
     final state = store.state.rechercheEmploiState;
     return ActionsRechercheEmploiViewModel(
-      withAlertButton: state.withAlertButton(),
+      // Temporaire (mise en production du mode invité) : pas de création d'alerte.
+      withAlertButton: !store.state.isInviteLoginMode() && state.withAlertButton(),
       withFiltreButton: _withFiltreButton(state),
       filtresCount: _filtresCount(state.request?.filtres),
     );

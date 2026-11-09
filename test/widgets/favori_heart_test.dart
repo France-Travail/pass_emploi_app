@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
+import 'package:pass_emploi_app/pages/offre_page.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/widgets/favori_heart.dart';
 import 'package:pass_emploi_app/widgets/favori_state_selector.dart';
 import 'package:redux/redux.dart';
 
 import '../dsl/app_state_dsl.dart';
-import 'package:pass_emploi_app/pages/offre_page.dart';
-import 'package:pass_emploi_app/widgets/favori_heart.dart';
 
 void main() {
   group("getAnalyticsWidgetName with from and isFavori", () {
@@ -78,6 +79,34 @@ void main() {
     );
 
     expect(find.byTooltip("Enregistrer l'offre Boulanger"), findsOneWidget);
+
     semantics.dispose();
+  });
+
+  testWidgets("le bouton de mise en favori est masqué en mode invité", (tester) async {
+    final store = Store<AppState>(
+      (state, _) => state,
+      initialState: givenState().loggedInUser(loginMode: LoginMode.INVITE),
+    );
+    await tester.pumpWidget(
+      StoreProvider<AppState>(
+        store: store,
+        child: MaterialApp(
+          home: Scaffold(
+            body: FavorisStateContext<OffreEmploi>(
+              selectState: (store) => store.state.offreEmploiFavorisIdsState,
+              child: FavoriHeart<OffreEmploi>(
+                offreId: "id",
+                withBorder: false,
+                from: OffrePage.emploiDetails,
+                a11yLabel: "Boulanger",
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byTooltip("Enregistrer l'offre Boulanger"), findsNothing);
   });
 }
