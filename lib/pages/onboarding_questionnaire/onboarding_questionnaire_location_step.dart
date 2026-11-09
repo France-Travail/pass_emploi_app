@@ -11,7 +11,7 @@ import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/widgets/buttons/clear_field_button.dart';
-import 'package:pass_emploi_app/widgets/slider/slider_focus_outline.dart';
+import 'package:pass_emploi_app/widgets/slider/slider_semantics.dart';
 
 class OnboardingQuestionnaireLocationStep extends StatefulWidget {
   const OnboardingQuestionnaireLocationStep({
@@ -184,11 +184,8 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
         ],
         if (!widget.isHabitation) ...[
           const SizedBox(height: Margins.spacing_l),
-          // A11y : le Slider du DSFR restitue sa valeur en pourcentage ; on expose un seul composant
-          // ajustable avec libellé, valeur en kilomètres et bornes min/max.
-          Semantics(
-            container: true,
-            slider: true,
+          // A11y : un seul composant ajustable, valeur en kilomètres, atteignable au clavier (voir SliderSemantics).
+          SliderSemantics(
             label: Strings.onboardingQuestionnaireRayonLabel,
             value: Strings.searchRadiusA11yValue(form.draftRayonKm),
             increasedValue: Strings.searchRadiusA11yValue(
@@ -208,23 +205,19 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
                     _nextRayon(form.draftRayonKm, -1).toDouble(),
                   )
                 : null,
-            excludeSemantics: true,
-            // A11y 8.5 : prise de focus visible (contour DSFR).
-            child: SliderFocusOutline(
-              child: DsfrSlider(
-                label: Strings.onboardingQuestionnaireRayonLabel,
-                description: Strings.onboardingQuestionnaireRayonDescription(
-                  form.draftRayonKm,
-                ),
-                value: form.draftRayonKm.toDouble(),
-                min: _rayonMin.toDouble(),
-                max: _rayonMax.toDouble(),
-                divisions: 9,
-                size: DsfrComponentSize.md,
-                valueLabelBuilder: (value) => Strings.onboardingQuestionnaireRayonValue(value.round()),
-                showMinMaxLabels: true,
-                onChanged: form.updateRayon,
+            child: DsfrSlider(
+              label: Strings.onboardingQuestionnaireRayonLabel,
+              description: Strings.onboardingQuestionnaireRayonDescription(
+                form.draftRayonKm,
               ),
+              value: form.draftRayonKm.toDouble(),
+              min: _rayonMin.toDouble(),
+              max: _rayonMax.toDouble(),
+              divisions: 9,
+              size: DsfrComponentSize.md,
+              valueLabelBuilder: (value) => Strings.onboardingQuestionnaireRayonValue(value.round()),
+              showMinMaxLabels: true,
+              onChanged: form.updateRayon,
             ),
           ),
         ],

@@ -13,6 +13,7 @@ import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/filtres_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/buttons/filter_button.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_accessible_toggle_switch.dart';
 import 'package:pass_emploi_app/widgets/errors/error_text.dart';
 import 'package:pass_emploi_app/widgets/slider/distance_slider.dart';
 import 'package:pass_emploi_app/widgets/tag_group.dart';
@@ -309,16 +310,14 @@ class _FiltreDebutantState extends State<_FiltreDebutant> {
               horizontal: DsfrSpacings.s3v,
               vertical: DsfrSpacings.s1w,
             ),
-            child: Semantics(
-              label: Strings.experienceSectionEnabled(_debutantOnlyEnabled),
-              child: DsfrToggleSwitch(
-                label: Strings.experienceSectionDescription,
-                // A11y 5.1 : l'interrupteur est accolé à son étiquette (repérable en cas de fort zoom).
-                labelLocation: DsfrToggleSwitchLabelLocation.right,
-                value: _debutantOnlyEnabled,
-                status: _debutantOnlyEnabled ? Strings.yes : Strings.no,
-                onChanged: _onDebutantOnlyValueChange,
-              ),
+            child: DsfrAccessibleToggleSwitch(
+              semanticsLabel: Strings.experienceSectionEnabled(_debutantOnlyEnabled),
+              label: Strings.experienceSectionDescription,
+              // A11y 5.1 : l'interrupteur est accolé à son étiquette (repérable en cas de fort zoom).
+              labelLocation: DsfrToggleSwitchLabelLocation.right,
+              value: _debutantOnlyEnabled,
+              status: _debutantOnlyEnabled ? Strings.yes : Strings.no,
+              onChanged: _onDebutantOnlyValueChange,
             ),
           ),
         ),

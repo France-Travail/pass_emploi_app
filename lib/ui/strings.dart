@@ -1803,6 +1803,7 @@ class Strings {
   static String alerteDeleteMessageTitle = Brand.isPassEmploi()
       ? "Souhaitez-vous supprimer l’alerte ?"
       : "Souhaites-tu supprimer l’alerte ?";
+  static String alerteDeleteA11y(String alerte) => "Supprimer l’alerte $alerte";
   static String alertesCountTitle(int count) => count <= 1 ? "$count alerte" : "$count alertes";
   static String alertesCreationHint =
       "💡 Les alertes se créent depuis les résultats d’offres d’emploi ou d’alternance.";

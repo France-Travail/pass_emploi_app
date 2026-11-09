@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
@@ -36,6 +37,12 @@ class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestio
     if (invalid && !_invalidAnnounced) A11yUtils.announce(Strings.onboardingQuestionnaireBirthdateInvalid);
     _invalidAnnounced = invalid;
   }
+
+  // A11y 9.12 : sur Android, le type « date » donne la nature des trois champs (contre-visite Access42 du 06/11/2026).
+  // Sur iOS, Flutter ne transmet aucun type « date de naissance » et le type « date » n'afficherait qu'un clavier
+  // complet à la place du pavé numérique : on garde le type « nombre » (limite à faire valider par Access42).
+  TextInputType get _birthdateKeyboardType =>
+      defaultTargetPlatform == TargetPlatform.android ? TextInputType.datetime : TextInputType.number;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +101,7 @@ class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestio
                   label: Strings.onboardingQuestionnaireBirthdateDayLabel,
                   initialValue: form.draftBirthDay,
                   focusNode: _dayFocus,
-                  keyboardType: TextInputType.number,
+                  keyboardType: _birthdateKeyboardType,
                   textInputAction: TextInputAction.next,
                   autofillHints: const [AutofillHints.birthdayDay],
                   // Avoid maxLength: broken DSFR UI, see https://github.com/Octo-Open-Source/flutter-dsfr/issues/150
@@ -113,7 +120,7 @@ class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestio
                   label: Strings.onboardingQuestionnaireBirthdateMonthLabel,
                   initialValue: form.draftBirthMonth,
                   focusNode: _monthFocus,
-                  keyboardType: TextInputType.number,
+                  keyboardType: _birthdateKeyboardType,
                   textInputAction: TextInputAction.next,
                   autofillHints: const [AutofillHints.birthdayMonth],
                   inputFormatters: [
@@ -131,7 +138,7 @@ class _OnboardingQuestionnaireBirthdateStepState extends State<OnboardingQuestio
                   label: Strings.onboardingQuestionnaireBirthdateYearLabel,
                   initialValue: form.draftBirthYear,
                   focusNode: _yearFocus,
-                  keyboardType: TextInputType.number,
+                  keyboardType: _birthdateKeyboardType,
                   textInputAction: TextInputAction.done,
                   autofillHints: const [AutofillHints.birthdayYear],
                   inputFormatters: [

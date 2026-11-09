@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
@@ -377,77 +378,95 @@ class _InviteActionPlanActionTileState extends State<InviteActionPlanActionTile>
             onFocusChange: (focused) => setState(() => _cardFocused = focused),
             child: Padding(
               padding: const EdgeInsets.all(Margins.spacing_base),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Semantics(
-                    key: widget.focusKey,
-                    container: true,
-                    // Sans `enabled: true` explicite, iOS annonce la case « estompé » (désactivée).
-                    enabled: true,
-                    checked: action.done,
-                    label: action.label,
-                    hint: _hintCase,
-                    onTap: widget.onToggleDone,
-                    excludeSemantics: true,
-                    child: _FocusableCheckbox(
-                      done: action.done,
+              // A11y 10.2 (contre-visite Access42 du 06/11/2026) : ordre de lecture case, lien, corbeille. Sans clé
+              // de tri, Flutter ordonne selon la position : quand le libellé tient sur deux lignes, le lien passe sous
+              // le haut de la corbeille et TalkBack le lit après elle. Le nœud de la carte limite le tri à ses éléments.
+              child: Semantics(
+                container: true,
+                explicitChildNodes: true,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Semantics(
+                      key: widget.focusKey,
+                      container: true,
+                      sortKey: const OrdinalSortKey(1),
+                      // Sans `enabled: true` explicite, iOS annonce la case « estompé » (désactivée).
+                      enabled: true,
+                      checked: action.done,
+                      label: action.label,
+                      hint: _hintCase,
                       onTap: widget.onToggleDone,
+                      excludeSemantics: true,
+                      child: _FocusableCheckbox(
+                        done: action.done,
+                        onTap: widget.onToggleDone,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: Margins.spacing_xs),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // A11y : libellé déjà porté par la case à cocher.
-                        ExcludeSemantics(
-                          child: Text(
-                            action.label,
-                            style: DsfrTextStyle.bodyMd(
-                              color: DsfrColorDecisions.textLabelGrey(context),
+                    const SizedBox(width: Margins.spacing_xs),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // A11y : libellé déjà porté par la case à cocher.
+                          ExcludeSemantics(
+                            child: Text(
+                              action.label,
+                              style: DsfrTextStyle.bodyMd(
+                                color: DsfrColorDecisions.textLabelGrey(context),
+                              ),
+                            ),
+                          ),
+                          if (_hasLink)
+                            Semantics(
+                              container: true,
+                              sortKey: const OrdinalSortKey(2),
+                              // A11y 5.1 : rôle lien, y compris sur Android (voir ExternalLinkSemantics).
+                              child: ExternalLinkSemantics(
+                                label: action.serviceName ?? action.label,
+                                url: action.url,
+                                onTap: _openLink,
+                                child: _serviceName(context),
+                              ),
+                            )
+                          else if (action.serviceName != null)
+                            ExcludeSemantics(child: _serviceName(context)),
+                          if (_hasScreen)
+                            Semantics(
+                              container: true,
+                              sortKey: const OrdinalSortKey(3),
+                              button: true,
+                              label: Strings.actionPlanEcranLabel(action.screen!),
+                              onTap: _openScreen,
+                              excludeSemantics: true,
+                              child: _screenLink(context),
+                            ),
+                        ],
+                      ),
+                    ),
+                    Semantics(
+                      container: true,
+                      sortKey: const OrdinalSortKey(4),
+                      child: DsfrFocusWidget(
+                        isFocused: _deleteFocused,
+                        child: Focus(
+                          canRequestFocus: false,
+                          skipTraversal: true,
+                          onFocusChange: (focused) => setState(() => _deleteFocused = focused),
+                          child: IconButton(
+                            onPressed: _delete,
+                            tooltip: Strings.inviteAccueilDeleteActionA11y(action.label),
+                            focusColor: DsfrColorDecisions.backgroundTransparent(context),
+                            icon: Icon(
+                              DsfrIcons.systemDeleteBinFill,
+                              color: DsfrColorDecisions.textActionHighBlueFrance(context),
                             ),
                           ),
                         ),
-                        if (_hasLink)
-                          // A11y 5.1 : rôle lien, y compris sur Android (voir ExternalLinkSemantics).
-                          ExternalLinkSemantics(
-                            label: action.serviceName ?? action.label,
-                            url: action.url,
-                            onTap: _openLink,
-                            child: _serviceName(context),
-                          )
-                        else if (action.serviceName != null)
-                          ExcludeSemantics(child: _serviceName(context)),
-                        if (_hasScreen)
-                          Semantics(
-                            button: true,
-                            label: Strings.actionPlanEcranLabel(action.screen!),
-                            onTap: _openScreen,
-                            excludeSemantics: true,
-                            child: _screenLink(context),
-                          ),
-                      ],
-                    ),
-                  ),
-                  DsfrFocusWidget(
-                    isFocused: _deleteFocused,
-                    child: Focus(
-                      canRequestFocus: false,
-                      skipTraversal: true,
-                      onFocusChange: (focused) => setState(() => _deleteFocused = focused),
-                      child: IconButton(
-                        onPressed: _delete,
-                        tooltip: Strings.inviteAccueilDeleteActionA11y(action.label),
-                        focusColor: DsfrColorDecisions.backgroundTransparent(context),
-                        icon: Icon(
-                          DsfrIcons.systemDeleteBinFill,
-                          color: DsfrColorDecisions.textActionHighBlueFrance(context),
-                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
