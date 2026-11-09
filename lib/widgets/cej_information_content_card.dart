@@ -3,6 +3,7 @@ import 'package:pass_emploi_app/ui/app_colors.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/text_styles.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/cards/generic/card_container.dart';
 import 'package:pass_emploi_app/widgets/textes.dart';
 
@@ -52,6 +53,7 @@ class CejInformationFirstContentCard extends StatelessWidget {
                 ),
               ],
             ),
+            semanticsLabel: Strings.whoIsConcernedFirstRichText.join().removeDecorativeArrowsForScreenReaders(),
           ),
           SizedBox(height: Margins.spacing_m),
           Text.rich(
@@ -71,6 +73,7 @@ class CejInformationFirstContentCard extends StatelessWidget {
                 ),
               ],
             ),
+            semanticsLabel: Strings.whoIsConcernedSecondRichText.join().removeDecorativeArrowsForScreenReaders(),
           ),
         ],
       ),

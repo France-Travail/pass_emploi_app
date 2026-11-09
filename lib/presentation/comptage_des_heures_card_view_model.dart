@@ -17,7 +17,6 @@ class ComptageDesHeuresCardViewModel extends Equatable {
   final String heuresDeclarees;
   final String heuresValidees;
   final String dateDerniereMiseAJour;
-  final String emoji;
   final String? heuresEnCoursDeCalcul;
   final void Function() retry;
 
@@ -29,7 +28,6 @@ class ComptageDesHeuresCardViewModel extends Equatable {
     required this.heuresDeclarees,
     required this.heuresValidees,
     required this.dateDerniereMiseAJour,
-    required this.emoji,
     required this.heuresEnCoursDeCalcul,
     required this.retry,
   });
@@ -43,7 +41,6 @@ class ComptageDesHeuresCardViewModel extends Equatable {
       heuresDeclarees: "",
       heuresValidees: "",
       dateDerniereMiseAJour: "",
-      emoji: "",
       heuresEnCoursDeCalcul: null,
       retry: () {},
     );
@@ -67,7 +64,6 @@ class ComptageDesHeuresCardViewModel extends Equatable {
       heuresDeclarees: state.comptageDesHeures.nbHeuresDeclarees.toInt().toString(),
       heuresValidees: state.comptageDesHeures.nbHeuresValidees.toInt().toString(),
       dateDerniereMiseAJour: Strings.updatedAgo(state.comptageDesHeures.dateDerniereMiseAJour.timeAgo()),
-      emoji: _emoji(state.comptageDesHeures.nbHeuresDeclarees),
       heuresEnCoursDeCalcul: _heuresEnCoursDeCalcul(state),
       retry: () => store.dispatch(ComptageDesHeuresRequestAction()),
     );
@@ -81,7 +77,6 @@ class ComptageDesHeuresCardViewModel extends Equatable {
         heuresDeclarees,
         heuresValidees,
         dateDerniereMiseAJour,
-        emoji,
         heuresEnCoursDeCalcul,
       ];
 }
@@ -112,26 +107,6 @@ String _title(double heuresDeclarees) {
   }
 
   return Strings.comptageDesHeures15Plus;
-}
-
-String _emoji(double heuresValidees) {
-  if (heuresValidees < 5) {
-    return "😉";
-  }
-
-  if (heuresValidees < 10) {
-    return "🙂";
-  }
-
-  if (heuresValidees < 15) {
-    return "😛";
-  }
-
-  if (heuresValidees == 15) {
-    return "😍";
-  }
-
-  return "🤩";
 }
 
 String? _heuresEnCoursDeCalcul(ComptageDesHeuresState comptageDesHeuresState) {

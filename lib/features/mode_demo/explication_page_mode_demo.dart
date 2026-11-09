@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/presentation/choix_mode_demo_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/a11y/string_a11y_extensions.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 
 class ExplicationModeDemoPage extends StatelessWidget {
@@ -70,6 +71,11 @@ class _Contenu extends StatelessWidget {
                 TextSpan(text: Strings.modeDemoExplicationPremierPoint3, style: regularStyle),
               ],
             ),
+            semanticsLabel: [
+              Strings.modeDemoExplicationPremierPoint1,
+              Strings.modeDemoExplicationPremierPoint2,
+              Strings.modeDemoExplicationPremierPoint3,
+            ].join().removeDecorativeArrowsForScreenReaders(),
           ),
           const SizedBox(height: DsfrSpacings.s1w),
           Text.rich(
@@ -79,6 +85,10 @@ class _Contenu extends StatelessWidget {
                 TextSpan(text: Strings.modeDemoExplicationSecondPoint2, style: boldStyle),
               ],
             ),
+            semanticsLabel: [
+              Strings.modeDemoExplicationSecondPoint1,
+              Strings.modeDemoExplicationSecondPoint2,
+            ].join().removeDecorativeArrowsForScreenReaders(),
           ),
           const SizedBox(height: DsfrSpacings.s1w),
           Text.rich(
@@ -88,6 +98,10 @@ class _Contenu extends StatelessWidget {
                 TextSpan(text: Strings.modeDemoExplicationTroisiemePoint2, style: boldStyle),
               ],
             ),
+            semanticsLabel: [
+              Strings.modeDemoExplicationTroisiemePoint1,
+              Strings.modeDemoExplicationTroisiemePoint2,
+            ].join().removeDecorativeArrowsForScreenReaders(),
           ),
           const SizedBox(height: DsfrSpacings.s4w),
           Text(

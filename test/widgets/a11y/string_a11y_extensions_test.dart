@@ -133,6 +133,13 @@ void main() {
     });
   });
 
+  group('removeDecorativeArrowsForScreenReaders', () {
+    test('should remove the leading arrow bullet', () {
+      expect("→ Les personnes entre 16 et 25 ans".removeDecorativeArrowsForScreenReaders(),
+          "Les personnes entre 16 et 25 ans");
+    });
+  });
+
   group('toOffreTitleForScreenReaders', () {
     test('should spell out H/F', () {
       expect("Vendeur H/F".toOffreTitleForScreenReaders(), "Vendeur hommes et femmes");

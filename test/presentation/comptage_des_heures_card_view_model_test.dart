@@ -62,7 +62,6 @@ void main() {
     expect(viewModel.pourcentageHeuresDeclarees, 0.26666666666666666);
     expect(viewModel.heuresDeclarees, "4");
     expect(viewModel.heuresValidees, "4");
-    expect(viewModel.emoji, "😉");
   });
 
   test('5 to 10 hours should be good but not great', () {
@@ -86,7 +85,6 @@ void main() {
     expect(viewModel.pourcentageHeuresDeclarees, 0.6);
     expect(viewModel.heuresDeclarees, "9");
     expect(viewModel.heuresValidees, "9");
-    expect(viewModel.emoji, "🙂");
   });
 
   test('10 to 15 hours should be great', () {
@@ -110,7 +108,6 @@ void main() {
     expect(viewModel.pourcentageHeuresDeclarees, 0.9333333333333333);
     expect(viewModel.heuresDeclarees, "14");
     expect(viewModel.heuresValidees, "14");
-    expect(viewModel.emoji, "😛");
   });
 
   test('15 hours should be top', () {
@@ -134,7 +131,6 @@ void main() {
     expect(viewModel.pourcentageHeuresDeclarees, 1);
     expect(viewModel.heuresDeclarees, "15");
     expect(viewModel.heuresValidees, "15");
-    expect(viewModel.emoji, "😍");
   });
 
   test('15+ hours should be amazing', () {
@@ -158,7 +154,6 @@ void main() {
     expect(viewModel.pourcentageHeuresDeclarees, 1);
     expect(viewModel.heuresDeclarees, "16");
     expect(viewModel.heuresValidees, "16");
-    expect(viewModel.emoji, "🤩");
   });
 
   test('heures en cours de calcul should be null when comptage des heures is not success', () {
