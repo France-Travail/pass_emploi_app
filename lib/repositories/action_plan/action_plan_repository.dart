@@ -107,6 +107,8 @@ class ActionPlanRepository {
     return state.plan.withoutEmptyObjectives();
   }
 
+  Future<String?> getStoredPlanId() async => (await _getRawPlan())?.id;
+
   Future<void> savePlan(ActionPlan plan) async {
     await _preferences.write(key: _planKey, value: jsonEncode(plan.toJson()));
   }

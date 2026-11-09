@@ -101,11 +101,14 @@ class InviteAccueilViewModel extends Equatable {
         : const OnboardingQuestionnaireAnswers();
     // Le prénom n'est demandé qu'à l'invité : le jeune connecté a celui de son compte.
     final withPrenom = store.state.isInviteLoginMode();
-    final mode = switch (answers.completeness(withPrenom: withPrenom)) {
-      OnboardingQuestionnaireCompleteness.incomplet => InviteAccueilMode.incomplet,
-      OnboardingQuestionnaireCompleteness.partiel => InviteAccueilMode.partiel,
-      OnboardingQuestionnaireCompleteness.complet => InviteAccueilMode.complet,
-    };
+    // Mode démo : quelles que soient les réponses, l'accueil reste celui du plan complet, avec « Modifier ».
+    final mode = store.state.demoState
+        ? InviteAccueilMode.complet
+        : switch (answers.completeness(withPrenom: withPrenom)) {
+            OnboardingQuestionnaireCompleteness.incomplet => InviteAccueilMode.incomplet,
+            OnboardingQuestionnaireCompleteness.partiel => InviteAccueilMode.partiel,
+            OnboardingQuestionnaireCompleteness.complet => InviteAccueilMode.complet,
+          };
 
     final plan = actionPlanState is ActionPlanSuccessState ? actionPlanState.plan : null;
     final isFailure = actionPlanState is ActionPlanFailureState;

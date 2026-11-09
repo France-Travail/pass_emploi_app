@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:pass_emploi_app/features/mode_demo/is_mode_demo_repository.dart';
 import 'package:pass_emploi_app/features/mode_demo/mode_demo_exception.dart';
 import 'package:pass_emploi_app/features/mode_demo/mode_demo_files.dart';
+import 'package:pass_emploi_app/features/mode_demo/plan_action/mode_demo_plan_action.dart';
 import 'package:pass_emploi_app/network/interceptors/pass_emploi_base_interceptor.dart';
 import 'package:pass_emploi_app/utils/asset_bundle_extensions.dart';
 import 'package:pass_emploi_app/utils/log.dart';
@@ -18,6 +19,14 @@ class DemoInterceptor extends PassEmploiBaseInterceptor {
   @override
   void onPassEmploiRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     throwModeDemoExceptionIfNecessary(options.method == "GET", options.uri);
+
+    final planAction = ModeDemoPlanAction.instance;
+    final planActionResponse = demoRepository.isModeDemo() ? planAction.respond(options) : null;
+    if (planActionResponse != null) {
+      if (planAction.isGeneration(options)) await Future<void>.delayed(ModeDemoPlanAction.generationDuration);
+      handler.resolve(planActionResponse);
+      return;
+    }
 
     if (!demoRepository.isModeDemo() || !options.uri.toString().isSupposedToBeMocked()) {
       handler.next(options);

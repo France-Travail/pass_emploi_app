@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/features/chat/status/chat_status_actions.dart';
 import 'package:pass_emploi_app/features/connectivity/connectivity_actions.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/features/mode_demo/is_mode_demo_repository.dart';
+import 'package:pass_emploi_app/features/mode_demo/plan_action/mode_demo_plan_action.dart';
 import 'package:pass_emploi_app/features/preferred_login_mode/preferred_login_mode_actions.dart';
 import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/brand.dart';
@@ -58,6 +59,7 @@ class LoginMiddleware extends MiddlewareClass<AppState> {
     store.dispatch(PreferredLoginModeSaveAction(loginMode: mode));
     if (mode.isDemo()) {
       _modeDemoRepository.setModeDemo(true);
+      ModeDemoPlanAction.instance.start(missionLocale: mode == LoginMode.DEMO_MILO);
       final user = _modeDemoUser(mode);
       store.dispatch(LoginSuccessAction(user));
       _matomoTracker.setOptOut(optOut: true);
