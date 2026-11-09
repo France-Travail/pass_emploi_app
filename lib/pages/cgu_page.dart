@@ -12,6 +12,7 @@ import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/dsfr/bloc_marque.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_accessible_toggle_switch.dart';
 
 class CguPage extends StatelessWidget {
   @override
@@ -107,18 +108,16 @@ class _BodyState extends State<_Body> {
                 const SizedBox(height: DsfrSpacings.s3w),
                 const DsfrDivider(),
                 const SizedBox(height: DsfrSpacings.s3w),
-                Semantics(
-                  label: Strings.cguSwitchLabel(_cguAccepted),
-                  child: DsfrToggleSwitch(
-                    label: switchLabel,
-                    labelLocation: DsfrToggleSwitchLabelLocation.right,
-                    value: _cguAccepted,
-                    status: _cguAccepted ? Strings.notificationsToggleEnabled : Strings.notificationsToggleDisabled,
-                    componentState: hasError
-                        ? DsfrComponentState.error(errorMessage: Strings.cguSwitchError)
-                        : const DsfrComponentState.none(),
-                    onChanged: (value) => setState(() => _cguAccepted = value),
-                  ),
+                DsfrAccessibleToggleSwitch(
+                  semanticsLabel: Strings.cguSwitchLabel(_cguAccepted),
+                  label: switchLabel,
+                  labelLocation: DsfrToggleSwitchLabelLocation.right,
+                  value: _cguAccepted,
+                  status: _cguAccepted ? Strings.notificationsToggleEnabled : Strings.notificationsToggleDisabled,
+                  componentState: hasError
+                      ? DsfrComponentState.error(errorMessage: Strings.cguSwitchError)
+                      : const DsfrComponentState.none(),
+                  onChanged: (value) => setState(() => _cguAccepted = value),
                 ),
                 if (hasError) ...[
                   const SizedBox(height: DsfrSpacings.s2w),

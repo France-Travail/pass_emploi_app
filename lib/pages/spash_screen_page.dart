@@ -21,7 +21,8 @@ class SplashScreenPage extends StatelessWidget {
           body: Stack(
             children: [
               BiseauBackground(),
-              Center(child: AppLogo()),
+              // A11y 1.2 : le logo est le seul élément qui nomme l'application sur cet écran.
+              Center(child: AppLogo(excludeFromSemantics: false)),
               if (appVersion != null) _AppVersion(appVersion),
             ],
           ),
@@ -43,7 +44,7 @@ class _AppVersion extends StatelessWidget {
       child: GestureDetector(
         onDoubleTap: () {
           context.dispatch(DeveloperOptionsDeleteAllPrefsAction());
-          showSnackBarWithSystemError(context, "Killez 💀- voire supprimer 🗑 - l'app");
+          showSnackBarWithSystemError(context, "Killez - voire supprimer - l'app");
         },
         child: Padding(
           padding: const EdgeInsets.all(Margins.spacing_base),

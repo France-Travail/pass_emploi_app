@@ -39,6 +39,11 @@ extension A11yStringExtensions on String {
     return replaceAll('↗', '');
   }
 
+  /// A11y 1.1 : la flèche « → » utilisée comme puce est décorative (sinon lue « flèche droite »).
+  String removeDecorativeArrowsForScreenReaders() {
+    return replaceAll('→', '').replaceAll(_doubleSpacesRegExp, ' ').trim();
+  }
+
   /// A11y 8.1 : l'abréviation « H/F » (ou « F/H ») des intitulés d'offre est lue « H F » ; elle est explicitée.
   String toOffreTitleForScreenReaders() {
     return replaceAllMapped(_genderAbbreviationRegExp, (match) {

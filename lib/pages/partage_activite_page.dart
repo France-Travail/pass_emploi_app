@@ -9,6 +9,7 @@ import 'package:pass_emploi_app/presentation/profil/partage_activite_page_view_m
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_accessible_toggle_switch.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
 
@@ -142,7 +143,7 @@ class _PartageFavorisState extends State<_PartageFavoris> {
 
   @override
   Widget build(BuildContext context) {
-    return DsfrToggleSwitch(
+    return DsfrAccessibleToggleSwitch(
       label: Strings.shareFavoriteLabel,
       // A11y 5.1 : l'interrupteur est accolé à son étiquette (repérable en cas de fort zoom).
       labelLocation: DsfrToggleSwitchLabelLocation.right,

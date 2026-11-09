@@ -78,6 +78,7 @@ class AlerteCardContent extends StatelessWidget {
       onTap();
     }
 
+    final cardLabel = '$title, $subtitle';
     return Material(
       color: DsfrColorDecisions.backgroundDefaultGrey(context),
       borderRadius: const BorderRadius.all(Radius.circular(4)),
@@ -99,7 +100,7 @@ class AlerteCardContent extends StatelessWidget {
                   child: Semantics(
                     container: true,
                     button: true,
-                    label: '$title, $subtitle',
+                    label: cardLabel,
                     onTap: onCardTap,
                     excludeSemantics: true,
                     child: Column(
@@ -120,7 +121,9 @@ class AlerteCardContent extends StatelessWidget {
                 if (onDelete != null)
                   IconButton(
                     onPressed: onDelete,
-                    tooltip: Strings.alerteDeleteMessageTitle,
+                    // A11y 5.1 (contre-visite Access42 du 06/11/2026) : chaque bouton nomme son alerte. Le type seul
+                    // ne suffit pas : deux alertes peuvent s'appeler « Emploi ».
+                    tooltip: Strings.alerteDeleteA11y(cardLabel),
                     icon: Icon(
                       DsfrIcons.systemDeleteBinLine,
                       color: DsfrColorDecisions.textTitleBlueFrance(context),

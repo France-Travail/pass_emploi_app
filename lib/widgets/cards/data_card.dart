@@ -164,7 +164,8 @@ class DataCard<T> extends StatelessWidget {
                         padding: const EdgeInsets.only(top: DsfrSpacings.s1w, right: DsfrSpacings.s1w),
                         child: FavoriHeart<T>(
                           offreId: id!,
-                          a11yLabel: sousTitre != null ? '$titre ${sousTitre!}' : titre,
+                          // A11y 8.1 : « H/F » explicité, comme dans le nom de la carte.
+                          a11yLabel: (sousTitre != null ? '$titre ${sousTitre!}' : titre).toOffreTitleForScreenReaders(),
                           withBorder: false,
                           from: from!,
                           icon: DsfrIcons.systemStarLine,

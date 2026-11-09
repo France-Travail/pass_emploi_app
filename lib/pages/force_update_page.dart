@@ -67,7 +67,8 @@ class ForceUpdatePage extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: BlocMarque(),
                       ),
-                      const Expanded(child: AppLogo()),
+                      // A11y 1.2 : le logo est le seul élément qui nomme l'application sur cet écran.
+                      const Expanded(child: AppLogo(excludeFromSemantics: false)),
                       Text(
                         viewModel.label,
                         style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textDefaultGrey(context)),

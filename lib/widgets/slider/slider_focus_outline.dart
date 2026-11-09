@@ -6,8 +6,10 @@ import 'package:flutter_dsfr/flutter_dsfr.dart';
 /// Le Slider Material n'indique le focus que par un halo #F0ECF5 sur fond blanc (contraste 1,2:1). Le halo est retiré
 /// et le curseur est entouré du contour de focus DSFR, comme les autres composants, quand il a le focus clavier.
 class SliderFocusOutline extends StatelessWidget {
-  const SliderFocusOutline({super.key, required this.child});
+  const SliderFocusOutline({super.key, this.focusNode, required this.child});
 
+  /// Nœud du Focus englobant, pour atteindre le curseur (voir SliderSemantics).
+  final FocusNode? focusNode;
   final Widget child;
 
   @override
@@ -16,6 +18,7 @@ class SliderFocusOutline extends StatelessWidget {
       data: SliderTheme.of(context).copyWith(overlayColor: Colors.transparent),
       // Le Focus englobant ne prend pas le focus lui-même : il signale celui du curseur.
       child: Focus(
+        focusNode: focusNode,
         canRequestFocus: false,
         skipTraversal: true,
         includeSemantics: false,

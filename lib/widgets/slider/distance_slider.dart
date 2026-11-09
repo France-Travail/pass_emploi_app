@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
-import 'package:pass_emploi_app/widgets/slider/slider_focus_outline.dart';
+import 'package:pass_emploi_app/widgets/slider/slider_semantics.dart';
 
 class DistanceSlider extends StatefulWidget {
   final double initialDistanceValue;
@@ -35,11 +35,8 @@ class _DistanceSliderState extends State<DistanceSlider> {
   @override
   Widget build(BuildContext context) {
     final value = _sliderValueToDisplay(widget.initialDistanceValue);
-    // A11y 25.3.2 : le Slider du DSFR restitue sa valeur en pourcentage et son libellé est séparé.
-    // On expose un seul composant ajustable : libellé, valeur en kilomètres, bornes min/max.
-    return Semantics(
-      container: true,
-      slider: true,
+    // A11y 25.3.2 : un seul composant ajustable, valeur en kilomètres, atteignable au clavier (voir SliderSemantics).
+    return SliderSemantics(
       label: widget.label,
       value: Strings.searchRadiusA11yValue(value.round()),
       increasedValue: Strings.searchRadiusA11yValue((value + _step).clamp(0, _maxValue).round()),
@@ -47,21 +44,17 @@ class _DistanceSliderState extends State<DistanceSlider> {
       hint: Strings.searchRadiusA11yHint(0, _maxValue.round()),
       onIncrease: value < _maxValue ? () => _onValueChange((value + _step).clamp(0, _maxValue)) : null,
       onDecrease: value > 0 ? () => _onValueChange((value - _step).clamp(0, _maxValue)) : null,
-      excludeSemantics: true,
-      // A11y 8.5 : prise de focus visible (contour DSFR).
-      child: SliderFocusOutline(
-        child: DsfrSlider(
-          label: widget.label,
-          description: widget.descriptionBuilder(value.round()),
-          value: value,
-          min: 0,
-          max: _maxValue,
-          divisions: _divisions,
-          size: DsfrComponentSize.md,
-          valueLabelBuilder: (v) => widget.valueLabelBuilder(v.round()),
-          showMinMaxLabels: true,
-          onChanged: _onValueChange,
-        ),
+      child: DsfrSlider(
+        label: widget.label,
+        description: widget.descriptionBuilder(value.round()),
+        value: value,
+        min: 0,
+        max: _maxValue,
+        divisions: _divisions,
+        size: DsfrComponentSize.md,
+        valueLabelBuilder: (v) => widget.valueLabelBuilder(v.round()),
+        showMinMaxLabels: true,
+        onChanged: _onValueChange,
       ),
     );
   }

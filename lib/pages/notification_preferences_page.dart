@@ -10,6 +10,7 @@ import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_accessible_toggle_switch.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_profil_tile.dart';
 import 'package:pass_emploi_app/widgets/retry.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
@@ -101,8 +102,10 @@ class _Content extends StatelessWidget {
           children: [
             PageTitle(Strings.notificationsLabel),
             const SizedBox(height: DsfrSpacings.s2w),
-            DsfrToggleSwitchGroup(
+            // DsfrToggleSwitchGroup n'accepte que des DsfrToggleSwitch : même groupe, avec DsfrAccessibleToggleSwitch.
+            DsfrGroup<Widget>(
               label: Strings.notificationsSettingsSubtitle,
+              separator: DsfrDivider(),
               children: [
                 _notificationSwitch(
                   title: Strings.notificationsSettingsAlertesTitle,
@@ -165,13 +168,13 @@ class _Content extends StatelessWidget {
     );
   }
 
-  DsfrToggleSwitch _notificationSwitch({
+  Widget _notificationSwitch({
     required String title,
     required String description,
     required bool value,
     required ValueChanged<bool> onChanged,
   }) {
-    return DsfrToggleSwitch(
+    return DsfrAccessibleToggleSwitch(
       label: title,
       description: description,
       labelLocation: DsfrToggleSwitchLabelLocation.right,

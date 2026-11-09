@@ -65,6 +65,8 @@ class TagGroupState<T extends CheckboxValueViewModel> extends State<TagGroup> {
     // et son focus clavier.
     return Semantics(
       container: true,
+      // A11y 5.1 (iOS) : sans `enabled: true` explicite, VoiceOver annonce l'étiquette « estompé ».
+      enabled: true,
       checked: isSelected,
       label: viewModel.label,
       hint: viewModel.helpText,

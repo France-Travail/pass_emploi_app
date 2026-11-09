@@ -409,7 +409,7 @@ class _DeveloperOptions extends StatelessWidget {
             if (token != null) {
               await Clipboard.setData(ClipboardData(text: token));
               if (context.mounted) {
-                showSnackBarWithSystemError(context, "Token copié ✅");
+                showSnackBarWithSystemError(context, "Token copié");
               }
             }
           },
@@ -423,7 +423,7 @@ class _DeveloperOptions extends StatelessWidget {
             // ignore: deprecated_member_use, unregister() works with Firebase Installation ID, backend expects an FCM token
             await FirebaseMessaging.instance.deleteToken();
             if (context.mounted) {
-              showSnackBarWithSystemError(context, "Token supprimé ❌");
+              showSnackBarWithSystemError(context, "Token supprimé");
             }
           },
         ),
@@ -436,7 +436,7 @@ class _DeveloperOptions extends StatelessWidget {
             final String? token = await _getApnsToken();
             await Clipboard.setData(ClipboardData(text: token ?? ""));
             if (context.mounted) {
-              showSnackBarWithSystemError(context, "Token APNs copié ✅");
+              showSnackBarWithSystemError(context, "Token APNs copié");
             }
           },
         ),
@@ -456,7 +456,7 @@ class _DeveloperOptions extends StatelessWidget {
           title: Strings.developerOptionDeleteAllPrefs,
           onTap: () {
             context.dispatch(DeveloperOptionsDeleteAllPrefsAction());
-            showSnackBarWithSystemError(context, "Killez 💀- voire supprimer 🗑 - l'app");
+            showSnackBarWithSystemError(context, "Killez - voire supprimer - l'app");
           },
         ),
         const SizedBox(height: DsfrSpacings.s1w),

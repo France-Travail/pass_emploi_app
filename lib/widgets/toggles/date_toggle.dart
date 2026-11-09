@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_accessible_toggle_switch.dart';
 
 class DateToggle extends StatelessWidget {
   final Function(bool) onIsActiveChange;
@@ -10,14 +10,12 @@ class DateToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      label: Strings.startDateEnabled(isActiveDate),
-      child: DsfrToggleSwitch(
-        label: Strings.startDate,
-        value: isActiveDate,
-        status: isActiveDate ? Strings.yes : Strings.no,
-        onChanged: onIsActiveChange,
-      ),
+    return DsfrAccessibleToggleSwitch(
+      semanticsLabel: Strings.startDateEnabled(isActiveDate),
+      label: Strings.startDate,
+      value: isActiveDate,
+      status: isActiveDate ? Strings.yes : Strings.no,
+      onChanged: onIsActiveChange,
     );
   }
 }
