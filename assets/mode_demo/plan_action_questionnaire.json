@@ -1,0 +1,23 @@
+{
+  "dateNaissance": "2005-03-14",
+  "habitation": {
+    "codeInsee": "59350",
+    "nom": "Lille"
+  },
+  "situation": "AUTRE",
+  "goals": [
+    "DECOUVRIR_METIERS",
+    "ENGAGER"
+  ],
+  "domaineInconnu": true,
+  "villeRecherche": {
+    "codeInsee": "59350",
+    "nom": "Lille"
+  },
+  "rayonKm": 20,
+  "obstacles": [
+    "PAS_DE_PERMIS",
+    "FIN_DE_MOIS",
+    "SANTE"
+  ]
+}

@@ -22,9 +22,12 @@ import '../../dsl/app_state_dsl.dart';
 import '../../utils/test_setup.dart';
 
 void main() {
+  // Le plan et les réponses du jeune fictif sont lus dans les fichiers de assets/mode_demo/.
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   final demo = ModeDemoPlanAction.instance;
 
-  Response<dynamic>? repondre(String methode, String chemin, [Object? data]) {
+  Future<Response<dynamic>?> repondre(String methode, String chemin, [Object? data]) {
     return demo.respond(
       RequestOptions(
         method: methode,
@@ -35,10 +38,9 @@ void main() {
     );
   }
 
-  ActionPlan lirePlan([String methode = "GET"]) {
-    return ActionPlan.fromApiJson(
-      repondre(methode, "/jeunes/SEVP/plan-action")!.data as Map<String, dynamic>,
-    );
+  Future<ActionPlan> lirePlan([String methode = "GET"]) async {
+    final reponse = await repondre(methode, "/jeunes/SEVP/plan-action");
+    return ActionPlan.fromApiJson(reponse!.data as Map<String, dynamic>);
   }
 
   String progression(ActionPlan plan) {
@@ -57,13 +59,15 @@ void main() {
 
   test(
     "le plan des captures : 5 objectifs dans leur ordre, avec les mêmes cases cochées",
-    () {
+    () async {
+      final plan = await lirePlan();
+
       expect(
-        progression(lirePlan()),
+        progression(plan),
         "Découvrir des métiers 2/8 | M'engager 1/3 | Passer mon permis 0/6 | Boucler mes fins de mois 1/5 | "
         "Prendre soin de ma santé 0/3",
       );
-      expect(lirePlan().objectives.map((objectif) => objectif.theme), [
+      expect(plan.objectives.map((objectif) => objectif.theme), [
         "DECOUVRIR_METIERS",
         "ENGAGER",
         "PAS_DE_PERMIS",
@@ -75,8 +79,8 @@ void main() {
 
   test(
     "les tâches s'ouvrent comme dans l'app : site, écran de l'app ou simple conseil",
-    () {
-      final plan = lirePlan();
+    () async {
+      final plan = await lirePlan();
 
       final fichesMetiers = tache(plan, "Je consulte des fiches métiers");
       expect(fichesMetiers.kind, ActionPlanActionKind.link);
@@ -102,20 +106,21 @@ void main() {
 
   test(
     "cocher ouvre la déclaration, avec la thématique France Travail ou la catégorie Mission Locale",
-    () {
+    () async {
+      final planFranceTravail = await lirePlan();
       expect(
-        lirePlan().objectives.expand((objectif) => objectif.actions).every((a) => a.declarationRequise),
+        planFranceTravail.objectives.expand((objectif) => objectif.actions).every((a) => a.declarationRequise),
         isTrue,
       );
       expect(
-        tache(lirePlan(), "Je consulte des fiches métiers").categorie,
+        tache(planFranceTravail, "Je consulte des fiches métiers").categorie,
         "Mon (nouveau) métier",
       );
 
       demo.start(missionLocale: true);
 
       expect(
-        tache(lirePlan(), "Je consulte des fiches métiers").categorie,
+        tache(await lirePlan(), "Je consulte des fiches métiers").categorie,
         "Projet pro",
       );
     },
@@ -123,18 +128,18 @@ void main() {
 
   test(
     "coches, décoches et suppressions sont gardées, puis la démo suivante repart des captures",
-    () {
-      repondre("PATCH", "/jeunes/SEVP/plan-action/taches/demo-tache-178", {
+    () async {
+      await repondre("PATCH", "/jeunes/SEVP/plan-action/taches/demo-tache-178", {
         "terminee": true,
         "date": "2026-11-05",
       });
-      repondre("PATCH", "/jeunes/SEVP/plan-action/taches/demo-tache-26", {
+      await repondre("PATCH", "/jeunes/SEVP/plan-action/taches/demo-tache-26", {
         "terminee": false,
       });
-      repondre("DELETE", "/jeunes/SEVP/plan-action/taches/demo-tache-127");
+      await repondre("DELETE", "/jeunes/SEVP/plan-action/taches/demo-tache-127");
 
       expect(
-        progression(lirePlan()),
+        progression(await lirePlan()),
         "Découvrir des métiers 1/8 | M'engager 1/2 | Passer mon permis 1/6 | Boucler mes fins de mois 1/5 | "
         "Prendre soin de ma santé 0/3",
       );
@@ -142,7 +147,7 @@ void main() {
       demo.start(missionLocale: false);
 
       expect(
-        progression(lirePlan()),
+        progression(await lirePlan()),
         startsWith(
           "Découvrir des métiers 2/8 | M'engager 1/3 | Passer mon permis 0/6",
         ),
@@ -152,14 +157,14 @@ void main() {
 
   test(
     "« Modifier » renvoie le même plan, coches et suppressions comprises, comme l'API",
-    () {
-      repondre("DELETE", "/jeunes/SEVP/plan-action/taches/demo-tache-218");
-      repondre("DELETE", "/jeunes/SEVP/plan-action/taches/demo-tache-219");
-      repondre("DELETE", "/jeunes/SEVP/plan-action/taches/demo-tache-221");
+    () async {
+      await repondre("DELETE", "/jeunes/SEVP/plan-action/taches/demo-tache-218");
+      await repondre("DELETE", "/jeunes/SEVP/plan-action/taches/demo-tache-219");
+      await repondre("DELETE", "/jeunes/SEVP/plan-action/taches/demo-tache-221");
 
-      final plan = lirePlan("POST");
+      final plan = await lirePlan("POST");
 
-      expect(repondre("POST", "/jeunes/SEVP/plan-action")!.statusCode, 201);
+      expect((await repondre("POST", "/jeunes/SEVP/plan-action"))!.statusCode, 201);
       expect(
         plan.objectives.map((objectif) => objectif.title),
         isNot(contains("Prendre soin de ma santé")),
@@ -168,8 +173,8 @@ void main() {
     },
   );
 
-  test("les réponses du jeune fictif rendent le questionnaire complet", () {
-    final json = repondre("GET", "/jeunes/SEVP/questionnaire")!.data as Map<String, dynamic>;
+  test("les réponses du jeune fictif rendent le questionnaire complet", () async {
+    final json = (await repondre("GET", "/jeunes/SEVP/questionnaire"))!.data as Map<String, dynamic>;
 
     final answers = const ActionPlanRequestMapper().fromQuestionnaireResponse(
       json,
@@ -192,9 +197,9 @@ void main() {
     expect(answers.habitation?.nom, "Lille");
   });
 
-  test("les autres routes gardent le mode démo habituel", () {
-    expect(repondre("GET", "/jeunes/SEVP/fonctionnalites"), isNull);
-    expect(repondre("GET", "/jeunes/SEVP/mon-suivi"), isNull);
+  test("les autres routes gardent le mode démo habituel", () async {
+    expect(await repondre("GET", "/jeunes/SEVP/fonctionnalites"), isNull);
+    expect(await repondre("GET", "/jeunes/SEVP/mon-suivi"), isNull);
   });
 
   group("au lancement de l'app", () {
@@ -246,7 +251,7 @@ void main() {
 
     Future<OnboardingQuestionnaireAnswers> terminer(OnboardingQuestionnaireAnswers reponses) async {
       final actionPlanRepository = MockActionPlanRepository();
-      final plan = ActionPlan.fromApiJson(demo.planJson());
+      final plan = ActionPlan.fromApiJson(await demo.planJson());
       when(
         () => actionPlanRepository.generate(any(), any(), keepLocalProgress: any(named: 'keepLocalProgress')),
       ).thenAnswer((_) async => plan);
@@ -285,11 +290,11 @@ void main() {
       );
     });
 
-    test("réponses incomplètes : l'accueil de la démo reste celui du plan complet, avec « Modifier »", () {
+    test("réponses incomplètes : l'accueil de la démo reste celui du plan complet, avec « Modifier »", () async {
       final store = givenState()
           .loggedInUser(loginMode: LoginMode.DEMO_PE)
           .withOnboardingQuestionnaire(finished: true)
-          .withActionPlanSuccess(ActionPlan.fromApiJson(demo.planJson()))
+          .withActionPlanSuccess(ActionPlan.fromApiJson(await demo.planJson()))
           .copyWith(demoState: true)
           .store();
 

@@ -37,7 +37,7 @@ class DemoInterceptor extends PassEmploiBaseInterceptor {
     }
 
     final planAction = ModeDemoPlanAction.instance;
-    final planActionResponse = planAction.respond(options);
+    final planActionResponse = await planAction.respond(options);
     if (planActionResponse != null) {
       if (planAction.isGeneration(options)) await Future<void>.delayed(ModeDemoPlanAction.generationDuration);
       handler.resolve(planActionResponse);

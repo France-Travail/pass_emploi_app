@@ -17,6 +17,9 @@ import 'package:pass_emploi_app/widgets/text_form_fields/metier_autocomplete.dar
 import 'package:redux/redux.dart';
 
 void main() {
+  // Le plan et les réponses du jeune fictif sont lus dans les fichiers de assets/mode_demo/.
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late _ReseauEspion reseau;
 
   Dio client({required bool demo}) {
