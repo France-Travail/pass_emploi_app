@@ -73,6 +73,8 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
     final label = widget.isHabitation
         ? Strings.onboardingQuestionnaireHabitationLabel
         : Strings.onboardingQuestionnaireVilleLabel;
+    // Mode démo : la ville est imposée, le champ est grisé, sans effacement ni géolocalisation.
+    final editable = form.fixedCommune == null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -106,18 +108,21 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
                       key: ValueKey(widget.isHabitation ? 'habitation' : 'ville'),
                       controller: _controller,
                       onChanged: _onQueryChanged,
+                      enabled: editable,
                       // A11y 9.12 : nature de la saisie identifiée : type « adresse » (inputType Android) et commune
                       // proposée par le remplissage automatique.
                       keyboardType: TextInputType.streetAddress,
                       autofillHints: const [AutofillHints.addressCity],
                       // Réserve la place du bouton d'effacement.
-                      suffixIcon: _controller.text.isNotEmpty ? const SizedBox.square(dimension: 40) : null,
+                      suffixIcon: editable && _controller.text.isNotEmpty
+                          ? const SizedBox.square(dimension: 40)
+                          : null,
                     ),
                   ),
                 ],
               ),
             ),
-            if (_controller.text.isNotEmpty)
+            if (editable && _controller.text.isNotEmpty)
               Positioned(
                 right: DsfrSpacings.s1v,
                 bottom: DsfrSpacings.s1v,
@@ -155,7 +160,7 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
             ),
           ),
         ],
-        if (!widget.isHabitation) ...[
+        if (editable && !widget.isHabitation) ...[
           const SizedBox(height: Margins.spacing_base),
           Text(
             Strings.onboardingQuestionnaireVilleOr,
@@ -165,14 +170,16 @@ class _OnboardingQuestionnaireLocationStepState extends State<OnboardingQuestion
             ),
           ),
         ],
-        const SizedBox(height: Margins.spacing_base),
-        DsfrButton(
-          label: Strings.onboardingQuestionnaireGeolocate,
-          variant: DsfrButtonVariant.secondary,
-          size: DsfrComponentSize.lg,
-          icon: DsfrIcons.mapMapPin2Line,
-          onPressed: form.isGeolocating ? null : _geolocate,
-        ),
+        if (editable) ...[
+          const SizedBox(height: Margins.spacing_base),
+          DsfrButton(
+            label: Strings.onboardingQuestionnaireGeolocate,
+            variant: DsfrButtonVariant.secondary,
+            size: DsfrComponentSize.lg,
+            icon: DsfrIcons.mapMapPin2Line,
+            onPressed: form.isGeolocating ? null : _geolocate,
+          ),
+        ],
         if (form.geolocationError != null) ...[
           const SizedBox(height: Margins.spacing_s),
           Text(

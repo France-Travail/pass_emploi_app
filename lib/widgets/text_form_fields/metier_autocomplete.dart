@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/ignore_tracking_context_provider.dart';
 import 'package:pass_emploi_app/features/metier/search_metier_actions.dart';
+import 'package:pass_emploi_app/features/mode_demo/mode_demo_offline.dart';
 import 'package:pass_emploi_app/models/metier.dart';
 import 'package:pass_emploi_app/presentation/autocomplete/metier_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
@@ -39,11 +40,20 @@ class MetierAutocomplete extends StatefulWidget {
 
 class _MetierAutocompleteState extends State<MetierAutocomplete> {
   Metier? _selectedMetier;
+  bool _demo = false;
 
   @override
   void initState() {
-    _selectedMetier = widget.initialValue;
     super.initState();
+    _selectedMetier = widget.initialValue;
+    // Mode démo : le métier est imposé, et la recherche le reçoit comme s'il avait été choisi.
+    _demo = StoreProvider.of<AppState>(context, listen: false).state.demoState;
+    if (_demo && _selectedMetier != modeDemoMetier) {
+      _selectedMetier = modeDemoMetier;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) widget.onMetierSelected(modeDemoMetier);
+      });
+    }
   }
 
   @override
@@ -54,7 +64,8 @@ class _MetierAutocompleteState extends State<MetierAutocomplete> {
       a11ySuppressionLabel: Strings.a11YMetierSuppressionLabel,
       heroTag: _heroTag,
       textFormFieldKey: Key(_selectedMetier.toString()),
-      withDeleteButton: _selectedMetier != null,
+      enabled: !_demo,
+      withDeleteButton: !_demo && _selectedMetier != null,
       onTextTap: () => Navigator.push(
         IgnoreTrackingContext.of(context).nonTrackingContext,
         _MetierAutocompletePage.materialPageRoute(

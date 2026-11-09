@@ -16,6 +16,8 @@ class ReadOnlyTextFormField extends StatefulWidget {
   final String? hint;
   final String? initialValue;
   final Widget? prefixIcon;
+  // Valeur imposée (ex. métier du mode démo) : le champ est grisé et ne s'ouvre pas.
+  final bool enabled;
 
   const ReadOnlyTextFormField({
     super.key,
@@ -29,6 +31,7 @@ class ReadOnlyTextFormField extends StatefulWidget {
     required this.hint,
     this.initialValue,
     this.prefixIcon,
+    this.enabled = true,
   });
 
   @override
@@ -47,7 +50,7 @@ class _ReadOnlyTextFormFieldState extends State<ReadOnlyTextFormField> {
     _controller = TextEditingController(text: widget.initialValue);
     _focusNode = FocusNode(
       onKeyEvent: (node, event) {
-        if (event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.enter) {
+        if (widget.enabled && event is KeyDownEvent && event.logicalKey == LogicalKeyboardKey.enter) {
           widget.onTextTap();
           return KeyEventResult.handled;
         }
@@ -123,7 +126,8 @@ class _ReadOnlyTextFormFieldState extends State<ReadOnlyTextFormField> {
                 button: true,
                 label: [widget.title, if (widget.hint != null) widget.hint!].join(', '),
                 value: hasValue ? '${Strings.chosenValue} $value' : null,
-                onTap: widget.onTextTap,
+                enabled: widget.enabled,
+                onTap: widget.enabled ? widget.onTextTap : null,
                 excludeSemantics: true,
                 child: Material(
                   type: MaterialType.transparency,
@@ -136,14 +140,21 @@ class _ReadOnlyTextFormFieldState extends State<ReadOnlyTextFormField> {
                       focusNode: _focusNode,
                       readOnly: true,
                       showCursor: false,
-                      onTap: widget.onTextTap,
-                      style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
+                      enabled: widget.enabled,
+                      onTap: widget.enabled ? widget.onTextTap : null,
+                      style: DsfrTextStyle.bodyMd(
+                        color: widget.enabled
+                            ? DsfrColorDecisions.textDefaultGrey(context)
+                            : DsfrColorDecisions.textDisabledGrey(context),
+                      ),
                       decoration: InputDecoration(
                         prefixIcon: widget.prefixIcon,
                         // Réserve la place du bouton de suppression, affiché par-dessus pour rester accessible.
                         suffixIcon: widget.withDeleteButton ? const SizedBox(width: 44, height: 44) : null,
                         filled: true,
-                        fillColor: DsfrColorDecisions.backgroundContrastGrey(context),
+                        fillColor: widget.enabled
+                            ? DsfrColorDecisions.backgroundContrastGrey(context)
+                            : DsfrColorDecisions.backgroundDisabledGrey(context),
                         focusedBorder: underlineInputBorder,
                         enabledBorder: underlineInputBorder,
                         border: underlineInputBorder,

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:pass_emploi_app/features/mode_demo/is_mode_demo_repository.dart';
 import 'package:pass_emploi_app/features/mode_demo/mode_demo_exception.dart';
 import 'package:pass_emploi_app/features/mode_demo/mode_demo_files.dart';
+import 'package:pass_emploi_app/features/mode_demo/mode_demo_offline.dart';
 import 'package:pass_emploi_app/features/mode_demo/plan_action/mode_demo_plan_action.dart';
 import 'package:pass_emploi_app/network/interceptors/pass_emploi_base_interceptor.dart';
 import 'package:pass_emploi_app/utils/asset_bundle_extensions.dart';
@@ -16,20 +17,41 @@ class DemoInterceptor extends PassEmploiBaseInterceptor {
 
   DemoInterceptor(this.demoRepository);
 
+  // Mode démo : aucune requête ne part, pas même vers un autre serveur que l'API.
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    if (demoRepository.isModeDemo() && !options.isPassEmploiRequest()) {
+      respondWithoutNetwork(options, handler);
+      return;
+    }
+    super.onRequest(options, handler);
+  }
+
   @override
   void onPassEmploiRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     throwModeDemoExceptionIfNecessary(options.method == "GET", options.uri);
 
+    if (!demoRepository.isModeDemo()) {
+      handler.next(options);
+      return;
+    }
+
     final planAction = ModeDemoPlanAction.instance;
-    final planActionResponse = demoRepository.isModeDemo() ? planAction.respond(options) : null;
+    final planActionResponse = planAction.respond(options);
     if (planActionResponse != null) {
       if (planAction.isGeneration(options)) await Future<void>.delayed(ModeDemoPlanAction.generationDuration);
       handler.resolve(planActionResponse);
       return;
     }
 
-    if (!demoRepository.isModeDemo() || !options.uri.toString().isSupposedToBeMocked()) {
-      handler.next(options);
+    final referentielResponse = modeDemoReferentielResponse(options);
+    if (referentielResponse != null) {
+      handler.resolve(referentielResponse);
+      return;
+    }
+
+    if (!options.uri.toString().isSupposedToBeMocked()) {
+      respondWithoutNetwork(options, handler);
       return;
     }
 

@@ -4,6 +4,7 @@ import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
+import 'package:pass_emploi_app/features/mode_demo/mode_demo_offline.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_actions.dart';
 import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
@@ -56,7 +57,6 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
   @override
   void initState() {
     super.initState();
-    _communesRepository = CommunesRepository();
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -76,6 +76,8 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
     if (_formInitialized) return;
     _formInitialized = true;
     final store = StoreProvider.of<AppState>(context);
+    final demo = store.state.demoState;
+    _communesRepository = demo ? ModeDemoCommunesRepository() : CommunesRepository();
     final questionnaireState = store.state.onboardingQuestionnaireState;
     _tracker = OnboardingQuestionnaireTracker(
       isUpdate: questionnaireState is OnboardingQuestionnaireSuccessState && questionnaireState.everFinished,
@@ -93,6 +95,7 @@ class _OnboardingQuestionnairePageState extends State<OnboardingQuestionnairePag
       },
       startAtFirstStep: widget.editMode,
       skipActionPlanGeneration: widget.editMode,
+      fixedCommune: demo ? modeDemoCommune : null,
       withPrenomStep: store.state.isInviteLoginMode(),
       tracker: _tracker,
       onFinishWithoutGeneration: (answers) {
