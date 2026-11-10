@@ -368,7 +368,10 @@ class OnboardingQuestionnaireAnswers extends Equatable {
     );
   }
 
-  bool get canGenerateActionPlan => situation != null && objectifs.isNotEmpty;
+  /// Le serveur cible une situation passée comme « Autre situation ». « Rien ne me bloque » n'a aucune tâche et, comme
+  /// côté serveur, efface les autres freins : sans objectif, il donnerait un plan vide.
+  bool get canGenerateActionPlan =>
+      objectifs.isNotEmpty || (freins.isNotEmpty && !freins.contains(QuestionnaireFrein.rienNeMeBloque));
 
   bool get isPrenomAnswered => prenom != null && prenom!.trim().isNotEmpty;
 

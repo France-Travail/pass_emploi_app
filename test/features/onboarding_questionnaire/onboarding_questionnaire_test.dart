@@ -494,6 +494,27 @@ void main() {
     verify(() => actionPlanRepository.generate(any(), answers, keepLocalProgress: false)).called(1);
   });
 
+  test('complete with a frein but without situation nor objectifs generates plan', () async {
+    final answers = const OnboardingQuestionnaireAnswers(freins: {QuestionnaireFrein.pasDePermis});
+    const plan = ActionPlan(id: 'p1', greeting: 'Salut', objectives: []);
+    when(() => repository.saveAnswers(any())).thenAnswer((_) async {});
+    when(() => repository.setFinished(true)).thenAnswer((_) async {});
+    when(
+      () => actionPlanRepository.generate(any(), any(), keepLocalProgress: any(named: 'keepLocalProgress')),
+    ).thenAnswer((_) async => plan);
+
+    final factory = TestStoreFactory()
+      ..onboardingQuestionnaireRepository = repository
+      ..actionPlanRepository = actionPlanRepository;
+    final store = factory.initializeReduxStore(initialState: givenState().loggedInMiloUser());
+    final generated = store.onChange.firstWhere((s) => s.actionPlanState is ActionPlanSuccessState);
+
+    store.dispatch(OnboardingQuestionnaireCompleteAction(answers));
+
+    await generated;
+    verify(() => actionPlanRepository.generate(any(), answers, keepLocalProgress: false)).called(1);
+  });
+
   test('finish action marks questionnaire as finished in state', () async {
     final answers = const OnboardingQuestionnaireAnswers(prenom: 'Léa');
     final factory = TestStoreFactory()

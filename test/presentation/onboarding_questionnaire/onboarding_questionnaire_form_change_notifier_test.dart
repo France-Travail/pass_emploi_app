@@ -592,7 +592,7 @@ void main() {
 
   group('finish without generation', () {
     test(
-      'skipping last step without situation/objectifs finishes without loader',
+      'skipping last step without objectifs nor freins finishes without loader',
       () async {
         OnboardingQuestionnaireAnswers? finishedAnswers;
         form = OnboardingQuestionnaireFormChangeNotifier(
@@ -639,6 +639,53 @@ void main() {
 
         expect(form.step, OnboardingQuestionnaireStep.loader);
         expect(finishWithoutGenerationCalled, isFalse);
+      },
+    );
+
+    test(
+      'continuing last step with a frein but without situation nor objectifs goes to loader',
+      () async {
+        var finishWithoutGenerationCalled = false;
+        form = OnboardingQuestionnaireFormChangeNotifier(
+          loadAnswers: () async => storedAnswers,
+          saveAnswers: (answers) async {
+            storedAnswers = answers;
+            savedCalls.add(answers);
+          },
+          onFinishWithoutGeneration: (_) =>
+              finishWithoutGenerationCalled = true,
+        );
+        await form.init();
+        form.step = OnboardingQuestionnaireStep.freins;
+        form.draftFreins = {QuestionnaireFrein.pasDePermis};
+
+        await form.continueStep();
+
+        expect(form.step, OnboardingQuestionnaireStep.loader);
+        expect(finishWithoutGenerationCalled, isFalse);
+      },
+    );
+
+    test(
+      'continuing last step with only rienNeMeBloque and without objectifs finishes without loader',
+      () async {
+        OnboardingQuestionnaireAnswers? finishedAnswers;
+        form = OnboardingQuestionnaireFormChangeNotifier(
+          loadAnswers: () async => storedAnswers,
+          saveAnswers: (answers) async {
+            storedAnswers = answers;
+            savedCalls.add(answers);
+          },
+          onFinishWithoutGeneration: (answers) => finishedAnswers = answers,
+        );
+        await form.init();
+        form.step = OnboardingQuestionnaireStep.freins;
+        form.draftFreins = {QuestionnaireFrein.rienNeMeBloque};
+
+        await form.continueStep();
+
+        expect(form.step, OnboardingQuestionnaireStep.freins);
+        expect(finishedAnswers?.freins, {QuestionnaireFrein.rienNeMeBloque});
       },
     );
   });
