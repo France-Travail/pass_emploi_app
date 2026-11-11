@@ -52,7 +52,7 @@ dependencies:
       ref: 0.5.0
   # Native features
   webview_flutter: "4.14.1"
-  flutter_local_notifications: ^22.3.3
+  flutter_local_notifications: ^23.0.0
   flutter_appauth: ^13.0.0
   flutter_secure_storage: ^11.2.0
   url_launcher: ^6.3.3
