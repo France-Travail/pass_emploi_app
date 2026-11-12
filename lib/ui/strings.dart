@@ -26,20 +26,20 @@ class _PassEmploiStrings {
 }
 
 class _CejStrings {
-  static String appName = "CEJ";
+  static String appName = "1J1S";
   static String splashAppName = "1jeune1solution";
   static String logoDescription = "Contrat d'Engagement Jeune";
   static String shouldInformConseiller =
       "En cas d’imprévu, il est important de prévenir ton conseiller. Tu peux le contacter via la messagerie de l’application";
-  static String suppressionAccountLabel = "Supprimer mon compte de l’application CEJ";
+  static String suppressionAccountLabel = "Supprimer mon compte de l’application 1J1S";
   static String warningInformationParagraph1 =
       "En supprimant ton compte de l’application 1 jeune 1 solution, tu perdras définitivement toutes les données présentes sur l’application :";
   static String suppressionDonneesIntroduction =
       "En supprimant tes données de l’application 1 jeune 1 solution, tu perdras définitivement toutes les données présentes sur l’application :";
   static String warningInformationParagraph2 =
       "La suppression de ton compte sur l’application 1 jeune 1 solution n’entraîne pas la suppression de ton accompagnement.";
-  static String accountDeletionSuccess = "Ton compte a bien été supprimé de l’application CEJ";
-  static String modeDemoExplicationPremierPoint3 = " l’application CEJ utilisée par vos bénéficiaires.";
+  static String accountDeletionSuccess = "Ton compte a bien été supprimé de l’application 1J1S";
+  static String modeDemoExplicationPremierPoint3 = " l’application 1J1S utilisée par vos bénéficiaires.";
   static String legalNoticeUrl = "https://doc.pass-emploi.beta.gouv.fr/legal/mobile_mentions_legales";
   static String privacyPolicyUrl =
       "https://travail-emploi.gouv.fr/application-contrat-dengagement-jeune-cej-traitement-des-donnees-personnelles";
@@ -1797,7 +1797,7 @@ class Strings {
   static String contactConseilsDepartementaux = "Conseil départemental";
   static String contactPageTitle = "Contacter l’équipe";
   static String contactPageBody1 = Brand.isCej()
-      ? "L’équipe technique de l’application CEJ est en charge du développement de l’application."
+      ? "L’équipe technique de l’application 1J1S est en charge du développement de l’application."
       : "L’équipe technique de l’application pass emploi est en charge du développement de l’application.";
   static String contactPageBody2 = Brand.isPassEmploi() ? "Contactez-nous pour :" : "Contacte-nous pour :";
   static String contactPageBody3 = Brand.isCej()
@@ -1809,7 +1809,7 @@ class Strings {
   static String contactPageButton = "Contacter l'équipe";
 
   static String objetPriseDeContact(Brand brand) => brand.isCej
-      ? "Prise de contact avec l’équipe de l’application du CEJ"
+      ? "Prise de contact avec l’équipe de l’application 1J1S"
       : "Prise de contact avec l’équipe de l’application pass emploi";
   static String corpsPriseDeContact = Brand.isPassEmploi()
       ? "Décrivez-nous votre problème ou vos suggestions d’évolution : "
@@ -1921,7 +1921,7 @@ class Strings {
   static String supportMail = "support@pass-emploi.beta.gouv.fr";
 
   static String ratingEmailObject(Brand brand) =>
-      brand.isCej ? "Mon avis sur l’application du CEJ" : "Mon avis sur l’application pass emploi";
+      brand.isCej ? "Mon avis sur l’application 1J1S" : "Mon avis sur l’application pass emploi";
 
   static String contentSupportMail = "Aide-nous à améliorer l’application en nous donnant ton avis :\n";
 
@@ -2083,7 +2083,7 @@ class Strings {
 
   // CGU
   static String cguNeverAcceptedTitle = Brand.isCej()
-      ? "Bienvenue sur l’application du CEJ"
+      ? "Bienvenue sur l’application 1J1S"
       : "Bienvenue sur l’application pass emploi";
   static String cguUpdateRequiredTitle = "Mise à jour des Conditions Générales d'Utilisation (CGU)";
   static List<String> cguNeverAcceptedDescription = Brand.isPassEmploi()

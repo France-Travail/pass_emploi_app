@@ -86,6 +86,6 @@ void main() {
     final viewModel = RatingViewModel.create(store, Platform.IOS);
 
     // Then
-    expect(viewModel.ratingEmailObject, 'Mission Locale - Mon avis sur l’application du CEJ');
+    expect(viewModel.ratingEmailObject, 'Mission Locale - Mon avis sur l’application 1J1S');
   });
 }

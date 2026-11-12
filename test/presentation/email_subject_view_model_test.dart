@@ -20,7 +20,7 @@ void main() {
 
           // Then
           expect(
-              viewModel.contactEmailObject, "Mission Locale - Prise de contact avec l’équipe de l’application du CEJ");
+              viewModel.contactEmailObject, "Mission Locale - Prise de contact avec l’équipe de l’application 1J1S");
         });
 
         test('should return expected email subject for login mode POLE_EMPLOI', () {
@@ -34,7 +34,7 @@ void main() {
 
           // Then
           expect(
-              viewModel.contactEmailObject, "France Travail - Prise de contact avec l’équipe de l’application du CEJ");
+              viewModel.contactEmailObject, "France Travail - Prise de contact avec l’équipe de l’application 1J1S");
         });
       });
 
@@ -115,7 +115,7 @@ void main() {
           final viewModel = EmailObjectViewModel.create(store);
 
           // Then
-          expect(viewModel.ratingEmailObject, "Mission Locale - Mon avis sur l’application du CEJ");
+          expect(viewModel.ratingEmailObject, "Mission Locale - Mon avis sur l’application 1J1S");
         });
 
         test('should return expected email subject for login mode POLE_EMPLOI', () {
@@ -128,7 +128,7 @@ void main() {
           final viewModel = EmailObjectViewModel.create(store);
 
           // Then
-          expect(viewModel.ratingEmailObject, "France Travail - Mon avis sur l’application du CEJ");
+          expect(viewModel.ratingEmailObject, "France Travail - Mon avis sur l’application 1J1S");
         });
       });
 
