@@ -26,6 +26,7 @@ import 'package:pass_emploi_app/repositories/date_consultation_actualite_mission
 import 'package:pass_emploi_app/repositories/date_consultation_notification_repository.dart';
 import 'package:pass_emploi_app/repositories/date_consultation_offre_repository.dart';
 import 'package:pass_emploi_app/repositories/derniere_offre_consultee_repository.dart';
+import 'package:pass_emploi_app/repositories/cgu/cgu_repository.dart';
 import 'package:pass_emploi_app/repositories/details_jeune/details_jeune_repository.dart';
 import 'package:pass_emploi_app/repositories/developer_option_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_emploi/evenement_emploi_repository.dart';
@@ -97,6 +98,12 @@ class MockAuthAccessTokenRetriever extends Mock implements AuthAccessTokenRetrie
 class MockDetailsJeuneRepository extends Mock implements DetailsJeuneRepository {
   MockDetailsJeuneRepository() {
     when(() => get(any())).thenAnswer((_) async => null);
+  }
+}
+
+class MockCguRepository extends Mock implements CguRepository {
+  MockCguRepository() {
+    when(() => get(any(), isInvite: any(named: 'isInvite'))).thenAnswer((_) async => null);
   }
 }
 

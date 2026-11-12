@@ -8,7 +8,6 @@ import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_que
 import 'package:pass_emploi_app/features/tutorial/tutorial_state.dart';
 import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
-import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/presentation/main_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/external_links.dart';
@@ -93,13 +92,11 @@ RouterPageDisplayState _routerPageDisplayState(Store<AppState> store) {
   }
 
   if (loginState is LoginSuccessState) {
-    if (!loginState.user.loginMode.isInvite()) {
-      if (cguState is CguNeverAcceptedState || cguState is CguUpdateRequiredState) {
-        return RouterPageDisplayState.cgu;
-      }
-      if (!store.state.isFonctionnalitesResolved()) {
-        return RouterPageDisplayState.splash;
-      }
+    if (cguState is CguNeverAcceptedState || cguState is CguUpdateRequiredState) {
+      return RouterPageDisplayState.cgu;
+    }
+    if (!store.state.isFonctionnalitesResolved()) {
+      return RouterPageDisplayState.splash;
     }
     if (store.state.hasPlanAction()) {
       if (onboardingQuestionnaireState is OnboardingQuestionnaireNotInitializedState) {

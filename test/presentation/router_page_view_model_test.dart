@@ -340,6 +340,32 @@ void main() {
       expect(viewModel.routerPageDisplayState, RouterPageDisplayState.cgu);
     });
 
+    test('should show CGU when user is logged in as invite and never accepted them', () {
+      final store =
+          givenState() //
+              .copyWith(loginState: successUserState(loginMode: LoginMode.INVITE, accompagnement: Accompagnement.cej))
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withCguNeverAccepted()
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.cgu);
+    });
+
+    test('should show CGU update when user is logged in as invite and CGU were updated', () {
+      final store =
+          givenState() //
+              .copyWith(loginState: successUserState(loginMode: LoginMode.INVITE, accompagnement: Accompagnement.cej))
+              .withFirstLaunchOnboardingSuccessState(false)
+              .withCguUpdateRequired(Cgu(lastUpdate: DateTime(2022), changes: []))
+              .store();
+
+      final viewModel = RouterPageViewModel.create(store, Platform.IOS);
+
+      expect(viewModel.routerPageDisplayState, RouterPageDisplayState.cgu);
+    });
+
     test('should show onboarding questionnaire when user is logged in as invite and questionnaire unfinished', () {
       final store =
           givenState() //

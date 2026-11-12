@@ -59,6 +59,7 @@ import 'package:pass_emploi_app/repositories/demarche/create_demarche_repository
 import 'package:pass_emploi_app/repositories/demarche/search_demarche_repository.dart';
 import 'package:pass_emploi_app/repositories/demarche/update_demarche_repository.dart';
 import 'package:pass_emploi_app/repositories/derniere_offre_consultee_repository.dart';
+import 'package:pass_emploi_app/repositories/cgu/cgu_repository.dart';
 import 'package:pass_emploi_app/repositories/details_jeune/details_jeune_repository.dart';
 import 'package:pass_emploi_app/repositories/developer_option_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_emploi/evenement_emploi_details_repository.dart';
@@ -283,6 +284,7 @@ class AppInitializer {
       ServiceCiviqueRepository(dioClient, crashlytics),
       ServiceCiviqueDetailRepository(dioClient, crashlytics),
       DetailsJeuneRepository(dioClient, crashlytics),
+      CguRepository(dioClient, crashlytics),
       SuppressionCompteRepository(dioClient, crashlytics),
       modeDemoRepository,
       CampagneRepository(dioClient, crashlytics),

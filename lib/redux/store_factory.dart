@@ -132,6 +132,7 @@ import 'package:pass_emploi_app/repositories/demarche/create_demarche_repository
 import 'package:pass_emploi_app/repositories/demarche/search_demarche_repository.dart';
 import 'package:pass_emploi_app/repositories/demarche/update_demarche_repository.dart';
 import 'package:pass_emploi_app/repositories/derniere_offre_consultee_repository.dart';
+import 'package:pass_emploi_app/repositories/cgu/cgu_repository.dart';
 import 'package:pass_emploi_app/repositories/details_jeune/details_jeune_repository.dart';
 import 'package:pass_emploi_app/repositories/developer_option_repository.dart';
 import 'package:pass_emploi_app/repositories/evenement_emploi/evenement_emploi_details_repository.dart';
@@ -227,6 +228,7 @@ class StoreFactory {
   final ServiceCiviqueRepository serviceCiviqueRepository;
   final ServiceCiviqueDetailRepository serviceCiviqueDetailRepository;
   final DetailsJeuneRepository detailsJeuneRepository;
+  final CguRepository cguRepository;
   final SuppressionCompteRepository suppressionCompteRepository;
   final ModeDemoRepository modeDemoRepository;
   final CampagneRepository campagneRepository;
@@ -317,6 +319,7 @@ class StoreFactory {
     this.serviceCiviqueRepository,
     this.serviceCiviqueDetailRepository,
     this.detailsJeuneRepository,
+    this.cguRepository,
     this.suppressionCompteRepository,
     this.modeDemoRepository,
     this.campagneRepository,
@@ -458,7 +461,7 @@ class StoreFactory {
         MessageImportantMiddleware(chatRepository, detailsJeuneRepository).call,
         MatchingDemarcheMiddleware(matchingDemarcheRepository).call,
         NotificationsSettingsMiddleware(pushNotificationManager).call,
-        CguMiddleware(detailsJeuneRepository, remoteConfigRepository).call,
+        CguMiddleware(cguRepository, remoteConfigRepository).call,
         DateConsultationOffreMiddleware(dateConsultationOffreRepository).call,
         InAppFeedbackMiddleware(inAppFeedbackRepository).call,
         InAppNotificationsMiddleware(inAppNotificationsRepository).call,

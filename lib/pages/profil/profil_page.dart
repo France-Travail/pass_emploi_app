@@ -181,6 +181,7 @@ class _Scaffold extends StatelessWidget {
                     foregroundColor: DsfrColorDecisions.textDefaultError(context),
                     onPressed: () => SuppressionComptePage.show(context),
                   ),
+                  const SizedBox(height: DsfrSpacings.s3w),
                 ],
                 if (kDebugMode || viewModel.displayDeveloperOptions) ...[
                   const SizedBox(height: DsfrSpacings.s4w),
