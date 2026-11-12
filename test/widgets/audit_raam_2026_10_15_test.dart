@@ -47,7 +47,7 @@ void main() {
 
       final field = tester.getSemantics(find.byType(EditableText)).getSemanticsData();
       expect(field.flagsCollection.isTextField, isTrue);
-      expect(field.label, contains(Strings.lastWarningBeforeSuppression));
+      expect(field.label, contains(Strings.confirmationLabel));
       expect(field.label, contains(Strings.mandatorySuppressionLabelError));
       semantics.dispose();
     });

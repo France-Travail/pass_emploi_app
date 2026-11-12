@@ -11,17 +11,17 @@ import 'package:pass_emploi_app/features/deep_link/deep_link_actions.dart';
 import 'package:pass_emploi_app/features/details_jeune/details_jeune_actions.dart';
 import 'package:pass_emploi_app/features/developer_option/activation/developer_options_action.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
 import 'package:pass_emploi_app/models/deep_link.dart';
 import 'package:pass_emploi_app/pages/cv/cv_list_page.dart';
 import 'package:pass_emploi_app/pages/login_page.dart';
 import 'package:pass_emploi_app/pages/notification_preferences_page.dart';
-import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
 import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questionnaire_page.dart';
-import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_tracker.dart';
 import 'package:pass_emploi_app/pages/partage_activite_page.dart';
 import 'package:pass_emploi_app/pages/profil/confidentialite_page.dart';
 import 'package:pass_emploi_app/pages/profil/matomo_logging_page.dart';
 import 'package:pass_emploi_app/pages/suppression_compte_page.dart';
+import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_tracker.dart';
 import 'package:pass_emploi_app/presentation/profil/profil_page_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
@@ -149,15 +149,10 @@ class _Scaffold extends StatelessWidget {
                   description: Strings.privacyAndDataSubtitle,
                   onTap: () => Navigator.push(context, ConfidentialitePage.materialPageRoute()),
                 ),
-                if (viewModel.displayLogoutAndSuppressionCompte) ...[
+                const SizedBox(height: DsfrSpacings.s2w),
+
+                if (viewModel.displayLogout) ...[
                   const SizedBox(height: DsfrSpacings.s1w),
-                  DsfrProfilTile(
-                    icon: DsfrIcons.systemDeleteBinLine,
-                    iconBackgroundColor: DsfrColors.greenEmeraude950,
-                    title: Strings.suppressionButtonLabel,
-                    onTap: () => Navigator.push(context, SuppressionComptePage.materialPageRoute()),
-                  ),
-                  const SizedBox(height: DsfrSpacings.s4w),
                   DsfrButton(
                     label: Strings.logoutAction,
                     icon: DsfrIcons.systemLogoutBoxRLine,
@@ -165,10 +160,9 @@ class _Scaffold extends StatelessWidget {
                     size: DsfrComponentSize.lg,
                     onPressed: () => context.dispatch(RequestLogoutAction(LogoutReason.userLogout)),
                   ),
-                  const SizedBox(height: DsfrSpacings.s4w),
                 ],
                 if (viewModel.displayLogin) ...[
-                  const SizedBox(height: DsfrSpacings.s4w),
+                  const SizedBox(height: DsfrSpacings.s1w),
                   DsfrButton(
                     label: Strings.inviteLoginAction,
                     icon: DsfrIcons.userUserLine,
@@ -176,7 +170,17 @@ class _Scaffold extends StatelessWidget {
                     size: DsfrComponentSize.lg,
                     onPressed: () => Navigator.push(context, LoginPage.repriseCompteInviteMaterialPageRoute()),
                   ),
-                  const SizedBox(height: DsfrSpacings.s4w),
+                ],
+                if (viewModel.displaySuppressionCompte) ...[
+                  const SizedBox(height: DsfrSpacings.s1w),
+                  DsfrButton(
+                    label: viewModel.suppressionButtonLabel,
+                    icon: DsfrIcons.systemDeleteBinLine,
+                    variant: DsfrButtonVariant.secondary,
+                    size: DsfrComponentSize.lg,
+                    foregroundColor: DsfrColorDecisions.textDefaultError(context),
+                    onPressed: () => SuppressionComptePage.show(context),
+                  ),
                 ],
                 if (kDebugMode || viewModel.displayDeveloperOptions) ...[
                   const SizedBox(height: DsfrSpacings.s4w),

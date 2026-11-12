@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/presentation/display_state.dart';
 import 'package:pass_emploi_app/presentation/profil/suppression_compte_view_model.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
-import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
@@ -71,15 +69,6 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Center(
-          child: SvgPicture.asset(
-            Drawables.illustrationWarning,
-            width: 80,
-            height: 80,
-            excludeFromSemantics: true,
-          ),
-        ),
-        const SizedBox(height: DsfrSpacings.s3w),
         // A11y 7.1 / 10.2 : titre de la fenêtre, qui reçoit le focus du lecteur d'écran à l'ouverture.
         AutoFocusA11y(
           child: Semantics(
@@ -91,10 +80,16 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
           ),
         ),
         const SizedBox(height: DsfrSpacings.s2w),
+        Text(
+          Strings.lastWarningBeforeSuppression,
+          style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
+        ),
+        const SizedBox(height: DsfrSpacings.s3w),
         // A11y 9.9 : le message d'erreur, affiché sous le champ, est restitué avec le champ (même nœud).
         MergeSemantics(
           child: DsfrInput(
-            label: Strings.lastWarningBeforeSuppression,
+            label: Strings.confirmationLabel,
+            placeholder: Strings.suppressionLabel.toLowerCase(),
             controller: _inputController,
             focusNode: _inputFocusNode,
             keyboardType: TextInputType.text,
@@ -110,13 +105,11 @@ class _DeleteAlertDialogState extends State<DeleteAlertDialog> {
             },
           ),
         ),
-        const SizedBox(height: DsfrSpacings.s4w),
+        const SizedBox(height: DsfrSpacings.s3w),
         DsfrButton(
           label: Strings.suppressionLabel,
-          icon: DsfrIcons.systemDeleteBinLine,
-          variant: DsfrButtonVariant.secondary,
+          variant: DsfrButtonVariant.primary,
           size: DsfrComponentSize.lg,
-          foregroundColor: DsfrColorDecisions.textDefaultError(context),
           onPressed: _canDeleteAccount(viewModel)
               ? () {
                   viewModel.onDeleteUser();

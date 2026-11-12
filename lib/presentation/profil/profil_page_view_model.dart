@@ -20,7 +20,9 @@ class ProfilPageViewModel extends Equatable {
   final bool displayMonConseiller;
   final bool displayPartageActivite;
   final bool displayNotifications;
-  final bool displayLogoutAndSuppressionCompte;
+  final bool displaySuppressionCompte;
+  final String suppressionButtonLabel;
+  final bool displayLogout;
   final bool displayLogin;
   final bool displayDeveloperOptions;
   final bool withDownloadCv;
@@ -40,7 +42,9 @@ class ProfilPageViewModel extends Equatable {
     required this.displayMonConseiller,
     required this.displayPartageActivite,
     required this.displayNotifications,
-    required this.displayLogoutAndSuppressionCompte,
+    required this.displaySuppressionCompte,
+    required this.suppressionButtonLabel,
+    required this.displayLogout,
     required this.displayLogin,
     required this.displayDeveloperOptions,
     required this.withDownloadCv,
@@ -76,7 +80,11 @@ class ProfilPageViewModel extends Equatable {
       displayMonConseiller: _shouldDisplayMonConseiller(store.state.detailsJeuneState),
       displayPartageActivite: !isInvite,
       displayNotifications: !isInvite,
-      displayLogoutAndSuppressionCompte: !isInvite,
+      // La suppression reste proposée à tous les profils, y compris l'invité.
+      // La déconnexion n'a pas de sens pour un invité : elle est remplacée par la connexion.
+      displaySuppressionCompte: true,
+      suppressionButtonLabel: isInvite ? Strings.suppressionDonneesButtonLabel : Strings.suppressionButtonLabel,
+      displayLogout: !isInvite,
       displayLogin: isInvite,
       displayDeveloperOptions: store.state.developerOptionsState is DeveloperOptionsActivatedState,
       withDownloadCv: user?.loginMode.isPe() ?? false,
@@ -110,7 +118,9 @@ class ProfilPageViewModel extends Equatable {
         displayMonConseiller,
         displayPartageActivite,
         displayNotifications,
-        displayLogoutAndSuppressionCompte,
+        displaySuppressionCompte,
+        suppressionButtonLabel,
+        displayLogout,
         displayLogin,
         displayDeveloperOptions,
         withDownloadCv,

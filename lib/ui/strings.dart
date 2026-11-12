@@ -10,8 +10,10 @@ class _PassEmploiStrings {
   static String suppressionAccountLabel = "Supprimer mon compte de l’application pass emploi";
   static String warningInformationParagraph1 =
       "En supprimant votre compte de l’application pass emploi, vous perdrez définitivement toutes les données présentes sur l’application :";
+  static String suppressionDonneesIntroduction =
+      "En supprimant vos données de l’application pass emploi, vous perdrez définitivement toutes les données présentes sur l’application :";
   static String warningInformationParagraph2 =
-      "La suppression de votre compte sur l’application pass emploi n'entraîne pas la suppression de votre accompagnement.";
+      "La suppression de votre compte sur l’application pass emploi n’entraîne pas la suppression de votre accompagnement.";
   static String accountDeletionSuccess = "Votre compte a bien été supprimé de l’application pass emploi";
   static String modeDemoExplicationPremierPoint3 = " l’application pass emploi utilisée par vos bénéficiaires.";
   static String legalNoticeUrl = "https://doc.pass-emploi.beta.gouv.fr/legal/pass_emploi_mentions_legales";
@@ -30,9 +32,11 @@ class _CejStrings {
       "En cas d’imprévu, il est important de prévenir ton conseiller. Tu peux le contacter via la messagerie de l’application";
   static String suppressionAccountLabel = "Supprimer mon compte de l’application CEJ";
   static String warningInformationParagraph1 =
-      "En supprimant ton compte de l’application CEJ, tu perdras définitivement toutes les données présentes sur l’application :";
+      "En supprimant ton compte de l’application 1 jeune 1 solution, tu perdras définitivement toutes les données présentes sur l’application :";
+  static String suppressionDonneesIntroduction =
+      "En supprimant tes données de l’application 1 jeune 1 solution, tu perdras définitivement toutes les données présentes sur l’application :";
   static String warningInformationParagraph2 =
-      "La suppression de ton compte sur l’application CEJ n'entraîne pas la suppression de ton accompagnement.";
+      "La suppression de ton compte sur l’application 1 jeune 1 solution n’entraîne pas la suppression de ton accompagnement.";
   static String accountDeletionSuccess = "Ton compte a bien été supprimé de l’application CEJ";
   static String modeDemoExplicationPremierPoint3 = " l’application CEJ utilisée par vos bénéficiaires.";
   static String legalNoticeUrl = "https://doc.pass-emploi.beta.gouv.fr/legal/mobile_mentions_legales";
@@ -1650,34 +1654,78 @@ class Strings {
       : "Autorise le partage pour permettre au conseiller d’avoir un suivi de ton activité.";
   static String warning = "Attention";
   static String suppressionButtonLabel = "Supprimer mon compte";
+  static String suppressionDonneesButtonLabel = "Supprimer mes données";
   static String warningInformationParagraph1 = Brand.isCej()
       ? _CejStrings.warningInformationParagraph1
       : _PassEmploiStrings.warningInformationParagraph1;
+  static String suppressionDonneesIntroduction = Brand.isCej()
+      ? _CejStrings.suppressionDonneesIntroduction
+      : _PassEmploiStrings.suppressionDonneesIntroduction;
   static String warningInformationParagraph2 = Brand.isCej()
       ? _CejStrings.warningInformationParagraph2
       : _PassEmploiStrings.warningInformationParagraph2;
   static String warningInformationPoleEmploi = Brand.isPassEmploi()
       ? "Vos démarches et rendez-vous seront toujours disponibles dans votre portail France Travail."
       : "Tes démarches et rendez-vous seront toujours disponibles dans ton portail France Travail.";
-  static List<String> warningPointsMilo = [
-    "tes actions",
-    "tes messages avec ton conseiller",
-    "tes rendez-vous",
-    "tes recherches et offres sauvegardées",
-  ];
-
-  static List<String> warningPointsPoleEmploi = Brand.isPassEmploi()
+  static List<String> warningPointsMilo = Brand.isPassEmploi()
       ? [
-          "vos messages avec votre conseiller",
-          "vos recherches et offres sauvegardées",
+          "Vos suggestions d’actions",
+          "Vos réponses au questionnaire",
+          "Vos actions",
+          "Vos messages avec votre conseiller",
+          "Vos rendez-vous",
+          "Vos alertes et offres suivies",
         ]
       : [
-          "tes messages avec ton conseiller",
-          "tes recherches et offres sauvegardées",
+          "Tes suggestions d’actions",
+          "Tes réponses au questionnaire",
+          "Tes actions",
+          "Tes messages avec ton conseiller",
+          "Tes rendez-vous",
+          "Tes alertes et offres suivies",
+        ];
+
+  static List<String> warningPointsFtAccompagne = Brand.isPassEmploi()
+      ? [
+          "Vos suggestions de démarches",
+          "Vos réponses au questionnaire",
+          "Vos messages avec votre conseiller",
+          "Vos recherches et offres sauvegardées",
+        ]
+      : [
+          "Tes suggestions de démarches",
+          "Tes réponses au questionnaire",
+          "Tes messages avec ton conseiller",
+          "Tes recherches et offres sauvegardées",
+        ];
+
+  static List<String> warningPointsFtNonAccompagne = Brand.isPassEmploi()
+      ? [
+          "Vos suggestions de démarches",
+          "Vos réponses au questionnaire",
+          "Vos alertes et offres suivies",
+        ]
+      : [
+          "Tes suggestions de démarches",
+          "Tes réponses au questionnaire",
+          "Tes alertes et offres suivies",
+        ];
+
+  static List<String> warningPointsInvite = Brand.isPassEmploi()
+      ? [
+          "Vos suggestions d’actions",
+          "Vos réponses au questionnaire",
+          "Vos alertes et offres suivies",
+        ]
+      : [
+          "Tes suggestions d’actions",
+          "Tes réponses au questionnaire",
+          "Tes alertes et offres suivies",
         ];
   static String lastWarningBeforeSuppression = Brand.isPassEmploi()
-      ? "Tapez le mot “supprimer” pour confirmer la suppression de votre compte (majuscules et minuscules acceptées)."
-      : "Tape le mot “supprimer” pour confirmer la suppression de ton compte (majuscules et minuscules acceptées).";
+      ? "Tapez “supprimer” pour confirmer la suppression de votre compte."
+      : "Tape “supprimer” pour confirmer la suppression de ton compte.";
+  static String confirmationLabel = "Confirmation";
   static String mandatorySuppressionLabelError = Brand.isPassEmploi()
       ? "Champ invalide. Vérifiez que vous avez bien tapé “supprimer”."
       : "Champ invalide. Vérifie que tu as bien tapé “supprimer”.";

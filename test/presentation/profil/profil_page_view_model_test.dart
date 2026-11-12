@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/models/user.dart';
 import 'package:pass_emploi_app/presentation/profil/profil_page_view_model.dart';
+import 'package:pass_emploi_app/ui/strings.dart';
 
 import '../../doubles/fixtures.dart';
 import '../../doubles/spies.dart';
@@ -116,7 +117,31 @@ void main() {
     expect(viewModel.displayMonCompte, isFalse);
     expect(viewModel.displayPartageActivite, isFalse);
     expect(viewModel.displayNotifications, isFalse);
-    expect(viewModel.displayLogoutAndSuppressionCompte, isFalse);
+    expect(viewModel.displayLogout, isFalse);
+    expect(viewModel.displaySuppressionCompte, isTrue);
+    expect(viewModel.suppressionButtonLabel, Strings.suppressionDonneesButtonLabel);
+  });
+
+  test("create should display suppression compte for invite, EC and DE", () {
+    final profiles = <({LoginMode loginMode, Accompagnement accompagnement})>[
+      (loginMode: LoginMode.INVITE, accompagnement: Accompagnement.cej),
+      (loginMode: LoginMode.POLE_EMPLOI, accompagnement: Accompagnement.ftEspaceCandidat),
+      (loginMode: LoginMode.POLE_EMPLOI, accompagnement: Accompagnement.ftDemandeurDEmploi),
+    ];
+
+    for (final profile in profiles) {
+      final store = givenState()
+          .loggedInUser(loginMode: profile.loginMode, accompagnement: profile.accompagnement)
+          .store();
+
+      final viewModel = ProfilPageViewModel.create(store);
+
+      expect(
+        viewModel.displaySuppressionCompte,
+        isTrue,
+        reason: "${profile.loginMode} / ${profile.accompagnement}",
+      );
+    }
   });
 
   test("create when user is invite should display login", () {
@@ -152,7 +177,9 @@ void main() {
     expect(viewModel.displayMonCompte, isTrue);
     expect(viewModel.displayPartageActivite, isTrue);
     expect(viewModel.displayNotifications, isTrue);
-    expect(viewModel.displayLogoutAndSuppressionCompte, isTrue);
+    expect(viewModel.displayLogout, isTrue);
+    expect(viewModel.displaySuppressionCompte, isTrue);
+    expect(viewModel.suppressionButtonLabel, Strings.suppressionButtonLabel);
   });
 
   test("create when user is from Milo should not display download CV card", () {

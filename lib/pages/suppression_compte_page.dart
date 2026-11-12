@@ -13,11 +13,16 @@ import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/widgets/a11y/a11y_bullet_list.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/dialogs/delete_user_dialog.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/snack_bar/show_snack_bar.dart';
 
 class SuppressionComptePage extends StatelessWidget {
-  static MaterialPageRoute<void> materialPageRoute() {
-    return MaterialPageRoute(builder: (context) => SuppressionComptePage());
+  static Future<void> show(BuildContext context) {
+    return showDsfrBottomSheet<void>(
+      context: context,
+      name: AnalyticsScreenNames.suppressionAccount,
+      builder: (context) => SuppressionComptePage(),
+    );
   }
 
   @override
@@ -26,8 +31,9 @@ class SuppressionComptePage extends StatelessWidget {
       tracking: AnalyticsScreenNames.suppressionAccount,
       child: StoreConnector<AppState, SuppressionCompteViewModel>(
         converter: (store) => SuppressionCompteViewModel.create(store),
-        builder: (context, viewModel) => _scaffold(context, viewModel),
+        builder: (context, viewModel) => _sheet(context, viewModel),
         onDidChange: (_, newVM) {
+          if (!context.mounted) return;
           if (newVM.displayState == DisplayState.FAILURE) {
             showSnackBarWithSystemError(context, Strings.alerteDeleteError);
           } else if (newVM.displayState == DisplayState.CONTENT) {
@@ -39,20 +45,17 @@ class SuppressionComptePage extends StatelessWidget {
     );
   }
 
-  Widget _scaffold(BuildContext context, SuppressionCompteViewModel viewModel) {
-    return Scaffold(
-      backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
-      appBar: const BackAppBar(),
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              Expanded(child: _body(context, viewModel)),
-              _DeleteAccountButton(),
-            ],
-          ),
-          if (viewModel.displayState == DisplayState.LOADING)
-            Positioned.fill(
+  Widget _sheet(BuildContext context, SuppressionCompteViewModel viewModel) {
+    final isLoading = viewModel.displayState == DisplayState.LOADING;
+    return Stack(
+      children: [
+        DsfrBottomSheet(
+          actions: _Actions(confirmLabel: viewModel.confirmLabel),
+          child: _body(context, viewModel),
+        ),
+        if (isLoading)
+          Positioned.fill(
+            child: AbsorbPointer(
               child: ColoredBox(
                 color: DsfrColorDecisions.backgroundDefaultGrey(context).withValues(alpha: 0.5),
                 child: Center(
@@ -62,73 +65,68 @@ class SuppressionComptePage extends StatelessWidget {
                 ),
               ),
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 
   Widget _body(BuildContext context, SuppressionCompteViewModel viewModel) {
-    return Semantics(
-      container: true,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s3w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            PageTitle(Strings.suppressionPageTitle),
-            const SizedBox(height: DsfrSpacings.s2w),
-            // A11y 7.1 : « Attention » introduit un avertissement, ce n'est pas un titre de section.
-            Text(
-              Strings.warning,
-              style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
-            ),
-            const SizedBox(height: DsfrSpacings.s2w),
-            Text(
-              Strings.warningInformationParagraph1,
-              style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
-            ),
-            const SizedBox(height: DsfrSpacings.s3w),
-            A11yBulletList(items: viewModel.warningSuppressionFeatures),
-            const SizedBox(height: DsfrSpacings.s3w),
-            Text(
-              Strings.warningInformationParagraph2,
-              style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
-            ),
-            if (viewModel.isPoleEmploiLogin) ...[
-              const SizedBox(height: DsfrSpacings.s3w),
-              Text(
-                Strings.warningInformationPoleEmploi,
-                style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
-              ),
-            ],
-            const SizedBox(height: DsfrSpacings.s3w),
-            const DsfrDivider(),
-          ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        PageTitle(viewModel.title),
+        const SizedBox(height: DsfrSpacings.s2w),
+        Text(
+          viewModel.introduction,
+          style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
         ),
-      ),
+        const SizedBox(height: DsfrSpacings.s3w),
+        A11yBulletList(items: viewModel.warningSuppressionFeatures),
+        if (viewModel.accompagnementNotice != null) ...[
+          const SizedBox(height: DsfrSpacings.s3w),
+          Text(
+            viewModel.accompagnementNotice!,
+            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
+          ),
+        ],
+        if (viewModel.poleEmploiNotice != null) ...[
+          const SizedBox(height: DsfrSpacings.s3w),
+          Text(
+            viewModel.poleEmploiNotice!,
+            style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
+          ),
+        ],
+      ],
     );
   }
 }
 
-class _DeleteAccountButton extends StatelessWidget {
+class _Actions extends StatelessWidget {
+  const _Actions({required this.confirmLabel});
+
+  final String confirmLabel;
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      minimum: const EdgeInsets.only(bottom: DsfrSpacings.s5w),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
-        child: SizedBox(
-          width: double.infinity,
-          child: DsfrButton(
-            label: Strings.suppressionButtonLabel,
-            icon: DsfrIcons.systemDeleteBinLine,
-            variant: DsfrButtonVariant.secondary,
-            size: DsfrComponentSize.lg,
-            foregroundColor: DsfrColorDecisions.textDefaultError(context),
-            onPressed: () => DeleteAlertDialog.show(context),
-          ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        DsfrButton(
+          label: confirmLabel,
+          icon: DsfrIcons.systemDeleteBinLine,
+          variant: DsfrButtonVariant.secondary,
+          size: DsfrComponentSize.lg,
+          foregroundColor: DsfrColorDecisions.textDefaultError(context),
+          onPressed: () => DeleteAlertDialog.show(context),
         ),
-      ),
+        const SizedBox(height: DsfrSpacings.s2w),
+        DsfrButton(
+          label: Strings.cancelLabel,
+          variant: DsfrButtonVariant.secondary,
+          size: DsfrComponentSize.lg,
+          onPressed: () => Navigator.pop(context),
+        ),
+      ],
     );
   }
 }
