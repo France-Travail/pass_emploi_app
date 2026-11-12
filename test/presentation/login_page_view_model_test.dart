@@ -48,7 +48,7 @@ void main() {
       expect(viewModel.withInviteButton, isTrue);
       expect(viewModel.onInviteLogin, isNotNull);
       expect(viewModel.withThemedAppLogo, false);
-      expect(viewModel.title, "Choisis un compte");
+      expect(viewModel.title, "Choisissez un compte");
       expect(viewModel.subtitle, isNull);
       expect(
         viewModel.description,

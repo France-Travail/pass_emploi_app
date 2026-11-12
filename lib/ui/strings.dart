@@ -27,6 +27,7 @@ class _PassEmploiStrings {
 
 class _CejStrings {
   static String appName = "CEJ";
+  static String splashAppName = "1jeune1solution";
   static String logoDescription = "Contrat d'Engagement Jeune";
   static String shouldInformConseiller =
       "En cas d’imprévu, il est important de prévenir ton conseiller. Tu peux le contacter via la messagerie de l’application";
@@ -51,6 +52,7 @@ class Strings {
 
   // Common
   static String appName = Brand.isCej() ? _CejStrings.appName : _PassEmploiStrings.appName;
+  static String splashAppName = Brand.isCej() ? _CejStrings.splashAppName : _PassEmploiStrings.appName;
   static String error = "Une erreur s’est produite";
   static String retry = "Réessayer";
   static String logoDescription = Brand.isCej() ? _CejStrings.logoDescription : _PassEmploiStrings.logoDescription;
@@ -203,9 +205,10 @@ class Strings {
   static String softUpdateBottomSheetClose = "Plus tard";
 
   // First Launch Onboarding
+  static String firstLaunchOnboardingTitle = "1 jeune\n1 solution";
   static String firstLaunchOnboardingTagline = "Tes envies,\ntes projets,\ntes solutions.";
   static String firstLaunchOnboardingDescription =
-      "L'app des 15-25 ans qui t'accompagne dans tous tes projets : études, emploi, logement, mobilité, santé, loisirs et bien plus";
+      "L'app des 15-30 ans qui t'accompagne dans tous tes projets : études, emploi, logement, mobilité, santé, loisirs et bien plus";
 
   static String firstLaunchOnboardingCardTitle1 =
       "Des suggestions d’actions personnalisées pour démarrer selon tes objectifs";
@@ -215,7 +218,7 @@ class Strings {
   // Entree
   static String republiqueFrancaise = "République Française, liberté, égalité, fraternité";
   static String askAccount = "Demander un compte";
-  static String loginChooseAccountTitle = "Choisis un compte";
+  static String loginChooseAccountTitle = "Choisissez un compte";
   static String loginChooseAccountDescription =
       "Si tu disposes de plusieurs accès, sélectionne l'organisme qui t'accompagne actuellement.";
   static String loginPassEmploiTitle = "Bienvenue";

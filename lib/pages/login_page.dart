@@ -19,6 +19,7 @@ import 'package:pass_emploi_app/widgets/a11y/expandable_header_semantics.dart';
 import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/drawables/app_logo.dart';
+import 'package:pass_emploi_app/widgets/drawables/cej_wordmark.dart';
 import 'package:pass_emploi_app/widgets/dsfr/bloc_marque.dart';
 import 'package:pass_emploi_app/widgets/login_page_remote_message.dart';
 
@@ -89,11 +90,13 @@ class _Scaffold extends StatelessWidget {
                 const SizedBox(height: Margins.spacing_s),
                 _ModeDemoTripleTap(
                   child: Center(
-                    child: AppLogo(
-                      width: 120,
-                      excludeFromSemantics: false,
-                      color: viewModel.withThemedAppLogo ? AppColors.primary : null,
-                    ),
+                    child: viewModel.withThemedAppLogo
+                        ? AppLogo(
+                            width: 120,
+                            excludeFromSemantics: false,
+                            color: AppColors.primary,
+                          )
+                        : const CejWordmark(),
                   ),
                 ),
                 const SizedBox(height: Margins.spacing_l),
@@ -101,7 +104,9 @@ class _Scaffold extends StatelessWidget {
                   header: true,
                   child: Text(
                     viewModel.title,
-                    style: DsfrTextStyle.headline2(color: DsfrColorDecisions.textTitleGrey(context)),
+                    style: DsfrTextStyle.headline2(color: DsfrColorDecisions.textTitleGrey(context)).copyWith(
+                      height: viewModel.withOrganismChoice ? 36 / 28 : null,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -116,7 +121,9 @@ class _Scaffold extends StatelessWidget {
                 const SizedBox(height: Margins.spacing_base),
                 Text(
                   viewModel.description,
-                  style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textTitleGrey(context)),
+                  style: viewModel.withOrganismChoice
+                      ? DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)).copyWith(height: 24 / 16)
+                      : DsfrTextStyle.bodySm(color: DsfrColorDecisions.textTitleGrey(context)),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: Margins.spacing_base),
@@ -160,7 +167,7 @@ class _Scaffold extends StatelessWidget {
                   const SizedBox(height: Margins.spacing_base),
                   Text(
                     Strings.loginNoAccountLabel,
-                    style: DsfrTextStyle.bodySmBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                    style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)).copyWith(height: 24 / 16),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: Margins.spacing_base),

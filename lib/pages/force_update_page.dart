@@ -12,6 +12,7 @@ import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/platform.dart';
 import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
 import 'package:pass_emploi_app/widgets/drawables/app_logo.dart';
+import 'package:pass_emploi_app/widgets/drawables/cej_wordmark.dart';
 import 'package:pass_emploi_app/widgets/dsfr/bloc_marque.dart';
 
 class ForceUpdatePage extends StatelessWidget {
@@ -68,7 +69,9 @@ class ForceUpdatePage extends StatelessWidget {
                         child: BlocMarque(),
                       ),
                       // A11y 1.2 : le logo est le seul élément qui nomme l'application sur cet écran.
-                      const Expanded(child: AppLogo(excludeFromSemantics: false)),
+                      Expanded(
+                        child: brand.isCej ? const CejWordmark() : const AppLogo(excludeFromSemantics: false),
+                      ),
                       Text(
                         viewModel.label,
                         style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textDefaultGrey(context)),

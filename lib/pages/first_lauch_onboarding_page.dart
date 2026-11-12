@@ -1,5 +1,8 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/features/first_launch_onboarding/first_launch_onboarding_actions.dart';
@@ -11,17 +14,16 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
-import 'package:pass_emploi_app/widgets/drawables/app_logo.dart';
 import 'package:pass_emploi_app/widgets/dsfr/bloc_marque.dart';
 import 'package:pass_emploi_app/widgets/dsfr/emoji_tile.dart';
-import 'package:pass_emploi_app/widgets/dsfr/splash_emoji_cluster.dart';
 
 const double _maxContentWidth = 480;
 const double _maxSplitWidth = 920;
 
 class FirstLaunchOnboardingPage extends StatefulWidget {
   @override
-  State<FirstLaunchOnboardingPage> createState() => _FirstLaunchOnboardingPageState();
+  State<FirstLaunchOnboardingPage> createState() =>
+      _FirstLaunchOnboardingPageState();
 }
 
 class _FirstLaunchOnboardingPageState extends State<FirstLaunchOnboardingPage> {
@@ -104,7 +106,9 @@ class _FirstScreenStacked extends StatelessWidget {
                   minHeight: constraints.maxHeight,
                 ),
                 child: Column(
-                  mainAxisAlignment: isTablet ? MainAxisAlignment.center : MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: isTablet
+                      ? MainAxisAlignment.center
+                      : MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const _FirstScreenIntro(),
@@ -137,7 +141,7 @@ class _FirstScreenSplit extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: _maxSplitWidth),
           child: Row(
             children: [
-              const Expanded(child: SplashEmojiCluster()),
+              const Expanded(child: _WelcomeIllustration()),
               const SizedBox(width: Margins.spacing_xl),
               Expanded(
                 child: LayoutBuilder(
@@ -151,11 +155,8 @@ class _FirstScreenSplit extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            const Align(
-                              alignment: Alignment.center,
-                              child: AppLogo(width: 220, excludeFromSemantics: false),
-                            ),
-                            const SizedBox(height: Margins.spacing_l),
+                            const _WelcomeTitle(),
+                            const SizedBox(height: 12),
                             const _FirstScreenCopy(),
                             const SizedBox(height: Margins.spacing_l),
                             _ContinueButton(onPressed: onStart),
@@ -179,19 +180,63 @@ class _FirstScreenIntro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: Margins.spacing_m),
-        const SplashEmojiCluster(),
-        const SizedBox(height: Margins.spacing_base),
-        const Align(
-          alignment: Alignment.center,
-          child: AppLogo(width: 220, excludeFromSemantics: false),
-        ),
-        const SizedBox(height: Margins.spacing_l),
-        const _FirstScreenCopy(),
+        SizedBox(height: Margins.spacing_base),
+        _WelcomeIllustration(),
+        SizedBox(height: 18),
+        _WelcomeTitle(),
+        SizedBox(height: 12),
+        _FirstScreenCopy(),
       ],
+    );
+  }
+}
+
+class _WelcomeIllustration extends StatelessWidget {
+  const _WelcomeIllustration();
+
+  @override
+  Widget build(BuildContext context) {
+    return const ExcludeSemantics(
+      child: Image(
+        image: AssetImage(
+          'assets/illustrations/onboarding_1jeune1solution.png',
+        ),
+        fit: BoxFit.fitWidth,
+      ),
+    );
+  }
+}
+
+class _WelcomeTitle extends StatelessWidget {
+  const _WelcomeTitle();
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      header: true,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned(
+            left: -3,
+            top: 70,
+            child: Transform.rotate(
+              angle: -5 * math.pi / 180,
+              child: ExcludeSemantics(
+                child: SvgPicture.asset('assets/splash_zigzag_cej.svg'),
+              ),
+            ),
+          ),
+          Text(
+            Strings.firstLaunchOnboardingTitle,
+            style: DsfrTextStyle.displaySm(color: DsfrColors.grey50)
+                .copyWith(height: 56 / 48),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -204,16 +249,13 @@ class _FirstScreenCopy extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Semantics(
-          header: true,
-          child: Text(
-            Strings.firstLaunchOnboardingTagline,
-            style: DsfrTextStyle.headline5(
-              color: DsfrColorDecisions.textDefaultGrey(context),
-            ),
-          ),
+        Text(
+          Strings.firstLaunchOnboardingTagline,
+          style: DsfrTextStyle.headline5(
+            color: DsfrColorDecisions.textDefaultGrey(context),
+          ).copyWith(height: 28 / 20),
         ),
-        const SizedBox(height: Margins.spacing_base),
+        const SizedBox(height: 12),
         Text(
           Strings.firstLaunchOnboardingDescription,
           style: DsfrTextStyle.bodyMd(
@@ -305,7 +347,13 @@ class _PageViewScreenState extends State<_PageViewScreen> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const AppLogo(width: 120, excludeFromSemantics: false),
+                        Text(
+                          Strings.splashAppName,
+                          textAlign: TextAlign.center,
+                          style: DsfrTextStyle.headline1(
+                            color: DsfrColors.grey50,
+                          ).copyWith(height: 40 / 32),
+                        ),
                         const SizedBox(height: Margins.spacing_base),
                         SizedBox(
                           height: _pageViewHeight,
@@ -329,8 +377,11 @@ class _PageViewScreenState extends State<_PageViewScreen> {
                                 child: _DiscoveryCard(
                                   emoji: '🎯',
                                   emojiBackground: DsfrColors.blueCumulus950,
-                                  title: Strings.firstLaunchOnboardingCardTitle1,
+                                  title:
+                                      Strings.firstLaunchOnboardingCardTitle1,
                                   autoFocus: true,
+                                  onContinue: _onContinue,
+                                  interactive: _currentPage == 0,
                                 ),
                               ),
                               _heightAwarePage(
@@ -338,8 +389,11 @@ class _PageViewScreenState extends State<_PageViewScreen> {
                                 child: _DiscoveryCard(
                                   emoji: '💼',
                                   emojiBackground: DsfrColors.greenEmeraude950,
-                                  title: Strings.firstLaunchOnboardingCardTitle2,
+                                  title:
+                                      Strings.firstLaunchOnboardingCardTitle2,
                                   globalKey: page2Key,
+                                  onContinue: _onContinue,
+                                  interactive: _currentPage == 1,
                                 ),
                               ),
                               _heightAwarePage(
@@ -347,23 +401,14 @@ class _PageViewScreenState extends State<_PageViewScreen> {
                                 child: _DiscoveryCard(
                                   emoji: '💬',
                                   emojiBackground: DsfrColors.purpleGlycine925,
-                                  title: Strings.firstLaunchOnboardingCardTitle3,
+                                  title:
+                                      Strings.firstLaunchOnboardingCardTitle3,
                                   globalKey: page3Key,
+                                  onContinue: _onContinue,
+                                  interactive: _currentPage == 2,
                                 ),
                               ),
                             ],
-                          ),
-                        ),
-                        const SizedBox(height: Margins.spacing_base),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: Margins.spacing_xl,
-                          ),
-                          child: DsfrButton(
-                            label: Strings.continueLabel,
-                            variant: DsfrButtonVariant.primary,
-                            size: DsfrComponentSize.lg,
-                            onPressed: _onContinue,
                           ),
                         ),
                         const SizedBox(height: Margins.spacing_base),
@@ -410,6 +455,8 @@ class _DiscoveryCard extends StatelessWidget {
     required this.emoji,
     required this.emojiBackground,
     required this.title,
+    required this.onContinue,
+    required this.interactive,
     this.autoFocus = false,
     this.globalKey,
   });
@@ -417,6 +464,8 @@ class _DiscoveryCard extends StatelessWidget {
   final String emoji;
   final Color emojiBackground;
   final String title;
+  final VoidCallback onContinue;
+  final bool interactive;
   final bool autoFocus;
   final GlobalKey? globalKey;
 
@@ -457,21 +506,39 @@ class _DiscoveryCard extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(Margins.spacing_m),
-            child: Builder(
-              builder: (context) {
-                final text = Semantics(
-                  key: globalKey,
-                  container: true,
-                  child: Text(
-                    title,
-                    style: DsfrTextStyle.bodyMdBold(
-                      color: DsfrColorDecisions.textDefaultGrey(context),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Builder(
+                  builder: (context) {
+                    final text = Semantics(
+                      key: globalKey,
+                      container: true,
+                      child: Text(
+                        title,
+                        style: DsfrTextStyle.bodyMdBold(
+                          color: DsfrColorDecisions.textDefaultGrey(context),
+                        ).copyWith(height: 24 / 16),
+                      ),
+                    );
+                    if (autoFocus) return AutoFocusA11y(child: text);
+                    return text;
+                  },
+                ),
+                const SizedBox(height: 12),
+                ExcludeSemantics(
+                  excluding: !interactive,
+                  child: IgnorePointer(
+                    ignoring: !interactive,
+                    child: DsfrButton(
+                      label: Strings.continueLabel,
+                      variant: DsfrButtonVariant.primary,
+                      size: DsfrComponentSize.lg,
+                      onPressed: onContinue,
                     ),
                   ),
-                );
-                if (autoFocus) return AutoFocusA11y(child: text);
-                return text;
-              },
+                ),
+              ],
             ),
           ),
         ],

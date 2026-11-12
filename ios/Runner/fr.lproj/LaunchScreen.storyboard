@@ -22,21 +22,9 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="biseau_background" translatesAutoresizingMaskIntoConstraints="NO" id="utT-kp-G6P">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
-                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" image="cej_splash_logo" translatesAutoresizingMaskIntoConstraints="NO" id="YRO-k0-Ey4">
-                                <rect key="frame" x="107" y="348" width="200" height="200"/>
-                                <accessibility key="accessibilityConfiguration">
-                                    <accessibilityTraits key="traits" image="YES" notEnabled="YES"/>
-                                </accessibility>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="200" id="hf6-vt-Rbl"/>
-                                    <constraint firstAttribute="width" constant="200" id="iTX-QA-XDZ"/>
-                                </constraints>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="YRO-k0-Ey4" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="FoM-Jc-JWv"/>
-                            <constraint firstItem="YRO-k0-Ey4" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Lq9-yq-Iqd"/>
                             <constraint firstItem="utT-kp-G6P" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="Znm-7F-ftu"/>
                             <constraint firstAttribute="bottom" secondItem="utT-kp-G6P" secondAttribute="bottom" id="k4h-oE-jj1"/>
                             <constraint firstItem="utT-kp-G6P" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="yNF-9N-50t"/>
@@ -51,6 +39,5 @@
     </scenes>
     <resources>
         <image name="biseau_background" width="375" height="812"/>
-        <image name="cej_splash_logo" width="250" height="135"/>
     </resources>
 </document>
