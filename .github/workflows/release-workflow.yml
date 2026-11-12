@@ -281,7 +281,7 @@ jobs:
           export APP_STORE_CONNECT_KEY_IDENTIFIER="$APPLE_PROD_API_KEY"
           export APP_STORE_CONNECT_PRIVATE_KEY=`cat ios/AuthKey_"$APPLE_PROD_API_KEY".p8`
           app-store-connect publish \
-            --path $(find $(pwd) -name "CEJ.ipa")
+            --path $(find $(pwd) -name "1J1S.ipa")
         env:
           APPLE_PROD_API_ISSUER: ${{ secrets.APPLE_PROD_API_ISSUER }}
           APPLE_PROD_API_KEY: ${{ secrets.APPLE_PROD_API_KEY }}
