@@ -18,7 +18,7 @@ dependencies:
   # Dart
   collection: ^1.19.1
   equatable: ^3.0.0
-  synchronized: ^3.5.0
+  synchronized: ^3.6.1+1
   uuid: ^4.6.0
   clock: ^1.1.3
   # Dio
