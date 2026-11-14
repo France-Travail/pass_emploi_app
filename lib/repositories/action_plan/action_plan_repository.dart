@@ -54,6 +54,7 @@ class ActionPlanRepository {
     try {
       final response = await _httpClient.get(url);
       final data = response.data;
+      if (data == null) return ActionPlanFetchNotFound();
       if (data is! Map<String, dynamic>) return ActionPlanFetchFailure();
       return ActionPlanFetchFound(await _replaceAndPersist(ActionPlan.fromApiJson(data)));
     } catch (e, stack) {
