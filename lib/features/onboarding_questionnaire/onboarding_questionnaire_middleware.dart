@@ -156,7 +156,7 @@ class OnboardingQuestionnaireMiddleware extends MiddlewareClass<AppState> {
       }
 
       await _repository.setFinished(true);
-      // Mode démo : sans situation ni objectif, le questionnaire saute l'écran de génération, qui d'habitude le referme.
+      // Mode démo : sans objectif ni frein, le questionnaire saute l'écran de génération, qui d'habitude le referme.
       if (!answers.canGenerateActionPlan) {
         store.dispatch(OnboardingQuestionnaireSuccessAction(finished: true, everFinished: true, answers: answers));
       }

@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 import 'package:pass_emploi_app/utils/asset_bundle_extensions.dart';
 
-// Le plan de la démo ne dépend pas des réponses. L'app n'envoie la demande de génération qu'avec une situation et au
-// moins un objectif : ceux du jeune fictif remplacent les étapes passées, pour la demande seulement.
+// Le plan de la démo ne dépend pas des réponses. L'app n'envoie la demande de génération qu'avec au moins un objectif ou
+// un frein : la situation et les objectifs du jeune fictif remplacent les étapes passées, pour la demande seulement.
 OnboardingQuestionnaireAnswers answersForDemoGeneration(OnboardingQuestionnaireAnswers answers) {
   if (answers.canGenerateActionPlan) return answers;
   return answers.copyWith(

@@ -39,6 +39,16 @@ void main() {
     });
   });
 
+  test('omits a skipped situation and sends empty goals when objectifs are skipped', () {
+    final request = mapper.toRequest(
+      const OnboardingQuestionnaireAnswers(freins: {QuestionnaireFrein.pasDePermis}),
+    );
+
+    expect(request.containsKey('situation'), isFalse);
+    expect(request['goals'], isEmpty);
+    expect(request['obstacles'], ['PAS_DE_PERMIS']);
+  });
+
   test('maps domaine inconnu to null domaine and domaineInconnu true', () {
     final request = mapper.toRequest(
       const OnboardingQuestionnaireAnswers(
