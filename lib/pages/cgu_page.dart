@@ -94,6 +94,8 @@ class _BodyState extends State<_Body> {
     final bool neverAccepted = widget.viewModel.displayState is CguNeverAcceptedDisplayState;
     final switchLabel = neverAccepted ? Strings.cguNeverAcceptedSwitch : Strings.cguUpdateRequiredSwitch;
     final hasError = shouldHighlightError();
+    final switchLabelColor =
+        hasError ? DsfrColorDecisions.textDefaultError(context) : DsfrColorDecisions.textDefaultGrey(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -108,22 +110,62 @@ class _BodyState extends State<_Body> {
                 const SizedBox(height: DsfrSpacings.s3w),
                 const DsfrDivider(),
                 const SizedBox(height: DsfrSpacings.s3w),
-                DsfrAccessibleToggleSwitch(
-                  semanticsLabel: Strings.cguSwitchLabel(_cguAccepted),
-                  label: switchLabel,
-                  labelLocation: DsfrToggleSwitchLabelLocation.right,
-                  value: _cguAccepted,
-                  status: _cguAccepted ? Strings.notificationsToggleEnabled : Strings.notificationsToggleDisabled,
+                // L'interrupteur DSFR n'accepte qu'un libellé texte : la phrase et son lien sont posés à sa droite
+                // (interrupteur avant le texte, comme partout dans l'app depuis l'audit d'accessibilité), et
+                // l'interrupteur porte la phrase entière pour les lecteurs d'écran. Le groupe DSFR affiche
+                // l'erreur (barre et message) sur l'ensemble et la transmet à l'interrupteur.
+                DsfrGroup(
                   componentState: hasError
                       ? DsfrComponentState.error(errorMessage: Strings.cguSwitchError)
                       : const DsfrComponentState.none(),
-                  onChanged: (value) => setState(() => _cguAccepted = value),
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        IntrinsicWidth(
+                          child: DsfrAccessibleToggleSwitch(
+                            semanticsLabel: Strings.cguSwitchSemanticsLabel(switchLabel),
+                            label: '',
+                            labelLocation: DsfrToggleSwitchLabelLocation.right,
+                            value: _cguAccepted,
+                            status:
+                                _cguAccepted ? Strings.notificationsToggleEnabled : Strings.notificationsToggleDisabled,
+                            onChanged: (value) => setState(() => _cguAccepted = value),
+                          ),
+                        ),
+                        // « Désactivé » est plus large que l'interrupteur : cet espace l'empêche de toucher le texte.
+                        const SizedBox(width: DsfrSpacings.s1w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ExcludeSemantics(
+                                child: Text(switchLabel, style: DsfrTextStyle.bodyMd(color: switchLabelColor)),
+                              ),
+                              DsfrLink(
+                                label: Strings.cguSwitchLink,
+                                icon: DsfrIcons.systemExternalLinkLine,
+                                onTap: _launchExternalRedirect,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 if (hasError) ...[
                   const SizedBox(height: DsfrSpacings.s2w),
                   DsfrAlert(
                     type: DsfrAlertType.error,
                     description: DsfrAlertDescriptionText(Strings.cguSwitchError),
+                  ),
+                ],
+                if (widget.viewModel.withInviteRefusalNotice) ...[
+                  const SizedBox(height: DsfrSpacings.s3w),
+                  DsfrAlert(
+                    type: DsfrAlertType.info,
+                    description: DsfrAlertDescriptionText(Strings.cguInviteRefusalNotice),
                   ),
                 ],
               ],
@@ -217,10 +259,13 @@ class _CguUpdateRequiredContent extends StatelessWidget {
               Strings.cguUpdateRequiredDescription[1],
           style: bodyStyle,
         ),
-        DsfrLink(
-          label: Strings.cguUpdateRequiredDescription[2],
-          icon: DsfrIcons.systemExternalLinkLine,
-          onTap: _launchExternalRedirect,
+        Align(
+          alignment: Alignment.centerLeft,
+          child: DsfrLink(
+            label: Strings.cguUpdateRequiredDescription[2],
+            icon: DsfrIcons.systemExternalLinkLine,
+            onTap: _launchExternalRedirect,
+          ),
         ),
         Text(Strings.cguUpdateRequiredDescription[3], style: bodyStyle),
         for (final change in displayState.changes) Text(' • $change\n', style: bodyStyle),

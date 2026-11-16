@@ -25,11 +25,15 @@ class CguUpdateRequiredDisplayState extends CguDisplayState {
 
 class CguPageViewModel extends Equatable {
   final CguDisplayState? displayState;
+
+  /// Encart d'information réservé à l'invité : s'il refuse, son compte invité est supprimé (voir CguMiddleware).
+  final bool withInviteRefusalNotice;
   final Function() onAccept;
   final Function() onRefuse;
 
   CguPageViewModel._({
     required this.displayState,
+    required this.withInviteRefusalNotice,
     required this.onAccept,
     required this.onRefuse,
   });
@@ -37,13 +41,14 @@ class CguPageViewModel extends Equatable {
   factory CguPageViewModel.create(Store<AppState> store) {
     return CguPageViewModel._(
       displayState: _displayState(store.state.cguState),
+      withInviteRefusalNotice: store.state.isInviteLoginMode(),
       onAccept: () => store.dispatch(CguAcceptedAction(clock.now())),
       onRefuse: () => store.dispatch(CguRefusedAction()),
     );
   }
 
   @override
-  List<Object?> get props => [displayState];
+  List<Object?> get props => [displayState, withInviteRefusalNotice];
 }
 
 CguDisplayState? _displayState(CguState cguState) {

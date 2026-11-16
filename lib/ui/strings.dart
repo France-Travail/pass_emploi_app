@@ -31,15 +31,15 @@ class _CejStrings {
   static String logoDescription = "Contrat d'Engagement Jeune";
   static String shouldInformConseiller =
       "En cas d’imprévu, il est important de prévenir ton conseiller. Tu peux le contacter via la messagerie de l’application";
-  static String suppressionAccountLabel = "Supprimer mon compte de l’application 1J1S";
+  static String suppressionAccountLabel = "Supprimer mon compte de l’application 1jeune1solution";
   static String warningInformationParagraph1 =
-      "En supprimant ton compte de l’application 1 jeune 1 solution, tu perdras définitivement toutes les données présentes sur l’application :";
+      "En supprimant ton compte de l’application 1jeune1solution, tu perdras définitivement toutes les données présentes sur l’application :";
   static String suppressionDonneesIntroduction =
-      "En supprimant tes données de l’application 1 jeune 1 solution, tu perdras définitivement toutes les données présentes sur l’application :";
+      "En supprimant tes données de l’application 1jeune1solution, tu perdras définitivement toutes les données présentes sur l’application :";
   static String warningInformationParagraph2 =
-      "La suppression de ton compte sur l’application 1 jeune 1 solution n’entraîne pas la suppression de ton accompagnement.";
-  static String accountDeletionSuccess = "Ton compte a bien été supprimé de l’application 1J1S";
-  static String modeDemoExplicationPremierPoint3 = " l’application 1J1S utilisée par vos bénéficiaires.";
+      "La suppression de ton compte sur l’application 1jeune1solution n’entraîne pas la suppression de ton accompagnement.";
+  static String accountDeletionSuccess = "Ton compte a bien été supprimé de l’application 1jeune1solution";
+  static String modeDemoExplicationPremierPoint3 = " l’application 1jeune1solution utilisée par vos bénéficiaires.";
   static String legalNoticeUrl = "https://doc.pass-emploi.beta.gouv.fr/legal/mobile_mentions_legales";
   static String privacyPolicyUrl =
       "https://travail-emploi.gouv.fr/application-contrat-dengagement-jeune-cej-traitement-des-donnees-personnelles";
@@ -205,7 +205,7 @@ class Strings {
   static String softUpdateBottomSheetClose = "Plus tard";
 
   // First Launch Onboarding
-  static String firstLaunchOnboardingTitle = "1 jeune\n1 solution";
+  static String firstLaunchOnboardingTitle = "1jeune\n1solution";
   static String firstLaunchOnboardingTagline = "Tes envies,\ntes projets,\ntes solutions.";
   static String firstLaunchOnboardingDescription =
       "L'app des 15-30 ans qui t'accompagne dans tous tes projets : études, emploi, logement, mobilité, santé, loisirs et bien plus";
@@ -218,7 +218,7 @@ class Strings {
   // Entree
   static String republiqueFrancaise = "République Française, liberté, égalité, fraternité";
   static String askAccount = "Demander un compte";
-  static String loginChooseAccountTitle = "Choisissez un compte";
+  static String loginChooseAccountTitle = "Choisis un compte";
   static String loginChooseAccountDescription =
       "Si tu disposes de plusieurs accès, sélectionne l'organisme qui t'accompagne actuellement.";
   static String loginPassEmploiTitle = "Bienvenue";
@@ -1797,7 +1797,7 @@ class Strings {
   static String contactConseilsDepartementaux = "Conseil départemental";
   static String contactPageTitle = "Contacter l’équipe";
   static String contactPageBody1 = Brand.isCej()
-      ? "L’équipe technique de l’application 1J1S est en charge du développement de l’application."
+      ? "L’équipe technique de l’application 1jeune1solution est en charge du développement de l’application."
       : "L’équipe technique de l’application pass emploi est en charge du développement de l’application.";
   static String contactPageBody2 = Brand.isPassEmploi() ? "Contactez-nous pour :" : "Contacte-nous pour :";
   static String contactPageBody3 = Brand.isCej()
@@ -1809,7 +1809,7 @@ class Strings {
   static String contactPageButton = "Contacter l'équipe";
 
   static String objetPriseDeContact(Brand brand) => brand.isCej
-      ? "Prise de contact avec l’équipe de l’application 1J1S"
+      ? "Prise de contact avec l’équipe de l’application 1jeune1solution"
       : "Prise de contact avec l’équipe de l’application pass emploi";
   static String corpsPriseDeContact = Brand.isPassEmploi()
       ? "Décrivez-nous votre problème ou vos suggestions d’évolution : "
@@ -1921,7 +1921,7 @@ class Strings {
   static String supportMail = "support@pass-emploi.beta.gouv.fr";
 
   static String ratingEmailObject(Brand brand) =>
-      brand.isCej ? "Mon avis sur l’application 1J1S" : "Mon avis sur l’application pass emploi";
+      brand.isCej ? "Mon avis sur l’application 1jeune1solution" : "Mon avis sur l’application pass emploi";
 
   static String contentSupportMail = "Aide-nous à améliorer l’application en nous donnant ton avis :\n";
 
@@ -2083,7 +2083,7 @@ class Strings {
 
   // CGU
   static String cguNeverAcceptedTitle = Brand.isCej()
-      ? "Bienvenue sur l’application 1J1S"
+      ? "Bienvenue sur l’application 1jeune1solution"
       : "Bienvenue sur l’application pass emploi";
   static String cguUpdateRequiredTitle = "Mise à jour des Conditions Générales d'Utilisation (CGU)";
   static List<String> cguNeverAcceptedDescription = Brand.isPassEmploi()
@@ -2104,18 +2104,21 @@ class Strings {
   static List<String> cguUpdateRequiredDescription = [
     "Nous avons mis à jour nos CGU le ",
     ". L’utilisation de notre service est soumise à l’acceptation préalable de nos ",
-    "CGU.",
+    "Conditions Générales d’Utilisation",
     "\n\nPoints clés de la mise à jour :\n",
   ];
-  static String cguNeverAcceptedSwitch = "J’ai lu et j’accepte les Conditions Générales d’Utilisation";
-  static String cguUpdateRequiredSwitch = "J’ai lu et j’accepte les nouvelles CGU";
+  static String cguNeverAcceptedSwitch = "J’ai lu et j’accepte les";
+  static String cguUpdateRequiredSwitch = "J’ai lu et j’accepte les nouvelles";
+  static String cguSwitchLink = "Conditions Générales d’Utilisation";
   static String cguSwitchError = Brand.isPassEmploi()
       ? "Acceptez les Conditions Générales d’Utilisation pour utiliser l’application."
       : "Accepte les Conditions Générales d’Utilisation pour utiliser l’application.";
   static String cguAccept = "Valider";
   static String cguRefuse = "Refuser et se déconnecter";
+  static String cguInviteRefusalNotice = "Si tu n’acceptes pas, nous ne gardons pas tes informations.";
 
-  static String cguSwitchLabel(bool accepted) => accepted ? "Refuser les cgu" : "Accepter les cgu";
+  /// Nom de l'interrupteur pour les lecteurs d'écran : la phrase visible et son lien, en entier.
+  static String cguSwitchSemanticsLabel(String switchLabel) => "$switchLabel $cguSwitchLink";
 
   // In-app feedback
   static String feedbackBad = "Pas d’accord";
