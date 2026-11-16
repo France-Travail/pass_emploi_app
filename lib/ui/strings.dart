@@ -27,7 +27,7 @@ class _PassEmploiStrings {
 
 class _CejStrings {
   static String appName = "1J1S";
-  static String splashAppName = "1jeune1solution";
+  static String splashAppName = "1jeune 1solution";
   static String logoDescription = "Contrat d'Engagement Jeune";
   static String shouldInformConseiller =
       "En cas d’imprévu, il est important de prévenir ton conseiller. Tu peux le contacter via la messagerie de l’application";

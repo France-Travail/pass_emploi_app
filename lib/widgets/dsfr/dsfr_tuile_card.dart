@@ -10,7 +10,7 @@ const _leadingSize = 40.0;
 class DsfrTuileCard extends StatelessWidget {
   const DsfrTuileCard({
     super.key,
-    required this.leading,
+    this.leading,
     required this.title,
     this.description,
     this.onTap,
@@ -23,7 +23,7 @@ class DsfrTuileCard extends StatelessWidget {
     this.descriptionIcon = DsfrIcons.systemArrowRightSLine,
   });
 
-  final Widget leading;
+  final Widget? leading;
   final String title;
   final String? description;
   final VoidCallback? onTap;
@@ -36,7 +36,6 @@ class DsfrTuileCard extends StatelessWidget {
   final String? semanticsLinkUrl;
   final String? semanticsLabel;
 
-  /// Icône affichée à côté de la description (chevron par défaut).
   final IconData descriptionIcon;
 
   bool get _isTappable => onTap != null;
@@ -67,7 +66,7 @@ class DsfrTuileCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ExcludeSemantics(child: _PictoColumn(child: leading)),
+            if (leading != null) ExcludeSemantics(child: _PictoColumn(child: leading!)),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(DsfrSpacings.s2w),

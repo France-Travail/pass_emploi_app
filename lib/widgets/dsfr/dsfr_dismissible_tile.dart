@@ -32,7 +32,7 @@ class DsfrDismissibleTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DsfrTuileCard(
-      leading: leading ?? const SizedBox.shrink(),
+      leading: leading,
       title: title,
       description: description,
       onTap: onTap,

@@ -15,28 +15,31 @@ class FilterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: DsfrSpacings.s2w),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          DsfrButton(
-            label: Strings.applyFiltres,
-            variant: DsfrButtonVariant.primary,
-            size: DsfrComponentSize.lg,
-            onPressed: isEnabled ? onPressed : null,
-          ),
-          if (onReset != null) ...[
-            const SizedBox(height: DsfrSpacings.s2w),
+    return ColoredBox(
+      color: DsfrColorDecisions.backgroundDefaultGrey(context),
+      child: Padding(
+        padding: const EdgeInsets.only(top: DsfrSpacings.s2w, bottom: DsfrSpacings.s2w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
             DsfrButton(
-              label: Strings.resetFiltres,
-              variant: DsfrButtonVariant.secondary,
+              label: Strings.applyFiltres,
+              variant: DsfrButtonVariant.primary,
               size: DsfrComponentSize.lg,
-              onPressed: isEnabled ? onReset : null,
+              onPressed: isEnabled ? onPressed : null,
             ),
+            if (onReset != null) ...[
+              const SizedBox(height: DsfrSpacings.s2w),
+              DsfrButton(
+                label: Strings.resetFiltres,
+                variant: DsfrButtonVariant.secondary,
+                size: DsfrComponentSize.lg,
+                onPressed: isEnabled ? onReset : null,
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
