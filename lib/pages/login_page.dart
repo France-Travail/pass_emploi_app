@@ -104,9 +104,11 @@ class _Scaffold extends StatelessWidget {
                   header: true,
                   child: Text(
                     viewModel.title,
-                    style: DsfrTextStyle.headline2(color: DsfrColorDecisions.textTitleGrey(context)).copyWith(
-                      height: viewModel.withOrganismChoice ? 36 / 28 : null,
-                    ),
+                    // 1jeune1solution : « Choisis un compte » en titre DSFR h4 (22 px) ; pass emploi garde le h2 (28 px).
+                    style: viewModel.withOrganismChoice
+                        ? DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context))
+                            .copyWith(height: 28 / 22)
+                        : DsfrTextStyle.headline2(color: DsfrColorDecisions.textTitleGrey(context)),
                     textAlign: TextAlign.center,
                   ),
                 ),

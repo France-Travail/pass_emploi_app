@@ -2,6 +2,7 @@ import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/features/cgu/cgu_actions.dart';
 import 'package:pass_emploi_app/models/cgu.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/presentation/cgu_page_view_model.dart';
 
 import '../doubles/spies.dart';
@@ -41,6 +42,32 @@ void main() {
         changes: ['change 1', 'change 2'],
       ),
     );
+  });
+
+  group('encart d’information sur le refus', () {
+    test('affiché pour un invité', () {
+      // Given
+      final store = givenState().loggedInUser(loginMode: LoginMode.INVITE).withCguNeverAccepted().store();
+
+      // When
+      final viewModel = CguPageViewModel.create(store);
+
+      // Then
+      expect(viewModel.withInviteRefusalNotice, isTrue);
+    });
+
+    test('masqué pour un jeune Mission Locale ou France Travail', () {
+      for (final loginMode in [LoginMode.MILO, LoginMode.POLE_EMPLOI]) {
+        // Given
+        final store = givenState().loggedInUser(loginMode: loginMode).withCguNeverAccepted().store();
+
+        // When
+        final viewModel = CguPageViewModel.create(store);
+
+        // Then
+        expect(viewModel.withInviteRefusalNotice, isFalse, reason: loginMode.name);
+      }
+    });
   });
 
   test('onAccept should dispatch CguAcceptedAction', () {
