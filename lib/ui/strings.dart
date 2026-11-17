@@ -371,15 +371,14 @@ class Strings {
   static String onboardingQuestionnaireStepOf(int current, int total) => "Étape $current sur $total";
 
   static String onboardingQuestionnairePrenomTitle = "Ton prénom";
-  static String onboardingQuestionnairePrenomSubtitle =
-      "Juste ton prénom, pour te parler normalement. Rien d'autre. 🙂";
+  static String onboardingQuestionnairePrenomSubtitle = "D'abord, faisons connaissance ! Comment tu t'appelles ? 🙂";
   static String onboardingQuestionnairePrenomLabel = "Ton prénom";
 
   static String onboardingQuestionnaireBirthdateTitle = "Ta date de naissance";
   static String onboardingQuestionnaireBirthdateGreeting(String? prenom) {
     final trimmed = prenom?.trim() ?? '';
-    if (trimmed.isEmpty) return "Salut ! L'app est réservée aux 15-25 ans.";
-    return "Salut $trimmed ! L'app est réservée aux 15-25 ans.";
+    if (trimmed.isEmpty) return "Salut ! L'app est réservée aux 15-30 ans.";
+    return "Salut $trimmed ! L'app est réservée aux 15-30 ans.";
   }
 
   static String onboardingQuestionnaireBirthdateSubtitle =
@@ -391,7 +390,7 @@ class Strings {
   static String onboardingQuestionnaireBirthdateHint = "Exemple : 05 03 2006";
   static String onboardingQuestionnaireBirthdateInvalid = "Cette date n'existe pas. Exemple : 05 03 2006";
   static String onboardingQuestionnaireUnderAgeTitle = "Reviens dans quelque temps\u{00A0}!";
-  static String onboardingQuestionnaireUnderAgeDescription = "Cette appli est destinée aux jeunes de 15 à 25 ans.";
+  static String onboardingQuestionnaireUnderAgeDescription = "Cette appli est destinée aux jeunes de 15 à 30 ans.";
   static String onboardingQuestionnaireUnderAgeNoticeTitle = "Encore un peu de patience";
   static String onboardingQuestionnaireUnderAgeNoticeDescription =
       "Tu pourras l’utiliser dès tes 15 ans. À très vite pour explorer tes pistes ensemble\u{00A0}!";
