@@ -18,7 +18,7 @@ dependencies:
   # Dart
   collection: ^1.19.1
   equatable: ^3.0.0
-  synchronized: ^3.5.0
+  synchronized: ^3.6.1+1
   uuid: ^4.6.0
   clock: ^1.1.3
   # Dio
@@ -37,7 +37,7 @@ dependencies:
   cloud_firestore: "7.1.0" # >= 7.1.0 requis : faille eMudhra (CA intermédiaire compromise)
 
   # UI
-  flutter_svg: ^2.3.2
+  flutter_svg: ^2.4.0
   smooth_page_indicator: ^3.0.0
   path_provider: ^2.1.6
   flutter_staggered_animations: "1.1.1"
