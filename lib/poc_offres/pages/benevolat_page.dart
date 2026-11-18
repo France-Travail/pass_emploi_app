@@ -333,7 +333,7 @@ class _TitreFiltre extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      header: true,
+      headingLevel: 2,
       child: Text(titre, style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context))),
     );
   }

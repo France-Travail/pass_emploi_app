@@ -239,7 +239,7 @@ class PocTitreResultats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      header: true,
+      headingLevel: 2,
       child: Text(texte, style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context))),
     );
   }
@@ -266,7 +266,7 @@ class PocRecherchesRecentes extends StatelessWidget {
               const SizedBox(width: DsfrSpacings.s1w),
               Expanded(
                 child: Semantics(
-                  header: true,
+                  headingLevel: 2,
                   child: Text(
                     Strings.rechercheRecentesTitle,
                     style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),

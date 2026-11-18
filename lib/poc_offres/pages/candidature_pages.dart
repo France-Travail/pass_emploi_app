@@ -329,7 +329,7 @@ class _TitreCv extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      header: true,
+      headingLevel: 2,
       child: Text(titre, style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context))),
     );
   }
@@ -489,7 +489,7 @@ class CandidatureConfirmationPage extends StatelessWidget {
                       ),
                       const SizedBox(height: DsfrSpacings.s2w),
                       Semantics(
-                        header: true,
+                        headingLevel: 1,
                         child: Text(
                           PocOffresStrings.bravo(prenom),
                           textAlign: TextAlign.center,

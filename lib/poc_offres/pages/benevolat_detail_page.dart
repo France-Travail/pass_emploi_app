@@ -185,7 +185,7 @@ class _Prerequis extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Semantics(
-                    header: true,
+                    headingLevel: 2,
                     child: Text(
                       PocOffresStrings.prerequis,
                       style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textActionHighBlueFrance(context)),

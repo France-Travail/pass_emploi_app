@@ -60,7 +60,7 @@ class _FormationsMetierPageState extends State<FormationsMetierPage> {
         padding: const EdgeInsets.all(DsfrSpacings.s2w),
         children: [
           Semantics(
-            header: true,
+            headingLevel: 1,
             child: Text(
               widget.fiche.libelle,
               style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),

@@ -69,7 +69,7 @@ class _Contenu extends StatelessWidget {
           const SizedBox(height: DsfrSpacings.s2w),
         ],
         Semantics(
-          header: true,
+          headingLevel: 1,
           child: Text(fiche.libelle, style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context))),
         ),
         if (fiche.domaine case final domaine?) ...[

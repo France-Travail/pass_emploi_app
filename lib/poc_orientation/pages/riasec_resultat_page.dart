@@ -35,7 +35,7 @@ class _RiasecResultatPageState extends State<RiasecResultatPage> {
             ..._profilPlat(context)
           else ...[
             Semantics(
-              header: true,
+              headingLevel: 1,
               child: Text(
                 PocOrientationStrings.resultatProfil(
                   profil.dominants.map((type) => type.nom).toList(),
@@ -92,7 +92,7 @@ class _RiasecResultatPageState extends State<RiasecResultatPage> {
   List<Widget> _profilPlat(BuildContext context) {
     return [
       Semantics(
-        header: true,
+        headingLevel: 1,
         child: Text(
           PocOrientationStrings.resultatPlatTitre,
           style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context)),

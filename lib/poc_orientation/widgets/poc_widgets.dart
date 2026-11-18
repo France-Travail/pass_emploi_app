@@ -41,7 +41,7 @@ class PocSectionTitre extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      header: true,
+      headingLevel: 2,
       child: Text(texte, style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textTitleGrey(context))),
     );
   }

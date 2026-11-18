@@ -103,7 +103,7 @@ class _FiltresNiveauState extends State<_FiltresNiveau> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Semantics(
-                  header: true,
+                  headingLevel: 2,
                   child: Text(
                     PocOffresStrings.niveauEtudes,
                     style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context)),

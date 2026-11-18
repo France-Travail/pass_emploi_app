@@ -40,7 +40,7 @@ class _TestRiasecPageState extends State<TestRiasecPage> {
         const SizedBox(height: DsfrSpacings.s4w),
         Semantics(
           liveRegion: true,
-          header: true,
+          headingLevel: 1,
           child: Text(
             question.texte,
             style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
@@ -105,7 +105,7 @@ class _Accueil extends StatelessWidget {
       padding: const EdgeInsets.all(DsfrSpacings.s2w),
       children: [
         Semantics(
-          header: true,
+          headingLevel: 1,
           child: Text(
             PocOrientationStrings.testIntroTitre,
             style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context)),
