@@ -53,7 +53,7 @@ class ForceUpdatePage extends StatelessWidget {
                   surfaceTintColor: Colors.transparent,
                   backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
                   title: Semantics(
-                    header: true,
+                    headingLevel: 1,
                     child: Text(
                       Strings.updateTitle,
                       style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),

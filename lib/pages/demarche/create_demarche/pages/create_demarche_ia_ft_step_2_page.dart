@@ -250,7 +250,7 @@ class _ContentState extends State<_Content> {
                 const SizedBox(height: DsfrSpacings.s2w),
               ],
               Semantics(
-                header: true,
+                headingLevel: 2,
                 child: Text(
                   Strings.iaFtSuggestionsContent(suggestions.length),
                   style: DsfrTextStyle.bodyMdBold(

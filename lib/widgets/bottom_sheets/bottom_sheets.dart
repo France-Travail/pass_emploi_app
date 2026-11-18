@@ -34,7 +34,7 @@ class BottomSheetHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      header: true,
+      headingLevel: 1,
       child: Container(
         padding: padding ?? EdgeInsets.only(top: Margins.spacing_base),
         child: Row(

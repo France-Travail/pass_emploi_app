@@ -38,7 +38,7 @@ class CheckBoxGroupState<T extends CheckboxValueViewModel> extends State<CheckBo
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Semantics(
-          header: true,
+          headingLevel: 2,
           child: Text(
             widget.title,
             style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),

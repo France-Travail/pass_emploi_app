@@ -84,7 +84,7 @@ class _EmptyListPlaceholder extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Semantics(
-                  header: true,
+                  headingLevel: 2,
                   child: Text(
                     Strings.eventListEmpty,
                     style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),

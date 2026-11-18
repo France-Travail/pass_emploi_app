@@ -149,13 +149,13 @@ void main() {
 
     final titre = tester.getSemantics(find.text(Strings.rechercheRecentesTitle));
     expect(titre.label, Strings.rechercheRecentesTitle);
-    expect(titre.flagsCollection.isHeader, isTrue);
+    expect(titre.headingLevel, greaterThan(0));
     expect(titre.flagsCollection.isButton, isFalse);
 
     final suggestion = tester.getSemantics(find.text('Vendeur'));
     expect(suggestion.label, 'Vendeur');
     expect(suggestion.flagsCollection.isButton, isTrue);
-    expect(suggestion.flagsCollection.isHeader, isFalse);
+    expect(suggestion.headingLevel, 0);
 
     semantics.dispose();
   });

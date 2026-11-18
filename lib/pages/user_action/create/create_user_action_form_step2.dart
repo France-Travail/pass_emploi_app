@@ -47,7 +47,7 @@ class _CreateUserActionFormStep2State extends State<CreateUserActionFormStep2> {
             children: [
               const SizedBox(height: DsfrSpacings.s2w),
               Semantics(
-                header: true,
+                headingLevel: 3,
                 child: Text(
                   Strings.userActionSubtitleStep2,
                   style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),

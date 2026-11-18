@@ -66,7 +66,7 @@ class OnboardingPage extends StatelessWidget {
                       const SizedBox(height: DsfrSpacings.s3v),
                       AutoFocusA11y(
                         child: Semantics(
-                          header: true,
+                          headingLevel: 1,
                           child: Text(
                             Strings.onboardingTitle,
                             textAlign: TextAlign.center,
@@ -267,7 +267,7 @@ class _SkipOnboardingDialog extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Semantics(
-          header: true,
+          headingLevel: 1,
           child: Text(
             Strings.skipOnboarding,
             style: DsfrTextStyle.headline4(

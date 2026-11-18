@@ -10,7 +10,7 @@ class LargeSectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      header: true,
+      headingLevel: 2,
       child: Text(
         title,
         style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
@@ -27,7 +27,7 @@ class MediumSectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      header: true,
+      headingLevel: 2,
       child: Text(
         title,
         style: TextStyles.textMBold.copyWith(color: color ?? AppColorsSpecifics.primaryToLighten(context)),

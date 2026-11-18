@@ -34,7 +34,7 @@ class OnboardingQuestionnaireProgressCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Semantics(
-              header: true,
+              headingLevel: 2,
               child: Text(
                 Strings.inviteAccueilQuestionnaireTitle,
                 style: DsfrTextStyle.headline6(color: DsfrColorDecisions.textTitleGrey(context)),

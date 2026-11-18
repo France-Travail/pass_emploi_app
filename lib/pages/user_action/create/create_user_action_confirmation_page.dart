@@ -154,7 +154,7 @@ class _Body extends StatelessWidget {
                   // du header), puis le message et les boutons se lisent dans l'ordre.
                   AutoFocusA11y(
                     child: Semantics(
-                      header: true,
+                      headingLevel: 1,
                       child: Text(
                         Strings.userActionConfirmationTitle(viewModel.firstName),
                         // A11y 1.1 : l'emoji « 🎉 » est décoratif.

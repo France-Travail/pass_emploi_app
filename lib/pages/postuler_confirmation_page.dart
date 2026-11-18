@@ -48,7 +48,7 @@ class PostulerConfirmationPage extends StatelessWidget {
                             const SuccessIllustration(size: 160),
                             const SizedBox(height: DsfrSpacings.s3w),
                             Semantics(
-                              header: true,
+                              headingLevel: 2,
                               child: Text(
                                 Strings.offreSuivieConfirmationPageTitle,
                                 textAlign: TextAlign.center,

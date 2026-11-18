@@ -140,7 +140,7 @@ class _Title extends StatelessWidget {
   Widget build(BuildContext context) {
     return AutoFocusA11y(
       child: Semantics(
-        header: true,
+        headingLevel: 1,
         child: Text(
           Strings.chatPieceJointeBottomSheetTitle,
           style: DsfrTextStyle.headline4(

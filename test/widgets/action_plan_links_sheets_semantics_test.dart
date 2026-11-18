@@ -365,10 +365,9 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: Scaffold(body: ActionPlanFeedbackBottomSheet())));
     await tester.pump(const Duration(milliseconds: 200));
 
-    expect(
-      tester.getSemantics(find.text(Strings.actionPlanFeedbackTitle)),
-      isSemantics(label: Strings.actionPlanFeedbackTitle, isHeader: true),
-    );
+    final titre = tester.getSemantics(find.text(Strings.actionPlanFeedbackTitle));
+    expect(titre, isSemantics(label: Strings.actionPlanFeedbackTitle));
+    expect(titre.headingLevel, greaterThan(0));
     handle.dispose();
   });
 

@@ -301,7 +301,7 @@ class _InviteActionPlanActionTileState extends State<InviteActionPlanActionTile>
               // A11y : le titre est un en-tête et reçoit le focus du lecteur d'écran à l'ouverture.
               AutoFocusA11y(
                 child: Semantics(
-                  header: true,
+                  headingLevel: 1,
                   child: Text(
                     Strings.inviteAccueilDeleteConfirmTitle,
                     style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
@@ -654,7 +654,7 @@ class InviteObjectiveFeedback extends StatelessWidget {
               children: [
                 // A11y 7.1 : titre du bloc de retour sur les actions.
                 Semantics(
-                  header: true,
+                  headingLevel: 3,
                   child: Text(
                     Strings.inviteAccueilObjectiveFeedbackTitle,
                     style: titleStyle,

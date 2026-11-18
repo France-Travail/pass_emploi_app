@@ -25,7 +25,7 @@ class MultilineAppBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Semantics(
-                  header: true,
+                  headingLevel: 1,
                   child: Text(
                     title!,
                     style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),

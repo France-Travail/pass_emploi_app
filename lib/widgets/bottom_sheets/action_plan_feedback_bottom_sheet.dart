@@ -35,7 +35,7 @@ class ActionPlanFeedbackBottomSheet extends StatelessWidget {
             // A11y 7.1 / 10.2 : titre de la feuille, en-tête, qui reçoit le focus à l'ouverture.
             AutoFocusA11y(
               child: Semantics(
-                header: true,
+                headingLevel: 1,
                 child: Text(
                   Strings.actionPlanFeedbackTitle,
                   style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textTitleGrey(context)),

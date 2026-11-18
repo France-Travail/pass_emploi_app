@@ -11,7 +11,7 @@ class TitleTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      header: true,
+      headingLevel: 2,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: Margins.spacing_l),
         title: Text(title, style: TextStyles.textBaseBold.copyWith(color: context.content)),

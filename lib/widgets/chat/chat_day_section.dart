@@ -13,7 +13,7 @@ class ChatDaySection extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s1v),
       child: Center(
         child: Semantics(
-          header: true,
+          headingLevel: 2,
           child: Text(
             dayLabel,
             style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textMentionGrey(context)),

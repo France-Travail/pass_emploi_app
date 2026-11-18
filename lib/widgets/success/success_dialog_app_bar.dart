@@ -54,7 +54,7 @@ class _SuccessDialogAppBarState extends State<SuccessDialogAppBar> {
       backgroundColor: backgroundColor,
       iconTheme: IconThemeData(color: titleColor),
       title: Semantics(
-        header: true,
+        headingLevel: 1,
         child: Tooltip(
           message: title,
           excludeFromSemantics: true,

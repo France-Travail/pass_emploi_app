@@ -495,7 +495,7 @@ class _SemaineSectionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Focus(
       child: Semantics(
-        header: true,
+        headingLevel: 2,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: DsfrSpacings.s1w),
           child: Column(

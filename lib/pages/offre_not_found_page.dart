@@ -25,7 +25,7 @@ class OffreNotFoundPage extends StatelessWidget {
           backgroundColor: DsfrColorDecisions.backgroundDefaultGrey(context),
           iconTheme: IconThemeData(color: DsfrColorDecisions.textTitleGrey(context)),
           title: Semantics(
-            header: true,
+            headingLevel: 1,
             child: Tooltip(
               message: Strings.offreNotFoundTitle,
               excludeFromSemantics: true,

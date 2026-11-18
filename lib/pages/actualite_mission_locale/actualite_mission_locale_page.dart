@@ -128,7 +128,7 @@ class _Empty extends StatelessWidget {
             ),
           ),
           Semantics(
-            header: true,
+            headingLevel: 2,
             child: Text(
               Strings.actualiteMissionLocaleEmptyTitle,
               style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
@@ -176,7 +176,7 @@ class _ActualiteItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Semantics(
-                      header: true,
+                      headingLevel: 2,
                       child: Text(
                         actualite.titre,
                         style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
@@ -246,7 +246,7 @@ class _ExternalUrlAlertDialog extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Semantics(
-          header: true,
+          headingLevel: 1,
           child: Text(
             Strings.externalUrlAlertTitle,
             style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),

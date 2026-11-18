@@ -36,7 +36,7 @@ class DsfrEmptyState extends StatelessWidget {
         Center(child: _illustration(illustrationAsset ?? Drawables.illustrationRechercheEmpty, illustrationWidth)),
         const SizedBox(height: DsfrSpacings.s3w),
         Semantics(
-          header: true,
+          headingLevel: 2,
           child: Text(
             title,
             textAlign: TextAlign.center,

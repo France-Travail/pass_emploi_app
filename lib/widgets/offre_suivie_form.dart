@@ -172,7 +172,7 @@ class _Content extends StatelessWidget {
         ],
         // A11y 7.1 : titre du bloc de suivi de l'offre.
         Semantics(
-          header: true,
+          headingLevel: 2,
           child: Text(
             Strings.ouEnEtesVous,
             style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),

@@ -293,7 +293,7 @@ class _FiltreDebutantState extends State<_FiltreDebutant> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Semantics(
-          header: true,
+          headingLevel: 2,
           child: Text(
             Strings.experienceSectionTitle,
             style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context)),

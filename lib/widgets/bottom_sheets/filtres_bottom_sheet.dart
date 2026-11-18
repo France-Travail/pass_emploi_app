@@ -42,7 +42,7 @@ class FiltresBottomSheet extends StatelessWidget {
                 ),
                 const SizedBox(height: DsfrSpacings.s1w),
                 Semantics(
-                  header: true,
+                  headingLevel: 1,
                   child: Text(
                     title,
                     style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),

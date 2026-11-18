@@ -241,7 +241,7 @@ class _LogoutConfirmation extends StatelessWidget {
         // A11y : le titre est un en-tête et reçoit le focus du lecteur d'écran à l'ouverture.
         AutoFocusA11y(
           child: Semantics(
-            header: true,
+            headingLevel: 1,
             child: Text(
               Strings.onboardingQuestionnaireLogoutTitle,
               style: DsfrTextStyle.headline4(
@@ -324,7 +324,7 @@ class _QuestionnaireBodyState extends State<_QuestionnaireBody> {
         duration: AnimationDurations.slow,
         // A11y 10.2.3 : « Étape X sur Y, titre » restitué en un seul en-tête.
         child: Semantics(
-          header: true,
+          headingLevel: 1,
           label: Strings.onboardingQuestionnaireStepA11y(
             form.stepNumber,
             form.stepsCount,

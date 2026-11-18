@@ -25,8 +25,8 @@ extension FocusNodeA11yExt on FocusNode {
 
 /// Déplace le focus du lecteur d'écran sur [child] à son affichage.
 ///
-/// Crée un nœud sémantique dédié (`container`) : à placer AU-DESSUS d'un `Semantics(header: true)`,
-/// jamais en dessous, sinon le texte est isolé dans ce nœud et perd son rôle d'en-tête.
+/// Crée un nœud sémantique dédié (`container`) : à placer AU-DESSUS d'un `Semantics(headingLevel: …)`,
+/// jamais en dessous, sinon le texte est isolé dans ce nœud et perd son rôle de titre.
 class AutoFocusA11y extends StatefulWidget {
   final Widget child;
   final bool enabled;

@@ -136,7 +136,7 @@ class _RecentSearches<Result> extends StatelessWidget {
                   Expanded(
                     // A11y 7.1 : titre de section déclaré comme titre
                     child: Semantics(
-                      header: true,
+                      headingLevel: 2,
                       child: Text(
                         Strings.rechercheRecentesTitle,
                         style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),

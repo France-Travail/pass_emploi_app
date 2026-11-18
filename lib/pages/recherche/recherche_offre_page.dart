@@ -302,7 +302,7 @@ class _PageTitle extends StatelessWidget {
       ),
       child: AutoFocusA11y(
         child: Semantics(
-          header: true,
+          headingLevel: 1,
           child: Text(
             title,
             style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),

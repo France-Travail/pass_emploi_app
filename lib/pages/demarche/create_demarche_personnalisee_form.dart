@@ -110,7 +110,7 @@ class _BodyState extends State<_Body> {
         children: [
           const SizedBox(height: DsfrSpacings.s2w),
           Semantics(
-            header: true,
+            headingLevel: 2,
             child: Text(
               Strings.createDemarcheAppBarTitle,
               style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),

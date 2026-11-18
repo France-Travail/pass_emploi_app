@@ -100,7 +100,7 @@ class _ActionPlanDeclarationBottomSheetState extends State<ActionPlanDeclaration
         // A11y 7.1 / 10.2 : titre de la feuille, en-tête, qui reçoit le focus à l'ouverture.
         AutoFocusA11y(
           child: Semantics(
-            header: true,
+            headingLevel: 1,
             child: Text(
               viewModel.titre,
               style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textTitleGrey(context)),
@@ -177,7 +177,7 @@ class _Succes extends StatelessWidget {
         const SizedBox(height: DsfrSpacings.s3v),
         // A11y 7.1 : « Bravo, Léa ! » est le titre de la confirmation.
         Semantics(
-          header: true,
+          headingLevel: 1,
           child: Text(
             Strings.userActionConfirmationTitle(viewModel.prenom),
             // A11y 1.1 : l'emoji « 🎉 » est décoratif.

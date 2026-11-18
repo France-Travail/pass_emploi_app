@@ -56,7 +56,7 @@ void main() {
       final semantics = tester.ensureSemantics();
       await pump(tester);
 
-      expect(tester.getSemantics(find.text(Strings.warning)), isSemantics(isHeader: true));
+      expect(tester.getSemantics(find.text(Strings.warning)).headingLevel, greaterThan(0));
       semantics.dispose();
     });
   });

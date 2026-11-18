@@ -43,7 +43,7 @@ class ChatMessageBottomSheet extends StatelessWidget {
               children: [
                 AutoFocusA11y(
                   child: Semantics(
-                    header: true,
+                    headingLevel: 1,
                     child: Text(
                       Strings.chatMessageBottomSheetTitle,
                       style: DsfrTextStyle.headline4(

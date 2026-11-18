@@ -194,7 +194,7 @@ class _Header extends StatelessWidget {
       children: [
         if (viewModel.title != null)
           Semantics(
-            header: true,
+            headingLevel: 1,
             child: Text(
               viewModel.title!,
               style: DsfrTextStyle.headline5(
@@ -408,7 +408,7 @@ class _AnimateurPart extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Semantics(
-          header: true,
+          headingLevel: 2,
           child: Text(
             Strings.withAnimateurTitle,
             style: DsfrTextStyle.bodyMdBold(
@@ -468,7 +468,7 @@ class _ConseillerPart extends StatelessWidget {
         if (_withSepLine()) _Separator(),
         if (viewModel.commentTitle != null)
           Semantics(
-            header: true,
+            headingLevel: 2,
             child: Text(
               viewModel.commentTitle!,
               style: DsfrTextStyle.bodyMdBold(
@@ -510,7 +510,7 @@ class _InformIfAbsent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Semantics(
-          header: true,
+          headingLevel: 2,
           child: Text(
             Strings.cannotGoToRendezvous,
             style: DsfrTextStyle.headline6(

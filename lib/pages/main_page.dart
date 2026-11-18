@@ -306,7 +306,7 @@ class _PopUpActualisationPe extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Semantics(
-          header: true,
+          headingLevel: 1,
           child: Text(
             Strings.actualisationPePopUpTitle,
             style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
