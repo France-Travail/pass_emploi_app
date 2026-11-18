@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:pass_emploi_app/poc_orientation/mes_pistes.dart';
 import 'package:pass_emploi_app/poc_orientation/pages/centres_interet_page.dart';
 import 'package:pass_emploi_app/poc_orientation/pages/test_riasec_page.dart';
 import 'package:pass_emploi_app/poc_orientation/poc_orientation_strings.dart';
@@ -22,6 +23,13 @@ class RiasecResultatPage extends StatefulWidget {
 class _RiasecResultatPageState extends State<RiasecResultatPage> {
   late Future<List<RomeMetierResume>> _metiers = RomeApiClient.instance.metiersAvecRiasec();
   String? _domaine;
+
+  @override
+  void initState() {
+    super.initState();
+    // Le résultat est gardé avec les pistes : le jeune le retrouve, et peut le partager à son conseiller.
+    MesPistes.instance.enregistrerProfilRiasec(widget.profil.scores);
+  }
 
   @override
   Widget build(BuildContext context) {

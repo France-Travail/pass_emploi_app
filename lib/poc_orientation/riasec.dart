@@ -87,6 +87,12 @@ class RiasecProfil {
       final type = riasecQuestions[i].type;
       scores[type] = scores[type]! + (reponses[i]?.points ?? 0);
     }
+    return RiasecProfil.depuisScores(scores);
+  }
+
+  // Pour retrouver le résultat du test gardé sur le téléphone.
+  factory RiasecProfil.depuisScores(Map<Riasec, int> scoresGardes) {
+    final scores = {for (final type in Riasec.values) type: scoresGardes[type] ?? 0};
     final ordre = [...Riasec.values]
       ..sort((a, b) {
         final ecart = scores[b]!.compareTo(scores[a]!);

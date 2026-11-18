@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:pass_emploi_app/poc_orientation/mes_pistes.dart';
 import 'package:pass_emploi_app/poc_orientation/pages/fiche_metier_page.dart';
 import 'package:pass_emploi_app/poc_orientation/poc_orientation_strings.dart';
 import 'package:pass_emploi_app/poc_orientation/rome_models.dart';
@@ -185,16 +186,30 @@ class _PocListeMetiersState extends State<PocListeMetiers> {
 }
 
 class PocMetierTuile extends StatelessWidget {
-  const PocMetierTuile({super.key, required this.metier, this.detail});
+  const PocMetierTuile({super.key, required this.metier, this.detail, this.avecStatut = true});
 
   final RomeMetierResume metier;
   final String? detail;
+  final bool avecStatut;
 
   @override
   Widget build(BuildContext context) {
+    return ValueListenableBuilder<MesPistesEtat>(
+      valueListenable: MesPistes.instance,
+      builder: (context, etat, _) => _tuile(context, avecStatut ? etat.piste(metier.code)?.avis : null),
+    );
+  }
+
+  // Dans les listes, le jeune voit d'un coup d'œil les métiers qu'il a déjà triés.
+  Widget _tuile(BuildContext context, AvisMetier? avis) {
+    final statut = switch (avis) {
+      AvisMetier.meTente => PocOrientationStrings.pisteDansMesPistes,
+      AvisMetier.pasPourMoi => PocOrientationStrings.pisteMiseDeCote,
+      null => null,
+    };
     return Semantics(
       button: true,
-      label: [metier.libelle, ?detail].join('. '),
+      label: [metier.libelle, ?statut, ?detail].join('. '),
       excludeSemantics: true,
       onTap: () => _ouvrir(context),
       child: Material(
@@ -217,6 +232,16 @@ class PocMetierTuile extends StatelessWidget {
                           metier.libelle,
                           style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleBlueFrance(context)),
                         ),
+                        if (statut != null) ...[
+                          const SizedBox(height: DsfrSpacings.s1v),
+                          DsfrBadge(
+                            label: statut,
+                            type: avis == AvisMetier.meTente ? DsfrBadgeType.success : DsfrBadgeType.custom,
+                            backgroundCustomColor: DsfrColorDecisions.backgroundContrastGrey(context),
+                            textCustomColor: DsfrColorDecisions.textMentionGrey(context),
+                            size: DsfrComponentSize.sm,
+                          ),
+                        ],
                         if (detail != null) ...[
                           const SizedBox(height: DsfrSpacings.s1v),
                           Text(detail!, style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textMentionGrey(context))),

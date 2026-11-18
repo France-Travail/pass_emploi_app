@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:pass_emploi_app/poc_orientation/mes_pistes.dart';
 import 'package:pass_emploi_app/poc_orientation/pages/metiers_liste_page.dart';
 import 'package:pass_emploi_app/poc_orientation/poc_orientation_strings.dart';
 import 'package:pass_emploi_app/poc_orientation/rome_api_client.dart';
@@ -85,6 +86,7 @@ class _CentresInteretPageState extends State<CentresInteretPage> {
 
   void _voirMetiers() {
     final centres = [..._selection];
+    MesPistes.instance.enregistrerCentresInteret(centres.map((centre) => centre.libelle).toList());
     Navigator.push(
       context,
       MetiersListePage.route(

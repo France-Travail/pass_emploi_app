@@ -13,6 +13,8 @@ import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/brand.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/user.dart';
+import 'package:pass_emploi_app/poc_orientation/mes_pistes.dart';
+import 'package:pass_emploi_app/poc_orientation/partage_conseiller.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:redux/redux.dart';
@@ -60,6 +62,8 @@ class LoginMiddleware extends MiddlewareClass<AppState> {
     if (mode.isDemo()) {
       _modeDemoRepository.setModeDemo(true);
       ModeDemoPlanAction.instance.start(missionLocale: mode == LoginMode.DEMO_MILO);
+      MesPistes.instance.demarrerDemo();
+      PocMessagesDemo.vider();
       final user = _modeDemoUser(mode);
       store.dispatch(LoginSuccessAction(user));
       _matomoTracker.setOptOut(optOut: true);

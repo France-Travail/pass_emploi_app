@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
-import 'package:pass_emploi_app/poc_orientation/mes_metiers.dart';
-import 'package:pass_emploi_app/poc_orientation/pages/formations_metier_page.dart';
 import 'package:pass_emploi_app/poc_orientation/poc_orientation_strings.dart';
 import 'package:pass_emploi_app/poc_orientation/poc_passerelles.dart';
 import 'package:pass_emploi_app/poc_orientation/riasec.dart';
 import 'package:pass_emploi_app/poc_orientation/rome_api_client.dart';
 import 'package:pass_emploi_app/poc_orientation/rome_models.dart';
+import 'package:pass_emploi_app/poc_orientation/widgets/piste_widgets.dart';
 import 'package:pass_emploi_app/poc_orientation/widgets/poc_widgets.dart';
 
 class FicheMetierPage extends StatefulWidget {
@@ -22,6 +21,12 @@ class FicheMetierPage extends StatefulWidget {
 
 class _FicheMetierPageState extends State<FicheMetierPage> {
   late Future<RomeFicheMetier> _fiche = RomeApiClient.instance.ficheMetier(widget.metier.code);
+
+  @override
+  void initState() {
+    super.initState();
+    ouvrirMesPistes(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +82,7 @@ class _Contenu extends StatelessWidget {
           Text(domaine, style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textMentionGrey(context))),
         ],
         const SizedBox(height: DsfrSpacings.s2w),
-        Align(alignment: Alignment.centerLeft, child: _BoutonMesMetiers(fiche: fiche)),
+        AvisSurLeMetier(fiche: fiche),
         if (fiche.enBref case final enBref? when !_enBrefAnnonceLaListe) ...[
           const SizedBox(height: DsfrSpacings.s3w),
           PocSectionTitre(PocOrientationStrings.ficheEnBref),
@@ -127,7 +132,7 @@ class _Contenu extends StatelessWidget {
           Text(fiche.appellations.join(' · '), style: texte),
         ],
         const SizedBox(height: DsfrSpacings.s4w),
-        _EtMaintenant(fiche: fiche),
+        AvancerSurLeMetier(fiche: fiche),
         const SizedBox(height: DsfrSpacings.s3w),
         PocMention(PocOrientationStrings.ficheSource(fiche.code)),
       ],
@@ -154,94 +159,5 @@ class _Contenu extends StatelessWidget {
         .toList();
     if (types.isEmpty) return null;
     return '${types.map((type) => type.lettre).join(' + ')} : ${types.map((type) => type.nom).join(' et ')}';
-  }
-}
-
-class _BoutonMesMetiers extends StatelessWidget {
-  const _BoutonMesMetiers({required this.fiche});
-
-  final RomeFicheMetier fiche;
-
-  @override
-  Widget build(BuildContext context) {
-    return ValueListenableBuilder<List<RomeMetierResume>>(
-      valueListenable: MesMetiers.instance,
-      builder: (context, _, _) {
-        final retenu = MesMetiers.instance.contient(fiche.code);
-        return DsfrButton(
-          label: retenu ? PocOrientationStrings.ficheRetirer : PocOrientationStrings.ficheAjouter,
-          icon: retenu ? DsfrIcons.businessBookmarkFill : DsfrIcons.businessBookmarkLine,
-          variant: DsfrButtonVariant.tertiary,
-          size: DsfrComponentSize.md,
-          onPressed: () => MesMetiers.instance.basculer(fiche.resume),
-        );
-      },
-    );
-  }
-}
-
-class _EtMaintenant extends StatelessWidget {
-  const _EtMaintenant({required this.fiche});
-
-  final RomeFicheMetier fiche;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        PocSectionTitre(PocOrientationStrings.ficheEtMaintenant),
-        const SizedBox(height: DsfrSpacings.s2w),
-        DsfrButton(
-          label: PocOrientationStrings.ficheVoirOffres,
-          icon: DsfrIcons.businessBriefcaseLine,
-          variant: DsfrButtonVariant.primary,
-          size: DsfrComponentSize.lg,
-          onPressed: () => ouvrirRechercheOffres(context, fiche, alternance: false),
-        ),
-        const SizedBox(height: DsfrSpacings.s2w),
-        DsfrButton(
-          label: PocOrientationStrings.ficheImmersion,
-          icon: DsfrIcons.mapMapPin2Line,
-          variant: DsfrButtonVariant.secondary,
-          size: DsfrComponentSize.lg,
-          onPressed: () => ouvrirRechercheImmersion(context, fiche),
-        ),
-        if (peutChercherAlternance(context)) ...[
-          const SizedBox(height: DsfrSpacings.s2w),
-          DsfrButton(
-            label: PocOrientationStrings.ficheAlternance,
-            variant: DsfrButtonVariant.secondary,
-            size: DsfrComponentSize.lg,
-            onPressed: () => ouvrirRechercheOffres(context, fiche, alternance: true),
-          ),
-        ],
-        const SizedBox(height: DsfrSpacings.s4w),
-        PocSectionTitre(PocOrientationStrings.ficheSeFormer),
-        const SizedBox(height: DsfrSpacings.s2w),
-        DsfrButton(
-          label: PocOrientationStrings.ficheVoirFormations,
-          icon: DsfrIcons.documentBook2Line,
-          variant: DsfrButtonVariant.secondary,
-          size: DsfrComponentSize.lg,
-          onPressed: () => Navigator.push(context, FormationsMetierPage.route(fiche)),
-        ),
-        const SizedBox(height: DsfrSpacings.s3w),
-        Text(
-          PocOrientationStrings.ficheAutresSources,
-          style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
-        ),
-        const SizedBox(height: DsfrSpacings.s1w),
-        PocLienExterne(
-          label: PocOrientationStrings.ficheFormationAlternance,
-          onTap: () => ouvrirFormationsAlternance(fiche),
-        ),
-        PocLienExterne(
-          label: PocOrientationStrings.ficheFormationContinue,
-          onTap: () => ouvrirFormationsFranceTravail(fiche),
-        ),
-        PocLienExterne(label: PocOrientationStrings.ficheFormationInitiale, onTap: ouvrirFormationsOnisep),
-      ],
-    );
   }
 }
