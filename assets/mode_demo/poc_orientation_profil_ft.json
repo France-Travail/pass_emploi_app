@@ -1,0 +1,11 @@
+{
+  "commentaire": "Profil France Travail fictif de Paul (démo du POC) : en vrai, API « Expériences professionnelles » de France Travail Connect, avec l'accord du jeune.",
+  "experiences": [
+    {
+      "intitule": "Équipier polyvalent en restauration rapide",
+      "codeRome": "G1603",
+      "libelleRome": "Equipier polyvalent / Equipière polyvalente de restauration rapide",
+      "dureeMois": 8
+    }
+  ]
+}

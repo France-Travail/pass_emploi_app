@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_questionnaire_state.dart';
+import 'package:pass_emploi_app/poc_orientation/conseils_freins.dart';
 import 'package:pass_emploi_app/poc_orientation/mes_pistes.dart';
 import 'package:pass_emploi_app/poc_orientation/pages/formations_metier_page.dart';
 import 'package:pass_emploi_app/poc_orientation/poc_orientation_strings.dart';
 import 'package:pass_emploi_app/poc_orientation/poc_passerelles.dart';
 import 'package:pass_emploi_app/poc_orientation/rome_models.dart';
 import 'package:pass_emploi_app/poc_orientation/widgets/poc_widgets.dart';
+import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_tuile_card.dart';
@@ -266,6 +270,9 @@ class AvancerSurLeMetier extends StatelessWidget {
       builder: (context, etat, _) {
         final piste = etat.piste(fiche.code);
         final suivie = piste != null && piste.avis == AvisMetier.meTente ? piste : null;
+        final questionnaire = StoreProvider.of<AppState>(context).state.onboardingQuestionnaireState;
+        final reponses = questionnaire is OnboardingQuestionnaireSuccessState ? questionnaire.answers : null;
+        final sansDiplome = accessibleSansDiplome(fiche);
         final texte = DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context));
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -281,6 +288,7 @@ class AvancerSurLeMetier extends StatelessWidget {
             for (final etape in EtapePiste.values) ...[
               const SizedBox(height: DsfrSpacings.s3w),
               _EtapeTitre(PocOrientationStrings.etapeTitre(etape)),
+              for (final conseil in conseilsPourEtape(etape, reponses, sansDiplome: sansDiplome)) _Conseil(conseil),
               for (final action in ActionPiste.values.where((action) => action.etape == etape)) ...[
                 if (action != ActionPiste.lireFiche) ...[
                   const SizedBox(height: DsfrSpacings.s2w),
@@ -331,6 +339,43 @@ class AvancerSurLeMetier extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+// Conseil tiré des freins du questionnaire, sous l'étape où il sert.
+class _Conseil extends StatelessWidget {
+  const _Conseil(this.texte);
+
+  final String texte;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: DsfrSpacings.s2w),
+      child: Semantics(
+        label: PocOrientationStrings.conseilPourLecteur(texte),
+        excludeSemantics: true,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: DsfrColorDecisions.backgroundContrastInfo(context),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(DsfrSpacings.s2w),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(DsfrIcons.othersLightbulbLine, size: 20, color: DsfrColorDecisions.textActionHighBlueFrance(context)),
+                const SizedBox(width: DsfrSpacings.s1w),
+                Expanded(
+                  child: Text(texte, style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context))),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

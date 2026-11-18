@@ -1,3 +1,4 @@
+import 'package:pass_emploi_app/poc_orientation/marche_travail.dart';
 import 'package:pass_emploi_app/poc_orientation/mes_pistes.dart';
 
 class PocOrientationStrings {
@@ -218,4 +219,71 @@ class PocOrientationStrings {
   static String formationsNonPublie = "Résultats non publiés : trop peu d’élèves";
   static String formationsSource(String annee) =>
       "Source : InserJeunes (ministère de l’Éducation nationale et Dares), sortants $annee. Formations trouvées par mots-clés du métier : à vérifier.";
+
+  static String pistesPourToiTitre = "Des pistes pour toi";
+  static String pistesPourToiIntro = "D’après ce que tu as déjà fait dans l’app. Dis-nous ce qui te tente.";
+  static String pistesPourToiVoirPlus(int nombre) => nombre > 1 ? "Voir les $nombre autres pistes" : "Voir l’autre piste";
+  static String pistesPourToiVoirMoins = "Voir moins de pistes";
+  static String pistesProchesTitre = "Des métiers proches de tes pistes";
+  static String caRecrute = "Ça recrute près de chez toi";
+  static String hubPasEncoreQuestionnaire =
+      "C’est ce que tu as répondu au questionnaire : commence par le test ou par tes centres d’intérêt.";
+
+  static String raisonConseiller = "Ton conseiller te le suggère";
+  static String raisonFranceTravail = "Tu l’as indiqué à France Travail";
+  static String raisonParcoursDetail(String intitule, int? mois) => mois == null ? intitule : "$intitule, $mois mois";
+  static String raisonParcours(String detail) => "Ton parcours France Travail : $detail";
+  static String raisonQuestionnaire(String domaine) => "Tu as écrit « $domaine » dans ton questionnaire";
+  static String raisonFavori(int nombre) => nombre > 1 ? "Tu as mis $nombre offres en favori" : "Tu as mis une offre en favori";
+  static String raisonRecherche(int nombre) =>
+      nombre > 1 ? "Tu as enregistré $nombre recherches" : "Tu as enregistré une recherche";
+  static String raisonDiagoriente = "Tu l’avais aimé sur Diagoriente";
+  static String raisonProche(String metiers) => "Proche de « $metiers », qui te tente";
+
+  static String presTitre = "Près de chez toi";
+  static String presTerritoire(String ville, String territoire) => "Autour de $ville ($territoire)";
+  static String presOffres(String nombre) => "$nombre offres d’emploi en un an";
+  static String presDemandeurs(String nombre) => "$nombre demandeurs d’emploi cherchent ce métier";
+  static String presCdi(int pourcentage) => "$pourcentage % des embauches se font en CDI";
+  static String presSalaire(String min, String max) => "Salaire proposé : souvent entre $min € et $max € brut par mois";
+  static String presAcces(int pourcentage) =>
+      "$pourcentage % des demandeurs d’emploi de ce métier retrouvent un emploi en moins de 6 mois";
+  static String presDifficulte(DifficulteRecrutement difficulte) => switch (difficulte) {
+        DifficulteRecrutement.tresFaible ||
+        DifficulteRecrutement.faible =>
+          "Les entreprises trouvent facilement des candidats : il faudra te démarquer.",
+        DifficulteRecrutement.moyenne => "Les entreprises ont parfois du mal à recruter.",
+        DifficulteRecrutement.elevee ||
+        DifficulteRecrutement.tresElevee =>
+          "Les entreprises ont du mal à recruter : c’est une vraie opportunité.",
+      };
+  static String presOrigines(List<String> origines) =>
+      "Surtout à cause ${origines.map(_origineLisible).join(" et ")}.";
+  static String _origineLisible(String origine) => switch (origine) {
+        "Conditions de travail" => "des conditions de travail",
+        "Lien formation - métier" => "de la formation demandée",
+        "Intensité d'embauche" => "des nombreux postes à pourvoir",
+        "Manque de main d'oeuvre" => "du manque de candidats",
+        "Attractivité Salariale" => "des salaires",
+        "Inadéquation géographique" => "de la distance entre les emplois et les candidats",
+        "Durabilité de l'emploi" => "des contrats souvent courts",
+        _ => "de : ${origine.toLowerCase()}",
+      };
+  static String presVoirDataEmploi = "Voir tous les chiffres sur Data Emploi";
+  static String presSansChiffres = "Regarde si ce métier recrute près de chez toi, avec les chiffres de France Travail.";
+  static String presSource(String periode, String territoire) =>
+      "Source : France Travail, Data Emploi (offres et demandeurs : $periode), $territoire.";
+  static String presDemo = "Démo : chiffres relevés sur Data Emploi le 18/11/2026.";
+
+  static String conseilPourLecteur(String conseil) => "Conseil : $conseil";
+  static String conseilSante = "Pense à ta santé : regarde bien les conditions de travail plus haut, et parles-en à ton conseiller.";
+  static String conseilTransport(String? ville, int rayonKm) => ville == null
+      ? "Sans permis ou sans voiture : cherche une immersion près de chez toi, proche des transports en commun."
+      : "Sans permis ou sans voiture : cherche une immersion à moins de $rayonKm km de $ville, proche des transports en commun.";
+  static String conseilExperience = "Une immersion compte comme une première expérience sur ton CV.";
+  static String conseilConfiance = "Un échange avec un pro, c’est sans engagement : tu peux poser toutes tes questions.";
+  static String conseilFinDeMois = "En alternance, tu es payé pendant ta formation.";
+  static String conseilSansDiplome = "Bonne nouvelle : ce métier est accessible sans diplôme.";
+  static String conseilFormationCourte =
+      "Pas de diplôme ? Des formations courtes existent, comme le CAP en 1 ou 2 ans, souvent en alternance.";
 }

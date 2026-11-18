@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pass_emploi_app/features/mode_demo/mode_demo_offline.dart';
+import 'package:pass_emploi_app/poc_orientation/contexte_jeune.dart';
 import 'package:pass_emploi_app/poc_orientation/mes_pistes.dart';
 import 'package:pass_emploi_app/poc_orientation/pages/centres_interet_page.dart';
 import 'package:pass_emploi_app/poc_orientation/pages/fiche_metier_page.dart';
@@ -11,6 +12,7 @@ import 'package:pass_emploi_app/poc_orientation/partage_conseiller.dart';
 import 'package:pass_emploi_app/poc_orientation/poc_orientation_strings.dart';
 import 'package:pass_emploi_app/poc_orientation/poc_passerelles.dart';
 import 'package:pass_emploi_app/poc_orientation/rome_models.dart';
+import 'package:pass_emploi_app/poc_orientation/widgets/pistes_pour_toi_widgets.dart';
 import 'package:pass_emploi_app/poc_orientation/widgets/poc_widgets.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_tuile_card.dart';
@@ -62,6 +64,7 @@ class _ExplorerMetiersPageState extends State<ExplorerMetiersPage> {
                 const SizedBox(height: DsfrSpacings.s4w),
                 _MesPistes(etat: etat),
               ],
+              const PistesPourToi(),
               const SizedBox(height: DsfrSpacings.s4w),
               PocSectionTitre(PocOrientationStrings.hubMetierEnTete),
               const SizedBox(height: DsfrSpacings.s2w),
@@ -87,6 +90,13 @@ class _ExplorerMetiersPageState extends State<ExplorerMetiersPage> {
               const SizedBox(height: DsfrSpacings.s4w),
               PocSectionTitre(PocOrientationStrings.hubPasEncore),
               const SizedBox(height: DsfrSpacings.s2w),
+              if (_aReponduNePasSavoir(context)) ...[
+                Text(
+                  PocOrientationStrings.hubPasEncoreQuestionnaire,
+                  style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textMentionGrey(context)),
+                ),
+                const SizedBox(height: DsfrSpacings.s2w),
+              ],
               if (profil != null && !profil.estPlat) ...[
                 DsfrTuileCard(
                   leading: const DsfrTuileCardIcon(icon: DsfrIcons.userUserLine),
@@ -121,6 +131,11 @@ class _ExplorerMetiersPageState extends State<ExplorerMetiersPage> {
       ),
     );
   }
+}
+
+// Le jeune a répondu « Je ne sais pas encore » au métier du questionnaire : on lui montre par où commencer.
+bool _aReponduNePasSavoir(BuildContext context) {
+  return ContexteJeune.depuis(StoreProvider.of<AppState>(context).state).neSaitPasEncore;
 }
 
 class _MesPistes extends StatelessWidget {

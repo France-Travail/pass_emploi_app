@@ -1,0 +1,41 @@
+{
+  "releve": "Chiffres relevés le 18/11/2026 sur Data Emploi (France Travail), pour la démo du POC.",
+  "territoire": {
+    "type": "EPCI",
+    "code": "200093201",
+    "nom": "Métropole européenne de Lille",
+    "codeInseeVille": "59350",
+    "ville": "Lille"
+  },
+  "periodes": {
+    "offres": "T2 2026",
+    "embauches": "T3 2025",
+    "accesEmploi": "T1 2026",
+    "difficulte": "2025"
+  },
+  "metiers": {
+    "D1102": {"offres12Mois": 560, "demandeurs": 450, "salaire": [1802, 2100], "embauchesTrimestre": 80, "partCdi": 54, "accesEmploi6Mois": 30, "difficulte": "Moyenne", "origines": {"Conditions de travail": 100, "Durabilité de l'emploi": 10, "Inadéquation géographique": 50, "Intensité d'embauche": 75, "Lien formation - métier": 100, "Manque de main d'oeuvre": 50, "Attractivité Salariale": 50}},
+    "D1507": {"offres12Mois": 1390, "demandeurs": 5390, "salaire": [1802, 1932], "embauchesTrimestre": 920, "partCdi": 22, "accesEmploi6Mois": 28, "difficulte": "Très faible", "origines": {"Conditions de travail": 100, "Durabilité de l'emploi": 25, "Inadéquation géographique": 50, "Intensité d'embauche": 100, "Lien formation - métier": 25, "Manque de main d'oeuvre": 10, "Attractivité Salariale": 100}},
+    "D1502": {"offres12Mois": 270, "demandeurs": 60, "salaire": [1802, 2350], "embauchesTrimestre": 20, "partCdi": 60, "accesEmploi6Mois": 42, "difficulte": "Très faible", "origines": {"Conditions de travail": 50, "Durabilité de l'emploi": 10, "Inadéquation géographique": 75, "Intensité d'embauche": 50, "Lien formation - métier": 50, "Manque de main d'oeuvre": 75, "Attractivité Salariale": 25}},
+    "D1212": {"offres12Mois": 230, "demandeurs": 620, "salaire": [1802, 2000], "embauchesTrimestre": 120, "partCdi": 25, "accesEmploi6Mois": 33, "difficulte": "Très faible", "origines": {"Conditions de travail": 25, "Durabilité de l'emploi": 25, "Inadéquation géographique": 50, "Intensité d'embauche": 50, "Lien formation - métier": 50, "Manque de main d'oeuvre": 50, "Attractivité Salariale": 75}},
+    "C1201": {"offres12Mois": 30, "demandeurs": 60, "salaire": [1802, 1881], "embauchesTrimestre": 10, "partCdi": 38, "accesEmploi6Mois": 39, "difficulte": null, "origines": {}},
+    "D1401": {"offres12Mois": 760, "demandeurs": 540, "salaire": [1802, 2500], "embauchesTrimestre": 110, "partCdi": 29, "accesEmploi6Mois": 36, "difficulte": "Faible", "origines": {"Conditions de travail": 10, "Durabilité de l'emploi": 10, "Inadéquation géographique": 10, "Intensité d'embauche": 50, "Lien formation - métier": 50, "Manque de main d'oeuvre": 75, "Attractivité Salariale": 50}},
+    "A1101": {"offres12Mois": 30, "demandeurs": 10, "salaire": [1802, 1972], "embauchesTrimestre": null, "partCdi": null, "accesEmploi6Mois": null, "difficulte": "Très élevée", "origines": {"Conditions de travail": 75, "Durabilité de l'emploi": 100, "Inadéquation géographique": 100, "Intensité d'embauche": 100, "Lien formation - métier": 25, "Manque de main d'oeuvre": 50}},
+    "D1202": {"offres12Mois": 230, "demandeurs": 1000, "salaire": [1802, 2000], "embauchesTrimestre": 120, "partCdi": 30, "accesEmploi6Mois": 29, "difficulte": null, "origines": {}},
+    "G1603": {"offres12Mois": 1390, "demandeurs": 2630, "salaire": [1802, 1859], "embauchesTrimestre": 400, "partCdi": 31, "accesEmploi6Mois": 31, "difficulte": "Très faible", "origines": {"Conditions de travail": 100, "Durabilité de l'emploi": 50, "Inadéquation géographique": 10, "Intensité d'embauche": 100, "Lien formation - métier": 25, "Manque de main d'oeuvre": 10, "Attractivité Salariale": 100}},
+    "D1101": {"offres12Mois": 400, "demandeurs": 290, "salaire": [1802, 2083], "embauchesTrimestre": 60, "partCdi": 27, "accesEmploi6Mois": 35, "difficulte": "Très faible", "origines": {"Conditions de travail": 75, "Durabilité de l'emploi": 25, "Inadéquation géographique": 75, "Intensité d'embauche": 50, "Lien formation - métier": 100, "Manque de main d'oeuvre": 50, "Attractivité Salariale": 75}},
+    "D1108": {"offres12Mois": 10, "demandeurs": 10, "salaire": null, "embauchesTrimestre": null, "partCdi": null, "accesEmploi6Mois": null, "difficulte": "Moyenne", "origines": {"Conditions de travail": 100, "Durabilité de l'emploi": 10, "Inadéquation géographique": 50, "Intensité d'embauche": 75, "Lien formation - métier": 100, "Manque de main d'oeuvre": 50, "Attractivité Salariale": 50}},
+    "D1106": {"offres12Mois": 920, "demandeurs": 1170, "salaire": [1802, 1884], "embauchesTrimestre": 300, "partCdi": 27, "accesEmploi6Mois": 32, "difficulte": "Très faible", "origines": {"Conditions de travail": 75, "Durabilité de l'emploi": 50, "Inadéquation géographique": 10, "Intensité d'embauche": 75, "Lien formation - métier": 25, "Manque de main d'oeuvre": 50, "Attractivité Salariale": 100}},
+    "D1104": {"offres12Mois": 170, "demandeurs": 580, "salaire": [1802, 2244], "embauchesTrimestre": 60, "partCdi": 36, "accesEmploi6Mois": 25, "difficulte": "Moyenne", "origines": {"Conditions de travail": 100, "Durabilité de l'emploi": 10, "Inadéquation géographique": 25, "Intensité d'embauche": 75, "Lien formation - métier": 100, "Manque de main d'oeuvre": 25, "Attractivité Salariale": 50}},
+    "D1301": {"offres12Mois": 10, "demandeurs": 20, "salaire": null, "embauchesTrimestre": null, "partCdi": 67, "accesEmploi6Mois": 35, "difficulte": "Très faible", "origines": {"Conditions de travail": 50, "Durabilité de l'emploi": 10, "Inadéquation géographique": 50, "Intensité d'embauche": 75, "Lien formation - métier": 50, "Manque de main d'oeuvre": 50, "Attractivité Salariale": 10}}
+  },
+  "metiersProches": {
+    "D1102": [
+      {"code": "D1101", "libelle": "Boucher / Bouchère"},
+      {"code": "D1108", "libelle": "Chef boulanger / Cheffe boulangère"},
+      {"code": "D1106", "libelle": "Vendeur / Vendeuse en épicerie"},
+      {"code": "D1104", "libelle": "Pâtissier / Pâtissière"},
+      {"code": "D1301", "libelle": "Gérant / Gérante de magasin d'alimentation générale"}
+    ]
+  }
+}

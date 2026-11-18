@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/poc_orientation/rome_api_client.dart';
 import 'package:pass_emploi_app/poc_orientation/rome_models.dart';
 import 'package:pass_emploi_app/poc_orientation/widgets/piste_widgets.dart';
 import 'package:pass_emploi_app/poc_orientation/widgets/poc_widgets.dart';
+import 'package:pass_emploi_app/poc_orientation/widgets/pres_de_chez_toi.dart';
 
 class FicheMetierPage extends StatefulWidget {
   const FicheMetierPage({super.key, required this.metier});
@@ -131,6 +132,8 @@ class _Contenu extends StatelessWidget {
           const SizedBox(height: DsfrSpacings.s1w),
           Text(fiche.appellations.join(' · '), style: texte),
         ],
+        const SizedBox(height: DsfrSpacings.s4w),
+        PresDeChezToi(fiche: fiche),
         const SizedBox(height: DsfrSpacings.s4w),
         AvancerSurLeMetier(fiche: fiche),
         const SizedBox(height: DsfrSpacings.s3w),
