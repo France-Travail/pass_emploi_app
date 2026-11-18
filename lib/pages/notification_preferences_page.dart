@@ -142,7 +142,7 @@ class _Content extends StatelessWidget {
             ),
             const SizedBox(height: DsfrSpacings.s2w),
             Semantics(
-              header: true,
+              headingLevel: 2,
               child: Text(
                 Strings.settingsLabel,
                 style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),

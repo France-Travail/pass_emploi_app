@@ -70,7 +70,7 @@ class _Content extends StatelessWidget {
       children: [
         const SizedBox(height: DsfrSpacings.s2w),
         Semantics(
-          header: true,
+          headingLevel: 2,
           child: Text(
             Strings.suiviPostuleesCount(viewModel.postulees.length),
             style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
@@ -80,7 +80,7 @@ class _Content extends StatelessWidget {
         ..._cards(context, viewModel.postulees, showCandidatureBadge: true),
         const SizedBox(height: DsfrSpacings.s2w),
         Semantics(
-          header: true,
+          headingLevel: 2,
           child: Text(
             Strings.suiviFavorisCount(viewModel.favorisSansPostulation.length),
             style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),

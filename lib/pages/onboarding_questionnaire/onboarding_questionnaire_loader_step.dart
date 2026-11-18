@@ -120,7 +120,7 @@ class _OnboardingQuestionnaireLoaderStepState
           const SizedBox(height: Margins.spacing_m),
           // A11y 7.1 : le titre de l'écran est un en-tête.
           Semantics(
-            header: true,
+            headingLevel: 1,
             child: Text(
               Strings.onboardingQuestionnaireLoaderTitle,
               textAlign: TextAlign.center,

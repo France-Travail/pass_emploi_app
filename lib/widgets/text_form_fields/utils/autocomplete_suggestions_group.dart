@@ -37,7 +37,7 @@ class AutocompleteSuggestionsGroup extends StatelessWidget {
                   child: Semantics(
                     // A11y 5.1 : container pour ne pas fusionner le titre avec les suggestions
                     container: true,
-                    header: true,
+                    headingLevel: 2,
                     child: Text(
                       title!,
                       style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),

@@ -73,7 +73,7 @@ void main() {
 
       final titleNode = findNode(tester, (n) => n.getSemanticsData().label.contains('Bravo'));
       expect(titleNode, isNotNull);
-      expect(titleNode!.getSemanticsData().flagsCollection.isHeader, isTrue);
+      expect(titleNode!.getSemanticsData().headingLevel, greaterThan(0));
 
       // Un seul focus est demandé : sur le titre, jamais sur un bouton.
       expect(focusedNodeIds.length, 1);

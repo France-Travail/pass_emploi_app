@@ -69,7 +69,7 @@ class _Scaffold extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _SectionTitle(Strings.menuProfil),
+                _SectionTitle(Strings.menuProfil, headingLevel: 1),
                 const SizedBox(height: DsfrSpacings.s2w),
                 _IdentityHighlight(viewModel: viewModel),
                 if (viewModel.displayMonCompte) ...[
@@ -319,13 +319,14 @@ class _HighlightRow extends StatelessWidget {
 
 class _SectionTitle extends StatelessWidget {
   final String title;
+  final int headingLevel;
 
-  const _SectionTitle(this.title);
+  const _SectionTitle(this.title, {this.headingLevel = 2});
 
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      header: true,
+      headingLevel: headingLevel,
       child: Text(title, style: DsfrTextStyle.headline5(color: DsfrColorDecisions.textTitleGrey(context))),
     );
   }

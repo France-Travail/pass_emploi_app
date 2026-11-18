@@ -51,7 +51,7 @@ class OnboardingQuestionnaireOverAgePage extends StatelessWidget {
                     const SizedBox(height: Margins.spacing_m),
                     AutoFocusA11y(
                       child: Semantics(
-                        header: true,
+                        headingLevel: 1,
                         child: Text(
                           Strings.onboardingQuestionnaireOverAgeTitle,
                           textAlign: TextAlign.center,

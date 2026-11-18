@@ -112,7 +112,7 @@ class _ContentState extends State<_Content> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Semantics(
-            header: true,
+            headingLevel: 1,
             child: Text(
               Strings.evenementEmploiFiltres,
               style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
@@ -243,7 +243,7 @@ class _TypeFiltreState extends State<_TypeFiltre> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Semantics(
-          header: true,
+          headingLevel: 2,
           child: Text(
             Strings.evenementEmploiFiltresType,
             style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context)),
@@ -328,7 +328,7 @@ class _DateFiltresState extends State<_DateFiltres> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Semantics(
-          header: true,
+          headingLevel: 2,
           child: Text(
             Strings.evenementEmploiFiltresDate,
             style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context)),

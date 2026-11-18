@@ -43,7 +43,7 @@ class _Title extends StatelessWidget {
   Widget build(BuildContext context) {
     return AutoFocusA11y(
       child: Semantics(
-        header: true,
+        headingLevel: 1,
         child: Text(
           Strings.postulerTitle,
           style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),

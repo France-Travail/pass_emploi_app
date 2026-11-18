@@ -104,7 +104,7 @@ class _Failure extends StatelessWidget {
         ),
         const SizedBox(height: DsfrSpacings.s3w),
         Semantics(
-          header: true,
+          headingLevel: 2,
           child: Text(
             Strings.error,
             style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
@@ -141,7 +141,7 @@ class _Success extends StatelessWidget {
                   const SuccessIllustration(size: 160),
                   const SizedBox(height: DsfrSpacings.s3w),
                   Semantics(
-                    header: true,
+                    headingLevel: 2,
                     child: Text(
                       Strings.autoDesinscriptionSuccessTitle(viewModel.title ?? ""),
                       style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
@@ -185,7 +185,7 @@ class _Form extends StatelessWidget {
         children: [
           if (viewModel.title != null)
             Semantics(
-              header: true,
+              headingLevel: 2,
               child: Text(
                 viewModel.title!,
                 style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),

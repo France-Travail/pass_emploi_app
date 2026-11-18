@@ -228,7 +228,7 @@ class _EmptyListPlaceholder extends StatelessWidget {
         const _EmptyIllustration(),
         const SizedBox(height: DsfrSpacings.s2w),
         Semantics(
-          header: true,
+          headingLevel: 2,
           child: Text(
             Strings.cvListEmptyTitle,
             style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
@@ -253,7 +253,7 @@ class _EmptyListPlaceholder extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Semantics(
-          header: true,
+          headingLevel: 2,
           child: Text(
             Strings.cvListEmptyTitle,
             style: DsfrTextStyle.bodyMdMedium(color: DsfrColorDecisions.textTitleGrey(context)),

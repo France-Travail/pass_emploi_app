@@ -147,7 +147,7 @@ class _Body extends StatelessWidget {
         if (viewModel.titreDetail != null) ...[
           const SizedBox(height: DsfrSpacings.s1w),
           Semantics(
-            header: true,
+            headingLevel: 1,
             child: Text(
               viewModel.titreDetail!,
               style: DsfrTextStyle.headline5(
@@ -159,7 +159,7 @@ class _Body extends StatelessWidget {
         const SizedBox(height: DsfrSpacings.s2w),
         // A11y 7.1 : titre de section de la fenêtre de détail.
         Semantics(
-          header: true,
+          headingLevel: 2,
           child: Text(
             Strings.demarcheDetails,
             style: DsfrTextStyle.bodyMdBold(
@@ -190,7 +190,7 @@ class _Body extends StatelessWidget {
         const SizedBox(height: DsfrSpacings.s2w),
         // A11y 7.1 : titre de section de la fenêtre de détail.
         Semantics(
-          header: true,
+          headingLevel: 2,
           child: Text(
             Strings.historiqueDemarche,
             style: DsfrTextStyle.bodyMdBold(

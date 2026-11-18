@@ -18,7 +18,7 @@ class CejInformationFirstContentCard extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: Semantics(
-              header: true,
+              headingLevel: 2,
               child: MediumSectionTitle(Strings.whoIsConcerned),
             ),
           ),

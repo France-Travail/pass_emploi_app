@@ -216,7 +216,7 @@ class _WelcomeTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      header: true,
+      headingLevel: 1,
       child: Stack(
         clipBehavior: Clip.none,
         children: [

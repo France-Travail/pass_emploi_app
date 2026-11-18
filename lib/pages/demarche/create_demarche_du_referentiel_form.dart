@@ -114,7 +114,7 @@ class _FormState extends State<_Form> {
         children: [
           const SizedBox(height: DsfrSpacings.s2w),
           Semantics(
-            header: true,
+            headingLevel: 2,
             child: Text(
               widget.viewModel.quoi,
               style: DsfrTextStyle.bodyLg(color: DsfrColorDecisions.textTitleGrey(context)),

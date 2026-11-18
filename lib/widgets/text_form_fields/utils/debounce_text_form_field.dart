@@ -29,7 +29,7 @@ class DebounceTextFormField extends StatelessWidget {
           // A11y 5.1 : le titre forme son propre nœud ; fusionné au champ, il le faisait annoncer « Titre ».
           Semantics(
             container: true,
-            header: true,
+            headingLevel: 2,
             child: Text(
               label!,
               style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),

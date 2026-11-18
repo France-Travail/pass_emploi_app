@@ -22,7 +22,8 @@ class OffreDetailsSectionTitle extends StatelessWidget {
       OffreDetailsSectionTitleSize.headline6 => DsfrTextStyle.headline6(color: color),
     };
     return Semantics(
-      header: true,
+      // Les titres headline5 / headline6 sont des sous-sections d'une section headline4.
+      headingLevel: size == OffreDetailsSectionTitleSize.headline4 ? 2 : 3,
       child: Text(label, style: style),
     );
   }

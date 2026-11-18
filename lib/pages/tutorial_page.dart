@@ -218,7 +218,7 @@ class _TutorialCard extends StatelessWidget {
                       ),
                       const SizedBox(height: DsfrSpacings.s3v),
                       Semantics(
-                        header: true,
+                        headingLevel: 1,
                         child: Text(
                           title,
                           style: DsfrTextStyle.headline3(

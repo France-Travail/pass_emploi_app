@@ -12,7 +12,7 @@ class TitleSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      header: true,
+      headingLevel: 2,
       child: Column(
         children: [
           SepLine(Margins.spacing_s, Margins.spacing_s),

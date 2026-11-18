@@ -139,7 +139,7 @@ class _Content extends StatelessWidget {
           ],
           if (viewModel.showPlanSection) ...[
             Semantics(
-              header: true,
+              headingLevel: 2,
               child: Text(
                 Strings.inviteAccueilPlanTitle,
                 style: DsfrTextStyle.headline3(color: DsfrColorDecisions.textTitleGrey(context)),
@@ -212,7 +212,7 @@ class _Content extends StatelessWidget {
                   children: [
                     // A11y 7.1 : titre de l'encart ; A11y 1.1 : l'emoji « 💡 » est décoratif.
                     Semantics(
-                      header: true,
+                      headingLevel: 2,
                       child: Text(
                         Strings.inviteAccueilExplorerTipTitle,
                         semanticsLabel: Strings.inviteAccueilExplorerTipTitle.removeEmojisForScreenReaders(),

@@ -47,7 +47,7 @@ class CreationConfirmationBody extends StatelessWidget {
                     ],
                     // A11y 7.1 : « Bravo ! » est le titre de la confirmation.
                     Semantics(
-                      header: true,
+                      headingLevel: 2,
                       child: Text(
                         title,
                         // A11y 1.1 : l'emoji « 🎉 » est décoratif.

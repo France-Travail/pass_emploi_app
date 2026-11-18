@@ -96,7 +96,7 @@ class _CreateDemarcheIaFtStep1PageState extends State<CreateDemarcheIaFtStep1Pag
           children: [
             const SizedBox(height: DsfrSpacings.s2w),
             Semantics(
-              header: true,
+              headingLevel: 2,
               child: Text(
                 Strings.iaFtStep2Title,
                 style: DsfrTextStyle.bodyMdBold(

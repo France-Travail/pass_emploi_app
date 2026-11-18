@@ -59,7 +59,7 @@ class OffreDetailsHeader extends StatelessWidget {
                         const SizedBox(height: DsfrSpacings.s1w),
                       ],
                       Semantics(
-                        header: true,
+                        headingLevel: 1,
                         child: Text(
                           title,
                           // A11y 8.1 : « H/F » explicité.

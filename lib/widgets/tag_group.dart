@@ -34,7 +34,7 @@ class TagGroupState<T extends CheckboxValueViewModel> extends State<TagGroup> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Semantics(
-          header: true,
+          headingLevel: 2,
           child: Text(
             widget.title,
             style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context)),

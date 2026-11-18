@@ -292,7 +292,7 @@ class _Content extends StatelessWidget {
         ),
         const SizedBox(height: DsfrSpacings.s1w),
         Semantics(
-          header: true,
+          headingLevel: 1,
           child: Text(
             viewModel.title,
             style: DsfrTextStyle.headline5(

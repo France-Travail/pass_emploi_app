@@ -160,7 +160,7 @@ class _CreateUserActionAppBarState extends State<_CreateUserActionAppBar> {
       titleSpacing: 0,
       centerTitle: false,
       // A11y : l'AppBar marquerait tout le bloc (bouton Retour compris) comme en-tête ;
-      // seul le titre porte ce rôle, via son propre Semantics(header).
+      // seul le titre porte ce rôle, via son propre Semantics(headingLevel).
       excludeHeaderSemantics: true,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -198,7 +198,7 @@ class _CreateUserActionAppBarState extends State<_CreateUserActionAppBar> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s2w),
             child: Semantics(
-              header: true,
+              headingLevel: 1,
               child: Text(
                 Strings.createActionAppBarTitle,
                 style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
@@ -316,7 +316,7 @@ class _CreateUserActionForm extends StatelessWidget {
             key: ValueKey(formState.displayState),
             // A11y 7.1 : « Étape X sur 3, titre » restitué en un seul en-tête.
             child: Semantics(
-              header: true,
+              headingLevel: 2,
               label: Strings.onboardingQuestionnaireStepA11y(
                 formState.displayState.stepIndex + 1,
                 CreateUserActionDisplayState.stepCount,

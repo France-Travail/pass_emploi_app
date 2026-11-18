@@ -101,7 +101,7 @@ class _Scaffold extends StatelessWidget {
                 ),
                 const SizedBox(height: Margins.spacing_l),
                 Semantics(
-                  header: true,
+                  headingLevel: 1,
                   child: Text(
                     viewModel.title,
                     // 1jeune1solution : « Choisis un compte » en titre DSFR h4 (22 px) ; pass emploi garde le h2 (28 px).

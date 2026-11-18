@@ -59,7 +59,7 @@ class ResultatRechercheContenuState<Result> extends State<ResultatRechercheConte
           itemBuilder: (context, index) {
             if (index == 0) {
               return Semantics(
-                header: true,
+                headingLevel: 2,
                 child: Text(
                   widget.resultsCountLabel(widget.viewModel.items.length),
                   style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),

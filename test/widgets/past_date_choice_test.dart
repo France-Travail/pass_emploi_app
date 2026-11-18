@@ -71,7 +71,7 @@ void main() {
     final semantics = tester.ensureSemantics();
     await pump(tester);
 
-    expect(tester.getSemantics(find.text('Quand ?')), isNot(isSemantics(isHeader: true)));
+    expect(tester.getSemantics(find.text('Quand ?')).headingLevel, 0);
     expect(find.bySemanticsLabel(RegExp('^${Strings.dateSuggestionHier} \\(.*\\), Quand \\?\$')), findsOneWidget);
     expect(find.bySemanticsLabel(RegExp('^${Strings.dateSuggestionAujourdhui} \\(.*\\), Quand \\?\$')), findsOneWidget);
     semantics.dispose();

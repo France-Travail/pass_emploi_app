@@ -29,7 +29,7 @@ class CreateDemarcheFromThematiqueStep2Page extends StatelessWidget {
           const SizedBox(height: DsfrSpacings.s2w),
           // A11y 7.1 : titre de l'étape.
           Semantics(
-            header: true,
+            headingLevel: 3,
             child: Text(
               Strings.selectDemarche,
               style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textDefaultGrey(context)),

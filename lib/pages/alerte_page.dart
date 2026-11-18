@@ -134,7 +134,7 @@ class _AlertePageState extends State<AlertePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Semantics(
-                  header: true,
+                  headingLevel: 2,
                   child: Text(
                     Strings.alertesCountTitle(alertes.length),
                     style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
@@ -304,7 +304,7 @@ Widget _suggestionsSection(BuildContext context, SuggestionsRechercheListViewMod
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
       Semantics(
-        header: true,
+        headingLevel: 2,
         child: Text(
           Strings.suggestionsDeRechercheTitle,
           style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
@@ -414,7 +414,7 @@ class _SuggestionCard extends StatelessWidget {
             ),
             const SizedBox(height: DsfrSpacings.s1w),
             Semantics(
-              header: true,
+              headingLevel: 3,
               label: [
                 viewModel.titre.toOffreTitleForScreenReaders(),
                 _suggestionTypeLabel(viewModel.type),

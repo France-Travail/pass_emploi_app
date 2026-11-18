@@ -179,7 +179,7 @@ class DsfrBottomSheetMoreActionsTitle extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: DsfrSpacings.s1w),
       child: AutoFocusA11y(
         child: Semantics(
-          header: true,
+          headingLevel: 1,
           child: Text(
             Strings.moreActions,
             style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),

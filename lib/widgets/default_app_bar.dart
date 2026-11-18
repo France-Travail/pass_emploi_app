@@ -37,7 +37,7 @@ class PrimarySliverAppbar extends StatelessWidget {
       title: AutoFocusA11y(
         child: Builder(
           builder: (context) => Semantics(
-            header: true,
+            headingLevel: 1,
             // A11y 10.2 (audit RAAM du 15/10/2026) : l'en-tête épinglé fait partie de la zone qui défile. En remontant
             // par balayage, le lecteur d'écran l'atteint sans faire défiler le contenu, et la lecture reprenait au milieu
             // de la page. Quand le titre reçoit le focus du lecteur d'écran, la page revient donc en haut.
@@ -141,7 +141,7 @@ class PrimaryAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: AutoFocusA11y(
         enabled: withAutofocusA11y,
         child: Semantics(
-          header: true,
+          headingLevel: 1,
           child: Tooltip(
             message: title,
             excludeFromSemantics: true,
@@ -292,7 +292,7 @@ class PageTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return AutoFocusA11y(
       child: Semantics(
-        header: true,
+        headingLevel: 1,
         child: Text(
           title,
           style: DsfrTextStyle.headline4(color: DsfrColorDecisions.textTitleGrey(context)),
@@ -332,7 +332,7 @@ class SecondaryAppBar extends StatelessWidget implements PreferredSizeWidget {
       actionsPadding: hasActions ? const EdgeInsets.only(right: DsfrSpacings.s2w) : EdgeInsets.zero,
       backgroundColor: backgroundColor ?? DsfrColorDecisions.backgroundDefaultGrey(context),
       title: Semantics(
-        header: true,
+        headingLevel: 1,
         child: Tooltip(
           message: title,
           excludeFromSemantics: true,
