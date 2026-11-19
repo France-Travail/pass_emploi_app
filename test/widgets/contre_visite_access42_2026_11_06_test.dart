@@ -122,7 +122,7 @@ void main() {
       );
 
       expect(
-        tester.getSemantics(find.bySemanticsLabel('À distance')),
+        tester.getSemantics(find.bySemanticsLabel('À distance, Modalités d’accès')),
         isSemantics(hasEnabledState: true, isEnabled: true, hasCheckedState: true, isChecked: false, hasTapAction: true),
       );
       semantics.dispose();

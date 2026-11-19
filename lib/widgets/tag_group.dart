@@ -68,7 +68,8 @@ class TagGroupState<T extends CheckboxValueViewModel> extends State<TagGroup> {
       // A11y 5.1 (iOS) : sans `enabled: true` explicite, VoiceOver annonce l'étiquette « estompé ».
       enabled: true,
       checked: isSelected,
-      label: viewModel.label,
+      // A11y 9.6 : le nom reprend le titre du groupe, après le libellé visible.
+      label: '${viewModel.label}, ${widget.title}',
       hint: viewModel.helpText,
       onTap: () => onSelectionChanged(!isSelected),
       excludeSemantics: true,
