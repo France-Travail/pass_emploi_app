@@ -148,6 +148,8 @@ class _LocationAutocompletePageState extends State<_LocationAutocompletePage> {
                 label: widget.title,
                 hintText: widget.hint,
                 initialValue: widget.selectedLocation?.displayableLabel(),
+                // A11y 9.12 : ville, département ou code postal : type « adresse » (inputType Android).
+                keyboardType: TextInputType.streetAddress,
                 onChanged: (text) {
                   if (text.isEmpty != emptyInput) setState(() => emptyInput = text.isEmpty);
                   viewModel.onInputLocation(text);

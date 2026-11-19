@@ -82,7 +82,8 @@ class _Scaffold extends StatelessWidget {
         appBar: SecondaryAppBar(title: Strings.immersitionContactFormTitle, backgroundColor: backgroundColor),
         body: Stack(
           children: [
-            _Form(viewModel: viewModel),
+            // A11y 9.12 : les champs d'identité et de contact sont remplis ensemble par le remplissage automatique.
+            AutofillGroup(child: _Form(viewModel: viewModel)),
             if (viewModel.sendingState.isLoading()) LoadingOverlay(),
           ],
         ),
@@ -164,11 +165,16 @@ class _FormState extends State<_Form> {
                     style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textMentionGrey(context)),
                   ),
                   const SizedBox(height: DsfrSpacings.s2w),
+                  // A11y 9.12 : nature de chaque saisie personnelle identifiée : type de clavier (inputType Android)
+                  // et donnée proposée par le remplissage automatique (textContentType iOS).
                   ImmersionTextFormField(
                     isMandatory: true,
                     controller: state.userFirstNameController,
                     focusNode: state.userFirstNameFocus,
                     label: Strings.immersitionContactFormSurnameHint,
+                    keyboardType: TextInputType.name,
+                    textCapitalization: TextCapitalization.words,
+                    autofillHints: const [AutofillHints.givenName],
                   ),
                   const SizedBox(height: DsfrSpacings.s2w),
                   ImmersionTextFormField(
@@ -176,6 +182,9 @@ class _FormState extends State<_Form> {
                     controller: state.userLastNameController,
                     focusNode: state.userLastNameFocus,
                     label: Strings.immersitionContactFormNameHint,
+                    keyboardType: TextInputType.name,
+                    textCapitalization: TextCapitalization.words,
+                    autofillHints: const [AutofillHints.familyName],
                   ),
                   const SizedBox(height: DsfrSpacings.s2w),
                   ImmersionTextFormField(
@@ -188,6 +197,7 @@ class _FormState extends State<_Form> {
                     label: Strings.immersitionContactFormEmailHint,
                     keyboardType: TextInputType.emailAddress,
                     textCapitalization: TextCapitalization.none,
+                    autofillHints: const [AutofillHints.email],
                   ),
                   const SizedBox(height: DsfrSpacings.s2w),
                   ImmersionTextFormField(
@@ -200,6 +210,7 @@ class _FormState extends State<_Form> {
                     label: Strings.immersitionContactFormPhoneHint,
                     keyboardType: TextInputType.phone,
                     textCapitalization: TextCapitalization.none,
+                    autofillHints: const [AutofillHints.telephoneNumber],
                   ),
                   const SizedBox(height: DsfrSpacings.s2w),
                   ImmersionTextFormField(
@@ -229,6 +240,7 @@ class _FormState extends State<_Form> {
                     label: Strings.immersitionContactFormLinkedinLabel,
                     keyboardType: TextInputType.url,
                     textCapitalization: TextCapitalization.none,
+                    autofillHints: const [AutofillHints.url],
                   ),
                   const SizedBox(height: DsfrSpacings.s2w),
                 ],
@@ -268,6 +280,7 @@ class ImmersionTextFormField extends StatelessWidget {
   final String? hintText;
   final TextInputType keyboardType;
   final TextCapitalization textCapitalization;
+  final Iterable<String>? autofillHints;
 
   const ImmersionTextFormField({
     super.key,
@@ -282,6 +295,7 @@ class ImmersionTextFormField extends StatelessWidget {
     this.hintText,
     this.keyboardType = TextInputType.text,
     this.textCapitalization = TextCapitalization.sentences,
+    this.autofillHints,
   });
 
   @override
@@ -297,6 +311,7 @@ class ImmersionTextFormField extends StatelessWidget {
       maxLines: maxLines,
       keyboardType: keyboardType,
       textCapitalization: textCapitalization,
+      autofillHints: autofillHints,
       inputFormatters: maxLength != null ? [LengthLimitingTextInputFormatter(maxLength!)] : null,
       componentState: error != null
           ? DsfrComponentState.error(errorMessage: error)
