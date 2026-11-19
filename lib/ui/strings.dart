@@ -1046,7 +1046,6 @@ class Strings {
   static String cannotFinishActionInFuture = "On ne peut pas terminer une action dans le futur.";
 
   // User action done bottom sheet
-  static String userActionDoneBottomSheetTitle = "Quand as-tu terminé l'action ?";
   static String updateActionConfirmation = "La mise à jour de ton action a bien été prise en compte";
 
   // Update user action
@@ -2213,7 +2212,6 @@ class Strings {
   static const String sentimentNeutral = "Emoticone neutre";
   static const String sentimentSatisfied = "Emoticone plutôt d’accord";
   static const String mood = "Emoticone d’accord";
-  static const String emptyDate = "Aucune date sélectionnée";
   static String feedbackCommentaire = Brand.isPassEmploi()
       ? "Dites-nous pourquoi vous avez attribué cette note\u{00A0}?"
       : "Dis-nous pourquoi tu as attribué cette note\u{00A0}?";
