@@ -335,24 +335,30 @@ class _DateFiltresState extends State<_DateFiltres> {
           ),
         ),
         const SizedBox(height: DsfrSpacings.s1w),
-        DsfrDateInput(
-          label: Strings.evenementEmploiFiltresDateDebut,
-          controller: _dateDebutController,
-          firstDate: DateTime.now(),
-          lastDate: DateTime(2101),
-          initialDate: widget.initialDateDebut ?? DateTime.now(),
-          locale: const Locale('fr', 'FR'),
-          onChanged: widget.onDateDebutValueChange,
+        // A11y 9.1 / 9.2 : DsfrDateInput pose son étiquette sur le groupe, pas sur le champ, que TalkBack restituait
+        // sans nom. La fusion donne à chaque champ son étiquette visible.
+        MergeSemantics(
+          child: DsfrDateInput(
+            label: Strings.evenementEmploiFiltresDateDebut,
+            controller: _dateDebutController,
+            firstDate: DateTime.now(),
+            lastDate: DateTime(2101),
+            initialDate: widget.initialDateDebut ?? DateTime.now(),
+            locale: const Locale('fr', 'FR'),
+            onChanged: widget.onDateDebutValueChange,
+          ),
         ),
         const SizedBox(height: DsfrSpacings.s1w),
-        DsfrDateInput(
-          label: Strings.evenementEmploiFiltresDateFin,
-          controller: _dateFinController,
-          firstDate: firstDateFin ?? DateTime.now(),
-          lastDate: DateTime(2101),
-          initialDate: initialDateFin ?? firstDateFin ?? DateTime.now(),
-          locale: const Locale('fr', 'FR'),
-          onChanged: widget.onDateFinValueChange,
+        MergeSemantics(
+          child: DsfrDateInput(
+            label: Strings.evenementEmploiFiltresDateFin,
+            controller: _dateFinController,
+            firstDate: firstDateFin ?? DateTime.now(),
+            lastDate: DateTime(2101),
+            initialDate: initialDateFin ?? firstDateFin ?? DateTime.now(),
+            locale: const Locale('fr', 'FR'),
+            onChanged: widget.onDateFinValueChange,
+          ),
         ),
       ],
     );
