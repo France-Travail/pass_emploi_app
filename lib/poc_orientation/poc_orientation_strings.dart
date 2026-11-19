@@ -1,5 +1,7 @@
 import 'package:pass_emploi_app/poc_orientation/marche_travail.dart';
 import 'package:pass_emploi_app/poc_orientation/mes_pistes.dart';
+import 'package:pass_emploi_app/poc_orientation/parcours.dart';
+import 'package:pass_emploi_app/poc_orientation/pistes_pour_toi.dart';
 
 class PocOrientationStrings {
   static String prototype = "Prototype";
@@ -7,30 +9,16 @@ class PocOrientationStrings {
   static String chargement = "Chargement";
   static String erreur = "Impossible de joindre le service. Vérifie ta connexion et réessaie.";
   static String reessayer = "Réessayer";
-  static String voirPlus = "Voir plus de métiers";
-  static String nombreMetiers(int nombre) => nombre > 1 ? "$nombre métiers" : "$nombre métier";
 
   static String carteTitre = "Explorer les métiers";
-  static String carteDescription = "Trouve des idées, découvre un métier et teste-le";
+  static String carteDescription = "Trouve des idées, fais le tri, avance sur tes pistes";
 
   static String hubTitre = "Explorer les métiers";
-  static String hubIntro =
-      "Trouve des idées de métiers, découvre en quoi ils consistent, puis teste-les en immersion ou trouve une formation.";
   static String hubMetierEnTete = "Tu as déjà un métier en tête ?";
   static String hubMetierChamp = "Métier";
   static String hubMetierAide = "Exemple : boulanger, aide-soignant, développeur";
   static String hubMetierDemo = "Démo : seul ce métier est disponible";
-  static String hubPasEncore = "Tu ne sais pas encore ?";
-  static String hubTestTitre = "Faire le test RIASEC";
-  static String hubTestDescription = "30 questions, environ 4 minutes, pour découvrir ton profil";
-  static String hubCentresTitre = "Partir de mes centres d’intérêt";
-  static String hubCentresDescription = "Choisis ce que tu aimes, on te propose des métiers";
-  static String hubMesPistes = "Mes pistes de métiers";
-  static String hubMesPistesVide =
-      "Quand un métier te tente, dis-le depuis sa fiche : il arrive ici. On t’aide ensuite à le découvrir, à le tester puis à t’y former, étape par étape.";
   static String hubMisDeCote(int nombre) => "Mis de côté ($nombre)";
-  static String hubTonProfil(List<String> noms) => "Ton profil au test : ${_liste(noms)}";
-  static String hubRevoirResultats = "Revoir mes résultats";
   static String hubPartager = "Partager à mon conseiller";
 
   static String pisteOuJenSuis(EtapePiste? etape) => switch (etape) {
@@ -40,8 +28,6 @@ class PocOrientationStrings {
         null => "Toutes les étapes sont faites",
       };
   static String pisteProgression(int faites, int total) => "$faites étape${faites > 1 ? "s" : ""} sur $total";
-  static String pisteProchaineEtape(ActionPiste action) => "Prochaine étape : ${actionTitre(action).toLowerCase()}";
-  static String pisteALancer = "Prochaine étape : te lancer, avec les offres d’emploi ou d’alternance";
   static String pisteDansMesPistes = "Dans mes pistes";
   static String pisteMiseDeCote = "Mis de côté";
   static String pisteRaisons(Set<RaisonPasPourMoi> raisons) => raisons.map((raison) => raison.libelle).join(" · ");
@@ -117,10 +103,10 @@ class PocOrientationStrings {
     return "$ouJenSuis (${pisteProgression(faites, total)})";
   }
 
-  static String messageProfil(List<String> noms) => "Mon profil au test RIASEC : ${_liste(noms)}.";
+  static String messageProfil(List<String> noms) => "Mon profil au test RIASEC : ${listeNaturelle(noms)}.";
 
   // « Social et Réaliste », ou « Social, Réaliste et Artiste » quand trois profils sont à égalité.
-  static String _liste(List<String> noms) {
+  static String listeNaturelle(List<String> noms) {
     if (noms.length < 2) return noms.join();
     return "${noms.take(noms.length - 1).join(", ")} et ${noms.last}";
   }
@@ -130,11 +116,6 @@ class PocOrientationStrings {
   static String centresTitre = "Mes centres d’intérêt";
   static String centresIntro = "Choisis jusqu’à 3 centres d’intérêt.";
   static String centresSelection(int nombre) => "$nombre sur 3 choisis";
-  static String centresVoirMetiers = "Voir les métiers";
-  static String centresMetiersTitre = "Métiers pour toi";
-  static String centresMetiersIntro(List<String> centres) => "Si tu aimes : ${centres.join(", ")}.";
-  static String centresEnCommun(int nombre) =>
-      nombre > 1 ? "$nombre de tes centres d’intérêt" : "1 de tes centres d’intérêt";
 
   static String testTitre = "Test RIASEC";
   static String testIntroTitre = "Découvre ton profil";
@@ -169,13 +150,7 @@ class PocOrientationStrings {
   static String resultatPlatTexte =
       "Tes réponses sont très proches d’un profil à l’autre. Ce n’est pas grave : pars plutôt de tes centres d’intérêt, ou parles-en avec ton conseiller.";
   static String resultatScores = "Tes réponses";
-  static String resultatMetiersTitre = "Des métiers qui te ressemblent";
-  static String resultatExplication =
-      "France Travail donne un profil RIASEC à chaque métier. Les plus proches du tien sont en premier.";
-  static String resultatTousLesDomaines(int nombre) => "Tous ($nombre)";
-  static String resultatDomaine(String domaine, int nombre) => "$domaine ($nombre)";
   static String resultatRefaire = "Refaire le test";
-  static String profilDuMetier(List<String> noms) => "Profil ${noms.join(" et ")}";
 
   static String ficheTitre = "Fiche métier";
   static String ficheEnBref = "En bref";
@@ -187,12 +162,8 @@ class PocOrientationStrings {
   static String ficheCentresInteret = "Si tu aimes…";
   static String ficheProfil = "Profil RIASEC";
   static String ficheAussiAppele = "Aussi appelé";
-  static String ficheEtMaintenant = "Et maintenant ?";
   static String ficheVoirOffres = "Voir les offres d’emploi";
-  static String ficheImmersion = "Tester ce métier en immersion";
   static String ficheAlternance = "Chercher une alternance";
-  static String ficheSeFormer = "Se former à ce métier";
-  static String ficheVoirFormations = "Voir les formations près de chez moi";
   static String ficheAutresSources = "Ailleurs sur internet";
   static String ficheFormationAlternance = "Formations en alternance (La bonne alternance)";
   static String ficheFormationContinue = "Formations pour demandeurs d’emploi (France Travail)";
@@ -220,14 +191,7 @@ class PocOrientationStrings {
   static String formationsSource(String annee) =>
       "Source : InserJeunes (ministère de l’Éducation nationale et Dares), sortants $annee. Formations trouvées par mots-clés du métier : à vérifier.";
 
-  static String pistesPourToiTitre = "Des pistes pour toi";
-  static String pistesPourToiIntro = "D’après ce que tu as déjà fait dans l’app. Dis-nous ce qui te tente.";
-  static String pistesPourToiVoirPlus(int nombre) => nombre > 1 ? "Voir les $nombre autres pistes" : "Voir l’autre piste";
-  static String pistesPourToiVoirMoins = "Voir moins de pistes";
-  static String pistesProchesTitre = "Des métiers proches de tes pistes";
   static String caRecrute = "Ça recrute près de chez toi";
-  static String hubPasEncoreQuestionnaire =
-      "C’est ce que tu as répondu au questionnaire : commence par le test ou par tes centres d’intérêt.";
 
   static String raisonConseiller = "Ton conseiller te le suggère";
   static String raisonFranceTravail = "Tu l’as indiqué à France Travail";
@@ -286,4 +250,116 @@ class PocOrientationStrings {
   static String conseilSansDiplome = "Bonne nouvelle : ce métier est accessible sans diplôme.";
   static String conseilFormationCourte =
       "Pas de diplôme ? Des formations courtes existent, comme le CAP en 1 ou 2 ans, souvent en alternance.";
+
+  // Parcours en 3 temps
+  static String raisonTest(String profil) => "D’après ton test : tu es plutôt $profil";
+  static String raisonCentres = "D’après tes centres d’intérêt";
+  static String origine(SourcePiste source) => switch (source) {
+    SourcePiste.conseiller => "des conseils de ton conseiller",
+    SourcePiste.franceTravail => "de ce que tu as dit à France Travail",
+    SourcePiste.parcoursFranceTravail => "de ton parcours France Travail",
+    SourcePiste.questionnaire => "de ton questionnaire",
+    SourcePiste.test => "de ton test",
+    SourcePiste.centresInteret => "de tes centres d’intérêt",
+    SourcePiste.favori => "de tes favoris",
+    SourcePiste.recherche => "de tes recherches",
+    SourcePiste.diagoriente => "de Diagoriente",
+    SourcePiste.metierProche => "des voisins de tes pistes",
+  };
+  static String conseilSanteEfforts(List<String> efforts) =>
+      "Ce métier demande de ${listeNaturelle(efforts)}. Pense à ta santé, et parles-en à ton conseiller.";
+
+  static String etapeParcours(EtapeParcours etape) => switch (etape) {
+    EtapeParcours.idees => "Idées",
+    EtapeParcours.tri => "Tri",
+    EtapeParcours.avancer => "Avancer",
+  };
+  static String etapeParcoursLecteur(EtapeParcours etape, EtapeParcours enCours) =>
+      "Étape ${etape.index + 1} sur 3 : ${etapeParcours(etape)}${etape == enCours ? ", en cours" : etape.index < enCours.index ? ", faite" : ""}";
+  static String tuEnEsLa = "Tu en es là";
+  static String heroIdeesTitre = "Trouver des idées";
+  static String heroIdeesTexte(bool neSaitPasEncore) => neSaitPasEncore
+      ? "Tu nous as dit ne pas savoir encore quel métier : le test te donne des idées en 4 minutes."
+      : "Le test te donne des idées de métiers en 4 minutes.";
+  static String heroIdeesTest = "Faire le test";
+  static String heroIdeesCentres = "Choisir ce que j’aime";
+  static String heroTriTitre = "Faire le tri";
+  static String heroTriTexte(int nombre, String origines) =>
+      nombre > 1 ? "$nombre métiers pour toi, tirés $origines." : "1 métier pour toi, tiré $origines.";
+  static String heroTriBouton = "Commencer le tri";
+  static String heroAvancerLabel = "Ta prochaine étape";
+  static String heroLancerTitre = "Te lancer";
+  static String heroLancerTexte = "Tu as fait toutes les étapes de tes pistes : place aux offres.";
+  static String actionBouton(ActionPiste action) => switch (action) {
+    ActionPiste.lireFiche => "Lire la fiche",
+    ActionPiste.voirVideo => "Regarder sur Parcoursmétiers.tv",
+    ActionPiste.echangerAvecUnPro => "Trouver un pro sur My Job Glasses",
+    ActionPiste.faireUneImmersion => "Chercher une immersion",
+    ActionPiste.regarderLesFormations => "Voir les formations",
+  };
+  static String heroIdeesMetier = "J’ai déjà un métier en tête";
+  static String lancerTexteMetier = "Tu as fait toutes les étapes pour ce métier : place aux offres.";
+  static String voirLaFiche = "Voir la fiche";
+  // Les voisins d'une piste arrivent forcément après le tri : eux seuls sont « nouveaux ».
+  static String rappelATrier(int nombre, List<String> voisinsDe) {
+    if (voisinsDe.isEmpty) return nombre > 1 ? "$nombre métiers à trier" : "1 métier à trier";
+    final debut = nombre > 1 ? "$nombre nouveaux métiers à trier" : "1 nouveau métier à trier";
+    return "$debut, voisins de ${listeNaturelle(voisinsDe)}";
+  }
+
+  static String mesPistesTitre(int nombre) => nombre == 0 ? "Mes pistes" : "Mes pistes ($nombre)";
+  static String mesPistesVide = "Les métiers qui te tentent arriveront ici.";
+  static String autresIdeesTitre = "Trouver d’autres idées";
+  static String autresIdeesSousTitre = "Le test · Ce que tu aimes · La recherche";
+
+  static String triTitre = "Faire le tri";
+  static String triCompteur(int position, int total) => "$position sur $total";
+  static String triPourquoi = "Pourquoi ce métier ?";
+  static String triVoirFiche = "Voir la fiche complète";
+  static String triGlisser = "Glisse à droite si ça te tente, à gauche sinon.";
+  static String triVideTitre = "Rien à trier pour l’instant";
+  static String triVideTexte = "Le test et ce que tu aimes remplissent ton tri.";
+  static String finTriTitre = "Tri terminé";
+  static String finTriTentent(int nombre) => switch (nombre) {
+    0 => "Aucun métier ne t’a tenté cette fois",
+    1 => "1 métier te tente",
+    _ => "$nombre métiers te tentent",
+  };
+  static String finTriMisDeCote(int nombre) =>
+      "${nombre > 1 ? "$nombre mis de côté" : "1 mis de côté"}. Tu peux changer d’avis quand tu veux.";
+  static String finTriAvancer = "Avancer sur mes pistes";
+
+  static String faitOffres(String nombre, String ville) => "$nombre offres en un an autour de $ville";
+  static String faitSalaire(String min, String max) => "$min € à $max € brut par mois";
+  static String faitAcces(String acces) => "Accès : $acces";
+
+  static String ideesTitre = "Trouver des idées";
+  static String ideesIntro = "Les métiers que tu trouves ici arrivent dans ton tri.";
+  static String ideesProfil(String profil) => "Ton profil : $profil";
+  static String ideesRevoir = "Revoir mes résultats";
+  static String ideesRecherche = "Cherche-le, puis dis s’il te tente depuis sa fiche.";
+  static String ideesTest = "Fais le test";
+  static String ideesRefaireTest = "Refais le test";
+  static String ideesTestDetail = "30 questions, environ 4 minutes";
+  static String ideesCentres = "Choisis ce que tu aimes";
+  static String ideesCentresDetail = "Jusqu’à 3 centres d’intérêt";
+  static String ideesCentresChoisis(List<String> centres) => "Tu as choisi : ${centres.join(", ")}";
+
+  static String resultatAjoutes(int nombre) => "${nombre > 1 ? "$nombre métiers ajoutés" : "1 métier ajouté"} à ton tri";
+  static String resultatAjoutesTexte = "Les métiers les plus proches de ton profil t’attendent dans le tri.";
+  static String resultatAucunAjout = "Tu as déjà trié tous les métiers proches de ton profil.";
+  static String demoMetiersAjoutes = "Démo : seuls les métiers dont la fiche est dans la démo sont ajoutés.";
+  static String faireLeTri = "Faire le tri";
+  static String centresAjouter = "Ajouter à mon tri";
+  static String centresEnCours = "Je cherche les métiers…";
+  static String centresAjoutes(int nombre) =>
+      "${nombre > 1 ? "$nombre métiers ajoutés" : "1 métier ajouté"} à ton tri, d’après ce que tu aimes";
+  static String centresAucunAjout = "Tu as déjà trié tous les métiers liés à ces centres d’intérêt.";
+
+  static String ficheEtapes(int? faites, int total) =>
+      faites == null ? "Les étapes pour ce métier" : "Toutes les étapes · ${pisteProgression(faites, total)}";
+  static String ficheDetail = "Le métier en détail";
+  static String ficheTousLesChiffres(String? ville) =>
+      ville == null ? "Tous les chiffres près de chez toi" : "Tous les chiffres autour de $ville";
+  static String ficheVoirSiCaRecrute = "Voir si ce métier recrute près de chez toi (Data Emploi)";
 }

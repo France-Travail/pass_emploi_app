@@ -13,6 +13,13 @@ List<String> _libelles(Iterable<dynamic>? json) {
   return json.map((element) => element['libelle'] as String).toSet().toList();
 }
 
+// « Développeur / Développeuse informatique » donne « Développeur informatique » : la recherche par mot-clé trouve
+// mieux un intitulé sans la forme double.
+String motCleDuMetier(String libelle) {
+  final formeDouble = RegExp(r'^(.+?) / \S+(.*)$').firstMatch(libelle);
+  return formeDouble == null ? libelle : '${formeDouble.group(1)}${formeDouble.group(2)}';
+}
+
 class RomeCentreInteret extends Equatable {
   final String code;
   final String libelle;
@@ -183,10 +190,7 @@ class RomeFicheMetier {
 
   // « Développeur / Développeuse informatique » donne « Développeur informatique » : la recherche d'offres
   // par mot-clé trouve mieux un intitulé sans la forme double.
-  String get motCle {
-    final formeDouble = RegExp(r'^(.+?) / \S+(.*)$').firstMatch(libelle);
-    return formeDouble == null ? libelle : '${formeDouble.group(1)}${formeDouble.group(2)}';
-  }
+  String get motCle => motCleDuMetier(libelle);
 
   static List<String> _appellations(List<dynamic>? json, String libelleMetier) {
     return _libelles(json).where((appellation) => appellation != libelleMetier).take(8).toList();

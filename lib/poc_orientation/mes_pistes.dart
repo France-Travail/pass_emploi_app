@@ -69,13 +69,7 @@ class Piste extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-    'metier': {
-      'code': metier.code,
-      'libelle': metier.libelle,
-      'riasecMajeur': metier.riasecMajeur,
-      'riasecMineur': metier.riasecMineur,
-      'grandDomaine': metier.grandDomaine,
-    },
+    'metier': _metierVersJson(metier),
     'avis': avis.name,
     'raisons': [for (final raison in raisons) raison.name],
     'faites': [for (final action in faites) action.name],
@@ -83,17 +77,11 @@ class Piste extends Equatable {
 
   // Lecture tolérante : une valeur inconnue (version précédente du POC) est ignorée plutôt que de tout perdre.
   static Piste? fromJson(dynamic json) {
-    final metier = json is Map ? json['metier'] : null;
+    final metier = _metierDepuisJson(json is Map ? json['metier'] : null);
     final avis = AvisMetier.values.where((valeur) => valeur.name == json?['avis']).firstOrNull;
-    if (metier is! Map || metier['code'] is! String || metier['libelle'] is! String || avis == null) return null;
+    if (metier == null || avis == null) return null;
     return Piste(
-      metier: RomeMetierResume(
-        code: metier['code'] as String,
-        libelle: metier['libelle'] as String,
-        riasecMajeur: metier['riasecMajeur'] as String?,
-        riasecMineur: metier['riasecMineur'] as String?,
-        grandDomaine: metier['grandDomaine'] as String?,
-      ),
+      metier: metier,
       avis: avis,
       raisons: _valeurs(RaisonPasPourMoi.values, json['raisons']),
       faites: _valeurs(ActionPiste.values, json['faites']),
@@ -109,12 +97,62 @@ class Piste extends Equatable {
   List<Object?> get props => [metier, avis, raisons, faites];
 }
 
+Map<String, dynamic> _metierVersJson(RomeMetierResume metier) => {
+  'code': metier.code,
+  'libelle': metier.libelle,
+  'riasecMajeur': metier.riasecMajeur,
+  'riasecMineur': metier.riasecMineur,
+  'grandDomaine': metier.grandDomaine,
+};
+
+RomeMetierResume? _metierDepuisJson(dynamic metier) {
+  if (metier is! Map || metier['code'] is! String || metier['libelle'] is! String) return null;
+  return RomeMetierResume(
+    code: metier['code'] as String,
+    libelle: metier['libelle'] as String,
+    riasecMajeur: metier['riasecMajeur'] as String?,
+    riasecMineur: metier['riasecMineur'] as String?,
+    grandDomaine: metier['grandDomaine'] as String?,
+  );
+}
+
+// Le test et les centres d'intérêt n'ont plus leurs propres listes : leurs meilleurs métiers rejoignent le tri.
+enum SourceAjout { test, centresInteret }
+
+class AjoutAuTri extends Equatable {
+  const AjoutAuTri({required this.metier, required this.source, required this.detail});
+
+  final RomeMetierResume metier;
+  final SourceAjout source;
+
+  // « Social et Réaliste » pour le test ; les centres d'intérêt choisis, sinon.
+  final String detail;
+
+  Map<String, dynamic> toJson() => {'metier': _metierVersJson(metier), 'source': source.name, 'detail': detail};
+
+  static AjoutAuTri? fromJson(dynamic json) {
+    final metier = _metierDepuisJson(json is Map ? json['metier'] : null);
+    final source = SourceAjout.values.where((valeur) => valeur.name == json?['source']).firstOrNull;
+    if (metier == null || source == null) return null;
+    return AjoutAuTri(metier: metier, source: source, detail: json['detail'] as String? ?? '');
+  }
+
+  @override
+  List<Object?> get props => [metier, source, detail];
+}
+
 class MesPistesEtat extends Equatable {
-  const MesPistesEtat({this.pistes = const [], this.scoresRiasec, this.centresInteret = const []});
+  const MesPistesEtat({
+    this.pistes = const [],
+    this.scoresRiasec,
+    this.centresInteret = const [],
+    this.ajouts = const [],
+  });
 
   final List<Piste> pistes;
   final Map<Riasec, int>? scoresRiasec;
   final List<String> centresInteret;
+  final List<AjoutAuTri> ajouts;
 
   List<Piste> get quiTentent => pistes.where((piste) => piste.avis == AvisMetier.meTente).toList();
 
@@ -126,11 +164,17 @@ class MesPistesEtat extends Equatable {
 
   bool get aQuelqueChoseAPartager => pistes.isNotEmpty || (profilRiasec != null && !profilRiasec!.estPlat);
 
-  MesPistesEtat copyWith({List<Piste>? pistes, Map<Riasec, int>? scoresRiasec, List<String>? centresInteret}) {
+  MesPistesEtat copyWith({
+    List<Piste>? pistes,
+    Map<Riasec, int>? scoresRiasec,
+    List<String>? centresInteret,
+    List<AjoutAuTri>? ajouts,
+  }) {
     return MesPistesEtat(
       pistes: pistes ?? this.pistes,
       scoresRiasec: scoresRiasec ?? this.scoresRiasec,
       centresInteret: centresInteret ?? this.centresInteret,
+      ajouts: ajouts ?? this.ajouts,
     );
   }
 
@@ -139,6 +183,7 @@ class MesPistesEtat extends Equatable {
     if (scoresRiasec case final scores?)
       'riasec': {for (final entree in scores.entries) entree.key.lettre: entree.value},
     'centresInteret': centresInteret,
+    'ajouts': [for (final ajout in ajouts) ajout.toJson()],
   };
 
   static MesPistesEtat lire(String? brut) {
@@ -158,6 +203,7 @@ class MesPistesEtat extends Equatable {
           for (final centre in (json['centresInteret'] as List? ?? const []))
             if (centre is String) centre,
         ],
+        ajouts: [for (final ajout in (json['ajouts'] as List? ?? const [])) ?AjoutAuTri.fromJson(ajout)],
       );
     } catch (_) {
       return const MesPistesEtat();
@@ -165,7 +211,7 @@ class MesPistesEtat extends Equatable {
   }
 
   @override
-  List<Object?> get props => [pistes, scoresRiasec, centresInteret];
+  List<Object?> get props => [pistes, scoresRiasec, centresInteret, ajouts];
 }
 
 // Les pistes du jeune : gardées sur son téléphone, au nom de son compte, jamais envoyées à un serveur (sauf s'il les
@@ -229,6 +275,19 @@ class MesPistes extends ValueNotifier<MesPistesEtat> {
   void enregistrerProfilRiasec(Map<Riasec, int> scores) => _changer(value.copyWith(scoresRiasec: {...scores}));
 
   void enregistrerCentresInteret(List<String> centres) => _changer(value.copyWith(centresInteret: [...centres]));
+
+  // Un nouveau test (ou un nouveau choix de centres d'intérêt) remplace les métiers que le précédent avait ajoutés.
+  void ajouterAuTri(SourceAjout source, List<RomeMetierResume> metiers, String detail) {
+    _changer(
+      value.copyWith(
+        ajouts: [
+          for (final ajout in value.ajouts)
+            if (ajout.source != source) ajout,
+          for (final metier in metiers) AjoutAuTri(metier: metier, source: source, detail: detail),
+        ],
+      ),
+    );
+  }
 
   void _modifier(RomeMetierResume metier, Piste Function(Piste piste) modification) {
     final existante = value.piste(metier.code) ?? Piste(metier: metier, avis: AvisMetier.meTente);

@@ -141,50 +141,6 @@ class _PocErreur extends StatelessWidget {
   }
 }
 
-class PocMetierAffiche {
-  const PocMetierAffiche(this.metier, [this.detail]);
-
-  final RomeMetierResume metier;
-  final String? detail;
-}
-
-class PocListeMetiers extends StatefulWidget {
-  const PocListeMetiers({super.key, required this.metiers});
-
-  final List<PocMetierAffiche> metiers;
-
-  @override
-  State<PocListeMetiers> createState() => _PocListeMetiersState();
-}
-
-class _PocListeMetiersState extends State<PocListeMetiers> {
-  static const _parPage = 20;
-  int _visibles = _parPage;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          PocOrientationStrings.nombreMetiers(widget.metiers.length),
-          style: DsfrTextStyle.bodySmBold(color: DsfrColorDecisions.textMentionGrey(context)),
-        ),
-        for (final affiche in widget.metiers.take(_visibles)) PocMetierTuile(metier: affiche.metier, detail: affiche.detail),
-        if (_visibles < widget.metiers.length) ...[
-          const SizedBox(height: DsfrSpacings.s2w),
-          DsfrButton(
-            label: PocOrientationStrings.voirPlus,
-            variant: DsfrButtonVariant.secondary,
-            size: DsfrComponentSize.md,
-            onPressed: () => setState(() => _visibles += _parPage),
-          ),
-        ],
-      ],
-    );
-  }
-}
-
 class PocMetierTuile extends StatelessWidget {
   const PocMetierTuile({super.key, required this.metier, this.detail, this.avecStatut = true});
 

@@ -91,6 +91,19 @@ void main() {
     });
   });
 
+  test('un nouveau test remplace les métiers que le précédent avait ajoutés au tri, pas ceux des centres', () async {
+    await pistes.ouvrirSession(jeune: 'jeune-1', demo: false);
+    pistes.ajouterAuTri(SourceAjout.centresInteret, [_boulanger], 'Cuisiner');
+    pistes.ajouterAuTri(SourceAjout.test, [_estheticien], 'Social et Artiste');
+
+    pistes.ajouterAuTri(SourceAjout.test, [_boulanger], 'Réaliste et Social');
+
+    expect(pistes.value.ajouts, const [
+      AjoutAuTri(metier: _boulanger, source: SourceAjout.centresInteret, detail: 'Cuisiner'),
+      AjoutAuTri(metier: _boulanger, source: SourceAjout.test, detail: 'Réaliste et Social'),
+    ]);
+  });
+
   group('Mémoire sur le téléphone', () {
     test('les pistes, le profil et les centres d’intérêt sont gardés au nom du jeune', () async {
       await pistes.ouvrirSession(jeune: 'jeune-1', demo: false);
@@ -98,6 +111,7 @@ void main() {
       pistes.pasPourMoi(_estheticien, {RaisonPasPourMoi.interet});
       pistes.enregistrerProfilRiasec({Riasec.social: 9, Riasec.realiste: 7});
       pistes.enregistrerCentresInteret(['Cuisiner']);
+      pistes.ajouterAuTri(SourceAjout.test, [_boulanger], 'Social et Réaliste');
       final avant = pistes.value;
       await Future<void>.delayed(Duration.zero);
 

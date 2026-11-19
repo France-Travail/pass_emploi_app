@@ -8,13 +8,14 @@ List<String> conseilsPourEtape(
   EtapePiste etape,
   OnboardingQuestionnaireAnswers? reponses, {
   required bool sansDiplome,
+  List<String> efforts = const [],
 }) {
   if (reponses == null) return const [];
   final freins = reponses.freins;
   return switch (etape) {
     EtapePiste.decouvrir => [
       if (freins.contains(QuestionnaireFrein.sante) || freins.contains(QuestionnaireFrein.handicap))
-        PocOrientationStrings.conseilSante,
+        efforts.isEmpty ? PocOrientationStrings.conseilSante : PocOrientationStrings.conseilSanteEfforts(efforts),
     ],
     EtapePiste.tester => [
       if (freins.contains(QuestionnaireFrein.pasDePermis) || freins.contains(QuestionnaireFrein.pasDeTransport))

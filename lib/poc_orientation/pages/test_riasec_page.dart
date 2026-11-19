@@ -90,7 +90,7 @@ class _TestRiasecPageState extends State<TestRiasecPage> {
       setState(() => _index = index + 1);
       return;
     }
-    Navigator.pushReplacement(context, RiasecResultatPage.route(RiasecProfil.depuis(_reponses)));
+    Navigator.pushReplacement(context, RiasecResultatPage.route(RiasecProfil.depuis(_reponses), nouveauTest: true));
   }
 }
 

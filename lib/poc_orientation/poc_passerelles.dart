@@ -14,6 +14,13 @@ import 'package:pass_emploi_app/utils/launcher_utils.dart';
 
 const _accompagnementsAvecAlternance = [Accompagnement.cej, Accompagnement.aij, Accompagnement.avenirPro];
 
+const nomRouteExplorerMetiers = '/poc_orientation/explorer_metiers';
+
+// Après le tri, retour à l'accueil « Explorer les métiers » (ou au premier écran, s'il n'est pas ouvert).
+void revenirAExplorerMetiers(NavigatorState navigateur) {
+  navigateur.popUntil((route) => route.settings.name == nomRouteExplorerMetiers || route.isFirst);
+}
+
 // Recharge les pistes quand le compte a changé (ou repart de zéro en démo).
 void ouvrirMesPistes(BuildContext context) {
   final state = StoreProvider.of<AppState>(context, listen: false).state;
@@ -26,42 +33,42 @@ bool peutChercherAlternance(BuildContext context) {
   return _accompagnementsAvecAlternance.contains(StoreProvider.of<AppState>(context).state.accompagnement());
 }
 
-void ouvrirRechercheOffres(BuildContext context, RomeFicheMetier fiche, {required bool alternance}) {
-  _retenirMetier(context, fiche);
+void ouvrirRechercheOffres(BuildContext context, RomeMetierResume metier, {required bool alternance}) {
+  _retenirMetier(context, metier);
   Navigator.of(context).push(RechercheOffreEmploiPage.materialPageRoute(onlyAlternance: alternance));
 }
 
-void ouvrirRechercheImmersion(BuildContext context, RomeFicheMetier fiche) {
-  _retenirMetier(context, fiche);
+void ouvrirRechercheImmersion(BuildContext context, RomeMetierResume metier) {
+  _retenirMetier(context, metier);
   Navigator.of(context).push(RechercheOffreImmersionPage.materialPageRoute());
 }
 
-void ouvrirFormationsAlternance(RomeFicheMetier fiche) {
-  launchExternalUrl('https://labonnealternance.apprentissage.beta.gouv.fr/recherche?romes=${fiche.code}');
+void ouvrirFormationsAlternance(RomeMetierResume metier) {
+  launchExternalUrl('https://labonnealternance.apprentissage.beta.gouv.fr/recherche?romes=${metier.code}');
 }
 
-void ouvrirFormationsFranceTravail(RomeFicheMetier fiche) {
-  launchExternalUrl('https://candidat.francetravail.fr/formations/recherche?quoi=${fiche.code}');
+void ouvrirFormationsFranceTravail(RomeMetierResume metier) {
+  launchExternalUrl('https://candidat.francetravail.fr/formations/recherche?quoi=${metier.code}');
 }
 
 void ouvrirFormationsOnisep() => launchExternalUrl('https://www.onisep.fr/recherche/formations');
 
 // Parcoursmétiers.tv range ses vidéos sous l'intitulé ROME, mais sa recherche ne trouve pas la forme double
 // « Boulanger / Boulangère » : on cherche la forme simple. Certains intitulés longs ne trouvent aucune vidéo.
-String lienVideosMetier(RomeFicheMetier fiche) {
-  return 'https://parcoursmetiers.tv/recherche?q=${Uri.encodeComponent(fiche.motCle)}';
+String lienVideosMetier(RomeMetierResume metier) {
+  return 'https://parcoursmetiers.tv/recherche?q=${Uri.encodeComponent(motCleDuMetier(metier.libelle))}';
 }
 
 // My Job Glasses demande un compte (gratuit, connexion possible avec France Travail), puis revient sur la recherche.
-String lienEchangerAvecUnPro(RomeFicheMetier fiche) {
-  return 'https://app.myjobglasses.com/search?q=${Uri.encodeComponent(fiche.motCle)}';
+String lienEchangerAvecUnPro(RomeMetierResume metier) {
+  return 'https://app.myjobglasses.com/search?q=${Uri.encodeComponent(motCleDuMetier(metier.libelle))}';
 }
 
 // Les pages de recherche préremplissent le métier depuis les critères de l'utilisateur.
-void _retenirMetier(BuildContext context, RomeFicheMetier fiche) {
+void _retenirMetier(BuildContext context, RomeMetierResume metier) {
   final store = StoreProvider.of<AppState>(context);
   final criteres = store.criteresRechercheUtilisateur.copyWith(
-    metier: () => MetierRomeCritere(Metier(codeRome: fiche.code, libelle: fiche.motCle)),
+    metier: () => MetierRomeCritere(Metier(codeRome: metier.code, libelle: motCleDuMetier(metier.libelle))),
   );
   store.dispatch(CriteresRecherchePersistSuccessAction(criteres));
   store.dispatch(CriteresRecherchePersistWriteAction(criteres));

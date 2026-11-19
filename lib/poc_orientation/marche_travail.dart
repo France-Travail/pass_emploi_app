@@ -13,6 +13,9 @@ String pocOrientationFicheDeDemo(String code) {
   return _fichesDeDemo.contains(code) ? 'poc_orientation_fiche_$code' : 'poc_orientation_fiche_metier';
 }
 
+// La fiche par défaut (poc_orientation_fiche_metier) est celle du boulanger, D1102.
+bool aUneFicheDeDemo(String code) => code == 'D1102' || _fichesDeDemo.contains(code);
+
 enum DifficulteRecrutement {
   tresFaible('Très faible'),
   faible('Faible'),

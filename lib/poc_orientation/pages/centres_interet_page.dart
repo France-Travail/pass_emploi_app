@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:pass_emploi_app/poc_orientation/marche_travail.dart';
 import 'package:pass_emploi_app/poc_orientation/mes_pistes.dart';
-import 'package:pass_emploi_app/poc_orientation/pages/metiers_liste_page.dart';
+import 'package:pass_emploi_app/poc_orientation/pages/tri_page.dart';
+import 'package:pass_emploi_app/poc_orientation/parcours.dart';
+import 'package:pass_emploi_app/poc_orientation/pistes_pour_toi.dart';
 import 'package:pass_emploi_app/poc_orientation/poc_orientation_strings.dart';
 import 'package:pass_emploi_app/poc_orientation/rome_api_client.dart';
 import 'package:pass_emploi_app/poc_orientation/rome_models.dart';
 import 'package:pass_emploi_app/poc_orientation/widgets/poc_widgets.dart';
+import 'package:pass_emploi_app/redux/app_state.dart';
 
+// « Choisis ce que tu aimes » : jusqu'à 3 centres d'intérêt, dont les métiers rejoignent le tri.
 class CentresInteretPage extends StatefulWidget {
   const CentresInteretPage({super.key});
 
@@ -21,6 +27,8 @@ class _CentresInteretPageState extends State<CentresInteretPage> {
 
   late Future<List<RomeCentreInteret>> _centres = RomeApiClient.instance.centresInteret();
   final _selection = <RomeCentreInteret>[];
+  bool _enCours = false;
+  (DsfrAlertType, String)? _alerte;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +61,7 @@ class _CentresInteretPageState extends State<CentresInteretPage> {
                   label: centre.libelle,
                   size: DsfrComponentSize.md,
                   value: _selection.contains(centre),
-                  enabled: _selection.contains(centre) || _selection.length < _maximum,
+                  enabled: !_enCours && (_selection.contains(centre) || _selection.length < _maximum),
                   onChanged: (coche) => _basculer(centre, coche),
                 ),
               ),
@@ -63,11 +71,24 @@ class _CentresInteretPageState extends State<CentresInteretPage> {
       bottom: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(DsfrSpacings.s2w),
-          child: DsfrButton(
-            label: PocOrientationStrings.centresVoirMetiers,
-            variant: DsfrButtonVariant.primary,
-            size: DsfrComponentSize.lg,
-            onPressed: _selection.isEmpty ? null : _voirMetiers,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (_alerte case (final type, final texte)?) ...[
+                Semantics(
+                  liveRegion: true,
+                  child: DsfrAlert(type: type, description: DsfrAlertDescriptionText(texte)),
+                ),
+                const SizedBox(height: DsfrSpacings.s2w),
+              ],
+              DsfrButton(
+                label: _enCours ? PocOrientationStrings.centresEnCours : PocOrientationStrings.centresAjouter,
+                variant: DsfrButtonVariant.primary,
+                size: DsfrComponentSize.lg,
+                onPressed: _selection.isEmpty || _enCours ? null : _ajouterAuTri,
+              ),
+            ],
           ),
         ),
       ),
@@ -76,6 +97,7 @@ class _CentresInteretPageState extends State<CentresInteretPage> {
 
   void _basculer(RomeCentreInteret centre, bool coche) {
     setState(() {
+      _alerte = null;
       if (coche) {
         _selection.add(centre);
       } else {
@@ -84,40 +106,46 @@ class _CentresInteretPageState extends State<CentresInteretPage> {
     });
   }
 
-  void _voirMetiers() {
-    final centres = [..._selection];
-    MesPistes.instance.enregistrerCentresInteret(centres.map((centre) => centre.libelle).toList());
-    Navigator.push(
-      context,
-      MetiersListePage.route(
-        titre: PocOrientationStrings.centresMetiersTitre,
-        intro: PocOrientationStrings.centresMetiersIntro(centres.map((centre) => centre.libelle).toList()),
-        charger: () => _metiersPour(centres),
-      ),
-    );
-  }
-
   // Un appel par centre d'intérêt, l'un après l'autre : ROME n'accepte qu'un appel par seconde.
-  static Future<List<PocMetierAffiche>> _metiersPour(List<RomeCentreInteret> centres) async {
-    final metiers = <String, RomeMetierResume>{};
-    final enCommun = <String, int>{};
-    for (final centre in centres) {
-      for (final metier in await RomeApiClient.instance.metiersDuCentreInteret(centre.code)) {
-        metiers[metier.code] = metier;
-        enCommun[metier.code] = (enCommun[metier.code] ?? 0) + 1;
+  // En démo, seuls les métiers dont la fiche est dans la démo rejoignent le tri (aucun appel réseau).
+  Future<void> _ajouterAuTri() async {
+    final centres = [..._selection];
+    final libelles = centres.map((centre) => centre.libelle).toList();
+    final demo = StoreProvider.of<AppState>(context, listen: false).state.demoState;
+    setState(() {
+      _enCours = true;
+      _alerte = null;
+    });
+    try {
+      final parCentre = <List<RomeMetierResume>>[];
+      for (final centre in centres) {
+        final metiers = await RomeApiClient.instance.metiersDuCentreInteret(centre.code);
+        parCentre.add(demo ? metiers.where((metier) => aUneFicheDeDemo(metier.code)).toList() : metiers);
       }
-    }
-    final tries = metiers.values.toList()
-      ..sort((a, b) {
-        final ecart = enCommun[b.code]!.compareTo(enCommun[a.code]!);
-        return ecart != 0 ? ecart : a.libelle.compareTo(b.libelle);
-      });
-    return [
-      for (final metier in tries)
-        PocMetierAffiche(
-          metier,
-          centres.length > 1 ? PocOrientationStrings.centresEnCommun(enCommun[metier.code]!) : null,
+      MesPistes.instance.enregistrerCentresInteret(libelles);
+      final choisis = metiersDesCentres(parCentre, MesPistes.instance.value);
+      MesPistes.instance.ajouterAuTri(SourceAjout.centresInteret, choisis, libelles.join(', '));
+      if (!mounted) return;
+      if (choisis.isEmpty) {
+        setState(() {
+          _enCours = false;
+          _alerte = (DsfrAlertType.info, PocOrientationStrings.centresAucunAjout);
+        });
+        return;
+      }
+      Navigator.pushReplacement(
+        context,
+        TriPage.route(
+          message: PocOrientationStrings.centresAjoutes(choisis.length),
+          dAbord: SourcePiste.centresInteret,
         ),
-    ];
+      );
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _enCours = false;
+        _alerte = (DsfrAlertType.error, PocOrientationStrings.erreur);
+      });
+    }
   }
 }

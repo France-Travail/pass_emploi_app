@@ -16,6 +16,8 @@ enum SourcePiste {
   franceTravail,
   parcoursFranceTravail,
   questionnaire,
+  test,
+  centresInteret,
   favori,
   recherche,
   diagoriente,
@@ -44,8 +46,9 @@ class PisteProposee extends Equatable {
 
 const _typesMetier = {OffreType.emploi, OffreType.alternance, OffreType.immersion};
 
-// « Des pistes pour toi » : des métiers tirés de ce que le jeune a déjà fait dans l'app, chacun avec ses raisons.
-// Un métier déjà trié (dans ses pistes ou mis de côté) n'est plus proposé.
+// « Des métiers pour toi », la liste à trier : tout ce que l'app sait du jeune (son activité, son conseiller, son test,
+// ses centres d'intérêt, les voisins de ses pistes), chaque métier avec ses raisons. Un métier déjà trié (dans ses pistes
+// ou mis de côté) n'est plus proposé.
 List<PisteProposee> proposerDesPistes(ContexteJeune contexte, MesPistesEtat mesPistes, {MarcheTravail? marche}) {
   final metiers = <String, RomeMetierResume>{};
   final raisons = <String, Map<SourcePiste, List<String>>>{};
@@ -69,6 +72,12 @@ List<PisteProposee> proposerDesPistes(ContexteJeune contexte, MesPistesEtat mesP
       null => null,
     };
     if (source != null) ajouter(romeoSimule(suggestion.metier ?? suggestion.titre), source, suggestion.titre);
+  }
+  for (final ajout in mesPistes.ajouts) {
+    ajouter(ajout.metier, switch (ajout.source) {
+      SourceAjout.test => SourcePiste.test,
+      SourceAjout.centresInteret => SourcePiste.centresInteret,
+    }, ajout.detail);
   }
   for (final experience in contexte.experiencesFranceTravail) {
     ajouter(
@@ -115,6 +124,8 @@ String _texte(SourcePiste source, List<String> details) => switch (source) {
   SourcePiste.franceTravail => PocOrientationStrings.raisonFranceTravail,
   SourcePiste.parcoursFranceTravail => PocOrientationStrings.raisonParcours(details.first),
   SourcePiste.questionnaire => PocOrientationStrings.raisonQuestionnaire(details.first),
+  SourcePiste.test => PocOrientationStrings.raisonTest(details.first),
+  SourcePiste.centresInteret => PocOrientationStrings.raisonCentres,
   SourcePiste.favori => PocOrientationStrings.raisonFavori(details.length),
   SourcePiste.recherche => PocOrientationStrings.raisonRecherche(details.length),
   SourcePiste.diagoriente => PocOrientationStrings.raisonDiagoriente,
