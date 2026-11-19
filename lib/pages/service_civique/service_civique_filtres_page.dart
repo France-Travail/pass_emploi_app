@@ -13,6 +13,7 @@ import 'package:pass_emploi_app/ui/theme.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/bottom_sheets.dart';
 import 'package:pass_emploi_app/widgets/bottom_sheets/filtres_bottom_sheet.dart';
 import 'package:pass_emploi_app/widgets/buttons/filter_button.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_date_picker_field.dart';
 import 'package:pass_emploi_app/widgets/radio_list_tile.dart';
 import 'package:pass_emploi_app/widgets/slider/distance_slider.dart';
 import 'package:pass_emploi_app/widgets/toggles/date_toggle.dart';
@@ -276,14 +277,16 @@ class _StartDateFiltersState extends State<_StartDateFilters> {
           isActiveDate: widget.isActiveDate,
         ),
         const SizedBox(height: DsfrSpacings.s1w),
-        DsfrDateInput(
+        // A11y 5.1 / 9.1 / 9.6 : un seul bouton, nommé par son étiquette et le titre de la section, désactivé tant
+        // que l'interrupteur « Dès le » est désactivé.
+        DsfrDatePickerField(
           label: Strings.selectDateTooltip,
+          groupLabel: Strings.startDateFiltreTitle,
           controller: _dateController,
           enabled: widget.isActiveDate,
           firstDate: DateTime(2020),
           lastDate: DateTime(2101),
           initialDate: widget.initialDateValue ?? DateTime.now(),
-          locale: const Locale('fr', 'FR'),
           onChanged: widget.onDateChange,
         ),
       ],

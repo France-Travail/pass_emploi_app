@@ -4,6 +4,7 @@ import 'package:pass_emploi_app/presentation/model/date_input_source.dart';
 import 'package:pass_emploi_app/presentation/model/date_suggestions_view_model.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/date_extensions.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_date_picker_field.dart';
 
 class DsfrDateInputSuggestions extends StatefulWidget {
   const DsfrDateInputSuggestions({
@@ -60,22 +61,18 @@ class _DsfrDateInputSuggestionsState extends State<DsfrDateInputSuggestions> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // A11y 9.1 / 9.2 : DsfrDateInput pose son étiquette (et son aide) sur le groupe, pas sur le champ, que TalkBack
-        // restituait sans nom. La fusion donne au champ son étiquette visible, son aide et son message d'erreur.
-        MergeSemantics(
-          child: DsfrDateInput(
-            label: widget.label,
-            hintText: widget.hintText,
-            controller: _controller,
-            firstDate: DateTime(2020),
-            lastDate: DateTime(2101),
-            initialDate: widget.dateSource.isValid ? widget.dateSource.selectedDate : DateTime.now(),
-            locale: const Locale('fr', 'FR'),
-            composantState: widget.isInvalid
-                ? DsfrComponentState.error(errorMessage: widget.errorMessage ?? Strings.dateMandatory)
-                : const DsfrComponentState.none(),
-            onChanged: (date) => widget.onDateChanged(DateFromPicker(date)),
-          ),
+        // A11y 5.1 / 9.1 / 9.2 / 9.9 : un seul bouton, nommé par son étiquette visible et son message d'erreur.
+        DsfrDatePickerField(
+          label: widget.label,
+          hintText: widget.hintText,
+          controller: _controller,
+          firstDate: DateTime(2020),
+          lastDate: DateTime(2101),
+          initialDate: widget.dateSource.isValid ? widget.dateSource.selectedDate : DateTime.now(),
+          composantState: widget.isInvalid
+              ? DsfrComponentState.error(errorMessage: widget.errorMessage ?? Strings.dateMandatory)
+              : const DsfrComponentState.none(),
+          onChanged: (date) => widget.onDateChanged(DateFromPicker(date)),
         ),
         const SizedBox(height: DsfrSpacings.s1w),
         DsfrDateSuggestions(

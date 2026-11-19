@@ -47,14 +47,19 @@ void main() {
     semantics.dispose();
   });
 
-  testWidgets('A11y 9.1 : les champs de la « Période » portent leur étiquette visible', (tester) async {
+  testWidgets('A11y 5.1 / 9.1 / 9.6 : les champs de la « Période » sont des boutons nommés avec la section', (
+    tester,
+  ) async {
     final semantics = tester.ensureSemantics();
     await pump(tester);
 
-    final champs = find.byType(TextField);
-    expect(champs, findsNWidgets(2));
-    expect(tester.getSemantics(champs.at(0)), isSemantics(isTextField: true, label: Strings.evenementEmploiFiltresDateDebut));
-    expect(tester.getSemantics(champs.at(1)), isSemantics(isTextField: true, label: Strings.evenementEmploiFiltresDateFin));
+    final periode = Strings.evenementEmploiFiltresDate;
+    for (final etiquette in [Strings.evenementEmploiFiltresDateDebut, Strings.evenementEmploiFiltresDateFin]) {
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('$etiquette, $periode')),
+        isSemantics(isButton: true, hasTapAction: true, hasEnabledState: true, isEnabled: true),
+      );
+    }
     semantics.dispose();
   });
 }

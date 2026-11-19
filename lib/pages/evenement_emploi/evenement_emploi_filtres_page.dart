@@ -13,6 +13,7 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/date_extensions.dart';
 import 'package:pass_emploi_app/widgets/buttons/filter_button.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_date_picker_field.dart';
 import 'package:pass_emploi_app/widgets/errors/error_text.dart';
 import 'package:pass_emploi_app/widgets/radio_list_tile.dart';
 import 'package:pass_emploi_app/widgets/tag_group.dart';
@@ -335,30 +336,25 @@ class _DateFiltresState extends State<_DateFiltres> {
           ),
         ),
         const SizedBox(height: DsfrSpacings.s1w),
-        // A11y 9.1 / 9.2 : DsfrDateInput pose son étiquette sur le groupe, pas sur le champ, que TalkBack restituait
-        // sans nom. La fusion donne à chaque champ son étiquette visible.
-        MergeSemantics(
-          child: DsfrDateInput(
-            label: Strings.evenementEmploiFiltresDateDebut,
-            controller: _dateDebutController,
-            firstDate: DateTime.now(),
-            lastDate: DateTime(2101),
-            initialDate: widget.initialDateDebut ?? DateTime.now(),
-            locale: const Locale('fr', 'FR'),
-            onChanged: widget.onDateDebutValueChange,
-          ),
+        // A11y 5.1 / 9.1 / 9.6 : chaque champ est un bouton nommé par son étiquette, suivie du titre de la section.
+        DsfrDatePickerField(
+          label: Strings.evenementEmploiFiltresDateDebut,
+          groupLabel: Strings.evenementEmploiFiltresDate,
+          controller: _dateDebutController,
+          firstDate: DateTime.now(),
+          lastDate: DateTime(2101),
+          initialDate: widget.initialDateDebut ?? DateTime.now(),
+          onChanged: widget.onDateDebutValueChange,
         ),
         const SizedBox(height: DsfrSpacings.s1w),
-        MergeSemantics(
-          child: DsfrDateInput(
-            label: Strings.evenementEmploiFiltresDateFin,
-            controller: _dateFinController,
-            firstDate: firstDateFin ?? DateTime.now(),
-            lastDate: DateTime(2101),
-            initialDate: initialDateFin ?? firstDateFin ?? DateTime.now(),
-            locale: const Locale('fr', 'FR'),
-            onChanged: widget.onDateFinValueChange,
-          ),
+        DsfrDatePickerField(
+          label: Strings.evenementEmploiFiltresDateFin,
+          groupLabel: Strings.evenementEmploiFiltresDate,
+          controller: _dateFinController,
+          firstDate: firstDateFin ?? DateTime.now(),
+          lastDate: DateTime(2101),
+          initialDate: initialDateFin ?? firstDateFin ?? DateTime.now(),
+          onChanged: widget.onDateFinValueChange,
         ),
       ],
     );

@@ -28,12 +28,14 @@ void main() {
     );
   }
 
-  testWidgets('A11y 9.1 / 9.2 : le champ date porte son étiquette visible et son aide', (tester) async {
+  testWidgets('A11y 5.1 / 9.1 / 9.2 : le champ date est un bouton qui porte son étiquette visible et son aide', (
+    tester,
+  ) async {
     final semantics = tester.ensureSemantics();
     await pump(tester);
 
     final champ = tester.getSemantics(find.byType(TextField));
-    expect(champ, isSemantics(isTextField: true));
+    expect(champ, isSemantics(isButton: true, hasTapAction: true));
     expect(champ.label, 'Date (obligatoire)');
     expect(champ.hint, 'Format jj/mm/aaaa');
     semantics.dispose();
@@ -45,7 +47,7 @@ void main() {
 
     final noeudsEtiquette = find.semantics.byLabel('Date (obligatoire)').evaluate();
     expect(noeudsEtiquette, hasLength(1));
-    expect(noeudsEtiquette.single, isSemantics(isTextField: true));
+    expect(noeudsEtiquette.single, isSemantics(isButton: true));
     semantics.dispose();
   });
 
