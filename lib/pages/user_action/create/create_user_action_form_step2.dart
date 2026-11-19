@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/analytics/tracker.dart';
 import 'package:pass_emploi_app/models/user_action_type.dart';
 import 'package:pass_emploi_app/presentation/user_action/creation_form/create_user_action_form_view_model.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
@@ -176,7 +177,11 @@ class _SelectableTagSemantics extends StatelessWidget {
       checked: selected,
       // A11y 9.6 : le nom reprend la consigne du groupe (« Sélectionne une action (obligatoire) »), après le libellé.
       label: '$label, ${Strings.userActionSubtitleStep2}',
-      onTap: onTap,
+      onTap: () {
+        onTap();
+        // A11y 5.5 : sans cet évènement, TalkBack (avant Android 16) n'annonçait pas le nouvel état.
+        A11yUtils.notifyTap(context);
+      },
       excludeSemantics: true,
       child: child,
     );
