@@ -259,6 +259,7 @@ class _DuplicateUserActionItemState extends State<_DuplicateUserActionItem> {
                 ),
                 const SizedBox(height: DsfrSpacings.s1w),
                 DsfrDateSuggestions(
+                  fieldLabel: Strings.datePickerTitle,
                   dateSource: widget.duplicatedUserAction.dateSource,
                   onSelected: widget.onDateChanged,
                 ),

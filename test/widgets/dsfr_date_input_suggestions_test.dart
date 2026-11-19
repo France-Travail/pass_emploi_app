@@ -57,6 +57,16 @@ void main() {
     semantics.dispose();
   });
 
+  testWidgets('A11y 9.6 : chaque suggestion reprend l’étiquette du champ après son libellé', (tester) async {
+    final semantics = tester.ensureSemantics();
+    await pump(tester);
+
+    for (final suggestion in [Strings.dateSuggestionAujourdhui, Strings.dateSuggestionDemain]) {
+      expect(find.bySemanticsLabel(RegExp('^$suggestion \\(.*\\), Date \\(obligatoire\\)\$')), findsOneWidget);
+    }
+    semantics.dispose();
+  });
+
   testWidgets('les suggestions restent des boutons distincts du champ', (tester) async {
     final semantics = tester.ensureSemantics();
     await pump(tester);

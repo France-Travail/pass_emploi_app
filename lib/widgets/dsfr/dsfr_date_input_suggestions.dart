@@ -79,6 +79,7 @@ class _DsfrDateInputSuggestionsState extends State<DsfrDateInputSuggestions> {
         ),
         const SizedBox(height: DsfrSpacings.s1w),
         DsfrDateSuggestions(
+          fieldLabel: widget.label,
           dateSource: widget.dateSource,
           onSelected: widget.onDateChanged,
         ),
@@ -90,10 +91,13 @@ class _DsfrDateInputSuggestionsState extends State<DsfrDateInputSuggestions> {
 class DsfrDateSuggestions extends StatelessWidget {
   const DsfrDateSuggestions({
     super.key,
+    required this.fieldLabel,
     required this.onSelected,
     required this.dateSource,
   });
 
+  /// Étiquette visible du champ date associé, reprise dans le nom de chaque suggestion (A11y 9.6).
+  final String fieldLabel;
   final void Function(DateInputSource) onSelected;
   final DateInputSource dateSource;
 
@@ -109,7 +113,8 @@ class DsfrDateSuggestions extends StatelessWidget {
             button: true,
             // A11y 10.3.3 : état sélectionné restitué, et nom lu une seule fois.
             selected: _isSuggestionSelected(suggestion),
-            label: suggestion.a11yLabel,
+            // A11y 9.6 : le nom reprend l'étiquette du champ date, après le libellé visible.
+            label: '${suggestion.a11yLabel}, $fieldLabel',
             onTap: () => onSelected(DateFromSuggestion(suggestion.date, suggestion.label)),
             excludeSemantics: true,
             child: DsfrButton(
