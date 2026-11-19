@@ -267,9 +267,13 @@ class _StartDateFiltersState extends State<_StartDateFilters> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          Strings.startDateFiltreTitle,
-          style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context)),
+        // A11y 6.1 : titre de section, comme dans les autres pages de filtres (titre de la page en niveau 1).
+        Semantics(
+          headingLevel: 2,
+          child: Text(
+            Strings.startDateFiltreTitle,
+            style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context)),
+          ),
         ),
         const SizedBox(height: DsfrSpacings.s1w),
         DateToggle(
@@ -305,9 +309,13 @@ class _DomainFilters extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          Strings.domainFiltreTitle,
-          style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context)),
+        // A11y 6.1 : titre de section, comme dans les autres pages de filtres (titre de la page en niveau 1).
+        Semantics(
+          headingLevel: 2,
+          child: Text(
+            Strings.domainFiltreTitle,
+            style: DsfrTextStyle.bodyXlBold(color: DsfrColorDecisions.textTitleGrey(context)),
+          ),
         ),
         const SizedBox(height: DsfrSpacings.s1w),
         _DomainList(
