@@ -1742,8 +1742,8 @@ class Strings {
   static String ratingAppSubtitle = Brand.isPassEmploi()
       ? "Votre retour fait évoluer l’appli"
       : "Ton retour fait évoluer l’appli";
-  static String contactTeamLabel = "Contacter l’équipe";
-  static String contactTeamSubtitle = "Une question, un souci ?";
+  static String contactTeamLabel = "Signaler un problème technique";
+  static String contactTeamSubtitle = "Un souci sur l’application ?";
 
   // Notifications settings
   static const String notificationsSettingsSubtitle = "Recevoir des notifications pour les événements suivants :";
@@ -1794,7 +1794,7 @@ class Strings {
 
   // contact page
   static String contactConseilsDepartementaux = "Conseil départemental";
-  static String contactPageTitle = "Contacter l’équipe";
+  static String contactPageTitle = "Signaler un problème technique";
   static String contactPageBody1 = Brand.isCej()
       ? "L’équipe technique de l’application 1jeune1solution est en charge du développement de l’application."
       : "L’équipe technique de l’application pass emploi est en charge du développement de l’application.";
@@ -1805,7 +1805,7 @@ class Strings {
   static String contactPageBodyBullet1 = "Un problème sur l’application";
   static String contactPageBodyBullet2 = "Une suggestion d’évolution";
   static String contactPageBodyBullet3 = "Toute autre remarque";
-  static String contactPageButton = "Contacter l'équipe";
+  static String contactPageButton = "Envoyer un email";
 
   static String objetPriseDeContact(Brand brand) => brand.isCej
       ? "Prise de contact avec l’équipe de l’application 1jeune1solution"
