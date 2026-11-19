@@ -1805,7 +1805,7 @@ class Strings {
   static String contactPageBodyBullet1 = "Un problème sur l’application";
   static String contactPageBodyBullet2 = "Une suggestion d’évolution";
   static String contactPageBodyBullet3 = "Toute autre remarque";
-  static String contactPageButton = "Envoyer un email";
+  static String contactPageButton = "Envoyer un e-mail";
 
   static String objetPriseDeContact(Brand brand) => brand.isCej
       ? "Prise de contact avec l’équipe de l’application 1jeune1solution"
