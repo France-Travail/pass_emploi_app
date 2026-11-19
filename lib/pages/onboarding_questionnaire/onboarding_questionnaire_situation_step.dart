@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questi
 import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_form_change_notifier.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/a11y/group_label_semantics.dart';
 
 class OnboardingQuestionnaireSituationStep extends StatefulWidget {
   const OnboardingQuestionnaireSituationStep({super.key, required this.form});
@@ -89,20 +90,24 @@ class _OnboardingQuestionnaireSituationStepState extends State<OnboardingQuestio
         ...QuestionnaireSituation.values.map(
           (situation) => Padding(
             padding: const EdgeInsets.only(bottom: Margins.spacing_s),
-            child: DsfrRadioRichButton<QuestionnaireSituation>(
-              title: situation.label,
-              value: situation,
-              groupValue: form.draftSituation,
-              size: DsfrComponentSize.md,
-              isExpanded: true,
-              trailingIcon: OnboardingQuestionnaireEmojiIllustration(
-                emoji: situation.emoji,
-                backgroundColor: situation.illustrationColor,
+            // A11y 9.6 : chaque choix reprend la question de l'étape, affichée en titre.
+            child: GroupLabelSemantics(
+              groupLabel: Strings.onboardingQuestionnaireSituationTitle,
+              child: DsfrRadioRichButton<QuestionnaireSituation>(
+                title: situation.label,
+                value: situation,
+                groupValue: form.draftSituation,
+                size: DsfrComponentSize.md,
+                isExpanded: true,
+                trailingIcon: OnboardingQuestionnaireEmojiIllustration(
+                  emoji: situation.emoji,
+                  backgroundColor: situation.illustrationColor,
+                ),
+                // A11y 5.3 : choisir une réponse la sélectionne seulement ; on passe à la suite avec « Continuer ».
+                onChanged: (value) {
+                  if (value != null) form.updateSituation(value);
+                },
               ),
-              // A11y 5.3 : choisir une réponse la sélectionne seulement ; on passe à la suite avec « Continuer ».
-              onChanged: (value) {
-                if (value != null) form.updateSituation(value);
-              },
             ),
           ),
         ),
