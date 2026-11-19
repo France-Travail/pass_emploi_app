@@ -60,18 +60,22 @@ class _DsfrDateInputSuggestionsState extends State<DsfrDateInputSuggestions> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        DsfrDateInput(
-          label: widget.label,
-          hintText: widget.hintText,
-          controller: _controller,
-          firstDate: DateTime(2020),
-          lastDate: DateTime(2101),
-          initialDate: widget.dateSource.isValid ? widget.dateSource.selectedDate : DateTime.now(),
-          locale: const Locale('fr', 'FR'),
-          composantState: widget.isInvalid
-              ? DsfrComponentState.error(errorMessage: widget.errorMessage ?? Strings.dateMandatory)
-              : const DsfrComponentState.none(),
-          onChanged: (date) => widget.onDateChanged(DateFromPicker(date)),
+        // A11y 9.1 / 9.2 : DsfrDateInput pose son étiquette (et son aide) sur le groupe, pas sur le champ, que TalkBack
+        // restituait sans nom. La fusion donne au champ son étiquette visible, son aide et son message d'erreur.
+        MergeSemantics(
+          child: DsfrDateInput(
+            label: widget.label,
+            hintText: widget.hintText,
+            controller: _controller,
+            firstDate: DateTime(2020),
+            lastDate: DateTime(2101),
+            initialDate: widget.dateSource.isValid ? widget.dateSource.selectedDate : DateTime.now(),
+            locale: const Locale('fr', 'FR'),
+            composantState: widget.isInvalid
+                ? DsfrComponentState.error(errorMessage: widget.errorMessage ?? Strings.dateMandatory)
+                : const DsfrComponentState.none(),
+            onChanged: (date) => widget.onDateChanged(DateFromPicker(date)),
+          ),
         ),
         const SizedBox(height: DsfrSpacings.s1w),
         DsfrDateSuggestions(
