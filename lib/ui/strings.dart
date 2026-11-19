@@ -2139,8 +2139,6 @@ class Strings {
       : "Tu n’as pas de nouvelle notification.";
 
   // a11y
-  static String selectedRadioButton = "Sélectionné";
-  static String unselectedRadioButton = "Non sélectionné";
 
   static String deleteSelection = "Supprimer la sélection";
 
