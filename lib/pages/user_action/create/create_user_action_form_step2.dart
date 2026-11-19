@@ -174,7 +174,8 @@ class _SelectableTagSemantics extends StatelessWidget {
       container: true,
       inMutuallyExclusiveGroup: true,
       checked: selected,
-      label: label,
+      // A11y 9.6 : le nom reprend la consigne du groupe (« Sélectionne une action (obligatoire) »), après le libellé.
+      label: '$label, ${Strings.userActionSubtitleStep2}',
       onTap: onTap,
       excludeSemantics: true,
       child: child,
