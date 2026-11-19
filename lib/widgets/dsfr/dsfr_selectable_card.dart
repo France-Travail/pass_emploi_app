@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:pass_emploi_app/widgets/a11y/group_label_semantics.dart';
 
 class DsfrSelectableCard extends StatefulWidget {
   const DsfrSelectableCard({
@@ -7,11 +8,15 @@ class DsfrSelectableCard extends StatefulWidget {
     required this.label,
     required this.onTap,
     this.selected = false,
+    this.groupLabel,
   });
 
   final String label;
   final VoidCallback onTap;
   final bool selected;
+
+  /// Question ou consigne du groupe de choix, reprise dans le nom accessible après le libellé (A11y 9.6).
+  final String? groupLabel;
 
   @override
   State<DsfrSelectableCard> createState() => _DsfrSelectableCardState();
@@ -25,7 +30,7 @@ class _DsfrSelectableCardState extends State<DsfrSelectableCard> {
     final label = widget.label;
     final selected = widget.selected;
     final radius = const BorderRadius.all(Radius.circular(4));
-    return Semantics(
+    final card = Semantics(
       button: true,
       selected: selected,
       // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material.
@@ -65,5 +70,7 @@ class _DsfrSelectableCardState extends State<DsfrSelectableCard> {
         ),
       ),
     );
+    final groupLabel = widget.groupLabel;
+    return groupLabel == null ? card : GroupLabelSemantics(groupLabel: groupLabel, child: card);
   }
 }

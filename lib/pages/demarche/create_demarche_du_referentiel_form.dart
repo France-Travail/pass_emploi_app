@@ -219,6 +219,7 @@ class _Comments extends StatelessWidget {
         }
         return DsfrSelectableCard(
           label: comment.label,
+          groupLabel: Strings.comment,
           selected: codeComment == comment.code,
           onTap: () => onCommentSelected(comment.code),
         );
