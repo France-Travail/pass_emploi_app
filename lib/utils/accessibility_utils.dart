@@ -13,6 +13,17 @@ class A11yUtils {
     );
   }
 
+  /// A11y 5.5 : fait annoncer le nouvel état (coché, activé…) d'un choix dont l'action « toucher » est fournie par un
+  /// `Semantics(onTap: …)` au lieu du composant lui-même.
+  ///
+  /// Avant Android 16 (API 36), le moteur Flutter ne signale pas à TalkBack le changement d'état « coché » : TalkBack
+  /// le lit sur l'évènement « clic » que les composants Material envoient eux-mêmes (`Toggleable`, `Feedback.forTap`).
+  /// Une action « toucher » fournie par `Semantics` ne l'envoie pas : à appeler après le changement d'état, avec le
+  /// contexte d'un widget dont le premier objet de rendu est ce `Semantics` (par exemple un `Builder` qui le renvoie).
+  static void notifyTap(BuildContext context) {
+    context.findRenderObject()?.sendSemanticsEvent(const TapSemanticEvent());
+  }
+
   static bool withTextScale(BuildContext context) {
     return MediaQuery.textScalerOf(context).scale(1.0) > 1.0;
   }

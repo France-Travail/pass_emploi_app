@@ -9,6 +9,10 @@ class DebounceTextFormField extends StatelessWidget {
   final String? hintText;
   final Function(String value)? onChanged;
   final Function(String value)? onFieldSubmitted;
+
+  /// A11y 9.12 : nature de la saisie (inputType Android). Texte libre par défaut, jamais « nom de personne » :
+  /// métier, mots clés et localisation ne sont pas des noms.
+  final TextInputType keyboardType;
   final Debouncer _debouncer = Debouncer(duration: Duration(milliseconds: 200));
 
   DebounceTextFormField({
@@ -18,6 +22,7 @@ class DebounceTextFormField extends StatelessWidget {
     this.hintText,
     this.onChanged,
     this.onFieldSubmitted,
+    this.keyboardType = TextInputType.text,
   });
 
   @override
@@ -53,7 +58,7 @@ class DebounceTextFormField extends StatelessWidget {
             child: DsfrInputHeadless(
               initialValue: initialValue,
               autofocus: true,
-              keyboardType: TextInputType.name,
+              keyboardType: keyboardType,
               textCapitalization: TextCapitalization.words,
               textInputAction: TextInputAction.done,
               onFieldSubmitted: onFieldSubmitted,

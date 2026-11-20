@@ -299,8 +299,8 @@ void main() {
         );
 
     testWidgets(
-        "Android : l'état termine le nom, dans une région live relue au changement (pas d'annonce dépréciée)",
-        (tester) async {
+        "Android : l'état termine le nom, dans une région live relue au changement (pas d'annonce dépréciée), "
+        "active seulement après un changement d'état et jusqu'à la perte du focus", (tester) async {
       final handle = tester.ensureSemantics();
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       final announcements = <String>[];
@@ -315,14 +315,24 @@ void main() {
 
       var data = tester.getSemantics(headerFinder()).getSemanticsData();
       expect(data.label, endsWith(', ${Strings.a11yCollapsed}'));
-      expect(data.flagsCollection.isLiveRegion, isTrue);
+      // Le moteur traite la création du nœud comme un changement de nom : une région live dès l'affichage serait lue
+      // par TalkBack à l'arrivée sur l'écran, sans que le focus soit sur l'en-tête.
+      expect(data.flagsCollection.isLiveRegion, isFalse);
       expect(data.flagsCollection.isButton, isTrue);
 
       await tester.tap(headerFinder());
       await tester.pump(const Duration(seconds: 1));
+      final header = tester.getSemantics(headerFinder());
+      data = header.getSemanticsData();
+      expect(data.label, endsWith(', ${Strings.a11yExpanded}'));
+      expect(data.flagsCollection.isLiveRegion, isTrue);
+      expect(announcements, isEmpty);
+
+      header.owner!.performAction(header.id, SemanticsAction.didLoseAccessibilityFocus);
+      await tester.pump();
       data = tester.getSemantics(headerFinder()).getSemanticsData();
       expect(data.label, endsWith(', ${Strings.a11yExpanded}'));
-      expect(announcements, isEmpty);
+      expect(data.flagsCollection.isLiveRegion, isFalse);
 
       tester.binding.defaultBinaryMessenger.setMockDecodedMessageHandler<dynamic>(SystemChannels.accessibility, null);
       debugDefaultTargetPlatformOverride = null;

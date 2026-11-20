@@ -391,60 +391,69 @@ class _SuggestionCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ExcludeSemantics(
-              child: Wrap(
-                spacing: DsfrSpacings.s1w,
-                runSpacing: DsfrSpacings.s1v,
-                children: [
-                  DsfrTag(
-                    label: _suggestionTypeLabel(viewModel.type),
-                    size: DsfrComponentSize.sm,
-                    backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
-                    textColor: DsfrColorDecisions.textLabelGrey(context),
-                  ),
-                  if (source != null)
-                    DsfrTag(
-                      label: source,
-                      size: DsfrComponentSize.sm,
-                      backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
-                      textColor: DsfrColorDecisions.textLabelGrey(context),
-                    ),
-                ],
-              ),
-            ),
-            const SizedBox(height: DsfrSpacings.s1w),
+            // A11y : le contenu de la carte (titre, tags, localisation) est restitué en un seul élément, titre de la
+            // carte ; les boutons restent à part. Les tags et l'icône de localisation, seulement visuels, sont donnés
+            // en texte (« Source : », « Localisation : », comme dans les autres cartes).
             Semantics(
+              container: true,
               headingLevel: 3,
               label: [
                 viewModel.titre.toOffreTitleForScreenReaders(),
                 _suggestionTypeLabel(viewModel.type),
-                ?source,
+                if (source != null) Strings.source + source,
+                if (localisation != null && localisation.isNotEmpty)
+                  '${Strings.iconAlternativeLocation} : $localisation',
               ].join(', '),
               excludeSemantics: true,
-              child: Text(
-                viewModel.titre,
-                style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleBlueFrance(context)),
-              ),
-            ),
-            if (localisation != null && localisation.isNotEmpty) ...[
-              const SizedBox(height: DsfrSpacings.s1v),
-              Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Icon(
-                    DsfrIcons.mapMapPin2Line,
-                    size: DsfrSpacings.s2w,
-                    color: DsfrColorDecisions.textDefaultGrey(context),
+                  Wrap(
+                    spacing: DsfrSpacings.s1w,
+                    runSpacing: DsfrSpacings.s1v,
+                    children: [
+                      DsfrTag(
+                        label: _suggestionTypeLabel(viewModel.type),
+                        size: DsfrComponentSize.sm,
+                        backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
+                        textColor: DsfrColorDecisions.textLabelGrey(context),
+                      ),
+                      if (source != null)
+                        DsfrTag(
+                          label: source,
+                          size: DsfrComponentSize.sm,
+                          backgroundColor: DsfrColorDecisions.backgroundContrastGrey(context),
+                          textColor: DsfrColorDecisions.textLabelGrey(context),
+                        ),
+                    ],
                   ),
-                  const SizedBox(width: DsfrSpacings.s1v),
-                  Expanded(
-                    child: Text(
-                      localisation,
-                      style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context)),
+                  const SizedBox(height: DsfrSpacings.s1w),
+                  Text(
+                    viewModel.titre,
+                    style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleBlueFrance(context)),
+                  ),
+                  if (localisation != null && localisation.isNotEmpty) ...[
+                    const SizedBox(height: DsfrSpacings.s1v),
+                    Row(
+                      children: [
+                        Icon(
+                          DsfrIcons.mapMapPin2Line,
+                          size: DsfrSpacings.s2w,
+                          color: DsfrColorDecisions.textDefaultGrey(context),
+                        ),
+                        const SizedBox(width: DsfrSpacings.s1v),
+                        Expanded(
+                          child: Text(
+                            localisation,
+                            style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textDefaultGrey(context)),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
+                  ],
                 ],
               ),
-            ],
+            ),
             const SizedBox(height: DsfrSpacings.s2w),
             _SuggestionButtons(
               titre: viewModel.titre.toOffreTitleForScreenReaders(),

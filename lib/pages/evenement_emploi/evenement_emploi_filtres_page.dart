@@ -13,6 +13,7 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/date_extensions.dart';
 import 'package:pass_emploi_app/widgets/buttons/filter_button.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_bottom_sheet.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_date_picker_field.dart';
 import 'package:pass_emploi_app/widgets/errors/error_text.dart';
 import 'package:pass_emploi_app/widgets/radio_list_tile.dart';
 import 'package:pass_emploi_app/widgets/tag_group.dart';
@@ -335,23 +336,24 @@ class _DateFiltresState extends State<_DateFiltres> {
           ),
         ),
         const SizedBox(height: DsfrSpacings.s1w),
-        DsfrDateInput(
+        // A11y 5.1 / 9.1 / 9.6 : chaque champ est un bouton nommé par son étiquette, suivie du titre de la section.
+        DsfrDatePickerField(
           label: Strings.evenementEmploiFiltresDateDebut,
+          groupLabel: Strings.evenementEmploiFiltresDate,
           controller: _dateDebutController,
           firstDate: DateTime.now(),
           lastDate: DateTime(2101),
           initialDate: widget.initialDateDebut ?? DateTime.now(),
-          locale: const Locale('fr', 'FR'),
           onChanged: widget.onDateDebutValueChange,
         ),
         const SizedBox(height: DsfrSpacings.s1w),
-        DsfrDateInput(
+        DsfrDatePickerField(
           label: Strings.evenementEmploiFiltresDateFin,
+          groupLabel: Strings.evenementEmploiFiltresDate,
           controller: _dateFinController,
           firstDate: firstDateFin ?? DateTime.now(),
           lastDate: DateTime(2101),
           initialDate: initialDateFin ?? firstDateFin ?? DateTime.now(),
-          locale: const Locale('fr', 'FR'),
           onChanged: widget.onDateFinValueChange,
         ),
       ],

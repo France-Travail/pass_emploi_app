@@ -16,6 +16,7 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/date_extensions.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_date_picker_field.dart';
 
 class CreateDemarcheIaFtStep2Page extends StatelessWidget {
   const CreateDemarcheIaFtStep2Page(this.formViewModel);
@@ -403,13 +404,15 @@ class _DemarcheIaCardState extends State<_DemarcheIaCard> {
                 ),
               ],
               const SizedBox(height: DsfrSpacings.s2w),
-              DsfrDateInput(
+              // A11y 5.1 / 9.1 / 9.6 : un seul bouton ; chaque carte a ce même champ, son nom reprend donc le titre de
+              // la démarche.
+              DsfrDatePickerField(
                 label: Strings.thematiquesDemarcheDateShort,
+                groupLabel: widget.suggestion.titre,
                 controller: _dateController,
                 firstDate: DateTime(2020),
                 lastDate: DateTime(2101),
                 initialDate: widget.date ?? DateTime.now(),
-                locale: const Locale('fr', 'FR'),
                 composantState: widget.showError
                     ? DsfrComponentState.error(
                         errorMessage: Strings.dateMandatory,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 
 /// [DsfrToggleSwitch] avec un état actif et une action « toucher » exposés aux lecteurs d'écran.
 ///
@@ -43,7 +44,13 @@ class DsfrAccessibleToggleSwitch extends StatelessWidget {
       container: true,
       label: semanticsLabel,
       enabled: canToggle,
-      onTap: canToggle ? () => onChanged(!value) : null,
+      onTap: canToggle
+          ? () {
+              onChanged(!value);
+              // A11y 5.5 : sans cet évènement, TalkBack (avant Android 16) n'annonçait pas le nouvel état.
+              A11yUtils.notifyTap(context);
+            }
+          : null,
       child: DsfrToggleSwitch(
         label: label,
         value: value,

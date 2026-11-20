@@ -388,20 +388,26 @@ class _InviteActionPlanActionTileState extends State<InviteActionPlanActionTile>
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Semantics(
-                      key: widget.focusKey,
-                      container: true,
-                      sortKey: const OrdinalSortKey(1),
-                      // Sans `enabled: true` explicite, iOS annonce la case « estompé » (désactivée).
-                      enabled: true,
-                      checked: action.done,
-                      label: action.label,
-                      hint: _hintCase,
-                      onTap: widget.onToggleDone,
-                      excludeSemantics: true,
-                      child: _FocusableCheckbox(
-                        done: action.done,
-                        onTap: widget.onToggleDone,
+                    Builder(
+                      builder: (caseContext) => Semantics(
+                        key: widget.focusKey,
+                        container: true,
+                        sortKey: const OrdinalSortKey(1),
+                        // Sans `enabled: true` explicite, iOS annonce la case « estompé » (désactivée).
+                        enabled: true,
+                        checked: action.done,
+                        label: action.label,
+                        hint: _hintCase,
+                        onTap: () {
+                          widget.onToggleDone();
+                          // A11y 5.5 : sans cet évènement, TalkBack (avant Android 16) n'annonçait pas le nouvel état.
+                          A11yUtils.notifyTap(caseContext);
+                        },
+                        excludeSemantics: true,
+                        child: _FocusableCheckbox(
+                          done: action.done,
+                          onTap: widget.onToggleDone,
+                        ),
                       ),
                     ),
                     const SizedBox(width: Margins.spacing_xs),

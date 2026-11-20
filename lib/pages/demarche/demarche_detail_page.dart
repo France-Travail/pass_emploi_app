@@ -139,7 +139,6 @@ class _Body extends StatelessWidget {
               DsfrStatusBadge.fromPillule(
                 pillule: viewModel.pillule!,
                 forDemarche: true,
-                excludeSemantics: true,
               ),
             ],
           ),

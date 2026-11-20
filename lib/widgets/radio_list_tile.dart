@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
-import 'package:pass_emploi_app/ui/strings.dart';
 
 class CustomRadioGroup<T> extends StatefulWidget {
   const CustomRadioGroup({
@@ -36,11 +35,15 @@ class _CustomRadioGroupState<T> extends State<CustomRadioGroup<T>> {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: DsfrSpacings.s1w),
+      // A11y 5.1 / 5.5 : bouton radio natif (rôle et état « coché » / « non coché »). L'état n'est plus écrit dans le
+      // nom : TalkBack et VoiceOver lisaient « sélectionné » deux fois (texte, puis état).
       child: Semantics(
-        button: true,
-        selected: isSelected,
+        // A11y 5.1 (iOS) : sans `enabled: true` explicite, VoiceOver peut annoncer le choix « estompé ».
+        enabled: true,
+        checked: isSelected,
+        inMutuallyExclusiveGroup: true,
         label: [
-          '${isSelected ? Strings.selectedRadioButton : Strings.unselectedRadioButton} : $title',
+          title,
           if (widget.groupLabel != null) widget.groupLabel!,
         ].join(', '),
         // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material.

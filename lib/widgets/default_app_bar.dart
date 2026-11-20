@@ -89,7 +89,9 @@ class _CentreNotif extends StatelessWidget {
       children: [
         DsfrButton(
           icon: DsfrIcons.mediaNotification3Line,
-          iconSemanticLabel: Strings.notificationsCenterTooltip,
+          // La pastille n'est qu'un repère visuel : l'information qu'elle porte est donnée dans le nom du bouton.
+          iconSemanticLabel:
+              withNewNotifications ? Strings.notificationsCenterWithNewA11y : Strings.notificationsCenterTooltip,
           variant: DsfrButtonVariant.tertiaryWithoutBorder,
           size: DsfrComponentSize.md,
           onPressed: () => Navigator.of(context).push(NotificationCenter.route()),

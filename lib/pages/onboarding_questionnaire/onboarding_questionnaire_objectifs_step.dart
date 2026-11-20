@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/pages/onboarding_questionnaire/onboarding_questi
 import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding_questionnaire_form_change_notifier.dart';
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/widgets/a11y/group_label_semantics.dart';
 
 class OnboardingQuestionnaireObjectifsStep extends StatelessWidget {
   const OnboardingQuestionnaireObjectifsStep({super.key, required this.form});
@@ -27,15 +28,19 @@ class OnboardingQuestionnaireObjectifsStep extends StatelessWidget {
         ...QuestionnaireObjectif.values.map(
           (objectif) => Padding(
             padding: const EdgeInsets.only(bottom: Margins.spacing_s),
-            child: OnboardingQuestionnaireCheckboxRich(
-              label: objectif.label,
-              size: DsfrComponentSize.md,
-              value: form.draftObjectifs.contains(objectif),
-              trailingIcon: OnboardingQuestionnaireEmojiIllustration(
-                emoji: objectif.emoji,
-                backgroundColor: objectif.illustrationColor,
+            // A11y 9.6 : chaque choix reprend la question de l'étape, affichée en titre.
+            child: GroupLabelSemantics(
+              groupLabel: Strings.onboardingQuestionnaireObjectifsTitle,
+              child: OnboardingQuestionnaireCheckboxRich(
+                label: objectif.label,
+                size: DsfrComponentSize.md,
+                value: form.draftObjectifs.contains(objectif),
+                trailingIcon: OnboardingQuestionnaireEmojiIllustration(
+                  emoji: objectif.emoji,
+                  backgroundColor: objectif.illustrationColor,
+                ),
+                onChanged: (_) => form.toggleObjectif(objectif),
               ),
-              onChanged: (_) => form.toggleObjectif(objectif),
             ),
           ),
         ),

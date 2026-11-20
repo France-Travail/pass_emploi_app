@@ -10,6 +10,7 @@ import 'package:pass_emploi_app/ui/animation_durations.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/a11y/external_link_semantics.dart';
+import 'package:pass_emploi_app/widgets/a11y/group_label_semantics.dart';
 import 'package:pass_emploi_app/widgets/create_user_action_confirmation_offre_suivi_page.dart';
 
 class OffreSuivieForm extends StatelessWidget {
@@ -240,60 +241,73 @@ class _OptionsState extends State<_Options> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              DsfrRadioButton<_OffreSuivieStatus>(
-                label: Strings.jaiPostule,
-                value: _OffreSuivieStatus.applied,
-                groupValue: _selectedValue,
-                size: DsfrComponentSize.md,
-                onChanged: (status) {
-                  if (status == null) return;
-                  trackEvent(OffreSuiviTrackingOption.postule);
-                  selectValue(status);
-                  widget.viewModel.onPostule();
-                },
-              ),
-              if (widget.viewModel.onInteresse != null) ...[
-                const SizedBox(height: DsfrSpacings.s1w),
-                DsfrRadioButton<_OffreSuivieStatus>(
-                  label: Strings.caMinteresse,
-                  value: _OffreSuivieStatus.interested,
+              // A11y 9.6 : chaque choix reprend la question « Où en es-tu ? », placée au-dessus.
+              GroupLabelSemantics(
+                groupLabel: Strings.ouEnEtesVous,
+                child: DsfrRadioButton<_OffreSuivieStatus>(
+                  label: Strings.jaiPostule,
+                  value: _OffreSuivieStatus.applied,
                   groupValue: _selectedValue,
                   size: DsfrComponentSize.md,
                   onChanged: (status) {
                     if (status == null) return;
-                    trackEvent(OffreSuiviTrackingOption.interesse);
+                    trackEvent(OffreSuiviTrackingOption.postule);
                     selectValue(status);
-                    widget.viewModel.onInteresse?.call();
+                    widget.viewModel.onPostule();
                   },
+                ),
+              ),
+              if (widget.viewModel.onInteresse != null) ...[
+                const SizedBox(height: DsfrSpacings.s1w),
+                GroupLabelSemantics(
+                  groupLabel: Strings.ouEnEtesVous,
+                  child: DsfrRadioButton<_OffreSuivieStatus>(
+                    label: Strings.caMinteresse,
+                    value: _OffreSuivieStatus.interested,
+                    groupValue: _selectedValue,
+                    size: DsfrComponentSize.md,
+                    onChanged: (status) {
+                      if (status == null) return;
+                      trackEvent(OffreSuiviTrackingOption.interesse);
+                      selectValue(status);
+                      widget.viewModel.onInteresse?.call();
+                    },
+                  ),
                 ),
               ],
               if (widget.viewModel.onNotYetPostuled != null) ...[
                 const SizedBox(height: DsfrSpacings.s1w),
-                DsfrRadioButton<_OffreSuivieStatus>(
-                  label: Strings.notYetPostuled,
-                  value: _OffreSuivieStatus.notYetPostuled,
+                GroupLabelSemantics(
+                  groupLabel: Strings.ouEnEtesVous,
+                  child: DsfrRadioButton<_OffreSuivieStatus>(
+                    label: Strings.notYetPostuled,
+                    value: _OffreSuivieStatus.notYetPostuled,
+                    groupValue: _selectedValue,
+                    size: DsfrComponentSize.md,
+                    onChanged: (status) {
+                      if (status == null) return;
+                      trackEvent(OffreSuiviTrackingOption.interesse);
+                      selectValue(status);
+                      widget.viewModel.onNotYetPostuled?.call();
+                    },
+                  ),
+                ),
+              ],
+              const SizedBox(height: DsfrSpacings.s1w),
+              GroupLabelSemantics(
+                groupLabel: Strings.ouEnEtesVous,
+                child: DsfrRadioButton<_OffreSuivieStatus>(
+                  label: Strings.caNeMinteressePas,
+                  value: _OffreSuivieStatus.notInterested,
                   groupValue: _selectedValue,
                   size: DsfrComponentSize.md,
                   onChanged: (status) {
                     if (status == null) return;
-                    trackEvent(OffreSuiviTrackingOption.interesse);
+                    trackEvent(OffreSuiviTrackingOption.notInterrested);
                     selectValue(status);
-                    widget.viewModel.onNotYetPostuled?.call();
+                    widget.viewModel.onNotInterested();
                   },
                 ),
-              ],
-              const SizedBox(height: DsfrSpacings.s1w),
-              DsfrRadioButton<_OffreSuivieStatus>(
-                label: Strings.caNeMinteressePas,
-                value: _OffreSuivieStatus.notInterested,
-                groupValue: _selectedValue,
-                size: DsfrComponentSize.md,
-                onChanged: (status) {
-                  if (status == null) return;
-                  trackEvent(OffreSuiviTrackingOption.notInterrested);
-                  selectValue(status);
-                  widget.viewModel.onNotInterested();
-                },
               ),
             ],
           ),

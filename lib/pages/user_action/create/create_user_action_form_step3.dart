@@ -11,6 +11,7 @@ import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/date_extensions.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_date_input_suggestions.dart';
+import 'package:pass_emploi_app/widgets/dsfr/dsfr_date_picker_field.dart';
 
 class CreateUserActionFormStep3 extends StatelessWidget {
   const CreateUserActionFormStep3({
@@ -240,25 +241,23 @@ class _DuplicateUserActionItemState extends State<_DuplicateUserActionItem> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // A11y 9.9 : fusionne le message d'erreur avec le champ date pour qu'il soit annoncé avec lui.
-                MergeSemantics(
-                  child: DsfrDateInput(
-                    label: Strings.datePickerTitle,
-                    controller: dateController,
-                    firstDate: DateTime(2020),
-                    lastDate: DateTime(2101),
-                    initialDate: widget.duplicatedUserAction.dateSource.isValid
-                        ? widget.duplicatedUserAction.dateSource.selectedDate
-                        : DateTime.now(),
-                    locale: const Locale('fr', 'FR'),
-                    composantState: showDateError
-                        ? DsfrComponentState.error(errorMessage: Strings.dateMandatory)
-                        : const DsfrComponentState.none(),
-                    onChanged: (date) => widget.onDateChanged(DateFromPicker(date)),
-                  ),
+                // A11y 5.1 / 9.1 / 9.9 : un seul bouton, nommé par son étiquette et son message d'erreur.
+                DsfrDatePickerField(
+                  label: Strings.datePickerTitle,
+                  controller: dateController,
+                  firstDate: DateTime(2020),
+                  lastDate: DateTime(2101),
+                  initialDate: widget.duplicatedUserAction.dateSource.isValid
+                      ? widget.duplicatedUserAction.dateSource.selectedDate
+                      : DateTime.now(),
+                  composantState: showDateError
+                      ? DsfrComponentState.error(errorMessage: Strings.dateMandatory)
+                      : const DsfrComponentState.none(),
+                  onChanged: (date) => widget.onDateChanged(DateFromPicker(date)),
                 ),
                 const SizedBox(height: DsfrSpacings.s1w),
                 DsfrDateSuggestions(
+                  fieldLabel: Strings.datePickerTitle,
                   dateSource: widget.duplicatedUserAction.dateSource,
                   onSelected: widget.onDateChanged,
                 ),

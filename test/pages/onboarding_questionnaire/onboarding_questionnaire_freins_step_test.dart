@@ -74,4 +74,15 @@ void main() {
     expect(form.draftFreins, {QuestionnaireFrein.rienNeMeBloque});
     expect(annonces, isEmpty);
   });
+
+  testWidgets('A11y 9.6 : chaque choix reprend la question de l’étape après son libellé', (tester) async {
+    final semantics = tester.ensureSemantics();
+    await pumpEtCapteAnnonces(tester);
+
+    for (final frein in QuestionnaireFrein.values) {
+      final nom = tester.getSemantics(find.text(frein.label)).getSemanticsData().label;
+      expect(nom, '${frein.label}\n${Strings.onboardingQuestionnaireFreinsTitle}');
+    }
+    semantics.dispose();
+  });
 }

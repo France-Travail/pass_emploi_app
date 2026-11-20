@@ -72,4 +72,39 @@ void main() {
     expect(find.bySemanticsLabel('Centre de notifications'), findsNothing);
     semantics.dispose();
   });
+
+  testWidgets('la pastille de nouvelles notifications est restituée dans le nom du bouton', (tester) async {
+    final semantics = tester.ensureSemantics();
+    Future<void> pump({required bool withNewNotifications}) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CustomScrollView(
+              slivers: [PrimarySliverAppbar(title: 'Bonjour', withNewNotifications: withNewNotifications)],
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 200));
+    }
+
+    await pump(withNewNotifications: true);
+    expect(
+      find.semantics.byPredicate((node) {
+        final data = node.getSemanticsData();
+        return data.flagsCollection.isButton && data.label == 'Centre de notifications, nouvelles notifications';
+      }),
+      findsOne,
+    );
+
+    await pump(withNewNotifications: false);
+    expect(
+      find.semantics.byPredicate((node) {
+        final data = node.getSemanticsData();
+        return data.flagsCollection.isButton && data.label == 'Centre de notifications';
+      }),
+      findsOne,
+    );
+    semantics.dispose();
+  });
 }

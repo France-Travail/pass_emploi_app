@@ -130,6 +130,7 @@ class _MoyensList extends StatelessWidget {
         final moyen = storeVm.comments[index];
         return DsfrSelectableCard(
           label: moyen.label,
+          groupLabel: Strings.selectMoyen,
           selected: moyen == selectedComment,
           onTap: () => onCommentSelected(moyen),
         );

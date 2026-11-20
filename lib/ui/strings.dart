@@ -788,7 +788,7 @@ class Strings {
   static const String userActionSubtitleStep1 = 'Choisis une catégorie';
 
   static const String userActionSubtitleStep2 = 'Sélectionne une action (obligatoire)';
-  static const String userActionTitleTextfieldStep2 = '*Nommer mon action';
+  static const String userActionTitleTextfieldStep2 = 'Nommer mon action (obligatoire)';
   static const String userActionDescriptionTextfieldStep2 = 'Décrire mon action';
   static const String userActionDescriptionDescriptionfieldStep2 =
       'Ajouter des détails pour que ton conseiller puisse valider ton action.';
@@ -1046,7 +1046,6 @@ class Strings {
   static String cannotFinishActionInFuture = "On ne peut pas terminer une action dans le futur.";
 
   // User action done bottom sheet
-  static String userActionDoneBottomSheetTitle = "Quand as-tu terminé l'action ?";
   static String updateActionConfirmation = "La mise à jour de ton action a bien été prise en compte";
 
   // Update user action
@@ -2133,6 +2132,7 @@ class Strings {
 
   // centre de notifications
   static String notificationsCenterTooltip = "Centre de notifications";
+  static String notificationsCenterWithNewA11y = "$notificationsCenterTooltip, nouvelles notifications";
   static String notificationsCenterTitle = "Notifications";
   static String notificationsCenterError = "Erreur lors de la récupération des notifications";
   static String notificationsCenterEmptyTitle = Brand.isPassEmploi()
@@ -2140,8 +2140,6 @@ class Strings {
       : "Tu n’as pas de nouvelle notification.";
 
   // a11y
-  static String selectedRadioButton = "Sélectionné";
-  static String unselectedRadioButton = "Non sélectionné";
 
   static String deleteSelection = "Supprimer la sélection";
 
@@ -2213,7 +2211,6 @@ class Strings {
   static const String sentimentNeutral = "Emoticone neutre";
   static const String sentimentSatisfied = "Emoticone plutôt d’accord";
   static const String mood = "Emoticone d’accord";
-  static const String emptyDate = "Aucune date sélectionnée";
   static String feedbackCommentaire = Brand.isPassEmploi()
       ? "Dites-nous pourquoi vous avez attribué cette note\u{00A0}?"
       : "Dis-nous pourquoi tu as attribué cette note\u{00A0}?";

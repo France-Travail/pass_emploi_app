@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/presentation/checkbox_value_view_model.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 
 // ignore_for_file: strict_raw_type
 class TagGroup<T> extends StatefulWidget {
@@ -63,20 +64,27 @@ class TagGroupState<T extends CheckboxValueViewModel> extends State<TagGroup> {
     // A11y 5.1 : DsfrTag n'expose qu'un état « sélectionné », sans rôle. Les filtres se cochent et se décochent :
     // chacun est restitué comme une case à cocher, avec son état et son aide. L'étiquette garde son apparence
     // et son focus clavier.
-    return Semantics(
-      container: true,
-      // A11y 5.1 (iOS) : sans `enabled: true` explicite, VoiceOver annonce l'étiquette « estompé ».
-      enabled: true,
-      checked: isSelected,
-      label: viewModel.label,
-      hint: viewModel.helpText,
-      onTap: () => onSelectionChanged(!isSelected),
-      excludeSemantics: true,
-      child: DsfrTag(
-        label: viewModel.label,
-        size: DsfrComponentSize.md,
-        isSelected: isSelected,
-        onSelectionChanged: onSelectionChanged,
+    return Builder(
+      builder: (tagContext) => Semantics(
+        container: true,
+        // A11y 5.1 (iOS) : sans `enabled: true` explicite, VoiceOver annonce l'étiquette « estompé ».
+        enabled: true,
+        checked: isSelected,
+        // A11y 9.6 : le nom reprend le titre du groupe, après le libellé visible.
+        label: '${viewModel.label}, ${widget.title}',
+        hint: viewModel.helpText,
+        onTap: () {
+          onSelectionChanged(!isSelected);
+          // A11y 5.5 : sans cet évènement, TalkBack (avant Android 16) n'annonçait pas le nouvel état.
+          A11yUtils.notifyTap(tagContext);
+        },
+        excludeSemantics: true,
+        child: DsfrTag(
+          label: viewModel.label,
+          size: DsfrComponentSize.md,
+          isSelected: isSelected,
+          onSelectionChanged: onSelectionChanged,
+        ),
       ),
     );
   }

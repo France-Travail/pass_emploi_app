@@ -7,6 +7,7 @@ import 'package:pass_emploi_app/presentation/onboarding_questionnaire/onboarding
 import 'package:pass_emploi_app/ui/margins.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 import 'package:pass_emploi_app/utils/accessibility_utils.dart';
+import 'package:pass_emploi_app/widgets/a11y/group_label_semantics.dart';
 
 class OnboardingQuestionnaireFreinsStep extends StatelessWidget {
   const OnboardingQuestionnaireFreinsStep({super.key, required this.form});
@@ -28,29 +29,33 @@ class OnboardingQuestionnaireFreinsStep extends StatelessWidget {
         ...QuestionnaireFrein.values.map(
           (frein) => Padding(
             padding: const EdgeInsets.only(bottom: Margins.spacing_s),
-            child: frein.isExclusive
-                ? DsfrRadioRichButton<QuestionnaireFrein>(
-                    title: frein.label,
-                    value: frein,
-                    groupValue: form.draftFreins.contains(frein) ? frein : null,
-                    size: DsfrComponentSize.md,
-                    isExpanded: true,
-                    trailingIcon: OnboardingQuestionnaireEmojiIllustration(
-                      emoji: frein.emoji,
-                      backgroundColor: frein.illustrationColor,
+            // A11y 9.6 : chaque choix reprend la question de l'étape, affichée en titre.
+            child: GroupLabelSemantics(
+              groupLabel: Strings.onboardingQuestionnaireFreinsTitle,
+              child: frein.isExclusive
+                  ? DsfrRadioRichButton<QuestionnaireFrein>(
+                      title: frein.label,
+                      value: frein,
+                      groupValue: form.draftFreins.contains(frein) ? frein : null,
+                      size: DsfrComponentSize.md,
+                      isExpanded: true,
+                      trailingIcon: OnboardingQuestionnaireEmojiIllustration(
+                        emoji: frein.emoji,
+                        backgroundColor: frein.illustrationColor,
+                      ),
+                      onChanged: (_) => _selectExclusiveFrein(form, frein),
+                    )
+                  : OnboardingQuestionnaireCheckboxRich(
+                      label: frein.label,
+                      size: DsfrComponentSize.md,
+                      value: form.draftFreins.contains(frein),
+                      trailingIcon: OnboardingQuestionnaireEmojiIllustration(
+                        emoji: frein.emoji,
+                        backgroundColor: frein.illustrationColor,
+                      ),
+                      onChanged: (_) => form.toggleFrein(frein),
                     ),
-                    onChanged: (_) => _selectExclusiveFrein(form, frein),
-                  )
-                : OnboardingQuestionnaireCheckboxRich(
-                    label: frein.label,
-                    size: DsfrComponentSize.md,
-                    value: form.draftFreins.contains(frein),
-                    trailingIcon: OnboardingQuestionnaireEmojiIllustration(
-                      emoji: frein.emoji,
-                      backgroundColor: frein.illustrationColor,
-                    ),
-                    onChanged: (_) => form.toggleFrein(frein),
-                  ),
+            ),
           ),
         ),
       ],

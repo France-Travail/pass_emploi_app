@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
+import 'package:pass_emploi_app/utils/accessibility_utils.dart';
 
 /// Case à cocher au format « riche » (bordure, libellé, illustration),
 /// alignée sur le [DsfrRadioRichButton] du DSFR Flutter.
@@ -44,7 +45,13 @@ class _OnboardingQuestionnaireCheckboxRichState
       enabled: enabled,
       checked: value,
       label: label,
-      onTap: canInteract ? () => onChanged(!value) : null,
+      onTap: canInteract
+          ? () {
+              onChanged(!value);
+              // A11y 5.5 : sans cet évènement, TalkBack (avant Android 16) n'annonçait pas le nouvel état.
+              A11yUtils.notifyTap(context);
+            }
+          : null,
       excludeSemantics: true,
       // A11y 2.3 : contour de focus DSFR, comme sur DsfrRadioRichButton, à la place du voile gris de Material.
       child: DsfrFocusWidget(
