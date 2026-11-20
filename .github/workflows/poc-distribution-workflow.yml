@@ -245,8 +245,7 @@ jobs:
 
       - name: CEJ - Deploy IPA to Firebase App Distribution
         run: |
-          mv "$(find $(pwd) -name "\[stg\] CEJ.ipa")" CEJ.ipa
-          firebase appdistribution:distribute $(find $(pwd) -name "CEJ.ipa") \
+          firebase appdistribution:distribute build/ios/ipa/*.ipa \
             --app "$CEJ_STAGING_IOS_APP_ID" \
             --groups "$STAGING_FIREBASE_RELEASE_GROUPS" \
             --release-notes "POC $GITHUB_REF_NAME @ ${GITHUB_SHA::7} - $HEAD_COMMIT_MESSAGE"
