@@ -47,38 +47,43 @@ class _AlerteBottomSheetFormContentState extends State<AlerteBottomSheetFormCont
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Expanded(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              DsfrInput(
-                label: Strings.alerteTitle,
-                initialValue: widget.initialTitle,
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.text,
-                componentState: (_searchTitle != null && _searchTitle!.isEmpty)
-                    ? DsfrComponentState.error(errorMessage: Strings.mandatoryAlerteTitleError)
-                    : const DsfrComponentState.none(),
-                onChanged: (value) => setState(() => _searchTitle = value),
-              ),
-              const SizedBox(height: DsfrSpacings.s3w),
-              Text(
-                Strings.alerteFilters,
-                style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
-              ),
-              const SizedBox(height: DsfrSpacings.s2w),
-              Wrap(
-                spacing: DsfrSpacings.s1w,
-                runSpacing: DsfrSpacings.s1w,
-                children: widget.tags.map(_buildTag).toList(),
-              ),
-              const SizedBox(height: DsfrSpacings.s3w),
-              DsfrAlert(
-                type: DsfrAlertType.info,
-                description: DsfrAlertDescriptionText(
-                  '${Strings.alerteInfo}\n${Strings.searchNotificationInfo}',
+          // A11y : un formulaire, pas une liste. Une `ListView` déclare chacun de ses enfants comme un élément
+          // (`scrollChildCount`), et le moteur Android l'expose alors comme une liste à TalkBack ;
+          // `SingleChildScrollView` défile sans structure de liste.
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                DsfrInput(
+                  label: Strings.alerteTitle,
+                  initialValue: widget.initialTitle,
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.text,
+                  componentState: (_searchTitle != null && _searchTitle!.isEmpty)
+                      ? DsfrComponentState.error(errorMessage: Strings.mandatoryAlerteTitleError)
+                      : const DsfrComponentState.none(),
+                  onChanged: (value) => setState(() => _searchTitle = value),
                 ),
-              ),
-            ],
+                const SizedBox(height: DsfrSpacings.s3w),
+                Text(
+                  Strings.alerteFilters,
+                  style: DsfrTextStyle.bodyMdBold(color: DsfrColorDecisions.textTitleGrey(context)),
+                ),
+                const SizedBox(height: DsfrSpacings.s2w),
+                Wrap(
+                  spacing: DsfrSpacings.s1w,
+                  runSpacing: DsfrSpacings.s1w,
+                  children: widget.tags.map(_buildTag).toList(),
+                ),
+                const SizedBox(height: DsfrSpacings.s3w),
+                DsfrAlert(
+                  type: DsfrAlertType.info,
+                  description: DsfrAlertDescriptionText(
+                    '${Strings.alerteInfo}\n${Strings.searchNotificationInfo}',
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         const SizedBox(height: DsfrSpacings.s2w),
