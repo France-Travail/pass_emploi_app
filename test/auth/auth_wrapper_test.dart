@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:pass_emploi_app/auth/auth_refresh_token_request.dart';
 import 'package:pass_emploi_app/auth/auth_token_request.dart';
 import 'package:pass_emploi_app/auth/auth_wrapper.dart';
+import 'package:pass_emploi_app/crashlytics/crashlytics.dart';
 import 'package:synchronized/synchronized.dart';
 
 class _MockFlutterAppAuth extends Mock implements FlutterAppAuth {}
@@ -134,6 +135,114 @@ void main() {
       );
     });
   });
+
+  group('refreshToken — refus temporaire et réseau', () {
+    late _MockCrashlytics crashlytics;
+
+    setUp(() {
+      registerFallbackValue(StackTrace.empty);
+      crashlytics = _MockCrashlytics();
+      authWrapper = AuthWrapper(appAuth, Lock(), crashlytics);
+    });
+
+    // Payloads observés dans les sources d'AppAuth : connect répond au rate limit par
+    // 429 {"statusCode":429,"message":"Trop de requêtes, réessayez dans quelques instants."}
+    test('429 sur iOS : refus temporaire, non remonté dans Crashlytics', () async {
+      when(() => appAuth.token(any())).thenThrow(
+        _appAuthException(
+          type: 'org.openid.appauth.general',
+          code: '-6',
+          domain: 'org.openid.appauth.remote-http',
+          errorDebugDescription: "Non-200 HTTP response (429) making token request to 'https://connect/token'.",
+        ),
+      );
+      await expectLater(
+        authWrapper.refreshToken(_refreshTokenRequest()),
+        throwsA(isA<AuthWrapperRefreshTemporarilyRefusedException>()),
+      );
+      verifyNever(() => crashlytics.recordNonNetworkException(any(), any()));
+    });
+
+    test('429 sur Android (statut HTTP perdu, corps sans token_type) : refus temporaire', () {
+      when(() => appAuth.token(any())).thenThrow(
+        _appAuthException(
+          type: '0',
+          code: '5',
+          rootCauseDebugDescription: 'org.json.JSONException: field "token_type" not found in json object',
+          legacyDetails: 'field "token_type" not found in json object',
+        ),
+      );
+      expect(
+        () => authWrapper.refreshToken(_refreshTokenRequest()),
+        throwsA(isA<AuthWrapperRefreshTemporarilyRefusedException>()),
+      );
+    });
+
+    test('erreur OAuth autre que invalid_grant : erreur générique, pas un refus temporaire', () {
+      when(() => appAuth.token(any())).thenThrow(
+        _appAuthException(type: '2', code: '2', error: 'invalid_client'),
+      );
+      expect(
+        () => authWrapper.refreshToken(_refreshTokenRequest()),
+        throwsA(isA<Object>().having((e) => e.runtimeType, 'runtimeType', AuthWrapperRefreshTokenException)),
+      );
+    });
+
+    test('invalid_grant via platformErrorDetails : refresh token expiré', () {
+      when(() => appAuth.token(any())).thenThrow(
+        _appAuthException(type: '2', code: '2', error: 'invalid_grant', legacyDetails: 'Token is not active'),
+      );
+      expect(
+        () => authWrapper.refreshToken(_refreshTokenRequest()),
+        throwsA(isA<AuthWrapperRefreshTokenExpiredException>()),
+      );
+    });
+
+    test('coupure réseau pendant l\'appel au token endpoint sur iOS : erreur réseau', () {
+      when(() => appAuth.token(any())).thenThrow(
+        _appAuthException(type: 'org.openid.appauth.general', code: '-5'),
+      );
+      expect(
+        () => authWrapper.refreshToken(_refreshTokenRequest()),
+        throwsA(isA<AuthWrapperNetworkException>()),
+      );
+    });
+
+    test('coupure réseau pendant l\'appel au token endpoint sur Android : erreur réseau', () {
+      when(() => appAuth.token(any())).thenThrow(
+        _appAuthException(type: '0', code: '3', legacyDetails: 'timeout'),
+      );
+      expect(
+        () => authWrapper.refreshToken(_refreshTokenRequest()),
+        throwsA(isA<AuthWrapperNetworkException>()),
+      );
+    });
+  });
+}
+
+class _MockCrashlytics extends Mock implements Crashlytics {}
+
+FlutterAppAuthPlatformException _appAuthException({
+  required String type,
+  required String code,
+  String? error,
+  String? domain,
+  String? rootCauseDebugDescription,
+  String? errorDebugDescription,
+  dynamic legacyDetails,
+}) {
+  return FlutterAppAuthPlatformException(
+    code: 'token_failed',
+    legacyDetails: legacyDetails,
+    platformErrorDetails: FlutterAppAuthPlatformErrorDetails(
+      type: type,
+      code: code,
+      error: error,
+      domain: domain,
+      rootCauseDebugDescription: rootCauseDebugDescription,
+      errorDebugDescription: errorDebugDescription,
+    ),
+  );
 }
 
 AuthRefreshTokenRequest _refreshTokenRequest() {

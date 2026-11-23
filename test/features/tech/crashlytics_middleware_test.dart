@@ -85,5 +85,15 @@ void main() {
         verifyNever(() => crashlytics.recordNonNetworkException(any(), any()));
       },
     );
+
+    test(
+      'only logs a temporarily refused refresh (rate limit), without non-fatal',
+      () {
+        dispatch(TokenRefreshTemporarilyRefusedAction(DateTime(2026, 11, 20, 10)));
+
+        verify(() => crashlytics.log(any(that: contains('temporarily refused')))).called(1);
+        verifyNever(() => crashlytics.recordNonNetworkException(any(), any()));
+      },
+    );
   });
 }

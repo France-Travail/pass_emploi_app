@@ -275,6 +275,7 @@ class MockOnboardingRepository extends Mock implements OnboardingRepository {
 class MockRemoteConfigRepository extends Mock implements RemoteConfigRepository {
   MockRemoteConfigRepository() {
     when(() => maxRefreshFailuresBeforeLogout()).thenReturn(20);
+    when(() => tokenRefreshFirstPause()).thenReturn(Duration(seconds: 60));
     when(() => monSuiviPoleEmploiStartDateInMonths()).thenReturn(1);
     when(() => campagnesAccueil()).thenReturn([]);
     when(() => softUpdateVersion(isAndroid: any(named: 'isAndroid'))).thenReturn(null);

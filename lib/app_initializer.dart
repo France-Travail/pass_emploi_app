@@ -218,7 +218,6 @@ class AppInitializer {
       authenticator,
       remoteConfigRepository,
       securedPreferences,
-      Lock(),
     );
     final authAccessChecker = AuthAccessChecker();
     final cacheStore = FileCacheStore((await getTemporaryDirectory()).path);

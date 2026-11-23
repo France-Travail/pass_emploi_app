@@ -83,7 +83,8 @@ class AuthWrapper {
       }
     } on PlatformException catch (e, stack) {
       final message = e.toString();
-      if (e.isNetworkException()) throw AuthWrapperNetworkException(message);
+      if (e.isNetworkException() || e.isTokenRequestNetworkError()) throw AuthWrapperNetworkException(message);
+      if (e.isRefusedWithoutOAuthError()) throw AuthWrapperRefreshTemporarilyRefusedException(message);
       _recordAppAuthException(e, stack);
       if (e.isRefreshTokenExpired()) throw AuthWrapperRefreshTokenExpiredException(message);
       throw AuthWrapperRefreshTokenException(message);
@@ -138,6 +139,18 @@ class AuthWrapperRefreshTokenExpiredException extends AuthWrapperRefreshTokenExc
   AuthWrapperRefreshTokenExpiredException(super.message);
 }
 
+/// Connect a refusé le refresh sans le traiter (rate limit, erreur serveur) :
+/// le refresh token reste valide, il faudra retenter plus tard.
+class AuthWrapperRefreshTemporarilyRefusedException extends AuthWrapperRefreshTokenException {
+  AuthWrapperRefreshTemporarilyRefusedException(super.message);
+}
+
+// Erreurs générales d'AppAuth, qui ne viennent pas d'une réponse OAuth du serveur.
+// iOS (OIDError.h) : domaine org.openid.appauth.general.
+// Android (AuthorizationException.GeneralErrors) : type 0.
+const _iosAppAuthGeneralErrorDomain = 'org.openid.appauth.general';
+const _androidAppAuthGeneralErrorType = '0';
+
 extension on PlatformException {
   bool isNetworkException() => code == "discovery_failed" || code == "network";
 
@@ -160,13 +173,40 @@ extension on PlatformException {
 
   bool isRefreshTokenExpired() {
     if (code != "token_failed") return false;
-    final details = this.details;
-    if (details is FlutterAppAuthPlatformErrorDetails) {
-      return details.error == "invalid_grant";
-    }
-    if (details is Map) {
-      return details['error'] == 'invalid_grant';
-    }
-    return false;
+    return _appAuthError().error == "invalid_grant";
+  }
+
+  // Connexion perdue pendant l'appel au token endpoint lui-même (après la discovery).
+  // iOS : OIDErrorCodeNetworkError (-5). Android : NETWORK_ERROR (3).
+  bool isTokenRequestNetworkError() => _isAppAuthGeneralError(iosCode: '-5', androidCode: '3');
+
+  // Réponse en erreur sans champ OAuth `error` : la demande n'a pas été traitée.
+  // C'est le cas du 429 de connect, qui répond {"statusCode":429,"message":"..."}, et des 5xx.
+  // iOS : OIDErrorCodeServerError (-6), le statut HTTP reste dans l'erreur sous-jacente.
+  // Android : AppAuth perd le statut HTTP. Un corps sans `error` ni `token_type`, ou qui n'est
+  // pas du JSON, donne JSON_DESERIALIZATION_ERROR (5) : impossible de distinguer un 429 d'un 5xx.
+  bool isRefusedWithoutOAuthError() => _isAppAuthGeneralError(iosCode: '-6', androidCode: '5');
+
+  bool _isAppAuthGeneralError({required String iosCode, required String androidCode}) {
+    if (code != "token_failed") return false;
+    final error = _appAuthError();
+    return (error.type == _iosAppAuthGeneralErrorDomain && error.code == iosCode) ||
+        (error.type == _androidAppAuthGeneralErrorType && error.code == androidCode);
+  }
+
+  // flutter_appauth expose les détails typés dans FlutterAppAuthPlatformException.platformErrorDetails ;
+  // `details` ne contient que les détails historiques (un simple message sur Android).
+  ({String? type, String? code, String? error}) _appAuthError() {
+    final self = this;
+    final details = self is FlutterAppAuthPlatformException ? self.platformErrorDetails : this.details;
+    return switch (details) {
+      FlutterAppAuthPlatformErrorDetails() => (type: details.type, code: details.code, error: details.error),
+      Map() => (
+          type: details['type']?.toString(),
+          code: details['code']?.toString(),
+          error: details['error']?.toString(),
+        ),
+      _ => (type: null, code: null, error: null),
+    };
   }
 }

@@ -17,7 +17,14 @@ const String _accessTokenKey = "accessToken";
 const String _refreshTokenKey = "refreshToken";
 const String _appAuthFlowMarkerStorageKey = "loginInProgress";
 
-enum RefreshTokenStatus { SUCCESSFUL, GENERIC_ERROR, USER_NOT_LOGGED_IN, NETWORK_UNREACHABLE, EXPIRED_REFRESH_TOKEN }
+enum RefreshTokenStatus {
+  SUCCESSFUL,
+  GENERIC_ERROR,
+  USER_NOT_LOGGED_IN,
+  NETWORK_UNREACHABLE,
+  EXPIRED_REFRESH_TOKEN,
+  TEMPORARILY_REFUSED,
+}
 
 enum AuthenticationMode { GENERIC, SIMILO, POLE_EMPLOI, INVITE, DEMO }
 
@@ -175,6 +182,8 @@ class Authenticator {
       }
       await _deleteToken();
       return RefreshTokenStatus.EXPIRED_REFRESH_TOKEN;
+    } on AuthWrapperRefreshTemporarilyRefusedException {
+      return RefreshTokenStatus.TEMPORARILY_REFUSED;
     } on AuthWrapperRefreshTokenException {
       return RefreshTokenStatus.GENERIC_ERROR;
     }
