@@ -177,5 +177,29 @@ void main() {
         });
       });
     });
+
+    group('withConseillerContact', () {
+      test('should refer to the conseiller for a jeune', () {
+        // Given
+        final store = givenState().loggedInUser(loginMode: LoginMode.MILO).store();
+
+        // When
+        final viewModel = EmailObjectViewModel.create(store);
+
+        // Then
+        expect(viewModel.withConseillerContact, isTrue);
+      });
+
+      test('should not refer to a conseiller for an invite, who has none', () {
+        // Given
+        final store = givenState().loggedInUser(loginMode: LoginMode.INVITE).store();
+
+        // When
+        final viewModel = EmailObjectViewModel.create(store);
+
+        // Then
+        expect(viewModel.withConseillerContact, isFalse);
+      });
+    });
   });
 }

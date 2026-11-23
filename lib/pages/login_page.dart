@@ -154,7 +154,11 @@ class _Scaffold extends StatelessWidget {
                 ],
                 if (viewModel.technicalErrorMessage != null) ...[
                   const SizedBox(height: Margins.spacing_m),
-                  _GenericError(viewModel.technicalErrorMessage!),
+                  _GenericError(viewModel.technicalErrorMessage!, viewModel.genericErrorDescription),
+                ],
+                if (viewModel.withTooManyRequestsMessage) ...[
+                  const SizedBox(height: Margins.spacing_m),
+                  _ErrorBanner(title: Strings.tooManyRequestsTitle, description: Strings.tooManyRequestsDescription),
                 ],
                 if (viewModel.withWrongDeviceClockMessage) ...[
                   const SizedBox(height: Margins.spacing_m),
@@ -470,13 +474,14 @@ class _LinkState extends State<Link> {
 
 class _GenericError extends StatelessWidget {
   final String technicalErrorMessage;
+  final String description;
 
-  const _GenericError(this.technicalErrorMessage);
+  const _GenericError(this.technicalErrorMessage, this.description);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: _ErrorBanner(title: Strings.loginGenericError, description: Strings.loginGenericErrorDescription),
+      child: _ErrorBanner(title: Strings.loginGenericError, description: description),
       onDoubleTap: () => showDialog(context: context, builder: (context) => _ErrorInfoDialog(technicalErrorMessage)),
     );
   }

@@ -44,6 +44,8 @@ class RepriseCompteInviteMiddleware extends MiddlewareClass<AppState> {
         store.dispatch(RepriseCompteInviteResetAction());
       case WrongDeviceClockAuthenticatorResponse():
         store.dispatch(RepriseCompteInviteWrongDeviceClockAction());
+      case TooManyRequestsAuthenticatorResponse():
+        store.dispatch(RepriseCompteInviteTooManyRequestsAction());
       case FailureAuthenticatorResponse(:final message):
         store.dispatch(RepriseCompteInviteFailureAction(message));
     }

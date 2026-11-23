@@ -70,9 +70,11 @@ class LoginMiddleware extends MiddlewareClass<AppState> {
       if (authenticatorResponse is SuccessAuthenticatorResponse) {
         _dispatchLoginSuccess(store);
       } else if (authenticatorResponse is FailureAuthenticatorResponse) {
-        store.dispatch(LoginFailureAction(authenticatorResponse.message));
+        store.dispatch(LoginFailureAction(authenticatorResponse.message, mode: mode));
       } else if (authenticatorResponse is WrongDeviceClockAuthenticatorResponse) {
         store.dispatch(LoginWrongDeviceClockAction());
+      } else if (authenticatorResponse is TooManyRequestsAuthenticatorResponse) {
+        store.dispatch(LoginTooManyRequestsAction());
       } else {
         store.dispatch(NotLoggedInAction());
       }

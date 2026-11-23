@@ -173,6 +173,17 @@ void main() {
       expect(result, isA<WrongDeviceClockAuthenticatorResponse>());
     });
 
+    test('response is too many requests when connect temporarily refuses the code exchange (rate limit)', () async {
+      // Given
+      when(() => wrapper.login(_tokenRequest())).thenThrow(AuthWrapperLoginTemporarilyRefusedException(''));
+
+      // When
+      final result = await authenticator.login(AuthenticationMode.GENERIC);
+
+      // Then
+      expect(result, isA<TooManyRequestsAuthenticatorResponse>());
+    });
+
     test('isLoggedIn is TRUE when login is successful', () async {
       // Given
       final wrapper = MockAuthWrapper();

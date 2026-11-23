@@ -35,7 +35,7 @@ class SuppressionComptePage extends StatelessWidget {
         onDidChange: (_, newVM) {
           if (!context.mounted) return;
           if (newVM.displayState == DisplayState.FAILURE) {
-            showSnackBarWithSystemError(context, Strings.alerteDeleteError);
+            showSnackBarWithApiError(context, Strings.alerteDeleteError);
           } else if (newVM.displayState == DisplayState.CONTENT) {
             _DeleteAccountSuccessDialog.show(context);
           }

@@ -47,6 +47,9 @@ class AuthWrapper {
       if (e.isNetworkException()) throw AuthWrapperNetworkException(message);
       if (e.isDeviceClockWrong()) throw AuthWrapperWrongDeviceClockException(message);
       if (e.isCodeExchangeFailing() && e.isUserCancellation()) throw UserCanceledLoginException(message);
+      if (e.isCodeExchangeFailing() && e.isRefusedWithoutOAuthError()) {
+        throw AuthWrapperLoginTemporarilyRefusedException(message);
+      }
       _recordAppAuthException(e, stack);
       if (e.isCodeExchangeFailing()) throw AuthWrapperCalledCancelException(message);
       throw AuthWrapperLoginException(message);
@@ -135,6 +138,11 @@ class UserCanceledLoginException extends AuthWrapperLoginException {
   UserCanceledLoginException(super.message);
 }
 
+/// Connect a refusé l'échange du code sans le traiter (rate limit, erreur serveur) : réessayer plus tard.
+class AuthWrapperLoginTemporarilyRefusedException extends AuthWrapperLoginException {
+  AuthWrapperLoginTemporarilyRefusedException(super.message);
+}
+
 class AuthWrapperRefreshTokenExpiredException extends AuthWrapperRefreshTokenException {
   AuthWrapperRefreshTokenExpiredException(super.message);
 }
@@ -180,15 +188,16 @@ extension on PlatformException {
   // iOS : OIDErrorCodeNetworkError (-5). Android : NETWORK_ERROR (3).
   bool isTokenRequestNetworkError() => _isAppAuthGeneralError(iosCode: '-5', androidCode: '3');
 
-  // Réponse en erreur sans champ OAuth `error` : la demande n'a pas été traitée.
-  // C'est le cas du 429 de connect, qui répond {"statusCode":429,"message":"..."}, et des 5xx.
+  // Réponse du token endpoint en erreur sans champ OAuth `error` : la demande n'a pas été traitée,
+  // au refresh comme à l'échange du code du login. C'est le cas du 429 de connect, qui répond
+  // {"statusCode":429,"message":"..."}, et des 5xx.
   // iOS : OIDErrorCodeServerError (-6), le statut HTTP reste dans l'erreur sous-jacente.
   // Android : AppAuth perd le statut HTTP. Un corps sans `error` ni `token_type`, ou qui n'est
   // pas du JSON, donne JSON_DESERIALIZATION_ERROR (5) : impossible de distinguer un 429 d'un 5xx.
   bool isRefusedWithoutOAuthError() => _isAppAuthGeneralError(iosCode: '-6', androidCode: '5');
 
   bool _isAppAuthGeneralError({required String iosCode, required String androidCode}) {
-    if (code != "token_failed") return false;
+    if (code != "token_failed" && !isCodeExchangeFailing()) return false;
     final error = _appAuthError();
     return (error.type == _iosAppAuthGeneralErrorDomain && error.code == iosCode) ||
         (error.type == _androidAppAuthGeneralErrorType && error.code == androidCode);

@@ -342,6 +342,9 @@ class Strings {
   static String loginGenericErrorDescription = Brand.isPassEmploi()
       ? "Réessayez plus tard. Si le problème persiste, vous pouvez contacter votre conseiller."
       : "Réessaie plus tard. Si le problème persiste, tu peux contacter ton conseiller.";
+
+  // Un invité n'a pas de conseiller : le mode invité n'existe que pour le CEJ, d'où le tutoiement.
+  static String loginGenericErrorDescriptionInvite = "Réessaie plus tard.";
   static String loginPoleEmploi = "France Travail";
   static String loginMissionLocale = "Mission Locale";
   static String loginAction = "Se connecter";
@@ -1546,6 +1549,12 @@ class Strings {
   static String genericError = Brand.isPassEmploi()
       ? "Une erreur est survenue. Veuillez réessayer"
       : "Une erreur est survenue. Réessaie";
+  static String tooManyRequestsError = Brand.isPassEmploi()
+      ? "Trop de requêtes. Réessayez dans quelques minutes."
+      : "Trop de requêtes. Réessaie dans quelques minutes.";
+  static String tooManyRequestsTitle = "Trop de requêtes";
+  static String tooManyRequestsDescription =
+      Brand.isPassEmploi() ? "Réessayez dans quelques minutes." : "Réessaie dans quelques minutes.";
   static String genericCreationError = Brand.isPassEmploi()
       ? "Erreur lors de la création. Veuillez réessayer"
       : "Erreur lors de la création. Réessaie";

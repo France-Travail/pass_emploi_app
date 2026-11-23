@@ -199,6 +199,17 @@ void main() {
         // Then
         await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldFailBecauseOfWrongClock()]);
       });
+
+      test('should fail because of too many requests when connect refuses the login (rate limit)', () async {
+        // Given
+        givenMiloLogin(TooManyRequestsAuthenticatorResponse());
+        givenInviteStore();
+
+        // Then
+        await sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldFailBecauseOfTooManyRequests()]);
+        await pumpEventQueue();
+        verifyNeverReprendre();
+      });
     });
 
     group('when requesting with POLE_EMPLOI', () {
@@ -368,6 +379,10 @@ Matcher _shouldBeReset() => StateIs<RepriseCompteInviteNotInitializedState>((sta
 
 Matcher _shouldFailBecauseOfWrongClock() {
   return StateIs<RepriseCompteInviteWrongDeviceClockState>((state) => state.repriseCompteInviteState);
+}
+
+Matcher _shouldFailBecauseOfTooManyRequests() {
+  return StateIs<RepriseCompteInviteTooManyRequestsState>((state) => state.repriseCompteInviteState);
 }
 
 Matcher _shouldFailWithMessage(String message) {

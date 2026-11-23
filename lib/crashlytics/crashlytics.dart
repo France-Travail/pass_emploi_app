@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:pass_emploi_app/network/interceptors/too_many_requests_interceptor.dart';
 import 'package:pass_emploi_app/utils/log.dart';
 
 abstract class Crashlytics {
@@ -31,6 +32,11 @@ class CrashlyticsWithFirebase extends Crashlytics {
   void recordNonNetworkExceptionUrl(dynamic exception, [StackTrace? stack, String? failingEndpoint]) {
     if (exception is SocketException) return;
     if (exception is DioException && exception.error is SocketException) return;
+    // Un refus pour excès de requêtes est attendu (rate limit de l'API ou de connect) : pas un crash.
+    if (exception is DioException && exception.isTooManyRequests()) {
+      log('Too many requests${failingEndpoint != null ? ' on $failingEndpoint' : ''}');
+      return;
+    }
     final logPrefix = failingEndpoint != null ? 'Exception on $failingEndpoint' : 'Exception';
     Log.e(logPrefix, exception, stack);
     FirebaseCrashlytics.instance.recordError(

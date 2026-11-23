@@ -96,6 +96,7 @@ import 'package:pass_emploi_app/models/service_civique.dart';
 import 'package:pass_emploi_app/models/user.dart';
 import 'package:pass_emploi_app/features/reprise_compte_invite/reprise_compte_invite_state.dart';
 import 'package:pass_emploi_app/features/structures_accompagnement/structures_accompagnement_state.dart';
+import 'package:pass_emploi_app/features/too_many_requests/too_many_requests_state.dart';
 /*AUTOGENERATE-REDUX-APP-STATE-IMPORT*/
 
 class AppState extends Equatable {
@@ -191,6 +192,7 @@ class AppState extends Equatable {
   final FonctionnalitesState fonctionnalitesState;
   final RepriseCompteInviteState repriseCompteInviteState;
   final StructuresAccompagnementState structuresAccompagnementState;
+  final TooManyRequestsState tooManyRequestsState;
   /*AUTOGENERATE-REDUX-APP-STATE-PROPERTY*/
 
   AppState({
@@ -286,6 +288,7 @@ class AppState extends Equatable {
     required this.fonctionnalitesState,
     required this.repriseCompteInviteState,
     required this.structuresAccompagnementState,
+    required this.tooManyRequestsState,
     /*AUTOGENERATE-REDUX-APP-STATE-CONSTRUCTOR*/
   });
 
@@ -382,6 +385,7 @@ class AppState extends Equatable {
     FonctionnalitesState? fonctionnalitesState,
     RepriseCompteInviteState? repriseCompteInviteState,
     StructuresAccompagnementState? structuresAccompagnementState,
+    TooManyRequestsState? tooManyRequestsState,
     /*AUTOGENERATE-REDUX-APP-STATE-COPYPARAM*/
   }) {
     return AppState(
@@ -478,6 +482,7 @@ class AppState extends Equatable {
       fonctionnalitesState: fonctionnalitesState ?? this.fonctionnalitesState,
       repriseCompteInviteState: repriseCompteInviteState ?? this.repriseCompteInviteState,
       structuresAccompagnementState: structuresAccompagnementState ?? this.structuresAccompagnementState,
+      tooManyRequestsState: tooManyRequestsState ?? this.tooManyRequestsState,
       /*AUTOGENERATE-REDUX-APP-STATE-COPYBODY*/
     );
   }
@@ -576,6 +581,7 @@ class AppState extends Equatable {
       fonctionnalitesState: FonctionnalitesNotInitializedState(),
       repriseCompteInviteState: RepriseCompteInviteNotInitializedState(),
       structuresAccompagnementState: StructuresAccompagnementNotInitializedState(),
+      tooManyRequestsState: TooManyRequestsState(),
       /*AUTOGENERATE-REDUX-APP-STATE-FACTORY*/
     );
   }
@@ -666,6 +672,7 @@ class AppState extends Equatable {
     fonctionnalitesState,
     repriseCompteInviteState,
     structuresAccompagnementState,
+    tooManyRequestsState,
     /*AUTOGENERATE-REDUX-APP-STATE-EQUATABLE*/
   ];
 

@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pass_emploi_app/ui/drawables.dart';
 import 'package:pass_emploi_app/ui/media_sizes.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/context_extensions.dart';
 
 class Retry extends StatelessWidget {
   final String text;
@@ -41,7 +42,7 @@ class Retry extends StatelessWidget {
             ),
             const SizedBox(height: DsfrSpacings.s1w),
             Text(
-              text,
+              context.apiErrorMessage(text),
               style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textDefaultGrey(context)),
               textAlign: TextAlign.center,
             ),
