@@ -263,7 +263,7 @@ jobs:
           cache: true
           flutter-version: ${{ env.FLUTTER_VERSION }}
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
