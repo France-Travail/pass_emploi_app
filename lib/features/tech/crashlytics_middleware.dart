@@ -25,6 +25,10 @@ class CrashlyticsMiddleware extends MiddlewareClass<AppState> {
     if (action is TokenRefreshGenericErrorAction) {
       _trackTokenRefreshFailure(action);
     }
+    if (action is TokenRefreshTemporarilyRefusedAction) {
+      // Refus attendu (rate limit de connect) : un log suffit, ce n'est pas une anomalie de l'app.
+      crashlytics.log("Token refresh temporarily refused, retry not before ${action.retryNotBefore}");
+    }
 
     _lastActions.add(_actionToString(action));
     crashlytics.setCustomKey("last_actions", _formatQueueForCrashlytics());

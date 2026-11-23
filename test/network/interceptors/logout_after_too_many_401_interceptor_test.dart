@@ -2,12 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pass_emploi_app/features/login/login_actions.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/network/interceptors/logout_after_too_many_401_interceptor.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/remote_config_repository.dart';
 import 'package:redux/redux.dart';
 
 import '../../doubles/spies.dart';
+import '../../dsl/app_state_dsl.dart';
 
 class MockStore extends Mock implements Store<AppState> {}
 
@@ -86,6 +88,23 @@ void main() {
     // Then
     expect(interceptor.unauthorizedCount, 1);
     expect(store.dispatchedAction, isA<RequestLogoutAction>());
+  });
+
+  test('does not log out an invite when limit is exceeded (he would lose his account)', () {
+    // Given
+    remoteConfigRepository.withUnhautorizedLimitAt(1);
+    final store = StoreSpy.withState(givenState().loggedInUser(loginMode: LoginMode.INVITE));
+    final dioError = DioException(
+      requestOptions: RequestOptions(path: '/test'),
+      response: Response(statusCode: 401, requestOptions: RequestOptions(path: '/test')),
+    );
+    interceptor.setStore(store);
+
+    // When
+    interceptor.onPassEmploiError(dioError, interceptorHandler);
+
+    // Then
+    expect(store.dispatchedActions, isEmpty);
   });
 
   test('reset unauthorizedCount for non-401 errors', () {

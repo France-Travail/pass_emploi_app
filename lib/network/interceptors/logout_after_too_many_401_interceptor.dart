@@ -41,6 +41,8 @@ class LogoutAfterTooMany401Interceptor extends PassEmploiBaseInterceptor {
   }
 
   void _onUnauthorizedErrorCountExceeded() {
+    // Un invité ne peut pas se reconnecter à son compte : le déconnecter le lui ferait perdre.
+    if (_store.state.isInviteLoginMode()) return;
     _store.dispatch(RequestLogoutAction(LogoutReason.tooMany401));
   }
 

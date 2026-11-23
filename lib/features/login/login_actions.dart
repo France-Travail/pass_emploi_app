@@ -25,6 +25,15 @@ class TokenRefreshGenericErrorAction {
       'TokenRefreshFailedAction(consecutive: $consecutiveFailures)';
 }
 
+class TokenRefreshTemporarilyRefusedAction {
+  final DateTime retryNotBefore;
+
+  TokenRefreshTemporarilyRefusedAction(this.retryNotBefore);
+
+  @override
+  String toString() => 'TokenRefreshTemporarilyRefusedAction(retryNotBefore: $retryNotBefore)';
+}
+
 class LoginRequestAction {}
 
 class LoginLoadingAction {}

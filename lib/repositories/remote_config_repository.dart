@@ -27,6 +27,16 @@ class RemoteConfigRepository {
     return value > 0 ? value : defaultMax;
   }
 
+  /// Pause avant de retenter un refresh refusé temporairement par connect.
+  /// À aligner sur la fenêtre du rate limit de connect (RATE_LIMIT_IP_FENETRE_SECONDES).
+  Duration tokenRefreshFirstPause() {
+    const defaultPause = Duration(seconds: 60);
+    if (_firebaseRemoteConfig == null) return defaultPause;
+
+    final value = _firebaseRemoteConfig.getInt("app_token_refresh_first_pause_seconds");
+    return value > 0 ? Duration(seconds: value) : defaultPause;
+  }
+
   int monSuiviPoleEmploiStartDateInMonths() {
     if (_firebaseRemoteConfig == null) return 0;
     return _firebaseRemoteConfig.getInt("mon_suivi_ft_start_date_in_months");

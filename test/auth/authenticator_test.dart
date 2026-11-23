@@ -453,6 +453,23 @@ void main() {
       },
     );
 
+    test('refresh token returns TEMPORARILY_REFUSED and keeps the session when connect refuses temporarily', () async {
+      // Given
+      when(() => wrapper.login(_tokenRequest())).thenAnswer((_) async => authTokenResponse());
+      when(
+        () => wrapper.refreshToken(_refreshTokenRequest()),
+      ).thenThrow(AuthWrapperRefreshTemporarilyRefusedException(''));
+
+      await authenticator.login(AuthenticationMode.GENERIC);
+
+      // When
+      final result = await authenticator.refreshStoredSession();
+
+      // Then
+      expect(result, RefreshTokenStatus.TEMPORARILY_REFUSED);
+      expect(await secureStorage.read(key: "refreshToken"), "refreshToken");
+    });
+
     test('refresh token returns USER_NOT_LOGGED_IN when user is not logged in', () async {
       // Given user not logged in
 
