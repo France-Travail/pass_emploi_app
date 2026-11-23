@@ -18,7 +18,7 @@ dependencies:
   # Dart
   collection: ^1.19.1
   equatable: ^3.0.0
-  synchronized: ^3.5.0
+  synchronized: ^3.6.1+1
   uuid: ^4.6.0
   clock: ^1.1.3
   # Dio
@@ -28,16 +28,16 @@ dependencies:
   http_parser: "4.1.2"
 
   # Firebase
-  firebase_core: "5.1.0"
-  firebase_crashlytics: "6.0.1"
-  firebase_remote_config: "7.0.1"
-  firebase_messaging: "17.0.1"
-  firebase_auth: "7.0.1"
-  firebase_app_installations: "0.5.1"
-  cloud_firestore: "7.1.0" # >= 7.1.0 requis : faille eMudhra (CA intermédiaire compromise)
+  firebase_core: 5.2.0
+  firebase_crashlytics: 6.1.0
+  firebase_remote_config: 7.1.0
+  firebase_messaging: 17.1.0
+  firebase_auth: 7.1.0
+  firebase_app_installations: 0.5.2
+  cloud_firestore: 7.2.0 # >= 7.1.0 requis : faille eMudhra (CA intermédiaire compromise)
 
   # UI
-  flutter_svg: ^2.3.2
+  flutter_svg: ^2.5.0
   smooth_page_indicator: ^3.0.0
   path_provider: ^2.1.6
   flutter_staggered_animations: "1.1.1"
@@ -69,7 +69,7 @@ dependencies:
   # Others
   flutter_redux: "0.10.0"
   redux: "5.0.0"
-  flutter_dotenv: ^6.0.1
+  flutter_dotenv: ^6.0.2
   package_info_plus: ^10.2.2
   encrypt: ^5.0.3
   logger: ^2.8.0
