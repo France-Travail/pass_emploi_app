@@ -65,16 +65,25 @@ void launchExternalUrlUnlessDemo(BuildContext context, String url) {
 // Le questionnaire cherche les communes directement sur geo.api.gouv.fr : en mode démo, il n'a que la ville de la démo.
 class ModeDemoCommunesRepository extends CommunesRepository {
   @override
-  Future<List<QuestionnaireCommune>> search(String query, {int limit = 8}) async => [modeDemoCommune];
+  Future<List<QuestionnaireCommune>> search(String query, {int limit = 8, bool oneEntryPerCodePostal = false}) async =>
+      [modeDemoCommune];
 
   @override
-  Future<List<QuestionnaireCommune>> searchByName(String query, {int limit = 8}) async => [modeDemoCommune];
+  Future<List<QuestionnaireCommune>> searchByName(
+    String query, {
+    int limit = 8,
+    bool oneEntryPerCodePostal = false,
+  }) async => [modeDemoCommune];
 
   @override
   Future<List<QuestionnaireCommune>> searchByCodePostal(String codePostal, {int limit = 8}) async => [modeDemoCommune];
 
   @override
-  Future<QuestionnaireCommune?> findByCoordinates({required double latitude, required double longitude}) async {
+  Future<QuestionnaireCommune?> findByCoordinates({
+    required double latitude,
+    required double longitude,
+    bool preferArrondissement = false,
+  }) async {
     return modeDemoCommune;
   }
 }

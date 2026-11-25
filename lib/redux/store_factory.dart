@@ -100,6 +100,7 @@ import 'package:pass_emploi_app/features/onboarding_questionnaire/onboarding_que
 import 'package:pass_emploi_app/features/action_plan/action_plan_middleware.dart';
 import 'package:pass_emploi_app/features/fonctionnalites/fonctionnalites_middleware.dart';
 import 'package:pass_emploi_app/features/reprise_compte_invite/reprise_compte_invite_middleware.dart';
+import 'package:pass_emploi_app/features/structures_accompagnement/structures_accompagnement_middleware.dart';
 /*AUTOGENERATE-REDUX-STOREFACTORY-IMPORT-MIDDLEWARE*/
 import 'package:pass_emploi_app/models/immersion.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
@@ -189,6 +190,7 @@ import 'package:pass_emploi_app/repositories/onboarding_questionnaire_repository
 import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
 import 'package:pass_emploi_app/repositories/fonctionnalites_repository.dart';
 import 'package:pass_emploi_app/repositories/reprise_compte_invite_repository.dart';
+import 'package:pass_emploi_app/repositories/structures_accompagnement_repository.dart';
 /*AUTOGENERATE-REDUX-STOREFACTORY-IMPORT-REPOSITORY*/
 import 'package:redux/redux.dart' as redux;
 
@@ -281,6 +283,7 @@ class StoreFactory {
   final ActionPlanRepository actionPlanRepository;
   final FonctionnalitesRepository fonctionnalitesRepository;
   final RepriseCompteInviteRepository repriseCompteInviteRepository;
+  final StructuresAccompagnementRepository structuresAccompagnementRepository;
   /*AUTOGENERATE-REDUX-STOREFACTORY-PROPERTY-REPOSITORY*/
 
   StoreFactory(
@@ -372,6 +375,7 @@ class StoreFactory {
     this.actionPlanRepository,
     this.fonctionnalitesRepository,
     this.repriseCompteInviteRepository,
+    this.structuresAccompagnementRepository,
     /*AUTOGENERATE-REDUX-STOREFACTORY-CONSTRUCTOR-REPOSITORY*/
   );
 
@@ -491,6 +495,7 @@ class StoreFactory {
           onboardingQuestionnaireRepository,
           tutorialRepository,
         ).call,
+        StructuresAccompagnementMiddleware(structuresAccompagnementRepository).call,
         /*AUTOGENERATE-REDUX-STOREFACTORY-ADD-MIDDLEWARE*/
         ..._debugMiddlewares(),
         ..._stagingMiddlewares(initialState.configurationState.getFlavor()),

@@ -165,9 +165,8 @@ class InviteAccueilViewModel extends Equatable {
       showPlanSection: showPlanSection,
       showPlanEmptyState: showPlanEmptyState,
       planEmptyKind: planEmptyKind,
-
-      // showConseillerCta: mode == InviteAccueilMode.complet && store.state.isInviteLoginMode(),
-      showConseillerCta: false, // NOT IMPLEMENTED YET
+      // Tuile « Être accompagné par un conseiller ? » : invité seulement, quel que soit l'avancement du questionnaire.
+      showConseillerCta: store.state.isInviteLoginMode(),
       showModifierButton: mode == InviteAccueilMode.complet && !isFailure,
       showExplorerTip: isQuestionnaireResolved && mode == InviteAccueilMode.incomplet,
       showRetry: showPlanEmptyState && isFailure && (isPlanPersisted || answers.canGenerateActionPlan),

@@ -585,6 +585,62 @@ class Strings {
     String title,
   ) => "Étape $current sur $total, $title";
 
+  // Invité : être accompagné par une Mission Locale ou France Travail
+  static String etreAccompagneTitle = "Être accompagné";
+  static String etreAccompagneSubtitle = "Trouve une structure près de chez toi";
+  static String etreAccompagneVilleLabel = "Ta ville";
+  static String etreAccompagneVilleHint = "Saisis ta ville ou ton code postal, puis choisis-la dans la liste.";
+  static String etreAccompagneGeolocate = "Me géolocaliser";
+  static String etreAccompagneGeolocateError = "Impossible de récupérer ta position. Réessaie ou saisis ta ville.";
+  static String etreAccompagneStructureTitle = "Choisis quelle structure ?";
+  static String etreAccompagneMissionLocale = "Mission locale";
+  static String etreAccompagneFranceTravail = "France Travail";
+  static String etreAccompagneSubmit = "Voir les structures";
+  static String etreAccompagneErrorCommune = "Choisis ta ville dans la liste.";
+  static String etreAccompagneErrorArrondissement = "Précise ton arrondissement.";
+  static String etreAccompagneErrorA11y(String error) => "Erreur : $error";
+  static String etreAccompagneCommunesA11y(int count) =>
+      count == 1 ? "1 commune proposée" : "$count communes proposées";
+  static String etreAccompagneCommuneSelectedA11y(String commune) => "Ville choisie : $commune";
+  static String etreAccompagneMissionLocaleSubtitle(String ville) => "La Mission Locale de $ville";
+  static String etreAccompagneFranceTravailSubtitle(int count, String ville) =>
+      "$count ${count > 1 ? "structures" : "structure"} près de $ville";
+  static String etreAccompagneIntroMissionLocale =
+      "Pour être accompagné dans tes démarches, tu peux contacter ta Mission Locale. Un conseiller pourra t’aider gratuitement.";
+  static String etreAccompagneIntroMissionLocaleSites(int count, String ville) =>
+      "${_nombreEnLettres(count)} sites reçoivent les jeunes de $ville. Pour être accompagné dans tes démarches, tu peux contacter celui de ton choix. Un conseiller pourra t’aider gratuitement.";
+  static String etreAccompagneIntroFranceTravail(int count) => count > 1
+      ? "Pour être accompagné dans tes démarches, tu peux contacter l’une de ces structures près de chez toi. Un conseiller pourra t’aider gratuitement."
+      : "Pour être accompagné dans tes démarches, tu peux contacter cette structure près de chez toi. Un conseiller pourra t’aider gratuitement.";
+  static String etreAccompagneLoadingA11y = "Recherche des structures en cours";
+  static String etreAccompagneLoadingError =
+      "Les structures n’ont pas pu être chargées. Vérifie ta connexion internet, puis réessaie.";
+  static String etreAccompagneEmptyTitle(String codePostal) => "Aucune structure trouvée pour le $codePostal";
+  static String etreAccompagneEmptyMissionLocale =
+      "Il n’y a pas de Mission Locale avec ce code postal. Essaie avec le code postal d’une grande ville proche de chez toi.";
+  static String etreAccompagneEmptyFranceTravail =
+      "Il n’y a pas d’agence France Travail avec ce code postal. Essaie avec le code postal d’une grande ville proche de chez toi.";
+  static String etreAccompagneModifierRecherche = "Modifier ma recherche";
+  static String etreAccompagne3949Title = "Contacte un conseiller";
+  static String etreAccompagne3949Body = "pour des réponses précises et personnalisées sur ta situation.";
+  static String etreAccompagne3949Horaires =
+      "Du lundi au vendredi, de 8h30 à 16h30. Service gratuit + prix d’un appel.";
+  static String etreAccompagne3949Numero = "3949";
+  static String etreAccompagneCall(String telephone) => "Appelle le $telephone";
+  static String etreAccompagneCallA11y(String telephone, String structure) => "Appelle le $telephone, $structure";
+  static String etreAccompagneItineraire = "Voir l’itinéraire";
+  static String etreAccompagneItineraireA11y(String structure) => "Voir l’itinéraire vers $structure";
+  static String etreAccompagneAdresseA11y(String adresse) => "Adresse : $adresse";
+  static String etreAccompagneHorairesA11y(String horaires) => "Horaires : $horaires";
+
+  static String _nombreEnLettres(int count) => switch (count) {
+    2 => "Deux",
+    3 => "Trois",
+    4 => "Quatre",
+    5 => "Cinq",
+    _ => "$count",
+  };
+
   // Card and subcomponents
   static const String emploiTag = "Offre d’emploi";
   static const String alternanceTag = "Alternance";
