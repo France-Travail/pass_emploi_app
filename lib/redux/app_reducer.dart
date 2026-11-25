@@ -99,6 +99,7 @@ import 'package:pass_emploi_app/features/action_plan/action_plan_reducer.dart';
 import 'package:pass_emploi_app/features/fonctionnalites/fonctionnalites_reducer.dart';
 import 'package:pass_emploi_app/features/reprise_compte_invite/reprise_compte_invite_actions.dart';
 import 'package:pass_emploi_app/features/reprise_compte_invite/reprise_compte_invite_reducer.dart';
+import 'package:pass_emploi_app/features/structures_accompagnement/structures_accompagnement_reducer.dart';
 /*AUTOGENERATE-REDUX-APP-REDUCER-IMPORT*/
 
 AppState reducer(AppState current, dynamic action) {
@@ -235,6 +236,7 @@ AppState reducer(AppState current, dynamic action) {
     actionPlanDeclarationState: actionPlanDeclarationReducer(current.actionPlanDeclarationState, action),
     fonctionnalitesState: fonctionnalitesReducer(current.fonctionnalitesState, action),
     repriseCompteInviteState: repriseCompteInviteReducer(current.repriseCompteInviteState, action),
+    structuresAccompagnementState: structuresAccompagnementReducer(current.structuresAccompagnementState, action),
     /*AUTOGENERATE-REDUX-APP-REDUCER-STATE*/
   );
 }

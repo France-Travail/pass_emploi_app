@@ -71,7 +71,9 @@ extension UrlExtensions on String {
         !contains('/actions/') &&
         !contains('/plan-action') &&
         !contains('/questionnaire') &&
-        !contains('/cgu');
+        !contains('/cgu') &&
+        // Réservée au mode invité, jamais appelée en mode démo.
+        !contains('referentiels/structures-accompagnement');
   }
 
   String removeLastPath() => substring(0, lastIndexOf('/'));

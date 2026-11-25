@@ -8,7 +8,7 @@ class CommunesRepository {
   static final _codePostal = RegExp(r'^\d{5}$');
   static final _firstNumber = RegExp(r'\d+');
   // Paris, Lyon, Marseille : l'API renvoie la commune seule, les arrondissements sont à aller chercher à part.
-  static const _communesAvecArrondissements = {'75056', '69123', '13055'};
+  static const _communesAvecArrondissements = QuestionnaireCommune.codesCommunesAvecArrondissements;
 
   final Dio _httpClient;
   final Crashlytics? _crashlytics;
@@ -16,9 +16,12 @@ class CommunesRepository {
   CommunesRepository({Dio? httpClient, this._crashlytics})
     : _httpClient = httpClient ?? Dio(BaseOptions(baseUrl: _baseUrl));
 
+  /// [oneEntryPerCodePostal] : une commune à plusieurs codes postaux (Toulouse : 31000, 31100…) est proposée une fois
+  /// par code postal, pour que l'utilisateur choisisse celui de son quartier.
   Future<List<QuestionnaireCommune>> search(
     String query, {
     int limit = 8,
+    bool oneEntryPerCodePostal = false,
   }) async {
     final normalized = query.trim().replaceAll(RegExp(r'\s+'), '');
     if (normalized.isEmpty) return [];
@@ -28,7 +31,7 @@ class CommunesRepository {
       return searchByCodePostal(normalized, limit: limit);
     }
 
-    return searchByName(query.trim(), limit: limit);
+    return searchByName(query.trim(), limit: limit, oneEntryPerCodePostal: oneEntryPerCodePostal);
   }
 
   Future<List<QuestionnaireCommune>> _withArrondissements(
@@ -88,6 +91,7 @@ class CommunesRepository {
   Future<List<QuestionnaireCommune>> searchByName(
     String query, {
     int limit = 8,
+    bool oneEntryPerCodePostal = false,
   }) async {
     final trimmed = query.trim();
     if (trimmed.length < 3) return [];
@@ -106,7 +110,7 @@ class CommunesRepository {
       if (data == null) return [];
       final communes = data
           .whereType<Map<String, dynamic>>()
-          .map(QuestionnaireCommune.fromJson)
+          .expand((json) => oneEntryPerCodePostal ? _perCodePostal(json) : [QuestionnaireCommune.fromJson(json)])
           .toList();
       return await _withArrondissements(communes, query: trimmed);
     } catch (e, stack) {
@@ -149,9 +153,39 @@ class CommunesRepository {
     }
   }
 
+  // Paris, Lyon et Marseille gardent une seule entrée : leurs arrondissements, chacun avec son code postal, suivent.
+  static List<QuestionnaireCommune> _perCodePostal(Map<String, dynamic> json) {
+    final codesPostaux = json['codesPostaux'];
+    if (_communesAvecArrondissements.contains(json['code']) || codesPostaux is! List || codesPostaux.length < 2) {
+      return [QuestionnaireCommune.fromJson(json)];
+    }
+    final codes = codesPostaux.map((code) => code.toString()).toSet().toList()..sort();
+    return codes.map((code) => QuestionnaireCommune.fromJson(json, preferredCodePostal: code)).toList();
+  }
+
+  /// [preferArrondissement] : à Paris, Lyon et Marseille, renvoie l'arrondissement où se trouve la position plutôt que
+  /// la commune entière.
   Future<QuestionnaireCommune?> findByCoordinates({
     required double latitude,
     required double longitude,
+    bool preferArrondissement = false,
+  }) async {
+    final commune = await _findByCoordinates(latitude: latitude, longitude: longitude);
+    if (!preferArrondissement || commune == null || !_communesAvecArrondissements.contains(commune.code)) {
+      return commune;
+    }
+    final arrondissement = await _findByCoordinates(
+      latitude: latitude,
+      longitude: longitude,
+      type: 'arrondissement-municipal',
+    );
+    return arrondissement ?? commune;
+  }
+
+  Future<QuestionnaireCommune?> _findByCoordinates({
+    required double latitude,
+    required double longitude,
+    String? type,
   }) async {
     const path = '/communes';
     try {
@@ -160,6 +194,7 @@ class CommunesRepository {
         queryParameters: {
           'lat': latitude,
           'lon': longitude,
+          'type': ?type,
           'fields': 'nom,code,codesPostaux,centre',
         },
       );

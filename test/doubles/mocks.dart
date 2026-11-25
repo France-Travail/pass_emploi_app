@@ -65,6 +65,7 @@ import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/wrappers/connectivity_wrapper.dart';
 
 import 'package:pass_emploi_app/repositories/reprise_compte_invite_repository.dart';
+import 'package:pass_emploi_app/repositories/structures_accompagnement_repository.dart';
 /*AUTOGENERATE-REDUX-TEST-MOCKS-REPOSITORY-IMPORT*/
 
 import 'dio_mock.dart';
@@ -440,5 +441,7 @@ class MockFonctionnalitesRepository extends Mock implements FonctionnalitesRepos
 }
 
 class MockRepriseCompteInviteRepository extends Mock implements RepriseCompteInviteRepository {}
+
+class MockStructuresAccompagnementRepository extends Mock implements StructuresAccompagnementRepository {}
 
 /*AUTOGENERATE-REDUX-TEST-MOCKS-REPOSITORY-DECLARATION*/

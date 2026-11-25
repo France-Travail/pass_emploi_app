@@ -1,0 +1,28 @@
+[
+  {
+    "nom": "Agence France Travail TOULOUSE ST-MICHEL",
+    "adresse": {
+      "ligne": "2 AVENUE DE L'URSS",
+      "codePostal": "31400",
+      "ville": "TOULOUSE"
+    },
+    "telephone": "39-49",
+    "horaires": [
+      "Lun–mer · 8h30 – 12h30, 12h30 – 16h30 sur RDV",
+      "Jeu · 8h30 – 12h30",
+      "Ven · 8h30 – 12h30, 12h30 – 15h30 sur RDV"
+    ],
+    "horairesAlt": "Lundi à mercredi ouvert de 8h30 à 12h30 en accès libre et de 12h30 à 16h30 sur rendez-vous, jeudi ouvert de 8h30 à 12h30, et vendredi ouvert de 8h30 à 12h30 en accès libre et de 12h30 à 15h30 sur rendez-vous."
+  },
+  {
+    "nom": "Agence France Travail sans coordonnées",
+    "adresse": {
+      "ligne": null,
+      "codePostal": null,
+      "ville": null
+    },
+    "telephone": null,
+    "horaires": null,
+    "horairesAlt": null
+  }
+]

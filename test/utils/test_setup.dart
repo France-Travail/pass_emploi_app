@@ -88,6 +88,7 @@ import 'package:pass_emploi_app/repositories/onboarding_questionnaire_repository
 import 'package:pass_emploi_app/repositories/action_plan/action_plan_repository.dart';
 import 'package:pass_emploi_app/repositories/fonctionnalites_repository.dart';
 import 'package:pass_emploi_app/repositories/reprise_compte_invite_repository.dart';
+import 'package:pass_emploi_app/repositories/structures_accompagnement_repository.dart';
 /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-IMPORT*/
 import 'package:redux/redux.dart';
 
@@ -186,6 +187,7 @@ class TestStoreFactory {
   ActionPlanRepository actionPlanRepository = MockActionPlanRepository();
   FonctionnalitesRepository fonctionnalitesRepository = MockFonctionnalitesRepository();
   RepriseCompteInviteRepository repriseCompteInviteRepository = MockRepriseCompteInviteRepository();
+  StructuresAccompagnementRepository structuresAccompagnementRepository = MockStructuresAccompagnementRepository();
   /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-PROPERTY*/
 
   Store<AppState> initializeReduxStore({required AppState initialState}) {
@@ -278,6 +280,7 @@ class TestStoreFactory {
       actionPlanRepository,
       fonctionnalitesRepository,
       repriseCompteInviteRepository,
+      structuresAccompagnementRepository,
       /*AUTOGENERATE-REDUX-TEST-SETUP-REPOSITORY-CONSTRUCTOR*/
     ).initializeReduxStore(initialState: initialState);
   }

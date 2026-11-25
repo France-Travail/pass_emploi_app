@@ -112,6 +112,7 @@ import 'package:pass_emploi_app/usecases/piece_jointe/piece_jointe_use_case.dart
 import 'package:pass_emploi_app/utils/compress_image.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/repositories/reprise_compte_invite_repository.dart';
+import 'package:pass_emploi_app/repositories/structures_accompagnement_repository.dart';
 /*AUTOGENERATE-REDUX-APP-INITIALIZER-REPOSITORY-IMPORT*/
 import 'package:pass_emploi_app/utils/secure_storage_exception_handler_decorator.dart';
 import 'package:pass_emploi_app/utils/secure_storage_in_memory_decorator.dart';
@@ -336,6 +337,7 @@ class AppInitializer {
       ActionPlanRepository(dioClient, securedPreferences, crashlytics),
       FonctionnalitesRepository(dioClient, crashlytics),
       RepriseCompteInviteRepository(dioClient, crashlytics),
+      StructuresAccompagnementRepository(dioClient, crashlytics),
       /*AUTOGENERATE-REDUX-APP-INITIALIZER-REPOSITORY-CONSTRUCTOR*/
     ).initializeReduxStore(initialState: AppState.initialState(configuration: configuration));
     accessTokenRetriever.setStore(reduxStore);

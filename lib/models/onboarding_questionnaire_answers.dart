@@ -23,6 +23,17 @@ class QuestionnaireCommune extends Equatable {
     return '$nom ($codePostal)';
   }
 
+  /// Paris, Lyon et Marseille entières : leurs arrondissements sont des communes à part.
+  static const codesCommunesAvecArrondissements = {'75056', '69123', '13055'};
+
+  bool get isCommuneAvecArrondissements => codesCommunesAvecArrondissements.contains(code);
+
+  static const _suffixeArrondissement = ' Arrondissement';
+
+  /// « Paris 14e » plutôt que « Paris 14e Arrondissement ».
+  String get nomCourt =>
+      nom.endsWith(_suffixeArrondissement) ? nom.substring(0, nom.length - _suffixeArrondissement.length) : nom;
+
   /// Département from the INSEE code (3 digits for overseas: 971, 972…; 2A/2B for Corsica).
   String? get departement {
     if (code.length < 2) return null;

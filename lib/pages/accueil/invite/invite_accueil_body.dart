@@ -8,6 +8,7 @@ import 'package:pass_emploi_app/pages/accueil/accueil_message_informatif.dart';
 import 'package:pass_emploi_app/pages/accueil/remote_campagne_accueil_card.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/invite_action_plan_empty_state.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/invite_action_plan_section.dart';
+import 'package:pass_emploi_app/pages/accueil/invite/invite_conseiller_tile.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/invite_discovery_tile.dart';
 import 'package:pass_emploi_app/pages/accueil/invite/onboarding_questionnaire_progress_card.dart';
 import 'package:pass_emploi_app/presentation/accueil/invite_accueil_view_model.dart';
@@ -230,51 +231,7 @@ class _Content extends StatelessWidget {
           ],
           if (viewModel.showConseillerCta) ...[
             const SizedBox(height: Margins.spacing_base),
-            Semantics(
-              button: true,
-              child: Material(
-                color: DsfrColorDecisions.artworkDecorativeBlueFrance(context),
-                borderRadius: BorderRadius.circular(4),
-                child: InkWell(
-                  onTap: () {
-                    // Not implemented yet
-                  },
-                  borderRadius: BorderRadius.circular(4),
-                  child: Padding(
-                    padding: const EdgeInsets.all(Margins.spacing_base),
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          'assets/dsfr/avatar.webp',
-                          width: 54,
-                          height: 54,
-                          excludeFromSemantics: true,
-                        ),
-                        const SizedBox(width: Margins.spacing_base),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                Strings.inviteAccueilConseillerTitle,
-                                style: DsfrTextStyle.bodyMdBold(
-                                  color: DsfrColorDecisions.textTitleBlueFrance(context),
-                                ),
-                              ),
-                              Text(
-                                Strings.inviteAccueilConseillerBody,
-                                style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textMentionGrey(context)),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Icon(DsfrIcons.systemArrowRightSLine, color: DsfrColorDecisions.textTitleBlueFrance(context)),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            const InviteConseillerTile(),
           ],
           const SizedBox(height: Margins.spacing_xl),
         ],

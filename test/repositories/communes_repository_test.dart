@@ -207,4 +207,143 @@ void main() {
       },
     );
   });
+
+  group('oneEntryPerCodePostal', () {
+    test('searchByName proposes a commune once per code postal, sorted', () async {
+      adapter.onGet(
+        '/communes',
+        (server) => server.reply(200, [
+          {
+            'nom': 'Lille',
+            'code': '59350',
+            'codesPostaux': ['59800', '59000', '59160'],
+          },
+          {
+            'nom': 'Lillers',
+            'code': '62516',
+            'codesPostaux': ['62190'],
+          },
+        ]),
+        queryParameters: {
+          'nom': 'Lil',
+          'boost': 'population',
+          'limit': 8,
+          'fields': 'nom,code,codesPostaux,centre',
+        },
+      );
+
+      final result = await repository.search('Lil', oneEntryPerCodePostal: true);
+
+      expect(result.map((c) => c.displayLabel), ['Lille (59000)', 'Lille (59160)', 'Lille (59800)', 'Lillers (62190)']);
+      expect(result.map((c) => c.code).toSet(), {'59350', '62516'});
+    });
+
+    test('searchByName keeps a single entry by default', () async {
+      adapter.onGet(
+        '/communes',
+        (server) => server.reply(200, [
+          {
+            'nom': 'Lille',
+            'code': '59350',
+            'codesPostaux': ['59000', '59160'],
+          },
+        ]),
+        queryParameters: {
+          'nom': 'Lil',
+          'boost': 'population',
+          'limit': 8,
+          'fields': 'nom,code,codesPostaux,centre',
+        },
+      );
+
+      final result = await repository.search('Lil');
+
+      expect(result.map((c) => c.displayLabel), ['Lille (59000)']);
+    });
+
+    test('Paris keeps a single entry, followed by its arrondissements', () async {
+      adapter.onGet(
+        '/communes',
+        (server) => server.reply(200, [
+          {
+            'nom': 'Paris',
+            'code': '75056',
+            'codesPostaux': ['75001', '75014'],
+          },
+        ]),
+        queryParameters: {
+          'nom': 'Paris',
+          'boost': 'population',
+          'limit': 8,
+          'fields': 'nom,code,codesPostaux,centre',
+        },
+      );
+      adapter.onGet(
+        '/communes',
+        (server) => server.reply(200, [
+          {
+            'nom': 'Paris 14e Arrondissement',
+            'code': '75114',
+            'codesPostaux': ['75014'],
+          },
+        ]),
+        queryParameters: {
+          'nom': 'Paris',
+          'type': 'arrondissement-municipal',
+          'limit': 20,
+          'fields': 'nom,code,codesPostaux,centre',
+        },
+      );
+
+      final result = await repository.search('Paris', oneEntryPerCodePostal: true);
+
+      expect(result.map((c) => c.code), ['75056', '75114']);
+    });
+  });
+
+  group('findByCoordinates with preferArrondissement', () {
+    void givenCommuneAt(Map<String, dynamic> commune, {String? type}) {
+      adapter.onGet(
+        '/communes',
+        (server) => server.reply(200, [commune]),
+        queryParameters: {
+          'lat': 48.83,
+          'lon': 2.32,
+          'type': ?type,
+          'fields': 'nom,code,codesPostaux,centre',
+        },
+      );
+    }
+
+    test('returns the arrondissement in Paris', () async {
+      givenCommuneAt({
+        'nom': 'Paris',
+        'code': '75056',
+        'codesPostaux': ['75001'],
+      });
+      givenCommuneAt({
+        'nom': 'Paris 14e Arrondissement',
+        'code': '75114',
+        'codesPostaux': ['75014'],
+      }, type: 'arrondissement-municipal');
+
+      final result = await repository.findByCoordinates(latitude: 48.83, longitude: 2.32, preferArrondissement: true);
+
+      expect(result?.code, '75114');
+      expect(result?.codePostal, '75014');
+      expect(result?.nomCourt, 'Paris 14e');
+    });
+
+    test('returns the commune elsewhere, and in Paris by default', () async {
+      givenCommuneAt({
+        'nom': 'Paris',
+        'code': '75056',
+        'codesPostaux': ['75001'],
+      });
+
+      final result = await repository.findByCoordinates(latitude: 48.83, longitude: 2.32);
+
+      expect(result?.code, '75056');
+    });
+  });
 }

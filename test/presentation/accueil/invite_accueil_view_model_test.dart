@@ -33,7 +33,7 @@ void main() {
     expect(viewModel.showExplorerTip, isTrue);
     expect(viewModel.showDiscoveryTile, isTrue);
     expect(viewModel.discoveryProgressPercent, 25);
-    expect(viewModel.showConseillerCta, isFalse);
+    expect(viewModel.showConseillerCta, isTrue);
     expect(viewModel.shouldShowAllowNotifications, isTrue);
     expect(viewModel.displayState, DisplayState.CONTENT);
     expect(viewModel.planDisplayEvent, isNull);
@@ -101,6 +101,7 @@ void main() {
     expect(viewModel.mode, InviteAccueilMode.partiel);
     expect(viewModel.showQuestionnaireCard, isTrue);
     expect(viewModel.showPlanSection, isTrue);
+    expect(viewModel.showConseillerCta, isTrue);
     expect(viewModel.plan?.objectives.first.title, 'Trouver un emploi');
     expect(
       viewModel.planDisplayEvent,
@@ -145,7 +146,7 @@ void main() {
     expect(viewModel.mode, InviteAccueilMode.complet);
     expect(viewModel.showQuestionnaireCard, isFalse);
     expect(viewModel.showModifierButton, isTrue);
-    expect(viewModel.showConseillerCta, isFalse);
+    expect(viewModel.showConseillerCta, isTrue);
     expect(viewModel.showPlanEmptyState, isFalse);
   });
 

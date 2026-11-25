@@ -136,6 +136,10 @@ class AnalyticsScreenNames {
   static const actionPlanFeedback = "/feedback/action-plan/affichage";
   static const actionPlanDeclaration = "/plan-action/declaration";
 
+  static const etreAccompagne = "etre-accompagne";
+  static const etreAccompagneMissionLocale = "etre-accompagne/mission-locale";
+  static const etreAccompagneFranceTravail = "etre-accompagne/france-travail";
+
   static const offreNotFound = "offre_not_found";
 }
 
@@ -315,6 +319,15 @@ class AnalyticsEventNames {
   static const questionnaireGeolocationSucceededAction = "Géolocalisation aboutie";
   static const questionnaireGeolocationFailedAction = "Géolocalisation échouée";
   static const questionnaireGenerationOutcomeAction = "Issue de la génération";
+
+  // Les villes ne sont jamais suivies : seulement le type de structure, l'origine de la ville et les volumes.
+  static const etreAccompagneCategory = "Être accompagné";
+  static const etreAccompagneTuileAction = "Clic sur la tuile de l'accueil";
+  static String etreAccompagneRechercheAction(String type) => "Recherche - $type";
+  static String etreAccompagneErreurAction(String type) => "Erreur - $type";
+  static String etreAccompagneAppelAction(String type) => "Appel - $type";
+  static const etreAccompagneAppel3949Action = "Appel - 3949";
+  static String etreAccompagneItineraireAction(String type) => "Itinéraire - $type";
 
   static const accueilCategory = "Accueil";
   static const accueilDetailSemainePressed = "Clic sur le détail de la semaine";
