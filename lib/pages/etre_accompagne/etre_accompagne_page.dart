@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:geolocator/geolocator.dart';
@@ -20,9 +21,12 @@ import 'package:pass_emploi_app/widgets/a11y/group_label_semantics.dart';
 import 'package:pass_emploi_app/widgets/buttons/clear_field_button.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 
-/// Invité : trouver la Mission Locale ou les agences France Travail de sa ville.
+/// Invité : trouver la Mission Locale ou les agences France Travail de son code postal.
 class EtreAccompagnePage extends StatefulWidget {
-  const EtreAccompagnePage({super.key});
+  const EtreAccompagnePage({super.key, this.communesRepository});
+
+  /// Remplaçable dans les tests ; sinon l'API géo de l'État.
+  final CommunesRepository? communesRepository;
 
   static MaterialPageRoute<void> materialPageRoute() {
     return MaterialPageRoute(builder: (_) => const EtreAccompagnePage());
@@ -33,28 +37,38 @@ class EtreAccompagnePage extends StatefulWidget {
 }
 
 class _EtreAccompagnePageState extends State<EtreAccompagnePage> {
-  final _communesRepository = CommunesRepository();
+  late final CommunesRepository _communesRepository;
   late final EtreAccompagneFormChangeNotifier _form;
   late final TextEditingController _controller;
-  List<QuestionnaireCommune> _suggestions = [];
-  int? _focusedSuggestion;
-  Timer? _debounce;
+  final _codePostalKey = GlobalKey();
+  final _communeChoiceKey = GlobalKey();
+  bool _isSubmitting = false;
+
+  // « Voir les structures » attend les communes du code postal, que l'API géo met parfois une dizaine de secondes à
+  // renvoyer : le bouton est désactivé et un chargement s'affiche dessous.
+  bool _isCheckingCodePostal = false;
+
+  // Recherche lancée au 5e chiffre, reprise par « Voir les structures » plutôt que d'en lancer une autre.
+  Future<void>? _communesLookup;
+  String? _communesLookupCodePostal;
 
   @override
   void initState() {
     super.initState();
-    // Ville pré-remplie avec la commune d'habitation du questionnaire, qui n'est jamais modifiée ici.
+    _communesRepository = widget.communesRepository ?? CommunesRepository();
+    // Code postal pré-rempli avec celui de la commune d'habitation du questionnaire, qui n'est jamais modifiée ici.
     final questionnaireState = StoreProvider.of<AppState>(context, listen: false).state.onboardingQuestionnaireState;
     final habitation = questionnaireState is OnboardingQuestionnaireSuccessState
         ? questionnaireState.answers.habitation
         : null;
     _form = EtreAccompagneFormChangeNotifier(initialCommune: habitation);
-    _controller = TextEditingController(text: _form.query);
+    _controller = TextEditingController(text: _form.codePostal);
+    // Si ce code postal couvre plusieurs communes, la liste s'affiche, celle du questionnaire choisie.
+    if (_form.needsCommunes) unawaited(_lookupCommunes(_form.codePostal));
   }
 
   @override
   void dispose() {
-    _debounce?.cancel();
     _controller.dispose();
     _form.dispose();
     super.dispose();
@@ -86,8 +100,8 @@ class _EtreAccompagnePageState extends State<EtreAccompagnePage> {
                     ),
                   ),
                   const SizedBox(height: DsfrSpacings.s2w),
-                  _villeField(context),
-                  ..._suggestionsList(context),
+                  _codePostalField(context),
+                  ..._communeChoice(context),
                   const SizedBox(height: DsfrSpacings.s2w),
                   DsfrButton(
                     label: Strings.etreAccompagneGeolocate,
@@ -128,8 +142,9 @@ class _EtreAccompagnePageState extends State<EtreAccompagnePage> {
                     label: Strings.etreAccompagneSubmit,
                     variant: DsfrButtonVariant.primary,
                     size: DsfrComponentSize.lg,
-                    onPressed: _form.canSubmit ? _submit : null,
+                    onPressed: _form.canSubmit && !_isCheckingCodePostal ? _submit : null,
                   ),
+                  if (_isCheckingCodePostal) ...[const SizedBox(height: DsfrSpacings.s2w), const _CheckingCodePostal()],
                 ],
               ),
             ),
@@ -139,10 +154,11 @@ class _EtreAccompagnePageState extends State<EtreAccompagnePage> {
     );
   }
 
-  Widget _villeField(BuildContext context) {
-    final error = _form.error;
+  Widget _codePostalField(BuildContext context) {
+    final error = _form.codePostalError;
     final hasClearButton = _controller.text.isNotEmpty;
     return Column(
+      key: _codePostalKey,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // A11y 5.1 : le bouton d'effacement est posé par-dessus le champ, hors du nœud fusionné « étiquette + champ ».
@@ -153,20 +169,22 @@ class _EtreAccompagnePageState extends State<EtreAccompagnePage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    Strings.etreAccompagneVilleLabel,
+                    Strings.etreAccompagneCodePostalLabel,
                     style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
                   ),
+                  // A11y 11.10 : format attendu indiqué avant la saisie.
                   Text(
-                    Strings.etreAccompagneVilleHint,
+                    Strings.etreAccompagneCodePostalHint,
                     style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textMentionGrey(context)),
                   ),
                   const SizedBox(height: DsfrSpacings.s1w),
                   DsfrInputHeadless(
                     controller: _controller,
-                    onChanged: _onQueryChanged,
-                    // A11y 9.12 : nature de la saisie (commune).
-                    keyboardType: TextInputType.streetAddress,
-                    autofillHints: const [AutofillHints.addressCity],
+                    onChanged: _onCodePostalChanged,
+                    // A11y 9.12 : nature de la saisie (code postal).
+                    keyboardType: TextInputType.number,
+                    autofillHints: const [AutofillHints.postalCode],
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(5)],
                     inputBorderColor: error != null ? DsfrColorDecisions.borderPlainError(context) : null,
                     // Texte agrandi : le champ grandit avec le texte au lieu de le rogner.
                     inputConstraints: const BoxConstraints(minHeight: DsfrSpacings.s6w),
@@ -189,59 +207,50 @@ class _EtreAccompagnePageState extends State<EtreAccompagnePage> {
                 right: DsfrSpacings.s1v,
                 bottom: DsfrSpacings.s1v,
                 child: ClearFieldButton(
-                  tooltip: Strings.a11yClearField(Strings.etreAccompagneVilleLabel),
-                  onPressed: _clearQuery,
+                  tooltip: Strings.a11yClearField(Strings.etreAccompagneCodePostalLabel),
+                  onPressed: _clearCodePostal,
                 ),
               ),
           ],
         ),
-        if (error != null) ...[
-          const SizedBox(height: DsfrSpacings.s1w),
-          ExcludeSemantics(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(DsfrIcons.systemErrorWarningFill, size: 16, color: DsfrColorDecisions.textDefaultError(context)),
-                const SizedBox(width: DsfrSpacings.s1v),
-                Expanded(
-                  child: Text(
-                    error,
-                    style: DsfrTextStyle.bodyXs(color: DsfrColorDecisions.textDefaultError(context)),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+        if (error != null) ...[const SizedBox(height: DsfrSpacings.s1w), _ErrorText(error)],
       ],
     );
   }
 
-  List<Widget> _suggestionsList(BuildContext context) {
-    if (_suggestions.isEmpty) return [];
+  // Seulement quand le code postal couvre plusieurs communes (14500 : Campagnolles, Vire Normandie).
+  List<Widget> _communeChoice(BuildContext context) {
+    final communes = _form.communes;
+    if (!_form.showCommuneChoice || communes == null) return [];
+    final error = _form.communeError;
+    // A11y 9.6 : chaque choix reprend la question, et l'erreur quand il y en a une.
+    final groupLabel = error == null
+        ? Strings.etreAccompagneCommuneLabel
+        : '${Strings.etreAccompagneCommuneLabel}, ${Strings.etreAccompagneErrorA11y(error)}';
     return [
-      const SizedBox(height: DsfrSpacings.s1w),
-      for (final (index, commune) in _suggestions.indexed)
-        DsfrFocusWidget(
-          isFocused: _focusedSuggestion == index,
-          child: ListTile(
-            contentPadding: EdgeInsets.zero,
-            // A11y 2.3 : contour de focus DSFR à la place du voile gris de Material.
-            focusColor: DsfrColorDecisions.backgroundTransparent(context),
-            onFocusChange: (focused) => setState(() {
-              if (focused) {
-                _focusedSuggestion = index;
-              } else if (_focusedSuggestion == index) {
-                _focusedSuggestion = null;
-              }
-            }),
-            title: Text(
-              commune.displayLabel,
-              style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context)),
+      const SizedBox(height: DsfrSpacings.s2w),
+      ExcludeSemantics(
+        key: _communeChoiceKey,
+        child: Text(
+          Strings.etreAccompagneCommuneLabel,
+          style: DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textLabelGrey(context)),
+        ),
+      ),
+      for (final commune in communes)
+        Padding(
+          padding: const EdgeInsets.only(top: DsfrSpacings.s1w),
+          child: GroupLabelSemantics(
+            groupLabel: groupLabel,
+            child: DsfrRadioButton<String>(
+              label: commune.nom,
+              value: commune.code,
+              groupValue: _form.commune?.code,
+              size: DsfrComponentSize.md,
+              onChanged: (_) => _form.selectCommune(commune),
             ),
-            onTap: () => _selectCommune(commune, StructuresAccompagnementCommuneOrigine.saisie),
           ),
         ),
+      if (error != null) ...[const SizedBox(height: DsfrSpacings.s1w), _ErrorText(error)],
     ];
   }
 
@@ -264,50 +273,77 @@ class _EtreAccompagnePageState extends State<EtreAccompagnePage> {
     );
   }
 
-  void _clearQuery() {
-    _debounce?.cancel();
+  void _clearCodePostal() {
     _controller.clear();
-    setState(() => _suggestions = []);
-    _form.updateQuery('');
+    _form.updateCodePostal('');
   }
 
-  void _onQueryChanged(String value) {
-    _form.updateQuery(value);
-    _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), () async {
-      final results = await _communesRepository.search(value, oneEntryPerCodePostal: true);
-      // Réponse d'une saisie dépassée, ou commune déjà choisie entre-temps.
-      if (!mounted || _controller.text != value || _form.commune != null) return;
-      setState(() {
-        _suggestions = results;
-        _focusedSuggestion = null;
-      });
-      // A11y 5.4 : la liste apparaît sous le champ, son arrivée est annoncée.
-      if (results.isNotEmpty) A11yUtils.announce(Strings.etreAccompagneCommunesA11y(results.length));
+  void _onCodePostalChanged(String value) {
+    _form.updateCodePostal(value);
+    if (_form.needsCommunes) unawaited(_lookupCommunes(value, announceChoice: true));
+  }
+
+  Future<void> _lookupCommunes(String codePostal, {bool announceChoice = false}) {
+    final pending = _communesLookup;
+    if (pending != null && _communesLookupCodePostal == codePostal) return pending;
+    final lookup = _fetchCommunes(codePostal, announceChoice: announceChoice);
+    _communesLookup = lookup;
+    _communesLookupCodePostal = codePostal;
+    return lookup.whenComplete(() {
+      if (!identical(_communesLookup, lookup)) return;
+      _communesLookup = null;
+      _communesLookupCodePostal = null;
     });
   }
 
-  void _selectCommune(QuestionnaireCommune commune, StructuresAccompagnementCommuneOrigine origine) {
-    _debounce?.cancel();
-    setState(() {
-      _suggestions = [];
-      _focusedSuggestion = null;
-    });
-    _controller.text = commune.displayLabel;
-    _form.selectCommune(commune, origine);
-    A11yUtils.announce(Strings.etreAccompagneCommuneSelectedA11y(commune.displayLabel));
-  }
-
-  void _submit() {
-    final request = _form.submit();
-    final error = _form.error;
-    if (request == null) {
-      // A11y 11.10 : l'erreur, affichée sous le champ, est aussi annoncée.
-      if (error != null) A11yUtils.announce(Strings.etreAccompagneErrorA11y(error));
-      return;
+  /// [announceChoice] : A11y 5.4, l'apparition de la liste des communes sous le champ est annoncée.
+  Future<void> _fetchCommunes(String codePostal, {required bool announceChoice}) async {
+    final communes = await _communesRepository.communesDuCodePostal(codePostal);
+    if (!mounted) return;
+    final wasShown = _form.showCommuneChoice;
+    _form.setCommunes(codePostal, communes);
+    // Pendant « Voir les structures », c'est l'erreur « Choisis ta commune. » qui est annoncée.
+    if (announceChoice && !_isCheckingCodePostal && !wasShown && _form.showCommuneChoice) {
+      A11yUtils.announce(Strings.etreAccompagneCommunesA11y(_form.communes!.length));
     }
-    FocusScope.of(context).unfocus();
-    Navigator.of(context).push(StructuresAccompagnementPage.materialPageRoute(request));
+  }
+
+  Future<void> _submit() async {
+    if (_isSubmitting) return;
+    _isSubmitting = true;
+    try {
+      // Communes pas encore connues (API géo lente, ou injoignable jusque-là) : elles sont attendues d'abord.
+      if (_form.type != null && _form.needsCommunes) {
+        setState(() => _isCheckingCodePostal = true);
+        A11yUtils.announce(Strings.etreAccompagneCodePostalChecking);
+        await _lookupCommunes(_form.codePostal);
+        if (!mounted) return;
+        setState(() => _isCheckingCodePostal = false);
+      }
+      final request = _form.submit();
+      if (request == null) {
+        // A11y 11.10 : l'erreur, affichée sous le champ ou sous les communes, est aussi annoncée.
+        final error = _form.codePostalError ?? _form.communeError;
+        if (error != null) {
+          A11yUtils.announce(Strings.etreAccompagneErrorA11y(error));
+          _revealError(_form.codePostalError != null ? _codePostalKey : _communeChoiceKey);
+        }
+        return;
+      }
+      FocusScope.of(context).unfocus();
+      await Navigator.of(context).push(StructuresAccompagnementPage.materialPageRoute(request));
+    } finally {
+      _isSubmitting = false;
+    }
+  }
+
+  // Clavier ouvert, l'erreur peut être hors de l'écran, au-dessus du bouton : la page remonte jusqu'à elle.
+  void _revealError(GlobalKey key) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final target = key.currentContext;
+      if (!mounted || target == null) return;
+      Scrollable.ensureVisible(target, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    });
   }
 
   // Seule la commune trouvée part vers l'API géo de l'État : la position n'est jamais envoyée au serveur pass emploi.
@@ -315,13 +351,18 @@ class _EtreAccompagnePageState extends State<EtreAccompagnePage> {
     _form.startGeolocation();
     final commune = await _findCommuneAroundMe();
     if (!mounted) return;
-    if (commune == null) {
+    // Paris, Lyon ou Marseille sans arrondissement : il manquerait le bon code postal.
+    if (commune == null || commune.codePostal == null || commune.isCommuneAvecArrondissements) {
       _form.endGeolocation(failed: true);
       A11yUtils.announce(Strings.etreAccompagneGeolocateError);
       return;
     }
     _form.endGeolocation(failed: false);
-    _selectCommune(commune, StructuresAccompagnementCommuneOrigine.geolocalisation);
+    _form.applyGeolocatedCommune(commune);
+    _controller.text = _form.codePostal;
+    A11yUtils.announce(Strings.etreAccompagneGeolocatedA11y(_form.codePostal, commune.nomCourt));
+    // La commune géolocalisée reste choisie si le code postal en couvre plusieurs.
+    unawaited(_lookupCommunes(_form.codePostal));
   }
 
   Future<QuestionnaireCommune?> _findCommuneAroundMe() async {
@@ -339,5 +380,57 @@ class _EtreAccompagnePageState extends State<EtreAccompagnePage> {
     } catch (_) {
       return null;
     }
+  }
+}
+
+/// Erreur affichée sous le champ ou sous les communes. Elle est lue avec eux : exclue ici pour ne pas l'être deux fois.
+class _ErrorText extends StatelessWidget {
+  const _ErrorText(this.error);
+
+  final String error;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = DsfrColorDecisions.textDefaultError(context);
+    return ExcludeSemantics(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(DsfrIcons.systemErrorWarningFill, size: 16, color: color),
+          const SizedBox(width: DsfrSpacings.s1v),
+          Expanded(
+            child: Text(error, style: DsfrTextStyle.bodyXs(color: color)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Chargement sous « Voir les structures », le temps de vérifier le code postal. Annoncé au moment de l'appui.
+class _CheckingCodePostal extends StatelessWidget {
+  const _CheckingCodePostal();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox.square(
+          dimension: DsfrSpacings.s3w,
+          child: CircularProgressIndicator(
+            strokeWidth: 3,
+            color: DsfrColorDecisions.backgroundActionHighBlueFrance(context),
+          ),
+        ),
+        const SizedBox(width: DsfrSpacings.s1w),
+        Flexible(
+          child: Text(
+            Strings.etreAccompagneCodePostalChecking,
+            style: DsfrTextStyle.bodySm(color: DsfrColorDecisions.textMentionGrey(context)),
+          ),
+        ),
+      ],
+    );
   }
 }

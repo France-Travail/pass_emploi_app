@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -10,6 +12,7 @@ import 'package:pass_emploi_app/pages/accueil/invite/invite_conseiller_tile.dart
 import 'package:pass_emploi_app/pages/etre_accompagne/etre_accompagne_page.dart';
 import 'package:pass_emploi_app/pages/etre_accompagne/structures_accompagnement_page.dart';
 import 'package:pass_emploi_app/redux/app_state.dart';
+import 'package:pass_emploi_app/repositories/communes_repository.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
 
 import '../../doubles/fixtures.dart';
@@ -17,7 +20,31 @@ import '../../doubles/spies.dart';
 import '../../dsl/app_state_dsl.dart';
 
 const _lille = QuestionnaireCommune(code: '59350', nom: 'Lille', codePostal: '59000');
-const _paris = QuestionnaireCommune(code: '75056', nom: 'Paris', codePostal: '75001');
+const _paris14 = QuestionnaireCommune(code: '75056', nom: 'Paris', codePostal: '75014');
+const _vire = QuestionnaireCommune(code: '14762', nom: 'Vire Normandie', codePostal: '14500');
+const _campagnolles = QuestionnaireCommune(code: '14127', nom: 'Campagnolles', codePostal: '14500');
+
+/// Communes de l'API géo, sans réseau.
+class _FakeCommunesRepository extends CommunesRepository {
+  /// Réponse retenue jusqu'à ce que le test la libère (API géo lente).
+  Completer<void>? gate;
+  int calls = 0;
+
+  @override
+  Future<List<QuestionnaireCommune>?> communesDuCodePostal(String codePostal) async {
+    calls++;
+    await gate?.future;
+    return switch (codePostal) {
+      '59000' => [_lille],
+      '75014' => [_paris14],
+      '14500' => [_campagnolles, _vire],
+      '99999' => null,
+      _ => [],
+    };
+  }
+}
+
+EtreAccompagnePage _etreAccompagnePage() => EtreAccompagnePage(communesRepository: _FakeCommunesRepository());
 
 const _franceTravailRequest = StructuresAccompagnementRequest(
   type: StructureAccompagnementType.franceTravail,
@@ -73,6 +100,22 @@ void _setSize(WidgetTester tester, Size size) {
   addTearDown(tester.view.reset);
 }
 
+/// Choisit [structure] si besoin, puis touche « Voir les structures ».
+Future<void> _submit(WidgetTester tester, String? structure) async {
+  if (structure != null) {
+    await tester.ensureVisible(find.text(structure));
+    await tester.tap(find.text(structure));
+    await tester.pump();
+  }
+  await tester.ensureVisible(find.text(Strings.etreAccompagneSubmit));
+  await tester.tap(find.text(Strings.etreAccompagneSubmit));
+  await tester.pump();
+  // Recherche des communes, puis ouverture de la liste des structures, ou défilement jusqu'à l'erreur (animation qui
+  // démarre à la frame suivante, et pendant laquelle la page ignore les appuis).
+  await tester.pump(const Duration(seconds: 1));
+  await tester.pump(const Duration(milliseconds: 500));
+}
+
 String _mergedLabel(WidgetTester tester, Finder finder) => tester.getSemantics(finder).getSemanticsData().label;
 
 void main() {
@@ -89,10 +132,10 @@ void main() {
   });
 
   group('Être accompagné', () {
-    testWidgets('ville pré-remplie, aucune structure choisie, « Voir les structures » désactivé', (tester) async {
-      await _pump(tester, _state(habitation: _lille), const EtreAccompagnePage());
+    testWidgets('code postal pré-rempli, aucune structure choisie, « Voir les structures » désactivé', (tester) async {
+      await _pump(tester, _state(habitation: _lille), _etreAccompagnePage());
 
-      expect(find.widgetWithText(TextField, 'Lille (59000)'), findsOneWidget);
+      expect(find.widgetWithText(TextField, '59000'), findsOneWidget);
       final submit = tester.widget<DsfrButton>(find.widgetWithText(DsfrButton, Strings.etreAccompagneSubmit));
       expect(submit.onPressed, isNull);
 
@@ -105,7 +148,7 @@ void main() {
 
     testWidgets('A11y : chaque choix annonce son nom, la question et son état', (tester) async {
       final handle = tester.ensureSemantics();
-      await _pump(tester, _state(habitation: _lille), const EtreAccompagnePage());
+      await _pump(tester, _state(habitation: _lille), _etreAccompagnePage());
       await tester.tap(find.text(Strings.etreAccompagneFranceTravail));
       await tester.pump();
 
@@ -117,42 +160,150 @@ void main() {
       handle.dispose();
     });
 
-    testWidgets('texte saisi sans choisir dans la liste : erreur affichée et lue avec le champ', (tester) async {
+    testWidgets('code postal incomplet : erreur affichée et lue avec le champ', (tester) async {
       final handle = tester.ensureSemantics();
-      await _pump(tester, _state(), const EtreAccompagnePage());
+      await _pump(tester, _state(), _etreAccompagnePage());
 
-      await tester.enterText(find.byType(TextField), 'Lille');
-      await tester.tap(find.text(Strings.etreAccompagneMissionLocale));
-      await tester.pump();
-      await tester.ensureVisible(find.text(Strings.etreAccompagneSubmit));
-      await tester.tap(find.text(Strings.etreAccompagneSubmit));
-      await tester.pump(const Duration(seconds: 1));
+      await tester.enterText(find.byType(TextField), '5900');
+      await _submit(tester, Strings.etreAccompagneMissionLocale);
 
-      expect(find.text(Strings.etreAccompagneErrorCommune), findsOneWidget);
+      expect(find.text(Strings.etreAccompagneErrorCodePostalFormat), findsOneWidget);
       expect(
         _mergedLabel(tester, find.byType(TextField)),
-        contains(Strings.etreAccompagneErrorA11y(Strings.etreAccompagneErrorCommune)),
+        contains(Strings.etreAccompagneErrorA11y(Strings.etreAccompagneErrorCodePostalFormat)),
       );
+      expect(find.byType(StructuresAccompagnementPage), findsNothing);
       handle.dispose();
     });
 
-    testWidgets('ville entière (Paris) : « Précise ton arrondissement. », rien ne s’ouvre', (tester) async {
-      await _pump(tester, _state(habitation: _paris), const EtreAccompagnePage());
+    testWidgets('le champ n’accepte que 5 chiffres', (tester) async {
+      await _pump(tester, _state(), _etreAccompagnePage());
 
+      await tester.enterText(find.byType(TextField), 'Paris 750141');
+      await tester.pump();
+
+      expect(find.widgetWithText(TextField, '75014'), findsOneWidget);
+    });
+
+    testWidgets('Paris 75014 : pas d’arrondissement à préciser, Paris est cherché avec ce code postal', (tester) async {
+      await _pump(tester, _state(), _etreAccompagnePage());
+
+      await tester.enterText(find.byType(TextField), '75014');
+      await tester.pump();
+      await _submit(tester, Strings.etreAccompagneMissionLocale);
+
+      expect(find.text(Strings.etreAccompagneCommuneLabel), findsNothing);
+      final page = tester.widget<StructuresAccompagnementPage>(find.byType(StructuresAccompagnementPage));
+      expect(page.request.commune, _paris14);
+      expect(page.request.origine, StructuresAccompagnementCommuneOrigine.saisie);
+    });
+
+    testWidgets('API géo lente : chargement sous le bouton désactivé, une seule recherche, puis la liste', (
+      tester,
+    ) async {
+      final repository = _FakeCommunesRepository()..gate = Completer<void>();
+      await _pump(tester, _state(), EtreAccompagnePage(communesRepository: repository));
+
+      await tester.enterText(find.byType(TextField), '75014');
+      await tester.pump();
       await tester.tap(find.text(Strings.etreAccompagneMissionLocale));
       await tester.pump();
       await tester.ensureVisible(find.text(Strings.etreAccompagneSubmit));
       await tester.tap(find.text(Strings.etreAccompagneSubmit));
+      await tester.pump();
+
+      expect(find.text(Strings.etreAccompagneCodePostalChecking), findsOneWidget);
+      final button = tester.widget<DsfrButton>(find.widgetWithText(DsfrButton, Strings.etreAccompagneSubmit));
+      expect(button.onPressed, isNull);
+      expect(find.byType(StructuresAccompagnementPage), findsNothing);
+
+      repository.gate!.complete();
+      await tester.pump();
       await tester.pump(const Duration(seconds: 1));
 
-      expect(find.text(Strings.etreAccompagneErrorArrondissement), findsOneWidget);
+      // La recherche lancée au 5e chiffre est reprise, pas relancée.
+      expect(repository.calls, 1);
+      expect(find.byType(StructuresAccompagnementPage), findsOneWidget);
+    });
+
+    testWidgets('API géo injoignable : erreur sous le champ, chargement retiré', (tester) async {
+      await _pump(tester, _state(), _etreAccompagnePage());
+
+      await tester.enterText(find.byType(TextField), '99999');
+      await tester.pump();
+      await _submit(tester, Strings.etreAccompagneFranceTravail);
+
+      expect(find.text(Strings.etreAccompagneErrorCodePostalVerification), findsOneWidget);
+      expect(find.text(Strings.etreAccompagneCodePostalChecking), findsNothing);
       expect(find.byType(StructuresAccompagnementPage), findsNothing);
+    });
+
+    testWidgets('code postal inconnu : erreur sous le champ', (tester) async {
+      await _pump(tester, _state(), _etreAccompagnePage());
+
+      await tester.enterText(find.byType(TextField), '75000');
+      await tester.pump();
+      await _submit(tester, Strings.etreAccompagneFranceTravail);
+
+      expect(find.text(Strings.etreAccompagneErrorCodePostalInconnu), findsOneWidget);
+      expect(find.byType(StructuresAccompagnementPage), findsNothing);
+    });
+
+    testWidgets('code postal de plusieurs communes : la commune est demandée', (tester) async {
+      final handle = tester.ensureSemantics();
+      await _pump(tester, _state(), _etreAccompagnePage());
+
+      await tester.enterText(find.byType(TextField), '14500');
+      await tester.pump();
+
+      expect(find.text(Strings.etreAccompagneCommuneLabel), findsOneWidget);
+      expect(find.text('Campagnolles'), findsOneWidget);
+      expect(find.text('Vire Normandie'), findsOneWidget);
+
+      await _submit(tester, Strings.etreAccompagneMissionLocale);
+
+      expect(find.text(Strings.etreAccompagneErrorCommuneChoice), findsOneWidget);
+      // A11y 9.6 : chaque commune reprend la question et l'erreur.
+      final campagnolles = find.byType(DsfrRadioButton<String>).first;
+      final label = tester.getSemantics(campagnolles).getSemanticsData().label;
+      expect(label, startsWith('Campagnolles'));
+      expect(
+        label,
+        contains(
+          '${Strings.etreAccompagneCommuneLabel}, '
+          '${Strings.etreAccompagneErrorA11y(Strings.etreAccompagneErrorCommuneChoice)}',
+        ),
+      );
+
+      await tester.tap(find.text('Campagnolles'));
+      await tester.pump();
+
+      expect(tester.getSemantics(campagnolles), isSemantics(isInMutuallyExclusiveGroup: true, isChecked: true));
+      expect(find.text(Strings.etreAccompagneErrorCommuneChoice), findsNothing);
+
+      await _submit(tester, null);
+
+      final page = tester.widget<StructuresAccompagnementPage>(find.byType(StructuresAccompagnementPage));
+      expect(page.request.commune, _campagnolles);
+      handle.dispose();
+    });
+
+    testWidgets('commune du questionnaire parmi plusieurs : déjà choisie', (tester) async {
+      await _pump(tester, _state(habitation: _vire), _etreAccompagnePage());
+
+      expect(find.widgetWithText(TextField, '14500'), findsOneWidget);
+      final vire = tester.widget<DsfrRadioButton<String>>(
+        find.widgetWithText(DsfrRadioButton<String>, 'Vire Normandie'),
+      );
+      expect(vire.groupValue, _vire.code);
     });
 
     for (final size in [const Size(320, 640), const Size(740, 360)]) {
       testWidgets('texte à 200 % ($size) : rien n’est coupé', (tester) async {
         _setSize(tester, size);
-        await _pump(tester, _state(habitation: _lille), const EtreAccompagnePage(), textScale: 2);
+        await _pump(tester, _state(habitation: _vire), _etreAccompagnePage(), textScale: 2);
+
+        expect(find.text('Vire Normandie'), findsOneWidget);
 
         expect(tester.takeException(), isNull);
       });

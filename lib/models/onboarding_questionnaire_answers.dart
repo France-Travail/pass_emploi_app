@@ -30,9 +30,48 @@ class QuestionnaireCommune extends Equatable {
 
   static const _suffixeArrondissement = ' Arrondissement';
 
-  /// « Paris 14e » plutôt que « Paris 14e Arrondissement ».
-  String get nomCourt =>
-      nom.endsWith(_suffixeArrondissement) ? nom.substring(0, nom.length - _suffixeArrondissement.length) : nom;
+  /// « Paris 14e » plutôt que « Paris 14e Arrondissement », et aussi pour Paris entier avec le code postal 75014.
+  String get nomCourt {
+    if (nom.endsWith(_suffixeArrondissement)) return nom.substring(0, nom.length - _suffixeArrondissement.length);
+    final numero = _numeroArrondissement;
+    if (numero == null) return nom;
+    return '$nom ${numero == 1 ? '1er' : '${numero}e'}';
+  }
+
+  // Code postal d'un arrondissement de Paris (75001 à 75020, et 75116), Lyon (69001 à 69009) ou Marseille (13001 à 13016).
+  int? get _numeroArrondissement {
+    final cp = codePostal;
+    if (cp == null) return null;
+    if (code == '75056' && cp == '75116') return 16;
+    final (prefixe, dernier) = switch (code) {
+      '75056' => ('750', 20),
+      '69123' => ('6900', 9),
+      '13055' => ('130', 16),
+      _ => ('', 0),
+    };
+    if (dernier == 0 || !cp.startsWith(prefixe)) return null;
+    final numero = int.tryParse(cp.substring(prefixe.length));
+    return numero != null && numero >= 1 && numero <= dernier ? numero : null;
+  }
+
+  /// Un arrondissement de Paris, Lyon ou Marseille devient sa commune entière, avec le code postal de l'arrondissement :
+  /// c'est ce qu'attend le back de pass emploi, qui retrouve l'arrondissement à partir du code postal.
+  QuestionnaireCommune get communeEntiere {
+    final ville = switch (code) {
+      _ when code.startsWith('751') => ('75056', 'Paris'),
+      _ when code.startsWith('6938') => ('69123', 'Lyon'),
+      _ when code.startsWith('132') => ('13055', 'Marseille'),
+      _ => null,
+    };
+    if (ville == null) return this;
+    return QuestionnaireCommune(
+      code: ville.$1,
+      nom: ville.$2,
+      codePostal: codePostal,
+      latitude: latitude,
+      longitude: longitude,
+    );
+  }
 
   /// Département from the INSEE code (3 digits for overseas: 971, 972…; 2A/2B for Corsica).
   String? get departement {

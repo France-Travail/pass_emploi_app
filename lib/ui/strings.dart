@@ -588,20 +588,27 @@ class Strings {
   // Invité : être accompagné par une Mission Locale ou France Travail
   static String etreAccompagneTitle = "Être accompagné";
   static String etreAccompagneSubtitle = "Trouve une structure près de chez toi";
-  static String etreAccompagneVilleLabel = "Ta ville";
-  static String etreAccompagneVilleHint = "Saisis ta ville ou ton code postal, puis choisis-la dans la liste.";
+  static String etreAccompagneCodePostalLabel = "Ton code postal";
+  static String etreAccompagneCodePostalHint = "Format attendu : 5 chiffres";
+  static String etreAccompagneCommuneLabel = "Ta commune";
+  static String etreAccompagneCodePostalChecking = "Vérification du code postal…";
   static String etreAccompagneGeolocate = "Me géolocaliser";
-  static String etreAccompagneGeolocateError = "Impossible de récupérer ta position. Réessaie ou saisis ta ville.";
+  static String etreAccompagneGeolocateError =
+      "Impossible de récupérer ta position. Réessaie ou saisis ton code postal.";
   static String etreAccompagneStructureTitle = "Choisis quelle structure ?";
   static String etreAccompagneMissionLocale = "Mission locale";
   static String etreAccompagneFranceTravail = "France Travail";
   static String etreAccompagneSubmit = "Voir les structures";
-  static String etreAccompagneErrorCommune = "Choisis ta ville dans la liste.";
-  static String etreAccompagneErrorArrondissement = "Précise ton arrondissement.";
+  static String etreAccompagneErrorCodePostalFormat = "Saisis un code postal à 5 chiffres.";
+  static String etreAccompagneErrorCodePostalInconnu = "Aucune commune ne correspond à ce code postal.";
+  static String etreAccompagneErrorCodePostalVerification =
+      "Impossible de vérifier ce code postal. Vérifie ta connexion puis réessaie.";
+  static String etreAccompagneErrorCommuneChoice = "Choisis ta commune.";
   static String etreAccompagneErrorA11y(String error) => "Erreur : $error";
   static String etreAccompagneCommunesA11y(int count) =>
-      count == 1 ? "1 commune proposée" : "$count communes proposées";
-  static String etreAccompagneCommuneSelectedA11y(String commune) => "Ville choisie : $commune";
+      "$count communes ont ce code postal : choisis la tienne sous le champ.";
+  static String etreAccompagneGeolocatedA11y(String codePostal, String commune) =>
+      "Code postal trouvé : $codePostal, $commune";
   static String etreAccompagneMissionLocaleSubtitle(String ville) => "La Mission Locale de $ville";
   static String etreAccompagneFranceTravailSubtitle(int count, String ville) =>
       "$count ${count > 1 ? "structures" : "structure"} près de $ville";

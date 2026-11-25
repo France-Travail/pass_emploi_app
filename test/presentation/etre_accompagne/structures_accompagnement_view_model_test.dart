@@ -176,6 +176,17 @@ void main() {
       expect(viewModel.items.length, 2);
     });
 
+    test('whole Paris searched with an arrondissement code postal names the arrondissement', () {
+      const paris18 = QuestionnaireCommune(code: '75056', nom: 'Paris', codePostal: '75018');
+      final request = _request(StructureAccompagnementType.missionLocale, commune: paris18);
+      final viewModel = _viewModel(
+        _store(StructuresAccompagnementSuccessState(request, [_missionLocale])),
+        request,
+      );
+
+      expect(viewModel.subtitle, 'La Mission Locale de Paris 18e');
+    });
+
     test('without telephone: no call button, itinerary kept', () {
       const sansTelephone = StructureAccompagnement(
         nom: 'Mission Locale sans téléphone',

@@ -16,12 +16,9 @@ class CommunesRepository {
   CommunesRepository({Dio? httpClient, this._crashlytics})
     : _httpClient = httpClient ?? Dio(BaseOptions(baseUrl: _baseUrl));
 
-  /// [oneEntryPerCodePostal] : une commune à plusieurs codes postaux (Toulouse : 31000, 31100…) est proposée une fois
-  /// par code postal, pour que l'utilisateur choisisse celui de son quartier.
   Future<List<QuestionnaireCommune>> search(
     String query, {
     int limit = 8,
-    bool oneEntryPerCodePostal = false,
   }) async {
     final normalized = query.trim().replaceAll(RegExp(r'\s+'), '');
     if (normalized.isEmpty) return [];
@@ -31,7 +28,7 @@ class CommunesRepository {
       return searchByCodePostal(normalized, limit: limit);
     }
 
-    return searchByName(query.trim(), limit: limit, oneEntryPerCodePostal: oneEntryPerCodePostal);
+    return searchByName(query.trim(), limit: limit);
   }
 
   Future<List<QuestionnaireCommune>> _withArrondissements(
@@ -91,7 +88,6 @@ class CommunesRepository {
   Future<List<QuestionnaireCommune>> searchByName(
     String query, {
     int limit = 8,
-    bool oneEntryPerCodePostal = false,
   }) async {
     final trimmed = query.trim();
     if (trimmed.length < 3) return [];
@@ -110,7 +106,7 @@ class CommunesRepository {
       if (data == null) return [];
       final communes = data
           .whereType<Map<String, dynamic>>()
-          .expand((json) => oneEntryPerCodePostal ? _perCodePostal(json) : [QuestionnaireCommune.fromJson(json)])
+          .map(QuestionnaireCommune.fromJson)
           .toList();
       return await _withArrondissements(communes, query: trimmed);
     } catch (e, stack) {
@@ -153,14 +149,40 @@ class CommunesRepository {
     }
   }
 
-  // Paris, Lyon et Marseille gardent une seule entrée : leurs arrondissements, chacun avec son code postal, suivent.
-  static List<QuestionnaireCommune> _perCodePostal(Map<String, dynamic> json) {
-    final codesPostaux = json['codesPostaux'];
-    if (_communesAvecArrondissements.contains(json['code']) || codesPostaux is! List || codesPostaux.length < 2) {
-      return [QuestionnaireCommune.fromJson(json)];
+  /// Communes d'un code postal, triées par nom, sans les arrondissements : 75014 donne Paris (75056), le back de
+  /// pass emploi retrouvant l'arrondissement à partir du code postal. `null` si la recherche a échoué.
+  Future<List<QuestionnaireCommune>?> communesDuCodePostal(String codePostal) async {
+    if (!_codePostal.hasMatch(codePostal)) return [];
+    const path = '/communes';
+    try {
+      final response = await _httpClient.get<List<dynamic>>(
+        path,
+        queryParameters: {'codePostal': codePostal, 'fields': 'nom,code,codesPostaux,centre'},
+        // L'API répond parfois en une dizaine de secondes : au-delà de 15, l'invité peut réessayer.
+        options: Options(receiveTimeout: const Duration(seconds: 15)),
+      );
+      final data = response.data;
+      if (data == null) return null;
+      return data
+          .whereType<Map<String, dynamic>>()
+          .map((json) => QuestionnaireCommune.fromJson(json, preferredCodePostal: codePostal))
+          .toList()
+        ..sort((a, b) => _cleDeTri(a.nom).compareTo(_cleDeTri(b.nom)));
+    } catch (e, stack) {
+      _crashlytics?.recordNonNetworkExceptionUrl(e, stack, '$_baseUrl$path');
+      return null;
     }
-    final codes = codesPostaux.map((code) => code.toString()).toSet().toList()..sort();
-    return codes.map((code) => QuestionnaireCommune.fromJson(json, preferredCodePostal: code)).toList();
+  }
+
+  // Ordre alphabétique : « Écouché » se range avec les E.
+  static String _cleDeTri(String nom) {
+    const avecAccents = 'àâäçéèêëîïôöùûüÿ';
+    const sansAccents = 'aaaceeeeiioouuuy';
+    final minuscules = nom.toLowerCase().replaceAll('œ', 'oe').replaceAll('æ', 'ae');
+    return minuscules.split('').map((c) {
+      final index = avecAccents.indexOf(c);
+      return index < 0 ? c : sansAccents[index];
+    }).join();
   }
 
   /// [preferArrondissement] : à Paris, Lyon et Marseille, renvoie l'arrondissement où se trouve la position plutôt que

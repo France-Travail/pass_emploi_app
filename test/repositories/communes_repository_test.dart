@@ -208,96 +208,70 @@ void main() {
     );
   });
 
-  group('oneEntryPerCodePostal', () {
-    test('searchByName proposes a commune once per code postal, sorted', () async {
+  group('communesDuCodePostal', () {
+    void givenCommunes(String codePostal, int status, [Object? body]) {
       adapter.onGet(
         '/communes',
-        (server) => server.reply(200, [
-          {
-            'nom': 'Lille',
-            'code': '59350',
-            'codesPostaux': ['59800', '59000', '59160'],
-          },
-          {
-            'nom': 'Lillers',
-            'code': '62516',
-            'codesPostaux': ['62190'],
-          },
-        ]),
-        queryParameters: {
-          'nom': 'Lil',
-          'boost': 'population',
-          'limit': 8,
-          'fields': 'nom,code,codesPostaux,centre',
-        },
+        (server) => server.reply(status, body),
+        queryParameters: {'codePostal': codePostal, 'fields': 'nom,code,codesPostaux,centre'},
       );
+    }
 
-      final result = await repository.search('Lil', oneEntryPerCodePostal: true);
+    test('returns the communes of the code postal, sorted by name, with this code postal', () async {
+      givenCommunes('14500', 200, [
+        {
+          'nom': 'Vire Normandie',
+          'code': '14762',
+          'codesPostaux': ['14500'],
+        },
+        {
+          'nom': 'Écouché-les-Vallées',
+          'code': '61153',
+          'codesPostaux': ['61150', '14500'],
+        },
+        {
+          'nom': 'Campagnolles',
+          'code': '14127',
+          'codesPostaux': ['14500'],
+        },
+      ]);
 
-      expect(result.map((c) => c.displayLabel), ['Lille (59000)', 'Lille (59160)', 'Lille (59800)', 'Lillers (62190)']);
-      expect(result.map((c) => c.code).toSet(), {'59350', '62516'});
+      final result = await repository.communesDuCodePostal('14500');
+
+      expect(result?.map((c) => c.nom), ['Campagnolles', 'Écouché-les-Vallées', 'Vire Normandie']);
+      expect(result?.map((c) => c.codePostal), everyElement('14500'));
     });
 
-    test('searchByName keeps a single entry by default', () async {
-      adapter.onGet(
-        '/communes',
-        (server) => server.reply(200, [
-          {
-            'nom': 'Lille',
-            'code': '59350',
-            'codesPostaux': ['59000', '59160'],
-          },
-        ]),
-        queryParameters: {
-          'nom': 'Lil',
-          'boost': 'population',
-          'limit': 8,
-          'fields': 'nom,code,codesPostaux,centre',
+    test('Paris code postal gives the whole city, never the arrondissement', () async {
+      givenCommunes('75014', 200, [
+        {
+          'nom': 'Paris',
+          'code': '75056',
+          'codesPostaux': ['75001', '75014'],
         },
-      );
+      ]);
 
-      final result = await repository.search('Lil');
+      final result = await repository.communesDuCodePostal('75014');
 
-      expect(result.map((c) => c.displayLabel), ['Lille (59000)']);
+      expect(result?.single.code, '75056');
+      expect(result?.single.codePostal, '75014');
+      expect(result?.single.nomCourt, 'Paris 14e');
     });
 
-    test('Paris keeps a single entry, followed by its arrondissements', () async {
-      adapter.onGet(
-        '/communes',
-        (server) => server.reply(200, [
-          {
-            'nom': 'Paris',
-            'code': '75056',
-            'codesPostaux': ['75001', '75014'],
-          },
-        ]),
-        queryParameters: {
-          'nom': 'Paris',
-          'boost': 'population',
-          'limit': 8,
-          'fields': 'nom,code,codesPostaux,centre',
-        },
-      );
-      adapter.onGet(
-        '/communes',
-        (server) => server.reply(200, [
-          {
-            'nom': 'Paris 14e Arrondissement',
-            'code': '75114',
-            'codesPostaux': ['75014'],
-          },
-        ]),
-        queryParameters: {
-          'nom': 'Paris',
-          'type': 'arrondissement-municipal',
-          'limit': 20,
-          'fields': 'nom,code,codesPostaux,centre',
-        },
-      );
+    test('unknown code postal gives an empty list', () async {
+      givenCommunes('75000', 200, []);
 
-      final result = await repository.search('Paris', oneEntryPerCodePostal: true);
+      expect(await repository.communesDuCodePostal('75000'), isEmpty);
+    });
 
-      expect(result.map((c) => c.code), ['75056', '75114']);
+    test('failure gives null, to tell it from an unknown code postal', () async {
+      givenCommunes('14500', 500);
+
+      expect(await repository.communesDuCodePostal('14500'), isNull);
+    });
+
+    test('not 5 digits: empty, without calling the API', () async {
+      expect(await repository.communesDuCodePostal('1450'), isEmpty);
     });
   });
 
