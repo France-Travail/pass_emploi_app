@@ -42,7 +42,8 @@ extension on RequestOptions {
       !_isSessionsDetailsRequest() &&
       !_isComptageDesHeuresRequest() &&
       !_isUserActionRequest() &&
-      !_isPlanActionRequest();
+      !_isPlanActionRequest() &&
+      !_isCguRequest();
 
   bool _isMonSuiviRequest() => uri.toString().contains('mon-suivi');
 
@@ -56,4 +57,8 @@ extension on RequestOptions {
 
   // The plan must always come from the server: a cached plan served on network failure could be stale.
   bool _isPlanActionRequest() => uri.toString().contains('plan-action');
+
+  // The CGU signature must always come from the server: a cached "never signed" answer (the API allows 20 minutes)
+  // would bring the CGU page back on next launch, right after the user accepted them.
+  bool _isCguRequest() => uri.path.endsWith('/cgu');
 }

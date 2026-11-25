@@ -78,6 +78,28 @@ void main() {
     verify(() => responseHandler.next(response)).called(1);
     verify(() => errorHandler.next(error)).called(1);
   });
+
+  for (final path in ['/jeunes/id-jeune/cgu', '/jeunes/id-jeune/invite/cgu']) {
+    test('for GET$path route, cache should NOT be used, so CGU page does not come back after acceptance', () {
+      // Given
+      final options = RequestOptions(baseUrl: 'https://api.passemploi.fr', path: path);
+      final response = Response(requestOptions: options);
+      final error = DioException(requestOptions: options);
+
+      // When
+      cacheInterceptor.onPassEmploiRequest(options, requestHandler);
+      cacheInterceptor.onPassEmploiResponse(response, responseHandler);
+      cacheInterceptor.onPassEmploiError(error, errorHandler);
+
+      // Then
+      verifyNever(() => decorated.onRequest(options, requestHandler));
+      verifyNever(() => decorated.onResponse(response, responseHandler));
+      verifyNever(() => decorated.onError(error, errorHandler));
+      verify(() => requestHandler.next(options)).called(1);
+      verify(() => responseHandler.next(response)).called(1);
+      verify(() => errorHandler.next(error)).called(1);
+    });
+  }
 }
 
 class MockDioCacheInterceptor extends Mock implements DioCacheInterceptor {}
