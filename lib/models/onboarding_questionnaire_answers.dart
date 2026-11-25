@@ -397,6 +397,15 @@ class OnboardingQuestionnaireAnswers extends Equatable {
 
   bool get isFreinsAnswered => freins.isNotEmpty;
 
+  /// Vrai si la date de naissance est connue et que le jeune n'a pas encore [years] ans le jour de [now].
+  /// Né un 29 février : un an de plus le 1er mars des années non bissextiles.
+  bool isYoungerThan(int years, DateTime now) {
+    final birthDate = dateNaissance;
+    if (birthDate == null) return false;
+    final birthday = DateTime(birthDate.year + years, birthDate.month, birthDate.day);
+    return DateTime(now.year, now.month, now.day).isBefore(birthday);
+  }
+
   /// [withPrenom] : le prénom n'est demandé qu'à l'invité, le jeune connecté a celui de son compte.
   int answeredStepsCount({required bool withPrenom}) {
     var count = 0;

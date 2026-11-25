@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
 import 'package:pass_emploi_app/features/action_plan/action_plan_actions.dart';
@@ -72,7 +73,7 @@ void main() {
 
   test('partiel mode shows plan and questionnaire', () {
     final answers = const OnboardingQuestionnaireAnswers(
-      situation: QuestionnaireSituation.lycee,
+      situation: QuestionnaireSituation.etudesSuperieures,
       objectifs: {QuestionnaireObjectif.emploi},
       prenom: 'Léa',
     );
@@ -109,12 +110,12 @@ void main() {
     );
   });
 
-  test('complet mode do not shows modifier and conseiller CTA because not implemented yet', () {
+  test('complet mode shows modifier and conseiller CTA', () {
     final answers = OnboardingQuestionnaireAnswers(
       prenom: 'Léa',
       dateNaissance: DateTime(2005, 5, 5),
       habitation: const QuestionnaireCommune(code: '75056', nom: 'Paris'),
-      situation: QuestionnaireSituation.lycee,
+      situation: QuestionnaireSituation.etudesSuperieures,
       objectifs: {QuestionnaireObjectif.emploi},
       domaineInconnu: true,
       villeRecherche: const QuestionnaireCommune(code: '75056', nom: 'Paris'),
@@ -490,6 +491,64 @@ void main() {
       final store = givenState().loggedInMiloUser().store();
 
       expect(InviteAccueilViewModel.create(store).withNotificationCenter, isTrue);
+    });
+  });
+
+  group('tuile « Être accompagné »', () {
+    final aujourdhui = DateTime(2026, 11, 25);
+
+    bool showConseillerCta(OnboardingQuestionnaireAnswers answers) {
+      return withClock(Clock.fixed(aujourdhui), () {
+        final store = givenState()
+            .loggedInUser(loginMode: LoginMode.INVITE)
+            .withOnboardingQuestionnaire(finished: true, answers: answers)
+            .withActionPlanEmpty()
+            .store();
+        return InviteAccueilViewModel.create(store).showConseillerCta;
+      });
+    }
+
+    test('masquée pour un collégien', () {
+      final answers = OnboardingQuestionnaireAnswers(
+        dateNaissance: DateTime(2005, 5, 5),
+        situation: QuestionnaireSituation.college,
+      );
+      expect(showConseillerCta(answers), isFalse);
+    });
+
+    test('masquée pour un lycéen, même de plus de 16 ans', () {
+      final answers = OnboardingQuestionnaireAnswers(
+        dateNaissance: DateTime(2005, 5, 5),
+        situation: QuestionnaireSituation.lycee,
+      );
+      expect(showConseillerCta(answers), isFalse);
+    });
+
+    test('masquée la veille des 16 ans', () {
+      final answers = OnboardingQuestionnaireAnswers(
+        dateNaissance: DateTime(2010, 11, 26),
+        situation: QuestionnaireSituation.emploi,
+      );
+      expect(showConseillerCta(answers), isFalse);
+    });
+
+    test('affichée le jour des 16 ans', () {
+      final answers = OnboardingQuestionnaireAnswers(
+        dateNaissance: DateTime(2010, 11, 25),
+        situation: QuestionnaireSituation.emploi,
+      );
+      expect(showConseillerCta(answers), isTrue);
+    });
+
+    test('affichée sans situation ni date de naissance (questionnaire pas encore rempli)', () {
+      expect(showConseillerCta(const OnboardingQuestionnaireAnswers()), isTrue);
+    });
+
+    test('affichée sans date de naissance, pour une autre situation que collège ou lycée', () {
+      expect(
+        showConseillerCta(const OnboardingQuestionnaireAnswers(situation: QuestionnaireSituation.autre)),
+        isTrue,
+      );
     });
   });
 }

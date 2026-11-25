@@ -1,3 +1,4 @@
+import 'package:clock/clock.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pass_emploi_app/analytics/analytics_constants.dart';
@@ -165,8 +166,9 @@ class InviteAccueilViewModel extends Equatable {
       showPlanSection: showPlanSection,
       showPlanEmptyState: showPlanEmptyState,
       planEmptyKind: planEmptyKind,
-      // Tuile « Être accompagné par un conseiller ? » : invité seulement, quel que soit l'avancement du questionnaire.
-      showConseillerCta: store.state.isInviteLoginMode(),
+      // Tuile « Être accompagné par un conseiller ? » : invité seulement, quel que soit l'avancement du questionnaire,
+      // sauf collégien, lycéen ou moins de 16 ans. Situation ou date de naissance pas encore renseignée : affichée.
+      showConseillerCta: store.state.isInviteLoginMode() && !_isTropJeunePourEtreAccompagne(answers),
       showModifierButton: mode == InviteAccueilMode.complet && !isFailure,
       showExplorerTip: isQuestionnaireResolved && mode == InviteAccueilMode.incomplet,
       showRetry: showPlanEmptyState && isFailure && (isPlanPersisted || answers.canGenerateActionPlan),
@@ -231,6 +233,14 @@ class InviteAccueilViewModel extends Equatable {
     messageInformatif,
     remoteCampagnes,
   ];
+}
+
+const _ageMinimumEtreAccompagne = 16;
+
+bool _isTropJeunePourEtreAccompagne(OnboardingQuestionnaireAnswers answers) {
+  return answers.situation == QuestionnaireSituation.college ||
+      answers.situation == QuestionnaireSituation.lycee ||
+      answers.isYoungerThan(_ageMinimumEtreAccompagne, clock.now());
 }
 
 ActionPlanTrackingEvent _planDisplayEvent({required bool isFailure, required ActionPlan? plan}) {
