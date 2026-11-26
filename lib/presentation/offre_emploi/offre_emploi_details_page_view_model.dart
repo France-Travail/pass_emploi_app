@@ -45,6 +45,7 @@ class OffreEmploiDetailsPageViewModel {
   final List<EducationViewModel>? educations;
   final List<Language>? languages;
   final List<DriverLicence>? driverLicences;
+  final bool withPartageConseiller;
   final bool isNotFound;
 
   OffreEmploiDetailsPageViewModel._({
@@ -77,6 +78,7 @@ class OffreEmploiDetailsPageViewModel {
     this.educations,
     this.languages,
     this.driverLicences,
+    this.withPartageConseiller = false,
     this.isNotFound = false,
   });
 
@@ -166,6 +168,7 @@ OffreEmploiDetailsPageViewModel _viewModelFromDetails(
     educations: offreDetails.educations?.map((e) => _toViewModel(e)).toList(),
     languages: offreDetails.languages,
     driverLicences: offreDetails.driverLicences,
+    withPartageConseiller: store.state.hasChat(),
   );
 }
 

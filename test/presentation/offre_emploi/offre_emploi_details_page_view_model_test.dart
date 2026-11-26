@@ -3,8 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/features/favori/ids/favori_ids_state.dart';
 import 'package:pass_emploi_app/features/favori/update/favori_update_state.dart';
 import 'package:pass_emploi_app/features/offres_suivies/offres_suivies_state.dart';
+import 'package:pass_emploi_app/models/accompagnement.dart';
 import 'package:pass_emploi_app/models/favori.dart';
 import 'package:pass_emploi_app/models/image_source.dart';
+import 'package:pass_emploi_app/models/login_mode.dart';
 import 'package:pass_emploi_app/models/offre_dto.dart';
 import 'package:pass_emploi_app/models/offre_emploi.dart';
 import 'package:pass_emploi_app/models/offre_emploi_details.dart';
@@ -174,6 +176,61 @@ void main() {
 
       // Then
       expect(viewModel.shouldShowCvBottomSheet, true);
+    });
+  });
+
+  group("withPartageConseiller", () {
+    for (final (profil, state) in [
+      ("jeune Mission Locale", givenState().loggedInMiloUser()),
+      ("jeune France Travail en CEJ", givenState().loggedInPoleEmploiUser()),
+    ]) {
+      test("is true for a $profil, who has a messagerie", () {
+        // Given
+        final store = state.offreEmploiDetailsSuccess().store();
+
+        // When
+        final viewModel = OffreEmploiDetailsPageViewModel.create(store);
+
+        // Then
+        expect(viewModel.withPartageConseiller, isTrue);
+      });
+    }
+
+    for (final (profil, state) in [
+      ("invité", givenState().loggedInUser(loginMode: LoginMode.INVITE)),
+      (
+        "jeune France Travail demandeur d'emploi sans conseiller",
+        givenState().loggedInUser(loginMode: LoginMode.POLE_EMPLOI, accompagnement: Accompagnement.ftDemandeurDEmploi),
+      ),
+      (
+        "jeune France Travail espace candidat sans conseiller",
+        givenState().loggedInUser(loginMode: LoginMode.POLE_EMPLOI, accompagnement: Accompagnement.ftEspaceCandidat),
+      ),
+    ]) {
+      test("is false for a $profil, who has no messagerie", () {
+        // Given
+        final store = state.offreEmploiDetailsSuccess().store();
+
+        // When
+        final viewModel = OffreEmploiDetailsPageViewModel.create(store);
+
+        // Then
+        expect(viewModel.withPartageConseiller, isFalse);
+      });
+    }
+
+    test("is false when offre data is incomplete", () {
+      // Given
+      final store = givenState()
+          .loggedInMiloUser() //
+          .offreEmploiDetailsIncompleteData(offreEmploi: mockOffreEmploi())
+          .store();
+
+      // When
+      final viewModel = OffreEmploiDetailsPageViewModel.create(store);
+
+      // Then
+      expect(viewModel.withPartageConseiller, isFalse);
     });
   });
 

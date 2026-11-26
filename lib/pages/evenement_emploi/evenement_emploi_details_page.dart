@@ -105,12 +105,13 @@ class _Content extends StatelessWidget {
           semanticsLinkUrl: viewModel.url,
           onPressed: () => _openInscriptionUrl(context),
         ),
-      OffreDetailsAction(
-        label: Strings.eventEmploiDetailsPartagerConseiller,
-        icon: DsfrIcons.systemShareLine,
-        variant: DsfrButtonVariant.secondary,
-        onPressed: () => _partagerConseiller(context),
-      ),
+      if (viewModel.withPartageConseiller)
+        OffreDetailsAction(
+          label: Strings.eventEmploiDetailsPartagerConseiller,
+          icon: DsfrIcons.systemShareLine,
+          variant: DsfrButtonVariant.secondary,
+          onPressed: () => _partagerConseiller(context),
+        ),
     ];
 
     return Column(

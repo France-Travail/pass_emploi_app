@@ -159,7 +159,7 @@ class OffreEmploiDetailsPage extends StatelessWidget {
         ),
       );
     }
-    if (id != null && showDetails) {
+    if (id != null && showDetails && viewModel.withPartageConseiller) {
       footerActions.add(
         OffreDetailsAction(
           label: Strings.partagerOffreConseiller,
