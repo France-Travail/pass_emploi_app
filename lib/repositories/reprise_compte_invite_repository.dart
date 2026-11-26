@@ -18,7 +18,7 @@ class RepriseCompteInviteRepository {
   }) async {
     final url = "/jeunes/$idInvite/reprise-invite";
     // Le questionnaire n'est pris en compte qu'avec le plan qu'il a généré, et un questionnaire invalide
-    // (sans situation ni objectif) ferait échouer toute la reprise.
+    // (sans situation, ou sans objectif ni frein) ferait échouer toute la reprise.
     final withQuestionnaire = plan != null && questionnaire != null && questionnaire.canGenerateActionPlan;
     try {
       await _httpClient.post(

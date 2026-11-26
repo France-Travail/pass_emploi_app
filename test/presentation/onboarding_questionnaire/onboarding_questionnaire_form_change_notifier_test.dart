@@ -641,5 +641,58 @@ void main() {
         expect(finishWithoutGenerationCalled, isFalse);
       },
     );
+
+    test(
+      'continuing last step with situation and a frein but without objectifs goes to loader',
+      () async {
+        var finishWithoutGenerationCalled = false;
+        form = OnboardingQuestionnaireFormChangeNotifier(
+          loadAnswers: () async => storedAnswers,
+          saveAnswers: (answers) async {
+            storedAnswers = answers;
+            savedCalls.add(answers);
+          },
+          onFinishWithoutGeneration: (_) =>
+              finishWithoutGenerationCalled = true,
+        );
+        await form.init();
+        form.step = OnboardingQuestionnaireStep.freins;
+        form.draftFreins = {QuestionnaireFrein.pasDePermis};
+        form.savedAnswers = const OnboardingQuestionnaireAnswers(
+          situation: QuestionnaireSituation.emploi,
+        );
+
+        await form.continueStep();
+
+        expect(form.step, OnboardingQuestionnaireStep.loader);
+        expect(finishWithoutGenerationCalled, isFalse);
+      },
+    );
+
+    test(
+      'continuing last step with situation and only rienNeMeBloque, without objectifs, finishes without loader',
+      () async {
+        OnboardingQuestionnaireAnswers? finishedAnswers;
+        form = OnboardingQuestionnaireFormChangeNotifier(
+          loadAnswers: () async => storedAnswers,
+          saveAnswers: (answers) async {
+            storedAnswers = answers;
+            savedCalls.add(answers);
+          },
+          onFinishWithoutGeneration: (answers) => finishedAnswers = answers,
+        );
+        await form.init();
+        form.step = OnboardingQuestionnaireStep.freins;
+        form.draftFreins = {QuestionnaireFrein.rienNeMeBloque};
+        form.savedAnswers = const OnboardingQuestionnaireAnswers(
+          situation: QuestionnaireSituation.emploi,
+        );
+
+        await form.continueStep();
+
+        expect(form.step, OnboardingQuestionnaireStep.freins);
+        expect(finishedAnswers?.freins, {QuestionnaireFrein.rienNeMeBloque});
+      },
+    );
   });
 }

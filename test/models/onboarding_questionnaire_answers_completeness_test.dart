@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pass_emploi_app/models/onboarding_questionnaire_answers.dart';
 
 void main() {
-  test('canGenerateActionPlan requires situation and objectifs', () {
+  test('canGenerateActionPlan requires a situation and an objectif or a frein', () {
     expect(const OnboardingQuestionnaireAnswers().canGenerateActionPlan, isFalse);
     expect(
       const OnboardingQuestionnaireAnswers(situation: QuestionnaireSituation.lycee).canGenerateActionPlan,
@@ -13,9 +13,45 @@ void main() {
       isFalse,
     );
     expect(
+      const OnboardingQuestionnaireAnswers(freins: {QuestionnaireFrein.pasDePermis}).canGenerateActionPlan,
+      isFalse,
+    );
+    expect(
       const OnboardingQuestionnaireAnswers(
         situation: QuestionnaireSituation.lycee,
         objectifs: {QuestionnaireObjectif.emploi},
+      ).canGenerateActionPlan,
+      isTrue,
+    );
+    expect(
+      const OnboardingQuestionnaireAnswers(
+        situation: QuestionnaireSituation.lycee,
+        freins: {QuestionnaireFrein.pasDePermis},
+      ).canGenerateActionPlan,
+      isTrue,
+    );
+  });
+
+  test('canGenerateActionPlan does not count rienNeMeBloque, which clears the other freins', () {
+    expect(
+      const OnboardingQuestionnaireAnswers(
+        situation: QuestionnaireSituation.lycee,
+        freins: {QuestionnaireFrein.rienNeMeBloque},
+      ).canGenerateActionPlan,
+      isFalse,
+    );
+    expect(
+      const OnboardingQuestionnaireAnswers(
+        situation: QuestionnaireSituation.lycee,
+        freins: {QuestionnaireFrein.rienNeMeBloque, QuestionnaireFrein.pasDePermis},
+      ).canGenerateActionPlan,
+      isFalse,
+    );
+    expect(
+      const OnboardingQuestionnaireAnswers(
+        situation: QuestionnaireSituation.lycee,
+        objectifs: {QuestionnaireObjectif.emploi},
+        freins: {QuestionnaireFrein.rienNeMeBloque},
       ).canGenerateActionPlan,
       isTrue,
     );

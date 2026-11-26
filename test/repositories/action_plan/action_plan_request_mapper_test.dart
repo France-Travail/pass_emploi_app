@@ -52,6 +52,19 @@ void main() {
     expect(request['domaineInconnu'], isTrue);
   });
 
+  test('sends empty goals when objectifs are skipped but a frein is given', () {
+    final request = mapper.toRequest(
+      const OnboardingQuestionnaireAnswers(
+        situation: QuestionnaireSituation.emploi,
+        freins: {QuestionnaireFrein.pasDePermis},
+      ),
+    );
+
+    expect(request['situation'], 'EMPLOI');
+    expect(request['goals'], isEmpty);
+    expect(request['obstacles'], ['PAS_DE_PERMIS']);
+  });
+
   test('maps rienNeMeBloque as exclusive obstacle', () {
     final request = mapper.toRequest(
       const OnboardingQuestionnaireAnswers(
