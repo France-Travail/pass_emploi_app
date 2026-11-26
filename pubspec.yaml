@@ -63,7 +63,7 @@ dependencies:
   connectivity_plus: ^7.3.1
   image_picker: ^1.2.4
   flutter_image_compress: ^2.5.1
-  file_picker: ^13.3.2
+  file_picker: ^13.4.1
   app_settings: ^9.0.1
   geolocator: ^14.1.2
   # Others
