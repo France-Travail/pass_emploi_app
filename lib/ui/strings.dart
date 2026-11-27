@@ -613,7 +613,7 @@ class Strings {
   static String etreAccompagneFranceTravailSubtitle(int count, String ville) =>
       "$count ${count > 1 ? "structures" : "structure"} près de $ville";
   static String etreAccompagneIntroMissionLocale =
-      "Pour être accompagné dans tes démarches, tu peux contacter ta Mission Locale. Un conseiller pourra t’aider gratuitement.";
+      "Cette Mission Locale peut t’accompagner dans tes démarches. Un conseiller pourra t’aider gratuitement.";
   static String etreAccompagneIntroMissionLocaleSites(int count, String ville) =>
       "${_nombreEnLettres(count)} sites reçoivent les jeunes de $ville. Pour être accompagné dans tes démarches, tu peux contacter celui de ton choix. Un conseiller pourra t’aider gratuitement.";
   static String etreAccompagneIntroFranceTravail(int count) => count > 1

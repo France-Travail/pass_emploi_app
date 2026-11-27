@@ -139,7 +139,7 @@ void main() {
       expect(viewModel.displayState, DisplayState.CONTENT);
       expect(viewModel.title, 'Mission locale');
       expect(viewModel.subtitle, 'La Mission Locale de Lille');
-      expect(viewModel.intro, contains('tu peux contacter ta Mission Locale'));
+      expect(viewModel.intro, contains('Cette Mission Locale peut t’accompagner dans tes démarches'));
       expect(viewModel.withContact3949, isFalse);
       expect(viewModel.items, [
         StructureAccompagnementItem(
