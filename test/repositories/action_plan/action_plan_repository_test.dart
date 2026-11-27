@@ -134,6 +134,16 @@ void main() {
         });
       });
 
+      group('when jeune has no plan and response is no content', () {
+        sut.givenResponseCode(204);
+
+        test('response should be not found', () async {
+          await sut.expectResult<ActionPlanFetchResult>((result) {
+            expect(result, isA<ActionPlanFetchNotFound>());
+          });
+        });
+      });
+
       group('when response is invalid', () {
         sut.givenResponseCode(500);
 
