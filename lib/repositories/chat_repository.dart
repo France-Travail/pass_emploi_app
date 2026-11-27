@@ -89,36 +89,41 @@ class ChatRepository {
     String? givenIv,
     Map<String, dynamic> customPayload = const {},
   }) async {
-    final chatDocumentId = await _getChatDocumentId(userId);
-    if (chatDocumentId == null) return false;
+    try {
+      final chatDocumentId = await _getChatDocumentId(userId);
+      if (chatDocumentId == null) return false;
 
-    final messageCreationDate = FieldValue.serverTimestamp();
-    final encryptedMessage =
-        givenIv != null ? _chatCrypto.encryptWithIv(message, givenIv) : _chatCrypto.encrypt(message);
-    return await FirebaseFirestore.instance
-        .runTransaction((transaction) async {
-          final newDocId = _chatCollection(chatDocumentId).collection('messages').doc(messageId);
-          transaction
-            ..set(newDocId, {
-              'iv': encryptedMessage.base64InitializationVector,
-              'content': encryptedMessage.base64Message,
-              'sentBy': "jeune",
-              'creationDate': messageCreationDate,
-              ...customPayload,
-            })
-            ..update(_chatCollection(chatDocumentId), {
-              'lastMessageContent': encryptedMessage.base64Message,
-              'lastMessageIv': encryptedMessage.base64InitializationVector,
-              'lastMessageSentBy': "jeune",
-              'lastMessageSentAt': messageCreationDate,
-              'seenByConseiller': false,
-            });
-        })
-        .then((value) => true) //
-        .catchError((e, StackTrace stack) {
-          _crashlytics.recordNonNetworkException(e, stack);
-          return false;
-        });
+      final messageCreationDate = FieldValue.serverTimestamp();
+      final encryptedMessage =
+          givenIv != null ? _chatCrypto.encryptWithIv(message, givenIv) : _chatCrypto.encrypt(message);
+      return await FirebaseFirestore.instance
+          .runTransaction((transaction) async {
+            final newDocId = _chatCollection(chatDocumentId).collection('messages').doc(messageId);
+            transaction
+              ..set(newDocId, {
+                'iv': encryptedMessage.base64InitializationVector,
+                'content': encryptedMessage.base64Message,
+                'sentBy': "jeune",
+                'creationDate': messageCreationDate,
+                ...customPayload,
+              })
+              ..update(_chatCollection(chatDocumentId), {
+                'lastMessageContent': encryptedMessage.base64Message,
+                'lastMessageIv': encryptedMessage.base64InitializationVector,
+                'lastMessageSentBy': "jeune",
+                'lastMessageSentAt': messageCreationDate,
+                'seenByConseiller': false,
+              });
+          })
+          .then((value) => true) //
+          .catchError((e, StackTrace stack) {
+            _crashlytics.recordNonNetworkException(e, stack);
+            return false;
+          });
+    } catch (e, stack) {
+      _crashlytics.recordNonNetworkException(e, stack);
+      return false;
+    }
   }
 
   Future<bool> sendMessage(String userId, Message message) async {
