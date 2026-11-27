@@ -23,7 +23,7 @@ class CguMiddleware extends MiddlewareClass<AppState> {
         action.date,
         isInvite: store.state.isInviteLoginMode(),
       );
-      if (success) store.dispatch(CguAlreadyAcceptedAction());
+      store.dispatch(success ? CguAlreadyAcceptedAction() : CguAcceptFailureAction());
     } else if (action is CguRefusedAction) {
       // La suppression du compte invité a besoin du jeton invité : elle doit précéder la déconnexion.
       // La déconnexion purge ensuite l'état local (plan, questionnaire).

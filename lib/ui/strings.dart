@@ -1550,11 +1550,12 @@ class Strings {
       ? "Une erreur est survenue. Veuillez réessayer"
       : "Une erreur est survenue. Réessaie";
   static String tooManyRequestsError = Brand.isPassEmploi()
-      ? "Trop de requêtes. Réessayez dans quelques minutes."
-      : "Trop de requêtes. Réessaie dans quelques minutes.";
+      ? "Une erreur est survenue suite à de nombreuses requêtes. Réessayez dans quelques minutes."
+      : "Une erreur est survenue suite à de nombreuses requêtes. Réessaie dans quelques minutes.";
   static String tooManyRequestsTitle = "Trop de requêtes";
-  static String tooManyRequestsDescription =
-      Brand.isPassEmploi() ? "Réessayez dans quelques minutes." : "Réessaie dans quelques minutes.";
+  static String tooManyRequestsDescription = Brand.isPassEmploi()
+      ? "Réessayez dans quelques minutes."
+      : "Réessaie dans quelques minutes.";
   static String genericCreationError = Brand.isPassEmploi()
       ? "Erreur lors de la création. Veuillez réessayer"
       : "Erreur lors de la création. Réessaie";
