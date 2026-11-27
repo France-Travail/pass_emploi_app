@@ -16,6 +16,7 @@ class EvenementEmploiDetailsPageViewModel extends Equatable {
   final String lieu;
   final String? description;
   final String? url;
+  final bool withPartageConseiller;
   final Function(String eventId) retry;
 
   EvenementEmploiDetailsPageViewModel({
@@ -27,6 +28,7 @@ class EvenementEmploiDetailsPageViewModel extends Equatable {
     required this.lieu,
     required this.description,
     required this.url,
+    required this.withPartageConseiller,
     required this.retry,
   });
 
@@ -46,6 +48,7 @@ class EvenementEmploiDetailsPageViewModel extends Equatable {
       lieu: details.ville != null && details.codePostal != null ? "${details.codePostal} - ${details.ville}" : '',
       description: details.description,
       url: details.url,
+      withPartageConseiller: store.state.hasChat(),
       retry: (eventId) => store.dispatch(EvenementEmploiDetailsRequestAction(eventId)),
     );
   }
@@ -60,12 +63,13 @@ class EvenementEmploiDetailsPageViewModel extends Equatable {
       lieu: '',
       description: '',
       url: null,
+      withPartageConseiller: false,
       retry: (eventId) => store.dispatch(EvenementEmploiDetailsRequestAction(eventId)),
     );
   }
 
   @override
-  List<Object?> get props => [displayState, tag, titre, date, heure, lieu, description, url];
+  List<Object?> get props => [displayState, tag, titre, date, heure, lieu, description, url, withPartageConseiller];
 }
 
 DisplayState _displayState(EvenementEmploiDetailsState state) {
