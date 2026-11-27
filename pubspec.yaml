@@ -52,7 +52,7 @@ dependencies:
       ref: 0.5.0
   # Native features
   webview_flutter: "4.14.1"
-  flutter_local_notifications: ^23.0.0
+  flutter_local_notifications: ^23.0.4
   flutter_appauth: ^13.0.0
   flutter_secure_storage: ^11.2.0
   url_launcher: ^6.3.3
@@ -63,7 +63,7 @@ dependencies:
   connectivity_plus: ^7.3.1
   image_picker: ^1.2.4
   flutter_image_compress: ^2.5.1
-  file_picker: ^13.3.2
+  file_picker: ^13.4.1
   app_settings: ^9.0.1
   geolocator: ^14.1.2
   # Others
