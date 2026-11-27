@@ -11,9 +11,13 @@ class EmailObjectViewModel extends Equatable {
   final String contactEmailObject;
   final String ratingEmailObject;
 
+  /// Un invité n'a pas de conseiller : on ne le renvoie pas vers lui.
+  final bool withConseillerContact;
+
   EmailObjectViewModel({
     required this.contactEmailObject,
     required this.ratingEmailObject,
+    this.withConseillerContact = true,
   });
 
   factory EmailObjectViewModel.create(Store<AppState> store) {
@@ -24,11 +28,12 @@ class EmailObjectViewModel extends Equatable {
     return EmailObjectViewModel(
       contactEmailObject: _emailSubject(user, brand),
       ratingEmailObject: _ratingSubject(user, brand),
+      withConseillerContact: !user.loginMode.isInvite(),
     );
   }
 
   @override
-  List<Object?> get props => [contactEmailObject, ratingEmailObject];
+  List<Object?> get props => [contactEmailObject, ratingEmailObject, withConseillerContact];
 }
 
 String _emailSubject(User user, Brand brand) {

@@ -19,3 +19,5 @@ class RepriseCompteInviteFailureState extends RepriseCompteInviteState {
 }
 
 class RepriseCompteInviteWrongDeviceClockState extends RepriseCompteInviteState {}
+
+class RepriseCompteInviteTooManyRequestsState extends RepriseCompteInviteState {}

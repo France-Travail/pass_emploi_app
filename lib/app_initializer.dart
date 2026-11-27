@@ -22,6 +22,7 @@ import 'package:pass_emploi_app/features/mode_demo/is_mode_demo_repository.dart'
 import 'package:pass_emploi_app/network/cache_manager.dart';
 import 'package:pass_emploi_app/network/interceptors/logout_after_too_many_401_interceptor.dart';
 import 'package:pass_emploi_app/network/interceptors/monitoring_interceptor.dart';
+import 'package:pass_emploi_app/network/interceptors/too_many_requests_interceptor.dart';
 import 'package:pass_emploi_app/network/pass_emploi_dio_builder.dart';
 import 'package:pass_emploi_app/pages/force_update_page.dart';
 import 'package:pass_emploi_app/pass_emploi_app.dart';
@@ -230,6 +231,7 @@ class AppInitializer {
       AppVersionRepository(),
     );
     final unauthorizedInterceptor = LogoutAfterTooMany401Interceptor(remoteConfigRepository);
+    final tooManyRequestsInterceptor = TooManyRequestsInterceptor();
     _setTrustedCertificatesForOldDevices(configuration, crashlytics);
     final dioClient = PassEmploiDioBuilder(
       baseUrl: baseUrl,
@@ -239,6 +241,7 @@ class AppInitializer {
       authAccessChecker: authAccessChecker,
       monitoringInterceptor: monitoringInterceptor,
       unauthorizedInterceptor: unauthorizedInterceptor,
+      tooManyRequestsInterceptor: tooManyRequestsInterceptor,
     ).build();
     logoutRepository.setHttpClient(dioClient);
     logoutRepository.setCacheManager(requestCacheManager);
@@ -344,6 +347,7 @@ class AppInitializer {
     authAccessChecker.setStore(reduxStore);
     unauthorizedInterceptor.setStore(reduxStore);
     monitoringInterceptor.setStore(reduxStore);
+    tooManyRequestsInterceptor.setStore(reduxStore);
     chatCrypto.setStore(reduxStore);
     await pushNotificationManager.init(reduxStore);
     return reduxStore;

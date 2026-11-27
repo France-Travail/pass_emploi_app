@@ -40,7 +40,7 @@ class NotificationPreferencesPage extends StatelessWidget {
     BuildContext context,
   ) {
     if (previousViewModel?.withUpdateError != viewModel.withUpdateError && viewModel.withUpdateError) {
-      showSnackBarWithSystemError(context);
+      showSnackBarWithApiError(context);
     }
   }
 }

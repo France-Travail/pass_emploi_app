@@ -10,13 +10,24 @@ class CguNotInitializedState extends CguState {}
 
 class CguAlreadyAcceptedState extends CguState {}
 
-class CguNeverAcceptedState extends CguState {}
+class CguNeverAcceptedState extends CguState {
+  /// La dernière tentative d'acceptation a échoué.
+  final bool acceptFailed;
+
+  CguNeverAcceptedState({this.acceptFailed = false});
+
+  @override
+  List<Object?> get props => [acceptFailed];
+}
 
 class CguUpdateRequiredState extends CguState {
   final Cgu updatedCgu;
 
-  CguUpdateRequiredState(this.updatedCgu);
+  /// La dernière tentative d'acceptation a échoué.
+  final bool acceptFailed;
+
+  CguUpdateRequiredState(this.updatedCgu, {this.acceptFailed = false});
 
   @override
-  List<Object?> get props => [updatedCgu];
+  List<Object?> get props => [updatedCgu, acceptFailed];
 }

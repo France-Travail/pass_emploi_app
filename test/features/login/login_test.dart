@@ -364,6 +364,42 @@ void main() {
         preferredLoginModeRepository.verifySaveCalled();
       });
     });
+
+    group('when login fails for a generic reason as invite', () {
+      sut.whenDispatchingAction(() => RequestLoginAction(LoginMode.INVITE));
+
+      test('failure keeps the invite login mode, so that he is not sent to a conseiller', () async {
+        // Given
+        when(() => authenticator.login(AuthenticationMode.INVITE))
+            .thenAnswer((_) async => FailureAuthenticatorResponse('error-message'));
+        sut.givenStore = givenState().store((f) {
+          f.authenticator = authenticator;
+          f.matomoTracker = matomoTracker;
+          f.preferredLoginModeRepository = preferredLoginModeRepository;
+        });
+
+        // Then
+        sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldFailWithMessage(mode: LoginMode.INVITE)]);
+      });
+    });
+
+    group('when connect refuses the login because of too many requests', () {
+      sut.whenDispatchingAction(() => RequestLoginAction(LoginMode.MILO));
+
+      test('user is not logged in and failure is a too many requests one', () async {
+        // Given
+        when(() => authenticator.login(AuthenticationMode.SIMILO))
+            .thenAnswer((_) async => TooManyRequestsAuthenticatorResponse());
+        sut.givenStore = givenState().store((f) {
+          f.authenticator = authenticator;
+          f.matomoTracker = matomoTracker;
+          f.preferredLoginModeRepository = preferredLoginModeRepository;
+        });
+
+        // Then
+        sut.thenExpectChangingStatesThroughOrder([_shouldLoad(), _shouldFailBecauseOfTooManyRequests()]);
+      });
+    });
   });
 
   group('On logout…', () {
@@ -399,10 +435,15 @@ Matcher _shouldLoad() => StateIs<LoginLoadingState>((state) => state.loginState)
 
 Matcher _shouldFailBecauseOfWrongClock() => StateIs<LoginWrongDeviceClockState>((state) => state.loginState);
 
-Matcher _shouldFailWithMessage() {
+Matcher _shouldFailBecauseOfTooManyRequests() => StateIs<LoginTooManyRequestsState>((state) => state.loginState);
+
+Matcher _shouldFailWithMessage({LoginMode mode = LoginMode.MILO}) {
   return StateIs<LoginGenericFailureState>(
     (state) => state.loginState,
-    (state) => expect(state.message, 'error-message'),
+    (state) {
+      expect(state.message, 'error-message');
+      expect(state.mode, mode);
+    },
   );
 }
 

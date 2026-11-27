@@ -5,6 +5,7 @@ RepriseCompteInviteState repriseCompteInviteReducer(RepriseCompteInviteState cur
   if (action is RepriseCompteInviteLoadingAction) return RepriseCompteInviteLoadingState();
   if (action is RepriseCompteInviteFailureAction) return RepriseCompteInviteFailureState(action.message);
   if (action is RepriseCompteInviteWrongDeviceClockAction) return RepriseCompteInviteWrongDeviceClockState();
+  if (action is RepriseCompteInviteTooManyRequestsAction) return RepriseCompteInviteTooManyRequestsState();
   if (action is RepriseCompteInviteResetAction) return RepriseCompteInviteNotInitializedState();
   return current;
 }

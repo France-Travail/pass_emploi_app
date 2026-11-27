@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dsfr/flutter_dsfr.dart';
 import 'package:pass_emploi_app/ui/strings.dart';
+import 'package:pass_emploi_app/utils/context_extensions.dart';
 import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 
 final GlobalKey<ScaffoldMessengerState> snackBarKey = GlobalKey<ScaffoldMessengerState>();
@@ -22,6 +23,11 @@ void showSnackBarWithSystemError(BuildContext context, [String? label]) {
     label: label ?? Strings.miscellaneousErrorRetry,
     onActionTap: null,
   );
+}
+
+/// Échec d'un appel à l'API : pendant une limite de débit (429), le message dédié remplace [label].
+void showSnackBarWithApiError(BuildContext context, [String? label]) {
+  showSnackBarWithSystemError(context, context.apiErrorMessage(label ?? Strings.miscellaneousErrorRetry));
 }
 
 void showSnackBarWithUserError(BuildContext context, String label) {

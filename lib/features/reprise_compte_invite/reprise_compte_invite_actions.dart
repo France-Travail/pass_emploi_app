@@ -18,4 +18,6 @@ class RepriseCompteInviteFailureAction {
 
 class RepriseCompteInviteWrongDeviceClockAction {}
 
+class RepriseCompteInviteTooManyRequestsAction {}
+
 class RepriseCompteInviteResetAction {}

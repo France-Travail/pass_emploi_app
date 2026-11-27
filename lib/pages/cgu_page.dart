@@ -12,6 +12,7 @@ import 'package:pass_emploi_app/utils/launcher_utils.dart';
 import 'package:pass_emploi_app/utils/pass_emploi_matomo_tracker.dart';
 import 'package:pass_emploi_app/widgets/default_app_bar.dart';
 import 'package:pass_emploi_app/widgets/dsfr/bloc_marque.dart';
+import 'package:pass_emploi_app/widgets/a11y/auto_focus.dart';
 import 'package:pass_emploi_app/widgets/dsfr/dsfr_accessible_toggle_switch.dart';
 
 class CguPage extends StatelessWidget {
@@ -161,6 +162,11 @@ class _BodyState extends State<_Body> {
                     description: DsfrAlertDescriptionText(Strings.cguSwitchError),
                   ),
                 ],
+                // L'erreur de l'interrupteur, plus récente, remplace celle de l'enregistrement.
+                if (widget.viewModel.acceptErrorMessage case final message? when !hasError) ...[
+                  const SizedBox(height: DsfrSpacings.s2w),
+                  _AcceptErrorAlert(message),
+                ],
                 if (widget.viewModel.withInviteRefusalNotice) ...[
                   const SizedBox(height: DsfrSpacings.s3w),
                   DsfrAlert(
@@ -200,6 +206,48 @@ class _BodyState extends State<_Body> {
   }
 
   bool shouldHighlightError() => _acceptCguButtonClicked && !_cguAccepted;
+}
+
+/// L'acceptation n'a pas pu être enregistrée.
+///
+/// L'alerte apparaît après le défilement vers le bas lancé par « J'accepte » : elle allonge la page et
+/// resterait sous le bord de l'écran, on fait donc défiler jusqu'à elle.
+class _AcceptErrorAlert extends StatefulWidget {
+  final String message;
+
+  const _AcceptErrorAlert(this.message);
+
+  @override
+  State<_AcceptErrorAlert> createState() => _AcceptErrorAlertState();
+}
+
+class _AcceptErrorAlertState extends State<_AcceptErrorAlert> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      Scrollable.ensureVisible(
+        context,
+        duration: AnimationDurations.medium,
+        curve: Curves.easeInOut,
+        alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AutoFocusA11y(
+      child: Semantics(
+        liveRegion: true,
+        child: DsfrAlert(
+          type: DsfrAlertType.error,
+          description: DsfrAlertDescriptionText(widget.message),
+        ),
+      ),
+    );
+  }
 }
 
 class _CguNeverAcceptedContent extends StatelessWidget {

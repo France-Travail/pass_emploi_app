@@ -16,4 +16,7 @@ class CguAcceptedAction {
   CguAcceptedAction(this.date);
 }
 
+/// L'acceptation n'a pas pu être enregistrée : la page des CGU reste affichée et signale l'erreur.
+class CguAcceptFailureAction {}
+
 class CguRefusedAction {}

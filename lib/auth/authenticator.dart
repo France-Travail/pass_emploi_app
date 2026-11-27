@@ -59,6 +59,9 @@ class CancelledAuthenticatorResponse extends AuthenticatorResponse {}
 
 class WrongDeviceClockAuthenticatorResponse extends AuthenticatorResponse {}
 
+/// Connect a refusé la connexion pour excès de requêtes (rate limit) : réessayer dans quelques minutes.
+class TooManyRequestsAuthenticatorResponse extends AuthenticatorResponse {}
+
 class FailureAuthenticatorResponse extends AuthenticatorResponse {
   final String message;
 
@@ -110,6 +113,7 @@ class Authenticator {
     } catch (e) {
       if (e is UserCanceledLoginException) return CancelledAuthenticatorResponse();
       if (e is AuthWrapperWrongDeviceClockException) return WrongDeviceClockAuthenticatorResponse();
+      if (e is AuthWrapperLoginTemporarilyRefusedException) return TooManyRequestsAuthenticatorResponse();
       return FailureAuthenticatorResponse(e.toString());
     } finally {
       await _deleteAppAuthFlowMarker();

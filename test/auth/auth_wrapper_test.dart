@@ -85,6 +85,53 @@ void main() {
     });
   });
 
+  group('login — refus temporaire (rate limit)', () {
+    late _MockCrashlytics crashlytics;
+
+    setUp(() {
+      registerFallbackValue(StackTrace.empty);
+      crashlytics = _MockCrashlytics();
+      authWrapper = AuthWrapper(appAuth, Lock(), crashlytics);
+    });
+
+    test('429 de connect à l\'échange du code sur iOS : refus temporaire, non remonté dans Crashlytics', () async {
+      when(() => appAuth.authorizeAndExchangeCode(any())).thenThrow(
+        _appAuthException(
+          platformCode: 'authorize_and_exchange_code_failed',
+          type: 'org.openid.appauth.general',
+          code: '-6',
+          domain: 'org.openid.appauth.remote-http',
+          errorDebugDescription: "Non-200 HTTP response (429) making token request to 'https://connect/token'.",
+        ),
+      );
+      await expectLater(
+        authWrapper.login(_loginRequest()),
+        throwsA(isA<AuthWrapperLoginTemporarilyRefusedException>()),
+      );
+      verifyNever(() => crashlytics.recordNonNetworkException(any(), any()));
+    });
+
+    test('429 de connect à l\'échange du code sur Android : refus temporaire', () {
+      when(() => appAuth.authorizeAndExchangeCode(any())).thenThrow(
+        _appAuthException(platformCode: 'authorize_and_exchange_code_failed', type: '0', code: '5'),
+      );
+      expect(
+        () => authWrapper.login(_loginRequest()),
+        throwsA(isA<AuthWrapperLoginTemporarilyRefusedException>()),
+      );
+    });
+
+    test('erreur OAuth à l\'échange du code : pas un refus temporaire', () {
+      when(() => appAuth.authorizeAndExchangeCode(any())).thenThrow(
+        _appAuthException(platformCode: 'authorize_and_exchange_code_failed', type: '2', code: '2', error: 'invalid_grant'),
+      );
+      expect(
+        () => authWrapper.login(_loginRequest()),
+        throwsA(isA<AuthWrapperCalledCancelException>()),
+      );
+    });
+  });
+
   group('refreshToken — isRefreshTokenExpired detection', () {
     test('throws AuthWrapperRefreshTokenExpiredException on invalid_grant via FlutterAppAuthPlatformErrorDetails', () {
       when(() => appAuth.token(any())).thenThrow(
@@ -223,6 +270,7 @@ void main() {
 class _MockCrashlytics extends Mock implements Crashlytics {}
 
 FlutterAppAuthPlatformException _appAuthException({
+  String platformCode = 'token_failed',
   required String type,
   required String code,
   String? error,
@@ -232,7 +280,7 @@ FlutterAppAuthPlatformException _appAuthException({
   dynamic legacyDetails,
 }) {
   return FlutterAppAuthPlatformException(
-    code: 'token_failed',
+    code: platformCode,
     legacyDetails: legacyDetails,
     platformErrorDetails: FlutterAppAuthPlatformErrorDetails(
       type: type,

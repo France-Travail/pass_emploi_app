@@ -115,7 +115,7 @@ class _ActionDetailPageState extends State<UserActionDetailPage> {
   void _pageNavigationHandling(UserActionDetailsViewModel viewModel) {
     final context = this.context;
     if (viewModel.updateDisplayState == UpdateDisplayState.SHOW_UPDATE_ERROR) {
-      showSnackBarWithSystemError(context, Strings.updateStatusError);
+      showSnackBarWithApiError(context, Strings.updateStatusError);
       viewModel.resetUpdateStatus();
     } else if (viewModel.updateDisplayState == UpdateDisplayState.TO_DISMISS_AFTER_UPDATE) {
       _trackSuccessfulUpdate();
@@ -129,7 +129,7 @@ class _ActionDetailPageState extends State<UserActionDetailPage> {
         ),
       );
     } else if (viewModel.deleteDisplayState == DeleteDisplayState.SHOW_DELETE_ERROR) {
-      showSnackBarWithSystemError(context, Strings.deleteActionError);
+      showSnackBarWithApiError(context, Strings.deleteActionError);
     }
   }
 

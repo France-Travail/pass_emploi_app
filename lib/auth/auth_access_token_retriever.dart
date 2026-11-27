@@ -80,8 +80,7 @@ class AuthAccessTokenRetriever {
   }
 
   Future<int> _failureCount() async {
-    return _cachedFailureCount ??=
-        int.tryParse(await _preferences.read(key: _failureCountKey) ?? '') ?? 0;
+    return _cachedFailureCount ??= int.tryParse(await _preferences.read(key: _failureCountKey) ?? '') ?? 0;
   }
 
   Future<int> _incrementFailureCount() async {

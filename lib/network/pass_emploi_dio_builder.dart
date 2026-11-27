@@ -11,6 +11,7 @@ import 'package:pass_emploi_app/network/interceptors/expired_token_interceptor.d
 import 'package:pass_emploi_app/network/interceptors/logging_interceptor.dart';
 import 'package:pass_emploi_app/network/interceptors/logout_after_too_many_401_interceptor.dart';
 import 'package:pass_emploi_app/network/interceptors/monitoring_interceptor.dart';
+import 'package:pass_emploi_app/network/interceptors/too_many_requests_interceptor.dart';
 
 class PassEmploiDioBuilder {
   /// Since dio_cache_interceptor 4, codes are an allow-list (formerly `hitCacheOnErrorExcept: [401, 403, 404]`).
@@ -27,6 +28,7 @@ class PassEmploiDioBuilder {
   final AuthAccessChecker authAccessChecker;
   final MonitoringInterceptor monitoringInterceptor;
   final LogoutAfterTooMany401Interceptor unauthorizedInterceptor;
+  final TooManyRequestsInterceptor tooManyRequestsInterceptor;
 
   PassEmploiDioBuilder({
     required this.baseUrl,
@@ -36,6 +38,7 @@ class PassEmploiDioBuilder {
     required this.authAccessChecker,
     required this.monitoringInterceptor,
     required this.unauthorizedInterceptor,
+    required this.tooManyRequestsInterceptor,
   });
 
   Dio build() {
@@ -54,7 +57,9 @@ class PassEmploiDioBuilder {
       ..add(CacheInterceptor(DioCacheInterceptor(options: cacheOptions)))
       ..add(LoggingNetworkInterceptor())
       ..add(ExpiredTokenInterceptor(authAccessChecker))
-      ..add(unauthorizedInterceptor);
+      ..add(unauthorizedInterceptor)
+      // En dernier : voir TooManyRequestsInterceptor.
+      ..add(tooManyRequestsInterceptor);
     return dioClient;
   }
 }

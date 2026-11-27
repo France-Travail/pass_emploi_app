@@ -6,6 +6,7 @@ import 'package:pass_emploi_app/features/login/login_actions.dart';
 import 'package:pass_emploi_app/features/login/login_state.dart';
 import 'package:pass_emploi_app/models/cgu.dart';
 import 'package:pass_emploi_app/models/login_mode.dart';
+import 'package:pass_emploi_app/redux/app_state.dart';
 import 'package:pass_emploi_app/repositories/cgu/cgu_repository.dart';
 
 import '../../doubles/fixtures.dart';
@@ -163,18 +164,53 @@ void main() {
         verify(() => cguRepository.save('id', DateTime(2024), isInvite: false)).called(1);
       });
 
-      test('should call repository and keep current state if unsuccessful', () async {
+      test('échec : reste sur les CGU jamais acceptées et signale l’échec', () async {
         when(() => cguRepository.save('id', DateTime(2024), isInvite: false)).thenAnswer((_) async => false);
 
         sut.givenStore = givenState() //
             .loggedIn()
+            .withCguNeverAccepted()
             .store((f) => {
                   f.cguRepository = cguRepository,
                 });
 
-        await sut.thenExpectNever(_shouldHaveAcceptedCgu());
+        await sut.thenExpectChangingStatesThroughOrder([
+          _shouldHaveCguState(CguNeverAcceptedState(acceptFailed: true)),
+        ]);
 
         verify(() => cguRepository.save('id', DateTime(2024), isInvite: false)).called(1);
+      });
+
+      test('échec : reste sur la mise à jour des CGU et signale l’échec', () async {
+        final cgu = Cgu(lastUpdate: DateTime(2024), changes: ['change']);
+        when(() => cguRepository.save('id', DateTime(2024), isInvite: false)).thenAnswer((_) async => false);
+
+        sut.givenStore = givenState() //
+            .loggedIn()
+            .withCguUpdateRequired(cgu)
+            .store((f) => {
+                  f.cguRepository = cguRepository,
+                });
+
+        await sut.thenExpectChangingStatesThroughOrder([
+          _shouldHaveCguState(CguUpdateRequiredState(cgu, acceptFailed: true)),
+        ]);
+      });
+
+      test('nouvelle tentative après un échec : efface l’échec puis accepte', () async {
+        when(() => cguRepository.save('id', DateTime(2024), isInvite: false)).thenAnswer((_) async => true);
+
+        sut.givenStore = givenState() //
+            .loggedIn()
+            .copyWith(cguState: CguNeverAcceptedState(acceptFailed: true))
+            .store((f) => {
+                  f.cguRepository = cguRepository,
+                });
+
+        await sut.thenExpectChangingStatesThroughOrder([
+          _shouldHaveCguState(CguNeverAcceptedState()),
+          _shouldHaveAcceptedCgu(),
+        ]);
       });
     });
 
@@ -206,5 +242,7 @@ Matcher _shouldAcceptUpdatedCgu(Cgu expectedCgu) {
     },
   );
 }
+
+Matcher _shouldHaveCguState(CguState expected) => isA<AppState>().having((s) => s.cguState, 'cguState', expected);
 
 Matcher _shouldLogout() => StateIs<LoginNotInitializedState>((state) => state.loginState);

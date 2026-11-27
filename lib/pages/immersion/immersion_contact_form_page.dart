@@ -41,7 +41,7 @@ class ImmersionContactFormPage extends StatelessWidget {
   void _pageNavigationHandling(ImmersionContactFormViewModel viewModel, BuildContext context) {
     if (viewModel.sendingState.isFailure()) {
       PassEmploiMatomoTracker.instance.trackScreen(AnalyticsScreenNames.immersionFormSent(false));
-      showSnackBarWithSystemError(context);
+      showSnackBarWithApiError(context);
       viewModel.resetSendingState();
     } else if (viewModel.sendingState.isAlreadyDone()) {
       PassEmploiMatomoTracker.instance.trackScreen(AnalyticsScreenNames.immersionFormSent(false));

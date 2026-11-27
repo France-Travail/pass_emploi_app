@@ -29,7 +29,7 @@ class ContactPage extends StatelessWidget {
             appBar: const BackAppBar(),
             body: Column(
               children: [
-                Expanded(child: _Body()),
+                Expanded(child: _Body(withConseillerContact: viewModel.withConseillerContact)),
                 _ContactButton(viewModel: viewModel),
               ],
             ),
@@ -41,6 +41,10 @@ class ContactPage extends StatelessWidget {
 }
 
 class _Body extends StatelessWidget {
+  final bool withConseillerContact;
+
+  const _Body({required this.withConseillerContact});
+
   @override
   Widget build(BuildContext context) {
     final textStyle = DsfrTextStyle.bodyMd(color: DsfrColorDecisions.textTitleGrey(context));
@@ -64,8 +68,10 @@ class _Body extends StatelessWidget {
               ],
             ),
             const SizedBox(height: DsfrSpacings.s3w),
-            Text(Strings.contactPageBody3, style: textStyle),
-            const SizedBox(height: DsfrSpacings.s3w),
+            if (withConseillerContact) ...[
+              Text(Strings.contactPageBody3, style: textStyle),
+              const SizedBox(height: DsfrSpacings.s3w),
+            ],
             const DsfrDivider(),
           ],
         ),

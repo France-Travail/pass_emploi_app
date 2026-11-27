@@ -48,11 +48,14 @@ class LoginSuccessAction {
 
 class LoginFailureAction {
   final String message;
+  final LoginMode? mode;
 
-  LoginFailureAction(this.message);
+  LoginFailureAction(this.message, {this.mode});
 }
 
 class LoginWrongDeviceClockAction {}
+
+class LoginTooManyRequestsAction {}
 
 class NotLoggedInAction {}
 
